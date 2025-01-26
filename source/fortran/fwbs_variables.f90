@@ -66,7 +66,7 @@ module fwbs_variables
   real(dp) :: fwlife
   !! first wall full-power year lifetime (y)
 
-  real(dp) :: fwmass
+  real(dp) :: m_fw_total
   !! first wall mass [kg]
 
   real(dp) :: fw_armour_mass
@@ -679,7 +679,7 @@ module fwbs_variables
     fhole = 0.0D0
     fwbsshape = 2
     fwlife = 0.0D0
-    fwmass = 0.0D0
+    m_fw_total = 0.0D0
     fw_armour_mass = 0.0D0
     fw_armour_thickness = 0.005D0
     fw_armour_vol = 0.0D0

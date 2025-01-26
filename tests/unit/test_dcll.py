@@ -312,7 +312,7 @@ class DcllMassesParam(NamedTuple):
 
     whtblkt: Any = None
 
-    fwmass: Any = None
+    m_fw_total: Any = None
 
     fw_armour_vol: Any = None
 
@@ -428,7 +428,7 @@ class DcllMassesParam(NamedTuple):
 
     expected_whtblkt: Any = None
 
-    expected_fwmass: Any = None
+    expected_m_fw_total: Any = None
 
     expected_fw_armour_vol: Any = None
 
@@ -534,7 +534,7 @@ class DcllMassesParam(NamedTuple):
             volblkti=401.90579863726225,
             volblkto=995.99450251303142,
             whtblkt=0,
-            fwmass=0,
+            m_fw_total=0,
             fw_armour_vol=0,
             fw_armour_thickness=0.0050000000000000001,
             fw_armour_mass=0,
@@ -592,7 +592,7 @@ class DcllMassesParam(NamedTuple):
             expected_blbmith=0.37000000000000011,
             expected_blbmoth=0.49699999999999994,
             expected_whtblkt=10654509.24412049,
-            expected_fwmass=193353.16636179245,
+            expected_m_fw_total=193353.16636179245,
             expected_fw_armour_vol=7.0163598878346534,
             expected_fw_armour_mass=135064.92784081708,
             expected_vol_fw_total=28.820872142117942,
@@ -653,7 +653,7 @@ class DcllMassesParam(NamedTuple):
             volblkti=402.02180553751157,
             volblkto=998.46427094945204,
             whtblkt=10654509.24412049,
-            fwmass=193353.16636179245,
+            m_fw_total=193353.16636179245,
             fw_armour_vol=7.0163598878346534,
             fw_armour_thickness=0.0050000000000000001,
             fw_armour_mass=135064.92784081708,
@@ -711,7 +711,7 @@ class DcllMassesParam(NamedTuple):
             expected_blbmith=0.37000000000000011,
             expected_blbmoth=0.49699999999999994,
             expected_whtblkt=10673841.813263938,
-            expected_fwmass=228388.37777659783,
+            expected_m_fw_total=228388.37777659783,
             expected_fw_armour_vol=7.0163598878346534,
             expected_fw_armour_mass=135064.92784081708,
             expected_vol_fw_total=34.043157184860888,
@@ -817,7 +817,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "whtblkt", dcllmassesparam.whtblkt)
 
-    monkeypatch.setattr(fwbs_variables, "fwmass", dcllmassesparam.fwmass)
+    monkeypatch.setattr(fwbs_variables, "m_fw_total", dcllmassesparam.m_fw_total)
 
     monkeypatch.setattr(fwbs_variables, "fw_armour_vol", dcllmassesparam.fw_armour_vol)
 
@@ -957,7 +957,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     assert fwbs_variables.whtblkt == pytest.approx(dcllmassesparam.expected_whtblkt)
 
-    assert fwbs_variables.fwmass == pytest.approx(dcllmassesparam.expected_fwmass)
+    assert fwbs_variables.m_fw_total == pytest.approx(
+        dcllmassesparam.expected_m_fw_total
+    )
 
     assert fwbs_variables.fw_armour_vol == pytest.approx(
         dcllmassesparam.expected_fw_armour_vol

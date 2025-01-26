@@ -681,7 +681,7 @@ class DCLL:
             * (1 - dcll_module.f_vol_stl_fw)
             * fwbs_variables.vol_fw_total
         )
-        fwbs_variables.fwmass = dcll_module.fwmass_stl + dcll_module.fwmass_cool
+        fwbs_variables.m_fw_total = dcll_module.fwmass_stl + dcll_module.fwmass_cool
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
             physics_variables.a_plasma_surface * fwbs_variables.fw_armour_thickness
@@ -707,7 +707,7 @@ class DCLL:
         # Total mass of first wall and blanket
         fwbs_variables.armour_fw_bl_mass = (
             fwbs_variables.fw_armour_mass
-            + fwbs_variables.fwmass
+            + fwbs_variables.m_fw_total
             + fwbs_variables.whtblkt
         )
 
@@ -716,7 +716,7 @@ class DCLL:
             dcll_module.mass_segm_ib = (
                 fwbs_variables.whtblkt
                 * (fwbs_variables.volblkti / fwbs_variables.volblkt)
-                + fwbs_variables.fwmass
+                + fwbs_variables.m_fw_total
                 * (
                     build_variables.a_fw_inboard
                     * build_variables.dr_fw_inboard
@@ -735,7 +735,7 @@ class DCLL:
 
         dcll_module.mass_segm_ob = (
             fwbs_variables.whtblkt * (fwbs_variables.volblkto / fwbs_variables.volblkt)
-            + fwbs_variables.fwmass
+            + fwbs_variables.m_fw_total
             * (
                 build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
@@ -787,8 +787,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "First Wall Mass, excluding armour (kg)",
-                "(fwmass)",
-                fwbs_variables.fwmass,
+                "(m_fw_total)",
+                fwbs_variables.m_fw_total,
                 "OP ",
             )
             po.ovarre(
