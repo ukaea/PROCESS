@@ -19,7 +19,7 @@ def fw():
 class FwTempParam(NamedTuple):
     fw_th_conductivity: Any = None
 
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
     temp_fw_coolant_in: Any = None
 
@@ -63,7 +63,7 @@ class FwTempParam(NamedTuple):
     (
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
+            i_fw_coolant_type="helium",
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
@@ -85,7 +85,7 @@ class FwTempParam(NamedTuple):
         ),
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
+            i_fw_coolant_type="helium",
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
@@ -125,7 +125,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     # monkeypatch doesnt work for strings
     # but helium is the default
-    # monkeypatch.setattr(fwbs_variables, "fwcoolant", fwtempparam.fwcoolant)
+    # monkeypatch.setattr(fwbs_variables, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
 
     monkeypatch.setattr(
         fwbs_variables, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
