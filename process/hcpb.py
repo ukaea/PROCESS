@@ -304,7 +304,7 @@ class CCFE_HCPB:
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.fwmass = fwbs_variables.denstl * fwbs_variables.vol_fw_total
+        fwbs_variables.m_fw_total = fwbs_variables.denstl * fwbs_variables.vol_fw_total
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
@@ -371,7 +371,7 @@ class CCFE_HCPB:
         # Total mass of first wall and blanket
         fwbs_variables.armour_fw_bl_mass = (
             fwbs_variables.fw_armour_mass
-            + fwbs_variables.fwmass
+            + fwbs_variables.m_fw_total
             + fwbs_variables.whtblkt
         )
 
@@ -534,7 +534,7 @@ class CCFE_HCPB:
 
         # Total nuclear heating in FW (MW)
         fwbs_variables.pnucfw = (
-            fwbs_variables.fwmass
+            fwbs_variables.m_fw_total
             * ccfe_hcpb_module.fw_armour_u_nuc_heating
             * physics_variables.fusion_power
         )
@@ -542,7 +542,7 @@ class CCFE_HCPB:
         if fwbs_variables.pnucfw < 0:
             raise RuntimeError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.pnucfw = },
-                {physics_variables.fusion_power = }, {fwbs_variables.fwmass = }"""
+                {physics_variables.fusion_power = }, {fwbs_variables.m_fw_total = }"""
             )
 
     def nuclear_heating_blanket(self):
@@ -1294,8 +1294,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First Wall Mass, excluding armour (kg)",
-            "(fwmass)",
-            fwbs_variables.fwmass,
+            "(m_fw_total)",
+            fwbs_variables.m_fw_total,
             "OP ",
         )
         po.ovarre(

@@ -402,7 +402,7 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 class NuclearHeatingFwParam(NamedTuple):
     pnucfw: Any = None
 
-    fwmass: Any = None
+    m_fw_total: Any = None
 
     fusion_power: Any = None
 
@@ -418,7 +418,7 @@ class NuclearHeatingFwParam(NamedTuple):
     (
         NuclearHeatingFwParam(
             pnucfw=0,
-            fwmass=224802.80270851994,
+            m_fw_total=224802.80270851994,
             fusion_power=1986.0623241661431,
             fw_armour_u_nuc_heating=0,
             expected_pnucfw=279.04523551646628,
@@ -426,7 +426,7 @@ class NuclearHeatingFwParam(NamedTuple):
         ),
         NuclearHeatingFwParam(
             pnucfw=276.80690153753221,
-            fwmass=182115.83467868491,
+            m_fw_total=182115.83467868491,
             fusion_power=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_pnucfw=225.98781165610032,
@@ -449,7 +449,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "pnucfw", nuclearheatingfwparam.pnucfw)
 
-    monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
+    monkeypatch.setattr(fwbs_variables, "m_fw_total", nuclearheatingfwparam.m_fw_total)
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
@@ -1414,7 +1414,7 @@ class ComponentMassesParam(NamedTuple):
     vfpblkt: Any = None
     whtshld: Any = None
     wpenshld: Any = None
-    fwmass: Any = None
+    m_fw_total: Any = None
     fw_armour_vol: Any = None
     fw_armour_thickness: Any = None
     fw_armour_mass: Any = None
@@ -1450,7 +1450,7 @@ class ComponentMassesParam(NamedTuple):
     expected_wtblli2o: Any = None
     expected_whtshld: Any = None
     expected_wpenshld: Any = None
-    expected_fwmass: Any = None
+    expected_m_fw_total: Any = None
     expected_fw_armour_vol: Any = None
     expected_fw_armour_mass: Any = None
     expected_armour_fw_bl_mass: Any = None
@@ -1505,7 +1505,7 @@ class ComponentMassesParam(NamedTuple):
             vfpblkt=0.10000000000000001,
             whtshld=0,
             wpenshld=0,
-            fwmass=0,
+            m_fw_total=0,
             fw_armour_vol=0,
             fw_armour_thickness=0.0050000000000000001,
             fw_armour_mass=0,
@@ -1541,7 +1541,7 @@ class ComponentMassesParam(NamedTuple):
             expected_wtblli2o=1064289.0394976311,
             expected_whtshld=2445141.3347883238,
             expected_wpenshld=2445141.3347883238,
-            expected_fwmass=188693.16002348688,
+            expected_m_fw_total=188693.16002348688,
             expected_fw_armour_vol=5.8692138856227967,
             expected_fw_armour_mass=112982.36729823884,
             expected_armour_fw_bl_mass=3263343.5901344167,
@@ -1617,7 +1617,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "vfpblkt", componentmassesparam.vfpblkt)
     monkeypatch.setattr(fwbs_variables, "whtshld", componentmassesparam.whtshld)
     monkeypatch.setattr(fwbs_variables, "wpenshld", componentmassesparam.wpenshld)
-    monkeypatch.setattr(fwbs_variables, "fwmass", componentmassesparam.fwmass)
+    monkeypatch.setattr(fwbs_variables, "m_fw_total", componentmassesparam.m_fw_total)
     monkeypatch.setattr(
         fwbs_variables, "fw_armour_vol", componentmassesparam.fw_armour_vol
     )
@@ -1698,7 +1698,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.wpenshld == pytest.approx(
         componentmassesparam.expected_wpenshld
     )
-    assert fwbs_variables.fwmass == pytest.approx(componentmassesparam.expected_fwmass)
+    assert fwbs_variables.m_fw_total == pytest.approx(
+        componentmassesparam.expected_m_fw_total
+    )
     assert fwbs_variables.fw_armour_vol == pytest.approx(
         componentmassesparam.expected_fw_armour_vol
     )
