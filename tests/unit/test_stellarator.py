@@ -220,7 +220,7 @@ class StbildParam(NamedTuple):
 
     dr_vv_outboard: Any = None
 
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     dr_fw_inboard: Any = None
 
@@ -308,7 +308,7 @@ class StbildParam(NamedTuple):
 
     expected_bore: Any = None
 
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
 
     expected_dr_fw_inboard: Any = None
 
@@ -349,7 +349,7 @@ class StbildParam(NamedTuple):
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            fwarea=0,
+            a_fw_total=0,
             dr_fw_inboard=0,
             dr_fw_outboard=0,
             dr_shld_vv_gap_inboard=0.025000000000000005,
@@ -393,7 +393,7 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=1918.8188778803135,
+            expected_a_fw_total=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
@@ -419,7 +419,7 @@ class StbildParam(NamedTuple):
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            fwarea=1918.8188778803135,
+            a_fw_total=1918.8188778803135,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
             dr_shld_vv_gap_inboard=0.025000000000000005,
@@ -463,7 +463,7 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=2120.6210472630282,
+            expected_a_fw_total=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
@@ -517,7 +517,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
-    monkeypatch.setattr(build_variables, "fwarea", stbildparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", stbildparam.a_fw_total)
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
@@ -636,7 +636,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
-    assert build_variables.fwarea == pytest.approx(stbildparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(stbildparam.expected_a_fw_total)
 
     assert build_variables.dr_fw_inboard == pytest.approx(
         stbildparam.expected_dr_fw_inboard

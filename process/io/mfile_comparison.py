@@ -204,7 +204,7 @@ BLANKET_COMPARE_PARAMS = [
     "pnucdiv",
     "tbr",
     "li6enrich",
-    "fwarea",
+    "a_fw_total",
     "emult",
 ]
 

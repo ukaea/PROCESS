@@ -27,7 +27,7 @@ def dcll():
 class DcllNeutronicsAndPowerParam(NamedTuple):
     a_fw_outboard: Any = None
 
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     porbitlossmw: Any = None
 
@@ -91,7 +91,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
     (
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=988.92586580655245,
-            fwarea=1601.1595634509963,
+            a_fw_total=1601.1595634509963,
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=0,
@@ -123,7 +123,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
         ),
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=1168.1172772224481,
-            fwarea=1891.2865102700493,
+            a_fw_total=1891.2865102700493,
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=33.056596978820579,
@@ -172,7 +172,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         build_variables, "a_fw_outboard", dcllneutronicsandpowerparam.a_fw_outboard
     )
 
-    monkeypatch.setattr(build_variables, "fwarea", dcllneutronicsandpowerparam.fwarea)
+    monkeypatch.setattr(
+        build_variables, "a_fw_total", dcllneutronicsandpowerparam.a_fw_total
+    )
 
     monkeypatch.setattr(
         current_drive_variables,

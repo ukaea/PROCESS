@@ -1138,7 +1138,7 @@ class Costs:
                 * cmlsa[cost_variables.lsa - 1]
                 * (
                     (cost_variables.ucfwa + cost_variables.ucfws)
-                    * build_variables.fwarea
+                    * build_variables.a_fw_total
                     + cost_variables.ucfwps
                 )
             )
