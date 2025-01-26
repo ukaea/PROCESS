@@ -2341,7 +2341,7 @@ etaiso = 0.9
 * DESCRIPTION:   First wall coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set.
 
-fwcoolant = helium 
+i_fw_coolant_type = helium 
 * DESCRIPTION:   switch for first wall coolant (can be different from blanket coolant) (default = helium):
 * 'helium'
 * 'water'
