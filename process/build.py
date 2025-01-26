@@ -2006,7 +2006,7 @@ class Build:
             # as a test
 
             (
-                build_variables.fwareaib,
+                build_variables.a_fw_inboard,
                 build_variables.fwareaob,
                 build_variables.fwarea,
             ) = maths_library.dshellarea(r1, r2, hfw)
@@ -2043,7 +2043,7 @@ class Build:
             # as a test
 
             (
-                build_variables.fwareaib,
+                build_variables.a_fw_inboard,
                 build_variables.fwareaob,
                 build_variables.fwarea,
             ) = maths_library.eshellarea(r1, r2, r3, hfw)
@@ -2055,7 +2055,7 @@ class Build:
             build_variables.fwareaob = build_variables.fwareaob * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
         else:
@@ -2063,11 +2063,11 @@ class Build:
             build_variables.fwareaob = build_variables.fwareaob * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = build_variables.fwareaib + build_variables.fwareaob
+        build_variables.fwarea = build_variables.a_fw_inboard + build_variables.fwareaob
 
         if build_variables.fwareaob <= 0.0e0:
             error_handling.fdiags[0] = fwbs_variables.fdiv

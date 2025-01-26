@@ -232,7 +232,7 @@ class CCFE_HCPB:
         # First wall coolant volume (m3)
         coolvol = (
             coolvol
-            + build_variables.fwareaib
+            + build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.vffwi
             + build_variables.fwareaob
@@ -245,7 +245,7 @@ class CCFE_HCPB:
 
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
         fwbs_variables.fwclfr = (
-            build_variables.fwareaib
+            build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.vffwi
             + build_variables.fwareaob
@@ -294,7 +294,7 @@ class CCFE_HCPB:
 
         # First wall volume (m^3)
         fwbs_variables.volfw = (
-            build_variables.fwareaib
+            build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * (1.0 - fwbs_variables.vffwi)
             + build_variables.fwareaob
