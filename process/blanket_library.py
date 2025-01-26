@@ -450,7 +450,7 @@ class BlanketLibrary:
         else:
             # FW
             mid_temp_fw = (
-                fwbs_variables.temp_fw_coolant_in + fwbs_variables.fwoutlet
+                fwbs_variables.temp_fw_coolant_in + fwbs_variables.temp_fw_coolant_out
             ) * 0.5
             fw_fluid_properties = FluidProperties.of(
                 f2py_compatible_to_string(fwbs_variables.fwcoolant),
@@ -545,8 +545,8 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "Outlet Temperature (Celcius)",
-                    "(fwoutlet)",
-                    fwbs_variables.fwoutlet,
+                    "(temp_fw_coolant_out)",
+                    fwbs_variables.temp_fw_coolant_out,
                     "OP ",
                 )
 
@@ -1505,7 +1505,7 @@ class BlanketLibrary:
             primary coolant switch      fwcoolant               coolwh              ---
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              temp_fw_coolant_in                 inlet_temp          inlet_temp_liq
-            outlet temp (K)             fwoutlet                outlet_temp         outlet_temp_liq
+            outlet temp (K)             temp_fw_coolant_out                outlet_temp         outlet_temp_liq
             pressure (Pa)               fwpressure              blpressure          blpressure_liq
         """
         ######################################################
@@ -1600,7 +1600,7 @@ class BlanketLibrary:
                 ) * fwbs_variables.temp_fw_coolant_in
                 inlet_tempi = fwoutleti
             else:
-                fwoutleti = fwbs_variables.fwoutlet
+                fwoutleti = fwbs_variables.temp_fw_coolant_out
 
             fwoutleto = (f_nuc_fwo * fwbs_variables.outlet_temp) + (
                 1 - f_nuc_fwo
@@ -1608,9 +1608,9 @@ class BlanketLibrary:
             inlet_tempo = fwoutleto
 
         elif fwbs_variables.ipump == 1:
-            fwoutleti = fwbs_variables.fwoutlet
+            fwoutleti = fwbs_variables.temp_fw_coolant_out
             inlet_tempi = fwbs_variables.inlet_temp
-            fwoutleto = fwbs_variables.fwoutlet
+            fwoutleto = fwbs_variables.temp_fw_coolant_out
             inlet_tempo = fwbs_variables.inlet_temp
 
         # Maximum FW temperature. (27/11/2015) Issue #348
@@ -1848,7 +1848,7 @@ class BlanketLibrary:
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_coolant_in.item(),
-                temp_out=fwbs_variables.fwoutlet.item(),
+                temp_out=fwbs_variables.temp_fw_coolant_out.item(),
                 pressure=fwbs_variables.fwpressure.item(),
                 pdrop=deltap_fw.item(),
                 mf=blanket_library.mffw,
@@ -1957,8 +1957,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
-                "(fwoutlet)",
-                fwbs_variables.fwoutlet,
+                "(temp_fw_coolant_out)",
+                fwbs_variables.temp_fw_coolant_out,
             )
             po.ovarre(
                 self.outfile,

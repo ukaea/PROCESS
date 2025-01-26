@@ -2333,7 +2333,7 @@ etaiso = 0.9
 * DESCRIPTION:   Inlet temperature of first wall coolant [K] (default = 573.0)
 * JUSTIFICATION: Not yet set.
 
-*fwoutlet = 
+*temp_fw_coolant_out = 
 * DESCRIPTION:   Outlet temperature of first wall coolant (K) (default = 823.0)
 * JUSTIFICATION: Not yet set.
 
