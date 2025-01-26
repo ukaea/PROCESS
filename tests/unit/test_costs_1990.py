@@ -998,7 +998,7 @@ def test_acc21(acc21param, monkeypatch, costs):
 
 
 class Acc2211Param(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     ucblss: Any = None
 
@@ -1031,7 +1031,7 @@ class Acc2211Param(NamedTuple):
     "acc2211param",
     (
         Acc2211Param(
-            fwarea=1601.1595634509963,
+            a_fw_total=1601.1595634509963,
             ucblss=90,
             fkind=1,
             fwallcst=0,
@@ -1060,7 +1060,7 @@ class Acc2211Param(NamedTuple):
             expected_fwallcst=143.19827300247195,
         ),
         Acc2211Param(
-            fwarea=1891.2865102700493,
+            a_fw_total=1891.2865102700493,
             ucblss=90,
             fkind=1,
             fwallcst=143.19827300247195,
@@ -1103,7 +1103,7 @@ def test_acc2211(acc2211param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwarea", acc2211param.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", acc2211param.a_fw_total)
 
     monkeypatch.setattr(cost_variables, "ucblss", acc2211param.ucblss)
 

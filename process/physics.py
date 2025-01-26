@@ -2073,7 +2073,7 @@ class Physics:
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
-        # Note that 'fwarea' excludes these, so they have been added back in.
+        # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
             physics_variables.wallmw = (
                 physics_variables.ffwal
@@ -2086,14 +2086,14 @@ class Physics:
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
 
         # Calculate ion/electron equilibration power
@@ -2370,7 +2370,7 @@ class Physics:
 
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
-        # Note that 'fwarea' excludes these, so they have been added back in.
+        # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
@@ -2382,21 +2382,21 @@ class Physics:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.photon_wall = (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
+                ) * physics_variables.pradmw / build_variables.a_fw_total + (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
                 ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
-                    build_variables.fwarea
+                    build_variables.a_fw_total
                 )
             else:
                 # Single null configuration - including SoL radaition
                 physics_variables.photon_wall = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.pradmw
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                     + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.rad_fraction_sol
                     * physics_variables.pdivt
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
 
         constraint_variables.peakradwallload = (

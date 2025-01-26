@@ -271,7 +271,7 @@ class IFE:
         self.genbld()
 
         # First wall area: no true first wall at bottom of chamber
-        build_variables.fwarea = (
+        build_variables.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl1)
             + np.pi * ife_variables.r1 * ife_variables.r1
         )
@@ -609,7 +609,7 @@ class IFE:
                 )
 
         # First wall area
-        build_variables.fwarea = (
+        build_variables.a_fw_total = (
             2.0
             * np.pi
             * ife_variables.r1
@@ -840,15 +840,15 @@ class IFE:
                 )
 
         # First wall area
-        build_variables.fwarea = (
+        build_variables.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl5)
         )
-        build_variables.fwarea = build_variables.fwarea + np.pi * (
+        build_variables.a_fw_total = build_variables.a_fw_total + np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
-        build_variables.fwarea = (
-            build_variables.fwarea
+        build_variables.a_fw_total = (
+            build_variables.a_fw_total
             + np.pi
             * ife_variables.r1
             * np.sqrt(
@@ -1196,7 +1196,7 @@ class IFE:
         # with only the top being solid.  This is considered part
         # of the shield. There is a target injector tube at the
         # centre of this area.
-        build_variables.fwarea = np.pi * (
+        build_variables.a_fw_total = np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
@@ -1421,7 +1421,7 @@ class IFE:
 
         # First wall area
 
-        build_variables.fwarea = (
+        build_variables.a_fw_total = (
             2.0
             * np.pi
             * ife_variables.r1
@@ -1485,7 +1485,7 @@ class IFE:
             phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
             sang = 1.0 - np.cos(phi)
             physics_variables.wallmw = (
-                physics_variables.fusion_power * 0.5 * sang / build_variables.fwarea
+                physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
             )
 
         elif ife_variables.ifetyp == 4:
@@ -1497,12 +1497,12 @@ class IFE:
             phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
             sang = sang - (1.0 - np.cos(phi))
             physics_variables.wallmw = (
-                physics_variables.fusion_power * 0.5 * sang / build_variables.fwarea
+                physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
             )
 
         else:
             physics_variables.wallmw = (
-                physics_variables.fusion_power / build_variables.fwarea
+                physics_variables.fusion_power / build_variables.a_fw_total
             )
 
         if not output:
@@ -1848,8 +1848,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "First wall area (m2)",
-            "(fwarea)",
-            build_variables.fwarea,
+            "(a_fw_total)",
+            build_variables.a_fw_total,
         )
         process_output.ovarre(
             self.outfile,

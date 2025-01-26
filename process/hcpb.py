@@ -253,7 +253,7 @@ class CCFE_HCPB:
             * build_variables.dr_fw_outboard
             * fwbs_variables.vffwo
         ) / (
-            build_variables.fwarea
+            build_variables.a_fw_total
             * 0.5
             * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
@@ -675,12 +675,12 @@ class CCFE_HCPB:
         fwbs_variables.psurffwo = (
             fwbs_variables.pradfw
             * build_variables.a_fw_outboard
-            / build_variables.fwarea
+            / build_variables.a_fw_total
             + current_drive_variables.porbitlossmw
             + physics_variables.palpfwmw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
-            1 - build_variables.a_fw_outboard / build_variables.fwarea
+            1 - build_variables.a_fw_outboard / build_variables.a_fw_total
         )
 
         # primary_pumping == 0
@@ -1547,8 +1547,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First wall area (m2)",
-            "(fwarea)",
-            build_variables.fwarea,
+            "(a_fw_total)",
+            build_variables.a_fw_total,
             "OP ",
         )
         po.ovarre(

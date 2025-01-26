@@ -1515,12 +1515,12 @@ class BlanketLibrary:
         blanket_library.pnucfwi = (
             fwbs_variables.pnucfw
             * build_variables.a_fw_inboard
-            / build_variables.fwarea
+            / build_variables.a_fw_total
         )
         blanket_library.pnucfwo = (
             fwbs_variables.pnucfw
             * build_variables.a_fw_outboard
-            / build_variables.fwarea
+            / build_variables.a_fw_total
         )
 
         # IB/OB Blanket (MW)
