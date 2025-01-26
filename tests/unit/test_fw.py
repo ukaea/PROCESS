@@ -23,7 +23,7 @@ class FwTempParam(NamedTuple):
 
     temp_fw_coolant_in: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
     temp_fw_coolant_out: Any = None
 
@@ -65,7 +65,7 @@ class FwTempParam(NamedTuple):
             fw_th_conductivity=28.34,
             fwcoolant="helium",
             temp_fw_coolant_in=573,
-            fwpressure=8000000,
+            pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
             pitch=0.005000000000000001,
             fw_channel_length=4,
@@ -87,7 +87,7 @@ class FwTempParam(NamedTuple):
             fw_th_conductivity=28.34,
             fwcoolant="helium",
             temp_fw_coolant_in=573,
-            fwpressure=8000000,
+            pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
             pitch=0.005000000000000001,
             fw_channel_length=4,
@@ -131,7 +131,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
         fwbs_variables, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
     )
 
-    monkeypatch.setattr(fwbs_variables, "fwpressure", fwtempparam.fwpressure)
+    monkeypatch.setattr(fwbs_variables, "pres_fw_coolant", fwtempparam.pres_fw_coolant)
 
     monkeypatch.setattr(
         fwbs_variables, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
