@@ -196,12 +196,14 @@ class DCLL:
         # Surface heat flux on first wall (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.pradfw
+            * build_variables.a_fw_outboard
+            / build_variables.fwarea
             + current_drive_variables.porbitlossmw
             + physics_variables.palpfwmw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
-            1 - build_variables.fwareaob / build_variables.fwarea
+            1 - build_variables.a_fw_outboard / build_variables.fwarea
         )
 
         if output:
@@ -666,7 +668,7 @@ class DCLL:
         # First wall volume (m^3)
         fwbs_variables.volfw = (
             build_variables.a_fw_inboard * build_variables.dr_fw_inboard
-            + build_variables.fwareaob * build_variables.dr_fw_outboard
+            + build_variables.a_fw_outboard * build_variables.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
         dcll_module.fwmass_stl = (
@@ -733,7 +735,7 @@ class DCLL:
             fwbs_variables.whtblkt * (fwbs_variables.volblkto / fwbs_variables.volblkt)
             + fwbs_variables.fwmass
             * (
-                build_variables.fwareaob
+                build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 / fwbs_variables.volfw
             )

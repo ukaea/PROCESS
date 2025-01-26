@@ -235,7 +235,7 @@ class CCFE_HCPB:
             + build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.vffwi
-            + build_variables.fwareaob
+            + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.vffwo
         )
@@ -248,7 +248,7 @@ class CCFE_HCPB:
             build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.vffwi
-            + build_variables.fwareaob
+            + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.vffwo
         ) / (
@@ -297,7 +297,7 @@ class CCFE_HCPB:
             build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
             * (1.0 - fwbs_variables.vffwi)
-            + build_variables.fwareaob
+            + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * (1.0 - fwbs_variables.vffwo)
         )
@@ -682,12 +682,14 @@ class CCFE_HCPB:
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.pradfw
+            * build_variables.a_fw_outboard
+            / build_variables.fwarea
             + current_drive_variables.porbitlossmw
             + physics_variables.palpfwmw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
-            1 - build_variables.fwareaob / build_variables.fwarea
+            1 - build_variables.a_fw_outboard / build_variables.fwarea
         )
 
         # primary_pumping == 0
