@@ -577,7 +577,7 @@
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
- Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
+ Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    

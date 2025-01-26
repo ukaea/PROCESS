@@ -94,7 +94,7 @@ class ProcessTracker:
         "pinjmw",
         "shldith",
         "dr_fw_inboard",
-        "fwoth",
+        "dr_fw_outboard",
         "thshield",
         "tftsgap",
         "bore",

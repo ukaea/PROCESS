@@ -411,7 +411,8 @@ class Build:
                     + build_variables.vvblgap
                     + build_variables.shldtth
                     + build_variables.blnktth
-                    + 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
+                    + 0.5e0
+                    * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                     + build_variables.vgaptop
                     + physics_variables.rminor * physics_variables.kappa
                 )
@@ -530,7 +531,9 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.blnktth
 
-                fwtth = 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
+                fwtth = 0.5e0 * (
+                    build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
+                )
                 po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
                 po.ovarre(
                     self.mfile,
@@ -737,7 +740,8 @@ class Build:
                 + build_variables.shldtth
                 + build_variables.vvblgap
                 + build_variables.blnktth
-                + 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
+                + 0.5e0
+                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 + build_variables.vgaptop
                 + physics_variables.rminor * physics_variables.kappa
             )
@@ -1811,7 +1815,7 @@ class Build:
             physics_variables.rmajor
             + physics_variables.rminor
             + build_variables.scraplo
-            + build_variables.fwoth
+            + build_variables.dr_fw_outboard
             + build_variables.blnkoth
             + build_variables.shldoth
         )
@@ -1886,7 +1890,7 @@ class Build:
             + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
-            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
+            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
@@ -2244,11 +2248,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.fwoth
+            radius = radius + build_variables.dr_fw_outboard
             radial_build_data.append([
                 "Outboard first wall",
-                "fwoth",
-                build_variables.fwoth,
+                "dr_fw_outboard",
+                build_variables.dr_fw_outboard,
                 radius,
             ])
 

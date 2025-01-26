@@ -99,7 +99,7 @@ module build_variables
   real(dp) :: dr_fw_inboard
   !! inboard first wall thickness, initial estimate as calculated (m)
 
-  real(dp) :: fwoth
+  real(dp) :: dr_fw_outboard
   !! outboard first wall thickness, initial estimate as calculated (m)
 
   real(dp) :: gapds
@@ -328,7 +328,7 @@ module build_variables
     fwareaib = 0.0D0
     fwareaob = 0.0D0
     dr_fw_inboard = 0.0D0
-    fwoth = 0.0D0
+    dr_fw_outboard = 0.0D0
     gapds = 0.155D0
     gapoh = 0.08D0
     gapomin = 0.234D0

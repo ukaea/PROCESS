@@ -129,7 +129,7 @@ class BlanketLibrary:
                 build_variables.scrapli
                 + build_variables.scraplo
                 + build_variables.dr_fw_inboard
-                + build_variables.fwoth
+                + build_variables.dr_fw_outboard
             )
             # Shield
             if icomponent == 1:
@@ -165,7 +165,7 @@ class BlanketLibrary:
             + build_variables.scrapli
             + 2.0 * physics_variables.rminor
             + build_variables.scraplo
-            + build_variables.fwoth
+            + build_variables.dr_fw_outboard
         )
         # Sheild
         if icomponent == 1:
@@ -1640,7 +1640,7 @@ class BlanketLibrary:
         (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
-            build_variables.fwoth,
+            build_variables.dr_fw_outboard,
             build_variables.fwareaob,
             fwbs_variables.psurffwo,
             blanket_library.pnucfwo,
@@ -1650,7 +1650,7 @@ class BlanketLibrary:
         #     int(output),
         #     self.outfile,
         #     fwbs_variables.afw,
-        #     build_variables.fwoth,
+        #     build_variables.dr_fw_outboard,
         #     build_variables.fwareaob,
         #     fwbs_variables.psurffwo,
         #     blanket_library.pnucfwo,

@@ -37,7 +37,7 @@ depending on the switches used.
  Plasma geometric centre                      3.265           9.142   (rminor)            
  Plasma outboard edge                         3.265          12.408   (rminor)            
  Outboard scrape-off                          0.225          12.633   (scraplo)           IP, ITV
- Outboard first wall                          0.018          12.651   (fwoth)             
+ Outboard first wall                          0.018          12.651   (dr_fw_outboard)             
  Outboard blanket                             0.982          13.633   (blnkoth)           IP*
  Gap                                          0.020          13.653   (vvblgap)           IP
  Vacuum vessel (and shielding)                1.100          14.753   (d_vv_out+shldoth)  IP

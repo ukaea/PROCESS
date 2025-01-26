@@ -1224,12 +1224,12 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! rminor : input real : plasma minor radius (m)
       !! scraplo : input real : gap between plasma and first wall, outboard side (m)
-      !! fwoth : input real : outboard first wall thickness, initial estimate (m)
+      !! dr_fw_outboard : input real : outboard first wall thickness, initial estimate (m)
       !! blnkoth : input real : outboard blanket thickness (m)
       !! fcwr : input real : f-value for conducting wall radius / rminor limit
       !! cwrmax : input real : maximum ratio of conducting wall distance to plasma minor radius for vertical stability
       use physics_variables, only: rminor, cwrmax
-      use build_variables, only: scraplo, fwoth, blnkoth
+      use build_variables, only: scraplo, dr_fw_outboard, blnkoth
       use constraint_variables, only: fcwr
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1240,7 +1240,7 @@ contains
       ! rcw : local real : conducting shell radius (m)
       real(dp) :: rcw
 
-      rcw = rminor + scraplo + fwoth + blnkoth
+      rcw = rminor + scraplo + dr_fw_outboard + blnkoth
       tmp_cc =  1.0D0 - fcwr * cwrmax*rminor / rcw
       tmp_con = cwrmax*rminor * (1.0D0 - tmp_cc)
       tmp_err = rcw * tmp_cc

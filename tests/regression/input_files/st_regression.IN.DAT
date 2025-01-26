@@ -2382,7 +2382,7 @@ iblanket = 1
 * JUSTIFICATION: Assuming DCLL blanket
 
 *iblanket_thickness = 
-* DESCRIPTION:  Blanket thickness switch (Do not set blnkith, blnkoth, dr_fw_inboard or fwoth when `iblanket=3`):
+* DESCRIPTION:  Blanket thickness switch (Do not set blnkith, blnkoth, dr_fw_inboard or dr_fw_outboard when `iblanket=3`):
 *=1 thin    0.53 m inboard, 0.91 m outboard
 *=2 medium  0.64 m inboard, 1.11 m outboard
 *=3 thick   0.75 m inboard, 1.30 m outboard
