@@ -31,10 +31,6 @@ module fwbs_variables
   !! density of steel [kg m^-3]
   !#TODO: should this be in constants. Is currently an input. Should be a list of preapproved options?
 
-  real(dp) :: denw
-  !! density of tungsten [kg m^-3]
-  !#TODO: same as above with steel?
-
   real(dp) :: denwc
   !! density of tungsten carbide [kg m^-3]
 
@@ -673,7 +669,6 @@ module fwbs_variables
     coolmass = 0.0D0
     vvmass = 0.0D0
     denstl = 7800.0D0
-    denw = 19250.0D0
     denwc = 15630.0D0
     dewmkg = 0.0D0
     emult = 1.269D0
