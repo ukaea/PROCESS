@@ -2004,7 +2004,7 @@ class Build:
 
             (
                 build_variables.a_fw_inboard,
-                build_variables.fwareaob,
+                build_variables.a_fw_outboard,
                 build_variables.fwarea,
             ) = dshellarea(r1, r2, hfw)
 
@@ -2037,7 +2037,7 @@ class Build:
 
             (
                 build_variables.a_fw_inboard,
-                build_variables.fwareaob,
+                build_variables.a_fw_outboard,
                 build_variables.fwarea,
             ) = eshellarea(r1, r2, r3, hfw)
 
@@ -2045,7 +2045,7 @@ class Build:
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
             build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
@@ -2053,16 +2053,18 @@ class Build:
             )
         else:
             # Single null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
             build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = build_variables.a_fw_inboard + build_variables.fwareaob
+        build_variables.fwarea = (
+            build_variables.a_fw_inboard + build_variables.a_fw_outboard
+        )
 
-        if build_variables.fwareaob <= 0.0e0:
+        if build_variables.a_fw_outboard <= 0.0e0:
             error_handling.fdiags[0] = fwbs_variables.fdiv
             error_handling.fdiags[1] = fwbs_variables.fhcd
             error_handling.report_error(61)
