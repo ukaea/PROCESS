@@ -324,8 +324,6 @@ class DcllMassesParam(NamedTuple):
 
     denstl: Any = None
 
-    denw: Any = None
-
     den_liq: Any = None
 
     ifci: Any = None
@@ -541,7 +539,6 @@ class DcllMassesParam(NamedTuple):
             volfw=0,
             armour_fw_bl_mass=0,
             denstl=7800,
-            denw=19250,
             den_liq=9753.2497999999996,
             ifci=1,
             den_ceramic=3210,
@@ -661,7 +658,6 @@ class DcllMassesParam(NamedTuple):
             volfw=28.820872142117942,
             armour_fw_bl_mass=10982927.3383231,
             denstl=7800,
-            denw=19250,
             den_liq=9753.2497999999996,
             ifci=1,
             den_ceramic=3210,
@@ -838,8 +834,6 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     )
 
     monkeypatch.setattr(fwbs_variables, "denstl", dcllmassesparam.denstl)
-
-    monkeypatch.setattr(fwbs_variables, "denw", dcllmassesparam.denw)
 
     monkeypatch.setattr(fwbs_variables, "den_liq", dcllmassesparam.den_liq)
 
