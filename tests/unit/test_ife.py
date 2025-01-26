@@ -47,7 +47,7 @@ def test_ifetgt(monkeypatch, ife):
 
 
 class SombldParam(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
     ifetyp: Any = None
     chrad: Any = None
     r1: Any = None
@@ -114,7 +114,7 @@ class SombldParam(NamedTuple):
     v2matf: Any = None
     shmatf: Any = None
     v3matf: Any = None
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
     expected_r1: Any = None
     expected_r2: Any = None
     expected_r3: Any = None
@@ -156,7 +156,7 @@ class SombldParam(NamedTuple):
     "sombldparam",
     (
         SombldParam(
-            fwarea=0,
+            a_fw_total=0,
             ifetyp=2,
             chrad=3.5,
             r1=0,
@@ -383,7 +383,7 @@ class SombldParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            expected_fwarea=258.39044229575416,
+            expected_a_fw_total=258.39044229575416,
             expected_r1=3.5,
             expected_r2=3.5550000000000002,
             expected_r3=3.5600000000000001,
@@ -548,7 +548,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "fwarea", sombldparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", sombldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", sombldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", sombldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", sombldparam.r1)
@@ -618,7 +618,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
 
     ife.sombld()
 
-    assert build_variables.fwarea == pytest.approx(sombldparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(sombldparam.expected_a_fw_total)
     assert ife_variables.r1 == pytest.approx(sombldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(sombldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(sombldparam.expected_r3)
@@ -747,7 +747,7 @@ def test_lasdrv(lasdrvparam, ife):
 
 
 class HylbldParam(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
     ifetyp: Any = None
     chrad: Any = None
     r1: Any = None
@@ -798,7 +798,7 @@ class HylbldParam(NamedTuple):
     shmatv: Any = None
     v3matv: Any = None
     chmatv: Any = None
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
     expected_r1: Any = None
     expected_r2: Any = None
     expected_r3: Any = None
@@ -833,7 +833,7 @@ class HylbldParam(NamedTuple):
     "hylbldparam",
     (
         HylbldParam(
-            fwarea=0,
+            a_fw_total=0,
             ifetyp=3,
             chrad=3.5,
             r1=0,
@@ -964,7 +964,7 @@ class HylbldParam(NamedTuple):
             chmatv=np.array(
                 np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            expected_fwarea=281.91872215483801,
+            expected_a_fw_total=281.91872215483801,
             expected_r1=3.5,
             expected_r2=3.5550000000000002,
             expected_r3=3.5600000000000001,
@@ -1089,7 +1089,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "fwarea", hylbldparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", hylbldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", hylbldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", hylbldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", hylbldparam.r1)
@@ -1143,7 +1143,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
 
     ife.hylbld()
 
-    assert build_variables.fwarea == pytest.approx(hylbldparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(hylbldparam.expected_a_fw_total)
     assert ife_variables.r1 == pytest.approx(hylbldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(hylbldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(hylbldparam.expected_r3)
@@ -1207,7 +1207,7 @@ def test_iondrv(iondrvparam, ife):
 
 
 class IfefbsParam(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
     tlife: Any = None
     abktflnc: Any = None
     cfactr: Any = None
@@ -1257,7 +1257,7 @@ class IfefbsParam(NamedTuple):
     "ifefbsparam",
     (
         IfefbsParam(
-            fwarea=188.02432031734912,
+            a_fw_total=188.02432031734912,
             tlife=30,
             abktflnc=20,
             cfactr=0.75000000000000011,
@@ -1542,7 +1542,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "fwarea", ifefbsparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", ifefbsparam.a_fw_total)
     monkeypatch.setattr(cost_variables, "tlife", ifefbsparam.tlife)
     monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
     monkeypatch.setattr(cost_variables, "cfactr", ifefbsparam.cfactr)
@@ -1592,7 +1592,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
 
 
 class GenbldParam(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
     ifetyp: Any = None
     chrad: Any = None
     r1: Any = None
@@ -1643,7 +1643,7 @@ class GenbldParam(NamedTuple):
     shmatv: Any = None
     v3matv: Any = None
     chmatv: Any = None
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
     expected_r1: Any = None
     expected_r2: Any = None
     expected_r3: Any = None
@@ -1678,7 +1678,7 @@ class GenbldParam(NamedTuple):
     "genbldparam",
     (
         GenbldParam(
-            fwarea=0,
+            a_fw_total=0,
             ifetyp=0,
             chrad=3.5,
             r1=0,
@@ -1809,7 +1809,7 @@ class GenbldParam(NamedTuple):
             chmatv=np.array(
                 np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            expected_fwarea=226.5088303238241,
+            expected_a_fw_total=226.5088303238241,
             expected_r1=3.5,
             expected_r2=3.5550000000000002,
             expected_r3=3.5600000000000001,
@@ -1934,7 +1934,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "fwarea", genbldparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", genbldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", genbldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", genbldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", genbldparam.r1)
@@ -1988,7 +1988,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
 
     ife.genbld()
 
-    assert build_variables.fwarea == pytest.approx(genbldparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(genbldparam.expected_a_fw_total)
     assert ife_variables.r1 == pytest.approx(genbldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(genbldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(genbldparam.expected_r3)
@@ -2132,7 +2132,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
 
 class Bld2019Param(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
     trcl: Any = None
     stcl: Any = None
     tbr: Any = None
@@ -2187,7 +2187,7 @@ class Bld2019Param(NamedTuple):
     shmatv: Any = None
     v3matv: Any = None
     chmatv: Any = None
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
     expected_tbr: Any = None
     expected_emult: Any = None
     expected_r1: Any = None
@@ -2224,7 +2224,7 @@ class Bld2019Param(NamedTuple):
     "bld2019param",
     (
         Bld2019Param(
-            fwarea=0,
+            a_fw_total=0,
             trcl=1,
             stcl=3,
             tbr=0,
@@ -2359,7 +2359,7 @@ class Bld2019Param(NamedTuple):
             chmatv=np.array(
                 np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            expected_fwarea=36.573165036030936,
+            expected_a_fw_total=36.573165036030936,
             expected_tbr=1.3991938274222466,
             expected_emult=0.87599606521170326,
             expected_r1=3.5,
@@ -2460,7 +2460,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "fwarea", bld2019param.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", bld2019param.a_fw_total)
     monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
@@ -2518,7 +2518,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
     ife.bld2019()
 
-    assert build_variables.fwarea == pytest.approx(bld2019param.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(bld2019param.expected_a_fw_total)
     assert fwbs_variables.tbr == pytest.approx(bld2019param.expected_tbr)
     assert fwbs_variables.emult == pytest.approx(bld2019param.expected_emult)
     assert ife_variables.r1 == pytest.approx(bld2019param.expected_r1)
