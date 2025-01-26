@@ -32,7 +32,7 @@ class Fw:
         """Thermo-hydraulic calculations for the first wall
         author: P J Knight, CCFE, Culham Science Centre
         afw : input real : first wall coolant channel radius (m)
-        thickness : first wall thickness (fwith or fwoth) (m)
+        thickness : first wall thickness (dr_fw_inboard or fwoth) (m)
         area : input real : area of first wall section under consideration (m2)
         (i.e. area of inboard wall or outboard wall)
         prad_incident : input real : Surface heat flux on first wall (outboard and inboard) (MW)

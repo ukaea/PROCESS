@@ -2104,7 +2104,7 @@
         "fwiizp": 0.0,
         "fwimzp": 0.0,
         "fwinlet": 573.0,
-        "fwith": 0.0,
+        "dr_fw_inboard": 0.0,
         "fwlife": 0.0,
         "fwmass": 0.0,
         "fwmatf": [
@@ -8878,7 +8878,7 @@
         "beta_poloidal": "poloidal beta",
         "betbm0": "leading coefficient for NB beta fraction",
         "beta_poloidal_max": "maximum poloidal beta (`constraint equation 48`)",
-        "bfw": "outer radius of each first wall structural tube (m) (0.5 * average of fwith and fwoth)",
+        "bfw": "outer radius of each first wall structural tube (m) (0.5 * average of dr_fw_inboard and fwoth)",
         "bigq": "Fusion gain; P_fusion / (P_injection + P_ohmic)",
         "bigqmin": "minimum fusion gain Q (`constraint equation 28`)",
         "bioshld_thk": "Radial thickness of bio-shield around reactor (m)",
@@ -9688,7 +9688,7 @@
         "fwiizp": "inboard first wall integrated zone power / neutron",
         "fwimzp": "inboard first wall mean zone power density/neutron",
         "fwinlet": "inlet temperature of first wall coolant (K)",
-        "fwith": "inboard first wall thickness, initial estimate as calculated (m)",
+        "dr_fw_inboard": "inboard first wall thickness, initial estimate as calculated (m)",
         "fwlife": "first wall full-power year lifetime (y)",
         "fwmass": "first wall mass (kg)",
         "fwmatf": "IFE first wall material fractions",
@@ -9816,7 +9816,7 @@
         "iavail": "Switch for plant availability model:\n<ul>\n<li>=0 use input value for cfactr</li>\n<li>=1 calculate cfactr using Taylor and Ward 1999 model</li>\n<li>=2 calculate cfactr using new (2015) model</li>\n</ul>",
         "ibkt_life": "Switch for fw/blanket lifetime calculation in availability module:\n<ul>\n<li>=0 use neutron fluence model</li>\n<li>=1 use fusion power model (DEMO only)</li>\n</ul>",
         "iblanket": "switch for blanket model:\n<ul>\n<li>=1 CCFE HCPB model</li>\n<li>=2 KIT HCPB model</li>\n<li>=3 CCFE HCPB model with Tritium Breeding Ratio calculation</li>\n<li>=4 KIT HCLL model</li>\n</ul>",
-        "iblanket_thickness": "Blanket thickness switch (Do not set blnkith, blnkoth, fwith or fwoth when `iblanket=3`):\n<ul>\n<li>=1 thin    0.53 m inboard, 0.91 m outboard</li>\n<li>=2 medium  0.64 m inboard, 1.11 m outboard</li>\n<li>=3 thick   0.75 m inboard, 1.30 m outboard</li>\n</ul>",
+        "iblanket_thickness": "Blanket thickness switch (Do not set blnkith, blnkoth, dr_fw_inboard or fwoth when `iblanket=3`):\n<ul>\n<li>=1 thin    0.53 m inboard, 0.91 m outboard</li>\n<li>=2 medium  0.64 m inboard, 1.11 m outboard</li>\n<li>=3 thick   0.75 m inboard, 1.30 m outboard</li>\n</ul>",
         "iblnkith": "switch for inboard blanket:\n<ul>\n<li>=0 No inboard blanket (blnkith=0.0)</li>\n<li>=1 Inboard blanket present</li>\n</ul>",
         "i_bootstrap_current": "switch for bootstrap current scaling\n<ul>\n<li>=1 ITER 1989 bootstrap scaling (high R/a only)</li>\n<li>=2 for Nevins et al general scaling</li>\n<li>=3 for Wilson et al numerical scaling</li>\n<li>=4 for Sauter et al scaling</li>\n</ul>",
         "icase": "power plant type",
@@ -13057,7 +13057,7 @@
             "lb": 300.0,
             "ub": 1500.0
         },
-        "fwith": {
+        "dr_fw_inboard": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17035,7 +17035,7 @@
             "fwarea",
             "fwareaib",
             "fwareaob",
-            "fwith",
+            "dr_fw_inboard",
             "fwoth",
             "gapds",
             "gapoh",
@@ -20390,7 +20390,7 @@
         "fwdzl": "real_variable",
         "fwdzu": "real_variable",
         "fwinlet": "real_variable",
-        "fwith": "real_variable",
+        "dr_fw_inboard": "real_variable",
         "fwmatf": "real_array",
         "fwoth": "real_variable",
         "fwoutlet": "real_variable",

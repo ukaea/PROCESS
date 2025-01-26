@@ -411,10 +411,10 @@ class Stellarator:
         )
 
         # First Wall
-        build_variables.fwith = (
+        build_variables.dr_fw_inboard = (
             2.0e0 * fwbs_variables.afw + 2.0e0 * fwbs_variables.fw_wall
         )
-        build_variables.fwoth = build_variables.fwith
+        build_variables.fwoth = build_variables.dr_fw_inboard
 
         build_variables.bore = physics_variables.rmajor - (
             build_variables.ohcth
@@ -424,7 +424,7 @@ class Stellarator:
             + build_variables.d_vv_in
             + build_variables.shldith
             + build_variables.blnkith
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scrapli
             + physics_variables.rminor
         )
@@ -439,7 +439,7 @@ class Stellarator:
             + build_variables.d_vv_in
             + build_variables.shldith
             + build_variables.blnkith
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scrapli
             + physics_variables.rminor
         )
@@ -452,7 +452,7 @@ class Stellarator:
             + build_variables.d_vv_in
             + build_variables.shldith
             + build_variables.blnkith
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scrapli
         )
 
@@ -469,7 +469,7 @@ class Stellarator:
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.scrapli
-            - build_variables.fwith
+            - build_variables.dr_fw_inboard
             - build_variables.blnkith
             - build_variables.shldith
         )
@@ -507,7 +507,7 @@ class Stellarator:
                 + build_variables.d_vv_in
                 + build_variables.shldith
                 + build_variables.blnkith
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
                 + build_variables.scrapli
                 + physics_variables.rminor
             )
@@ -642,19 +642,19 @@ class Stellarator:
                 build_variables.blnkith,
             )
 
-            radius = radius + build_variables.fwith
+            radius = radius + build_variables.dr_fw_inboard
             po.obuild(
                 self.outfile,
                 "Inboard first wall",
-                build_variables.fwith,
+                build_variables.dr_fw_inboard,
                 radius,
-                "(fwith)",
+                "(dr_fw_inboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Inboard first wall radial thickness (m)",
-                "(fwith)",
-                build_variables.fwith,
+                "(dr_fw_inboard)",
+                build_variables.dr_fw_inboard,
             )
 
             radius = radius + build_variables.scrapli
@@ -1159,7 +1159,7 @@ class Stellarator:
 
         r1 = physics_variables.rminor + 0.5e0 * (
             build_variables.scrapli
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scraplo
             + build_variables.fwoth
         )
@@ -1406,7 +1406,7 @@ class Stellarator:
                             + 0.013165 * fwbs_variables.coolp**3
                         ) - 20
 
-                bfwi = 0.5e0 * build_variables.fwith
+                bfwi = 0.5e0 * build_variables.dr_fw_inboard
                 bfwo = 0.5e0 * build_variables.fwoth
 
                 vffwi = (
@@ -1770,7 +1770,7 @@ class Stellarator:
 
             fwbs_variables.fwmass = (
                 build_variables.fwarea
-                * (build_variables.fwith + build_variables.fwoth)
+                * (build_variables.dr_fw_inboard + build_variables.fwoth)
                 / 2.0e0
                 * fwbs_variables.denstl
                 * (1.0e0 - fwbs_variables.fwclfr)
@@ -1781,19 +1781,21 @@ class Stellarator:
             coolvol = (
                 coolvol
                 + build_variables.fwarea
-                * (build_variables.fwith + build_variables.fwoth)
+                * (build_variables.dr_fw_inboard + build_variables.fwoth)
                 / 2.0e0
                 * fwbs_variables.fwclfr
             )
 
         else:
             fwbs_variables.fwmass = fwbs_variables.denstl * (
-                build_variables.fwareaib * build_variables.fwith * (1.0e0 - vffwi)
+                build_variables.fwareaib
+                * build_variables.dr_fw_inboard
+                * (1.0e0 - vffwi)
                 + build_variables.fwareaob * build_variables.fwoth * (1.0e0 - vffwo)
             )
             coolvol = (
                 coolvol
-                + build_variables.fwareaib * build_variables.fwith * vffwi
+                + build_variables.fwareaib * build_variables.dr_fw_inboard * vffwi
                 + build_variables.fwareaob * build_variables.fwoth * vffwo
             )
 
@@ -1801,12 +1803,12 @@ class Stellarator:
             #  in fispact.f90, safety.f90
 
             fwbs_variables.fwclfr = (
-                build_variables.fwareaib * build_variables.fwith * vffwi
+                build_variables.fwareaib * build_variables.dr_fw_inboard * vffwi
                 + build_variables.fwareaob * build_variables.fwoth * vffwo
             ) / (
                 build_variables.fwarea
                 * 0.5e0
-                * (build_variables.fwith + build_variables.fwoth)
+                * (build_variables.dr_fw_inboard + build_variables.fwoth)
             )
 
         #  Mass of coolant = volume * density at typical coolant
@@ -1849,7 +1851,7 @@ class Stellarator:
 
         r1 = physics_variables.rminor + 0.5e0 * (
             build_variables.scrapli
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.blnkith
             + build_variables.shldith
             + build_variables.scraplo
@@ -2341,7 +2343,7 @@ class Stellarator:
 
             dshieq = (
                 build_variables.shldith
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
                 + build_variables.blnkith
             )
             dshoeq = (
@@ -2907,7 +2909,7 @@ class Stellarator:
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.scrapli
-            - build_variables.fwith
+            - build_variables.dr_fw_inboard
             - build_variables.blnkith
             - build_variables.vvblgap
             - build_variables.shldith

@@ -199,7 +199,7 @@ contains
       iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
-      blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
+      blbpoth, gapds, dr_fw_inboard, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, clh1, stcl, clh2, &
@@ -1336,8 +1336,8 @@ contains
        case ('foh_stress')
           call parse_real_variable('foh_stress', foh_stress, 1.0D-3, 1.0D0, &
                'F-value for CS coil Tresca yield criterion')
-       !       case ('fwith')
-       !          call parse_real_variable('fwith', fwith, 0.0D0, 10.0D0, &
+       !       case ('dr_fw_inboard')
+       !          call parse_real_variable('dr_fw_inboard', dr_fw_inboard, 0.0D0, 10.0D0, &
        !               'Inboard first wall thickness, initial estimate (m)')
        !       case ('fwoth')
        !          call parse_real_variable('fwoth', fwoth, 0.0D0, 10.0D0, &
@@ -2193,7 +2193,7 @@ contains
           endif
 
           if (iblanket == 3) then
-              fwith = 0.03D0
+              dr_fw_inboard = 0.03D0
               fwoth = 0.03D0
               fw_armour_thickness = 0.003D0
           end if
