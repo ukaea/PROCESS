@@ -1271,13 +1271,13 @@ class Stellarator:
                 #  Void fraction in first wall / breeding zone,
                 #  for use in fwbs_variables.fwmass and coolvol calculation below
 
-                vffwi = (
+                f_a_fw_coolant_inboard = (
                     1.0e0
                     - fwbs_variables.fblbe
                     - fwbs_variables.fblbreed
                     - fwbs_variables.fblss
                 )
-                f_a_fw_coolant_outboard = vffwi
+                f_a_fw_coolant_outboard = f_a_fw_coolant_inboard
 
         else:
             fwbs_variables.pnuc_cp = 0.0e0
@@ -1415,7 +1415,7 @@ class Stellarator:
                 bfwi = 0.5e0 * build_variables.dr_fw_inboard
                 bfwo = 0.5e0 * build_variables.dr_fw_outboard
 
-                vffwi = (
+                f_a_fw_coolant_inboard = (
                     fwbs_variables.afwi * fwbs_variables.afwi / (bfwi * bfwi)
                 )  # inboard FW coolant void fraction
                 f_a_fw_coolant_outboard = (
@@ -1796,14 +1796,16 @@ class Stellarator:
             fwbs_variables.fwmass = fwbs_variables.denstl * (
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
-                * (1.0e0 - vffwi)
+                * (1.0e0 - f_a_fw_coolant_inboard)
                 + build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * (1.0e0 - f_a_fw_coolant_outboard)
             )
             coolvol = (
                 coolvol
-                + build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
+                + build_variables.a_fw_inboard
+                * build_variables.dr_fw_inboard
+                * f_a_fw_coolant_inboard
                 + build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * f_a_fw_coolant_outboard
@@ -1813,7 +1815,9 @@ class Stellarator:
             #  in fispact.f90, safety.f90
 
             fwbs_variables.fwclfr = (
-                build_variables.a_fw_inboard * build_variables.dr_fw_inboard * vffwi
+                build_variables.a_fw_inboard
+                * build_variables.dr_fw_inboard
+                * f_a_fw_coolant_inboard
                 + build_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * f_a_fw_coolant_outboard

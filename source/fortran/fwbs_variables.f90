@@ -177,7 +177,7 @@ module fwbs_variables
   !! ( neut_absorb = -1 --> a fit on simplified MCNP neutronic
   !! calculation is used assuming water cooled (13%) tungesten carbyde )
 
-  real(dp) :: vffwi, f_a_fw_coolant_outboard
+  real(dp) :: f_a_fw_coolant_inboard, f_a_fw_coolant_outboard
   !! Inboard/outboard FW coolant cross-sectional area void fraction
 
   real(dp) :: psurffwi, psurffwo
@@ -702,7 +702,7 @@ module fwbs_variables
     whtblli4sio4 = 0.0D0
     whtbltibe12 = 0.0D0
     f_neut_shield = -1.0D0
-    vffwi = 0.0D0
+    f_a_fw_coolant_inboard = 0.0D0
     f_a_fw_coolant_outboard = 0.0D0
     psurffwi = 0.0D0
     psurffwo = 0.0D0

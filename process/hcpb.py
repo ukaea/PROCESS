@@ -235,7 +235,7 @@ class CCFE_HCPB:
             coolvol
             + build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * fwbs_variables.vffwi
+            * fwbs_variables.f_a_fw_coolant_inboard
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.f_a_fw_coolant_outboard
@@ -248,7 +248,7 @@ class CCFE_HCPB:
         fwbs_variables.fwclfr = (
             build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * fwbs_variables.vffwi
+            * fwbs_variables.f_a_fw_coolant_inboard
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.f_a_fw_coolant_outboard
@@ -297,7 +297,7 @@ class CCFE_HCPB:
         fwbs_variables.vol_fw_total = (
             build_variables.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * (1.0 - fwbs_variables.vffwi)
+            * (1.0 - fwbs_variables.f_a_fw_coolant_inboard)
             + build_variables.a_fw_outboard
             * build_variables.dr_fw_outboard
             * (1.0 - fwbs_variables.f_a_fw_coolant_outboard)
@@ -392,17 +392,17 @@ class CCFE_HCPB:
         # First wall void fractions
 
         # inboard FW coolant void fraction
-        fwbs_variables.vffwi = (
+        fwbs_variables.f_a_fw_coolant_inboard = (
             np.pi
             * fwbs_variables.afw**2
             / (fwbs_variables.pitch * build_variables.dr_fw_inboard)
         )
 
         # outboard FW coolant void fraction
-        fwbs_variables.f_a_fw_coolant_outboard = fwbs_variables.vffwi
+        fwbs_variables.f_a_fw_coolant_outboard = fwbs_variables.f_a_fw_coolant_inboard
 
         # mean FW coolant void fraction
-        vffwm = fwbs_variables.vffwi
+        vffwm = fwbs_variables.f_a_fw_coolant_inboard
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
