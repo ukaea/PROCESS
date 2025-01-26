@@ -873,7 +873,7 @@
     {
       "no": 173,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 55 if iblanket != 2"
+      "message": "CONSTRAINTS: Do not use constraint 55 if i_blanket_type != 2"
     },
     {
       "no": 174,
@@ -1088,7 +1088,7 @@
     {
       "no": 216,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if iblanket=1"
+      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if i_blanket_type=1"
     },
     {
       "no": 217,

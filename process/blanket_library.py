@@ -601,7 +601,7 @@ class BlanketLibrary:
         npblkti_liq = 0
         npblkto_liq = 0
 
-        if fwbs_variables.iblanket == 5:
+        if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
             blanket_library.bldepti = build_variables.blbuith
             blanket_library.bldepto = build_variables.blbuoth

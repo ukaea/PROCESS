@@ -213,8 +213,8 @@ class CCFE_HCPB:
         it only appears to contain code relevant to hcpb.
         """
         # CCFE HCPB modal calculates the coolant mass,
-        # have added an if staement using the iblanket switch for this.
-        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+        # have added an if staement using the i_blanket_type switch for this.
+        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
 
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
@@ -262,7 +262,7 @@ class CCFE_HCPB:
         # shield, FW and FW armour.
         # KIT HCPB calculates the mass of the blanket (including seprate masses for each material)
         # and the void fraction for the blanket.
-        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
 
         # Component masses
 

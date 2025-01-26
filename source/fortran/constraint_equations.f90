@@ -2192,8 +2192,8 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftbr : input real : f-value for minimum tritium breeding ratio
-      !! tbr : input real :  tritium breeding ratio (iblanket=2,3 (KIT HCPB/HCLL))
-      !! tbrmin : input real :  minimum tritium breeding ratio (If iblanket=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
+      !! tbr : input real :  tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
+      !! tbrmin : input real :  minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
       use constraint_variables, only: ftbr, tbrmin
       use fwbs_variables, only: tbr
       implicit none
