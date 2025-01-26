@@ -417,7 +417,7 @@ class DCLL:
 
         FW Armour
              - Tungsten
-             - Use denw from fwbs_variables
+             - Use den_tungsten form constants.f90
         FW and BB Structure Coolant
              - Helium
              - See primary_coolant_properties for denisty etc.
@@ -684,7 +684,7 @@ class DCLL:
         )
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * fwbs_variables.denw
+            fwbs_variables.fw_armour_vol * constants.den_tungsten
         )
 
         # Total mass of blanket
