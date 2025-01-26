@@ -1962,7 +1962,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
+        # a_fw_total = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -2005,7 +2005,7 @@ class Build:
             (
                 build_variables.a_fw_inboard,
                 build_variables.a_fw_outboard,
-                build_variables.fwarea,
+                build_variables.a_fw_total,
             ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
@@ -2038,7 +2038,7 @@ class Build:
             (
                 build_variables.a_fw_inboard,
                 build_variables.a_fw_outboard,
-                build_variables.fwarea,
+                build_variables.a_fw_total,
             ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
@@ -2060,7 +2060,7 @@ class Build:
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = (
+        build_variables.a_fw_total = (
             build_variables.a_fw_inboard + build_variables.a_fw_outboard
         )
 
