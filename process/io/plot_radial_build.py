@@ -116,13 +116,11 @@ def get_radial_build(m_file):
         radial_labels[4] = "precomp"
         radial_labels[5] = "tftsgap"
 
-    radial_build = []
-
-    for ii in range(isweep):
-        if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append([
-                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
-            ])
+    radial_build = [
+        [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
+        for ii in range(isweep)
+        if m_file.data["ifail"].get_scan(ii + 1) == 1
+    ]
 
     radial_build = np.array(radial_build)
 

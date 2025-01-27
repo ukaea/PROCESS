@@ -563,10 +563,8 @@ def grep(file, regexp, flags=re.UNICODE):
 
     try:
         with open(file, encoding="utf-8") as file_open:
-            for line in file_open:
-                if re.search(regexp, line, flags):
-                    lines.append(line)
-            file_open.close()
+            lines = [line for line in file_open if re.search(regexp, line, flags)]
+
     except OSError:
         logging.warning("File : %s not found\n", file)
     return lines
@@ -889,7 +887,7 @@ def dict_ixc_bounds():
     # Returns dictionary mapping iteration variable name to bounds
     ixc_full = output_dict["DICT_IXC_FULL"]
     ixc_bounds = {}
-    for key, value in ixc_full.items():
+    for value in ixc_full.values():
         lb = value["lb"]
         ub = value["ub"]
         temp = {"lb": lb, "ub": ub}
@@ -904,7 +902,7 @@ def dict_ixc_default():
     default = output_dict["DICT_DEFAULT"]
     ixc_full = output_dict["DICT_IXC_FULL"]
 
-    for key, value in ixc_full.items():
+    for value in ixc_full.values():
         name = value["name"]
 
         if name in default:

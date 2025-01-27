@@ -404,13 +404,12 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     # estimate of the constraints
     constraints = m_file.data["sqsumsq"].get_scan(-1)
 
-    table_sol = []
-    for var_no in range(nvars):
-        table_sol.append(m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1))
-
-    table_res = []
-    for con_no in range(neqns):
-        table_res.append(m_file.data[f"normres{con_no + 1:03}"].get_scan(-1))
+    table_sol = [
+        m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1) for var_no in range(nvars)
+    ]
+    table_res = [
+        m_file.data[f"normres{con_no + 1:03}"].get_scan(-1) for con_no in range(neqns)
+    ]
 
     if ifail != dicts["IFAIL_SUCCESS"]:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns

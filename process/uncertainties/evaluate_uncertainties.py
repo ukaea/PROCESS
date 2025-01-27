@@ -130,8 +130,9 @@ def run_monte_carlo(args):
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
                     m_file = mf.MFile(mfilepath)
-                    for item in m_file.data:
-                        outputDataSet.append(m_file.data[item].get_scan(-1))
+                    outputDataSet.extend([
+                        m_file.data[item].get_scan(-1) for item in m_file.data
+                    ])
 
                     # Append process data to list of all mfile data
                     MFileDataSet.append(outputDataSet)
@@ -207,11 +208,7 @@ def column_data_list(working_dir):
     m_file = mf.MFile(mfilepath)
 
     # read data in MFILE
-    columnDataSet = []
-    for item in m_file.data:
-        columnDataSet.append(item)
-
-    return columnDataSet
+    return list(m_file.data)
 
 
 def run_morris_method(args):
@@ -261,8 +258,7 @@ def run_morris_method(args):
 
         mfilepath = Path(config.wdir) / "MFILE.DAT"
         m_file = mf.MFile(mfilepath)
-        for item in m_file.data:
-            outputDataSet.append(m_file.data[item].get_scan(-1))
+        outputDataSet.extend([m_file.data[item].get_scan(-1) for item in m_file.data])
 
         # Append process data to list of all mfile data
         MFileDataSet.append(outputDataSet)
@@ -344,8 +340,7 @@ def run_sobol_method(args):
 
         mfilepath = Path(config.wdir) / "MFILE.DAT"
         m_file = mf.MFile(mfilepath)
-        for item in m_file.data:
-            outputDataSet.append(m_file.data[item].get_scan(-1))
+        outputDataSet.extend([m_file.data[item].get_scan(-1) for item in m_file.data])
 
         # Append process data to list of all mfile data
         MFileDataSet.append(outputDataSet)
