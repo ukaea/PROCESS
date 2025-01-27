@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 
 PROCESS plot_proc using process_io_lib functions and MFILE.DAT

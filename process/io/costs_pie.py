@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to display the cost breakdown as a pie chart
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to assess uncertainties in the input parameters in PROCESS. Allows
 for use with monte carlo, Morris method and Sobol techniques.

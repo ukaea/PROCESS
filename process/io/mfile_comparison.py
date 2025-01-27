@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 
 Python tool for comparing MFILE and outputting differences.

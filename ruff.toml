@@ -9,6 +9,7 @@ extend-select = [
     "C4",
     "COM",
     "DTZ",
+    "EXE",
     "F",
     "FA",
     "FLY",
