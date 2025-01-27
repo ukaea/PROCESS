@@ -416,7 +416,9 @@ class PlasmaGeom:
         return xsi, xso
 
     @staticmethod
-    def plasma_volume(rmajor, rminor, xi, thetai, xo, thetao):
+    def plasma_volume(
+        rmajor: float, rminor: float, xi: float, thetai: float, xo: float, thetao: float
+    ) -> float:
         """
         Plasma volume calculation
         :author: P J Knight, CCFE, Culham Science Centre
