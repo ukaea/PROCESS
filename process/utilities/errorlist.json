@@ -228,7 +228,7 @@
     {
       "no": 44,
       "level": 3,
-      "message": "CHECK: If snull=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
     },
     {
       "no": 45,
@@ -438,7 +438,7 @@
     {
       "no": 86,
       "level": 3,
-      "message": "OUTPLAS: Illegal value of ishape"
+      "message": "OUTPLAS: Illegal value of i_plasma_geometry"
     },
     {
       "no": 87,

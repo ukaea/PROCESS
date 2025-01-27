@@ -30,7 +30,7 @@ class TestVacuum:
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
         monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
-        monkeypatch.setattr(pv, "sarea", 1500.3146527709359)
+        monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf", 18)
         monkeypatch.setattr(tv, "t_between_pulse", 500)
         monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
@@ -65,7 +65,7 @@ class TestVacuum:
         r0 = 8.1386000000000003
         aw = 3.2664151549205331
         dsol = 0.22500000000000003
-        plasma_sarea = 1468.3151179059994
+        plasma_a_plasma_surface = 1468.3151179059994
         plasma_vol = 2907.2299918381777
         thshldo = 0.40000000000000002
         thshldi = 0.12000000000000001
@@ -87,7 +87,7 @@ class TestVacuum:
             r0,
             aw,
             dsol,
-            plasma_sarea,
+            plasma_a_plasma_surface,
             plasma_vol,
             thshldo,
             thshldi,

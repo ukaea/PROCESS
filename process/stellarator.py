@@ -246,8 +246,8 @@ class Stellarator:
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
-                physics_variables.plasma_volume,
-                physics_variables.xarea,
+                physics_variables.vol_plasma,
+                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -324,25 +324,25 @@ class Stellarator:
         Fourierkoeffizienten' ('Representation of nested, closed
         surfaces with Fourier coefficients')
         """
-        physics_variables.plasma_volume = (
-            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_plasma_volume
+        physics_variables.vol_plasma = (
+            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:
-        physics_variables.sarea = (
+        physics_variables.a_plasma_surface = (
             st.f_r * st.f_a * stellarator_configuration.stella_config_plasma_surface
         )
 
         # Plasma cross section area. Approximated
-        physics_variables.xarea = (
+        physics_variables.a_plasma_poloidal = (
             np.pi * physics_variables.rminor * physics_variables.rminor
         )  # average, could be calculated for every toroidal angle if desired
 
-        #  physics_variables.sareao is retained only for obsolescent fispact calculation...
+        #  physics_variables.a_plasma_surface_outboard is retained only for obsolescent fispact calculation...
 
         #  Cross-sectional area, averaged over toroidal angle
-        physics_variables.sareao = (
-            0.5e0 * physics_variables.sarea
+        physics_variables.a_plasma_surface_outboard = (
+            0.5e0 * physics_variables.a_plasma_surface
         )  # Used only in the divertor model; approximate as for tokamaks
 
     def stopt(self, output: bool):
@@ -533,7 +533,7 @@ class Stellarator:
             build_variables.scrapli + build_variables.scraplo
         )
         build_variables.fwarea = (
-            physics_variables.sarea * awall / physics_variables.rminor
+            physics_variables.a_plasma_surface * awall / physics_variables.rminor
         )
 
         if heat_transport_variables.ipowerflow == 0:
@@ -1165,14 +1165,14 @@ class Stellarator:
         )
         if heat_transport_variables.ipowerflow == 0:
             build_variables.blarea = (
-                physics_variables.sarea
+                physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (1.0e0 - fwbs_variables.fhole)
             )
         else:
             build_variables.blarea = (
-                physics_variables.sarea
+                physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (
@@ -1194,7 +1194,9 @@ class Stellarator:
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
 
         r1 = r1 + 0.5e0 * (build_variables.blnkith + build_variables.blnkoth)
-        build_variables.sharea = physics_variables.sarea * r1 / physics_variables.rminor
+        build_variables.sharea = (
+            physics_variables.a_plasma_surface * r1 / physics_variables.rminor
+        )
         build_variables.shareaib = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolsi
         )
@@ -1860,7 +1862,7 @@ class Stellarator:
         fwbs_variables.vdewin = (
             (build_variables.d_vv_in + build_variables.d_vv_out)
             / 2.0e0
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * r1
             / physics_variables.rminor
             * fwbs_variables.fvoldw
@@ -4105,7 +4107,7 @@ class Stellarator:
             * physics_variables.btot
             * physics_variables.btot
             / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume
+            * physics_variables.vol_plasma
         )
 
         physics_module.rho_star = np.sqrt(
@@ -4113,7 +4115,7 @@ class Stellarator:
             * constants.proton_mass
             * physics_variables.aion
             * physics_module.e_plasma_beta
-            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
+            / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -4148,13 +4150,13 @@ class Stellarator:
 
         # D-T power density is named differently to differentiate it from the beam given component
         physics_variables.dt_power_plasma = (
-            physics_module.dt_power_density_plasma * physics_variables.plasma_volume
+            physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.dhe3_power = (
-            physics_module.dhe3_power_density * physics_variables.plasma_volume
+            physics_module.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.dd_power = (
-            physics_module.dd_power_density * physics_variables.plasma_volume
+            physics_module.dd_power_density * physics_variables.vol_plasma
         )
 
         #  Calculate neutral beam slowing down effects
@@ -4183,7 +4185,7 @@ class Stellarator:
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.plasma_volume,
+                physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
             physics_variables.fusion_rate_density_total = (
@@ -4191,14 +4193,14 @@ class Stellarator:
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
-                / physics_variables.plasma_volume
+                / physics_variables.vol_plasma
             )
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
-                / physics_variables.plasma_volume
+                / physics_variables.vol_plasma
             )
             physics_variables.dt_power_total = (
                 physics_variables.dt_power_plasma
@@ -4233,7 +4235,7 @@ class Stellarator:
             physics_variables.alpha_power_beams,
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density_plasma,
-            physics_variables.plasma_volume,
+            physics_variables.vol_plasma,
             physics_variables.alpha_power_density_plasma,
         )
 
@@ -4256,7 +4258,7 @@ class Stellarator:
             physics_variables.wallmw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
@@ -4300,14 +4302,14 @@ class Stellarator:
         physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
 
         physics_variables.pinnerzoneradmw = (
-            physics_variables.pcoreradpv * physics_variables.plasma_volume
+            physics_variables.pcoreradpv * physics_variables.vol_plasma
         )  # Should probably be vol_core
         physics_variables.pouterzoneradmw = (
-            physics_variables.pedgeradpv * physics_variables.plasma_volume
+            physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
 
         physics_variables.pradmw = (
-            physics_variables.pradpv * physics_variables.plasma_volume
+            physics_variables.pradpv * physics_variables.vol_plasma
         )
 
         #  Heating power to plasma (= Psol in divertor model)
@@ -4318,7 +4320,7 @@ class Stellarator:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.pradpv * physics_variables.plasma_volume
+            - physics_variables.pradpv * physics_variables.vol_plasma
         )
         powht = max(
             0.00001e0, powht
@@ -4343,7 +4345,7 @@ class Stellarator:
         physics_variables.pradmw = (
             physics_variables.pradmw + physics_variables.psolradmw
         )
-        # pradpv = physics_variables.pradmw / physics_variables.plasma_volume # this line OVERWRITES the original definition of pradpv, probably shouldn't be defined like that as the core does not lose SOL power.
+        # pradpv = physics_variables.pradmw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pradpv, probably shouldn't be defined like that as the core does not lose SOL power.
 
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
@@ -4361,7 +4363,7 @@ class Stellarator:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
                 * physics_variables.pradmw
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
@@ -4431,16 +4433,16 @@ class Stellarator:
             physics_variables.tin,
             stellarator_variables.iotabar,
             physics_variables.qstar,
-            physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.vol_plasma,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
         physics_variables.ptremw = (
-            physics_variables.ptrepv * physics_variables.plasma_volume
+            physics_variables.ptrepv * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
-            physics_variables.ptripv * physics_variables.plasma_volume
+            physics_variables.ptripv * physics_variables.vol_plasma
         )
 
         physics_variables.pscalingmw = (
@@ -4469,7 +4471,7 @@ class Stellarator:
             sbar,
             physics_variables.dnalp,
             physics_variables.taueff,
-            physics_variables.plasma_volume,
+            physics_variables.vol_plasma,
         )
 
         # Calculate physics_variables.beta limit. Does nothing atm so commented out
@@ -4682,8 +4684,8 @@ class Stellarator:
                 * physics_variables.alpha_power_density_total
                 - physics_variables.pcoreradpv
             )
-            * physics_variables.plasma_volume
-            / physics_variables.sarea
+            * physics_variables.vol_plasma
+            / physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
         )
         q_PROCESS_r1 = (
@@ -4692,8 +4694,8 @@ class Stellarator:
                 * physics_variables.alpha_power_density_total
                 - physics_variables.pcoreradpv
             )
-            * physics_variables.plasma_volume
-            / physics_variables.sarea
+            * physics_variables.vol_plasma
+            / physics_variables.a_plasma_surface
         )
 
         q_neo = sum(neoclassics_module.q_flux * 1e-6)
@@ -4742,7 +4744,7 @@ class Stellarator:
 
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
@@ -4751,7 +4753,7 @@ class Stellarator:
         dmdt_neo_fuel_from_e = (
             4
             * dndt_neo_e
-            * physics_variables.sarea
+            * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
             * physics_variables.afuel
             * constants.proton_mass
@@ -4805,7 +4807,7 @@ class Stellarator:
 
     def st_calc_eff_chi(self):
         volscaling = (
-            physics_variables.plasma_volume
+            physics_variables.vol_plasma
             * st.f_r
             * (
                 impurity_radiation_module.coreradius
@@ -4815,7 +4817,7 @@ class Stellarator:
             ** 2
         )
         surfacescaling = (
-            physics_variables.sarea
+            physics_variables.a_plasma_surface
             * st.f_r
             * (
                 impurity_radiation_module.coreradius

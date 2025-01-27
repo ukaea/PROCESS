@@ -294,18 +294,30 @@ def calculate_poloidal_field(
     return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
-def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
+def calculate_current_coefficient_peng(
+    eps: float, len_plasma_poloidal: float, rminor: float
+) -> float:
     """
     Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
 
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - sf: float, shaping factor calculated in the poloidal perimeter function
+    :param eps: Plasma inverse aspect ratio.
+    :type eps: float
+    :param len_plasma_poloidal: Plasma poloidal perimeter length [m].
+    :type len_plasma_poloidal: float
+    :param rminor: Plasma minor radius [m].
+    :type rminor: float
 
-    References:
-    - None
+    :return: The plasma current scaling coefficient.
+    :rtype: float
+
+    :references: None
     """
-    return (1.22 - 0.68 * eps) / ((1.0 - eps * eps) ** 2) * sf**2
+
+    return (
+        (1.22 - 0.68 * eps)
+        / ((1.0 - eps * eps) ** 2)
+        * (len_plasma_poloidal / (2.0 * np.pi * rminor)) ** 2
+    )
 
 
 def calculate_plasma_current_peng(
@@ -1508,13 +1520,12 @@ class Physics:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.p0,
-            physics_variables.pperim,
+            physics_variables.len_plasma_poloidal,
             physics_variables.q0,
             physics_variables.q,
             physics_variables.rli,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.sf,
             physics_variables.triang,
             physics_variables.triang95,
         )
@@ -1604,7 +1615,7 @@ class Physics:
             * physics_variables.btot
             * physics_variables.btot
             / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume
+            * physics_variables.vol_plasma
         )
 
         # Plasma thermal energy derived from the total beta
@@ -1614,7 +1625,7 @@ class Physics:
             * physics_variables.btot
             * physics_variables.btot
             / (2.0e0 * constants.rmu0)
-            * physics_variables.plasma_volume
+            * physics_variables.vol_plasma
         )
 
         # Set PF coil ramp times
@@ -1726,7 +1737,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.q0,
                 physics_variables.rmajor,
-                physics_variables.plasma_volume,
+                physics_variables.vol_plasma,
             )
         )
 
@@ -1968,13 +1979,13 @@ class Physics:
 
         # This neglects the power from the beam
         physics_variables.dt_power_plasma = (
-            physics_module.dt_power_density_plasma * physics_variables.plasma_volume
+            physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.dhe3_power = (
-            physics_module.dhe3_power_density * physics_variables.plasma_volume
+            physics_module.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.dd_power = (
-            physics_module.dd_power_density * physics_variables.plasma_volume
+            physics_module.dd_power_density * physics_variables.vol_plasma
         )
 
         # Calculate neutral beam slowing down effects
@@ -2003,7 +2014,7 @@ class Physics:
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.plasma_volume,
+                physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
             physics_variables.fusion_rate_density_total = (
@@ -2011,14 +2022,14 @@ class Physics:
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
-                / physics_variables.plasma_volume
+                / physics_variables.vol_plasma
             )
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
-                / physics_variables.plasma_volume
+                / physics_variables.vol_plasma
             )
             physics_variables.dt_power_total = (
                 physics_variables.dt_power_plasma
@@ -2053,7 +2064,7 @@ class Physics:
             physics_variables.alpha_power_beams,
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density_plasma,
-            physics_variables.plasma_volume,
+            physics_variables.vol_plasma,
             physics_variables.alpha_power_density_plasma,
         )
 
@@ -2076,7 +2087,7 @@ class Physics:
             physics_variables.wallmw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if physics_variables.idivrt == 2:
@@ -2115,13 +2126,13 @@ class Physics:
         physics_variables.pradpv = radpwrdata.pradpv
 
         physics_variables.pinnerzoneradmw = (
-            physics_variables.pcoreradpv * physics_variables.plasma_volume
+            physics_variables.pcoreradpv * physics_variables.vol_plasma
         )
         physics_variables.pouterzoneradmw = (
-            physics_variables.pedgeradpv * physics_variables.plasma_volume
+            physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
         physics_variables.pradmw = (
-            physics_variables.pradpv * physics_variables.plasma_volume
+            physics_variables.pradpv * physics_variables.vol_plasma
         )
 
         # Calculate ohmic power
@@ -2137,7 +2148,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
-            physics_variables.plasma_volume,
+            physics_variables.vol_plasma,
             physics_variables.zeff,
         )
 
@@ -2149,7 +2160,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.kappa,
-            physics_variables.sarea,
+            physics_variables.a_plasma_surface,
             physics_variables.aion,
             physics_variables.aspect,
             physics_variables.plasma_current,
@@ -2216,7 +2227,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.sarea,
+            physics_variables.a_plasma_surface,
             physics_variables.zeff,
         )
 
@@ -2256,16 +2267,16 @@ class Physics:
             physics_variables.tin,
             physics_variables.q95,
             physics_variables.qstar,
-            physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.vol_plasma,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
         physics_variables.ptremw = (
-            physics_variables.ptrepv * physics_variables.plasma_volume
+            physics_variables.ptrepv * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
-            physics_variables.ptripv * physics_variables.plasma_volume
+            physics_variables.ptripv * physics_variables.vol_plasma
         )
         # Total transport power from scaling law (MW)
         # pscalingmw = physics_variables.ptremw + physics_variables.ptrimw #KE - why is this commented?
@@ -2313,11 +2324,11 @@ class Physics:
             sbar,
             physics_variables.dnalp,
             physics_variables.taueff,
-            physics_variables.plasma_volume,
+            physics_variables.vol_plasma,
         )
 
-        # ptremw = physics_variables.ptrepv*physics_variables.plasma_volume
-        # ptrimw = physics_variables.ptripv*physics_variables.plasma_volume
+        # ptremw = physics_variables.ptrepv*physics_variables.vol_plasma
+        # ptrimw = physics_variables.ptripv*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
             physics_variables.ptremw + physics_variables.ptrimw
@@ -2373,7 +2384,7 @@ class Physics:
             physics_variables.photon_wall = (
                 physics_variables.ffwal
                 * physics_variables.pradmw
-                / physics_variables.sarea
+                / physics_variables.a_plasma_surface
             )
         else:
             if physics_variables.idivrt == 2:
@@ -2527,7 +2538,7 @@ class Physics:
         q95: float,
         rmajor: float,
         rminor: float,
-        sarea: float,
+        a_plasma_surface: float,
         zeff: float,
     ) -> tuple[np.ndarray, float]:
         """
@@ -2544,7 +2555,7 @@ class Physics:
             q95 (float): Safety factor at 95% surface.
             rmajor (float): Plasma major radius (m).
             rminor (float): Plasma minor radius (m).
-            sarea (float): Plasma surface area (m^2).
+            a_plasma_surface (float): Plasma surface area (m^2).
             zeff (float): Plasma effective charge.
 
         Returns:
@@ -2577,7 +2588,7 @@ class Physics:
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
 
-        p_perp = pdivt / sarea
+        p_perp = pdivt / a_plasma_surface
 
         # Old ASDEX density limit formula
         # This applies to the density at the plasma edge, so must be scaled
@@ -2873,7 +2884,7 @@ class Physics:
         sbar,
         dnalp,
         taueff,
-        plasma_volume,
+        vol_plasma,
     ):
         """Auxiliary physics quantities
         author: P J Knight, CCFE, Culham Science Centre
@@ -2886,7 +2897,7 @@ class Physics:
         plasma_current: input real :  plasma current (A)
         sbar   : input real :  exponent for aspect ratio (normally 1)
         taueff : input real :  global energy confinement time (s)
-        plasma_volume    : input real :  plasma volume (m3)
+        vol_plasma    : input real :  plasma volume (m3)
         burnup : output real : fractional plasma burnup
         dntau  : output real : plasma average n-tau (s/m3)
         figmer : output real : physics figure of merit
@@ -2904,7 +2915,7 @@ class Physics:
 
         # Fusion reactions per second
 
-        fusrat = fusion_rate_density_total * plasma_volume
+        fusrat = fusion_rate_density_total * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -2948,7 +2959,7 @@ class Physics:
         rmajor: float,
         rminor: float,
         ten: float,
-        plasma_volume: float,
+        vol_plasma: float,
         zeff: float,
     ) -> tuple[float, float, float, float]:
         """
@@ -2961,7 +2972,7 @@ class Physics:
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
             ten (float): Density weighted average electron temperature (keV).
-            plasma_volume (float): Plasma volume (m^3).
+            vol_plasma (float): Plasma volume (m^3).
             zeff (float): Plasma effective charge.
 
         Returns:
@@ -3009,11 +3020,11 @@ class Physics:
             * plasma_current**2
             * res_plasma
             * 1.0e-6
-            / plasma_volume
+            / vol_plasma
         )
 
         # Total ohmic heating power
-        p_plasma_ohmic_mw = pden_plasma_ohmic_mw * plasma_volume
+        p_plasma_ohmic_mw = pden_plasma_ohmic_mw * vol_plasma
 
         return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, res_plasma
 
@@ -3028,13 +3039,12 @@ class Physics:
         kappa: float,
         kappa95: float,
         p0: float,
-        pperim: float,
+        len_plasma_poloidal: float,
         q0: float,
         q95: float,
         rli: float,
         rmajor: float,
         rminor: float,
-        sf: float,
         triang: float,
         triang95: float,
     ) -> tuple[float, float, float, float, float]:
@@ -3065,13 +3075,12 @@ class Physics:
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
-            pperim (float): Plasma perimeter length (m).
+            len_plasma_poloidal (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             rli (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
-            sf (float): Shape factor for i_plasma_current=1 (=A/pi in documentation).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
@@ -3110,7 +3119,7 @@ class Physics:
 
         # Peng analytical fit
         if i_plasma_current == 1:
-            fq = calculate_current_coefficient_peng(eps, sf)
+            fq = calculate_current_coefficient_peng(eps, len_plasma_poloidal, rminor)
 
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
@@ -3189,7 +3198,7 @@ class Physics:
             bt,
             kappa,
             triang,
-            pperim,
+            len_plasma_poloidal,
             constants.rmu0,
         )
 
@@ -3268,7 +3277,7 @@ class Physics:
             / constants.rmu0
             * (15.0e0 * constants.electron_charge**4 * physics_variables.dlamie)
             / (4.0e0 * np.pi**1.5e0 * constants.epsilon0**2)
-            * physics_variables.plasma_volume**2
+            * physics_variables.vol_plasma**2
             * physics_variables.rmajor**2
             * physics_variables.bt
             * np.sqrt(physics_variables.eps)
@@ -3282,7 +3291,7 @@ class Physics:
             * constants.proton_mass
             * physics_variables.aion
             * physics_module.e_plasma_beta
-            / (3.0e0 * physics_variables.plasma_volume * physics_variables.dnla)
+            / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -3295,7 +3304,7 @@ class Physics:
             / 3.0e0
             * constants.rmu0
             * physics_module.e_plasma_beta
-            / (physics_variables.plasma_volume * physics_variables.bt**2)
+            / (physics_variables.vol_plasma * physics_variables.bt**2)
         )
 
         po.oheadr(self.outfile, "Plasma")
@@ -3316,7 +3325,7 @@ class Physics:
         if stellarator_variables.istell == 0:
             if physics_variables.itart == 0:
                 physics_module.itart_r = physics_variables.itart
-                po.ovarrf(
+                po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
@@ -3324,7 +3333,7 @@ class Physics:
                 )
             elif physics_variables.itart == 1:
                 physics_module.itart_r = physics_variables.itart
-                po.ovarrf(
+                po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
@@ -3332,6 +3341,16 @@ class Physics:
                 )
 
         po.osubhd(self.outfile, "Plasma Geometry :")
+        po.ovarin(
+            self.outfile,
+            "Plasma shaping model",
+            "(i_plasma_shape)",
+            physics_variables.i_plasma_shape,
+        )
+        if physics_variables.i_plasma_shape == 0:
+            po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
+        elif physics_variables.i_plasma_shape == 1:
+            po.osubhd(self.outfile, "Sauter plasma shape model is used :")
         po.ovarrf(
             self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
         )
@@ -3343,9 +3362,15 @@ class Physics:
             "OP ",
         )
         po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
-
+        po.ovarrf(
+            self.outfile,
+            "Plasma squareness",
+            "(plasma_square)",
+            physics_variables.plasma_square,
+            "IP",
+        )
         if stellarator_variables.istell == 0:
-            if physics_variables.ishape in [0, 6, 8]:
+            if physics_variables.i_plasma_geometry in [0, 6, 8]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (input value used)",
@@ -3353,7 +3378,7 @@ class Physics:
                     physics_variables.kappa,
                     "IP ",
                 )
-            elif physics_variables.ishape == 1:
+            elif physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (TART scaling)",
@@ -3361,7 +3386,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape in [2, 3]:
+            elif physics_variables.i_plasma_geometry in [2, 3]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (Zohm scaling)",
@@ -3375,7 +3400,7 @@ class Physics:
                     "(fkzohm)",
                     physics_variables.fkzohm,
                 )
-            elif physics_variables.ishape in [4, 5, 7]:
+            elif physics_variables.i_plasma_geometry in [4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from kappa95)",
@@ -3383,7 +3408,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 9:
+            elif physics_variables.i_plasma_geometry == 9:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio and li(3))",
@@ -3391,7 +3416,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 10:
+            elif physics_variables.i_plasma_geometry == 10:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio and stability margin)",
@@ -3399,7 +3424,7 @@ class Physics:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.ishape == 11:
+            elif physics_variables.i_plasma_geometry == 11:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from aspect ratio via Menard 2016)",
@@ -3408,10 +3433,10 @@ class Physics:
                     "OP ",
                 )
             else:
-                error_handling.idiags[0] = physics_variables.ishape
+                error_handling.idiags[0] = physics_variables.i_plasma_geometry
                 po.report_error(86)
 
-            if physics_variables.ishape in [4, 5, 7]:
+            if physics_variables.i_plasma_geometry in [4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, 95% surface (input value used)",
@@ -3436,7 +3461,7 @@ class Physics:
                 "OP ",
             )
 
-            if physics_variables.ishape in [0, 2, 6, 8, 9, 10, 11]:
+            if physics_variables.i_plasma_geometry in [0, 2, 6, 8, 9, 10, 11]:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, X-point (input value used)",
@@ -3444,7 +3469,7 @@ class Physics:
                     physics_variables.triang,
                     "IP ",
                 )
-            elif physics_variables.ishape == 1:
+            elif physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, X-point (TART scaling)",
@@ -3461,7 +3486,7 @@ class Physics:
                     "OP ",
                 )
 
-            if physics_variables.ishape in [3, 4, 5, 7]:
+            if physics_variables.i_plasma_geometry in [3, 4, 5, 7]:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, 95% surface (input value used)",
@@ -3481,30 +3506,30 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Plasma poloidal perimeter (m)",
-                "(pperim)",
-                physics_variables.pperim,
+                "(len_plasma_poloidal)",
+                physics_variables.len_plasma_poloidal,
                 "OP ",
             )
 
             po.ovarre(
                 self.outfile,
                 "Plasma cross-sectional area (m2)",
-                "(xarea)",
-                physics_variables.xarea,
+                "(a_plasma_poloidal)",
+                physics_variables.a_plasma_poloidal,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Plasma surface area (m2)",
-                "(sarea)",
-                physics_variables.sarea,
+                "(a_plasma_surface)",
+                physics_variables.a_plasma_surface,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Plasma volume (m3)",
-                "(plasma_volume)",
-                physics_variables.plasma_volume,
+                "(vol_plasma)",
+                physics_variables.vol_plasma,
                 "OP ",
             )
 
@@ -3622,12 +3647,12 @@ class Physics:
                 "OP ",
             )
 
-            if physics_variables.ishape == 1:
+            if physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q",
-                    "(qlim)",
-                    physics_variables.qlim,
+                    "(q95_min)",
+                    physics_variables.q95_min,
                     "OP ",
                 )
 
@@ -4429,8 +4454,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Synchrotron radiation power (MW)",
-            "(psyncpv*plasma_volume)",
-            physics_variables.psyncpv * physics_variables.plasma_volume,
+            "(psyncpv*vol_plasma)",
+            physics_variables.psyncpv * physics_variables.vol_plasma,
             "OP ",
         )
         po.ovarrf(
@@ -5135,7 +5160,7 @@ class Physics:
                     physics_variables.powerht
                     / (
                         physics_variables.powerht
-                        + physics_variables.pradpv * physics_variables.plasma_volume
+                        + physics_variables.pradpv * physics_variables.vol_plasma
                     )
                 )
                 ** 0.31,
@@ -5623,8 +5648,8 @@ class Physics:
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
-                physics_variables.plasma_volume,
-                physics_variables.xarea,
+                physics_variables.vol_plasma,
+                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -5645,7 +5670,7 @@ class Physics:
         q95: float,
         q0: float,
         rmajor: float,
-        plasma_volume: float,
+        vol_plasma: float,
     ) -> float:
         """
         Calculate the bootstrap-driven fraction of the plasma current.
@@ -5658,7 +5683,7 @@ class Physics:
             q95 (float): Safety factor at 95% surface.
             q0 (float): Central safety factor.
             rmajor (float): Plasma major radius (m).
-            plasma_volume (float): Plasma volume (m3).
+            vol_plasma (float): Plasma volume (m3).
 
         Returns:
             float: The bootstrap-driven fraction of the plasma current.
@@ -5674,7 +5699,7 @@ class Physics:
         c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
 
         # Calculate the average minor radius
-        average_a = np.sqrt(plasma_volume / (2 * np.pi**2 * rmajor))
+        average_a = np.sqrt(vol_plasma / (2 * np.pi**2 * rmajor))
 
         b_pa = (plasma_current / 1e6) / (5 * average_a)
 
@@ -5915,7 +5940,7 @@ class Physics:
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius
-        rho = np.sqrt(physics_variables.xarea / np.pi) * roa
+        rho = np.sqrt(physics_variables.a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
         sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
@@ -6415,8 +6440,8 @@ class Physics:
             physics_variables.tin,
             physics_variables.q,
             physics_variables.qstar,
-            physics_variables.plasma_volume,
-            physics_variables.xarea,
+            physics_variables.vol_plasma,
+            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -6435,7 +6460,7 @@ class Physics:
         # calculation (i.e. whether device is ignited)
 
         if physics_variables.ignite == 0:
-            fhz -= current_drive_variables.pinjmw / physics_variables.plasma_volume
+            fhz -= current_drive_variables.pinjmw / physics_variables.vol_plasma
 
         # Include the radiation power if requested
 
@@ -6473,8 +6498,8 @@ class Physics:
         tin,
         q,
         qstar,
-        plasma_volume,
-        xarea,
+        vol_plasma,
+        a_plasma_poloidal,
         zeff,
     ):
         """Routine to calculate the confinement times and
@@ -6507,8 +6532,8 @@ class Physics:
         te        : input real :  average electron temperature (keV)
         ten       : input real :  density weighted average electron temp. (keV)
         tin       : input real :  density weighted average ion temperature (keV)
-        plasma_volume       : input real :  plasma volume (m3)
-        xarea     : input real :  plasma cross-sectional area (m2)
+        vol_plasma       : input real :  plasma volume (m3)
+        a_plasma_poloidal     : input real :  plasma cross-sectional area (m2)
         zeff      : input real :  plasma effective charge
         ptrepv    : output real : electron transport power (MW/m3)
         ptripv    : output real : ion transport power (MW/m3)
@@ -6562,11 +6587,11 @@ class Physics:
 
         # Include the radiation as a loss term if requested
         if physics_variables.iradloss == 0:
-            powerht = powerht - physics_variables.pradpv * plasma_volume
+            powerht = powerht - physics_variables.pradpv * vol_plasma
         elif physics_variables.iradloss == 1:
             powerht = (
-                powerht - pcoreradpv * plasma_volume
-            )  # shouldn't this be vol_core instead of plasma_volume?
+                powerht - pcoreradpv * vol_plasma
+            )  # shouldn't this be vol_core instead of vol_plasma?
         # else do not adjust powerht for radiation
 
         # Ensure heating power is positive (shouldn't be necessary)
@@ -6583,10 +6608,10 @@ class Physics:
         pcur = plasma_current / 1.0e6
 
         # Separatrix kappa defined with X-section for general use
-        kappaa = xarea / (np.pi * rminor * rminor)
+        kappaa = a_plasma_poloidal / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
-        physics_variables.kappaa_ipb = plasma_volume / (
+        physics_variables.kappaa_ipb = vol_plasma / (
             2.0e0 * np.pi**2 * rminor * rminor * rmajor
         )
 
@@ -7434,7 +7459,18 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
 
 
-def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_current):
+def pthresh(
+    dene,
+    dnla,
+    bt,
+    rmajor,
+    rminor,
+    kappa,
+    a_plasma_surface,
+    aion,
+    aspect,
+    plasma_current,
+):
     """L-mode to H-mode power threshold calculation
 
     Author: P J Knight, CCFE, Culham Science Centre
@@ -7454,7 +7490,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
     :param rmajor: plasma major radius (m)
     :param rminor: plasma minor radius (m)
     :param kappa: plasma elongation
-    :param sarea: plasma surface area (m2)
+    :param a_plasma_surface: plasma surface area (m2)
     :param aion: average mass of all ions (amu)
     :param aspect: aspect ratio
     :param plasma_current: plasma current (A)
@@ -7484,13 +7520,13 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
 
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = 0.0488 * dnla20**0.717 * bt**0.803 * sarea**0.941 * (2.0 / aion)
+    martin = 0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / aion)
     martin_error = (
         np.sqrt(
             0.057**2
             + (0.035 * np.log(dnla20)) ** 2
             + (0.032 * np.log(bt)) ** 2
-            + (0.019 * np.log(sarea)) ** 2
+            + (0.019 * np.log(a_plasma_surface)) ** 2
         )
         * martin
     )
@@ -7520,7 +7556,7 @@ def pthresh(dene, dnla, bt, rmajor, rminor, kappa, sarea, aion, aspect, plasma_c
     hubbard_2012_ub = 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
 
     # Hubbard et al. 2017 L-I threshold scaling
-    hubbard_2017 = 0.162 * dnla20 * sarea * (bt) ** 0.26
+    hubbard_2017 = 0.162 * dnla20 * a_plasma_surface * (bt) ** 0.26
 
     pthrmw = [
         iterdd,

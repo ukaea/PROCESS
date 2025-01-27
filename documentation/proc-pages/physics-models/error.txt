@@ -119,15 +119,15 @@ values. The shape of the plasma cross-section is given by its last
 closed flux surface (LCFS) elongation \(\kappa\) (\texttt{kappa}) and
 triangularity \(\delta\) (\texttt{triang}), which can be scaled
 automatically with the aspect ratio if required using switch
-\texttt{ishape}:
+\texttt{i_plasma_geometry}:
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ishape\ =\ 0} -- the input values for \texttt{kappa} and
+  \texttt{i_plasma_geometry\ =\ 0} -- the input values for \texttt{kappa} and
   \texttt{triang} are used directly.
 \item
-  \texttt{ishape\ =\ 1} -- the following scaling is used, which is
+  \texttt{i_plasma_geometry\ =\ 1} -- the following scaling is used, which is
   suitable for low aspect ratio machines (\(\epsilon = 1/A\)) \footnote{J.D.
     Galambos, `STAR Code : Spherical Tokamak Analysis and Reactor Code',
     Unpublished internal Oak Ridge document.}:
@@ -141,7 +141,7 @@ automatically with the aspect ratio if required using switch
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ishape\ =\ 2} -- the Zohm ITER scaling \footnote{H. Zohm et
+  \texttt{i_plasma_geometry\ =\ 2} -- the Zohm ITER scaling \footnote{H. Zohm et
     al, `On the Physics Guidelines for a Tokamak DEMO', FTP/3-3, Proc.
     IAEA Fusion Energy Conference, October 2012, San Diego} is used to
   calculate the elongation: \[
@@ -151,7 +151,7 @@ automatically with the aspect ratio if required using switch
   unchanged.
 \end{itemize}
 
-If \texttt{ishape\ =\ 0,\ 1,\ 2}, the values for the plasma shaping
+If \texttt{i_plasma_geometry\ =\ 0,\ 1,\ 2}, the values for the plasma shaping
 parameters at the 95\% flux surface are calculated as follows:
 
 \[\begin{aligned}
@@ -162,13 +162,13 @@ parameters at the 95\% flux surface are calculated as follows:
 \begin{itemize}
 \tightlist
 \item
-  If \texttt{ishape\ =\ 3}, the Zohm ITER scaling is used to calculate
-  the elongation (as for \texttt{ishape\ =\ 2} above), but the
+  If \texttt{i_plasma_geometry\ =\ 3}, the Zohm ITER scaling is used to calculate
+  the elongation (as for \texttt{i_plasma_geometry\ =\ 2} above), but the
   triangularity at the 95\% flux surface is input via variable
   \texttt{triang95}, and the LCFS triangularity \texttt{triang} is
   calculated from it, rather than the other way round.
 \item
-  Finally, if \texttt{ishape\ =\ 4}, the 95\% flux surface values
+  Finally, if \texttt{i_plasma_geometry\ =\ 4}, the 95\% flux surface values
   \texttt{kappa95} and \texttt{triang95} are both used as inputs, and
   the LCFS values are calculated from them by inverting the equations
   above.
@@ -182,10 +182,10 @@ significant elongation \footnote{Y. Sakamoto, `Recent progress in
   vertical stability analysis in JA', Task meeting EU-JA \#16, Fusion
   for Energy, Garching, 24--25 June 2014}. The maximum distance
 \(r_{\text{shell, max}}\) of this shell from the centre of the plasma
-may be set using input parameter \texttt{cwrmax}, such that
-\(r_{\text{shell, max}} =\) \texttt{cwrmax*rminor}. Constraint equation
+may be set using input parameter \texttt{f_r_conducting_wall}, such that
+\(r_{\text{shell, max}} =\) \texttt{f_r_conducting_wall*rminor}. Constraint equation
 no. 23 should be turned on with iteration variable no.~104
-(\texttt{fcwr}) to enforce this. (A scaling of \texttt{cwrmax} with
+(\texttt{fcwr}) to enforce this. (A scaling of \texttt{f_r_conducting_wall} with
 elongation should be available shortly.)
 
 The plasma surface area, cross-sectional area and volume are calculated
@@ -994,18 +994,18 @@ is derived directly from the energy confinement scaling law.
 \texttt{iradloss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
-\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
 \texttt{iradloss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
-\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
 \texttt{iradloss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power
 plant models.
 
-\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/plasma_volume}
+\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
 \subsection{Plasma Core Power Balance}\label{plasma-core-power-balance}
 
@@ -1387,10 +1387,10 @@ The region directly outside the last closed flux surface of the core
 plasma is known as the scrape-off layer, and contains no structural
 material. Plasma entering this region is not confined and is removed by
 the divertor. PROCESS treats the scrape-off layer merely as a gap.
-Switch \texttt{iscrp} determines whether the inboard and outboard gaps
+Switch \texttt{i_plasma_wall_gap} determines whether the inboard and outboard gaps
 should be calculated as 10\% of the plasma minor radius
-(\texttt{iscrp\ =\ 0}), or set equal to the input values
-\texttt{scrapli} and \texttt{scraplo} (\texttt{iscrp\ =\ 1}).
+(\texttt{i_plasma_wall_gap\ =\ 0}), or set equal to the input values
+\texttt{scrapli} and \texttt{scraplo} (\texttt{i_plasma_wall_gap\ =\ 1}).
 
 \end{document}
 

@@ -5,9 +5,9 @@ The principal outputs from the code are the divertor heat load, used to
 determine its lifetime, and its peak temperature. The divertor is cooled either 
 by gaseous helium or by pressurised water.
 
-Switch `snull` controls the overall plasma configuration. Setting `snull = 0` 
+Switch `i_single_null` controls the overall plasma configuration. Setting `i_single_null= 0` 
 corresponds to an up-down symmetric, double null configuration, while 
-`snull = 1` (the default) assumes a single null plasma with the divertor at the 
+`i_single_null= 1` (the default) assumes a single null plasma with the divertor at the 
 bottom of the machine. The vertical build and PF coil current scaling 
 algorithms take the value of this switch into account, although not the plasma 
 geometry at present.

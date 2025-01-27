@@ -1474,7 +1474,7 @@ class StructuredInputData:
     input file, and hence it is more human-readable and ready to output to file.
 
     An example of the structure:
-    self.data["parameters"]["physics_variables"]["ishape"]["value"] = 0
+    self.data["parameters"]["physics_variables"]["i_plasma_geometry"]["value"] = 0
     """
 
     def __init__(self, filename="IN.DAT"):

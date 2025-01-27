@@ -327,9 +327,9 @@
  Elongation,_area_ratio_calc.____________________________________________ (kappaa)______________________      1.7188E+00    
  Triangularity,_X-point_(input_value_used)_______________________________ (triang)______________________      5.0000E-01    
  Triangularity,_95%_surface_(calculated_from_triang)_____________________ (triang95)____________________      3.3333E-01    
- Plasma_poloidal_perimeter_(m)___________________________________________ (pperim)______________________      2.4081E+01    
- Plasma_cross-sectional_area_(m2)________________________________________ (xarea)_______________________      3.8398E+01    
- Plasma_surface_area_(m2)________________________________________________ (sarea)_______________________      1.1738E+03 OP 
+ Plasma_poloidal_perimeter_(m)___________________________________________ (len_plasma_poloidal)______________________      2.4081E+01    
+ Plasma_cross-sectional_area_(m2)________________________________________ (a_plasma_poloidal)_______________________      3.8398E+01    
+ Plasma_surface_area_(m2)________________________________________________ (a_plasma_surface)_______________________      1.1738E+03 OP 
  Plasma_volume_(m3)______________________________________________________ (vol)_________________________      1.8882E+03 OP 
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6699E+01    
@@ -1544,7 +1544,7 @@ aspect = 3.0
 hfact = 1.1
 
 * Switch for plasma cross-sectional shape calc - use input kappa & triang
-ishape = 0 
+i_plasma_geometry = 0 
 
 * Plasma elongation [-]
 kappa = 1.85
@@ -1561,7 +1561,7 @@ alphat = 1.45
 * (troyon-like) coefficient for beta scaling
 beta_norm_max = 3.0
 
-* Zohm elongation scaling adjustment factor (ishape=2; 3)
+* Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
 fkzohm = 1.02
 
 * Ejima coefficient for resistive startup V-s formula

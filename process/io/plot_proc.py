@@ -186,35 +186,48 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
 
     r_0 = mfile_data.data["rmajor"].get_scan(scan)
     a = mfile_data.data["rminor"].get_scan(scan)
-    triang_95 = mfile_data.data["triang95"].get_scan(scan)
-    kappa_95 = mfile_data.data["kappa95"].get_scan(scan)
+    triang = mfile_data.data["triang"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+    i_plasma_shape = mfile_data.data["i_plasma_shape"].get_scan(scan)
+    plasma_square = mfile_data.data["plasma_square"].get_scan(scan)
 
     pg = plasma_geometry(
-        r_0=r_0,
-        a=a,
-        triang_95=triang_95,
-        kappa_95=kappa_95,
+        rmajor=r_0,
+        rminor=a,
+        triang=triang,
+        kappa=kappa,
         i_single_null=i_single_null,
+        i_plasma_shape=i_plasma_shape,
+        square=plasma_square,
     )
+    if i_plasma_shape == 0:
+        # Plot the 2 plasma outline arcs.
+        axis.plot(pg.rs[0], pg.zs[0], color="black")
+        axis.plot(pg.rs[1], pg.zs[1], color="black")
 
-    axis.plot(pg.rs[0], pg.zs[0], color="black")
-    axis.plot(pg.rs[1], pg.zs[1], color="black")
+        # Set triang_95 to stop plotting plasma past boundary
+        # Assume IPDG scaling
+        triang_95 = triang / 1.5
 
-    # Colour in right side of plasma
-    axis.fill_between(
-        x=pg.rs[0],
-        y1=pg.zs[0],
-        where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
-        color=PLASMA_COLOUR[colour_scheme - 1],
-    )
-    # Colour in left side of plasma
-    axis.fill_between(
-        x=pg.rs[1],
-        y1=pg.zs[1],
-        where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
-        color=PLASMA_COLOUR[colour_scheme - 1],
-    )
+        # Colour in right side of plasma
+        axis.fill_between(
+            x=pg.rs[0],
+            y1=pg.zs[0],
+            where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+            color=PLASMA_COLOUR[colour_scheme - 1],
+        )
+        # Colour in left side of plasma
+        axis.fill_between(
+            x=pg.rs[1],
+            y1=pg.zs[1],
+            where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+            color=PLASMA_COLOUR[colour_scheme - 1],
+        )
+
+    elif i_plasma_shape == 1:
+        axis.plot(pg.rs, pg.zs, color="black")
+        axis.fill(pg.rs, pg.zs, color=PLASMA_COLOUR[colour_scheme - 1])
 
 
 def plot_centre_cross(axis, mfile_data, scan):
@@ -2343,9 +2356,9 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("aspect", "A", ""),
         ("kappa95", r"$\kappa_{95}$", ""),
         ("triang95", r"$\delta_{95}$", ""),
-        ("sarea", "Plasma surface area", "m$^2$"),
-        ("xarea", "Plasma cross-sectional area", "m$^2$"),
-        ("plasma_volume", "Plasma volume", "m$^3$"),
+        ("a_plasma_surface", "Plasma surface area", "m$^2$"),
+        ("a_plasma_poloidal", "Plasma cross-sectional area", "m$^2$"),
+        ("vol_plasma", "Plasma volume", "m$^3$"),
         ("n_tf", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("inboard_build", "Inboard build thickness", "m"),
@@ -3474,14 +3487,14 @@ def main(args=None):
     global q0
     global q95
     global plasma_current_MA
-    global xarea
+    global a_plasma_poloidal
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
     q0 = m_file.data["q0"].get_scan(scan)
     q95 = m_file.data["q95"].get_scan(scan)
     plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
-    xarea = m_file.data["xarea"].get_scan(scan)
+    a_plasma_poloidal = m_file.data["a_plasma_poloidal"].get_scan(scan)
 
     # Radial position  -- 0
     # Electron density -- 1
@@ -3503,10 +3516,10 @@ def main(args=None):
     # rad profile
     global ssync
     global bt
-    global plasma_volume
+    global vol_plasma
     ssync = m_file.data["ssync"].get_scan(scan)
     bt = m_file.data["bt"].get_scan(scan)
-    plasma_volume = m_file.data["plasma_volume"].get_scan(scan)
+    vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
 
     # Build the dictionaries of radial and vertical build values and cumulative values
     global vertical_upper

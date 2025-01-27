@@ -610,7 +610,7 @@ def psync_albajar_fidone():
     dum = 0.0
     psync = 0.0
 
-    kap = physics_variables.plasma_volume / (
+    kap = physics_variables.vol_plasma / (
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
     )
 
@@ -659,7 +659,7 @@ def psync_albajar_fidone():
 
     # psyncpv should be per unit volume; Albajar gives it as total
 
-    return psync / physics_variables.plasma_volume
+    return psync / physics_variables.vol_plasma
 
 
 @dataclass
@@ -812,7 +812,7 @@ def set_fusion_powers(
     alpha_power_beams: float,
     charged_power_density: float,
     neutron_power_density_plasma: float,
-    plasma_volume: float,
+    vol_plasma: float,
     alpha_power_density_plasma: float,
 ) -> tuple:
     """
@@ -825,7 +825,7 @@ def set_fusion_powers(
         alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
         neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
-        plasma_volume (float): Plasma volume (m^3).
+        vol_plasma (float): Plasma volume (m^3).
         alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
 
     Returns:
@@ -850,20 +850,20 @@ def set_fusion_powers(
     # Alpha power
 
     # Calculate alpha power produced just by the plasma
-    alpha_power_plasma = alpha_power_density_plasma * plasma_volume
+    alpha_power_plasma = alpha_power_density_plasma * vol_plasma
 
     # Add neutral beam alpha power / volume
     alpha_power_density_total = alpha_power_density_plasma + (
-        alpha_power_beams / plasma_volume
+        alpha_power_beams / vol_plasma
     )
 
     # Total alpha power
-    alpha_power_total = alpha_power_density_total * plasma_volume
+    alpha_power_total = alpha_power_density_total * vol_plasma
 
     # Neutron Power
 
     # Calculate neutron power produced just by the plasma
-    neutron_power_plasma = neutron_power_density_plasma * plasma_volume
+    neutron_power_plasma = neutron_power_density_plasma * vol_plasma
 
     # Add extra neutron power from beams
     neutron_power_density_total = neutron_power_density_plasma + (
@@ -874,16 +874,16 @@ def set_fusion_powers(
             )
             * alpha_power_beams
         )
-        / plasma_volume
+        / vol_plasma
     )
 
     # Total neutron power
-    neutron_power_total = neutron_power_density_total * plasma_volume
+    neutron_power_total = neutron_power_density_total * vol_plasma
 
     # Charged particle power
 
     # Total non-alpha charged particle power
-    non_alpha_charged_power = charged_power_density * plasma_volume
+    non_alpha_charged_power = charged_power_density * vol_plasma
 
     # Charged particle fusion power
     charged_particle_power = alpha_power_total + non_alpha_charged_power
@@ -1012,7 +1012,7 @@ def beam_fusion(
     sigmav_dt_average: float,
     ten: float,
     tin: float,
-    plasma_volume: float,
+    vol_plasma: float,
     zeffai: float,
 ) -> tuple:
     """
@@ -1037,7 +1037,7 @@ def beam_fusion(
                 sigmav_dt_average (float): Profile averaged <sigma v> for D-T (m^3/s).
                 ten (float): Density-weighted electron temperature (keV).
                 tin (float): Density-weighted ion temperature (keV).
-                plasma_volume (float): Plasma volume (m^3).
+                vol_plasma (float): Plasma volume (m^3).
                 zeffai (float): Mass weighted plasma effective charge.
 
             Returns:
@@ -1111,7 +1111,7 @@ def beam_fusion(
         f_tritium_beam,
         beam_current,
         tin,
-        plasma_volume,
+        vol_plasma,
         sigmav_dt_average,
     )
 
@@ -1143,7 +1143,7 @@ def beamcalc(
     f_tritium_beam: float,
     beam_current: float,
     ti: float,
-    plasma_volume: float,
+    vol_plasma: float,
     svdt: float,
 ) -> tuple[float, float, float, float]:
     """
@@ -1163,7 +1163,7 @@ def beamcalc(
         f_tritium_beam (float): Beam tritium fraction (0.0 = deuterium beam).
         beam_current (float): Beam current (A).
         ti (float): Thermal ion temperature (keV).
-        plasma_volume (float): Plasma volume (m^3).
+        vol_plasma (float): Plasma volume (m^3).
         svdt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
     Returns:
@@ -1214,7 +1214,7 @@ def beamcalc(
     deuterium_beam_density = (
         beam_current_deuterium
         * characteristic_deuterium_beam_slow_time
-        / (constants.electron_charge * plasma_volume)
+        / (constants.electron_charge * vol_plasma)
     )
 
     # Ratio of beam energy to critical energy for tritium
@@ -1229,7 +1229,7 @@ def beamcalc(
     tritium_beam_density = (
         beam_current_tritium
         * characteristic_tritium_beam_slow_time
-        / (constants.electron_charge * plasma_volume)
+        / (constants.electron_charge * vol_plasma)
     )
 
     hot_beam_density = deuterium_beam_density + tritium_beam_density
@@ -1256,11 +1256,9 @@ def beamcalc(
     # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
     # vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
-    source_deuterium = beam_current_deuterium / (
-        constants.electron_charge * plasma_volume
-    )
+    source_deuterium = beam_current_deuterium / (constants.electron_charge * vol_plasma)
 
-    source_tritium = beam_current_tritium / (constants.electron_charge * plasma_volume)
+    source_tritium = beam_current_tritium / (constants.electron_charge * vol_plasma)
 
     pressure_coeff_deuterium = (
         ATOMIC_MASS_DEUTERIUM
@@ -1307,10 +1305,10 @@ def beamcalc(
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
-        deuterium_beam_density, nt, hot_deuterium_rate, plasma_volume, ti, svdt
+        deuterium_beam_density, nt, hot_deuterium_rate, vol_plasma, ti, svdt
     )
     tritium_beam_alpha_power = alpha_power_beam(
-        tritium_beam_density, nd, hot_tritium_rate, plasma_volume, ti, svdt
+        tritium_beam_density, nd, hot_tritium_rate, vol_plasma, ti, svdt
     )
 
     return (
@@ -1366,7 +1364,7 @@ def alpha_power_beam(
     beam_ion_desnity: float,
     plasma_ion_desnity: float,
     sigv: float,
-    plasma_volume: float,
+    vol_plasma: float,
     ti: float,
     sigmav_dt: float,
 ) -> float:
@@ -1380,7 +1378,7 @@ def alpha_power_beam(
         beam_ion_desnity (float): Hot beam ion density (m^-3).
         plasma_ion_desnity (float): Thermal ion density (m^-3).
         sigv (float): Hot beam fusion reaction rate (m^3/s).
-        plasma_volume (float): Plasma volume (m^3).
+        vol_plasma (float): Plasma volume (m^3).
         ti (float): Thermal ion temperature (keV).
         sigmav_dt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
@@ -1411,7 +1409,7 @@ def alpha_power_beam(
         * plasma_ion_desnity
         * sigv
         * (constants.dt_alpha_energy / 1e6)
-        * plasma_volume
+        * vol_plasma
         * ratio
     )
 

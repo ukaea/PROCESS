@@ -295,7 +295,7 @@ class CCFE_HCPB:
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
-            physics_variables.sarea * fwbs_variables.fw_armour_thickness
+            physics_variables.a_plasma_surface * fwbs_variables.fw_armour_thickness
         )
 
         # First wall armour mass (kg)

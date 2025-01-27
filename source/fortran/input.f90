@@ -232,7 +232,7 @@ contains
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, taulimit, walalw, fmva, fradpwr, nflutfmax, fipir, &
-      fauxmn, fiooic, fcwr, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
+      fauxmn, fiooic,fr_conducting_wall, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
@@ -304,15 +304,15 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, cvol, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
-      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, cwrmax, nesep, c_beta, csawth, dene, &
+      rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
+      fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
-      fgwsep, rhopedn, tratio, q0, ishape, fne0, ignite, f_tritium, &
+      fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
-      iradloss, te, alphan, rmajor, kappa, iinvqd, fkzohm, beamfus0, &
-      tauratio, i_density_limit, bt, iscrp, ipnlaws, beta_max, beta_min, &
+      iradloss, te, alphan, rmajor, plasma_square, kappa, iinvqd, fkzohm, beamfus0, &
+      tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -557,11 +557,11 @@ contains
             case ('csawth')
           call parse_real_variable('csawth', csawth, 0.0D0, 10.0D0, &
                'Coefficient for sawteeth effects')
-       case ('cvol')
-          call parse_real_variable('cvol', cvol, 0.01D0, 10.0D0, &
+       case ('f_vol_plasma')
+          call parse_real_variable('f_vol_plasma', f_vol_plasma, 0.01D0, 10.0D0, &
                'Plasma volume multiplier')
-       case ('cwrmax')
-          call parse_real_variable('cwrmax', cwrmax, 1.0D0, 3.0D0, &
+       case ('f_r_conducting_wall')
+          call parse_real_variable('f_r_conducting_wall', f_r_conducting_wall, 1.0D0, 3.0D0, &
                'Max conducting shell to rminor radius')
        case ('dene')
           call parse_real_variable('dene', dene, 1.0D18, 1.0D22, &
@@ -663,12 +663,15 @@ contains
        case ('isc')
           call parse_int_variable('isc', isc, 1, ipnlaws, &
                'Switch for confinement scaling law')
-       case ('iscrp')
-          call parse_int_variable('iscrp', iscrp, 0, 1, &
-               'Switch for scrapeoff width')
-       case ('ishape')
-          call parse_int_variable('ishape', ishape, 0, 11, &
+       case ('i_plasma_wall_gap')
+          call parse_int_variable('i_plasma_wall_gap', i_plasma_wall_gap, 0, 1, &
+               'Switch for midplane gap between plasma and wall')
+       case ('i_plasma_geometry')
+          call parse_int_variable('i_plasma_geometry', i_plasma_geometry, 0, 11, &
                'Switch for plasma shape vs. aspect')
+       case ('i_plasma_shape')
+         call parse_int_variable('i_plasma_shape', i_plasma_shape, 0, 1, &
+               'Switch for plasma outline shape')
        case ('itart')
           call parse_int_variable('itart', itart, 0, 1, &
                'Switch for tight aspect ratio physics')
@@ -678,7 +681,10 @@ contains
        case ('iwalld')
           call parse_int_variable('iwalld', iwalld, 1, 2, &
                'Switch for wall load calculation')
-       case ('kappa')
+       case ('plasma_square')
+          call parse_real_variable('plasma_square', plasma_square, -5.0D0, 5.0D0, &
+                  'Plasma squareness')
+            case ('kappa')
           call parse_real_variable('kappa', kappa, 0.99D0, 5.0D0, &
                'Plasma separatrix elongation')
        case ('kappa95')
@@ -805,7 +811,7 @@ contains
           call parse_real_variable('fecrh_ignition', fecrh_ignition, 0.001D0, 10.0D0, &
                'F-value for ecrh ignition constraint')
        case ('fcwr')
-          call parse_real_variable('fcwr', fcwr, 0.001D0, 10.0D0, &
+          call parse_real_variable('fcwr',fr_conducting_wall, 0.001D0, 10.0D0, &
                'F-value for conducting wall radius')
        case ('fdene')
           call parse_real_variable('fdene', fdene, 0.001D0, 10.0D0, &

@@ -1369,7 +1369,7 @@ class ComponentMassesParam(NamedTuple):
     rminor: Any = None
     rmajor: Any = None
     idivrt: Any = None
-    sarea: Any = None
+    a_plasma_surface: Any = None
     blnkith: Any = None
     blbuith: Any = None
     blbmith: Any = None
@@ -1461,7 +1461,7 @@ class ComponentMassesParam(NamedTuple):
             rminor=2.6666666666666665,
             rmajor=8,
             idivrt=1,
-            sarea=1173.8427771245592,
+            a_plasma_surface=1173.8427771245592,
             blnkith=0.70000000000000007,
             blbuith=0.36499999999999999,
             blbmith=0.17000000000000001,
@@ -1562,7 +1562,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(physics_variables, "idivrt", componentmassesparam.idivrt)
-    monkeypatch.setattr(physics_variables, "sarea", componentmassesparam.sarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
+    )
     monkeypatch.setattr(build_variables, "blnkith", componentmassesparam.blnkith)
     monkeypatch.setattr(build_variables, "blbuith", componentmassesparam.blbuith)
     monkeypatch.setattr(build_variables, "blbmith", componentmassesparam.blbmith)

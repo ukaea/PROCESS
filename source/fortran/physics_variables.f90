@@ -125,10 +125,10 @@ module physics_variables
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
 
-  real(dp) :: cvol
-  !! multiplying factor times plasma volume (normally=1)
+  real(dp) :: f_vol_plasma
+  !! multiplying factor for the plasma volume (normally=1)
 
-  real(dp) :: cwrmax
+  real(dp) :: f_r_conducting_wall
   !! maximum ratio of conducting wall distance to plasma minor radius for
   !! vertical stability (`constraint equation 23`)
 
@@ -233,7 +233,7 @@ module physics_variables
   !! physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)
 
   real(dp) :: fkzohm
-  !! Zohm elongation scaling adjustment factor (`ishape=2, 3`)
+  !! Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)
 
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
@@ -523,17 +523,17 @@ module physics_variables
   !! <LI> (48)  NSTX gyro-Bohm (Buxton) (H-mode; Spherical tokamak)
   !! <LI> (49)  Use input tauee_in </UL>
 
-  integer :: iscrp
-  !! switch for plasma-first wall clearances:
+  integer :: i_plasma_wall_gap
+  !! Switch for plasma-first wall clearances at the mid-plane:
   !!
-  !! - =0 use 10% of rminor
-  !! - =1 use input (scrapli and scraplo)
+  !! - =0 use 10% of plasma minor radius
+  !! - =1 use input (`scrapli` and `scraplo`)
 
-  integer :: ishape
-  !! switch for plasma cross-sectional shape calculation:
+  integer :: i_plasma_geometry
+  !! switch for plasma elongation and triangularity calculations:
   !!
   !! - =0 use input kappa, triang to calculate 95% values
-  !! - =1 scale qlim, kappa, triang with aspect ratio (ST)
+  !! - =1 scale q95_min, kappa, triang with aspect ratio (ST)
   !! - =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
   !! - =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
   !! - =4 use input kappa95, triang95 to calculate separatrix values
@@ -544,6 +544,12 @@ module physics_variables
   !! - =9 set kappa to the natural elongation value, triang input
   !! - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
   !! - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
+
+  integer :: i_plasma_shape
+  !! switch for plasma boundary shape:
+  !!
+  !! - =0 use original PROCESS 2-arcs model
+  !! - =1 use the Sauter model
 
   integer :: itart
   !! switch for spherical tokamak (ST) models:
@@ -563,14 +569,17 @@ module physics_variables
   !! - =1 use scaled plasma surface area
   !! - =2 use first wall area directly
 
+  real(dp) :: plasma_square
+  !! plasma squareness used by Sauter plasma shape
+
   real(dp) :: kappa
-  !! plasma separatrix elongation (calculated if `ishape = 1-5, 7 or 9-10`)
+  !! plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)
 
   real(dp) :: kappa95
-  !! plasma elongation at 95% surface (calculated if `ishape = 0-3, 6, or 8-10`)
+  !! plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)
 
   real(dp) :: kappaa
-  !! plasma elongation calculated as xarea/(pi.a^2)
+  !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
 
   real(dp) :: kappaa_IPB
   !! Volume measure of plasma elongation
@@ -704,7 +713,7 @@ module physics_variables
   real(dp) :: fusion_power
   !! fusion power (MW)
 
-  real(dp) :: pperim
+  real(dp) :: len_plasma_poloidal
   !! plasma poloidal perimeter (m)
 
   real(dp) :: pradmw
@@ -788,7 +797,7 @@ module physics_variables
   real(dp) :: tauratio
   !! tauratio /1.0/ : ratio of He and pellet particle confinement times
 
-  real(dp) :: qlim
+  real(dp) :: q95_min
   !! lower limit for edge safety factor
 
   real(dp) :: qstar
@@ -842,14 +851,11 @@ module physics_variables
   real(dp) :: res_time
   !! plasma current resistive diffusion time (s)
 
-  real(dp) :: sarea
+  real(dp) :: a_plasma_surface
   !! plasma surface area
 
-  real(dp) :: sareao
+  real(dp) :: a_plasma_surface_outboard
   !! outboard plasma surface area
-
-  real(dp) :: sf
-  !! shape factor = plasma poloidal perimeter / (2.pi.rminor)
 
   integer :: i_single_null
   !! switch for single null / double null plasma:
@@ -897,12 +903,12 @@ module physics_variables
   !! ion temperature / electron temperature(used to calculate ti if `tratio > 0.0`
 
   real(dp) :: triang
-  !! plasma separatrix triangularity (calculated if `ishape = 1, 3-5 or 7`)
+  !! plasma separatrix triangularity (calculated if `i_plasma_geometry = 1, 3-5 or 7`)
 
   real(dp) :: triang95
-  !! plasma triangularity at 95% surface (calculated if `ishape = 0-2, 6, 8 or 9`)
+  !! plasma triangularity at 95% surface (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)
 
-  real(dp) :: plasma_volume
+  real(dp) :: vol_plasma
   !! plasma volume (m3)
 
   real(dp) :: vsbrn
@@ -926,8 +932,8 @@ module physics_variables
   real(dp) :: wtgpd
   !! mass of fuel used per day (g)
 
-  real(dp) :: xarea
-  !! plasma cross-sectional area (m2)
+  real(dp) :: a_plasma_poloidal
+  !! plasma poloidal cross-sectional area [m^2]
 
   real(dp) :: zeff
   !! plasma effective charge
@@ -977,8 +983,8 @@ module physics_variables
     bvert = 0.0D0
     c_beta = 0.5D0
     csawth = 1.0D0
-    cvol = 1.0D0
-    cwrmax = 1.35D0
+    f_vol_plasma = 1.0D0
+    f_r_conducting_wall = 1.35D0
     dene = 9.8D19
     deni = 0.0D0
     dlamee = 0.0D0
@@ -1045,11 +1051,13 @@ module physics_variables
     iprofile = 1
     iradloss = 1
     isc = 34
-    iscrp = 1
-    ishape = 0
+    i_plasma_wall_gap = 1
+    i_plasma_geometry = 0
+    i_plasma_shape = 0
     itart = 0
     itartpf = 0
     iwalld = 1
+    plasma_square = 0.0D0
     kappa = 1.792D0
     kappa95 = 1.6D0
     kappaa = 0.0D0
@@ -1096,7 +1104,7 @@ module physics_variables
     pden_plasma_ohmic_mw = 0.0D0
     powerht = 0.0D0
     fusion_power = 0.0D0
-    pperim = 0.0D0
+    len_plasma_poloidal = 0.0D0
     pradmw = 0.0D0
     pradpv = 0.0D0
     pradsolmw = 0.0D0
@@ -1116,7 +1124,7 @@ module physics_variables
     q95 = 0.0D0
     qfuel = 0.0D0
     tauratio = 1.0D0
-    qlim = 0.0D0
+    q95_min = 0.0D0
     qstar = 0.0D0
     rad_fraction_sol = 0.8D0
     rad_fraction_total = 0.0D0
@@ -1134,9 +1142,8 @@ module physics_variables
     rpfac = 0.0D0
     res_plasma = 0.0D0
     res_time = 0.0D0
-    sarea = 0.0D0
-    sareao = 0.0D0
-    sf = 0.0D0
+    a_plasma_surface = 0.0D0
+    a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
     ssync = 0.6D0
     tauee = 0.0D0
@@ -1153,7 +1160,7 @@ module physics_variables
     tratio = 1.0D0
     triang = 0.36D0
     triang95 = 0.24D0
-    plasma_volume = 0.0D0
+    vol_plasma = 0.0D0
     vsbrn = 0.0D0
     vshift = 0.0D0
     vsind = 0.0D0
@@ -1161,7 +1168,7 @@ module physics_variables
     vsstt = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
-    xarea = 0.0D0
+    a_plasma_poloidal = 0.0D0
     zeff = 0.0D0
     zeffai = 0.0D0
   end subroutine init_physics_variables

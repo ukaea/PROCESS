@@ -457,11 +457,11 @@ contains
     !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
     !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
     !! pinjmw : input real : total auxiliary injected power (MW)
-    !! plasma_volume : input real : plasma volume (m3)
+    !! vol_plasma : input real : plasma volume (m3)
 
     use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
-                                  pden_plasma_ohmic_mw, plasma_volume
+                                  pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
 
     implicit none
@@ -488,7 +488,7 @@ contains
 
     ! if plasma not ignited include injected power
     if (ignite == 0) then
-      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume
+      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma
     else
       ! if plasma ignited
       pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw
@@ -520,8 +520,8 @@ contains
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
-      !! plasma_volume : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, plasma_volume
+      !! vol_plasma : input real : plasma volume (m3)
+      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,9 +532,9 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/plasma_volume) * tmp_cc
+         tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
+         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
@@ -575,9 +575,9 @@ contains
       !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
-      !! plasma_volume : input real : plasma volume (m3)
+      !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
-                                 alpha_power_electron_density, piepv, plasma_volume, pradpv
+                                 alpha_power_electron_density, piepv, vol_plasma, pradpv
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -601,7 +601,7 @@ contains
 
       ! if plasma not ignited include injected power
       if (ignite == 0) then
-         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + pinjemw/plasma_volume
+         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + pinjemw/vol_plasma
       else
       ! if plasma ignited
          pdenom = f_alpha_plasma*alpha_power_electron_density + piepv
@@ -1029,13 +1029,13 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! pinjmw : input real : total auxiliary injected power (MW)
-      !! plasma_volume : input real : plasma volume (m3)
+      !! vol_plasma : input real : plasma volume (m3)
       !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
       !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
       !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
       !! fradpwr : input real : f-value for core radiation power limit
       !! pradpv : input real : total radiation power per volume (MW/m3)
-      use physics_variables, only: f_alpha_plasma, plasma_volume, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pradpv
+      use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pradpv
       use current_drive_variables, only: pinjmw
       use constraint_variables, only: fradpwr
       implicit none
@@ -1046,9 +1046,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       real(dp) :: pradmaxpv
-      !! Maximum possible power/plasma_volume that can be radiated (local)
+      !! Maximum possible power/vol_plasma that can be radiated (local)
 
-      pradmaxpv = pinjmw/plasma_volume + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
+      pradmaxpv = pinjmw/vol_plasma + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
       tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pradpv
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
       tmp_err = pradpv * tmp_cc
@@ -1219,18 +1219,18 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for conducting shell radius / rminor upper limit
       !! #=# physics
-      !! #=#=# fcwr, cwrmax
+      !! #=#=#fr_conducting_wall, f_r_conducting_wall
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! rminor : input real : plasma minor radius (m)
       !! scraplo : input real : gap between plasma and first wall, outboard side (m)
       !! fwoth : input real : outboard first wall thickness, initial estimate (m)
       !! blnkoth : input real : outboard blanket thickness (m)
-      !! fcwr : input real : f-value for conducting wall radius / rminor limit
-      !! cwrmax : input real : maximum ratio of conducting wall distance to plasma minor radius for vertical stability
-      use physics_variables, only: rminor, cwrmax
+      !!fr_conducting_wall : input real : f-value for conducting wall radius / rminor limit
+      !! f_r_conducting_wall : input real : maximum ratio of conducting wall distance to plasma minor radius for vertical stability
+      use physics_variables, only: rminor, f_r_conducting_wall
       use build_variables, only: scraplo, fwoth, blnkoth
-      use constraint_variables, only: fcwr
+      use constraint_variables, only:fr_conducting_wall
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1241,8 +1241,8 @@ contains
       real(dp) :: rcw
 
       rcw = rminor + scraplo + fwoth + blnkoth
-      tmp_cc =  1.0D0 - fcwr * cwrmax*rminor / rcw
-      tmp_con = cwrmax*rminor * (1.0D0 - tmp_cc)
+      tmp_cc =  1.0D0 -fr_conducting_wall * f_r_conducting_wall*rminor / rcw
+      tmp_con = f_r_conducting_wall*rminor * (1.0D0 - tmp_cc)
       tmp_err = rcw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'm'
@@ -1980,18 +1980,18 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for edge safety factor lower limit (TART)
       !! #=# tfcoil
-      !! #=#=# fq, qlim
+      !! #=#=# fq, q95_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
       !! q : safety factor 'near' plasma edge: equal to q95
       !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
-      !! qlim : input real :  lower limit for edge safety factor
+      !! q95_min : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use constraint_variables, only: fq
-      use physics_variables, only: q, qlim, itart
+      use physics_variables, only: q, q95_min, itart
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2001,9 +2001,9 @@ contains
 
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(9)
-      tmp_cc =   1.0D0 - fq * q/qlim
-      tmp_con = qlim * (1.0D0 - tmp_cc)
-      tmp_err = qlim * tmp_cc
+      tmp_cc =   1.0D0 - fq * q/q95_min
+      tmp_con = q95_min * (1.0D0 - tmp_cc)
+      tmp_err = q95_min * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -2889,8 +2889,8 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! alpha_crit : output real : critical ballooning parameter value
       !! nesep_crit : output real : critical electron density at separatrix [m-3]
-      !! kappa : input real : plasma separatrix elongation (calculated if ishape = 1-5, 7 or 9)
-      !! triang : input real : plasma separatrix triangularity (calculated if ishape = 1, 3-5 or 7)
+      !! kappa : input real : plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
+      !! triang : input real : plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
       !! aspect : input real : aspect ratio (iteration variable 1)
       !! pdivt : input real : power to conducted to the divertor region (MW)
       !! dlimit(7) : input real array : density limit (/m3) as calculated using various models

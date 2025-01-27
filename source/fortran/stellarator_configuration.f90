@@ -81,7 +81,7 @@ module stellarator_configuration
    real(dp) stella_config_derivative_min_LCFS_coils_dist
    !  The derivative of min_plasma_coil_distance wrt to the minor plasma radius at the reference point [1]
 
-   real(dp) stella_config_plasma_volume
+   real(dp) stella_config_vol_plasma
    !  The plasma volume at the reference point. Scales as a*R^2. [m^3]
 
    real(dp) stella_config_plasma_surface

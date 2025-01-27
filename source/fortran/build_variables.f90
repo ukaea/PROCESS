@@ -207,12 +207,12 @@ module build_variables
   !! TF coil vertical inner bore (m)
 
   real(dp) :: scrapli
-  !! Gap between plasma and first wall, inboard side (m) (if `iscrp=1`)
+  !! Gap between plasma and first wall, inboard side (m) (if `i_plasma_wall_gap=1`)
   !! Iteration variable: ixc = 73
   !! Scan variable: nsweep = 58
 
   real(dp) :: scraplo
-  !! Gap between plasma and first wall, outboard side (m) (if `iscrp=1`)
+  !! Gap between plasma and first wall, outboard side (m) (if `i_plasma_wall_gap=1`)
   !! Iteration variable: ixc = 74
   !! Scan variable: nsweep = 59
 

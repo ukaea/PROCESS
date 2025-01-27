@@ -176,10 +176,10 @@ aspect = 1.8
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ishape = 0
+i_plasma_geometry = 0
 * DESCRIPTION:   Switch for plasma shape vs. aspect (default = 0)
 * =0 use input kappa, triang to calculate 95% values
-* =1 scale qlim, kappa, triang with aspect ratio (ST)
+* =1 scale q95_min, kappa, triang with aspect ratio (ST)
 * =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
 * =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
 * =4 use input kappa95, triang95 to calculate separatrix values
@@ -198,7 +198,7 @@ kappa = 2.8
 
 *kappa95 = 
 * DESCRIPTION:   Plasma 95% elongation
-* JUSTIFICATION: Not set, calculated as ishape=0 
+* JUSTIFICATION: Not set, calculated as i_plasma_geometry=0 
 
 triang = 0.5 
 * DESCRIPTION:   Plasma Separatrix Triangularity
@@ -206,17 +206,17 @@ triang = 0.5
 
 *triang95 = 
 * DESCRIPTION:   Plasma 95% triangularity
-* JUSTIFICATION: Not set, calculated as ishape=0
+* JUSTIFICATION: Not set, calculated as i_plasma_geometry=0
 
 *fkzohm = 
-* DESCRIPTION:   Zohm elongation scaling multiplier (ishape 2,3)
-* JUSTIFICATION: Not scaling plasma shape. Used when ishape=2,3
+* DESCRIPTION:   Zohm elongation scaling multiplier (i_plasma_geometry 2,3)
+* JUSTIFICATION: Not scaling plasma shape. Used when i_plasma_geometry=2,3
 
 *m_s_limit =
-* DESCRIPTION:   Margin to vertical stability (ishape = 10)
-* JUSTIFICATION: Not used, not using ishape=10
+* DESCRIPTION:   Margin to vertical stability (i_plasma_geometry = 10)
+* JUSTIFICATION: Not used, not using i_plasma_geometry=10
 
-*cvol = 1.0
+*f_vol_plasma = 1.0
 * DESCRIPTION:   Plasma volume multiplier
 * JUSTIFICATION: Not scaling plasma volume
 
@@ -225,9 +225,9 @@ triang = 0.5
 *icc = 23
 * DESCRIPTION:   Constraint equation for conducting shell radius / rminor upper limit (FW) 
 * JUSTIFICATION: Turned off, dont care about shell radius ratio limit for vertical stability
-* VARIABLES:     cwrmax calculated in-situ
+* VARIABLES:     f_r_conducting_wall calculated in-situ
 
-*cwrmax = 
+*f_r_conducting_wall = 
 * DESCRIPTION:   Max conducting shell to rminor radius
 * JUSTIFICATION: Not using icc = 23
 
@@ -390,9 +390,9 @@ q0 = 2.0
 * JUSTIFICATION: 
 
 * icc = 45
-* DESCRIPTION:   Constraint equation for edge safety factor lower limit (TART) (ishape = 1)
+* DESCRIPTION:   Constraint equation for edge safety factor lower limit (TART) (i_plasma_geometry = 1)
 * JUSTIFICATION: Not used, dont care about q at edge lower limit
-* VARIABLES:     itart, qlim (lower limit for edge safety factor). q calculated in-situ
+* VARIABLES:     itart, q95_min (lower limit for edge safety factor). q calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ H-mode & Confinement ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -2079,7 +2079,7 @@ blnkith = 0.0
 * DESCRIPTION:   Inboard blanket breeding unit thickness (m) (blktmodel>0)
 * JUSTIFICATION: Design choice, no inboard blanket
 
-*iscrp = 
+*i_plasma_wall_gap = 
 * DESCRIPTION:   Switch for scrapeoff width (default = 1)
 * =0 use 10% of rminor
 * =1 use input (scrapli and scraplo)

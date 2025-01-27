@@ -148,6 +148,11 @@ OBS_VARS = {
     "betalim": "beta_max",
     "betalim_lower": "beta_min",
     "fbeta": "fbeta_poloidal_eps",
+    "fcwr": "fr_conducting_wall",
+    "cvol": "f_vol_plasma",
+    "cwrmax": "f_r_conducting_wall",
+    "ishape": "i_plasma_geometry",
+    "iscrp": "i_plasma_wall_gap",
 }
 
 OBS_VARS_HELP = {

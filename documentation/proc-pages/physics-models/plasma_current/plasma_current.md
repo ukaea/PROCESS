@@ -116,9 +116,9 @@ Switch value: `i_plasma_current = 1`
 
 The formula for calculating `fq` is:
 
-$$f_q = \left(\frac{{1.22 - 0.68  \epsilon}}{{(1.0 - \epsilon^2)^2}}\right)  \mathtt{{sf}}^2$$
+$$f_q = \left(\frac{{1.22 - 0.68  \epsilon}}{{(1.0 - \epsilon^2)^2}}\right)  \left(\frac{L_{\text{poloidal}}}{2\pi a}\right)^2$$
 
-Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\mathtt{eps}$) and $\mathtt{sf}$ is the shaping factor calculated in the [poloidal perimeter](../plasma_geometry.md#poloidal-perimeter) function in `plasma_geometry.py`
+Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\mathtt{eps}$) and $L_{\text{poloidal}}$ is the poloidal perimeter of the plasma.
 
 -----------
 
@@ -481,7 +481,7 @@ higher elongations causes an underestimate by up to 20%.
 
 Given the parameter dependencies a new plasma current relation based on fits to FIESTA
 equilibria was created. It showed no bias with any parameter fitted and that the fit is accurate to 10%.
-The linear relation between these and the 95% values expressed in does not hold at high values of elongation and triangularity as per the [`ishape = 0`](../plasma_geometry.md#plasma-geometry-parameters-geomty) relation.
+The linear relation between these and the 95% values expressed in does not hold at high values of elongation and triangularity as per the [`i_plasma_geometry = 0`](../plasma_geometry.md#plasma-geometry-parameters--plasma_geometry) relation.
 
 
 $$
@@ -539,10 +539,10 @@ $$
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
 
 $$
-B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{pperim}}
+B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{len_plasma_poloidal}}
 $$
 
-Where `pperim` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
+Where `len_plasma_poloidal` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
 
 In the case of using the Peng double null scaling ([`i_plasma_current = 2`](plasma_current.md#star-peng-double-null-divertor-scaling-st)), the values $F_1$ and $F_2$ are calculated from [_plasc_bpol](plasma_current.md#_plasc_bpol) and used to calculated the poloidal field from the toroidal field as per:
 

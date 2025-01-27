@@ -57,17 +57,17 @@ class StgeomParam(NamedTuple):
 
     rminor: Any = None
 
-    sarea: Any = None
+    a_plasma_surface: Any = None
 
-    sareao: Any = None
+    a_plasma_surface_outboard: Any = None
 
-    plasma_volume: Any = None
+    vol_plasma: Any = None
 
-    xarea: Any = None
+    a_plasma_poloidal: Any = None
 
     bt: Any = None
 
-    stella_config_plasma_volume: Any = None
+    stella_config_vol_plasma: Any = None
 
     stella_config_plasma_surface: Any = None
 
@@ -75,13 +75,13 @@ class StgeomParam(NamedTuple):
 
     f_a: Any = None
 
-    expected_sarea: Any = None
+    expected_a_plasma_surface: Any = None
 
-    expected_sareao: Any = None
+    expected_a_plasma_surface_outboard: Any = None
 
     expected_vol: Any = None
 
-    expected_xarea: Any = None
+    expected_a_plasma_poloidal: Any = None
 
 
 @pytest.mark.parametrize(
@@ -91,37 +91,37 @@ class StgeomParam(NamedTuple):
             aspect=12.33,
             rmajor=22,
             rminor=1.7842660178426601,
-            sarea=0,
-            sareao=0,
-            plasma_volume=0,
-            xarea=0,
+            a_plasma_surface=0,
+            a_plasma_surface_outboard=0,
+            vol_plasma=0,
+            a_plasma_poloidal=0,
             bt=5.5,
-            stella_config_plasma_volume=1422.6300000000001,
+            stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
-            expected_sarea=1925.3641313657533,
-            expected_sareao=962.68206568287667,
+            expected_a_plasma_surface=1925.3641313657533,
+            expected_a_plasma_surface_outboard=962.68206568287667,
             expected_vol=1385.2745877380669,
-            expected_xarea=10.001590778710231,
+            expected_a_plasma_poloidal=10.001590778710231,
         ),
         StgeomParam(
             aspect=12.33,
             rmajor=22,
             rminor=1.7842660178426601,
-            sarea=1925.3641313657533,
-            sareao=962.68206568287667,
-            plasma_volume=1385.2745877380669,
-            xarea=10.001590778710231,
+            a_plasma_surface=1925.3641313657533,
+            a_plasma_surface_outboard=962.68206568287667,
+            vol_plasma=1385.2745877380669,
+            a_plasma_poloidal=10.001590778710231,
             bt=5.5,
-            stella_config_plasma_volume=1422.6300000000001,
+            stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
             f_a=0.99125889880147788,
-            expected_sarea=1925.3641313657533,
-            expected_sareao=962.68206568287667,
+            expected_a_plasma_surface=1925.3641313657533,
+            expected_a_plasma_surface_outboard=962.68206568287667,
             expected_vol=1385.2745877380669,
-            expected_xarea=10.001590778710231,
+            expected_a_plasma_poloidal=10.001590778710231,
         ),
     ),
 )
@@ -144,20 +144,28 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "rminor", stgeomparam.rminor)
 
-    monkeypatch.setattr(physics_variables, "sarea", stgeomparam.sarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_surface", stgeomparam.a_plasma_surface
+    )
 
-    monkeypatch.setattr(physics_variables, "sareao", stgeomparam.sareao)
+    monkeypatch.setattr(
+        physics_variables,
+        "a_plasma_surface_outboard",
+        stgeomparam.a_plasma_surface_outboard,
+    )
 
-    monkeypatch.setattr(physics_variables, "plasma_volume", stgeomparam.plasma_volume)
+    monkeypatch.setattr(physics_variables, "vol_plasma", stgeomparam.vol_plasma)
 
-    monkeypatch.setattr(physics_variables, "xarea", stgeomparam.xarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
+    )
 
     monkeypatch.setattr(physics_variables, "bt", stgeomparam.bt)
 
     monkeypatch.setattr(
         stellarator_configuration,
-        "stella_config_plasma_volume",
-        stgeomparam.stella_config_plasma_volume,
+        "stella_config_vol_plasma",
+        stgeomparam.stella_config_vol_plasma,
     )
 
     monkeypatch.setattr(
@@ -172,13 +180,19 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     stellarator.stgeom()
 
-    assert physics_variables.sarea == pytest.approx(stgeomparam.expected_sarea)
+    assert physics_variables.a_plasma_surface == pytest.approx(
+        stgeomparam.expected_a_plasma_surface
+    )
 
-    assert physics_variables.sareao == pytest.approx(stgeomparam.expected_sareao)
+    assert physics_variables.a_plasma_surface_outboard == pytest.approx(
+        stgeomparam.expected_a_plasma_surface_outboard
+    )
 
-    assert physics_variables.plasma_volume == pytest.approx(stgeomparam.expected_vol)
+    assert physics_variables.vol_plasma == pytest.approx(stgeomparam.expected_vol)
 
-    assert physics_variables.xarea == pytest.approx(stgeomparam.expected_xarea)
+    assert physics_variables.a_plasma_poloidal == pytest.approx(
+        stgeomparam.expected_a_plasma_poloidal
+    )
 
 
 class StbildParam(NamedTuple):
@@ -272,7 +286,7 @@ class StbildParam(NamedTuple):
 
     rminor: Any = None
 
-    sarea: Any = None
+    a_plasma_surface: Any = None
 
     stella_config_derivative_min_lcfs_coils_dist: Any = None
 
@@ -368,7 +382,7 @@ class StbildParam(NamedTuple):
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
-            sarea=1925.3641313657533,
+            a_plasma_surface=1925.3641313657533,
             stella_config_derivative_min_lcfs_coils_dist=-1,
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
@@ -438,7 +452,7 @@ class StbildParam(NamedTuple):
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
-            sarea=1925.3641313657533,
+            a_plasma_surface=1925.3641313657533,
             stella_config_derivative_min_lcfs_coils_dist=-1,
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
@@ -573,7 +587,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "rminor", stbildparam.rminor)
 
-    monkeypatch.setattr(physics_variables, "sarea", stbildparam.sarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_surface", stbildparam.a_plasma_surface
+    )
 
     monkeypatch.setattr(
         stellarator_configuration,
@@ -2670,9 +2686,9 @@ class StCalcEffChiParam(NamedTuple):
 
     alphat: Any = None
 
-    plasma_volume: Any = None
+    vol_plasma: Any = None
 
-    sarea: Any = None
+    a_plasma_surface: Any = None
 
     rminor: Any = None
 
@@ -2696,8 +2712,8 @@ class StCalcEffChiParam(NamedTuple):
             pcoreradpv=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
-            sarea=1926.0551116585129,
+            vol_plasma=1385.8142655379029,
+            a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
@@ -2713,8 +2729,8 @@ class StCalcEffChiParam(NamedTuple):
             pcoreradpv=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
-            plasma_volume=1385.8142655379029,
-            sarea=1926.0551116585129,
+            vol_plasma=1385.8142655379029,
+            a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
             coreradius=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
@@ -2757,11 +2773,11 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
 
-    monkeypatch.setattr(
-        physics_variables, "plasma_volume", stcalceffchiparam.plasma_volume
-    )
+    monkeypatch.setattr(physics_variables, "vol_plasma", stcalceffchiparam.vol_plasma)
 
-    monkeypatch.setattr(physics_variables, "sarea", stcalceffchiparam.sarea)
+    monkeypatch.setattr(
+        physics_variables, "a_plasma_surface", stcalceffchiparam.a_plasma_surface
+    )
 
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 

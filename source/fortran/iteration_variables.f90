@@ -2243,7 +2243,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_104
-    !! <LI> (104) fcwr (f-value for equation 23)
+    !! <LI> (104)fr_conducting_wall (f-value for equation 23)
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(104) = 'fcwr          '
@@ -2252,16 +2252,16 @@ contains
   end subroutine init_itv_104
 
   real(kind(1.d0)) function itv_104()
-    use constraint_variables, only: fcwr
+    use constraint_variables, only:fr_conducting_wall
     implicit none
-    itv_104 = fcwr
+    itv_104 =fr_conducting_wall
   end function itv_104
 
   subroutine set_itv_104(ratio)
-    use constraint_variables, only: fcwr
+    use constraint_variables, only:fr_conducting_wall
     implicit none
     real(kind(1.d0)) :: ratio
-    fcwr = ratio
+   fr_conducting_wall = ratio
   end subroutine set_itv_104
 
   !---------------------------------
