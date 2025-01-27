@@ -395,11 +395,7 @@ def search_keys(dictionary, variable):
       matches --> List of matches to the searched for variable
 
     """
-    matches = []
-    for key in dictionary:
-        if variable.lower() in key.lower():
-            matches.append(key)
-    return matches
+    return [key for key in dictionary if variable.lower() in key.lower()]
 
 
 def search_des(dictionary, description):
@@ -417,10 +413,7 @@ def search_des(dictionary, description):
 
     """
     descriptions = [dictionary[key].var_descript.lower() for key in dictionary.data]
-    matches = []
-    for item in descriptions:
-        if description.lower() in item.lower():
-            matches.append(item)
+    matches = [item for item in descriptions if description.lower() in item.lower()]
     return matches
 
 

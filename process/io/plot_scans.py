@@ -686,14 +686,14 @@ def main(args=None):
 
             if two_dimensional_contour:
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
-                x_contour = []
-                y_contour = []
-                for i in range(n_scan_2):
-                    x_contour.append(m_file.data[scan_2_var_name].get_scan(i + 1))
-                for i in range(1, n_scan_1 * n_scan_2, n_scan_2):
-                    y_contour.append(
-                        m_file.data[scan_var_name].get_scan(i + 1)
-                    )  # is the separte lists in the list
+                x_contour = [
+                    m_file.data[scan_2_var_name].get_scan(i + 1)
+                    for i in range(n_scan_2)
+                ]
+                y_contour = [
+                    m_file.data[scan_var_name].get_scan(i + 1)
+                    for i in range(1, n_scan_1 * n_scan_2, n_scan_2)
+                ]
                 for i in contour_conv_ij:
                     output_contour_z[((i - 1) // n_scan_2)][
                         (

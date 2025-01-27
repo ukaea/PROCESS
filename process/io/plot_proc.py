@@ -2460,13 +2460,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
         if "rpf[" in item:
             number_of_coils += 1
 
-    pf_info = []
-    for i in range(1, number_of_coils):
-        if i % 2 != 0:
-            pf_info.append((
-                mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
-                f"PF {i}",
-            ))
+    pf_info = [
+        (
+            mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
+            f"PF {i}",
+        )
+        for i in range(1, number_of_coils)
+        if i % 2 != 0
+    ]
 
     if len(pf_info) > 2:
         pf_info_3_a = pf_info[2][0]

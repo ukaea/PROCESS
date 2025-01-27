@@ -20,10 +20,12 @@ extend-select = [
     "LOG",
     "NPY",
     "PD",
+    "PERF",
     "PGH",
     "PIE",
     "PYI",
     "Q",
+    "RET",
     "RSE",
     "RUF",
     "SIM",
@@ -34,7 +36,6 @@ extend-select = [
     "UP",
     "W",
     "YTT",
-    "RET",
 ]
 
 ignore = ["COM812", "FBT", "G004", "PD901"]

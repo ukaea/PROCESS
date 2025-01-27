@@ -100,11 +100,7 @@ class Scan:
         nsweep_var_name = nsweep_var_name.decode("utf-8")
         # offsets for aligning the converged/unconverged column
         max_sweep_value_length = len(str(np.max(sweep_values)).replace(".", ""))
-        offsets = []
-        for sweep_val in sweep_values:
-            offsets.append(
-                max_sweep_value_length - len(str(sweep_val).replace(".", ""))
-            )
+        offsets = [max_sweep_value_length - len(str(sweep_val).replace(".", "")) for sweep_val in sweep_values]
         for iscan in range(1, scan_module.isweep + 1):
             if scan_1d_ifail_dict[iscan] == 1:
                 converged_count += 1

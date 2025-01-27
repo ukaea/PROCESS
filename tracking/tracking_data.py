@@ -401,11 +401,8 @@ def plot_tracking_data(database):
 
     # populates the overrides map
     for i in ProcessTracker.tracking_variables:
-        try:
-            overriden_name, variable = i.split(".")
-        except (AttributeError, ValueError):
-            continue
-        else:
+        if hasattr(i, "split") and len(name_and_variable:=i.split("."))==2:
+            overriden_name, variable = name_and_variable
             overrides[variable] = overriden_name
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():

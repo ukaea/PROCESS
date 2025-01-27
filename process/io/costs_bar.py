@@ -246,9 +246,7 @@ def main(args=None):
     inflate = args.inf
 
     # Get file names
-    mfile_list = []
-    for item in args.f:
-        mfile_list.append(mf.MFile(filename=item))
+    mfile_list = [mf.MFile(filename=item) for item in args.f]
 
     # Check which cost model is being used
     if "c21" in mfile_list[0].data:
