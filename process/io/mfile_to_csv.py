@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to read from a PROCESS MFILE and write values into a csv
 

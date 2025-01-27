@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to create plots from the output of the Sobols
 sensistivity analysis to investigate the input

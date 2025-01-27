@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 
 Code to produce costs bar chart.

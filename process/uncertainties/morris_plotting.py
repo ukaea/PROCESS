@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to create plots from the output of the Morris method
 of elementary elements to investiage the sensistivity of

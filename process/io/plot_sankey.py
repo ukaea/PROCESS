@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code to display the power flow of a PROCESS run in a Sankey diagram
 

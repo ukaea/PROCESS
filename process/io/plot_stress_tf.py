@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Code generating the TF coil inboard mid-plane stress/strain summary plots
 The whole radial distribution is displayed
