@@ -36,13 +36,20 @@ def plasma_geometry(
     based on the given major radius, minor radius, triangularity, and elongation at 95% of the plasma surface. It also
     considers whether the plasma configuration is single null or double null.
 
-    :param float rmajor: Plasma major radius.
-    :param float rminor: Plasma minor radius.
-    :param float triang: Plasma triangularity at separatrix.
-    :param float kappa: Plasma elongation at separatrix.
-    :param int i_single_null: Switch for single null (1) or double null (0) plasma configuration.
-    :param int i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
-    :param float square: Square term for Sauter plasma shape.
+    :param rmajor: Plasma major radius.
+    :type rmajor: float
+    :param rminor: Plasma minor radius.
+    :type rminor: float
+    :param triang: Plasma triangularity at separatrix.
+    :type triang: float
+    :param kappa: Plasma elongation at separatrix.
+    :type kappa: float
+    :param i_single_null: Switch for single null (1) or double null (0) plasma configuration.
+    :type i_single_null: int
+    :param i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
+    :type i_plasma_shape: int
+    :param square: Square term for Sauter plasma shape.
+    :type square: float
     :returns: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
     :rtype: PlasmaGeometry
 
