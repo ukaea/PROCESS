@@ -659,9 +659,7 @@ def psync_albajar_fidone():
 
     # psyncpv should be per unit volume; Albajar gives it as total
 
-    psyncpv = psync / physics_variables.vol_plasma
-
-    return psyncpv
+    return psync / physics_variables.vol_plasma
 
 
 @dataclass

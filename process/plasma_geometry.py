@@ -475,10 +475,7 @@ class PlasmaGeom:
             )
         )
 
-        xvol = vout - vin
-        xvol = xvol
-
-        return xvol
+        return vout - vin
 
     @staticmethod
     def plasma_cross_section(
@@ -508,11 +505,9 @@ class PlasmaGeom:
         - F/MI/PJK/LOGBOOK14, p.41
         """
 
-        plasma_cross_section = xo**2 * (
-            thetao - np.cos(thetao) * np.sin(thetao)
-        ) + xi**2 * (thetai - np.cos(thetai) * np.sin(thetai))
-
-        return plasma_cross_section
+        return xo**2 * (thetao - np.cos(thetao) * np.sin(thetao)) + xi**2 * (
+            thetai - np.cos(thetai) * np.sin(thetai)
+        )
 
     @staticmethod
     def sauter_geometry(
@@ -543,7 +538,7 @@ class PlasmaGeom:
 
         :references:
             - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
-              Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016,
+              Fusion Engineering and Design, vol. 112, pp. 633-645, Nov. 2016,
               doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
 
@@ -668,9 +663,7 @@ def perim(a: float, kap: float, tri: float) -> float:
     thetao = np.arctan(kap / denomo)
     xlo = a * (denomo + 1.0e0 + tri)
 
-    perim = 2.0e0 * (xlo * thetao + xli * thetai)
-
-    return perim
+    return 2.0e0 * (xlo * thetao + xli * thetai)
 
 
 def fvol(r: float, a: float, kap: float, tri: float) -> float:
@@ -724,9 +717,7 @@ def fvol(r: float, a: float, kap: float, tri: float) -> float:
         * (zn * np.sqrt(rc2**2 - zn**2) + rc2**2 * np.arcsin(zn / rc2))
     )
 
-    fvol = vout - vin
-
-    return fvol
+    return vout - vin
 
 
 def xsect0(a: float, kap: float, tri: float) -> float:
@@ -772,6 +763,4 @@ def xsect0(a: float, kap: float, tri: float) -> float:
 
     #  Find cross-sectional area
 
-    xsect0 = xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)
-
-    return xsect0
+    return xlo**2 * (thetao - cto * sto) + xli**2 * (thetai - cti * sti)

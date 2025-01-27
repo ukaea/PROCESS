@@ -97,7 +97,7 @@ def plasma_geometry(
         return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
 
     # Sauter plasma shape
-    elif i_plasma_shape == 1:
+    if i_plasma_shape == 1:
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter
@@ -105,3 +105,6 @@ def plasma_geometry(
         Z = kappa * rminor * np.sin(x + square * np.sin(2 * x))
 
         return PlasmaGeometry(rs=R, zs=Z, kappa=kappa)
+
+    # Explicit return statement at the end of the function
+    return None
