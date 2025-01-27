@@ -34,7 +34,6 @@ extend-select = [
     "W",
     "YTT",
     "RET"
-    "SLF",
 ]
 
 ignore = ["COM812", "FBT", "G004", "PD901"]
