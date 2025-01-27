@@ -446,8 +446,7 @@ def main(args=None):
                 print()
                 if output_names2 != []:
                     print(
-                        "Y2-Axis\n "
-                        + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
+                        f"Y2-Axis\n  {output_name2} : {output_arrays2[input_file][output_name2]}\n"
                     )
         # Plot section
         # -----------
@@ -631,37 +630,16 @@ def main(args=None):
 
             # Output file naming
             if output_name == "plasma_current_MA":
-                plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
-                    + f".{save_format}"
-                )
+                extra_str = f"plasma_current{f'_vs_{output_name2}' if output_names2 != [] else ''}"
             elif stack_plots and output_names[-1] == output_name:
-                plt.savefig(
-                    (
-                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f"_vs_{output_name2}"
-                        if output_names2 != []
-                        else f"{args.outputdir}/scan_{scan_var_name}_vs_"
-                        + "_vs_".join(output_names)
-                        + f".{save_format}"
-                    ),
-                    dpi=300,
-                )
-
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else '_vs_'.join(output_names)}"
             else:
-                plt.savefig(
-                    (
-                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f"_vs_{output_name2}"
-                        if output_names2 != []
-                        else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f".{save_format}"
-                    ),
-                    dpi=300,
-                )
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else ''}"
+
+            plt.savefig(
+                f"{args.outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                dpi=300,
+            )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
                 plt.show()
                 plt.clf()

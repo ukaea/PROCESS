@@ -689,18 +689,15 @@ def plot_nprofile(prof, demo_ranges):
 
         # Add text box with density profile parameters
         textstr_density = "\n".join((
-            r"$n_{\text{e,0}}$: "
-            + f"{ne0:.3e} m$^{{-3}}$"
-            + r"$\hspace{4} \alpha_{\text{n}}$: "
-            + f"{alphan:.3f}\n",
-            r"$n_{\text{e,ped}}$: "
-            + f"{neped:.3e} m$^{{-3}}$"
-            + r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-            + f"{deni / dene:.3f}",
-            r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
-            r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
-            r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
-            r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
+            rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
+            rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
+            r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+            f"{deni / dene:.3f}",
+            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
+            rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
+            rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
 
         props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -817,16 +814,13 @@ def plot_tprofile(prof, demo_ranges):
 
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        r"$T_{\text{e,0}}$: "
-        + f"{te0:.3f} keV"
-        + r"$\hspace{4} \alpha_{\text{T}}$: "
-        + f"{alphat:.3f}\n",
-        r"$T_{\text{e,ped}}$: "
-        + f"{teped:.3f} keV"
-        + r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-        + f"{tratio:.3f}",
-        r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
-        r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
+        rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
+        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}\n",
+        rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
+        r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+        f"{tratio:.3f}",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}\n",
+        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV\n",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -2625,8 +2619,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("pnetelmw", "Net electric power", "MW"),
         (
             plant_eff,
-            "Fusion-to-electric efficiency "
-            + r"$\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$",
+            r"Fusion-to-electric efficiency $\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$",
             "%",
         ),
     ]
