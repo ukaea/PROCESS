@@ -45,8 +45,10 @@ class CCFE_HCPB:
         ccfe_hcpb_module.ofile = self.outfile
 
         # MDK (27/11/2015)
-        build_variables.fwith = 2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
-        build_variables.fwoth = build_variables.fwith
+        build_variables.dr_fw_inboard = (
+            2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
+        )
+        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 
         # Coolant type
         fwbs_variables.coolwh = 1
@@ -211,8 +213,8 @@ class CCFE_HCPB:
         it only appears to contain code relevant to hcpb.
         """
         # CCFE HCPB modal calculates the coolant mass,
-        # have added an if staement using the iblanket switch for this.
-        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+        # have added an if staement using the i_blanket_type switch for this.
+        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
 
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
@@ -231,8 +233,12 @@ class CCFE_HCPB:
         # First wall coolant volume (m3)
         coolvol = (
             coolvol
-            + build_variables.fwareaib * build_variables.fwith * fwbs_variables.vffwi
-            + build_variables.fwareaob * build_variables.fwoth * fwbs_variables.vffwo
+            + build_variables.a_fw_inboard
+            * build_variables.dr_fw_inboard
+            * fwbs_variables.f_a_fw_coolant_inboard
+            + build_variables.a_fw_outboard
+            * build_variables.dr_fw_outboard
+            * fwbs_variables.f_a_fw_coolant_outboard
         )
 
         # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
@@ -240,19 +246,23 @@ class CCFE_HCPB:
 
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
         fwbs_variables.fwclfr = (
-            build_variables.fwareaib * build_variables.fwith * fwbs_variables.vffwi
-            + build_variables.fwareaob * build_variables.fwoth * fwbs_variables.vffwo
+            build_variables.a_fw_inboard
+            * build_variables.dr_fw_inboard
+            * fwbs_variables.f_a_fw_coolant_inboard
+            + build_variables.a_fw_outboard
+            * build_variables.dr_fw_outboard
+            * fwbs_variables.f_a_fw_coolant_outboard
         ) / (
-            build_variables.fwarea
+            build_variables.a_fw_total
             * 0.5
-            * (build_variables.fwith + build_variables.fwoth)
+            * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
 
         # CCFE HCPB calculates the mass of the divertor, blanket (including seprate masses for each material),
         # shield, FW and FW armour.
         # KIT HCPB calculates the mass of the blanket (including seprate masses for each material)
         # and the void fraction for the blanket.
-        # N.B. iblanket=1 for CCFE HCPB and iblanket=3 for the same with TBR using Shimwell.
+        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
 
         # Component masses
 
@@ -284,14 +294,17 @@ class CCFE_HCPB:
         fwbs_variables.wpenshld = fwbs_variables.whtshld
 
         # First wall volume (m^3)
-        fwbs_variables.volfw = build_variables.fwareaib * build_variables.fwith * (
-            1.0 - fwbs_variables.vffwi
-        ) + build_variables.fwareaob * build_variables.fwoth * (
-            1.0 - fwbs_variables.vffwo
+        fwbs_variables.vol_fw_total = (
+            build_variables.a_fw_inboard
+            * build_variables.dr_fw_inboard
+            * (1.0 - fwbs_variables.f_a_fw_coolant_inboard)
+            + build_variables.a_fw_outboard
+            * build_variables.dr_fw_outboard
+            * (1.0 - fwbs_variables.f_a_fw_coolant_outboard)
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.fwmass = fwbs_variables.denstl * fwbs_variables.volfw
+        fwbs_variables.m_fw_total = fwbs_variables.denstl * fwbs_variables.vol_fw_total
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
@@ -300,7 +313,7 @@ class CCFE_HCPB:
 
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * fwbs_variables.denw
+            fwbs_variables.fw_armour_vol * constants.den_tungsten
         )
 
         if fwbs_variables.breeder_f < 1.0e-10:
@@ -358,7 +371,7 @@ class CCFE_HCPB:
         # Total mass of first wall and blanket
         fwbs_variables.armour_fw_bl_mass = (
             fwbs_variables.fw_armour_mass
-            + fwbs_variables.fwmass
+            + fwbs_variables.m_fw_total
             + fwbs_variables.whtblkt
         )
 
@@ -379,21 +392,21 @@ class CCFE_HCPB:
         # First wall void fractions
 
         # inboard FW coolant void fraction
-        fwbs_variables.vffwi = (
+        fwbs_variables.f_a_fw_coolant_inboard = (
             np.pi
             * fwbs_variables.afw**2
-            / (fwbs_variables.pitch * build_variables.fwith)
+            / (fwbs_variables.pitch * build_variables.dr_fw_inboard)
         )
 
         # outboard FW coolant void fraction
-        fwbs_variables.vffwo = fwbs_variables.vffwi
+        fwbs_variables.f_a_fw_coolant_outboard = fwbs_variables.f_a_fw_coolant_inboard
 
         # mean FW coolant void fraction
-        vffwm = fwbs_variables.vffwi
+        vffwm = fwbs_variables.f_a_fw_coolant_inboard
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
-        ccfe_hcpb_module.armour_density = fwbs_variables.denw * (1.0 - vffwm)
+        ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
         ccfe_hcpb_module.fw_density = fwbs_variables.denstl * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
             fwbs_variables.whtblkt / fwbs_variables.volblkt
@@ -431,7 +444,7 @@ class CCFE_HCPB:
         ccfe_hcpb_module.x_blanket = (
             ccfe_hcpb_module.armour_density * fwbs_variables.fw_armour_thickness
             + ccfe_hcpb_module.fw_density
-            * (build_variables.fwith + build_variables.fwoth)
+            * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
             / 2.0
             + ccfe_hcpb_module.blanket_density * th_blanket_av
         ) / 1000.0
@@ -521,7 +534,7 @@ class CCFE_HCPB:
 
         # Total nuclear heating in FW (MW)
         fwbs_variables.pnucfw = (
-            fwbs_variables.fwmass
+            fwbs_variables.m_fw_total
             * ccfe_hcpb_module.fw_armour_u_nuc_heating
             * physics_variables.fusion_power
         )
@@ -529,7 +542,7 @@ class CCFE_HCPB:
         if fwbs_variables.pnucfw < 0:
             raise RuntimeError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.pnucfw = },
-                {physics_variables.fusion_power = }, {fwbs_variables.fwmass = }"""
+                {physics_variables.fusion_power = }, {fwbs_variables.m_fw_total = }"""
             )
 
     def nuclear_heating_blanket(self):
@@ -660,12 +673,14 @@ class CCFE_HCPB:
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.pradfw * build_variables.fwareaob / build_variables.fwarea
+            fwbs_variables.pradfw
+            * build_variables.a_fw_outboard
+            / build_variables.a_fw_total
             + current_drive_variables.porbitlossmw
             + physics_variables.palpfwmw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
-            1 - build_variables.fwareaob / build_variables.fwarea
+            1 - build_variables.a_fw_outboard / build_variables.a_fw_total
         )
 
         # primary_pumping == 0
@@ -1181,14 +1196,14 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "For consistency, inboard first wall thicknesses should be 0.03 (m)",
-                "(fwith)",
-                build_variables.fwith,
+                "(dr_fw_inboard)",
+                build_variables.dr_fw_inboard,
             )
             po.ovarre(
                 self.outfile,
                 "For consistency, outboard first wall thicknesses should be 0.03 (m)",
-                "(fwoth)",
-                build_variables.fwoth,
+                "(dr_fw_outboard)",
+                build_variables.dr_fw_outboard,
             )
             po.ovarre(
                 self.outfile,
@@ -1241,8 +1256,8 @@ class CCFE_HCPB:
         po.ovarrf(
             self.outfile,
             "First Wall Volume (m3)",
-            "(volfw)",
-            fwbs_variables.volfw,
+            "(vol_fw_total)",
+            fwbs_variables.vol_fw_total,
             "OP ",
         )
         po.ovarrf(
@@ -1279,8 +1294,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First Wall Mass, excluding armour (kg)",
-            "(fwmass)",
-            fwbs_variables.fwmass,
+            "(m_fw_total)",
+            fwbs_variables.m_fw_total,
             "OP ",
         )
         po.ovarre(
@@ -1444,8 +1459,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First wall coolant pressure (Pa)",
-            "(fwpressure)",
-            fwbs_variables.fwpressure,
+            "(pres_fw_coolant)",
+            fwbs_variables.pres_fw_coolant,
         )
         po.ovarre(
             self.outfile,
@@ -1532,8 +1547,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "First wall area (m2)",
-            "(fwarea)",
-            build_variables.fwarea,
+            "(a_fw_total)",
+            build_variables.a_fw_total,
             "OP ",
         )
         po.ovarre(

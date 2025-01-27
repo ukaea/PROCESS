@@ -206,11 +206,11 @@ class StbildParam(NamedTuple):
 
     d_vv_out: Any = None
 
-    fwarea: Any = None
+    a_fw_total: Any = None
 
-    fwith: Any = None
+    dr_fw_inboard: Any = None
 
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
 
     gapds: Any = None
 
@@ -294,11 +294,11 @@ class StbildParam(NamedTuple):
 
     expected_bore: Any = None
 
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
 
-    expected_fwith: Any = None
+    expected_dr_fw_inboard: Any = None
 
-    expected_fwoth: Any = None
+    expected_dr_fw_outboard: Any = None
 
     expected_gapsto: Any = None
 
@@ -335,9 +335,9 @@ class StbildParam(NamedTuple):
             bore=1.4199999999999999,
             d_vv_in=0.35000000000000003,
             d_vv_out=0.35000000000000003,
-            fwarea=0,
-            fwith=0,
-            fwoth=0,
+            a_fw_total=0,
+            dr_fw_inboard=0,
+            dr_fw_outboard=0,
             gapds=0.025000000000000005,
             gapoh=0,
             gapomin=0.025000000000000005,
@@ -379,9 +379,9 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=1918.8188778803135,
-            expected_fwith=0.018000000000000002,
-            expected_fwoth=0.018000000000000002,
+            expected_a_fw_total=1918.8188778803135,
+            expected_dr_fw_inboard=0.018000000000000002,
+            expected_dr_fw_outboard=0.018000000000000002,
             expected_gapsto=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
@@ -405,9 +405,9 @@ class StbildParam(NamedTuple):
             bore=17.79214950143977,
             d_vv_in=0.35000000000000003,
             d_vv_out=0.35000000000000003,
-            fwarea=1918.8188778803135,
-            fwith=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            a_fw_total=1918.8188778803135,
+            dr_fw_inboard=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             gapds=0.025000000000000005,
             gapoh=0,
             gapomin=0.025000000000000005,
@@ -449,9 +449,9 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=2120.6210472630282,
-            expected_fwith=0.018000000000000002,
-            expected_fwoth=0.018000000000000002,
+            expected_a_fw_total=2120.6210472630282,
+            expected_dr_fw_inboard=0.018000000000000002,
+            expected_dr_fw_outboard=0.018000000000000002,
             expected_gapsto=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
@@ -501,11 +501,11 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "d_vv_out", stbildparam.d_vv_out)
 
-    monkeypatch.setattr(build_variables, "fwarea", stbildparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", stbildparam.a_fw_total)
 
-    monkeypatch.setattr(build_variables, "fwith", stbildparam.fwith)
+    monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
-    monkeypatch.setattr(build_variables, "fwoth", stbildparam.fwoth)
+    monkeypatch.setattr(build_variables, "dr_fw_outboard", stbildparam.dr_fw_outboard)
 
     monkeypatch.setattr(build_variables, "gapds", stbildparam.gapds)
 
@@ -604,11 +604,15 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.bore == pytest.approx(stbildparam.expected_bore)
 
-    assert build_variables.fwarea == pytest.approx(stbildparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(stbildparam.expected_a_fw_total)
 
-    assert build_variables.fwith == pytest.approx(stbildparam.expected_fwith)
+    assert build_variables.dr_fw_inboard == pytest.approx(
+        stbildparam.expected_dr_fw_inboard
+    )
 
-    assert build_variables.fwoth == pytest.approx(stbildparam.expected_fwoth)
+    assert build_variables.dr_fw_outboard == pytest.approx(
+        stbildparam.expected_dr_fw_outboard
+    )
 
     assert build_variables.gapsto == pytest.approx(stbildparam.expected_gapsto)
 
@@ -2785,8 +2789,8 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     blnkith: Any = None
     blnkoth: Any = None
-    fwith: Any = None
-    fwoth: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_outboard: Any = None
     shldith: Any = None
     shldoth: Any = None
     cfactr: Any = None
@@ -2816,8 +2820,8 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
         SctfcoilNuclearHeatingIter90Param(
             blnkith=0.83499999999999996,
             blnkoth=1.085,
-            fwith=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            dr_fw_inboard=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             shldith=0.20000000000000001,
             shldoth=0.20000000000000001,
             cfactr=0.75000000000000011,
@@ -2863,10 +2867,14 @@ def test_sctfcoil_nuclear_heating_iter90(
         build_variables, "blnkoth", sctfcoilnuclearheatingiter90param.blnkoth
     )
     monkeypatch.setattr(
-        build_variables, "fwith", sctfcoilnuclearheatingiter90param.fwith
+        build_variables,
+        "dr_fw_inboard",
+        sctfcoilnuclearheatingiter90param.dr_fw_inboard,
     )
     monkeypatch.setattr(
-        build_variables, "fwoth", sctfcoilnuclearheatingiter90param.fwoth
+        build_variables,
+        "dr_fw_outboard",
+        sctfcoilnuclearheatingiter90param.dr_fw_outboard,
     )
     monkeypatch.setattr(
         build_variables, "shldith", sctfcoilnuclearheatingiter90param.shldith

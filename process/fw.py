@@ -32,7 +32,7 @@ class Fw:
         """Thermo-hydraulic calculations for the first wall
         author: P J Knight, CCFE, Culham Science Centre
         afw : input real : first wall coolant channel radius (m)
-        thickness : first wall thickness (fwith or fwoth) (m)
+        thickness : first wall thickness (dr_fw_inboard or dr_fw_outboard) (m)
         area : input real : area of first wall section under consideration (m2)
         (i.e. area of inboard wall or outboard wall)
         prad_incident : input real : Surface heat flux on first wall (outboard and inboard) (MW)
@@ -75,16 +75,16 @@ class Fw:
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         ib_fluid_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.fwcoolant),
-            temperature=fwbs_variables.fwinlet.item(),
-            pressure=fwbs_variables.fwpressure.item(),
+            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
+            temperature=fwbs_variables.temp_fw_coolant_in.item(),
+            pressure=fwbs_variables.pres_fw_coolant.item(),
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         ob_fluid_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.fwcoolant),
-            temperature=fwbs_variables.fwoutlet.item(),
-            pressure=fwbs_variables.fwpressure.item(),
+            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
+            temperature=fwbs_variables.temp_fw_coolant_out.item(),
+            pressure=fwbs_variables.pres_fw_coolant.item(),
         )
 
         # Mean properties (inlet + outlet)/2
@@ -106,7 +106,7 @@ class Fw:
             fwbs_variables.fw_channel_length
             * load
             / cfmean
-            / (fwbs_variables.fwoutlet - fwbs_variables.fwinlet)
+            / (fwbs_variables.temp_fw_coolant_out - fwbs_variables.temp_fw_coolant_in)
         )
 
         # Coolant mass flux in a single channel (kg/m2/s)
@@ -121,7 +121,7 @@ class Fw:
         # Mean temperature of the wall material on the plasma side of the coolant 'tpeak'
         # is the estimate from the previous iteration of the wall surface temperature
         # (underneath the armour)
-        temp_k = (fwbs_variables.fwoutlet + fwbs_variables.tpeak) / 2  # (K)
+        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.tpeak) / 2  # (K)
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
@@ -205,7 +205,7 @@ class Fw:
         deltat_coolant = load / (2 * np.pi * afw * hcoeff)
 
         # Peak first wall temperature (K)
-        tpeakfw = fwbs_variables.fwoutlet + deltat_solid + deltat_coolant
+        tpeakfw = fwbs_variables.temp_fw_coolant_out + deltat_solid + deltat_coolant
 
         if output:
             po.oheadr(
@@ -271,8 +271,8 @@ class Fw:
             po.ovarre(
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
-                "(fwoutlet)",
-                fwbs_variables.fwoutlet,
+                "(temp_fw_coolant_out)",
+                fwbs_variables.temp_fw_coolant_out,
             )
             po.ovarre(
                 self.outfile, "Heat transfer coefficient", "(hcoeff)", hcoeff, "OP "

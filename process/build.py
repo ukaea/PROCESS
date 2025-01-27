@@ -411,7 +411,8 @@ class Build:
                     + build_variables.vvblgap
                     + build_variables.shldtth
                     + build_variables.blnktth
-                    + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                    + 0.5e0
+                    * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                     + build_variables.vgaptop
                     + physics_variables.rminor * physics_variables.kappa
                 )
@@ -530,7 +531,9 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.blnktth
 
-                fwtth = 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                fwtth = 0.5e0 * (
+                    build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
+                )
                 po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
                 po.ovarre(
                     self.mfile,
@@ -737,7 +740,8 @@ class Build:
                 + build_variables.shldtth
                 + build_variables.vvblgap
                 + build_variables.blnktth
-                + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                + 0.5e0
+                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 + build_variables.vgaptop
                 + physics_variables.rminor * physics_variables.kappa
             )
@@ -1696,7 +1700,7 @@ class Build:
                         + build_variables.shldith
                         + build_variables.vvblgap
                         + build_variables.blnkith
-                        + build_variables.fwith
+                        + build_variables.dr_fw_inboard
                         + 3.0e0 * build_variables.scrapli
                     )
                     + tfcoil_variables.drtop
@@ -1751,7 +1755,7 @@ class Build:
                 + build_variables.shldith
                 + build_variables.vvblgap
                 + build_variables.blnkith
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
                 + 3.0e0 * build_variables.scrapli
             )
             + tfcoil_variables.drtop
@@ -1791,7 +1795,7 @@ class Build:
             build_variables.r_sh_inboard_out
             + build_variables.vvblgap
             + build_variables.blnkith
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scrapli
             + physics_variables.rminor
         )
@@ -1801,7 +1805,7 @@ class Build:
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.scrapli
-            - build_variables.fwith
+            - build_variables.dr_fw_inboard
             - build_variables.blnkith
             - build_variables.shldith
         )
@@ -1811,7 +1815,7 @@ class Build:
             physics_variables.rmajor
             + physics_variables.rminor
             + build_variables.scraplo
-            + build_variables.fwoth
+            + build_variables.dr_fw_outboard
             + build_variables.blnkoth
             + build_variables.shldoth
         )
@@ -1878,7 +1882,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.scrapli+build_variables.scraplo)) )
+        # a_fw_total = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.scrapli+build_variables.scraplo)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -1886,7 +1890,7 @@ class Build:
             + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
-            - 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
@@ -1922,9 +1926,9 @@ class Build:
             # as a test
 
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
             ) = maths_library.dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
@@ -1959,33 +1963,35 @@ class Build:
             # as a test
 
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
             ) = maths_library.eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
         else:
             # Single null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = build_variables.fwareaib + build_variables.fwareaob
+        build_variables.a_fw_total = (
+            build_variables.a_fw_inboard + build_variables.a_fw_outboard
+        )
 
-        if build_variables.fwareaob <= 0.0e0:
+        if build_variables.a_fw_outboard <= 0.0e0:
             error_handling.fdiags[0] = fwbs_variables.fdiv
             error_handling.fdiags[1] = fwbs_variables.fhcd
             error_handling.report_error(61)
@@ -2204,11 +2210,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.fwith
+            radius = radius + build_variables.dr_fw_inboard
             radial_build_data.append([
                 "Inboard first wall",
-                "fwith",
-                build_variables.fwith,
+                "dr_fw_inboard",
+                build_variables.dr_fw_inboard,
                 radius,
             ])
 
@@ -2244,11 +2250,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.fwoth
+            radius = radius + build_variables.dr_fw_outboard
             radial_build_data.append([
                 "Outboard first wall",
-                "fwoth",
-                build_variables.fwoth,
+                "dr_fw_outboard",
+                build_variables.dr_fw_outboard,
                 radius,
             ])
 

@@ -19,8 +19,8 @@ def first_wall_geometry_single_null(
     blnktth: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
-    fwoth: float,
+    dr_fw_inboard: float,
+    dr_fw_outboard: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of first wall in a single null configuration
@@ -45,10 +45,10 @@ def first_wall_geometry_single_null(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
-    :param fwoth: outboard first wall radial thickness
-    :type fwoth: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
+    :param dr_fw_outboard: outboard first wall radial thickness
+    :type dr_fw_outboard: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
     :return: dataclass returning radial and vertical coordinates
@@ -77,8 +77,8 @@ def first_wall_geometry_single_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
-        fwoth=fwoth,
+        dr_fw_inboard=dr_fw_inboard,
+        dr_fw_outboard=dr_fw_outboard,
         tfwvt=tfwvt,
         top_point=top_point,
     )
@@ -103,8 +103,8 @@ def first_wall_geometry_lower(
     triang: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
-    fwoth: float,
+    dr_fw_inboard: float,
+    dr_fw_outboard: float,
     tfwvt: float,
     top_point: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -116,10 +116,10 @@ def first_wall_geometry_lower(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
-    :param fwoth: outboard first wall radial thickness
-    :type fwoth: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
+    :param dr_fw_outboard: outboard first wall radial thickness
+    :type dr_fw_outboard: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
     :param top_point: top point for plotdhgap, equal to
@@ -131,8 +131,8 @@ def first_wall_geometry_lower(
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
         c_blnkith,
         c_fwoth,
-        fwith,
-        fwoth,
+        dr_fw_inboard,
+        dr_fw_outboard,
         top_point,
         -tfwvt,
         triang,
@@ -153,8 +153,8 @@ def first_wall_geometry_double_null(
     blnktth: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
-    fwoth: float,
+    dr_fw_inboard: float,
+    dr_fw_outboard: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of first wall in a double null configuration
@@ -170,10 +170,10 @@ def first_wall_geometry_double_null(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
-    :param fwoth: outboard first wall radial thickness
-    :type fwoth: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
+    :param dr_fw_outboard: outboard first wall radial thickness
+    :type dr_fw_outboard: float
     :param tfwvt: top first wall vertical thickness
     :type tfwvt: float
     :return: dataclass returning radial and vertical coordinates
@@ -191,8 +191,8 @@ def first_wall_geometry_double_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
-        fwoth=fwoth,
+        dr_fw_inboard=dr_fw_inboard,
+        dr_fw_outboard=dr_fw_outboard,
         tfwvt=tfwvt,
         top_point=top_point,
     )
@@ -208,8 +208,8 @@ def first_wall_geometry_double_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
-        fwoth=fwoth,
+        dr_fw_inboard=dr_fw_inboard,
+        dr_fw_outboard=dr_fw_outboard,
         tfwvt=tfwvt,
         top_point=top_point,
     )

@@ -19,13 +19,13 @@ def fw():
 class FwTempParam(NamedTuple):
     fw_th_conductivity: Any = None
 
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
-    fwinlet: Any = None
+    temp_fw_coolant_in: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_coolant_out: Any = None
 
     pitch: Any = None
 
@@ -63,10 +63,10 @@ class FwTempParam(NamedTuple):
     (
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
-            fwinlet=573,
-            fwpressure=8000000,
-            fwoutlet=773,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            pres_fw_coolant=8000000,
+            temp_fw_coolant_out=773,
             pitch=0.005000000000000001,
             fw_channel_length=4,
             tpeak=873,
@@ -85,10 +85,10 @@ class FwTempParam(NamedTuple):
         ),
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
-            fwinlet=573,
-            fwpressure=8000000,
-            fwoutlet=773,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            pres_fw_coolant=8000000,
+            temp_fw_coolant_out=773,
             pitch=0.005000000000000001,
             fw_channel_length=4,
             tpeak=873,
@@ -125,13 +125,17 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     # monkeypatch doesnt work for strings
     # but helium is the default
-    # monkeypatch.setattr(fwbs_variables, "fwcoolant", fwtempparam.fwcoolant)
+    # monkeypatch.setattr(fwbs_variables, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
 
-    monkeypatch.setattr(fwbs_variables, "fwinlet", fwtempparam.fwinlet)
+    monkeypatch.setattr(
+        fwbs_variables, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
+    )
 
-    monkeypatch.setattr(fwbs_variables, "fwpressure", fwtempparam.fwpressure)
+    monkeypatch.setattr(fwbs_variables, "pres_fw_coolant", fwtempparam.pres_fw_coolant)
 
-    monkeypatch.setattr(fwbs_variables, "fwoutlet", fwtempparam.fwoutlet)
+    monkeypatch.setattr(
+        fwbs_variables, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
+    )
 
     monkeypatch.setattr(fwbs_variables, "pitch", fwtempparam.pitch)
 

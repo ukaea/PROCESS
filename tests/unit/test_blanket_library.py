@@ -27,13 +27,13 @@ def blanket_library_fixture():
 
 
 class PrimaryCoolantPropertiesParam(NamedTuple):
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
-    fwinlet: Any = None
+    temp_fw_coolant_in: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_coolant_out: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
     rhof_fw: Any = None
 
@@ -84,10 +84,10 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     "primarycoolantpropertiesparam",
     (
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
             rhof_fw=0,
             cp_fw=0,
             cv_fw=0,
@@ -112,10 +112,10 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_fw=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
             rhof_fw=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
@@ -159,19 +159,23 @@ def test_primary_coolant_properties(
     # monkeypatch doesnt work for strings
     # but helium is the default
     # monkeypatch.setattr(
-    #     fwbs_variables, "fwcoolant", primarycoolantpropertiesparam.fwcoolant
+    #     fwbs_variables, "i_fw_coolant_type", primarycoolantpropertiesparam.i_fw_coolant_type
     # )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwinlet", primarycoolantpropertiesparam.fwinlet
+        fwbs_variables,
+        "temp_fw_coolant_in",
+        primarycoolantpropertiesparam.temp_fw_coolant_in,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwoutlet", primarycoolantpropertiesparam.fwoutlet
+        fwbs_variables,
+        "temp_fw_coolant_out",
+        primarycoolantpropertiesparam.temp_fw_coolant_out,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwpressure", primarycoolantpropertiesparam.fwpressure
+        fwbs_variables, "pres_fw_coolant", primarycoolantpropertiesparam.pres_fw_coolant
     )
 
     monkeypatch.setattr(
@@ -360,8 +364,8 @@ class ComponentHalfHeightParam(NamedTuple):
     shldtth: Any = None
     scrapli: Any = None
     scraplo: Any = None
-    fwith: Any = None
-    fwoth: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_outboard: Any = None
     d_vv_bot: Any = None
     d_vv_top: Any = None
     rminor: Any = None
@@ -384,8 +388,8 @@ class ComponentHalfHeightParam(NamedTuple):
             shldtth=0.59999999999999998,
             scrapli=0.25,
             scraplo=0.25,
-            fwith=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            dr_fw_inboard=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             d_vv_bot=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             rminor=2.6666666666666665,
@@ -427,8 +431,12 @@ def test_component_half_height(
     monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
     monkeypatch.setattr(build_variables, "scrapli", componenthalfheightparam.scrapli)
     monkeypatch.setattr(build_variables, "scraplo", componenthalfheightparam.scraplo)
-    monkeypatch.setattr(build_variables, "fwith", componenthalfheightparam.fwith)
-    monkeypatch.setattr(build_variables, "fwoth", componenthalfheightparam.fwoth)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_inboard", componenthalfheightparam.dr_fw_inboard
+    )
+    monkeypatch.setattr(
+        build_variables, "dr_fw_outboard", componenthalfheightparam.dr_fw_outboard
+    )
     monkeypatch.setattr(build_variables, "d_vv_bot", componenthalfheightparam.d_vv_bot)
     monkeypatch.setattr(build_variables, "d_vv_top", componenthalfheightparam.d_vv_top)
     monkeypatch.setattr(physics_variables, "rminor", componenthalfheightparam.rminor)
@@ -447,10 +455,10 @@ class DshapedComponentParam(NamedTuple):
     rsldi: Any = None
     shldith: Any = None
     blnkith: Any = None
-    fwith: Any = None
+    dr_fw_inboard: Any = None
     scrapli: Any = None
     scraplo: Any = None
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
@@ -504,10 +512,10 @@ class DshapedComponentParam(NamedTuple):
             rsldi=1.5,
             shldith=0.40000000000000002,
             blnkith=0,
-            fwith=0.018000000000000002,
+            dr_fw_inboard=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             blareaib=0,
             blareaob=0,
             blarea=0,
@@ -557,10 +565,10 @@ class DshapedComponentParam(NamedTuple):
             rsldi=1.5,
             shldith=0.40000000000000002,
             blnkith=0,
-            fwith=0.018000000000000002,
+            dr_fw_inboard=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             blareaib=196.97785938008002,
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
@@ -610,10 +618,10 @@ class DshapedComponentParam(NamedTuple):
             rsldi=1.5,
             shldith=0.40000000000000002,
             blnkith=0,
-            fwith=0.018000000000000002,
+            dr_fw_inboard=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             blareaib=196.97785938008002,
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
@@ -676,10 +684,14 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(build_variables, "rsldi", dshapedcomponentparam.rsldi)
     monkeypatch.setattr(build_variables, "shldith", dshapedcomponentparam.shldith)
     monkeypatch.setattr(build_variables, "blnkith", dshapedcomponentparam.blnkith)
-    monkeypatch.setattr(build_variables, "fwith", dshapedcomponentparam.fwith)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_inboard", dshapedcomponentparam.dr_fw_inboard
+    )
     monkeypatch.setattr(build_variables, "scrapli", dshapedcomponentparam.scrapli)
     monkeypatch.setattr(build_variables, "scraplo", dshapedcomponentparam.scraplo)
-    monkeypatch.setattr(build_variables, "fwoth", dshapedcomponentparam.fwoth)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_outboard", dshapedcomponentparam.dr_fw_outboard
+    )
     monkeypatch.setattr(build_variables, "blareaib", dshapedcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", dshapedcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", dshapedcomponentparam.blarea)

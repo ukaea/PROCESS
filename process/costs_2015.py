@@ -344,9 +344,9 @@ class Costs2015:
         self.s_cref[24] = 25.0e6
         #  First wall W coating mass (kg)
         self.s_k[24] = (
-            build_variables.fwarea
+            build_variables.a_fw_total
             * fwbs_variables.fw_armour_thickness
-            * fwbs_variables.denw
+            * constants.den_tungsten
         )
         self.s_kref[24] = 29000.0e0
         self.s_cost[24] = (

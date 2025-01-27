@@ -135,12 +135,12 @@ RADIAL_BUILD = [
     "shldith",
     "vvblgapi",
     "blnkith",
-    "fwith",
+    "dr_fw_inboard",
     "scrapli",
     "rminori",
     "rminoro",
     "scraplo",
-    "fwoth",
+    "dr_fw_outboard",
     "blnkoth",
     "vvblgapo",
     "shldoth",
@@ -450,14 +450,14 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("blnkith", mfile_data, scan)
     arc_fill(axis, r1, r2, color=BLANKET_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("fwith", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_fw_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=FIRSTWALL_COLOUR[colour_scheme - 1])
 
     arc_fill(
         axis, rmajor - rminor, rmajor + rminor, color=PLASMA_COLOUR[colour_scheme - 1]
     )
 
-    r2, r1 = cumulative_radial_build2("fwoth", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_fw_outboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=FIRSTWALL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("blnkoth", mfile_data, scan)
@@ -1270,11 +1270,11 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
 
         # Upper blanket: inner surface
         radx_inner = (
-            cumulative_radial_build("fwoth", mfile_data, scan)
+            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
             + cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
         rminx_inner = (
-            cumulative_radial_build("fwoth", mfile_data, scan)
+            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
         bg_single_null = blanket_geometry_single_null(
@@ -1358,27 +1358,27 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         blnktth = tfwvt = 0.0
 
     c_blnkith = cumulative_radial_build("blnkith", mfile_data, scan)
-    c_fwoth = cumulative_radial_build("fwoth", mfile_data, scan)
+    c_fwoth = cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
 
     if i_single_null == 1:
         # Upper first wall: outer surface
         radx_outer = (
-            cumulative_radial_build("fwoth", mfile_data, scan)
+            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
             + cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
         rminx_outer = (
-            cumulative_radial_build("fwoth", mfile_data, scan)
+            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
             - cumulative_radial_build("blnkith", mfile_data, scan)
         ) / 2.0
 
         # Upper first wall: inner surface
         radx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
-            + cumulative_radial_build("fwith", mfile_data, scan)
+            + cumulative_radial_build("dr_fw_inboard", mfile_data, scan)
         ) / 2.0
         rminx_inner = (
             cumulative_radial_build("scraplo", mfile_data, scan)
-            - cumulative_radial_build("fwith", mfile_data, scan)
+            - cumulative_radial_build("dr_fw_inboard", mfile_data, scan)
         ) / 2.0
 
         fwg_single_null = first_wall_geometry_single_null(
@@ -1392,8 +1392,8 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             blnktth=blnktth,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
-            fwith=fwith,
-            fwoth=fwoth,
+            dr_fw_inboard=dr_fw_inboard,
+            dr_fw_outboard=dr_fw_outboard,
             tfwvt=tfwvt,
         )
 
@@ -1413,8 +1413,8 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             blnktth=blnktth,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
-            fwith=fwith,
-            fwoth=fwoth,
+            dr_fw_inboard=dr_fw_inboard,
+            dr_fw_outboard=dr_fw_outboard,
             tfwvt=tfwvt,
         )
         # Plot first wall
@@ -3351,12 +3351,12 @@ def main(args=None):
     global ddwi
     global shldith
     global blnkith
-    global fwith
+    global dr_fw_inboard
     global scrapli
     global rmajor
     global rminor
     global scraplo
-    global fwoth
+    global dr_fw_outboard
     global blnkoth
     global shldoth
     global ddwi
@@ -3374,12 +3374,12 @@ def main(args=None):
     gapds = m_file.data["gapds"].get_scan(scan)
     shldith = m_file.data["shldith"].get_scan(scan)
     blnkith = m_file.data["blnkith"].get_scan(scan)
-    fwith = m_file.data["fwith"].get_scan(scan)
+    dr_fw_inboard = m_file.data["dr_fw_inboard"].get_scan(scan)
     scrapli = m_file.data["scrapli"].get_scan(scan)
     rmajor = m_file.data["rmajor"].get_scan(scan)
     rminor = m_file.data["rminor"].get_scan(scan)
     scraplo = m_file.data["scraplo"].get_scan(scan)
-    fwoth = m_file.data["fwoth"].get_scan(scan)
+    dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
     blnkoth = m_file.data["blnkoth"].get_scan(scan)
     shldoth = m_file.data["shldoth"].get_scan(scan)
     gapsto = m_file.data["gapsto"].get_scan(scan)
