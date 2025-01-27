@@ -1,7 +1,7 @@
 from process import fortran as ft
 
 
-def write(models, outfile):
+def write(models, _outfile):
     """Write the results to the main output file (OUT.DAT).
 
     Write the program results to a file, in a tidy format.

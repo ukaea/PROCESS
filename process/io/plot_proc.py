@@ -344,7 +344,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def plot_cryostat(axis, mfile_data, scan, colour_scheme):
+def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
     rects = cryostat_geometry(rdewex=rdewex, ddwex=ddwex, zdewex=zdewex)
@@ -893,7 +893,7 @@ def plot_qprofile(prof, demo_ranges):
     )
 
 
-def read_imprad_data(skiprows, data_path):
+def read_imprad_data(_skiprows, data_path):
     """Function to read all data needed for creation of radiation profile
 
     Arguments:

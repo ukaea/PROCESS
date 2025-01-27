@@ -2983,7 +2983,7 @@ def test_pcond(pcondparam, monkeypatch, physics):
         qstar=pcondparam.qstar,
         rmajor=pcondparam.rmajor,
         rminor=pcondparam.rminor,
-        te=pcondparam.te,
+        _te=pcondparam.te,
         ten=pcondparam.ten,
         tin=pcondparam.tin,
         plasma_volume=pcondparam.plasma_volume,

@@ -3,6 +3,7 @@ target-version = "py310"
 
 [lint]
 extend-select = [
+    "ARG",
     "ASYNC",
     "B",
     "BLE",
