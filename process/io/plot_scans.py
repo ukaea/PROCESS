@@ -173,21 +173,10 @@ def main(args=None):
     # Input checks
     # ------------
     # Formting the inputs
-    output_names = output_names.split(" ")
-    while "" in output_names:
-        output_names.remove("")
-
-    output_names2 = output_names2.split(" ")
-    while "" in output_names2:
-        output_names2.remove("")
-
-    input_files = input_files.split(" ")
-    while "" in input_files:
-        input_files.remove("")
-
-    label_name = label_name.split(" ")
-    while "" in label_name:
-        label_name.remove("")
+    output_names = list(filter(None, output_names.split(" ")))
+    output_names2 = list(filter(None, output_names2.split(" ")))
+    input_files = list(filter(None, input_files.split(" ")))
+    label_name = list(filter(None, label_name.split(" ")))
 
     # If the input file is a directory, add MFILE.DAT
     for ii in range(len(input_files)):
@@ -207,89 +196,88 @@ def main(args=None):
     # This needs to be kept in sync automatically; this will break frequently
     # otherwise
     # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
-    nsweep_dict = {}
-    nsweep_dict[1] = "aspect"
-    nsweep_dict[2] = "hldivlim"
-    nsweep_dict[3] = "pnetelmw"
-    nsweep_dict[4] = "hfact"
-    nsweep_dict[5] = "oacdcp"
-    nsweep_dict[6] = "walalw"
-    nsweep_dict[7] = "beamfus0"
-    nsweep_dict[8] = "fqval"
-    nsweep_dict[9] = "te"
-    nsweep_dict[10] = "boundu(15)"
-    nsweep_dict[11] = "beta_norm_max"
-    nsweep_dict[12] = "bootstrap_current_fraction_max"
-    nsweep_dict[13] = "boundu(10)"
-    nsweep_dict[14] = "fiooic"
-    nsweep_dict[15] = "fjprot"
-    nsweep_dict[16] = "rmajor"
-    nsweep_dict[17] = (
-        "bmaxtf"  # bmxlim the maximum T field upper limit is the scan variable
-    )
-    nsweep_dict[18] = "gammax"
-    nsweep_dict[19] = "boundl(16)"
-    nsweep_dict[20] = "cnstv.t_burn_min"
-    nsweep_dict[21] = ""
-    nsweep_dict[22] = "cfactr"
-    nsweep_dict[23] = "boundu(72)"
-    nsweep_dict[24] = "powfmax"
-    nsweep_dict[25] = "kappa"
-    nsweep_dict[26] = "triang"
-    nsweep_dict[27] = "tbrmin"
-    nsweep_dict[28] = "bt"
-    nsweep_dict[29] = "coreradius"
-    nsweep_dict[30] = ""  # OBSOLETE
-    nsweep_dict[31] = "taulimit"
-    nsweep_dict[32] = "epsvmc"
-    nsweep_dict[33] = "ttarget"
-    nsweep_dict[34] = "qtargettotal"
-    nsweep_dict[35] = "lambda_q_omp"
-    nsweep_dict[36] = "lambda_target"
-    nsweep_dict[37] = "lcon_factor"
-    nsweep_dict[38] = "boundu(129)"
-    nsweep_dict[39] = "boundu(131)"
-    nsweep_dict[40] = "boundu(135)"
-    nsweep_dict[41] = "blnkoth"
-    nsweep_dict[42] = "fimp(9)"
-    nsweep_dict[43] = "Obsolete"  # Removed
-    nsweep_dict[44] = "alstrtf"
-    nsweep_dict[45] = "tmargmin_tf"
-    nsweep_dict[46] = "boundu(152)"
-    nsweep_dict[47] = "impurity_enrichment(9)"
-    nsweep_dict[48] = "n_pancake"
-    nsweep_dict[49] = "n_layer"
-    nsweep_dict[50] = "fimp(13)"
-    nsweep_dict[51] = "ftar"
-    nsweep_dict[52] = "rad_fraction_sol"
-    nsweep_dict[54] = "b_crit_upper_nbti"
-    nsweep_dict[55] = "shldith"
-    nsweep_dict[56] = "crypmw_max"
-    nsweep_dict[57] = "bt"  # Genuinly bt lower bound
-    nsweep_dict[58] = "scrapli"
-    nsweep_dict[59] = "scraplo"
-    nsweep_dict[60] = "sig_tf_wp_max"
-    nsweep_dict[61] = "copperaoh_m2_max"
-    nsweep_dict[62] = "coheof"
-    nsweep_dict[63] = "ohcth"
-    nsweep_dict[64] = "ohhghf"
-    nsweep_dict[65] = "csfv.n_cycle_min"
-    nsweep_dict[66] = "pfv.oh_steel_frac"
-    nsweep_dict[67] = "csfv.t_crack_vertical"
-    nsweep_dict[68] = "inlet_temp_liq"
-    nsweep_dict[69] = "outlet_temp_liq"
-    nsweep_dict[70] = "blpressure_liq"
-    nsweep_dict[71] = "n_liq_recirc"
-    nsweep_dict[72] = "bz_channel_conduct_liq"
-    nsweep_dict[73] = "pnuc_fw_ratio_dcll"
-    nsweep_dict[74] = "f_nuc_pow_bz_struct"
-    nsweep_dict[75] = "pitch"
-    nsweep_dict[76] = "etath"
-    nsweep_dict[77] = "startupratio"
-    nsweep_dict[78] = "fkind"
-    nsweep_dict[79] = "etaech"
-    nsweep_dict[80] = "fcoolcp"
-    nsweep_dict[81] = "n_tf_turn"
+    nsweep_dict = {
+        1: "aspect",
+        2: "hldivlim",
+        3: "pnetelmw",
+        4: "hfact",
+        5: "oacdcp",
+        6: "walalw",
+        7: "beamfus0",
+        8: "fqval",
+        9: "te",
+        10: "boundu(15)",
+        11: "beta_norm_max",
+        12: "bootstrap_current_fraction_max",
+        13: "boundu(10)",
+        14: "fiooic",
+        15: "fjprot",
+        16: "rmajor",
+        17: "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
+        18: "gammax",
+        19: "boundl(16)",
+        20: "cnstv.t_burn_min",
+        21: "",
+        22: "cfactr",
+        23: "boundu(72)",
+        24: "powfmax",
+        25: "kappa",
+        26: "triang",
+        27: "tbrmin",
+        28: "bt",
+        29: "coreradius",
+        30: "",  # OBSOLETE
+        31: "taulimit",
+        32: "epsvmc",
+        33: "ttarget",
+        34: "qtargettotal",
+        35: "lambda_q_omp",
+        36: "lambda_target",
+        37: "lcon_factor",
+        38: "boundu(129)",
+        39: "boundu(131)",
+        40: "boundu(135)",
+        41: "blnkoth",
+        42: "fimp(9)",
+        43: "Obsolete",  # Removed
+        44: "alstrtf",
+        45: "tmargmin_tf",
+        46: "boundu(152)",
+        47: "impurity_enrichment(9)",
+        48: "n_pancake",
+        49: "n_layer",
+        50: "fimp(13)",
+        51: "ftar",
+        52: "rad_fraction_sol",
+        54: "b_crit_upper_nbti",
+        55: "shldith",
+        56: "crypmw_max",
+        57: "bt",  # Genuinly bt lower bound
+        58: "scrapli",
+        59: "scraplo",
+        60: "sig_tf_wp_max",
+        61: "copperaoh_m2_max",
+        62: "coheof",
+        63: "ohcth",
+        64: "ohhghf",
+        65: "csfv.n_cycle_min",
+        66: "pfv.oh_steel_frac",
+        67: "csfv.t_crack_vertical",
+        68: "inlet_temp_liq",
+        69: "outlet_temp_liq",
+        70: "blpressure_liq",
+        71: "n_liq_recirc",
+        72: "bz_channel_conduct_liq",
+        73: "pnuc_fw_ratio_dcll",
+        74: "f_nuc_pow_bz_struct",
+        75: "pitch",
+        76: "etath",
+        77: "startupratio",
+        78: "fkind",
+        79: "etaech",
+        80: "fcoolcp",
+        81: "n_tf_turn",
+    }
     # -------------------
 
     # Getting the scanned variable name
@@ -309,28 +297,33 @@ def main(args=None):
     # ------
     # Check if the nsweep dict has been updated
     if nsweep_ref > len(nsweep_dict) + 1:
-        print(f"ERROR : nsweep = {nsweep_ref} not supported by the utility")
-        print("ERROR : Please update the 'nsweep_dict' dict")
+        print(
+            f"ERROR : nsweep = {nsweep_ref} not supported by the utility\n"
+            "ERROR : Please update the 'nsweep_dict' dict"
+        )
         exit()
 
     # Check if the scan variable is present in the
     if scan_var_name not in m_file.data:
-        print(f"ERROR : `{scan_var_name}` does not exist in PROCESS dicts")
-        print("ERROR : The scan variable is probably an upper/lower boundary")
-        print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
+        print(
+            f"ERROR : `{scan_var_name}` does not exist in PROCESS dicts\n"
+            "ERROR : The scan variable is probably an upper/lower boundary\n"
+            "ERROR : Please modify 'nsweep_dict' dict with the constrained var"
+        )
         exit()
 
     # Check if the second scan variable is present in the
     if is_2D_scan and (scan_2_var_name not in m_file.data):
-        print(f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts")
-        print("ERROR : The scan variable is probably an upper/lower boundary")
-        print("ERROR : Please modify 'nsweep_dict' dict with the constrained var")
+        print(
+            f"ERROR : `{scan_2_var_name}` does not exist in PROCESS dicts\n"
+            "ERROR : The scan variable is probably an upper/lower boundary\n"
+            "ERROR : Please modify 'nsweep_dict' dict with the constrained var"
+        )
         exit()
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
-        print("ERROR : Only one input file can be used for 2D scans")
-        print("ERROR : Exiting")
+        print("ERROR : Only one input file can be used for 2D scans\nERROR : Exiting")
         exit()
     # ------
 
@@ -358,14 +351,15 @@ def main(args=None):
             # Same scan var
             nsweep = int(m_file.data["nsweep"].get_scan(-1))
             if nsweep != nsweep_ref:
-                print("ERROR : You must use inputs files with the same scan variables")
-                print("ERROR : Exiting")
+                print(
+                    "ERROR : You must use inputs files with the same scan variables\n"
+                    "ERROR : Exiting"
+                )
                 exit()
 
             # No D scans
             if "nsweep_2" in m_file.data:
-                print("ERROR : You cannot mix 1D with 2D scans")
-                print("ERROR : Exiting")
+                print("ERROR : You cannot mix 1D with 2D scans\nERROR : Exiting")
                 exit()
             # ---
 
@@ -383,9 +377,9 @@ def main(args=None):
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
                     print(
-                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}"
+                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}\n"
+                        "Warning : This point will not be shown."
                     )
-                    print("Warning : This point will not be shown.")
 
             # Updating the number of scans
             n_scan = len(conv_i)
@@ -406,37 +400,36 @@ def main(args=None):
 
                 # Check if the output variable exists in the MFILE
                 if output_name not in m_file.data:
-                    print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
-                    print(f"Warning : `{output_name}` will not be output")
+                    print(
+                        f"Warning : `{output_name}` does not exist in PROCESS dicts\n"
+                        f"Warning : `{output_name}` will not be output"
+                    )
                     continue
 
                 for ii in range(n_scan):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
                 output_arrays[input_file][output_name] = ouput_array
             # Second variable scan
-            if output_names2 != []:
-                for output_name2 in output_names2:
-                    ouput_array2 = np.zeros(n_scan)
+            for output_name2 in output_names2:
+                ouput_array2 = np.zeros(n_scan)
 
-                    # Check if the output variable exists in the MFILE
-                    if output_name2 not in m_file.data:
-                        print(
-                            f"Warning : `{output_name2}` does not exist in PROCESS dicts"
-                        )
-                        print(f"Warning : `{output_name2}` will not be output")
-                        continue
+                # Check if the output variable exists in the MFILE
+                if output_name2 not in m_file.data:
+                    print(
+                        f"Warning : `{output_name2}` does not exist in PROCESS dicts\n"
+                        f"Warning : `{output_name2}` will not be output"
+                    )
+                    continue
 
-                    for ii in range(n_scan):
-                        ouput_array2[ii] = m_file.data[output_name2].get_scan(
-                            conv_i[ii]
-                        )
-                    output_arrays2[input_file][output_name2] = ouput_array2
+                for ii in range(n_scan):
+                    ouput_array2[ii] = m_file.data[output_name2].get_scan(conv_i[ii])
+                output_arrays2[input_file][output_name2] = ouput_array2
             # Terminal output
             if term_output:
-                print(f"\n{input_file} scan output\n")
-                print("X-axis:")
-                print(f"scan var {scan_var_name} : {scan_var_array[input_file]}\n")
-                print("Y-axis:")
+                print(
+                    f"\n{input_file} scan output\n\nX-axis:\n"
+                    f"scan var {scan_var_name} : {scan_var_array[input_file]}\n\nY-axis:"
+                )
                 for output_name in output_names:
                     # Check if the output variable exists in the MFILE
                     if output_name not in m_file.data:
@@ -446,8 +439,7 @@ def main(args=None):
                 print()
                 if output_names2 != []:
                     print(
-                        "Y2-Axis\n "
-                        + f" {output_name2} : {output_arrays2[input_file][output_name2]}\n"
+                        f"Y2-Axis\n  {output_name2} : {output_arrays2[input_file][output_name2]}\n"
                     )
         # Plot section
         # -----------
@@ -621,7 +613,8 @@ def main(args=None):
                     fontsize=axis_font_size,
                 )
                 plt.title(
-                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs {meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
+                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs "
+                    f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -631,37 +624,16 @@ def main(args=None):
 
             # Output file naming
             if output_name == "plasma_current_MA":
-                plt.savefig(
-                    f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
-                    + f"_vs_{output_name2}"
-                    if output_names2 != []
-                    else f"{args.outputdir}/scan_{scan_var_name}_vs_plasma_current"
-                    + f".{save_format}"
-                )
+                extra_str = f"plasma_current{f'_vs_{output_name2}' if output_names2 != [] else ''}"
             elif stack_plots and output_names[-1] == output_name:
-                plt.savefig(
-                    (
-                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f"_vs_{output_name2}"
-                        if output_names2 != []
-                        else f"{args.outputdir}/scan_{scan_var_name}_vs_"
-                        + "_vs_".join(output_names)
-                        + f".{save_format}"
-                    ),
-                    dpi=300,
-                )
-
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else '_vs_'.join(output_names)}"
             else:
-                plt.savefig(
-                    (
-                        f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f"_vs_{output_name2}"
-                        if output_names2 != []
-                        else f"{args.outputdir}/scan_{scan_var_name}_vs_{output_name}"
-                        + f".{save_format}"
-                    ),
-                    dpi=300,
-                )
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else ''}"
+
+            plt.savefig(
+                f"{args.outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                dpi=300,
+            )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
                 plt.show()
                 plt.clf()
@@ -694,16 +666,19 @@ def main(args=None):
                     failed_value_1 = m_file.data[scan_var_name].get_scan(ii_jj)
                     failed_value_2 = m_file.data[scan_2_var_name].get_scan(ii_jj)
                     print(
-                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) = ({failed_value_1},{failed_value_2})"
+                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) "
+                        f"= ({failed_value_1},{failed_value_2})\n"
+                        "Warning : This point will not be shown."
                     )
-                    print("Warning : This point will not be shown.")
 
         # Looping over requested outputs
         for output_name in output_names:
             # Check if the output variable exists in the MFILE
             if output_name not in m_file.data:
-                print(f"Warning : `{output_name}` does not exist in PROCESS dicts")
-                print(f"Warning : `{output_name}` will not be output")
+                print(
+                    f"Warning : `{output_name}` does not exist in PROCESS dicts\n"
+                    f"Warning : `{output_name}` will not be output"
+                )
                 continue
 
             # Declaring the outputs
