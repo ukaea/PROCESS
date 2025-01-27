@@ -158,8 +158,7 @@ def calc_u_planned_param(**kwargs):
     }
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def calc_u_planned_params():
@@ -170,7 +169,7 @@ def calc_u_planned_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         calc_u_planned_param(),  # Nominal
         calc_u_planned_param(
             abktflnc=20.0,
@@ -184,8 +183,6 @@ def calc_u_planned_params():
             expected=approx(0.03, abs=0.005),
         ),  # Nominal ST
     ]
-
-    return params
 
 
 @pytest.fixture(params=calc_u_planned_params(), ids=["nominal", "ST"])
@@ -258,8 +255,7 @@ def calc_u_unplanned_magnets_param(**kwargs):
     }
 
     # Merge default values with optional keyword args to override them
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def calc_u_unplanned_magnets_params():
@@ -273,7 +269,7 @@ def calc_u_unplanned_magnets_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         calc_u_unplanned_magnets_param(),
         calc_u_unplanned_magnets_param(
             temp_margin=2.0, tmargmin_tf=1.6, tmargmin_cs=1.6, conf_mag=0.8
@@ -286,8 +282,6 @@ def calc_u_unplanned_magnets_params():
             expected=approx(0.03, abs=0.005),
         ),
     ]
-
-    return params
 
 
 @pytest.fixture(
@@ -341,8 +335,7 @@ def calc_u_unplanned_divertor_param(**kwargs):
     defaults = {"divlife": 1.99, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def calc_u_unplanned_divertor_params():
@@ -355,13 +348,11 @@ def calc_u_unplanned_divertor_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         calc_u_unplanned_divertor_param(),
         calc_u_unplanned_divertor_param(divlife=4, expected=approx(1, abs=0)),
         calc_u_unplanned_divertor_param(divlife=3, expected=approx(0.1, abs=0.05)),
     ]
-
-    return params
 
 
 @pytest.fixture(
@@ -416,8 +407,7 @@ def calc_u_unplanned_fwbs_param(**kwargs):
     defaults = {"bktlife": 5, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def calc_u_unplanned_fwbs_params():
@@ -430,13 +420,11 @@ def calc_u_unplanned_fwbs_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         calc_u_unplanned_fwbs_param(),
         calc_u_unplanned_fwbs_param(bktlife=15, expected=approx(1, abs=0)),
         calc_u_unplanned_fwbs_param(bktlife=8.5, expected=approx(0.1, abs=0.005)),
     ]
-
-    return params
 
 
 @pytest.fixture(

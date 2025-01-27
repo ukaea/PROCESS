@@ -285,14 +285,13 @@ def calculate_poloidal_field(
     # Use Ampere's law using the plasma poloidal cross-section
     if i_plasma_current != 2:
         return rmu0 * ip / perim
-    else:
-        # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
+    # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
+    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
-        # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+    # Transform q95 to qbar
+    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-        return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 def calculate_current_coefficient_peng(eps: float, sf: float) -> float:
@@ -425,8 +424,9 @@ def calculate_current_coefficient_todd(
     )
     if model == 1:
         return base_scaling
-    elif model == 2:
+    if model == 2:
         return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
+    raise ValueError(f"model = {model} is an invalid option")
 
 
 @nb.jit(nopython=True, cache=True)
@@ -535,7 +535,7 @@ def calculate_current_coefficient_sauter(
     """
     w07 = 1.0  # zero squareness - can be modified later if required
 
-    fq = (
+    return (
         (4.1e6 / 5.0e6)
         * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
         * (1.0 + 0.09 * triang + 0.16 * triang**2)
@@ -543,8 +543,6 @@ def calculate_current_coefficient_sauter(
         / (1.0 - 0.74 * eps)
         * (1.0 + 0.55 * (w07 - 1.0))
     )
-
-    return fq
 
 
 @nb.jit(nopython=True, cache=True)
@@ -1443,7 +1441,7 @@ def _trapped_particle_fraction_sauter(
         zz = 1.0 - eps
         return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * sqeps_reduced)
 
-    elif fit == 1:
+    if fit == 1:
         # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
         # Similar to, but not quite identical to above
 
@@ -1451,7 +1449,7 @@ def _trapped_particle_fraction_sauter(
             ((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
         )
 
-    elif fit == 2:
+    if fit == 2:
         # Sauter 2016; https://doi.org/10.1016/j.fusengdes.2016.04.033.
         # Includes correction for triangularity
 

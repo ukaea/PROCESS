@@ -50,8 +50,7 @@ class Caller:
         # Check for same shape: mfile length can change between iterations
         if isinstance(previous, float) or previous.shape == current.shape:
             return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
-        else:
-            return False
+        return False
 
     def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
@@ -163,12 +162,11 @@ class Caller:
                     current_value = mfile_data.get(var, np.nan)
                     if self.check_agreement(previous_value, current_value):
                         continue
-                    else:
-                        # Value has changed between previous and current mfiles
-                        nonconverged_vars[var] = [
-                            previous_value,
-                            current_value,
-                        ]
+                    # Value has changed between previous and current mfiles
+                    nonconverged_vars[var] = [
+                        previous_value,
+                        current_value,
+                    ]
 
                 if len(nonconverged_vars) == 0:
                     # Previous and current mfiles agree (idempotent)

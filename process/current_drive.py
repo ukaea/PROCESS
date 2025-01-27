@@ -2053,6 +2053,7 @@ class CurrentDrive:
             palphap = palphap - n * pterm / (1.0e0 - arg2)
         else:
             eh.report_error(19)
+            return None
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen

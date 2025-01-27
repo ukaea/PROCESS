@@ -69,8 +69,7 @@ def acc2261_param(**kwargs):
     defaults = {"coolwh": 1, "expected": approx(49.68, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc2261_params():
@@ -82,12 +81,10 @@ def acc2261_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         acc2261_param(),
         acc2261_param(coolwh=2, expected=approx(53.85, abs=0.01)),
     ]
-
-    return params
 
 
 @pytest.fixture(params=acc2261_params(), ids=["he", "h2o"])
@@ -209,8 +206,7 @@ def acc2273_param(**kwargs):
     }
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc2273_params():
@@ -222,7 +218,7 @@ def acc2273_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         acc2273_param(),
         acc2273_param(
             f_tritium=0.5,
@@ -231,8 +227,6 @@ def acc2273_params():
             expected=approx(74.12, abs=0.01),
         ),
     ]
-
-    return params
 
 
 @pytest.fixture(params=acc2273_params(), ids=["ttrit_low", "ttrit_high"])
@@ -299,8 +293,7 @@ def acc228_param(**kwargs):
     defaults = {"fkind": 1.0, "expected": approx(150.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc228_params():
@@ -312,9 +305,7 @@ def acc228_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [acc228_param(), acc228_param(fkind=0.5, expected=approx(75.0, abs=0.01))]
-
-    return params
+    return [acc228_param(), acc228_param(fkind=0.5, expected=approx(75.0, abs=0.01))]
 
 
 @pytest.fixture(params=acc228_params(), ids=["fkind_1", "fkind_0p5"])
@@ -361,8 +352,7 @@ def acc229_param(**kwargs):
     defaults = {"fkind": 1.0, "expected": approx(125.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc229_params():
@@ -374,9 +364,7 @@ def acc229_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [acc229_param(), acc229_param(fkind=0.5, expected=approx(62.5, abs=0.01))]
-
-    return params
+    return [acc229_param(), acc229_param(fkind=0.5, expected=approx(62.5, abs=0.01))]
 
 
 @pytest.fixture(params=acc229_params(), ids=["fkind_1", "fkind_0p5"])
@@ -423,8 +411,7 @@ def acc23_param(**kwargs):
     defaults = {"coolwh": 1, "expected": approx(230, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc23_params():
@@ -436,9 +423,7 @@ def acc23_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [acc23_param(), acc23_param(coolwh=2, expected=approx(245, abs=0.01))]
-
-    return params
+    return [acc23_param(), acc23_param(coolwh=2, expected=approx(245, abs=0.01))]
 
 
 @pytest.fixture(params=acc23_params(), ids=["he", "h2o"])
@@ -554,8 +539,7 @@ def acc25_param(**kwargs):
     defaults = {"lsa": 4, "expected": approx(25, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc25_params():
@@ -567,9 +551,7 @@ def acc25_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [acc25_param(), acc25_param(lsa=1, expected=approx(19.25, abs=0.01))]
-
-    return params
+    return [acc25_param(), acc25_param(lsa=1, expected=approx(19.25, abs=0.01))]
 
 
 @pytest.fixture(params=acc25_params(), ids=["lsa_4", "lsa_1"])
@@ -625,8 +607,7 @@ def acc26_param(**kwargs):
     }
 
     # Merge default dict with any optional keyword arguments to override values
-    param = {**defaults, **kwargs}
-    return param
+    return {**defaults, **kwargs}
 
 
 def acc26_params():
@@ -638,7 +619,7 @@ def acc26_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    params = [
+    return [
         acc26_param(),
         acc26_param(
             ireactor=1,
@@ -649,8 +630,6 @@ def acc26_params():
             pgrossmw=700.0,
         ),
     ]
-
-    return params
 
 
 @pytest.fixture(params=acc26_params(), ids=["ireactor_0", "ireactor_1"])

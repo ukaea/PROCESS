@@ -328,8 +328,7 @@ class DefaultValues(ProjectDictionary):
         try:
             value = value.lower()
             value = value.replace("d", "E")
-            value = float(value)
-            return value
+            return float(value)
         except ValueError:
             # Failed conversion; don't change anything
             return original_value
@@ -464,7 +463,7 @@ class DefaultValues(ProjectDictionary):
             # This probably means that something was picked up by the init
             # subroutine regex in error
             return
-        elif self.dict[self.name][var] is None:
+        if self.dict[self.name][var] is None:
             # Only overwrite the value if Ford has produced a None, which is
             # stored on self.dict
             # Find the var in the Ford project again
@@ -538,9 +537,8 @@ def to_type(string):
             # try a float conversion
             string_mod = string.strip().lower().replace("d", "e")
             return float(string_mod)
-        else:
-            # try an int conversion
-            return int(string.strip())
+        # try an int conversion
+        return int(string.strip())
     except ValueError:
         match = re.match(r"\s*(\d+)", string)
         if match:
@@ -691,8 +689,7 @@ def dict_nsweep2ixc():
 
     # Use dict_ixc2nsweep from output_dict to produce dict_nsweep2ixc
     ixc2nsweep = output_dict["DICT_IXC2NSWEEP"]
-    nsweep2ixc = {b: a for a, b in ixc2nsweep.items()}
-    return nsweep2ixc
+    return {b: a for a, b in ixc2nsweep.items()}
 
 
 def dict_var_type():
@@ -933,9 +930,7 @@ def dict_ixc_simple():
 def dict_ixc_simple_rev():
     # Returns dictionary mapping iteration variable name to ixc no
     ixc_simple = output_dict["DICT_IXC_SIMPLE"]
-    ixc_simple_rev = {b: a for a, b in ixc_simple.items()}
-
-    return ixc_simple_rev
+    return {b: a for a, b in ixc_simple.items()}
 
 
 def create_dicts(project):

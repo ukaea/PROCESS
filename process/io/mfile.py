@@ -66,8 +66,7 @@ class MFileVariable(dict):
         # print(f"Trying to get({name}) on {self}, {id(self)}"
         if result:
             return result
-        else:
-            raise AttributeError(f"{self.__class__} object has no attribute {name}")
+        raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def set_scan(self, scan_number, scan_value):
         """Sets the class attribute self.scan# where # is scan number
@@ -98,8 +97,7 @@ class MFileVariable(dict):
         try:
             if scan_number is None or scan_number == -1:
                 return self[f"scan{self.latest_scan:02}"]
-            else:
-                return self[f"scan{scan_number:02}"]
+            return self[f"scan{scan_number:02}"]
         except KeyError:
             raise  # or substitute with any other exception type you want
 
@@ -142,8 +140,7 @@ class MFileErrorClass:
             raise KeyError(
                 "error_status not found in MFILE. Process probably exited prematurely"
             )
-        else:
-            return 0
+        return 0
 
     @property
     def exists(self):
@@ -157,8 +154,7 @@ class MFileDataDictionary(OrderedDict):
         result = self.get(name)
         if result:
             return result
-        else:
-            raise AttributeError(f"{self.__class__} object has no attribute {name}")
+        raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def __getitem__(self, item):
         try:
@@ -360,15 +356,14 @@ def sort_value(value_words: list[str]) -> str | float:
     if '"' in value_words[0]:
         # First "word" begins with ": return words as single str
         return " ".join(value_words).strip().strip('"').strip()
-    else:
-        try:
-            # Attempt float conversion of first word
-            return float(value_words[0])
-        except ValueError:
-            # Log the exception with details
-            logger.exception(f"Can't parse value in MFILE: {value_words}")
-            # Return the original string as a fallback
-            return " ".join(value_words).strip()
+    try:
+        # Attempt float conversion of first word
+        return float(value_words[0])
+    except ValueError:
+        # Log the exception with details
+        logger.exception(f"Can't parse value in MFILE: {value_words}")
+        # Return the original string as a fallback
+        return " ".join(value_words).strip()
 
 
 def sort_brackets(var):
@@ -377,16 +372,13 @@ def sort_brackets(var):
         tmp_name = var.lstrip("(").split(")")
         if len(tmp_name) > 2:
             return tmp_name[0] + ")"
-        else:
-            return tmp_name[0]
-    else:
-        return ""
+        return tmp_name[0]
+    return ""
 
 
 def clean_line(line):
     """Cleans an MFILE line into the three parts we care about"""
-    cleaned_line = [item.strip("_ \n") for item in line.split(" ") if item != ""]
-    return cleaned_line
+    return [item.strip("_ \n") for item in line.split(" ") if item != ""]
 
 
 def search_keys(dictionary, variable):
@@ -437,8 +429,7 @@ def get_unit(variable_desc):
     candidate = variable_desc.rsplit("_", 1)[-1]
     if candidate.startswith("(") and candidate.endswith(")"):
         return candidate[1:-1]
-    else:
-        return None
+    return None
 
 
 def is_number(val):

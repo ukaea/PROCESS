@@ -164,16 +164,14 @@ def create_module_signature(mod: FortranModule) -> str:
     header = "\n".join([i for i in imports if i]) + "\n\n"
     body = "\n".join(variables) + "\n\n" + "\n\n".join(functions)
 
-    string = f'{header}class {mod.name}:\n\t"""{docstring}"""\n{body}'
-
-    return string
+    return f'{header}class {mod.name}:\n\t"""{docstring}"""\n{body}'
 
 
 def create_import(var: FortranModuleVariable) -> str:
     """Creates the import statement for a var's type if not a builtin."""
     # ignore builtins
     if var.module == "builtins":
-        return
+        return None
 
     return f"from {var.module} import {var.var_type}"
 

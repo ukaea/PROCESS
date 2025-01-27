@@ -38,7 +38,7 @@ def mock_init(*args, **kwargs):
     :return: Nothing
     :rtype: Nonetype
     """
-    return None
+    return
 
 
 def mock_run(*args, **kwargs):
@@ -59,9 +59,8 @@ def process_obj(monkeypatch):
     """
     monkeypatch.setattr(main.Process, "__init__", mock_init)
     # Mock the __init__ method of the Process class with mock_init
-    process_obj = Process()
     # Return the mocked Process object
-    return process_obj
+    return Process()
 
 
 def test_Process(process_obj):

@@ -272,11 +272,9 @@ def _normalise_diffs(
         opt_param_value_pattern=opt_param_value_pattern,
         filter_in=False,
     )
-    normalised_solns = pd.concat(
+    return pd.concat(
         [non_normalising_solns_metadata, normalised_solns_opt_params], axis=1
     )
-
-    return normalised_solns
 
 
 def _filter_vars_of_interest(
@@ -301,14 +299,12 @@ def _filter_vars_of_interest(
     # Filter for optimisation parameters (normalised to initial value
     # e.g. xcm001) values and names, objective function value and name, plus
     # any extra variables
-    filtered_results = results_df.filter(
+    return results_df.filter(
         regex=(
             f"{TAG_REGEX}|{opt_param_value_pattern}|{NORM_OPT_PARAM_NAME_REGEX}|"
             f"{NORM_OBJF_PATTERN}|{'|'.join(extra_var_names)}".rstrip("|")
         )
     )
-
-    return filtered_results
 
 
 def _plot_solutions(
@@ -594,5 +590,4 @@ def _rms_errors(
     # Create df of tags and rmses
     tag_series = results_df["tag"]
     rmse_series = pd.Series(rmses, name="rmse")
-    rmse_df = pd.concat([tag_series, rmse_series], axis=1)
-    return rmse_df
+    return pd.concat([tag_series, rmse_series], axis=1)

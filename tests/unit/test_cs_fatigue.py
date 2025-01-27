@@ -12,9 +12,7 @@ def cs_fatigue_python():
     :return: an instance of CsFatigue
     :rtype: process.cs_fatigue.CsFatigue
     """
-    cs_fatigue_python = CsFatigue()
-
-    return cs_fatigue_python
+    return CsFatigue()
 
 
 class NcycleParam(NamedTuple):
