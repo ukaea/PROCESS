@@ -1518,23 +1518,23 @@ class PFCoil:
         epsilon = r / a
 
         # Field at inner radius of coil [T]
-        B_a = pfv.bmaxoh0
+        b_a = pfv.bmaxoh0
 
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
-        B_b = 0.0e0
+        b_b = 0.0e0
 
         # current density [A/m^2]
         j = pfv.cohbop
 
         # K term
-        K = ((alpha * B_a - B_b) * j * a) / (alpha - 1.0e0)
+        k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
 
         # M term
-        M = ((B_a - B_b) * j * a) / (alpha - 1.0e0)
+        m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
-        hp_term_1 = K * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
+        hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
 
         hp_term_2 = (
             alpha**2
@@ -1548,7 +1548,7 @@ class PFCoil:
             )
         )
 
-        hp_term_3 = M * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
+        hp_term_3 = m * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
 
         hp_term_4 = (
             alpha**2
@@ -2644,7 +2644,7 @@ class PFCoil:
                     pfv.cpt[k, jjj] * pfv.turns[k],
                 )
 
-    def selfinductance(self, a, b, c, N):
+    def selfinductance(self, a, b, c, n):
         """Calculates the selfinductance using Bunet's formula.
 
         author: M. Kovari, CCFE
@@ -2665,7 +2665,7 @@ class PFCoil:
         return (
             (1.0e-6 / 0.0254e0)
             * a**2
-            * N**2
+            * n**2
             / (9.0e0 * a + 10.0e0 * b + 8.4e0 * c + 3.2e0 * c * b / a)
         )
 
