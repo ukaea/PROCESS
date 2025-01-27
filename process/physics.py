@@ -7575,27 +7575,16 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 
 def pthresh(
-    
     dene,
-   
     dnla,
-   
     bt,
-   
     rmajor,
-   
     rminor,
-   
     kappa,
-   
     a_plasma_surface,
-   
     m_ions_total_amu,
-   
     aspect,
-   
     plasma_current,
-,
 ):
     """L-mode to H-mode power threshold calculation
 
@@ -7647,7 +7636,11 @@ def pthresh(
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
     martin = (
-        0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / m_ions_total_amu)
+        0.0488
+        * dnla20**0.717
+        * bt**0.803
+        * a_plasma_surface**0.941
+        * (2.0 / m_ions_total_amu)
     )
     martin_error = (
         np.sqrt(
