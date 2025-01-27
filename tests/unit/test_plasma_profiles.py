@@ -161,7 +161,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     alphat: float = 0.0
 
-    dnitot: float = 0.0
+    nd_ions_total: float = 0.0
 
     neped: float = 0.0
 
@@ -234,7 +234,7 @@ class PlasmaProfilesParam(NamedTuple):
             tratio=1,
             dnla=0.0,
             alphat=1.45,
-            dnitot=6.9461125748017857e19,
+            nd_ions_total=6.9461125748017857e19,
             neped=6.1916268627398164e19,
             ti=12.9,
             rhopedn=0.94000000000000006,
@@ -279,7 +279,7 @@ class PlasmaProfilesParam(NamedTuple):
             tratio=1,
             dnla=8.8687354645836431e19,
             alphat=1.45,
-            dnitot=6.9461125748017857e19,
+            nd_ions_total=6.9461125748017857e19,
             neped=6.1916268627398164e19,
             ti=13.07,
             rhopedn=0.94000000000000006,
@@ -357,7 +357,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "alphat", plasmaprofilesparam.alphat)
 
-    monkeypatch.setattr(physics_variables, "dnitot", plasmaprofilesparam.dnitot)
+    monkeypatch.setattr(
+        physics_variables, "nd_ions_total", plasmaprofilesparam.nd_ions_total
+    )
 
     monkeypatch.setattr(physics_variables, "neped", plasmaprofilesparam.neped)
 

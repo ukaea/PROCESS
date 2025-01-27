@@ -330,12 +330,12 @@ def check_process():
 
     if fortran.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(
-            "The thermal alpha/electron density ratio should be controlled using ralpne (itv 109) and not fimp(2)."
+            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not fimp(2)."
             "fimp(2) should be removed from the input file, or set to the default value 0.1D0."
         )
 
     # Impurity fractions
-    for imp in range(fortran.impurity_radiation_module.nimp):
+    for imp in range(fortran.impurity_radiation_module.n_impurities):
         fortran.impurity_radiation_module.impurity_arr_frac[imp] = (
             fortran.impurity_radiation_module.fimp[imp]
         )
@@ -990,9 +990,9 @@ def check_process():
             fortran.current_drive_variables.iefrf != 5
             and fortran.current_drive_variables.iefrf != 8
         ):
-            fortran.physics_variables.rnbeam = 0.0
+            fortran.physics_variables.f_nd_beam_electron = 0.0
     else:
-        fortran.physics_variables.rnbeam = 0.0
+        fortran.physics_variables.f_nd_beam_electron = 0.0
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)

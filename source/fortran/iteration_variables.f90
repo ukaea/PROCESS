@@ -168,25 +168,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_7
-    !! <LI> ( 7) rnbeam
+    !! <LI> ( 7) f_nd_beam_electron
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(7) = 'rnbeam        '
+    lablxc(7) = 'f_nd_beam_electron        '
     boundl(7) = 1.00D-6
     boundu(7) = 1.000D0
   end subroutine init_itv_7
 
   real(kind(1.d0)) function itv_7()
-    use physics_variables, only: rnbeam
+    use physics_variables, only: f_nd_beam_electron
     implicit none
-    itv_7 = rnbeam
+    itv_7 = f_nd_beam_electron
   end function itv_7
 
   subroutine set_itv_7(ratio)
-    use physics_variables, only: rnbeam
+    use physics_variables, only: f_nd_beam_electron
     implicit none
     real(kind(1.d0)) :: ratio
-    rnbeam = ratio
+    f_nd_beam_electron = ratio
   end subroutine set_itv_7
 
   !---------------------------------
@@ -2363,25 +2363,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_109
-    !! <LI> (109) ralpne: thermal alpha density / electron density
+    !! <LI> (109) f_nd_alpha_electron: thermal alpha density / electron density
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(109) = 'ralpne        '
+    lablxc(109) = 'f_nd_alpha_electron        '
     boundl(109) = 0.050D0
     boundu(109) = 0.150D0
   end subroutine init_itv_109
 
   real(kind(1.d0)) function itv_109()
-    use physics_variables, only: ralpne
+    use physics_variables, only: f_nd_alpha_electron
     implicit none
-    itv_109 = ralpne
+    itv_109 = f_nd_alpha_electron
   end function itv_109
 
   subroutine set_itv_109(ratio)
-    use physics_variables, only: ralpne
+    use physics_variables, only: f_nd_alpha_electron
     implicit none
     real(kind(1.d0)) :: ratio
-    ralpne = ratio
+    f_nd_alpha_electron = ratio
   end subroutine set_itv_109
 
   !---------------------------------

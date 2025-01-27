@@ -148,6 +148,11 @@ at the separatrix (`neped, nesep` for the electron density, and
 `teped, tesep` for the electron temperature); the ion equivalents are
 scaled from the electron values by the ratio of the volume-averaged values).
 
+!!! note "$\beta_T$ setting"
+    $\beta_T$ can have an important impact not on just the plasma profile shape but also synchrotron radiation calculations.
+    For more info on its effect, visit the radiation section [here](../plasma_radiation.md).
+
+
 !!! warning " Pedestal setting"
     If `ipedestal == 1` then the pedestal density `neped` is set as a fraction `fgwped` of the 
     Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2]. 
@@ -390,7 +395,7 @@ $$\begin{aligned}
 
 $$\begin{aligned}
 \mathtt{ne0} = n_{\text{e}} \times (\alpha_n+1) \\
-\mathtt{ni0} = \mathtt{dnitot} \times (\alpha_n+1)
+\mathtt{ni0} = \mathtt{nd_ions_total} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----

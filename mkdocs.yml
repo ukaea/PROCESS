@@ -56,7 +56,8 @@ nav:
                   - Overview: physics-models/plasma_beta/plasma_beta.md
                   - Fast Alpha: physics-models/plasma_beta/plasma_alpha_beta_contribution.md
               - Density Limit: physics-models/plasma_density.md
-              - Composition, Impurities & Radiation: physics-models/plasma_radiation_impurities.md
+              - Composition & Impurities: physics-models/plasma_composition.md
+              - Radiation: physics-models/plasma_radiation.md
               - Plasma Current:
                   - Overview: physics-models/plasma_current/plasma_current.md
                   - Bootstrap Current: physics-models/plasma_current/bootstrap_current.md

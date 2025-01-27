@@ -10,12 +10,6 @@ from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
-# https://physics.nist.gov/cgi-bin/cuu/Value?mdu|search_for=deuteron
-ATOMIC_MASS_DEUTERIUM = 2.013553212544
-
-# https://physics.nist.gov/cgi-bin/cuu/Value?mtu|search_for=triton
-ATOMIC_MASS_TRITIUM = 3.01550071597
-
 REACTION_CONSTANTS_DT = {
     "bg": 34.3827,
     "mrc2": 1.124656e6,
@@ -232,8 +226,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_tritium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -301,8 +295,8 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_helium3 * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -374,8 +368,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * (1.0 - self.f_dd_branching_trit)
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -447,8 +441,8 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * self.f_dd_branching_trit
-            * (physics_variables.f_deuterium * physics_variables.deni)
-            * (physics_variables.f_deuterium * physics_variables.deni)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -551,16 +545,36 @@ class FusionReactionRate:
         physics_variables.f_dd_branching_trit = self.f_dd_branching_trit
 
 
-def radpwr(plasma_profile):
-    """This routine finds the radiation powers in MW/m3 by calling
-    relevant routines.
+@dataclass
+class RadpwrData:
+    """DataClass which holds the output of the function radpwr"""
+
+    pden_plasma_sync_mw: float
+    pcoreradpv: float
+    pedgeradpv: float
+    pden_plasma_rad_mw: float
+
+
+def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
+    """
+    Calculate the radiation powers in MW/m^3 by calling relevant routines.
+
+    This function computes the radiation power densities for the plasma, including
+    impurity radiation and synchrotron radiation. It returns a dataclass containing
+    the calculated radiation power densities.
+
+    Parameters:
+        plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+
+    Returns:
+        RadpwrData: A dataclass containing the following radiation power densities:
+            - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
+            - pcoreradpv (float): Total core radiation power per unit volume (MW/m^3).
+            - pedgeradpv (float): Edge radiation power per unit volume (MW/m^3).
+            - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
+
     Author:
         P J Knight, CCFE, Culham Science Centre
-
-    :param plasma_profile:
-    :type plasma_profile: PlasmaProfile
-    :return: RadpwrData - dataclass returning radiation power
-    :rtype: DataClass
     """
     imp_rad = impurity.ImpurityRadiation(plasma_profile)
     imp_rad.calculate_imprad()
@@ -568,96 +582,75 @@ def radpwr(plasma_profile):
     pedgeradpv = imp_rad.radtot - imp_rad.radcore
 
     # Synchrotron radiation power/volume; assumed to be from core only.
-    # Synchrotron radiation power/volume; assumed to be from core only.
-    psyncpv = psync_albajar_fidone()
+    pden_plasma_sync_mw = psync_albajar_fidone()
 
     # Total core radiation power/volume.
-    # Total core radiation power/volume.
-    pcoreradpv = imp_rad.radcore + psyncpv
+    pcoreradpv = imp_rad.radcore + pden_plasma_sync_mw
 
     # Total radiation power/volume.
-    # Total radiation power/volume.
-    pradpv = imp_rad.radtot + psyncpv
+    pden_plasma_rad_mw = imp_rad.radtot + pden_plasma_sync_mw
 
-    return RadpwrData(psyncpv, pcoreradpv, pedgeradpv, pradpv)
+    return RadpwrData(pden_plasma_sync_mw, pcoreradpv, pedgeradpv, pden_plasma_rad_mw)
 
 
-def psync_albajar_fidone():
-    """This routine finds the synchrotron radiation power in MW/m3,
-    using the method of Albajar and Fidone.
-    References:
-        Albajar, Nuclear Fusion 41 (2001) 665
-        Fidone, Giruzzi, Granata, Nuclear Fusion 41 (2001) 1755
-    Authors:
-        P J Knight, CCFE, Culham Science Centre
-        R Kemp, CCFE, Culham Science Centre
-
-    :return: psyncpv synchrotron radiation power/volume (MW/m3)
-    :rtype: float
+def psync_albajar_fidone() -> float:
     """
-    tbet = 2.0e0
+        Calculate the synchrotron radiation power in MW/m^3.
+
+        This function computes the synchrotron radiation power density for the plasma based on
+        the plasma shape, major and minor radii, electron density, and temperature profiles.
+
+        Returns:
+            float: Synchrotron radiation power per unit volume (MW/m^3).
+
+        Notes:
+
+        References:
+            - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
+                Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    ‌
+            - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
+                Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    ‌
+    """
 
     # rpow is the (1-Rsyn) power dependence based on plasma shape
     # (see Fidone)
 
-    rpow = 0.62e0
-
-    kap = 0.0
-    de2o = 0.0
-    pao = 0.0
-    gfun = 0.0
-    kfun = 0.0
-    dum = 0.0
-    psync = 0.0
-
-    kap = physics_variables.vol_plasma / (
-        2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
-    )
-
-    # No account is taken of pedestal profiles here, other than use of
-    # the correct physics_variables.ne0 and physics_variables.te0...
-
     de2o = 1.0e-20 * physics_variables.ne0
     pao = 6.04e3 * (physics_variables.rminor * de2o) / physics_variables.bt
-    gfun = 0.93e0 * (
-        1.0e0
-        + 0.85e0 * np.exp(-0.82e0 * physics_variables.rmajor / physics_variables.rminor)
+    gfun = 0.93e0 * (1.0e0 + 0.85e0 * np.exp(-0.82e0 * physics_variables.aspect))
+    kfun = (
+        (physics_variables.alphan + 3.87 * physics_variables.alphat + 1.46) ** -0.79
+        * (1.98 + physics_variables.alphat) ** 1.36
+        * physics_variables.tbeta**2.14
+        * (physics_variables.tbeta**1.53 + 1.87 * physics_variables.alphat - 0.16)
+        ** -1.33
     )
-    kfun = (physics_variables.alphan + 3.87e0 * physics_variables.alphat + 1.46e0) ** (
-        -0.79e0
-    )
-    kfun = kfun * (1.98e0 + physics_variables.alphat) ** 1.36e0 * tbet**2.14e0
-    kfun = kfun * (tbet**1.53e0 + 1.87e0 * physics_variables.alphat - 0.16e0) ** (
-        -1.33e0
-    )
+
     dum = (
-        1.0e0
-        + 0.12e0
-        * (physics_variables.te0 / (pao**0.41e0))
-        * (1.0e0 - physics_variables.ssync) ** 0.41e0
-    )
-
-    # Very high T modification, from Fidone
-
-    dum = dum ** (-1.51e0)
+        1.0
+        + 0.12
+        * (physics_variables.te0 / pao**0.41)
+        * (1.0 - physics_variables.f_sync_reflect) ** 0.41
+    ) ** -1.51
 
     psync = (
         3.84e-8
-        * (1.0e0 - physics_variables.ssync) ** rpow
+        * (1.0 - physics_variables.f_sync_reflect) ** 0.62
         * physics_variables.rmajor
-        * physics_variables.rminor**1.38e0
-    )
-    psync = psync * kap**0.79e0 * physics_variables.bt**2.62e0 * de2o**0.38e0
-    psync = (
-        psync
+        * physics_variables.rminor**1.38
+        * physics_variables.kappa**0.79
+        * physics_variables.bt**2.62
+        * de2o**0.38
         * physics_variables.te0
-        * (16.0e0 + physics_variables.te0) ** 2.61e0
+        * (16.0 + physics_variables.te0) ** 2.61
         * dum
         * gfun
         * kfun
     )
 
-    # psyncpv should be per unit volume; Albajar gives it as total
+    # pden_plasma_sync_mw should be per unit volume; Albajar gives it as total
 
     return psync / physics_variables.vol_plasma
 
@@ -796,16 +789,6 @@ def bosch_hale_reactivity(
     return sigmav
 
 
-@dataclass
-class RadpwrData:
-    """DataClass which holds the output of the function radpwr"""
-
-    psyncpv: float
-    pcoreradpv: float
-    pedgeradpv: float
-    pradpv: float
-
-
 def set_fusion_powers(
     f_alpha_electron: float,
     f_alpha_ion: float,
@@ -920,8 +903,8 @@ def fast_alpha_beta(
     bp: float,
     bt: float,
     dene: float,
-    deni: float,
-    dnitot: float,
+    nd_fuel_ions: float,
+    nd_ions_total: float,
     ten: float,
     tin: float,
     alpha_power_density_total: float,
@@ -937,8 +920,8 @@ def fast_alpha_beta(
         bp (float): Poloidal field (T).
         bt (float): Toroidal field on axis (T).
         dene (float): Electron density (m^-3).
-        deni (float): Fuel ion density (m^-3).
-        dnitot (float): Total ion density (m^-3).
+        nd_fuel_ions (float): Fuel ion density (m^-3).
+        nd_ions_total (float): Total ion density (m^-3).
         ten (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
         alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
@@ -968,21 +951,23 @@ def fast_alpha_beta(
             2.0
             * constants.rmu0
             * constants.kiloelectron_volt
-            * (dene * ten + dnitot * tin)
+            * (dene * ten + nd_ions_total * tin)
             / (bt**2 + bp**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
         if i_beta_fast_alpha == 0:
-            fact = min(0.3, 0.29 * (deni / dene) ** 2 * ((ten + tin) / 20.0 - 0.37))
+            fact = min(
+                0.3, 0.29 * (nd_fuel_ions / dene) ** 2 * ((ten + tin) / 20.0 - 0.37)
+            )
 
         # Modified scaling, D J Ward
         else:
             fact = min(
                 0.30,
                 0.26
-                * (deni / dene) ** 2
+                * (nd_fuel_ions / dene) ** 2
                 * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
             )
 
@@ -1003,7 +988,7 @@ def beam_fusion(
     bt: float,
     beam_current: float,
     dene: float,
-    deni: float,
+    nd_fuel_ions: float,
     ion_electron_coulomb_log: float,
     beam_energy: float,
     f_deuterium_plasma: float,
@@ -1028,7 +1013,7 @@ def beam_fusion(
                 bt (float): Toroidal field on axis (T).
                 beam_current (float): Neutral beam current (A).
                 dene (float): Electron density (m^-3).
-                deni (float): Fuel ion density (m^-3).
+                nd_fuel_ions (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
                 beam_energy (float): Neutral beam energy (keV).
                 f_deuterium_plasma (float): Deuterium fraction of main plasma.
@@ -1070,8 +1055,8 @@ def beam_fusion(
     beam_slow_time = (
         1.99e19
         * (
-            ATOMIC_MASS_DEUTERIUM * (1.0 - f_tritium_beam)
-            + (ATOMIC_MASS_TRITIUM * f_tritium_beam)
+            constants.m_deuteron_amu * (1.0 - f_tritium_beam)
+            + (constants.m_triton_amu * f_tritium_beam)
         )
         * (ten**1.5 / dene)
         / ion_electron_coulomb_log
@@ -1082,19 +1067,19 @@ def beam_fusion(
     # Taken from J.W Sheffield, “The physics of magnetic fusion reactors,”
     critical_energy_deuterium = (
         14.8
-        * ATOMIC_MASS_DEUTERIUM
+        * constants.m_deuteron_amu
         * ten
         * zeffai ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log
     )
     critical_energy_tritium = critical_energy_deuterium * (
-        ATOMIC_MASS_TRITIUM / ATOMIC_MASS_DEUTERIUM
+        constants.m_triton_amu / constants.m_deuteron_amu
     )
 
     # Deuterium and tritium ion densities
-    deuterium_density = deni * f_deuterium_plasma
-    tritium_density = deni * f_tritium_plasma
+    deuterium_density = nd_fuel_ions * f_deuterium_plasma
+    tritium_density = nd_fuel_ions * f_tritium_plasma
 
     (
         deuterium_beam_alpha_power,
@@ -1240,7 +1225,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_deuterium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_DEUTERIUM)
+        / (constants.atomic_mass_unit * constants.m_deuteron_amu)
     )
 
     # Find the speed of the tritium particle when it has the critical energy.
@@ -1249,7 +1234,7 @@ def beamcalc(
         2.0
         * constants.kiloelectron_volt
         * critical_energy_tritium
-        / (constants.atomic_mass_unit * ATOMIC_MASS_TRITIUM)
+        / (constants.atomic_mass_unit * constants.m_triton_amu)
     )
 
     # Source term representing the number of ions born per unit time per unit volume.
@@ -1261,7 +1246,7 @@ def beamcalc(
     source_tritium = beam_current_tritium / (constants.electron_charge * vol_plasma)
 
     pressure_coeff_deuterium = (
-        ATOMIC_MASS_DEUTERIUM
+        constants.m_deuteron_amu
         * constants.atomic_mass_unit
         * beam_slow_time
         * deuterium_critical_energy_speed**2
@@ -1269,7 +1254,7 @@ def beamcalc(
         / (constants.kiloelectron_volt * 3.0)
     )
     pressure_coeff_tritium = (
-        ATOMIC_MASS_TRITIUM
+        constants.m_triton_amu
         * constants.atomic_mass_unit
         * beam_slow_time
         * tritium_critical_energy_speed**2
@@ -1297,11 +1282,11 @@ def beamcalc(
     ) / hot_beam_density
 
     hot_deuterium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_DEUTERIUM, deuterium_critical_energy_speed, beam_energy
+        constants.m_deuteron_amu, deuterium_critical_energy_speed, beam_energy
     )
 
     hot_tritium_rate = 1e-4 * beam_reaction_rate(
-        ATOMIC_MASS_TRITIUM, tritium_critical_energy_speed, beam_energy
+        constants.m_triton_amu, tritium_critical_energy_speed, beam_energy
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
@@ -1536,7 +1521,7 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     a5 = 4.09e2
 
     # Beam kinetic energy
-    beam_energy = 0.5 * ATOMIC_MASS_DEUTERIUM * vrelsq
+    beam_energy = 0.5 * constants.m_deuteron_amu * vrelsq
 
     # Set limits on cross-section at low and high beam energies
     if beam_energy < 10.0:

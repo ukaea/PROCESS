@@ -1503,6 +1503,19 @@ class Physics:
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
 
+        # Define coulomb logarithm
+        # (collisions: ion-electron, electron-electron)
+        physics_variables.dlamee = (
+            31.0
+            - (np.log(physics_variables.dene) / 2.0)
+            + np.log(physics_variables.te * 1000.0)
+        )
+        physics_variables.dlamie = (
+            31.3
+            - (np.log(physics_variables.dene) / 2.0)
+            + np.log(physics_variables.te * 1000.0)
+        )
+
         # Calculate plasma current
         (
             physics_variables.alphaj,
@@ -2005,7 +2018,7 @@ class Physics:
                 physics_variables.bt,
                 current_drive_variables.beam_current,
                 physics_variables.dene,
-                physics_variables.deni,
+                physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.beam_energy,
                 physics_variables.f_deuterium,
@@ -2072,8 +2085,8 @@ class Physics:
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
-            physics_variables.deni,
-            physics_variables.dnitot,
+            physics_variables.nd_fuel_ions,
+            physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
@@ -2119,20 +2132,20 @@ class Physics:
 
         # Calculate radiation power
 
-        radpwrdata = physics_funcs.radpwr(self.plasma_profile)
-        physics_variables.psyncpv = radpwrdata.psyncpv
+        radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
+        physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwrdata.pcoreradpv
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
-        physics_variables.pradpv = radpwrdata.pradpv
+        physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
-        physics_variables.pinnerzoneradmw = (
+        physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )
-        physics_variables.pouterzoneradmw = (
+        physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
-        physics_variables.pradmw = (
-            physics_variables.pradpv * physics_variables.vol_plasma
+        physics_variables.p_plasma_rad_mw = (
+            physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
 
         # Calculate ohmic power
@@ -2161,7 +2174,7 @@ class Physics:
             physics_variables.rminor,
             physics_variables.kappa,
             physics_variables.a_plasma_surface,
-            physics_variables.aion,
+            physics_variables.m_ions_total_amu,
             physics_variables.aspect,
             physics_variables.plasma_current,
         )
@@ -2181,7 +2194,7 @@ class Physics:
             + physics_variables.non_alpha_charged_power
             + pinj
             + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.pradmw
+            - physics_variables.p_plasma_rad_mw
         )
 
         # The following line is unphysical, but prevents -ve sqrt argument
@@ -2242,11 +2255,11 @@ class Physics:
             physics_variables.tauei,
             physics_variables.powerht,
         ) = self.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,
@@ -2317,12 +2330,12 @@ class Physics:
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.dnalp,
+            physics_variables.nd_alphas,
             physics_variables.taueff,
             physics_variables.vol_plasma,
         )
@@ -2381,26 +2394,26 @@ class Physics:
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
         # Note that 'fwarea' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
-            physics_variables.photon_wall = (
+            physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
-                * physics_variables.pradmw
+                * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if physics_variables.idivrt == 2:
                 # Double Null configuration in - including SoL radiation
-                physics_variables.photon_wall = (
+                physics_variables.pflux_fw_rad_mw = (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.pradmw / build_variables.fwarea + (
+                ) * physics_variables.p_plasma_rad_mw / build_variables.fwarea + (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
                 ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
                     build_variables.fwarea
                 )
             else:
                 # Single null configuration - including SoL radaition
-                physics_variables.photon_wall = (
+                physics_variables.pflux_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
-                    * physics_variables.pradmw
+                    * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
                     + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.rad_fraction_sol
@@ -2408,8 +2421,8 @@ class Physics:
                     / build_variables.fwarea
                 )
 
-        constraint_variables.peakradwallload = (
-            physics_variables.photon_wall * constraint_variables.peakfactrad
+        constraint_variables.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
         # Calculate the target imbalances
@@ -2478,7 +2491,7 @@ class Physics:
             + current_drive_variables.pinjmw
         )
         physics_module.rad_fraction_lcfs = (
-            1.0e6 * physics_variables.pradmw / physics_module.total_loss_power
+            1.0e6 * physics_variables.p_plasma_rad_mw / physics_module.total_loss_power
         )
         physics_variables.rad_fraction_total = (
             physics_module.rad_fraction_lcfs
@@ -2655,46 +2668,77 @@ class Physics:
         return dlimit, dlimit[i_density_limit - 1]
 
     @staticmethod
-    def plasma_composition():
-        """Calculates various plasma component fractional makeups
-        author: P J Knight, CCFE, Culham Science Centre
-
-        This subroutine determines the various plasma component
-        fractional makeups. It is the replacement for the original
-        It is the replacement for the original routine <CODE>betcom</CODE>,
-        and is used in conjunction with the new impurity radiation model
+    def plasma_composition() -> None:
         """
+        Calculates various plasma component fractional makeups.
+
+        Author: P J Knight, CCFE, Culham Science Centre
+
+        This subroutine determines the various plasma component fractional makeups.
+        It is the replacement for the original routine betcom(), and is used in conjunction
+        with the new impurity radiation model.
+
+        This function performs the following calculations:
+        - Determines the alpha ash portion.
+        - Calculates the proton density.
+        - Calculates the beam hot ion component.
+        - Sums the ion densities for all impurity ions with charge greater than helium.
+        - Ensures charge neutrality by adjusting the fuel portion.
+        - Calculates the total ion density.
+        - Sets impurity fractions for radiation calculations.
+        - Calculates the effective charge.
+        - Defines the Coulomb logarithm for ion-electron and electron-electron collisions.
+        - Calculates the fraction of alpha energy to ions and electrons.
+        - Calculates the average atomic masses of injected fuel species and neutral beams.
+        - Calculates the density weighted mass and mass weighted plasma effective charge.
+
+        Notes:
+
+
+        References:
+        """
+
         # Alpha ash portion
-        physics_variables.dnalp = physics_variables.dene * physics_variables.ralpne
+        physics_variables.nd_alphas = (
+            physics_variables.dene * physics_variables.f_nd_alpha_electron
+        )
+
+        # ======================================================================
 
         # Protons
         # This calculation will be wrong on the first call as the particle
         # production rates are evaluated later in the calling sequence
-        # Issue #557 Allow protium impurity to be specified: 'protium'
+        # Issue #557 Allow f_nd_protium_electrons impurity to be specified: 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
         if physics_variables.alpha_rate_density_total < 1.0e-6:  # not calculated yet...
-            physics_variables.dnprot = max(
-                physics_variables.protium * physics_variables.dene,
-                physics_variables.dnalp * (physics_variables.f_helium3 + 1.0e-3),
+            physics_variables.nd_protons = max(
+                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
-            physics_variables.dnprot = max(
-                physics_variables.protium * physics_variables.dene,
-                physics_variables.dnalp
+            physics_variables.nd_protons = max(
+                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
                 / physics_variables.alpha_rate_density_total,
             )
 
+        # ======================================================================
+
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
         if physics_variables.ignite == 0:
-            physics_variables.dnbeam = physics_variables.dene * physics_variables.rnbeam
+            physics_variables.nd_beam_ions = (
+                physics_variables.dene * physics_variables.f_nd_beam_electron
+            )
         else:
-            physics_variables.dnbeam = 0.0
+            physics_variables.nd_beam_ions = 0.0
+
+        # ======================================================================
 
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.te])
@@ -2703,60 +2747,72 @@ class Physics:
                     * physics_variables.dene
                 )
 
+        # ======================================================================
+
         # Fuel portion - conserve charge neutrality
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
             physics_variables.dene
-            - 2.0 * physics_variables.dnalp
-            - physics_variables.dnprot
-            - physics_variables.dnbeam
+            - 2.0 * physics_variables.nd_alphas
+            - physics_variables.nd_protons
+            - physics_variables.nd_beam_ions
             - znimp
         )
 
-        # Fuel ion density, deni
-        # For D-T-He3 mix, deni = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So deni = znfuel - nHe3 = znfuel - f_helium3*deni
-        physics_variables.deni = znfuel / (1.0 + physics_variables.f_helium3)
+        # ======================================================================
+
+        # Fuel ion density, nd_fuel_ions
+        # For D-T-He3 mix, nd_fuel_ions = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
+        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_helium3*nd_fuel_ions
+        physics_variables.nd_fuel_ions = znfuel / (1.0 + physics_variables.f_helium3)
+
+        # ======================================================================
 
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
         impurity_radiation_module.impurity_arr_frac[
             impurity_radiation.element2index("H_")
         ] = (
-            physics_variables.dnprot
+            physics_variables.nd_protons
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
-            * physics_variables.deni
-            + physics_variables.dnbeam
+            * physics_variables.nd_fuel_ions
+            + physics_variables.nd_beam_ions
         ) / physics_variables.dene
 
         impurity_radiation_module.impurity_arr_frac[
             impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
-            * physics_variables.deni
+            * physics_variables.nd_fuel_ions
             / physics_variables.dene
-            + physics_variables.ralpne
+            + physics_variables.f_nd_alpha_electron
         )
 
+        # ======================================================================
+
         # Total impurity density
-        physics_variables.dnz = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        physics_variables.nd_impurities = 0.0
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.dnz += (
+                physics_variables.nd_impurities += (
                     impurity_radiation_module.impurity_arr_frac[imp]
                     * physics_variables.dene
                 )
 
+        # ======================================================================
+
         # Total ion density
-        physics_variables.dnitot = (
-            physics_variables.deni
-            + physics_variables.dnalp
-            + physics_variables.dnprot
-            + physics_variables.dnbeam
-            + physics_variables.dnz
+        physics_variables.nd_ions_total = (
+            physics_variables.nd_fuel_ions
+            + physics_variables.nd_alphas
+            + physics_variables.nd_protons
+            + physics_variables.nd_beam_ions
+            + physics_variables.nd_impurities
         )
 
-        # Set some (obsolescent) impurity fraction variables
+        # ======================================================================
+
+        # Set some impurity fraction variables
         # for the benefit of other routines
         physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
             impurity_radiation.element2index("C_")
@@ -2773,11 +2829,13 @@ class Physics:
             ]
         )
 
+        # ======================================================================
+
         # Effective charge
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
         physics_variables.zeff = 0.0
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             physics_variables.zeff += (
                 impurity_radiation_module.impurity_arr_frac[imp]
                 * impurity_radiation.zav_of_te(
@@ -2786,18 +2844,7 @@ class Physics:
                 ** 2
             )
 
-        # Define coulomb logarithm
-        # (collisions: ion-electron, electron-electron)
-        physics_variables.dlamee = (
-            31.0
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
-        )
-        physics_variables.dlamie = (
-            31.3
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
-        )
+        # ======================================================================
 
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
@@ -2822,47 +2869,79 @@ class Physics:
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
-        # Average atomic masses
-        physics_variables.afuel = (
-            2.0 * physics_variables.f_deuterium
-            + 3.0 * physics_variables.f_tritium
-            + 3.0 * physics_variables.f_helium3
-        )
-        physics_variables.abeam = (
-            2.0 * (1.0 - current_drive_variables.f_tritium_beam)
-            + 3.0 * current_drive_variables.f_tritium_beam
+        # ======================================================================
+
+        # Average atomic masses of injected fuel species
+        physics_variables.m_fuel_amu = (
+            (constants.m_deuteron_amu * physics_variables.f_deuterium)
+            + (constants.m_triton_amu * physics_variables.f_tritium)
+            + (constants.m_helion_amu * physics_variables.f_helium3)
         )
 
-        # Density weighted mass
-        physics_variables.aion = (
-            physics_variables.afuel * physics_variables.deni
-            + 4.0 * physics_variables.dnalp
-            + physics_variables.dnprot
-            + physics_variables.abeam * physics_variables.dnbeam
+        # ======================================================================
+
+        # Average atomic masses of injected fuel species in the neutral beams
+        # Only deuterium and tritium in the beams
+        physics_variables.m_beam_amu = (
+            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
+        ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
+
+        # ======================================================================
+
+        # Average mass of all ions
+        physics_variables.m_ions_total_amu = (
+            (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
+            + (constants.m_alpha_amu * physics_variables.nd_alphas)
+            + (physics_variables.nd_protons * constants.m_proton_amu)
+            + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.aion += (
+                physics_variables.m_ions_total_amu += (
                     physics_variables.dene
                     * impurity_radiation_module.impurity_arr_frac[imp]
                     * impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
-        physics_variables.aion = physics_variables.aion / physics_variables.dnitot
+        physics_variables.m_ions_total_amu = (
+            physics_variables.m_ions_total_amu / physics_variables.nd_ions_total
+        )
+
+        # ======================================================================
 
         # Mass weighted plasma effective charge
+        # Sum of (Zi^2*n_i) / m_i
         physics_variables.zeffai = (
-            physics_variables.f_deuterium * physics_variables.deni / 2.0
-            + physics_variables.f_tritium * physics_variables.deni / 3.0
-            + 4.0 * physics_variables.f_helium3 * physics_variables.deni / 3.0
-            + physics_variables.dnalp
-            + physics_variables.dnprot
-            + (1.0 - current_drive_variables.f_tritium_beam)
-            * physics_variables.dnbeam
-            / 2.0
-            + current_drive_variables.f_tritium_beam * physics_variables.dnbeam / 3.0
+            (
+                physics_variables.f_deuterium
+                * physics_variables.nd_fuel_ions
+                / constants.m_deuteron_amu
+            )
+            + (
+                physics_variables.f_tritium
+                * physics_variables.nd_fuel_ions
+                / constants.m_triton_amu
+            )
+            + (
+                4.0
+                * physics_variables.f_helium3
+                * physics_variables.nd_fuel_ions
+                / constants.m_helion_amu
+            )
+            + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
+            + (physics_variables.nd_protons / constants.m_proton_amu)
+            + (
+                (1.0 - current_drive_variables.f_tritium_beam)
+                * physics_variables.nd_beam_ions
+                / constants.m_deuteron_amu
+            )
+            + (
+                current_drive_variables.f_tritium_beam
+                * physics_variables.nd_beam_ions
+                / constants.m_triton_amu
+            )
         ) / physics_variables.dene
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
                     impurity_radiation_module.impurity_arr_frac[imp]
@@ -2873,16 +2952,18 @@ class Physics:
                     / impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
+        # ======================================================================
+
     @staticmethod
     def phyaux(
         aspect,
         dene,
-        deni,
+        nd_fuel_ions,
         fusion_rate_density_total,
         alpha_rate_density_total,
         plasma_current,
         sbar,
-        dnalp,
+        nd_alphas,
         taueff,
         vol_plasma,
     ):
@@ -2890,8 +2971,8 @@ class Physics:
         author: P J Knight, CCFE, Culham Science Centre
         aspect : input real :  plasma aspect ratio
         dene   : input real :  electron density (/m3)
-        deni   : input real :  fuel ion density (/m3)
-        dnalp  : input real :  alpha ash density (/m3)
+        nd_fuel_ions   : input real :  fuel ion density (/m3)
+        nd_alphas  : input real :  alpha ash density (/m3)
         fusion_rate_density_total : input real :  fusion reaction rate from plasma and beams (/m3/s)
         alpha_rate_density_total  : input real :  alpha particle production rate (/m3/s)
         plasma_current: input real :  plasma current (A)
@@ -2921,7 +3002,7 @@ class Physics:
         # Number of alphas / alpha production rate
 
         if alpha_rate_density_total != 0.0:
-            taup = dnalp / alpha_rate_density_total
+            taup = nd_alphas / alpha_rate_density_total
         else:  # only likely if DD is only active fusion reaction
             taup = 0.0
 
@@ -2938,7 +3019,11 @@ class Physics:
         # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
-            burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
+            burnup = (
+                nd_alphas
+                / (nd_alphas + 0.5 * nd_fuel_ions)
+                / physics_variables.tauratio
+            )
         else:
             burnup = physics_variables.burnup_in
         # Fuel burnup rate (reactions/second) (previously Amps)
@@ -3289,7 +3374,7 @@ class Physics:
         physics_module.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
-            * physics_variables.aion
+            * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (
@@ -3859,7 +3944,10 @@ class Physics:
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
-            self.outfile, "Electron temperature (keV)", "(te)", physics_variables.te
+            self.outfile,
+            "Volume averaged electron temperature (keV)",
+            "(te)",
+            physics_variables.te,
         )
         po.ovarrf(
             self.outfile,
@@ -3891,18 +3979,21 @@ class Physics:
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Electron density (/m3)", "(dene)", physics_variables.dene
+            self.outfile,
+            "Volume averaged electron number density (/m3)",
+            "(dene)",
+            physics_variables.dene,
         )
         po.ovarre(
             self.outfile,
-            "Electron density on axis (/m3)",
+            "Electron number density on axis (/m3)",
             "(ne0)",
             physics_variables.ne0,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Line-averaged electron density (/m3)",
+            "Line-averaged electron number density (/m3)",
             "(dnla)",
             physics_variables.dnla,
             "OP ",
@@ -3933,79 +4024,75 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Ion density (/m3)",
-            "(dnitot)",
-            physics_variables.dnitot,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile, "Fuel density (/m3)", "(deni)", physics_variables.deni, "OP "
-        )
-        po.ovarre(
-            self.outfile,
-            "Total impurity density with Z > 2 (no He) (/m3)",
-            "(dnz)",
-            physics_variables.dnz,
+            "Total Ion number density (/m3)",
+            "(nd_ions_total)",
+            physics_variables.nd_ions_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Helium ion density (thermalised ions only) (/m3)",
-            "(dnalp)",
-            physics_variables.dnalp,
+            "Fuel ion number density (/m3)",
+            "(nd_fuel_ions)",
+            physics_variables.nd_fuel_ions,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Proton density (/m3)",
-            "(dnprot)",
-            physics_variables.dnprot,
+            "Total impurity number density with Z > 2 (no He) (/m3)",
+            "(nd_impurities)",
+            physics_variables.nd_impurities,
             "OP ",
         )
-        if physics_variables.protium > 1.0e-10:
-            po.ovarre(
-                self.outfile,
-                "Seeded protium density / electron density",
-                "(protium)",
-                physics_variables.protium,
-            )
+        po.ovarre(
+            self.outfile,
+            "Helium ion number density (thermalised ions only) (/m3)",
+            "(nd_alphas)",
+            physics_variables.nd_alphas,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Helium ion density (thermalised ions only) / electron number density",
+            "(f_nd_alpha_electron)",
+            physics_variables.f_nd_alpha_electron,
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton number density (/m3)",
+            "(nd_protons)",
+            physics_variables.nd_protons,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton number density / electron number density",
+            "(f_nd_protium_electrons)",
+            physics_variables.f_nd_protium_electrons,
+            "OP ",
+        )
 
         po.ovarre(
             self.outfile,
-            "Hot beam density (/m3)",
-            "(dnbeam)",
-            physics_variables.dnbeam,
+            "Hot beam ion number density (/m3)",
+            "(nd_beam_ions)",
+            physics_variables.nd_beam_ions,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Density limit from scaling (/m3)",
-            "(dnelimt)",
-            physics_variables.dnelimt,
+            "Hot beam ion number density / electron density",
+            "(f_nd_beam_electron)",
+            physics_variables.f_nd_beam_electron,
             "OP ",
         )
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
-            po.ovarre(
-                self.outfile,
-                "Density limit (enforced) (/m3)",
-                "(boundu(9)*dnelimt)",
-                numerics.boundu[8] * physics_variables.dnelimt,
-                "OP ",
-            )
 
-        po.ovarre(
-            self.outfile,
-            "Helium ion density (thermalised ions only) / electron density",
-            "(ralpne)",
-            physics_variables.ralpne,
-        )
         po.oblnkl(self.outfile)
 
         po.ocmmnt(self.outfile, "Impurities")
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
-        for imp in range(impurity_radiation_module.nimp):
+        for imp in range(impurity_radiation_module.n_impurities):
             # MDK Update fimp, as this will make the ITV output work correctly.
             impurity_radiation_module.fimp[imp] = (
                 impurity_radiation_module.impurity_arr_frac[imp]
@@ -4028,24 +4115,37 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Average mass of all ions (amu)",
-            "(aion)",
-            physics_variables.aion,
+            "(m_ions_total_amu)",
+            physics_variables.m_ions_total_amu,
             "OP ",
         )
-        # MDK Say which impurity is varied, if iteration variable fimpvar (102) is turned on
-        # if (any(ixc == 102)) :
-        #   call ovarst(self.outfile,'Impurity used as an iteration variable' , '', '"' // impurity_arr(impvar)%label // '"')
-        #   po.ovarre(self.outfile,'Fractional density of variable impurity (ion / electron density)','(fimpvar)',fimpvar)
-        #
+        po.ovarre(
+            self.outfile,
+            "Average mass of all fuel ions (amu)",
+            "(m_fuel_amu)",
+            physics_variables.m_fuel_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all beam ions (amu)",
+            "(m_beam_amu)",
+            physics_variables.m_beam_amu,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
         )
 
-        # Issue #487.  No idea what zeffai is.
-        # I haven't removed it as it is used in subroutine rether,
-        #  (routine to find the equilibration power between the ions and electrons)
-        # po.ovarrf(self.outfile,'Mass weighted effective charge','(zeffai)',zeffai, 'OP ')
+        po.ovarrf(
+            self.outfile,
+            "Mass-weighted Effective charge",
+            "(zeffai)",
+            physics_variables.zeffai,
+            "OP ",
+        )
 
         po.ovarrf(
             self.outfile, "Density profile factor", "(alphan)", physics_variables.alphan
@@ -4237,6 +4337,21 @@ class Physics:
                 physics_variables.dlimit[7],
                 "OP ",
             )
+            po.ovarre(
+                self.outfile,
+                "Density limit from scaling (/m3)",
+                "(dnelimt)",
+                physics_variables.dnelimt,
+                "OP ",
+            )
+            if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
+                po.ovarre(
+                    self.outfile,
+                    "Density limit (enforced) (/m3)",
+                    "(boundu(9)*dnelimt)",
+                    numerics.boundu[8] * physics_variables.dnelimt,
+                    "OP ",
+                )
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
@@ -4251,13 +4366,12 @@ class Physics:
             "(f_tritium)",
             physics_variables.f_tritium,
         )
-        if physics_variables.f_helium3 > 1.0e-3:
-            po.ovarrf(
-                self.outfile,
-                "3-Helium fuel fraction",
-                "(f_helium3)",
-                physics_variables.f_helium3,
-            )
+        po.ovarrf(
+            self.outfile,
+            "3-Helium fuel fraction",
+            "(f_helium3)",
+            physics_variables.f_helium3,
+        )
 
         po.osubhd(self.outfile, "Fusion Powers :")
         po.ocmmnt(
@@ -4454,15 +4568,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Synchrotron radiation power (MW)",
-            "(psyncpv*vol_plasma)",
-            physics_variables.psyncpv * physics_variables.vol_plasma,
+            "(pden_plasma_sync_mw*vol_plasma)",
+            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Synchrotron wall reflectivity factor",
-            "(ssync)",
-            physics_variables.ssync,
+            "(f_sync_reflect)",
+            physics_variables.f_sync_reflect,
         )
         po.ovarre(
             self.outfile,
@@ -4479,15 +4593,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Radiation power from inner zone (MW)",
-            "(pinnerzoneradmw)",
-            physics_variables.pinnerzoneradmw,
+            "(p_plasma_inner_rad_mw)",
+            physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Radiation power from outer zone (MW)",
-            "(pouterzoneradmw)",
-            physics_variables.pouterzoneradmw,
+            "(p_plasma_outer_rad_mw)",
+            physics_variables.p_plasma_outer_rad_mw,
             "OP ",
         )
 
@@ -4503,8 +4617,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total radiation power from inside LCFS (MW)",
-            "(pradmw)",
-            physics_variables.pradmw,
+            "(p_plasma_rad_mw)",
+            physics_variables.p_plasma_rad_mw,
             "OP ",
         )
         po.ovarre(
@@ -4517,15 +4631,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Nominal mean radiation load on inside surface of reactor (MW/m2)",
-            "(photon_wall)",
-            physics_variables.photon_wall,
+            "(pflux_fw_rad_mw)",
+            physics_variables.pflux_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Peaking factor for radiation wall load",
-            "(peakfactrad)",
-            constraint_variables.peakfactrad,
+            "(f_fw_rad_max)",
+            constraint_variables.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(
@@ -4538,8 +4652,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Peak radiation wall load (MW/m^2)",
-            "(peakradwallload)",
-            constraint_variables.peakradwallload,
+            "(pflux_fw_rad_max_mw)",
+            constraint_variables.pflux_fw_rad_max_mw,
             "OP ",
         )
         po.ovarre(
@@ -5112,7 +5226,7 @@ class Physics:
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
                 "",
-                physics_variables.pradmw,
+                physics_variables.p_plasma_rad_mw,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")
@@ -5121,7 +5235,7 @@ class Physics:
                 self.outfile,
                 "Radiation power subtracted from plasma power balance (MW)",
                 "",
-                physics_variables.pinnerzoneradmw,
+                physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "  (Radiation correction is core radiation power)")
@@ -5143,8 +5257,8 @@ class Physics:
                     physics_variables.powerht
                     / (
                         physics_variables.powerht
-                        + physics_variables.psyncpv
-                        + physics_variables.pinnerzoneradmw
+                        + physics_variables.pden_plasma_sync_mw
+                        + physics_variables.p_plasma_inner_rad_mw
                     )
                 )
                 ** 0.31,
@@ -5160,7 +5274,8 @@ class Physics:
                     physics_variables.powerht
                     / (
                         physics_variables.powerht
-                        + physics_variables.pradpv * physics_variables.vol_plasma
+                        + physics_variables.pden_plasma_rad_mw
+                        * physics_variables.vol_plasma
                     )
                 )
                 ** 0.31,
@@ -5623,11 +5738,11 @@ class Physics:
                 taueffz,
                 powerhtz,
             ) = self.pcond(
-                physics_variables.afuel,
+                physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
-                physics_variables.dnitot,
+                physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
@@ -5947,7 +6062,7 @@ class Physics:
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
-        ni = (physics_variables.dnitot / physics_variables.dene) * ne
+        ni = (physics_variables.nd_ions_total / physics_variables.dene) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
@@ -5963,7 +6078,7 @@ class Physics:
             physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.afuel)
+        amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
 
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
@@ -6415,11 +6530,11 @@ class Physics:
             taueffz,
             powerhtz,
         ) = self.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,
@@ -6465,7 +6580,7 @@ class Physics:
         # Include the radiation power if requested
 
         if physics_variables.iradloss == 0:
-            fhz += physics_variables.pradpv
+            fhz += physics_variables.pden_plasma_rad_mw
         elif physics_variables.iradloss == 1:
             fhz += physics_variables.pcoreradpv
 
@@ -6473,11 +6588,11 @@ class Physics:
 
     @staticmethod
     def pcond(
-        afuel,
+        m_fuel_amu,
         alpha_power_total,
         aspect,
         bt,
-        dnitot,
+        nd_ions_total,
         dene,
         dnla,
         eps,
@@ -6505,12 +6620,12 @@ class Physics:
         """Routine to calculate the confinement times and
         the transport power loss terms.
         author: P J Knight, CCFE, Culham Science Centre
-        afuel     : input real :  average mass of fuel (amu)
+        m_fuel_amu     : input real :  average mass of fuel (amu)
         alpha_power_total    : input real :  alpha particle power (MW)
         aspect    : input real :  aspect ratio
         bt        : input real :  toroidal field on axis (T)
         dene      : input real :  volume averaged electron density (/m3)
-        dnitot    : input real :  total ion density (/m3)
+        nd_ions_total    : input real :  total ion density (/m3)
         dnla      : input real :  line-averaged electron density (/m3)
         eps       : input real :  inverse aspect ratio
         hfact     : input real :  H factor on energy confinement scalings
@@ -6587,7 +6702,7 @@ class Physics:
 
         # Include the radiation as a loss term if requested
         if physics_variables.iradloss == 0:
-            powerht = powerht - physics_variables.pradpv * vol_plasma
+            powerht = powerht - physics_variables.pden_plasma_rad_mw * vol_plasma
         elif physics_variables.iradloss == 1:
             powerht = (
                 powerht - pcoreradpv * vol_plasma
@@ -6636,7 +6751,7 @@ class Physics:
                 * kappa95**0.125e0
                 * qstar
                 * dnla20
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(ten / 10.0e0)
             )
 
@@ -6648,7 +6763,7 @@ class Physics:
                 * rminor
                 * bt
                 * np.sqrt(kappa95)
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
             )
 
         elif isc == 5:  # Kaye-Goldston scaling (L-mode)
@@ -6659,7 +6774,7 @@ class Physics:
                 * pcur**1.24e0
                 * n20**0.26e0
                 * rmajor**1.65e0
-                * np.sqrt(afuel / 1.5e0)
+                * np.sqrt(m_fuel_amu / 1.5e0)
                 / (bt**0.09e0 * rminor**0.49e0 * powerht**0.58e0)
             )
 
@@ -6676,7 +6791,7 @@ class Physics:
                 * np.sqrt(kappa)
                 * dnla20**0.1e0
                 * bt**0.2e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
 
@@ -6687,7 +6802,7 @@ class Physics:
                 * rmajor**0.3e0
                 * rminor**0.8e0
                 * kappa**0.6e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
             )
             term2 = (
                 0.064e0
@@ -6697,7 +6812,7 @@ class Physics:
                 * kappa**0.5e0
                 * dnla20**0.6e0
                 * bt**0.35e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 / powerht
             )
             tauee = hfact * (term1 + term2)
@@ -6707,7 +6822,7 @@ class Physics:
             tauee = (
                 hfact
                 * 1.65e0
-                * np.sqrt(afuel / 2.0e0)
+                * np.sqrt(m_fuel_amu / 2.0e0)
                 * (
                     1.2e-2 * pcur * rll**1.5e0 / np.sqrt(zeff)
                     + 0.146e0
@@ -6728,7 +6843,7 @@ class Physics:
                 * rmajor**1.75e0
                 * rminor ** (-0.37e0)
                 * np.sqrt(kappa95)
-                * np.sqrt(afuel / 1.5e0)
+                * np.sqrt(m_fuel_amu / 1.5e0)
                 / np.sqrt(powerht)
             )
 
@@ -6764,14 +6879,14 @@ class Physics:
                 ** 0.6e0
             )
             tauee = hfact * (
-                0.085e0 * kappa95 * rminor**2 * np.sqrt(afuel)
+                0.085e0 * kappa95 * rminor**2 * np.sqrt(m_fuel_amu)
                 + 0.069e0
                 * n20**0.6e0
                 * pcur
                 * bt**0.2e0
                 * rminor**0.4e0
                 * rmajor**1.6e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * gjaeri
                 * kappa95**0.2e0
                 / powerht
@@ -6787,7 +6902,7 @@ class Physics:
                 * kappa95**0.25e0
                 * pcur**0.85e0
                 * n20**0.1e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
                 / powerht**0.5e0
             )
 
@@ -6801,7 +6916,7 @@ class Physics:
                 * kappa**0.35e0
                 * dnla20**0.09e0
                 * bt**0.15e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
 
@@ -6815,7 +6930,7 @@ class Physics:
                 * np.sqrt(kappa)
                 * dnla20**0.1e0
                 * bt**0.2e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / np.sqrt(powerht)
             )
             term1 = (
@@ -6824,7 +6939,7 @@ class Physics:
                 * rmajor**0.3e0
                 * rminor**0.8e0
                 * kappa**0.6e0
-                * afuel**0.5e0
+                * m_fuel_amu**0.5e0
             )
             term2 = (
                 0.064e0
@@ -6834,7 +6949,7 @@ class Physics:
                 * kappa**0.5e0
                 * dnla20**0.6e0
                 * bt**0.35e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 / powerht
             )
             tauit2 = hfact * (term1 + term2)
@@ -6863,7 +6978,7 @@ class Physics:
                 * kappa95**0.73e0
                 * dnla20**0.41e0
                 * bt**0.29e0
-                / (powerht**0.79e0 * afuel**0.02e0)
+                / (powerht**0.79e0 * m_fuel_amu**0.02e0)
             )
 
         elif isc == 17:  # Lackner-Gottardi scaling (L-mode)
@@ -6891,7 +7006,7 @@ class Physics:
                 * kappa95**0.28e0
                 * dnla20**0.14e0
                 * bt**0.04e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 / powerht**0.59e0
             )
 
@@ -6899,7 +7014,7 @@ class Physics:
             tauee = (
                 hfact
                 * 0.1e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * pcur**0.884e0
                 * rmajor**1.24e0
                 * rminor ** (-0.23e0)
@@ -6916,7 +7031,7 @@ class Physics:
                 * 0.082e0
                 * pcur**1.02e0
                 * bt**0.15e0
-                * np.sqrt(afuel)
+                * np.sqrt(m_fuel_amu)
                 * rmajor**1.60e0
                 / (powerht**0.47e0 * kappa**0.19e0)
             )
@@ -6972,7 +7087,7 @@ class Physics:
                 * pcur**1.06e0
                 * bt**0.32e0
                 * powerht ** (-0.67e0)
-                * afuel**0.41e0
+                * m_fuel_amu**0.41e0
                 * rmajor**1.79e0
                 * dnla20**0.17e0
                 * aspect**0.11e0
@@ -6993,7 +7108,7 @@ class Physics:
                 * rmajor**1.92e0
                 * aspect ** (-0.08e0)
                 * kappa**0.63e0
-                * afuel**0.42e0
+                * m_fuel_amu**0.42e0
             )
 
         elif isc == 27:  # ELMy: ITERH-97P(y)
@@ -7007,7 +7122,7 @@ class Physics:
                 * rmajor**2.03e0
                 * aspect ** (-0.19e0)
                 * kappa**0.92e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 28:  # ITER-96P (= ITER-97L) L-mode scaling
@@ -7023,7 +7138,7 @@ class Physics:
                 * rmajor**1.83e0
                 * aspect**0.06e0
                 * dnla19**0.40e0
-                * afuel**0.20e0
+                * m_fuel_amu**0.20e0
                 * powerht ** (-0.73e0)
             )
 
@@ -7034,7 +7149,7 @@ class Physics:
                 * pcur**0.9e0
                 * bt**0.17e0
                 * dnla19**0.45e0
-                * afuel**0.05e0
+                * m_fuel_amu**0.05e0
                 * rmajor**1.316e0
                 * rminor**0.79e0
                 * kappa**0.56e0
@@ -7051,7 +7166,7 @@ class Physics:
                 * rmajor**2.01e0
                 * aspect ** (-0.18e0)
                 * dnla19**0.47e0
-                * afuel**0.25e0
+                * m_fuel_amu**0.25e0
                 * powerht ** (-0.73e0)
             )
 
@@ -7066,7 +7181,7 @@ class Physics:
                 * rmajor**2
                 * kappaa**0.75e0
                 * aspect ** (-0.66e0)
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 32:  # IPB98(y), ELMy H-mode scaling
@@ -7082,7 +7197,7 @@ class Physics:
                 * rmajor**1.93e0
                 * kappa**0.67e0
                 * aspect ** (-0.23e0)
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
             )
 
         elif isc == 33:  # IPB98(y,1), ELMy H-mode scaling
@@ -7098,7 +7213,7 @@ class Physics:
                 * rmajor**2.05e0
                 * physics_variables.kappaa_ipb**0.72e0
                 * aspect ** (-0.57e0)
-                * afuel**0.13e0
+                * m_fuel_amu**0.13e0
             )
 
         elif isc == 34:  # IPB98(y,2), ELMy H-mode scaling
@@ -7114,7 +7229,7 @@ class Physics:
                 * rmajor**1.97e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.58e0)
-                * afuel**0.19e0
+                * m_fuel_amu**0.19e0
             )
 
         elif isc == 35:  # IPB98(y,3), ELMy H-mode scaling
@@ -7130,7 +7245,7 @@ class Physics:
                 * rmajor**2.15e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.64e0)
-                * afuel**0.20e0
+                * m_fuel_amu**0.20e0
             )
 
         elif isc == 36:  # IPB98(y,4), ELMy H-mode scaling
@@ -7146,7 +7261,7 @@ class Physics:
                 * rmajor**2.08e0
                 * physics_variables.kappaa_ipb**0.76e0
                 * aspect ** (-0.69e0)
-                * afuel**0.17e0
+                * m_fuel_amu**0.17e0
             )
 
         elif isc == 37:  # ISS95 stellarator scaling
@@ -7192,7 +7307,7 @@ class Physics:
                 * rmajor**2.11e0
                 * kappa95**0.75e0
                 * aspect ** (-0.3e0)
-                * afuel**0.14e0
+                * m_fuel_amu**0.14e0
             )
 
         elif isc == 40:  # "Non-power law" (NPL) Murari energy confinement scaling
@@ -7200,7 +7315,7 @@ class Physics:
             #  A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks
             #  A. Murari et al 2015 Nucl. Fusion 55 073009, doi:10.1088/0029-5515/55/7/073009
             #  Table 4.  (Issue #311)
-            # Note that aspect ratio and M (afuel) do not appear, and B (bt) only
+            # Note that aspect ratio and M (m_fuel_amu) do not appear, and B (bt) only
             # appears in the "saturation factor" h.
             h = dnla19**0.448e0 / (1.0e0 + np.exp(-9.403e0 * (bt / dnla19) ** 1.365e0))
             tauee = (
@@ -7215,7 +7330,7 @@ class Physics:
 
         elif isc == 41:  # Beta independent dimensionless confinement scaling
             # C.C. Petty 2008 Phys. Plasmas 15, 080501, equation 36
-            # Note that there is no dependence on the average fuel mass 'afuel'
+            # Note that there is no dependence on the average fuel mass 'm_fuel_amu'
             tauee = (
                 hfact
                 * 0.052e0
@@ -7245,7 +7360,7 @@ class Physics:
                 * rmajor**1.2345e0
                 * physics_variables.kappaa_ipb**0.37e0
                 * aspect**2.48205e0
-                * afuel**0.2e0
+                * m_fuel_amu**0.2e0
                 * qratio**0.77e0
                 * aspect ** (-0.9e0 * np.log(aspect))
                 * nratio ** (-0.22e0 * np.log(nratio))
@@ -7295,7 +7410,7 @@ class Physics:
                 * rmajor**1.97e0
                 * physics_variables.kappaa_ipb**0.78e0
                 * aspect ** (-0.58e0)
-                * afuel**0.19e0
+                * m_fuel_amu**0.19e0
             )
 
         elif isc == 47:  # NSTX-Petty08 Hybrid
@@ -7327,7 +7442,7 @@ class Physics:
                     * rmajor**1.97e0
                     * physics_variables.kappaa_ipb**0.78e0
                     * aspect ** (-0.58e0)
-                    * afuel**0.19e0
+                    * m_fuel_amu**0.19e0
                 )
 
             else:
@@ -7350,7 +7465,7 @@ class Physics:
                     * rmajor**1.97e0
                     * physics_variables.kappaa_ipb**0.78e0
                     * aspect ** (-0.58e0)
-                    * afuel**0.19e0
+                    * m_fuel_amu**0.19e0
                 )
 
                 tauee = hfact * (
@@ -7387,7 +7502,7 @@ class Physics:
             # (with V (m3) the plasma volume inside the LCFS),
             # inverse aspect ratio epsilon = a/Rgeo
             # effective atomic mass Meff of the plasma - NOT defined, but I have taken it equal to
-            # aion = average mass of all ions (amu).
+            # m_ions_total_amu = average mass of all ions (amu).
             # energy confinement time is given by τE,th = Wth/Pl,th, where Wth is the thermal stored energy.
             # The latter is derived from the total stored energy Wtot by subtracting the energy
             # content associated to fast particles originating from plasma heating.
@@ -7403,7 +7518,7 @@ class Physics:
                 * (1 + physics_variables.triang) ** 0.36
                 * physics_variables.kappaa_ipb**0.8
                 * eps**0.35
-                * physics_variables.aion**0.2
+                * physics_variables.m_ions_total_amu**0.2
             )
 
         else:
@@ -7419,10 +7534,10 @@ class Physics:
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
-        ptripv = 2.403e-22 * dnitot * tin / tauei
+        ptripv = 2.403e-22 * nd_ions_total * tin / tauei
         ptrepv = 2.403e-22 * dene * ten / tauee
 
-        ratio = dnitot / dene * tin / ten
+        ratio = nd_ions_total / dene * tin / ten
 
         # Global energy confinement time
 
@@ -7467,7 +7582,7 @@ def pthresh(
     rminor,
     kappa,
     a_plasma_surface,
-    aion,
+    m_ions_total_amu,
     aspect,
     plasma_current,
 ):
@@ -7491,7 +7606,7 @@ def pthresh(
     :param rminor: plasma minor radius (m)
     :param kappa: plasma elongation
     :param a_plasma_surface: plasma surface area (m2)
-    :param aion: average mass of all ions (amu)
+    :param m_ions_total_amu: average mass of all ions (amu)
     :param aspect: aspect ratio
     :param plasma_current: plasma current (A)
 
@@ -7520,7 +7635,13 @@ def pthresh(
 
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = 0.0488 * dnla20**0.717 * bt**0.803 * a_plasma_surface**0.941 * (2.0 / aion)
+    martin = (
+        0.0488
+        * dnla20**0.717
+        * bt**0.803
+        * a_plasma_surface**0.941
+        * (2.0 / m_ions_total_amu)
+    )
     martin_error = (
         np.sqrt(
             0.057**2
@@ -7535,20 +7656,43 @@ def pthresh(
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = 1.42 * dnla20**0.58 * bt**0.82 * rmajor * rminor**0.81 * (2.0 / aion)
+    snipes_2000 = (
+        1.42
+        * dnla20**0.58
+        * bt**0.82
+        * rmajor
+        * rminor**0.81
+        * (2.0 / m_ions_total_amu)
+    )
     snipes_2000_ub = (
-        1.547 * dnla20**0.615 * bt**0.851 * rmajor**1.089 * rminor**0.876 * (2.0 / aion)
+        1.547
+        * dnla20**0.615
+        * bt**0.851
+        * rmajor**1.089
+        * rminor**0.876
+        * (2.0 / m_ions_total_amu)
     )
     snipes_2000_lb = (
-        1.293 * dnla20**0.545 * bt**0.789 * rmajor**0.911 * rminor**0.744 * (2.0 / aion)
+        1.293
+        * dnla20**0.545
+        * bt**0.789
+        * rmajor**0.911
+        * rminor**0.744
+        * (2.0 / m_ions_total_amu)
     )
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
-    snipes_2000_cd = 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / aion)
-    snipes_2000_cd_ub = 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / aion)
-    snipes_2000_cd_lb = 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / aion)
+    snipes_2000_cd = (
+        0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+    )
+    snipes_2000_cd_ub = (
+        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+    )
+    snipes_2000_cd_lb = (
+        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+    )
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

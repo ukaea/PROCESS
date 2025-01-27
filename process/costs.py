@@ -2194,14 +2194,14 @@ class Costs:
         """
         if ife_variables.ife != 1:
             #  Previous calculation, using qfuel in Amps:
-            #  1.3 should have been physics_variables.afuel*umass/electron_charge*1000*s/day = 2.2
+            #  1.3 should have been physics_variables.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * qfuel * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             physics_variables.wtgpd = (
                 2.0e0
                 * physics_variables.rndfuel
-                * physics_variables.afuel
+                * physics_variables.m_fuel_amu
                 * constants.umass
                 * 1000.0e0
                 * 86400.0e0

@@ -183,7 +183,7 @@ def test_acc2272(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(fortran.physics_variables, "rndfuel", 7.158e20)
-    monkeypatch.setattr(fortran.physics_variables, "afuel", 2.5)
+    monkeypatch.setattr(fortran.physics_variables, "m_fuel_amu", 2.5)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(costs, "c2271", 0)
 
@@ -4275,7 +4275,7 @@ class Acc2272Param(NamedTuple):
 
     rndfuel: Any = None
 
-    afuel: Any = None
+    m_fuel_amu: Any = None
 
     c227: Any = None
 
@@ -4300,7 +4300,7 @@ class Acc2272Param(NamedTuple):
             edrive=5000000,
             wtgpd=0,
             rndfuel=7.0799717510383796e20,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             c227=0,
             c2272=0,
             c22=0,
@@ -4316,7 +4316,7 @@ class Acc2272Param(NamedTuple):
             edrive=5000000,
             wtgpd=507.88376577416528,
             rndfuel=7.0777619721108953e20,
-            afuel=2.5,
+            m_fuel_amu=2.5,
             c227=284.96904049038437,
             c2272=114.02873340990777,
             c22=3474.7391916096453,
@@ -4354,7 +4354,7 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "rndfuel", acc2272param.rndfuel)
 
-    monkeypatch.setattr(physics_variables, "afuel", acc2272param.afuel)
+    monkeypatch.setattr(physics_variables, "m_fuel_amu", acc2272param.m_fuel_amu)
 
     monkeypatch.setattr(costs, "c227", acc2272param.c227)
 

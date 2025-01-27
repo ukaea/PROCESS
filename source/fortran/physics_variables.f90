@@ -17,13 +17,13 @@ module physics_variables
   integer, parameter :: ipnlaws = 50
   !! number of energy confinement time scaling laws
 
-  real(dp) :: abeam
+  real(dp) :: m_beam_amu
   !! beam ion mass (amu)
 
-  real(dp) :: afuel
+  real(dp) :: m_fuel_amu
   !! average mass of fuel portion of ions (amu)
 
-  real(dp) :: aion
+  real(dp) :: m_ions_total_amu
   !! average mass of all ions (amu)
 
   real(dp) :: alphaj
@@ -135,7 +135,7 @@ module physics_variables
   real(dp) :: dene
   !! electron density (/m3) (`iteration variable 6`)
 
-  real(dp) :: deni
+  real(dp) :: nd_fuel_ions
   !! fuel ion density (/m3)
 
   real(dp) :: dlamee
@@ -147,10 +147,10 @@ module physics_variables
   real(dp), dimension(8) :: dlimit
   !! density limit (/m3) as calculated using various models
 
-  real(dp) :: dnalp
+  real(dp) :: nd_alphas
   !! thermal alpha density (/m3)
 
-  real(dp) :: dnbeam
+  real(dp) :: nd_beam_ions
   !! hot beam ion density, variable (/m3)
 
   real(dp) :: beam_density_out
@@ -162,19 +162,19 @@ module physics_variables
   real(dp) :: dnelimt
   !! density limit (/m3)
 
-  real(dp) :: dnitot
+  real(dp) :: nd_ions_total
   !! total ion density (/m3)
 
   real(dp) :: dnla
   !! line averaged electron density (/m3)
 
-  real(dp) :: dnprot
+  real(dp) :: nd_protons
   !! proton ash density (/m3)
 
   real(dp) :: dntau
   !! plasma average "n-tau" (seconds/m3)
 
-  real(dp) :: dnz
+  real(dp) :: nd_impurities
   !! high Z ion density (/m3)
 
   real(dp) :: gradient_length_ne
@@ -641,7 +641,7 @@ module physics_variables
   real(dp) :: pcoef
   !! profile factor (= n-weighted T / average T)
 
-  real(dp) :: pinnerzoneradmw
+  real(dp) :: p_plasma_inner_rad_mw
   !! radiation power from inner zone (MW)
 
   real(dp) :: pcoreradpv
@@ -671,7 +671,7 @@ module physics_variables
   real(dp) :: dt_power_plasma
   !!  Deuterium-tritium fusion power, just from plasma [MW]
 
-  real(dp) :: pouterzoneradmw
+  real(dp) :: p_plasma_outer_rad_mw
   !! radiation power from outer zone (MW)
 
   real(dp) :: pedgeradpv
@@ -680,7 +680,7 @@ module physics_variables
   real(dp) :: phiint
   !! internal plasma V-s
 
-  real(dp) :: photon_wall
+  real(dp) :: pflux_fw_rad_mw
   !! Nominal mean radiation load on inside surface of reactor (MW/m2)
 
   real(dp) :: piepv
@@ -716,10 +716,10 @@ module physics_variables
   real(dp) :: len_plasma_poloidal
   !! plasma poloidal perimeter (m)
 
-  real(dp) :: pradmw
+  real(dp) :: p_plasma_rad_mw
   !! total radiation power from inside LCFS (MW)
 
-  real(dp) :: pradpv
+  real(dp) :: pden_plasma_rad_mw
   !! total radiation power per volume (MW/m3)
 
   real(dp) :: pradsolmw
@@ -731,7 +731,7 @@ module physics_variables
   real(dp) :: psolradmw
   !! SOL radiation power (MW) (`stellarator only`)
 
-  real(dp) :: psyncpv
+  real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
 
   integer :: ilhthresh
@@ -809,11 +809,11 @@ module physics_variables
   real(dp) :: rad_fraction_total
   !! Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma
 
-  real(dp) :: ralpne
+  real(dp) :: f_nd_alpha_electron
   !! thermal alpha density/electron density (`iteration variable 109`)
 
-  real(dp) :: protium
-  !! Seeded protium density / electron density.
+  real(dp) :: f_nd_protium_electrons
+  !! Seeded f_nd_protium_electrons density / electron density.
 
   real(dp) :: rli
   !! plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
@@ -827,7 +827,7 @@ module physics_variables
   real(dp) :: rminor
   !! plasma minor radius (m)
 
-  real(dp) :: rnbeam
+  real(dp) :: f_nd_beam_electron
   !! hot beam density / n_e (`iteration variable 7`)
 
   real(dp) :: rncne
@@ -863,7 +863,7 @@ module physics_variables
   !! - =0 for double null
   !! - =1 for single null (diverted side down)
 
-  real(dp) :: ssync
+  real(dp) :: f_sync_reflect
   !! synchrotron wall reflectivity factor
 
   real(dp) :: tauee
@@ -947,9 +947,9 @@ module physics_variables
     !! Initialise module variables
     implicit none
 
-    abeam = 0.0D0
-    afuel = 0.0D0
-    aion = 0.0D0
+    m_beam_amu = 0.0D0
+    m_fuel_amu = 0.0D0
+    m_ions_total_amu = 0.0D0
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
@@ -986,20 +986,20 @@ module physics_variables
     f_vol_plasma = 1.0D0
     f_r_conducting_wall = 1.35D0
     dene = 9.8D19
-    deni = 0.0D0
+    nd_fuel_ions = 0.0D0
     dlamee = 0.0D0
     dlamie = 0.0D0
     dlimit = 0.0D0
-    dnalp = 0.0D0
-    dnbeam = 0.0D0
+    nd_alphas = 0.0D0
+    nd_beam_ions = 0.0D0
     beam_density_out = 0.0D0
     beta_norm_max = 3.5D0
     dnelimt = 0.0D0
-    dnitot = 0.0D0
+    nd_ions_total = 0.0D0
     dnla = 0.0D0
-    dnprot = 0.0D0
+    nd_protons = 0.0D0
     dntau = 0.0D0
-    dnz = 0.0D0
+    nd_impurities = 0.0D0
     beta_poloidal_eps_max = 1.38D0
     eps = 0.34399724802D0
     aux_current_fraction = 0.0D0
@@ -1079,7 +1079,7 @@ module physics_variables
     non_alpha_charged_power = 0.0D0
     charged_power_density = 0.0D0
     pcoef = 0.0D0
-    pinnerzoneradmw = 0.0D0
+    p_plasma_inner_rad_mw = 0.0D0
     pcoreradpv = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0
@@ -1089,11 +1089,11 @@ module physics_variables
     pdivmax = 0.0D0
     dt_power_total = 0.0D0
     dt_power_plasma = 0.0D0
-    pouterzoneradmw = 0.0D0
+    p_plasma_outer_rad_mw = 0.0D0
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0
     phiint = 0.0D0
-    photon_wall = 0.0D0
+    pflux_fw_rad_mw = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0
     neutron_power_plasma = 0.0D0
@@ -1105,12 +1105,12 @@ module physics_variables
     powerht = 0.0D0
     fusion_power = 0.0D0
     len_plasma_poloidal = 0.0D0
-    pradmw = 0.0D0
-    pradpv = 0.0D0
+    p_plasma_rad_mw = 0.0D0
+    pden_plasma_rad_mw = 0.0D0
     pradsolmw = 0.0D0
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
-    psyncpv = 0.0D0
+    pden_plasma_sync_mw = 0.0D0
     ilhthresh = 19
     plhthresh = 0.0D0
     pthrmw = 0.0D0
@@ -1128,13 +1128,13 @@ module physics_variables
     qstar = 0.0D0
     rad_fraction_sol = 0.8D0
     rad_fraction_total = 0.0D0
-    ralpne = 0.10D0
-    protium = 0.0D0
+    f_nd_alpha_electron = 0.10D0
+    f_nd_protium_electrons = 0.0D0
     rli = 0.9D0
     rlp = 0.0D0
     rmajor = 8.14D0
     rminor = 0.0D0
-    rnbeam = 0.005D0
+    f_nd_beam_electron = 0.005D0
     rncne = 0.0D0
     rndfuel = 0.0D0
     rnfene = 0.0D0
@@ -1145,7 +1145,7 @@ module physics_variables
     a_plasma_surface = 0.0D0
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
-    ssync = 0.6D0
+    f_sync_reflect = 0.6D0
     tauee = 0.0D0
     tauee_in = 0.0D0
     taueff = 0.0D0

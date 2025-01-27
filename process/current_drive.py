@@ -1310,10 +1310,10 @@ class CurrentDrive:
 
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
-            current_drive_variables.beam_energy / physics_variables.abeam,
+            current_drive_variables.beam_energy / physics_variables.m_beam_amu,
             physics_variables.te,
             physics_variables.dene,
-            physics_variables.ralpne,
+            physics_variables.f_nd_alpha_electron,
             physics_variables.rncne,
             physics_variables.rnone,
             physics_variables.rnfene,
@@ -1327,12 +1327,14 @@ class CurrentDrive:
         fshine = max(fshine, 1e-20)
 
         # Deuterium and tritium beam densities
-        dend = physics_variables.deni * (1.0 - current_drive_variables.f_tritium_beam)
-        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
+        dend = physics_variables.nd_fuel_ions * (
+            1.0 - current_drive_variables.f_tritium_beam
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_tritium_beam
 
         # Power split to ions / electrons
         fpion = self.cfnbi(
-            physics_variables.abeam,
+            physics_variables.m_beam_amu,
             current_drive_variables.beam_energy,
             physics_variables.ten,
             physics_variables.dene,
@@ -1344,7 +1346,7 @@ class CurrentDrive:
 
         # Current drive efficiency
         effnbss = current_drive_variables.frbeam * self.etanb(
-            physics_variables.abeam,
+            physics_variables.m_beam_amu,
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.aspect,
@@ -1580,10 +1582,10 @@ class CurrentDrive:
         #  Calculate beam stopping cross-section
 
         sigstop = self.sigbeam(
-            current_drive_variables.beam_energy / physics_variables.abeam,
+            current_drive_variables.beam_energy / physics_variables.m_beam_amu,
             physics_variables.te,
             physics_variables.dene,
-            physics_variables.ralpne,
+            physics_variables.f_nd_alpha_electron,
             physics_variables.rncne,
             physics_variables.rnone,
             physics_variables.rnfene,
@@ -1600,13 +1602,15 @@ class CurrentDrive:
 
         #  Deuterium and tritium beam densities
 
-        dend = physics_variables.deni * (1.0e0 - current_drive_variables.f_tritium_beam)
-        dent = physics_variables.deni * current_drive_variables.f_tritium_beam
+        dend = physics_variables.nd_fuel_ions * (
+            1.0e0 - current_drive_variables.f_tritium_beam
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_tritium_beam
 
         #  Power split to ions / electrons
 
         fpion = self.cfnbi(
-            physics_variables.abeam,
+            physics_variables.m_beam_amu,
             current_drive_variables.beam_energy,
             physics_variables.ten,
             physics_variables.dene,
@@ -1619,7 +1623,7 @@ class CurrentDrive:
         #  Current drive efficiency
 
         effnbss = self.etanb2(
-            physics_variables.abeam,
+            physics_variables.m_beam_amu,
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.aspect,
@@ -1694,7 +1698,7 @@ class CurrentDrive:
 
     def etanb2(
         self,
-        abeam,
+        m_beam_amu,
         alphan,
         alphat,
         aspect,
@@ -1712,7 +1716,7 @@ class CurrentDrive:
         using the ITER 1990 formulation, plus correction terms
         outlined in Culham Report AEA FUS 172
         author: P J Knight, CCFE, Culham Science Centre
-        abeam   : input real : beam ion mass (amu)
+        m_beam_amu   : input real : beam ion mass (amu)
         alphan  : input real : density profile factor
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
@@ -1747,7 +1751,7 @@ class CurrentDrive:
 
         #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
         #  N.B. ten is in keV
-        ecrit = 0.01 * abeam * ten
+        ecrit = 0.01 * m_beam_amu * ten
 
         #  Beam energy in MeV
         ebmev = beam_energy / 1e3
@@ -1756,7 +1760,7 @@ class CurrentDrive:
         xjs = ebmev / (bbd * ecrit)
         xj = np.sqrt(xjs)
 
-        yj = 0.8 * zeff / abeam
+        yj = 0.8 * zeff / m_beam_amu
 
         #  Fitting function J0(x,y)
         j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
@@ -1876,11 +1880,11 @@ class CurrentDrive:
 
         return e1 - e2
 
-    def etanb(self, abeam, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
+    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation
         author: P J Knight, CCFE, Culham Science Centre
-        abeam   : input real : beam ion mass (amu)
+        m_beam_amu   : input real : beam ion mass (amu)
         alphan  : input real : density profile factor
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
@@ -1901,10 +1905,10 @@ class CurrentDrive:
         dene20 = 1e-20 * dene
 
         # Ratio of E_beam/E_crit
-        xjs = ebeam / (bbd * 10.0 * abeam * ten)
+        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
         xj = np.sqrt(xjs)
 
-        yj = 0.8 * zeff / abeam
+        yj = 0.8 * zeff / m_beam_amu
 
         rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
 

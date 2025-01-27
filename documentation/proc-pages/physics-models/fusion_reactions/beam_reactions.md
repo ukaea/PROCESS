@@ -103,8 +103,8 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 3. **Set the plasma tritium and ion densities**
 
     $$
-    \mathtt{deuterium\_density = deni * f\_deuterium\_plasma} \\
-    \mathtt{tritium\_density = deni * f\_tritium\_plasma}
+    \mathtt{deuterium\_density = nd_fuel_ions * f\_deuterium\_plasma} \\
+    \mathtt{tritium\_density = nd_fuel_ions * f\_tritium\_plasma}
     $$
 
 4. **Calculate the beam alpha powers, density and deposited energy**
@@ -385,7 +385,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
 This constraint can be activated by stating `icc = 7` in the input file.
 
-The desired value of the hot ion beam density calculated from the code (`beam_density_out`) can be constrained using the input variable, `rnbeam`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
+The desired value of the hot ion beam density calculated from the code (`beam_density_out`) can be constrained using the input variable, `f_nd_beam_electron`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
 
 [^1]: J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 [^2]: Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  

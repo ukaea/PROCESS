@@ -806,7 +806,7 @@ class PowerflowCalcParam(NamedTuple):
 
     idivrt: Any = None
 
-    pradmw: Any = None
+    p_plasma_rad_mw: Any = None
 
     palpfwmw: Any = None
 
@@ -876,7 +876,7 @@ class PowerflowCalcParam(NamedTuple):
             htpmw_div=0,
             fpumpdiv=0.0050000000000000001,
             idivrt=1,
-            pradmw=287.44866938104849,
+            p_plasma_rad_mw=287.44866938104849,
             palpfwmw=19.835845058655043,
             pdivt=143.6315222649435,
             p_he=8000000,
@@ -925,7 +925,7 @@ class PowerflowCalcParam(NamedTuple):
             htpmw_div=1.7970292653352464,
             fpumpdiv=0.0050000000000000001,
             idivrt=1,
-            pradmw=287.44866938104849,
+            p_plasma_rad_mw=287.44866938104849,
             palpfwmw=19.829653483586444,
             pdivt=143.51338080047339,
             p_he=8000000,
@@ -1035,7 +1035,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(physics_variables, "idivrt", powerflowcalcparam.idivrt)
 
-    monkeypatch.setattr(physics_variables, "pradmw", powerflowcalcparam.pradmw)
+    monkeypatch.setattr(
+        physics_variables, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
+    )
 
     monkeypatch.setattr(physics_variables, "palpfwmw", powerflowcalcparam.palpfwmw)
 

@@ -179,7 +179,7 @@ def test_heat_transfer(fw):
         cf=5184.9330299967578,
         viscf=4.0416219836935569e-05,
         kf=0.3211653052986152,
-    ) == pytest.approx(1929.2210192752084)
+    ) == pytest.approx(1929.221015448999)
 
 
 def test_fw_thermal_conductivity(monkeypatch, fw):

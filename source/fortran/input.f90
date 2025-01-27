@@ -236,7 +236,7 @@ contains
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
       ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
-      ft_current_ramp_up, tcycmn, auxmin, zeffmax, peakfactrad, fdtmp, fpoloidalpower, &
+      ft_current_ramp_up, tcycmn, auxmin, zeffmax, f_fw_rad_max, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
       fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
@@ -293,7 +293,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, nimp, &
+    use impurity_radiation_module, only: coreradius, n_impurities, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -306,10 +306,10 @@ contains
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
       fpdivlim, beta_poloidal_eps_max, isc, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
-      ftar, plasma_res_factor, ssync, rnbeam, beta, neped, hfact, beta_norm_max, &
+      ftar, plasma_res_factor, f_sync_reflect, f_nd_beam_electron, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
-      itart, ralpne, iprofile, triang95, rad_fraction_sol, betbm0, protium, &
+      itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       iradloss, te, alphan, rmajor, plasma_square, kappa, iinvqd, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
@@ -594,7 +594,7 @@ contains
           call parse_real_variable('f_helium3', f_helium3, 0.0D0, 1.0D0, &
                'Helium-3 fuel fraction')
        case ('fimp')
-          call parse_real_array('fimp', fimp, isub1, nimp, &
+          call parse_real_array('fimp', fimp, isub1, n_impurities, &
                'Impurity density fraction', icode)
        case ('fkzohm')
           call parse_real_variable('fkzohm', fkzohm, 0.5D0, 2.0D0, &
@@ -714,11 +714,11 @@ contains
        case ('rad_fraction_sol')
           call parse_real_variable('rad_fraction_sol', rad_fraction_sol, 0.0D0, 1.0D0, &
                'SoL radiation fraction')
-       case ('ralpne')
-          call parse_real_variable('ralpne', ralpne, 1.0D-12, 1.0D0, &
+       case ('f_nd_alpha_electron')
+          call parse_real_variable('f_nd_alpha_electron', f_nd_alpha_electron, 1.0D-12, 1.0D0, &
                'Thermal alpha density / electron density')
-       case ('protium')
-          call parse_real_variable('protium', protium, 0.0D0, 1.0D0, &
+       case ('f_nd_protium_electrons')
+          call parse_real_variable('f_nd_protium_electrons', f_nd_protium_electrons, 0.0D0, 1.0D0, &
                'Protium density / electron density')
 
        case ('rhopedn')
@@ -733,14 +733,14 @@ contains
        case ('rmajor')
           call parse_real_variable('rmajor', rmajor, 0.1D0, 50.0D0, &
                'Plasma major radius (m)')
-       case ('rnbeam')
-          call parse_real_variable('rnbeam', rnbeam, 0.0D0, 1.0D0, &
+       case ('f_nd_beam_electron')
+          call parse_real_variable('f_nd_beam_electron', f_nd_beam_electron, 0.0D0, 1.0D0, &
                'Hot beam density / electron density')
        case ('i_single_null')
           call parse_int_variable('i_single_null', i_single_null, 0, 1, &
                'Switch for single/double null plasma')
-       case ('ssync')
-          call parse_real_variable('ssync', ssync, 0.0D0, 1.0D0, &
+       case ('f_sync_reflect')
+          call parse_real_variable('f_sync_reflect', f_sync_reflect, 0.0D0, 1.0D0, &
                'Synchrotron wall reflectivity factor')
        case ('tbeta')
           call parse_real_variable('tbeta', tbeta, 0.0D0, 4.0D0, &
@@ -1003,8 +1003,8 @@ contains
        case ('pdivtlim')
           call parse_real_variable('pdivtlim', pdivtlim, 0.1D0, 1.0D3, &
                'Minimum pdivt (MW) (con. 80, itvar. 153)')
-       case ('peakfactrad')
-          call parse_real_variable('peakfactrad', peakfactrad, 0.1D0, 10D0, &
+       case ('f_fw_rad_max')
+          call parse_real_variable('f_fw_rad_max', f_fw_rad_max, 0.1D0, 10D0, &
                'peaking factor for radiation wall load')
        case ('pnetelin')
           call parse_real_variable('pnetelin', pnetelin, 1.0D0, 1.0D4, &
@@ -3222,7 +3222,7 @@ contains
                'Switch for Reinke Criterion mode (0=H, 1=I)')
 
        case ('impvardiv')
-          call parse_int_variable('impvardiv', impvardiv, 3, nimp, &
+          call parse_int_variable('impvardiv', impvardiv, 3, n_impurities, &
                'Index of impurity to be iterated for Reike criterion')
 
 
