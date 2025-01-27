@@ -30,7 +30,7 @@ def temporary_dir():
 
 
 def test_parser_succeed(read_mfile):
-    assert read_mfile._mfile_data
+    assert read_mfile._mfile_data  # noqa: SLF001
 
 
 def test_value_read(read_mfile):
