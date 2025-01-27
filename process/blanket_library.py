@@ -399,6 +399,14 @@ class BlanketLibrary:
             build_variables.hmax + build_variables.tfcth
         )
 
+        # Internal cryostat space volume [m^3]
+        fwbs_variables.vol_cryostat_internal = (
+            np.pi
+            * (fwbs_variables.r_cryostat_inboard) ** 2
+            * 2
+            * fwbs_variables.z_cryostat_half_inside
+        )
+
         # Cryostat structure volume [m^3]
         # Calculate by taking the volume of the outer cryostat and subtracting the volume of the inner cryostat
         fwbs_variables.vol_cryostat = (
@@ -408,12 +416,7 @@ class BlanketLibrary:
             )
             * 2
             * (build_variables.dr_cryostat + fwbs_variables.z_cryostat_half_inside)
-        ) - (
-            np.pi
-            * (fwbs_variables.r_cryostat_inboard) ** 2
-            * 2
-            * fwbs_variables.z_cryostat_half_inside
-        )
+        ) - (fwbs_variables.vol_cryostat_internal)
 
         # Vacuum vessel mass (kg)
         fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl

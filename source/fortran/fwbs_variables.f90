@@ -429,7 +429,10 @@ module fwbs_variables
   !! modular coil) and cryostat [m]
 
   real(dp) :: vol_cryostat
-  !! cryostat volume [m^3]
+  !! Cryostat structure volume [m^3]
+
+  real(dp) :: vol_cryostat_internal
+  !! Internal volume of the cryostat [m^3]
 
   real(dp) :: vdewin
   !! vacuum vessel volume [m^3]
@@ -776,6 +779,7 @@ module fwbs_variables
     z_cryostat_half_inside = 0.0D0
     dr_pf_cryostat = 0.5D0
     vol_cryostat = 0.0D0
+    vol_cryostat_internal = 0.0D0
     vdewin = 0.0D0
     vfshld = 0.25D0
     volblkt = 0.0D0
