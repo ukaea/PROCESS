@@ -609,7 +609,6 @@ def psync_albajar_fidone():
     kfun = 0.0
     dum = 0.0
     psync = 0.0
-    # psyncpv = 0.0
 
     kap = physics_variables.plasma_volume / (
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
