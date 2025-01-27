@@ -689,18 +689,15 @@ def plot_nprofile(prof, demo_ranges):
 
         # Add text box with density profile parameters
         textstr_density = "\n".join((
-            r"$n_{\text{e,0}}$: "
-            + f"{ne0:.3e} m$^{{-3}}$"
-            + r"$\hspace{4} \alpha_{\text{n}}$: "
-            + f"{alphan:.3f}\n",
-            r"$n_{\text{e,ped}}$: "
-            + f"{neped:.3e} m$^{{-3}}$"
-            + r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-            + f"{deni / dene:.3f}",
-            r"$f_{\text{GW e,ped}}$: " + f"{fgwped_out:.3f}",
-            r"$\rho_{\text{ped,n}}$: " + f"{rhopedn:.3f}\n",
-            r"$n_{\text{e,sep}}$: " + f"{nesep:.3e} m$^{{-3}}$",
-            r"$f_{\text{GW e,sep}}$: " + f"{fgwsep_out:.3f}",
+            rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
+            rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
+            r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+            f"{deni / dene:.3f}",
+            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
+            rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
+            rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
 
         props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -817,16 +814,13 @@ def plot_tprofile(prof, demo_ranges):
 
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        r"$T_{\text{e,0}}$: "
-        + f"{te0:.3f} keV"
-        + r"$\hspace{4} \alpha_{\text{T}}$: "
-        + f"{alphat:.3f}\n",
-        r"$T_{\text{e,ped}}$: "
-        + f"{teped:.3f} keV"
-        + r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-        + f"{tratio:.3f}",
-        r"$\rho_{\text{ped,T}}$: " + f"{rhopedt:.3f}\n",
-        r"$T_{\text{e,sep}}$: " + f"{tesep:.3f} keV\n",
+        rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
+        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}\n",
+        rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
+        r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+        f"{tratio:.3f}",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}\n",
+        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV\n",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -1620,20 +1614,19 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             x12 = r_tf_inboard_out * np.cos(
                 np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
             )
-            # Y points for outboard case curve
-            y12 = r_tf_inboard_out * np.sin(
-                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-            )
+
         elif case_plasma == 1:
             # Flat case
 
             # X points for outboard case
-            x12 = r_tf_inboard_out * np.linspace(1, 1, 256, endpoint=True)
+            x12 = np.full(256, r_tf_inboard_out)
+        else:
+            raise NotImplementedError("case_plasma must be 0 or 1")
 
-            # Y points for outboard case
-            y12 = r_tf_inboard_out * np.sin(
-                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
-            )
+        # Y points for outboard case
+        y12 = r_tf_inboard_out * np.sin(
+            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+        )
 
         # Cordinates of the top and bottom of case curves,
         # used to plot the lines connecting the inside and outside of the case
@@ -1651,6 +1644,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         # Fill in the case segemnts
 
         # Upper main
+        case_plasma_label = (
+            f"Case: \n{nose_thickness:.4f} m nose thickness \n"
+            f"{side_thickness:.4f} m sidewall thickness \n$"
+            f"\\Delta$R = {tf_thickness:.4f} m \n "
+        )
         if case_plasma == 0:
             axis.fill_between(
                 [
@@ -1660,7 +1658,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
+                label=case_plasma_label,
             )
             # Lower main
             axis.fill_between(
@@ -1687,7 +1685,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=f"Case: \n{nose_thickness:.4f} m nose thickness \n{side_thickness:.4f} m sidewall thickness \n$\Delta$R = {tf_thickness:.4f} m \n ",  # noqa: W605
+                label=case_plasma_label,
             )
             # Lower main
             axis.fill_between(
@@ -1742,7 +1740,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp - (2 * tinstf)),
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
-                    label=f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
+                    label=(
+                        f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                    ),
                 )
             )
             # Dvides the WP up into the turn segments
@@ -1811,7 +1812,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp / 2) - (2 * tinstf),
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
+                    label=(
+                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                    ),
                 ),
             )
             # Inner WP
@@ -1862,7 +1866,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y)),
                     color="blue",
-                    label=f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$\Delta$R= {dr_tf_wp:.4f} m \n  ",  # noqa: W605
+                    label=(
+                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n"
+                        f"$\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                    ),
                 )
             )
 
@@ -2002,7 +2009,10 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="royalblue",
-                label=f"Cable space: \n{cable_space_width_radial} mm radial width \n{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$",
+                label=(
+                    f"Cable space: \n{cable_space_width_radial} mm radial width \n"
+                    f"{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$"
+                ),
                 edgecolor="black",
             ),
         )
@@ -2134,11 +2144,11 @@ def plot_info(axis, data, mfile_data, scan):
             elif data[i][0][0] == "#":
                 axis.text(-0.05, -i, f"{data[i][0][1:]}\n", ha="left", va="center")
             elif data[i][0][0] == "!":
-                value = data[i][0][1:]
+                value = data[i][0][1:].replace('"', "")
                 axis.text(
                     0.4,
                     -i,
-                    "-->  " + str(value.replace('"', "")) + " " + data[i][2],
+                    f"-->  {value} {data[i][2]}",
                     ha="left",
                     va="center",
                 )
@@ -2154,7 +2164,7 @@ def plot_info(axis, data, mfile_data, scan):
                     axis.text(
                         eqpos,
                         -i,
-                        "= " + value + " " + data[i][2],
+                        f"= {value} {data[i][2]}",
                         color=colorflag,
                         ha="left",
                         va="center",
@@ -2164,7 +2174,7 @@ def plot_info(axis, data, mfile_data, scan):
                     axis.text(
                         eqpos,
                         -i,
-                        "=" + "ERROR! Var missing",
+                        "= ERROR! Var missing",
                         color=colorflag,
                         ha="left",
                         va="center",
@@ -2175,7 +2185,7 @@ def plot_info(axis, data, mfile_data, scan):
             axis.text(
                 eqpos,
                 -i,
-                "= " + value + " " + data[i][2],
+                f"= {value} {data[i][2]}",
                 color=colorflag,
                 ha="left",
                 va="center",
@@ -2206,16 +2216,13 @@ def plot_header(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     data2 = [
-        ("!" + str(mfile_data.data["runtitle"].get_scan(-1)), "Run title", ""),
-        ("!" + str(mfile_data.data["procver"].get_scan(-1)), "PROCESS Version", ""),
-        ("!" + mfile_data.data["date"].get_scan(-1), "Date:", ""),
-        ("!" + mfile_data.data["time"].get_scan(-1), "Time:", ""),
-        ("!" + mfile_data.data["username"].get_scan(-1), "User:", ""),
+        (f"!{mfile_data.data['runtitle'].get_scan(-1)}", "Run title", ""),
+        (f"!{mfile_data.data['procver'].get_scan(-1)}", "PROCESS Version", ""),
+        (f"!{mfile_data.data['date'].get_scan(-1)}", "Date:", ""),
+        (f"!{mfile_data.data['time'].get_scan(-1)}", "Time:", ""),
+        (f"!{mfile_data.data['username'].get_scan(-1)}", "User:", ""),
         (
-            "!"
-            + dicts["DICT_OPTIMISATION_VARS"][
-                str(abs(int(mfile_data.data["minmax"].get_scan(-1))))
-            ],
+            f"!{dicts['DICT_OPTIMISATION_VARS'][str(abs(int(mfile_data.data['minmax'].get_scan(-1))))]}",
             "Optimising:",
             "",
         ),
@@ -2625,8 +2632,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("pnetelmw", "Net electric power", "MW"),
         (
             plant_eff,
-            "Fusion-to-electric efficiency "
-            + r"$\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$",
+            r"Fusion-to-electric efficiency $\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$",
             "%",
         ),
     ]
