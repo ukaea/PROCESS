@@ -850,16 +850,16 @@ def check_process():
     elif fortran.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
         if fortran.tfcoil_variables.i_tf_sc_mat in [1, 4, 5]:
-            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036–42. https://doi.org/10.1088/0953-2048/16/9/313.
+            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
             fortran.tfcoil_variables.eyoung_cond_axial = 32e9
         elif fortran.tfcoil_variables.i_tf_sc_mat == 2:
             # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
             fortran.tfcoil_variables.eyoung_cond_axial = 80e9
         elif fortran.tfcoil_variables.i_tf_sc_mat in [3, 7]:
-            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236–39. https://doi.org/10.1109/77.783280.
+            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
             fortran.tfcoil_variables.eyoung_cond_axial = 6.8e9
         elif fortran.tfcoil_variables.i_tf_sc_mat in [6, 8, 9]:
-            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426–431 (2005): 699–704. https://doi.org/10.1016/j.physc.2005.01.045.
+            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
             fortran.tfcoil_variables.eyoung_cond_axial = 145e9
 
         if fortran.tfcoil_variables.i_tf_cond_eyoung_trans == 0:

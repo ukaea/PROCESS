@@ -258,7 +258,7 @@ def _normalise_diffs(
     if (normalising_soln_opt_params_np == 0).any():
         zero_indexes = np.nonzero(normalising_soln_opt_params_np == 0)[0]
         raise ValueError(
-            f"Can't normalise with 0-valued optimisation parameter at index {str(zero_indexes)}."
+            f"Can't normalise with 0-valued optimisation parameter at index {zero_indexes!s}."
         )
 
     normalised_solns_opt_params = (

@@ -119,10 +119,8 @@ class VariableDescriptions(ProjectDictionary):
                 desc = getattr(var, self.value_type)
 
                 # If var key doesn't exist, add it
-                if (
-                    var.name not in self.dict[self.name]
-                    or not self.dict[self.name][var.name]
-                    and desc
+                if var.name not in self.dict[self.name] or (
+                    not self.dict[self.name][var.name] and desc
                 ):
                     # Only overwrite description if it's falsey and we're
                     # overwriting with something truthy

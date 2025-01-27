@@ -39,6 +39,7 @@ import json
 import logging
 import math
 import pathlib
+from typing import ClassVar
 
 import git
 import pandas as pd
@@ -85,10 +86,10 @@ class TrackingFile:
 class ProcessTracker:
     """Manages the creation of tracking data into a JSON file for a run of PROCESS."""
 
-    meta_variables = {"date", "time"}
+    meta_variables: ClassVar = {"date", "time"}
     # Variables in an MFile that hold metadata we want to show on the graph
 
-    tracking_variables = {
+    tracking_variables: ClassVar = {
         "pheat",
         "bootstrap_current_fraction",
         "pinjmw",
@@ -176,9 +177,9 @@ class ProcessTracker:
     def __init__(
         self,
         mfile: str,
-        database: str = None,
-        message: str = None,
-        hashid: str = None,
+        database: str | None = None,
+        message: str | None = None,
+        hashid: str | None = None,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -530,7 +531,7 @@ class PythonFortranInterfaceVariables:
     Parses the f2py generated tree and can find the parent module of a module variable.
     """
 
-    tree = {}
+    tree: ClassVar = {}
 
     @classmethod
     def populate_classes(cls):

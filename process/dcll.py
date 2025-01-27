@@ -66,7 +66,7 @@ class DCLL:
                      lead-lithium alloy, two candidate liquid metal breeder materials
                      for self-cooled blankets, Fusion Engineering and Design 27, 399-406
 
-         [Gas2001]   Gasior and Mozer (2001), Thermodynamic study of liquid lithium–lead
+         [Gas2001]   Gasior and Mozer (2001), Thermodynamic study of liquid lithium-lead
                      alloys using the EMF method, Journal of Nuclear Materials, 294, 77-83
 
          [Pal2016]   Palermo et al. (2016), Neutronic analyses of the preliminary design

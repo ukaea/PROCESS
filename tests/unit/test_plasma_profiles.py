@@ -20,7 +20,7 @@ class NProfileParam(NamedTuple):
     neped: float = 0.0
     rhopedn: float = 0.0
     alphan: float = 0.0
-    expected_nprofile: np.array = []
+    expected_nprofile: list | None = None
 
 
 @pytest.mark.parametrize(

@@ -524,7 +524,7 @@ class PlasmaGeom:
 
     def sauter_geometry(self, a, r0, kap, tri):
         """
-        Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633–645
+        Plasma geometry based on equations (36) in O. Sauter, Fusion Engineering and Design 112 (2016) 633-645
         'Geometric formulas for system codes including the effect of negative triangularity'
         Author: Michael Kovari, issue #392
         a      : input real :  plasma minor radius (m)

@@ -2213,17 +2213,13 @@ class PFCoil:
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
-                    (pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9)
-                    and tfv.str_cs_con_res > 0.7e-2
-                    or tfv.str_cs_con_res < -0.7e-2
-                ):
+                    pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9
+                ) and abs(tfv.str_cs_con_res) > 0.7e-2:
                     eh.report_error(262)
 
                 if (
-                    (pfv.isumatpf == 6 or pfv.isumatpf == 8 or pfv.isumatpf == 9)
-                    and tfv.str_pf_con_res > 0.7e-2
-                    or tfv.str_pf_con_res < -0.7e-2
-                ):
+                    pfv.isumatpf == 6 or pfv.isumatpf == 8 or pfv.isumatpf == 9
+                ) and abs(tfv.str_pf_con_res) > 0.7e-2:
                     eh.report_error(263)
 
             else:

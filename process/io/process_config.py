@@ -20,6 +20,7 @@ import sys
 from pathlib import Path
 from sys import stderr
 from time import sleep
+from typing import ClassVar
 
 from numpy import argsort, argwhere, logical_or
 from numpy.random import default_rng
@@ -416,12 +417,12 @@ class RunProcessConfig(ProcessConfig):
 
     no_allowed_unfeasible = 0
     create_itervar_diff = False
-    add_ixc = []
-    del_ixc = []
-    add_icc = []
-    del_icc = []
-    dictvar = {}
-    del_var = []
+    add_ixc: ClassVar = []
+    del_ixc: ClassVar = []
+    add_icc: ClassVar = []
+    del_icc: ClassVar = []
+    dictvar: ClassVar = {}
+    del_var: ClassVar = []
 
     def __init__(self, filename="run_process.conf"):
         """
@@ -663,11 +664,11 @@ class UncertaintiesConfig(ProcessConfig, Config):
     no_scans = 5
     no_samples = 1000
     output_mean = 8056.98
-    uncertainties = []
-    morris_uncertainties = []
-    sobol_uncertainties = []
-    output_vars = []
-    dict_results = {}
+    uncertainties: ClassVar = []
+    morris_uncertainties: ClassVar = []
+    sobol_uncertainties: ClassVar = []
+    output_vars: ClassVar = []
+    dict_results: ClassVar = {}
     ncdf_writer = None
     figure_of_merit = "rmajor"
     latin_hypercube_level = 4
