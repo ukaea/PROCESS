@@ -310,13 +310,15 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 def z2index(zimp):
     for i in range(len(impurity_radiation_module.impurity_arr_label)):
         if zimp == impurity_radiation_module.impurity_arr_z[i]:
-            z2index = i
-            return z2index
+            return i
 
     # Should only get here if there is a problem
 
     error_handling.idiags[0] = zimp
     error_handling.report_error(33)
+
+    # Explicit return
+    return None
 
 
 def fradcore(rho, coreradius, coreradiationfraction):

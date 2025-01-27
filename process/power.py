@@ -2307,11 +2307,10 @@ class Power:
 
         #  45% extra miscellaneous, piping and reserves
         self.qmisc = 0.45e0 * (self.qss + fwbs_variables.qnuc + self.qac + self.qcl)
-        helpow = max(
+        return max(
             0.0e0,
             self.qmisc + self.qss + fwbs_variables.qnuc + self.qac + self.qcl,
         )
-        return helpow
 
     def plant_thermal_efficiency(self, etath):
         """
@@ -2462,8 +2461,11 @@ class Power:
                 error_handling.fdiags[0] = heat_transport_variables.tturb
                 error_handling.report_error(166)
 
-            etath_liq = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
-            return etath_liq
+            return 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
+
+        raise ValueError(
+            f"secondary_cycle_liq ={fwbs_variables.secondary_cycle_liq} is an invalid option."
+        )
 
     def tfpwr(self, output: bool):
         """

@@ -939,8 +939,7 @@ def read_imprad_data(skiprows, data_path):
         lzdata[i] = np.column_stack((Te, lz, zav))
 
     # then switch string to floats
-    impdata = np.array(lzdata, dtype=float)
-    return impdata
+    return np.array(lzdata, dtype=float)
 
 
 def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:

@@ -2445,18 +2445,18 @@ class Stellarator:
                 * np.exp(-decay[4, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
 
-            return (
-                coilhtmx,
-                dpacop,
-                htheci,
-                nflutf,
-                pheci,
-                pheco,
-                ptfiwp,
-                ptfowp,
-                raddose,
-                ptfnuc,
-            )
+        return (
+            coilhtmx,
+            dpacop,
+            htheci,
+            nflutf,
+            pheci,
+            pheco,
+            ptfiwp,
+            ptfowp,
+            raddose,
+            ptfnuc,
+        )
 
     def stcoil(self, output: bool):
         """Routine that performs the calculations for stellarator coils

@@ -338,18 +338,16 @@ def no_unfeasible_mfile(wdir="."):
     if not m_file.data["isweep"].exists:
         if m_file.data["ifail"].get_scan(-1) == dicts["IFAIL_SUCCESS"]:
             return 0
-        else:
-            return 1
+        return 1
 
-    else:
-        ifail = m_file.data["ifail"].get_scans()
-        try:
-            return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
-        except TypeError:
-            # This seems to occur, if ifail is not in MFILE!
-            # This probably means in the mfile library a KeyError
-            # should be raised not only a message to stdout!
-            return 100000
+    ifail = m_file.data["ifail"].get_scans()
+    try:
+        return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
+    except TypeError:
+        # This seems to occur, if ifail is not in MFILE!
+        # This probably means in the mfile library a KeyError
+        # should be raised not only a message to stdout!
+        return 100000
 
 
 ################################
@@ -429,11 +427,10 @@ def get_from_indat_or_default(in_dat, varname):
     dicts = get_dicts()
     if varname in in_dat.data:
         return in_dat.data[varname].get_value
-    else:
-        # Load dicts from dicts JSON file
-        dicts = get_dicts()
+    # Load dicts from dicts JSON file
+    dicts = get_dicts()
 
-        return dicts["DICT_DEFAULT"][varname]
+    return dicts["DICT_DEFAULT"][varname]
 
 
 def set_variable_in_indat(in_dat, varname, value):
