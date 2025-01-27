@@ -115,7 +115,7 @@ class TFcoil:
             dptot = ptot / n_tcool_it
 
             tcool_calc = copy.copy(tfv.tcoolin)  # K
-            for i in range(n_tcool_it):
+            for _i in range(n_tcool_it):
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
 

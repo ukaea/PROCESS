@@ -3684,10 +3684,12 @@ class Sctfcoil:
         casestr = None
         insstrain = None
 
-        if abs(r_tf_inboard_in) < np.finfo(float(r_tf_inboard_in)).eps:
-            # New extended plane strain model can handle it
-            if i_tf_stress_model != 2:
-                raise ValueError("r_tf_inboard_in is ~= 0", 245)
+        # New extended plane strain model can handle it
+        if (
+            abs(r_tf_inboard_in) < np.finfo(float(r_tf_inboard_in)).eps
+            and i_tf_stress_model != 2
+        ):
+            raise ValueError("r_tf_inboard_in is ~= 0", 245)
 
         # TODO: following is no longer used/needed?
         # if tfcoil_variables.acstf >= 0.0e0:
@@ -3886,12 +3888,9 @@ class Sctfcoil:
             # The toroidal property drives the stress calculation (J. Last report no 4)
             # Hence, the radial direction is relevant for the property smearing
             # Rem : This assumption might be re-defined for bucked and wedged design
-            if i_tf_turns_integer == 0:
-                # Non-integer number of turns
-                t_cable_eyng = t_cable
-            else:
-                # Integer number of turns
-                t_cable_eyng = t_cable_radial
+
+            # Non-integer or interger number of turns
+            t_cable_eyng = t_cable if i_tf_turns_integer == 0 else t_cable_radial
 
             # Average WP Young's modulus in the transverse
             # (radial and toroidal) direction
@@ -4099,18 +4098,9 @@ class Sctfcoil:
         # Current action : trigger and error and add a little hole
         #                  to allow stress calculations
         # Rem SK : Can be easily ameneded playing around the boundary conditions
-        if abs(radtf[0]) < np.finfo(float(radtf[0])).eps:
-            # New extended plane strain model can handle it
-            if i_tf_stress_model != 2:
-                # error_handling.report_error(245)
-                radtf[0] = 1.0e-9
-            # elif abs(radtf[1]) < numpy.finfo(float(radtf[0])).eps:
-            #     logger.error(
-            #         """ERROR: First TF layer has zero thickness.
-            #     Perhaps you meant to have thkcas nonzero or tfcoil_variables.i_tf_bucking = 0?
-            #     """
-            #     )
-
+        # New extended plane strain model can handle it
+        if abs(radtf[0]) < np.finfo(float(radtf[0])).eps and i_tf_stress_model != 2:
+            radtf[0] = 1.0e-9
         # ---
 
         # Old generalized plane stress model
@@ -6303,10 +6293,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
 
     if eyoung_j_1 * eyoung_j_2 == 0:
         # poisson_j_perp_3 = 0
-        if eyoung_j_1 == 0:
-            poisson_j_perp_3 = poisson_j_perp_1
-        else:
-            poisson_j_perp_3 = poisson_j_perp_2
+        poisson_j_perp_3 = poisson_j_perp_1 if eyoung_j_1 == 0 else poisson_j_perp_2
 
         eyoung_j_3 = 0.0
         l_3 = l_1 + l_2
@@ -7297,6 +7284,4 @@ def vv_stress_on_quench(
 
     zeta = 1 + ((A_vv - 1) * np.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
 
-    tresca_stress_vv = zeta * B_vvi * J_vvi * Ri_vv
-
-    return tresca_stress_vv
+    return zeta * B_vvi * J_vvi * Ri_vv

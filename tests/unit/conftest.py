@@ -33,5 +33,4 @@ def input_file():
     data_path = Path(__file__).parent / "data"
     input_file = data_path / "large_tokamak_IN.DAT"
     # Convert input file path to absolute and string
-    input_file_path = str(Path(input_file).resolve())
-    return input_file_path
+    return str(Path(input_file).resolve())

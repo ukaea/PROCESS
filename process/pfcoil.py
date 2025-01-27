@@ -450,7 +450,7 @@ class PFCoil:
         pfflux = 0.0e0
         nocoil = 0
         for ccount in range(pfv.ngrp):
-            for i in range(pfv.ncls[ccount]):
+            for _i in range(pfv.ncls[ccount]):
                 pfflux = pfflux + (
                     pf.ccls[ccount]
                     * pfv.sxlg[nocoil, pfv.ncirt - 1]
@@ -543,7 +543,7 @@ class PFCoil:
         dz = 0
 
         for ii in range(pfv.ngrp):
-            for ij in range(pfv.ncls[ii]):
+            for _ij in range(pfv.ncls[ii]):
                 if pfv.ipfloc[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.ohcth
@@ -728,7 +728,7 @@ class PFCoil:
         c = 0
         pfv.itr_sum = 0.0e0
         for m in range(pfv.ngrp):
-            for n in range(pfv.ncls[m]):
+            for _n in range(pfv.ncls[m]):
                 pfv.itr_sum = pfv.itr_sum + (pfv.rpf[c] * pfv.turns[c] * pfv.cptdin[c])
                 c = c + 1
 
@@ -1282,10 +1282,7 @@ class PFCoil:
                 # No Central Solenoid
                 kk = 0
             else:
-                if pfv.cohbop > pfv.coheof:
-                    sgn = 1.0e0
-                else:
-                    sgn = -1.0e0
+                sgn = 1.0 if pfv.cohbop > pfv.coheof else -1.0
 
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pf.nfxf):
@@ -1305,7 +1302,7 @@ class PFCoil:
         # Non-Central Solenoid coils' contributions
         jj = 0
         for iii in range(pfv.ngrp):
-            for jjj in range(pfv.ncls[iii]):
+            for _jjj in range(pfv.ncls[iii]):
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
                 if iii == ii - 1:
@@ -1563,9 +1560,7 @@ class PFCoil:
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        s_hoop = s_hoop_nom / pfv.oh_steel_frac
-
-        return s_hoop
+        return s_hoop_nom / pfv.oh_steel_frac
 
     def axial_stress(self):
         """Calculation of axial stress of central solenoid.
@@ -1799,10 +1794,7 @@ class PFCoil:
 
         for i in range(pf.nef):
             for j in range(pf.nef - 1):
-                if j >= i:
-                    jj = j + 1 + 1
-                else:
-                    jj = j + 1
+                jj = j + 1 + 1 if j >= i else j + 1
 
                 zc[j] = pfv.zpf[jj - 1]
                 rc[j] = pfv.rpf[jj - 1]
@@ -2221,17 +2213,13 @@ class PFCoil:
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
-                    (pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9)
-                    and tfv.str_cs_con_res > 0.7e-2
-                    or tfv.str_cs_con_res < -0.7e-2
-                ):
+                    pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9
+                ) and abs(tfv.str_cs_con_res) > 0.7e-2:
                     eh.report_error(262)
 
                 if (
-                    (pfv.isumatpf == 6 or pfv.isumatpf == 8 or pfv.isumatpf == 9)
-                    and tfv.str_pf_con_res > 0.7e-2
-                    or tfv.str_pf_con_res < -0.7e-2
-                ):
+                    pfv.isumatpf == 6 or pfv.isumatpf == 8 or pfv.isumatpf == 9
+                ) and abs(tfv.str_pf_con_res) > 0.7e-2:
                     eh.report_error(263)
 
             else:
@@ -2674,13 +2662,12 @@ class PFCoil:
         :return selfinductance: the self inductance in Henries
         :rtype: float
         """
-        selfinductance = (
+        return (
             (1.0e-6 / 0.0254e0)
             * a**2
             * N**2
             / (9.0e0 * a + 10.0e0 * b + 8.4e0 * c + 3.2e0 * c * b / a)
         )
-        return selfinductance
 
     def waveform(self):
         """Sets up the PF coil waveforms.

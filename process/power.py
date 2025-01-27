@@ -163,7 +163,7 @@ class Power:
         jpf = -1
         poloidalenergy[:] = 0.0e0
         for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
-            for jjpf2 in range(
+            for _jjpf2 in range(
                 pfcoil_variables.ncls[jjpf]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
@@ -1306,10 +1306,7 @@ class Power:
             "------------------------------------------------------------------",
         )
 
-        if physics_variables.ignite == 0:
-            pinj = current_drive_variables.pinjmw
-        else:
-            pinj = 0.0e0
+        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
 
         primsum = 0.0e0
         secsum = 0.0e0
@@ -2310,11 +2307,10 @@ class Power:
 
         #  45% extra miscellaneous, piping and reserves
         self.qmisc = 0.45e0 * (self.qss + fwbs_variables.qnuc + self.qac + self.qcl)
-        helpow = max(
+        return max(
             0.0e0,
             self.qmisc + self.qss + fwbs_variables.qnuc + self.qac + self.qcl,
         )
-        return helpow
 
     def plant_thermal_efficiency(self, etath):
         """
@@ -2336,15 +2332,11 @@ class Power:
         """
         if fwbs_variables.secondary_cycle == 0:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
-                #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
-                # https://www.sciencedirect.com/science/article/pii/S0920379616300072
-                # Feedheat & reheat cycle assumed
-                etath = 0.411e0
-
-                #  KIT HCPB model
-            elif fwbs_variables.iblanket == 2:
+            if (
+                (fwbs_variables.iblanket == 1)
+                or (fwbs_variables.iblanket == 3)
+                or fwbs_variables.iblanket == 2
+            ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2469,8 +2461,11 @@ class Power:
                 error_handling.fdiags[0] = heat_transport_variables.tturb
                 error_handling.report_error(166)
 
-            etath_liq = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
-            return etath_liq
+            return 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
+
+        raise ValueError(
+            f"secondary_cycle_liq ={fwbs_variables.secondary_cycle_liq} is an invalid option."
+        )
 
     def tfpwr(self, output: bool):
         """

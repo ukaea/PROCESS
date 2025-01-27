@@ -112,8 +112,8 @@ def test_single_run_with_mfilejson(temp_data):
     try:
         with open(expected_json) as f:
             json_data = json.load(f)
-    except json.JSONDecodeError:
-        assert False, "The JSON file is not valid JSON"
+    except json.JSONDecodeError as err:
+        raise AssertionError("The JSON file is not valid JSON") from err
 
     # Check if the JSON contains expected outputs.
     expected_keys = ["rmajor", "bt", "beta"]

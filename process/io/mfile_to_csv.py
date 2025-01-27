@@ -73,12 +73,11 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     with open(vfile) as varfile:
         data = varfile.read()
         obj = json.loads(data)
-        vars = obj["vars"]
 
-    return vars
+    return obj["vars"]
 
 
-def read_mfile(mfilename="MFILE.DAT", vars=[]):
+def read_mfile(mfilename="MFILE.DAT", vars=None):
     """Returns specified variable values from identified file.
 
     :param args: input filename, variable names
@@ -86,6 +85,8 @@ def read_mfile(mfilename="MFILE.DAT", vars=[]):
     :return: variable descriptions, names, and values
     :rtype: list of tuples
     """
+    if vars is None:
+        vars = []
     print("Reading from MFILE:", mfilename)
 
     m_file = MFile(mfilename)
@@ -94,7 +95,7 @@ def read_mfile(mfilename="MFILE.DAT", vars=[]):
 
     # for each variable named in the input varfile, get the description and data value
     for var_name in vars:
-        if var_name not in m_file.data.keys():
+        if var_name not in m_file.data:
             print(f"Variable '{var_name}' not in MFILE. Skipping and moving on...")
         else:
             # In case of a file containing multiple scans, (scan = -1) uses the last scan value
@@ -115,25 +116,21 @@ def get_savenamepath(mfilename="MFILE.DAT"):
     :rtype: pathlib.PurePosixPath
     """
 
-    if mfilename == "MFILE.DAT":
-        # save it locally
-        dirname = Path.cwd()
-    else:
-        # output the csv file to the directory of the input file
-        dirname = PurePath(mfilename).parent
+    # Either save it locally or output the csv file to the directory of the input file
+    dirname = Path.cwd() if mfilename == "MFILE.DAT" else PurePath(mfilename).parent
 
     csv_filename = PurePath(mfilename).stem
-    csv_outfile = PurePath(dirname, csv_filename + ".csv")
-
-    return csv_outfile
+    return PurePath(dirname, csv_filename + ".csv")
 
 
-def write_to_csv(csv_outfile, output_data=[]):
+def write_to_csv(csv_outfile, output_data=None):
     """Write to csv file.
 
     :param args: input filename, variable data
     :type args: string, list of tuples
     """
+    if output_data is None:
+        output_data = []
     with open(csv_outfile, "w") as csv_file:
         print("Writing to csv file:", csv_outfile)
         writer = csv.writer(csv_file, delimiter=",")

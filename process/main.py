@@ -306,10 +306,7 @@ class VaryRun:
         # containing the config file (used when running regression tests in
         # temp dirs)
         # TODO Not sure this is required any more
-        if config.wdir:
-            wdir = config.wdir
-        else:
-            wdir = Path(self.config_file).parent
+        wdir = config.wdir if config.wdir else Path(self.config_file).parent
 
         # Check IN.DAT exists
         if not input_path.exists():
@@ -346,10 +343,9 @@ class VaryRun:
                         )
                     # This means success: feasible solution found
                     break
-                else:
-                    print(
-                        f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
-                    )
+                print(
+                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
+                )
             else:
                 print("PROCESS has stopped without finishing!")
 
@@ -471,14 +467,11 @@ class SingleRun:
         # If no HYBRD (non-optimisation) runs are required, return
         if (fortran.numerics.ioptimz > 0) or (fortran.numerics.ioptimz == -2):
             return
-        else:
-            # eqslv() has been temporarily commented out. Please see the comment
-            # in fortran.function_evaluator.fcnhyb() for an explanation.
-            # Original call:
-            # self.ifail = fortran.main_module.eqslv()
-            raise NotImplementedError(
-                "HYBRD non-optimisation solver is not implemented"
-            )
+        # eqslv() has been temporarily commented out. Please see the comment
+        # in fortran.function_evaluator.fcnhyb() for an explanation.
+        # Original call:
+        # self.ifail = fortran.main_module.eqslv()
+        raise NotImplementedError("HYBRD non-optimisation solver is not implemented")
 
     def run_scan(self, solver):
         """Create scan object if required.
@@ -580,17 +573,14 @@ class SingleRun:
                                     f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
                                     "Please set their values accordingly."
                                 )
-                            else:
-                                # Replace obsolete variable with updated variable
-                                modified_line = line.replace(
-                                    variable_name, replacement, 1
-                                )
-                                modified_lines.append(
-                                    f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
-                                )
-                                changes_made.append(
-                                    f"Replaced '{variable_name}' with '{replacement}'"
-                                )
+                            # Replace obsolete variable with updated variable
+                            modified_line = line.replace(variable_name, replacement, 1)
+                            modified_lines.append(
+                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                            )
+                            changes_made.append(
+                                f"Replaced '{variable_name}' with '{replacement}'"
+                            )
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
@@ -637,7 +627,10 @@ class SingleRun:
         and that any relevant switches are set correctly.
         """
         # try and get costs model
-        self.models.costs
+        try:
+            _tmp = self.models.costs
+        except ValueError as err:
+            raise ValueError("User-created model not injected correctly") from err
 
 
 class CostsProtocol(Protocol):

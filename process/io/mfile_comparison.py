@@ -307,15 +307,12 @@ def main(arg):
     for var in key_list:
         store = True
         for f in mfile_list:
-            if var not in f.data.keys():
+            if var not in f.data:
                 store = False
                 missing_vars.append(var)
 
         if store:
             var_list.append(var)
-
-    if arg.save:
-        ofile = open("comp.txt", "w")
 
     if arg.defaults:
         var_list = DEFAULT_COMPARE_PARAMS
@@ -335,7 +332,7 @@ def main(arg):
 
         values = np.zeros(n)  # replaced scipy with numpy
 
-        if v not in get_dicts()["DICT_VAR_TYPE"].keys():
+        if v not in get_dicts()["DICT_VAR_TYPE"]:
             try:
                 eval(mfile_list[0].data[v].get_scan(-1))
             except NameError:
@@ -361,10 +358,7 @@ def main(arg):
 
         if len(norm_vals) >= 1:
             key = v.strip(".").strip(" ")
-            if key in get_dicts()["DICT_DESCRIPTIONS"].keys():
-                des = get_dicts()["DICT_DESCRIPTIONS"][key]
-            else:
-                des = "-"
+            des = get_dicts()["DICT_DESCRIPTIONS"].get(key, "-")
             a = norm_vals >= 1.0 + arg.acc / 100.0
             b = norm_vals <= 1.0 - arg.acc / 100.0
             if a[1]:
@@ -399,7 +393,8 @@ def main(arg):
                 print(line)
                 print_counter += 1
                 if arg.save:
-                    ofile.write(wline + "\n")
+                    with open("comp.txt", "a") as ofile:
+                        ofile.write(wline + "\n")
             elif b[1]:
                 diff_list.append(v)
                 line = (
@@ -431,7 +426,8 @@ def main(arg):
                 print(line)
                 print_counter += 1
                 if arg.save:
-                    ofile.write(wline + "\n")
+                    with open("comp.txt", "a") as ofile:
+                        ofile.write(wline + "\n")
             else:
                 within_list.append(v)
                 line = (
@@ -462,17 +458,14 @@ def main(arg):
                 if arg.verbose:
                     print(line)
                     print_counter += 1
-                    ofile.write(wline + "\n")
+                    with open("comp.txt", "a") as ofile:
+                        ofile.write(wline + "\n")
 
-    if arg.save:
-        ofile.close()
-
-    if arg.baseline:
-        if arg.acc >= 10.0:
-            if print_counter == 0:
-                sys.exit(0)
-            else:
-                sys.exit(f"Differences in baseline output by more than {arg.acc}%")
+    if arg.baseline and arg.acc >= 10.0:
+        if print_counter == 0:
+            sys.exit(0)
+        else:
+            sys.exit(f"Differences in baseline output by more than {arg.acc}%")
 
 
 if __name__ == "__main__":

@@ -30,19 +30,16 @@ def feasible_point(filename, position):
     scanPoint = 0
     numScans = 1
 
-    for value in mfile_data.data.keys():
+    for value in mfile_data.data:
         if "isweep" in value:
             numScans = int(mfile_data.data["isweep"].get_scan(-1))
             break
 
     # Assign start point
-    if position == "first":
-        checkPoint = 1
-    else:
-        checkPoint = numScans
+    checkPoint = 1 if position == "first" else numScans
 
     while finished is False:
-        for value in mfile_data.data.keys():
+        for value in mfile_data.data:
             # Look for feasible scan points (with ifail = 1)
             if "ifail" in value and "vmcon_error_flag_(ifail)" not in value:
                 if mfile_data.data[value].get_scan(checkPoint) == 1:
@@ -78,7 +75,7 @@ def get_iteration_variables(filename, scan):
     mfile_data = mf.MFile(filename)
     iteration_vars = {}
 
-    for value in mfile_data.data.keys():
+    for value in mfile_data.data:
         if "itvar" in value and "nitvar" not in value:
             variable_name = mfile_data.data[value].var_description
             variable_value = mfile_data.data[value].get_scan(scan)

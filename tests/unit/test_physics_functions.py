@@ -296,7 +296,7 @@ def test_beamcalc():
 
 
 def test__fast_ion_pressure_integral():
-    pressure_integral = physics_functions._fast_ion_pressure_integral(1000.0, 276.7)
+    pressure_integral = physics_functions.fast_ion_pressure_integral(1000.0, 276.7)
 
     assert pressure_integral == pytest.approx(1.1061397270783706)
 

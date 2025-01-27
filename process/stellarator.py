@@ -2447,18 +2447,18 @@ class Stellarator:
                 * np.exp(-decay[4, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
 
-            return (
-                coilhtmx,
-                dpacop,
-                htheci,
-                nflutf,
-                pheci,
-                pheco,
-                ptfiwp,
-                ptfowp,
-                raddose,
-                ptfnuc,
-            )
+        return (
+            coilhtmx,
+            dpacop,
+            htheci,
+            nflutf,
+            pheci,
+            pheco,
+            ptfiwp,
+            ptfowp,
+            raddose,
+            ptfnuc,
+        )
 
     def stcoil(self, output: bool):
         """Routine that performs the calculations for stellarator coils
@@ -3359,7 +3359,7 @@ class Stellarator:
 
         dx = 0.01e0 / max(n1, n2) * (xmax - xmin)
 
-        for i in range(100):
+        for _i in range(100):
             #  Find difference in y values at x
 
             y01 = maths_library.find_y_nonuniform_x(x, x1, y1, n1)

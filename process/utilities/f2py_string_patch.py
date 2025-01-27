@@ -5,7 +5,7 @@ import numpy as np
 
 
 def string_to_f2py_compatible(
-    target: np.ndarray, string: str = None, except_length: bool = False
+    target: np.ndarray, string: str | None = None, except_length: bool = False
 ) -> str:
     """Return a string that is compatible with f2py interface.
     Fortran character(len=x) will throw an error (by f2py) if the passed string is
@@ -37,7 +37,7 @@ def string_to_f2py_compatible(
 
     if target_type != "S":
         raise TypeError(
-            f'{target} is not of type string ("|S<>") is instead {str(target.dtype)}'
+            f'{target} is not of type string ("|S<>") is instead {target.dtype!s}'
         )
 
     if string:
@@ -45,10 +45,11 @@ def string_to_f2py_compatible(
             raise RuntimeError(
                 f"String string of length {len(string)} is trying to initiate as {target} with length {target_size}"
             )
-        elif len(string) > target_size:
+        if len(string) > target_size:
             warnings.warn(
                 f"String string of length {len(string)} is trying to initiate as {target} with length \
                 {target_size}. String string will be truncated!",
+                stacklevel=2,
             )
 
         string = string[0:target_size]

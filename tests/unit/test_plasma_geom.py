@@ -15,9 +15,8 @@ def plasma():
     :return: an instance of PFCoil
     :rtype: process.pfcoil.PFCoil
     """
-    plasma = PlasmaGeom()
 
-    return plasma
+    return PlasmaGeom()
 
 
 class PlasmaAnglesArcsParam(NamedTuple):

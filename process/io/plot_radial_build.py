@@ -116,13 +116,11 @@ def get_radial_build(m_file):
         radial_labels[4] = "precomp"
         radial_labels[5] = "tftsgap"
 
-    radial_build = []
-
-    for ii in range(isweep):
-        if m_file.data["ifail"].get_scan(ii + 1) == 1:
-            radial_build.append([
-                m_file.data[rl].get_scan(ii + 1) for rl in radial_labels
-            ])
+    radial_build = [
+        [m_file.data[rl].get_scan(ii + 1) for rl in radial_labels]
+        for ii in range(isweep)
+        if m_file.data["ifail"].get_scan(ii + 1) == 1
+    ]
 
     radial_build = np.array(radial_build)
 
@@ -237,10 +235,7 @@ def main(args=None):
     # Getting the scanned variable name
     m_file = mf.MFile(filename=input_file)
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
-    if nsweep_ref == 0:
-        scan_var_name = "Null"
-    else:
-        scan_var_name = nsweep_list[nsweep_ref - 1]
+    scan_var_name = "Null" if nsweep_ref == 0 else nsweep_list[nsweep_ref - 1]
 
     radial_labels = [
         "Machine Bore",
@@ -339,10 +334,7 @@ def main(args=None):
         ind = [y for y, _ in enumerate(scan_points)]
     else:
         pass
-    if args.inboard:
-        end_scan = radial_labels.index("Plasma")
-    else:
-        end_scan = len(radial_build)
+    end_scan = radial_labels.index("Plasma") if args.inboard else len(radial_build)
     plt.figure(figsize=(8, 6))
     for kk in range(len(radial_build[:end_scan, 0])):
         if kk == 0:

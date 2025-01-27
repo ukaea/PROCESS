@@ -80,10 +80,10 @@ def main(args=None):
 
     # Boolean swiches for plot selection
     # -----------------------------------
-    plot_sig = ("sig" in plot_selection) or "all" == plot_selection
-    plot_disp = ("disp" in plot_selection) or "all" == plot_selection
-    plot_strain = ("strain" in plot_selection) or "all" == plot_selection
-    plot_sm_sig = ("sm_sig" in plot_selection) or "all" == plot_selection
+    plot_sig = ("sig" in plot_selection) or plot_selection == "all"
+    plot_disp = ("disp" in plot_selection) or plot_selection == "all"
+    plot_strain = ("strain" in plot_selection) or plot_selection == "all"
+    plot_sm_sig = ("sm_sig" in plot_selection) or plot_selection == "all"
 
     # Step 1 : Data extraction
     # ----------------------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ def main(args=None):
                 print(f"vertical strain : {vertical_strain[ii][0]}")
                 print()
 
-        if not len(wp_vertical_stress) == 0:
+        if len(wp_vertical_stress) != 0:
             print(
                 "smeared WP vertical stress in the inner/middle/out point :"
                 f" {wp_vertical_stress[0]}/{wp_vertical_stress[ii_mids]}/{wp_vertical_stress[ii_outs]} MPa"

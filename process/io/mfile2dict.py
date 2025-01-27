@@ -331,12 +331,12 @@ class MFILEParser(abc.MutableMapping):
 
         # Only run iscan check if iscan exists
         try:
-            _first_key = list(self._mfile_data.keys())[0]
+            _first_key = next(iter(self._mfile_data.keys()))
             _second_key = list(self._mfile_data.keys())[1]
             _second_key_fp = list(self._mfile_data[_second_key])[8]
             _iscan_arr = self._mfile_data[_first_key]["iscan"]["value"]
             _test_param = self._mfile_data[_second_key][_second_key_fp]["value"]
-            if not len(_test_param) == _iscan_arr[-1]:
+            if len(_test_param) != _iscan_arr[-1]:
                 print(_test_param)
                 raise AssertionError(
                     "Failed to retrieve all parameter sweep values, "
@@ -373,7 +373,8 @@ class MFILEParser(abc.MutableMapping):
                     "WARNING: Python module 'tomlkit' not found, "
                     "file comments will not be written to created TOML file"
                 )
-                toml.dump(self._mfile_data, open(output_filename, "w"))
+                with open(output_filename, "w") as file:
+                    toml.dump(self._mfile_data, file)
                 exit(0)
 
             # If TOMLKit is present, write TOML file as normal but add in
@@ -394,7 +395,7 @@ class MFILEParser(abc.MutableMapping):
                 _doc.add(tomlkit.nl())
 
             for group_name, data in self._mfile_data.items():
-                for var_name, var_data in data.items():
+                for var_name in data:
                     _doc[group_name][var_name].comment(
                         self._mfile_data[group_name][var_name]["description"]
                     )
@@ -406,19 +407,22 @@ class MFILEParser(abc.MutableMapping):
             self._logger.info("Output will be JSON file.")
             import json
 
-            json.dump(self._mfile_data, open(output_filename, "w"))
+            with open(output_filename, "w") as file:
+                json.dump(self._mfile_data, file)
         elif _suffix in [".yml", ".yaml"]:
             self._logger.info("Output will be YAML file.")
             # If file suffix is YAML
             import yaml
 
-            yaml.dump(self._mfile_data, open(output_filename, "w"))
+            with open(output_filename, "w") as file:
+                yaml.dump(self._mfile_data, file)
         elif _suffix == ".pckl":
             self._logger.info("Output will be Pickle file.")
             # If file suffix is Pickle
             import pickle
 
-            pickle.dump(self._mfile_data, open(output_filename, "wb"))
+            with open(output_filename, "wb") as file:
+                pickle.dump(self._mfile_data, file)
         else:
             raise RuntimeError(f"Unrecognised file format '{_suffix}'")
 

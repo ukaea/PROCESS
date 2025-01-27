@@ -122,7 +122,7 @@ class FusionReactionRate:
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
     """
@@ -177,7 +177,7 @@ class FusionReactionRate:
 
         References:
             - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-              Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+              Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
               doi: https://doi.org/10.1088/0029-5515/32/4/i07.
         ‌
         """
@@ -609,7 +609,6 @@ def psync_albajar_fidone():
     kfun = 0.0
     dum = 0.0
     psync = 0.0
-    psyncpv = 0.0
 
     kap = physics_variables.vol_plasma / (
         2.0e0 * np.pi**2 * physics_variables.rmajor * physics_variables.rminor**2
@@ -697,7 +696,7 @@ def fusion_rate_integral(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
 
@@ -722,11 +721,9 @@ def fusion_rate_integral(
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
     # just the volume averged ion density.
-    fusion_integral = (
+    return (
         2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )
-
-    return fusion_integral
 
 
 def bosch_hale_reactivity(
@@ -753,7 +750,7 @@ def bosch_hale_reactivity(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
     theta1 = (
@@ -1060,14 +1057,14 @@ def beam_fusion(
 
              References:
                 - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-                  Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+                  Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
                   doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
-                - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
+                - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
                   Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 
                 - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-                  vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+                  vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
     ‌
     """
 
@@ -1187,16 +1184,16 @@ def beamcalc(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+          vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
         - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
           International Series of Monographs on Physics, Volume 149.
 
-        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,
+        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
           Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 
     """
@@ -1259,7 +1256,7 @@ def beamcalc(
 
     # Source term representing the number of ions born per unit time per unit volume.
     # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-    # vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+    # vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
     source_deuterium = beam_current_deuterium / (constants.electron_charge * vol_plasma)
 
@@ -1284,10 +1281,10 @@ def beamcalc(
 
     # Fast Ion Pressure
     # This is the same form as the ideal gas law pressure, P=1/3 * nmv^2
-    deuterium_pressure = pressure_coeff_deuterium * _fast_ion_pressure_integral(
+    deuterium_pressure = pressure_coeff_deuterium * fast_ion_pressure_integral(
         beam_energy, critical_energy_deuterium
     )
-    tritium_pressure = pressure_coeff_tritium * _fast_ion_pressure_integral(
+    tritium_pressure = pressure_coeff_tritium * fast_ion_pressure_integral(
         beam_energy, critical_energy_tritium
     )
 
@@ -1324,7 +1321,7 @@ def beamcalc(
     )
 
 
-def _fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> float:
+def fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> float:
     """
     Calculate the fraction of initial beam energy given to the ions.
 
@@ -1346,7 +1343,7 @@ def _fast_ion_pressure_integral(beam_energy: float, critical_energy: float) -> f
 
     References:
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-          vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+          vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
         - W.A Houlberg, “Thermalization of an Energetic Heavy Ion in a Multi-species Plasma,” University of Wisconsin Fusion Technology Institute,
           Report UWFDM-103 1974, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm103.pdf
@@ -1397,7 +1394,7 @@ def alpha_power_beam(
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992,
+          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
     # Calculate the reactivity ratio
@@ -1546,9 +1543,8 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     # Set limits on cross-section at low and high beam energies
     if beam_energy < 10.0:
         return 1.0e-27
-    elif beam_energy > 1.0e4:
+    if beam_energy > 1.0e4:
         return 8.0e-26
-    else:
-        t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
-        t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
-        return 1.0e-24 * t1 / t2
+    t1 = a2 / (1.0 + (a3 * beam_energy - a4) ** 2) + a5
+    t2 = beam_energy * (np.exp(a1 / np.sqrt(beam_energy)) - 1.0)
+    return 1.0e-24 * t1 / t2

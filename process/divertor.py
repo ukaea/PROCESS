@@ -44,7 +44,7 @@ class Divertor:
                 output=output,
             )
             return
-        elif dv.i_hldiv == 2:
+        if dv.i_hldiv == 2:
             self.divwade(
                 pv.rmajor,
                 pv.rminor,
@@ -80,10 +80,8 @@ class Divertor:
         pwr = pv.pdivt  # power flow to divertor (MW)
         aionso = pv.afuel  # scrape-off layer ion mass
 
-        if dv.divdum == 0:  # Divertor Zeff: scaled
-            zeffso = 1.0e0 + 0.8e0 * (pv.zeff - 1.0e0)
-        else:  # use input value
-            zeffso = dv.zeffdiv
+        # Divertor Zeff: either scaled or use input value
+        zeffso = (1.0e0 + 0.8e0 * (pv.zeff - 1.0e0)) if dv.divdum == 0 else dv.zeffdiv
 
         #  Strike point field values
 
@@ -334,7 +332,7 @@ class Divertor:
         tdiv = tdivges
         tpts = tptsges
 
-        for i in range(15):
+        for _i in range(15):
             #  Find derivatives for Newton's method
 
             tptsp = tpts * (1.0e0 + epsilon)

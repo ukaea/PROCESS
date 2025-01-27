@@ -66,8 +66,7 @@ class MFileVariable(dict):
         # print(f"Trying to get({name}) on {self}, {id(self)}"
         if result:
             return result
-        else:
-            raise AttributeError(f"{self.__class__} object has no attribute {name}")
+        raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def set_scan(self, scan_number, scan_value):
         """Sets the class attribute self.scan# where # is scan number
@@ -98,8 +97,7 @@ class MFileVariable(dict):
         try:
             if scan_number is None or scan_number == -1:
                 return self[f"scan{self.latest_scan:02}"]
-            else:
-                return self[f"scan{scan_number:02}"]
+            return self[f"scan{scan_number:02}"]
         except KeyError:
             raise  # or substitute with any other exception type you want
 
@@ -110,12 +108,7 @@ class MFileVariable(dict):
           [List of all scans for variable]
 
         """
-        return [
-            v
-            for k, v in sorted(
-                filter(lambda x: True if "scan" in x[0] else False, self.items())
-            )
-        ]
+        return [v for k, v in sorted(filter(lambda x: "scan" in x[0], self.items()))]
 
     def get_number_of_scans(self):
         """Function to return the number of scans in the variable class"""
@@ -147,8 +140,7 @@ class MFileErrorClass:
             raise KeyError(
                 "error_status not found in MFILE. Process probably exited prematurely"
             )
-        else:
-            return 0
+        return 0
 
     @property
     def exists(self):
@@ -162,8 +154,7 @@ class MFileDataDictionary(OrderedDict):
         result = self.get(name)
         if result:
             return result
-        else:
-            raise AttributeError(f"{self.__class__} object has no attribute {name}")
+        raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def __getitem__(self, item):
         try:
@@ -193,10 +184,7 @@ class DefaultOrderedDict(OrderedDict):
         return value
 
     def __reduce__(self):
-        if self.default_factory is None:
-            args = ()
-        else:
-            args = (self.default_factory,)
+        args = () if self.default_factory is None else (self.default_factory,)
         return type(self), args, None, None, self.items()
 
     def copy(self):
@@ -287,30 +275,21 @@ class MFile:
                 # Pass all value "words"
                 var_value = sort_value(line[2:])
             var_unit = get_unit(var_des)
-            if len(line) >= 4:
-                var_flag = line[3]
-            else:
-                var_flag = None
+            var_flag = line[3] if len(line) >= 4 else None
 
             self.mfile_modules[self.current_module].append(var_name)
             self.add_to_mfile_variable(var_des, var_name, var_value, var_unit, var_flag)
 
     def add_to_mfile_variable(self, des, name, value, unit, flag, scan=None):
         """Function to add value to MFile class for that name/description"""
-        if name == "":
-            var_key = des.lower().replace("_", " ")
-        else:
-            var_key = name.lower()
+        var_key = des.lower().replace("_", " ") if name == "" else name.lower()
 
-        if var_key in self.data.keys():
+        if var_key in self.data:
             scan_num = scan if scan else (self.data[var_key].get_number_of_scans() + 1)
 
             # Check for duplicate entries per scan point if there are scans and no scans
             a = len(self.data[var_key].get_scans())
-            if "iscan" in self.data.keys():
-                b = len(self.data["iscan"].get_scans())
-            else:
-                b = 1
+            b = len(self.data["iscan"].get_scans()) if "iscan" in self.data else 1
 
             if var_key != "iscan":
                 if a < b:
@@ -344,10 +323,7 @@ class MFile:
                         dat_key = i + 1
                     data = self.data[item].get_scan(dat_key)
                     des = self.data[item].var_description.replace("_", " ")
-                    if verbose:
-                        entry = {"value": data, "description": des}
-                    else:
-                        entry = data
+                    entry = {"value": data, "description": des} if verbose else data
                     sub_dict[item] = entry
                 dict_to_write[f"scan-{i + 1}"] = sub_dict
         else:
@@ -361,10 +337,7 @@ class MFile:
                     )  # Default to scan 1 if not specified
                 data = self.data[item].get_scan(dat_key)
                 des = self.data[item].var_description.replace("_", " ")
-                if verbose:
-                    entry = {"value": data, "description": des}
-                else:
-                    entry = data
+                entry = {"value": data, "description": des} if verbose else data
                 dict_to_write[item] = entry
 
         with open(filename, "w") as fp:
@@ -383,15 +356,14 @@ def sort_value(value_words: list[str]) -> str | float:
     if '"' in value_words[0]:
         # First "word" begins with ": return words as single str
         return " ".join(value_words).strip().strip('"').strip()
-    else:
-        try:
-            # Attempt float conversion of first word
-            return float(value_words[0])
-        except ValueError:
-            # Log the exception with details
-            logger.exception(f"Can't parse value in MFILE: {value_words}")
-            # Return the original string as a fallback
-            return " ".join(value_words).strip()
+    try:
+        # Attempt float conversion of first word
+        return float(value_words[0])
+    except ValueError:
+        # Log the exception with details
+        logger.exception(f"Can't parse value in MFILE: {value_words}")
+        # Return the original string as a fallback
+        return " ".join(value_words).strip()
 
 
 def sort_brackets(var):
@@ -400,16 +372,13 @@ def sort_brackets(var):
         tmp_name = var.lstrip("(").split(")")
         if len(tmp_name) > 2:
             return tmp_name[0] + ")"
-        else:
-            return tmp_name[0]
-    else:
-        return ""
+        return tmp_name[0]
+    return ""
 
 
 def clean_line(line):
     """Cleans an MFILE line into the three parts we care about"""
-    cleaned_line = [item.strip("_ \n") for item in line.split(" ") if item != ""]
-    return cleaned_line
+    return [item.strip("_ \n") for item in line.split(" ") if item != ""]
 
 
 def search_keys(dictionary, variable):
@@ -426,11 +395,7 @@ def search_keys(dictionary, variable):
       matches --> List of matches to the searched for variable
 
     """
-    matches = []
-    for key in dictionary.keys():
-        if variable.lower() in key.lower():
-            matches.append(key)
-    return matches
+    return [key for key in dictionary if variable.lower() in key.lower()]
 
 
 def search_des(dictionary, description):
@@ -447,14 +412,8 @@ def search_des(dictionary, description):
       matches --> List of matches to the searched for description
 
     """
-    descriptions = [
-        dictionary[key].var_descript.lower() for key in dictionary.data.keys()
-    ]
-    matches = []
-    for item in descriptions:
-        if description.lower() in item.lower():
-            matches.append(item)
-    return matches
+    descriptions = [dictionary[key].var_descript.lower() for key in dictionary.data]
+    return [item for item in descriptions if description.lower() in item.lower()]
 
 
 def get_unit(variable_desc):
@@ -462,8 +421,7 @@ def get_unit(variable_desc):
     candidate = variable_desc.rsplit("_", 1)[-1]
     if candidate.startswith("(") and candidate.endswith(")"):
         return candidate[1:-1]
-    else:
-        return None
+    return None
 
 
 def is_number(val):

@@ -1565,10 +1565,7 @@ class Costs:
         #  costpfsh is the cost per metre of the steel conduit/sheath around
         #  each superconducting cable (so is zero for resistive coils)
 
-        if pfcoil_variables.ipfres == 1:
-            costpfsh = 0.0e0
-        else:
-            costpfsh = cost_variables.cconshpf
+        costpfsh = 0.0 if pfcoil_variables.ipfres == 1 else cost_variables.cconshpf
 
         #  Non-Central Solenoid coils
 

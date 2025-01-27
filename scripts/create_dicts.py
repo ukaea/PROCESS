@@ -119,14 +119,13 @@ class VariableDescriptions(ProjectDictionary):
                 desc = getattr(var, self.value_type)
 
                 # If var key doesn't exist, add it
-                if var.name not in self.dict[self.name]:
-                    self.dict[self.name][var.name] = desc
-
-                # Only overwrite description if it's falsey and we're
-                # overwriting with something truthy
-                # Guards against multiple declarations in different modules,
-                # when only one declaration is commented
-                elif not self.dict[self.name][var.name] and desc:
+                if var.name not in self.dict[self.name] or (
+                    not self.dict[self.name][var.name] and desc
+                ):
+                    # Only overwrite description if it's falsey and we're
+                    # overwriting with something truthy
+                    # Guards against multiple declarations in different modules,
+                    # when only one declaration is commented
                     self.dict[self.name][var.name] = desc
 
         for annotated_variable in self.python_variables:
@@ -327,8 +326,7 @@ class DefaultValues(ProjectDictionary):
         try:
             value = value.lower()
             value = value.replace("d", "E")
-            value = float(value)
-            return value
+            return float(value)
         except ValueError:
             # Failed conversion; don't change anything
             return original_value
@@ -463,35 +461,34 @@ class DefaultValues(ProjectDictionary):
             # This probably means that something was picked up by the init
             # subroutine regex in error
             return
-        elif self.dict[self.name][var] is None:
+        if self.dict[self.name][var] is None:
             # Only overwrite the value if Ford has produced a None, which is
             # stored on self.dict
             # Find the var in the Ford project again
             for module in self.project.modules:
                 for mod_var in module.variables:
-                    if var == mod_var.name:
-                        if mod_var.dimension:
-                            # The var has a dimension, so needs to be
-                            # initialised as a list
-                            if type(value) is list:
-                                assert mod_var.dimension == len(value), (
-                                    "Array"
-                                    f" {var} has length {mod_var.dimension} "
-                                    f"according to Ford, but {len(value)} "
-                                    "in the init subroutine. Perhaps the "
-                                    "ford_project.pickle needs to be updated?"
-                                )
-                                # The value list length and Ford variable dimension
-                                # match; just use the list in value
-                                # Update Ford project var and self.dict value
-                                mod_var.initial = value
-                                self.dict[self.name][var] = value
-                            else:
-                                # value needs to be spread over the length of
-                                # the list
-                                # Set the Ford project var and the dictionary values
-                                mod_var.initial = [value] * mod_var.dimension
-                                self.dict[self.name][var] = mod_var.initial
+                    if var == mod_var.name and mod_var.dimension:
+                        # The var has a dimension, so needs to be
+                        # initialised as a list
+                        if type(value) is list:
+                            assert mod_var.dimension == len(value), (
+                                "Array"
+                                f" {var} has length {mod_var.dimension} "
+                                f"according to Ford, but {len(value)} "
+                                "in the init subroutine. Perhaps the "
+                                "ford_project.pickle needs to be updated?"
+                            )
+                            # The value list length and Ford variable dimension
+                            # match; just use the list in value
+                            # Update Ford project var and self.dict value
+                            mod_var.initial = value
+                            self.dict[self.name][var] = value
+                        else:
+                            # value needs to be spread over the length of
+                            # the list
+                            # Set the Ford project var and the dictionary values
+                            mod_var.initial = [value] * mod_var.dimension
+                            self.dict[self.name][var] = mod_var.initial
 
             # If it's not an array, set it to the value in the init subroutine
             if self.dict[self.name][var] is None:
@@ -538,9 +535,8 @@ def to_type(string):
             # try a float conversion
             string_mod = string.strip().lower().replace("d", "e")
             return float(string_mod)
-        else:
-            # try an int conversion
-            return int(string.strip())
+        # try an int conversion
+        return int(string.strip())
     except ValueError:
         match = re.match(r"\s*(\d+)", string)
         if match:
@@ -567,10 +563,8 @@ def grep(file, regexp, flags=re.UNICODE):
 
     try:
         with open(file, encoding="utf-8") as file_open:
-            for line in file_open:
-                if re.search(regexp, line, flags):
-                    lines.append(line)
-            file_open.close()
+            lines = [line for line in file_open if re.search(regexp, line, flags)]
+
     except OSError:
         logging.warning("File : %s not found\n", file)
     return lines
@@ -590,7 +584,8 @@ def slice_file(file, re1, re2):
          lines --> List of lines from file between re1 and re2 inclusive
     """
 
-    filetext = open(file, encoding="utf-8").readlines()
+    with open(file, encoding="utf-8") as file:
+        filetext = file.readlines()
     start = None
     for i in range(len(filetext)):
         # look for first match
@@ -690,8 +685,7 @@ def dict_nsweep2ixc():
 
     # Use dict_ixc2nsweep from output_dict to produce dict_nsweep2ixc
     ixc2nsweep = output_dict["DICT_IXC2NSWEEP"]
-    nsweep2ixc = {b: a for a, b in ixc2nsweep.items()}
-    return nsweep2ixc
+    return {b: a for a, b in ixc2nsweep.items()}
 
 
 def dict_var_type():
@@ -865,23 +859,26 @@ def dict_ixc_full():
             ixc_full[itv_num] = {}
 
     for line in lines:
-        if "lablxc" in line and "=" in line:
-            if "lablxc(i)" not in line and "lablxc(ixc(i))" not in line:
-                labl_num = line.split("(")[1].split(")")[0]
-                labl = line.split("=")[-1].strip("\n").replace(" ", "").replace("'", "")
-                ixc_full[labl_num]["name"] = labl
+        if ("lablxc" in line and "=" in line) and (
+            "lablxc(i)" not in line and "lablxc(ixc(i))" not in line
+        ):
+            labl_num = line.split("(")[1].split(")")[0]
+            labl = line.split("=")[-1].strip("\n").replace(" ", "").replace("'", "")
+            ixc_full[labl_num]["name"] = labl
 
-        if "boundl(" in line and "=" in line:
-            if "boundl(i)" not in line and "boundl(ixc(i))" not in line:
-                boundl_num = line.split("(")[1].split(")")[0]
-                boundl_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-                ixc_full[boundl_num]["lb"] = float(boundl_val)
+        if ("boundl(" in line and "=" in line) and (
+            "boundl(i)" not in line and "boundl(ixc(i))" not in line
+        ):
+            boundl_num = line.split("(")[1].split(")")[0]
+            boundl_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
+            ixc_full[boundl_num]["lb"] = float(boundl_val)
 
-        if "boundu(" in line and "=" in line:
-            if "boundu(i)" not in line and "boundu(ixc(i))" not in line:
-                boundu_num = line.split("(")[1].split(")")[0]
-                boundu_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-                ixc_full[boundu_num]["ub"] = float(boundu_val)
+        if ("boundu(" in line and "=" in line) and (
+            "boundu(i)" not in line and "boundu(ixc(i))" not in line
+        ):
+            boundu_num = line.split("(")[1].split(")")[0]
+            boundu_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
+            ixc_full[boundu_num]["ub"] = float(boundu_val)
 
     return ixc_full
 
@@ -890,7 +887,7 @@ def dict_ixc_bounds():
     # Returns dictionary mapping iteration variable name to bounds
     ixc_full = output_dict["DICT_IXC_FULL"]
     ixc_bounds = {}
-    for key, value in ixc_full.items():
+    for value in ixc_full.values():
         lb = value["lb"]
         ub = value["ub"]
         temp = {"lb": lb, "ub": ub}
@@ -905,7 +902,7 @@ def dict_ixc_default():
     default = output_dict["DICT_DEFAULT"]
     ixc_full = output_dict["DICT_IXC_FULL"]
 
-    for key, value in ixc_full.items():
+    for value in ixc_full.values():
         name = value["name"]
 
         if name in default:
@@ -929,9 +926,7 @@ def dict_ixc_simple():
 def dict_ixc_simple_rev():
     # Returns dictionary mapping iteration variable name to ixc no
     ixc_simple = output_dict["DICT_IXC_SIMPLE"]
-    ixc_simple_rev = {b: a for a, b in ixc_simple.items()}
-
-    return ixc_simple_rev
+    return {b: a for a, b in ixc_simple.items()}
 
 
 def create_dicts(project):

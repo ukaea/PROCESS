@@ -21,9 +21,8 @@ def pfcoil():
     :return: an instance of PFCoil
     :rtype: process.pfcoil.PFCoil
     """
-    pfcoil = PFCoil(cs_fatigue=CsFatigue())
 
-    return pfcoil
+    return PFCoil(cs_fatigue=CsFatigue())
 
 
 def test_init_pfcoil(pfcoil):

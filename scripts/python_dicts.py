@@ -84,13 +84,9 @@ def get_non_dunder_class_members(_object: object) -> dict:
     :return non_dunder_members: a dictionary mapping a members name to the underlying member
     :type non_dunder_members: dict
     """
-    non_dunder_members = {}
-    for name, value in inspect.getmembers(_object):
-        # exclude methods or variables starting double-underscore
-        if name[0:2] != "__":
-            non_dunder_members[name] = value
-
-    return non_dunder_members
+    return {
+        name: value for name, value in inspect.getmembers(_object) if name[0:2] != "__"
+    }
 
 
 def get_annotated_variables(parent_name: str, _object) -> list[AnnotatedVariableData]:
@@ -139,7 +135,6 @@ def get_python_variables() -> list[AnnotatedVariableData]:
 
     variables = []
     for name, model in models_dict.items():
-        for annotated_variable in get_annotated_variables(name, model):
-            variables.append(annotated_variable)
+        variables.extend(get_annotated_variables(name, model))
 
     return variables

@@ -188,7 +188,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
     ---------------------------------
 
-    ### Beam fast ion pressure integral | `_fast_ion_pressure_integral()`
+    ### Beam fast ion pressure integral | `fast_ion_pressure_integral()`
 
     This internal function is for returning the main integral value for the fast ion pressure. It takes the initial beam energy ($E_{\text{beam}}$) and the critical energy ($E_{\text{crit}}$) for the required ion species.
 

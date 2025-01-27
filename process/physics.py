@@ -168,7 +168,7 @@ def calculate_beta_limit(
 
     References:
         - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
-          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988,
+          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
           doi: https://doi.org/10.1088/0741-3335/30/11/019.
 
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
@@ -207,7 +207,7 @@ def _plascar_bpol(
     References:
     - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
       'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729–1738. https://doi.org/10.13182/FST92-A29971
+      1729-1738. https://doi.org/10.13182/FST92-A29971
     - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
       unpublished internal Oak Ridge document
     """
@@ -280,19 +280,18 @@ def calculate_poloidal_field(
       unpublished internal Oak Ridge document
     - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
       'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729–1738. https://doi.org/10.13182/FST92-A29971
+      1729-1738. https://doi.org/10.13182/FST92-A29971
     """
     # Use Ampere's law using the plasma poloidal cross-section
     if i_plasma_current != 2:
         return rmu0 * ip / perim
-    else:
-        # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
+    # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
+    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
 
-        # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+    # Transform q95 to qbar
+    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-        return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 def calculate_current_coefficient_peng(
@@ -355,7 +354,7 @@ def calculate_plasma_current_peng(
       unpublished internal Oak Ridge document
     - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
       'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729–1738. https://doi.org/10.13182/FST92-A29971
+      1729-1738. https://doi.org/10.13182/FST92-A29971
     """
 
     # Transform q95 to qbar
@@ -437,8 +436,9 @@ def calculate_current_coefficient_todd(
     )
     if model == 1:
         return base_scaling
-    elif model == 2:
+    if model == 2:
         return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
+    raise ValueError(f"model = {model} is an invalid option")
 
 
 @nb.jit(nopython=True, cache=True)
@@ -547,7 +547,7 @@ def calculate_current_coefficient_sauter(
     """
     w07 = 1.0  # zero squareness - can be modified later if required
 
-    fq = (
+    return (
         (4.1e6 / 5.0e6)
         * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
         * (1.0 + 0.09 * triang + 0.16 * triang**2)
@@ -555,8 +555,6 @@ def calculate_current_coefficient_sauter(
         / (1.0 - 0.74 * eps)
         * (1.0 + 0.55 * (w07 - 1.0))
     )
-
-    return fq
 
 
 @nb.jit(nopython=True, cache=True)
@@ -630,7 +628,7 @@ def _nevins_integral(
         Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists’ meeting on heating and current drive."
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
         ITER-TN-PH-8-4, June 1988. 1988.
 
     """
@@ -738,9 +736,9 @@ def _coulomb_logarithm_sauter(
     Reference:
     - C. A. Ordonez, M. I. Molina;
       Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
-      Phys. Plasmas 1 August 1994; 1 (8): 2515–2518. https://doi.org/10.1063/1.870578
+      Phys. Plasmas 1 August 1994; 1 (8): 2515-2518. https://doi.org/10.1063/1.870578
     - Y. R. Shen, “Recent advances in nonlinear optics,” Reviews of Modern Physics, vol. 48, no. 1,
-      pp. 1–32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+      pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
     """
     return (
         15.9
@@ -940,7 +938,7 @@ def _calculate_l31_coefficient(
     Reference:
     - O. Sauter, C. Angioni, Y. R. Lin-Liu;
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
     - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
       [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
@@ -1025,7 +1023,7 @@ def _calculate_l31_32_coefficient(
     Reference:
     - O. Sauter, C. Angioni, Y. R. Lin-Liu;
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
     - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
       [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
@@ -1177,7 +1175,7 @@ def _calculate_l34_alpha_31_coefficient(
     Reference:
     - O. Sauter, C. Angioni, Y. R. Lin-Liu;
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
     - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
       [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
@@ -1431,11 +1429,11 @@ def _trapped_particle_fraction_sauter(
       Used in this paper:
     - O. Sauter, C. Angioni, Y. R. Lin-Liu;
       Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
     - O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
-      “Marginal  -limit for neoclassical tearing modes in JET H-mode discharges,”
-      Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999–2019, Aug. 2002,
+      “Marginal-limit for neoclassical tearing modes in JET H-mode discharges,”
+      Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
       doi: https://doi.org/10.1088/0741-3335/44/9/315.
 
     - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
@@ -1455,7 +1453,7 @@ def _trapped_particle_fraction_sauter(
         zz = 1.0 - eps
         return 1.0 - zz * np.sqrt(zz) / (1.0 + 1.46 * sqeps_reduced)
 
-    elif fit == 1:
+    if fit == 1:
         # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
         # Similar to, but not quite identical to above
 
@@ -1463,7 +1461,7 @@ def _trapped_particle_fraction_sauter(
             ((1.0 - eps) ** 2) / ((1.0 + 1.46 * sqeps_reduced) * np.sqrt(1.0 - eps**2))
         )
 
-    elif fit == 2:
+    if fit == 2:
         # Sauter 2016; https://doi.org/10.1016/j.fusengdes.2016.04.033.
         # Includes correction for triangularity
 
@@ -2176,10 +2174,7 @@ class Physics:
         # Power transported to the divertor by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
-        if physics_variables.ignite == 0:
-            pinj = current_drive_variables.pinjmw
-        else:
-            pinj = 0.0e0
+        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
 
         physics_variables.pdivt = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
@@ -2439,7 +2434,7 @@ class Physics:
             )
         # Model Taken from D3-D paper for conventional divertor
         # Journal of Nuclear Materials
-        # Volumes 290–293, March 2001, Pages 935-939
+        # Volumes 290-293, March 2001, Pages 935-939
         # Find the innner and outer lower target imbalance
 
         physics_module.fio = 0.16e0 + (0.16e0 - 0.41e0) * (
@@ -2581,7 +2576,7 @@ class Physics:
             - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
 
             - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,”
-              vol. 57, no. 1, pp. 014038–014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
+              vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
         """
 
         if i_density_limit < 1 or i_density_limit > 7:
@@ -3103,7 +3098,7 @@ class Physics:
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
             - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
               'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-              1729–1738. https://doi.org/10.13182/FST92-A29971
+              1729-1738. https://doi.org/10.13182/FST92-A29971
             - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
             - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
             - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
@@ -5871,7 +5866,7 @@ class Physics:
         Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists’ meeting on heating and current drive."
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
         ITER-TN-PH-8-4, June 1988. 1988.
 
         """
@@ -5929,7 +5924,7 @@ class Physics:
         Reference:
         - O. Sauter, C. Angioni, Y. R. Lin-Liu;
           Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-          Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240
+          Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
         - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
           Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
           [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
@@ -6145,7 +6140,7 @@ class Physics:
 
         References:
             - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
-              Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010,
+              Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
               doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
 
         """
@@ -6184,7 +6179,7 @@ class Physics:
 
         References:
             - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
-              Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008,
+              Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
               doi: https://doi.org/10.1088/0741-3335/50/6/065001.
 
         """
@@ -6274,7 +6269,7 @@ class Physics:
 
         References:
             - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
-              vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+              vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 
             - Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
               Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
@@ -6323,7 +6318,7 @@ class Physics:
 
         References:
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
-              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014,
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
               doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
 
@@ -6373,7 +6368,7 @@ class Physics:
 
         References:
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
-              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014,
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
               doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
 
@@ -7385,7 +7380,7 @@ class Physics:
             # thermal energy confinement time
             # plasma current Ip (MA),
             # on-axis vacuum toroidal magnetic field Bt (T)
-            # "central line-averaged electron density" nebar (1019 m−3)
+            # "central line-averaged electron density" nebar (1019 m-3)
             # thermal power lost due to transport through the LCFS Pl,th (MW)
             # major radius Rgeo (m)
             # elongation of the LCFS, defined as κa = V/(2πRgeo πa2)

@@ -287,12 +287,8 @@ def process_stopped(wdir="."):
     except KeyError:
         return True
 
-    if error_status >= 3:
-        # Fatal error
-        return True
-
-    # Process did not prematurely exit
-    return False
+    # Process did prematurely exit
+    return error_status >= 3
 
 
 ########################################
@@ -307,10 +303,7 @@ def process_warnings(wdir="."):
     m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
     error_status = m_file.data["error_status"].get_scan(-1)
 
-    if error_status >= 2:
-        return True
-
-    return False
+    return error_status >= 2
 
 
 ############################################
@@ -320,8 +313,8 @@ def mfile_exists():
     """checks whether MFILE.DAT exists"""
 
     try:
-        m_file = open("MFILE.DAT")
-        m_file.close()
+        with open("MFILE.DAT") as m_file:
+            m_file.close()
         return True
 
     except FileNotFoundError:
@@ -345,18 +338,16 @@ def no_unfeasible_mfile(wdir="."):
     if not m_file.data["isweep"].exists:
         if m_file.data["ifail"].get_scan(-1) == dicts["IFAIL_SUCCESS"]:
             return 0
-        else:
-            return 1
+        return 1
 
-    else:
-        ifail = m_file.data["ifail"].get_scans()
-        try:
-            return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
-        except TypeError:
-            # This seems to occur, if ifail is not in MFILE!
-            # This probably means in the mfile library a KeyError
-            # should be raised not only a message to stdout!
-            return 100000
+    ifail = m_file.data["ifail"].get_scans()
+    try:
+        return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
+    except TypeError:
+        # This seems to occur, if ifail is not in MFILE!
+        # This probably means in the mfile library a KeyError
+        # should be raised not only a message to stdout!
+        return 100000
 
 
 ################################
@@ -376,7 +367,7 @@ def vary_iteration_variables(itervars, lbs, ubs, u_seed=None):
     new_values = []
 
     generator = default_rng(seed=u_seed)
-    for varname, lbnd, ubnd in zip(itervars, lbs, ubs):
+    for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
         new_value = generator.uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
@@ -413,13 +404,12 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     # estimate of the constraints
     constraints = m_file.data["sqsumsq"].get_scan(-1)
 
-    table_sol = []
-    for var_no in range(nvars):
-        table_sol.append(m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1))
-
-    table_res = []
-    for con_no in range(neqns):
-        table_res.append(m_file.data[f"normres{con_no + 1:03}"].get_scan(-1))
+    table_sol = [
+        m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1) for var_no in range(nvars)
+    ]
+    table_res = [
+        m_file.data[f"normres{con_no + 1:03}"].get_scan(-1) for con_no in range(neqns)
+    ]
 
     if ifail != dicts["IFAIL_SUCCESS"]:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
@@ -434,13 +424,12 @@ def get_from_indat_or_default(in_dat, varname):
     """quick function to get variable value from IN.DAT
     or PROCESS default value"""
     dicts = get_dicts()
-    if varname in in_dat.data.keys():
+    if varname in in_dat.data:
         return in_dat.data[varname].get_value
-    else:
-        # Load dicts from dicts JSON file
-        dicts = get_dicts()
+    # Load dicts from dicts JSON file
+    dicts = get_dicts()
 
-        return dicts["DICT_DEFAULT"][varname]
+    return dicts["DICT_DEFAULT"][varname]
 
 
 def set_variable_in_indat(in_dat, varname, value):

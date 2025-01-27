@@ -39,6 +39,7 @@ import json
 import logging
 import math
 import pathlib
+from typing import ClassVar
 
 import git
 import pandas as pd
@@ -85,10 +86,10 @@ class TrackingFile:
 class ProcessTracker:
     """Manages the creation of tracking data into a JSON file for a run of PROCESS."""
 
-    meta_variables = {"date", "time"}
+    meta_variables: ClassVar = {"date", "time"}
     # Variables in an MFile that hold metadata we want to show on the graph
 
-    tracking_variables = {
+    tracking_variables: ClassVar = {
         "pheat",
         "bootstrap_current_fraction",
         "pinjmw",
@@ -176,9 +177,9 @@ class ProcessTracker:
     def __init__(
         self,
         mfile: str,
-        database: str = None,
-        message: str = None,
-        hashid: str = None,
+        database: str | None = None,
+        message: str | None = None,
+        hashid: str | None = None,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -366,7 +367,7 @@ class TrackedData:
         )  # the JSON data of one run of PROCESS in python datastructures
         for variable, value in tracking_data.items():
             # create a new TrackedVariable when we see a variable we do not know
-            if variable not in self.tracked_variables.keys():
+            if variable not in self.tracked_variables:
                 self.tracked_variables[variable] = TrackedVariable(variable)
 
             self.tracked_variables.get(variable).add_datapoint(
@@ -400,11 +401,8 @@ def plot_tracking_data(database):
 
     # populates the overrides map
     for i in ProcessTracker.tracking_variables:
-        try:
-            overriden_name, variable = i.split(".")
-        except (AttributeError, ValueError):
-            continue
-        else:
+        if hasattr(i, "split") and len(name_and_variable := i.split(".")) == 2:
+            overriden_name, variable = name_and_variable
             overrides[variable] = overriden_name
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
@@ -530,7 +528,7 @@ class PythonFortranInterfaceVariables:
     Parses the f2py generated tree and can find the parent module of a module variable.
     """
 
-    tree = {}
+    tree: ClassVar = {}
 
     @classmethod
     def populate_classes(cls):

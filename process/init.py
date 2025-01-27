@@ -349,100 +349,103 @@ def check_process():
         )
 
     # Plasma profile consistency checks
-    if fortran.ife_variables.ife != 1:
-        if fortran.physics_variables.ipedestal == 1:
-            # Temperature checks
-            if fortran.physics_variables.teped < fortran.physics_variables.tesep:
+    if fortran.ife_variables.ife != 1 and fortran.physics_variables.ipedestal == 1:
+        # Temperature checks
+        if fortran.physics_variables.teped < fortran.physics_variables.tesep:
+            raise ProcessValidationError(
+                "Pedestal temperature is lower than separatrix temperature",
+                teped=fortran.physics_variables.teped,
+                tesep=fortran.physics_variables.tesep,
+            )
+
+        if (abs(fortran.physics_variables.rhopedt - 1.0) <= 1e-7) and (
+            (fortran.physics_variables.teped - fortran.physics_variables.tesep) >= 1e-7
+        ):
+            warn(
+                f"Temperature pedestal is at plasma edge, but teped "
+                f"({fortran.physics_variables.teped}) differs from tesep "
+                f"({fortran.physics_variables.tesep})",
+                stacklevel=2,
+            )
+
+        # Core temperature should always be calculated (later) as being
+        # higher than the pedestal temperature, if and only if the
+        # volume-averaged temperature never drops below the pedestal
+        # temperature. Prevent this by adjusting te, and its lower bound
+        # (which will only have an effect if this is an optimisation run)
+        if fortran.physics_variables.te <= fortran.physics_variables.teped:
+            warn(
+                f"Volume-averaged temperature ({fortran.physics_variables.te}) has been "
+                f"forced to exceed input pedestal height ({fortran.physics_variables.teped}). "
+                "Changing to te = teped*1.001",
+                stacklevel=2,
+            )
+            fortran.physics_variables.te = fortran.physics_variables.teped * 1.001
+
+        if (
+            fortran.numerics.ioptimz >= 0
+            and (fortran.numerics.ixc[: fortran.numerics.nvar] == 4).any()
+            and fortran.numerics.boundl[3] < fortran.physics_variables.teped * 1.001
+        ):
+            warn(
+                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
+                stacklevel=2,
+            )
+            fortran.numerics.boundl[3] = fortran.physics_variables.teped * 1.001
+            fortran.numerics.boundu[3] = max(
+                fortran.numerics.boundu[3], fortran.numerics.boundl[3]
+            )
+
+        # Density checks
+        # Case where pedestal density is set manually
+        if (
+            fortran.physics_variables.fgwped < 0
+            or not (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any()
+        ):
+            # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
+            if fortran.physics_variables.neped < fortran.physics_variables.nesep:
                 raise ProcessValidationError(
-                    "Pedestal temperature is lower than separatrix temperature",
-                    teped=fortran.physics_variables.teped,
-                    tesep=fortran.physics_variables.tesep,
+                    "Density pedestal is lower than separatrix density",
+                    neped=fortran.physics_variables.neped,
+                    nesep=fortran.physics_variables.nesep,
                 )
 
-            if (abs(fortran.physics_variables.rhopedt - 1.0) <= 1e-7) and (
-                (fortran.physics_variables.teped - fortran.physics_variables.tesep)
+            # Issue #589 Pedestal density is set manually using neped,
+            # but pedestal width = 0.
+            if (
+                abs(fortran.physics_variables.rhopedn - 1.0) <= 1e-7
+                and (fortran.physics_variables.neped - fortran.physics_variables.nesep)
                 >= 1e-7
             ):
                 warn(
-                    f"Temperature pedestal is at plasma edge, but teped "
-                    f"({fortran.physics_variables.teped}) differs from tesep "
-                    f"({fortran.physics_variables.tesep})"
+                    "Density pedestal is at plasma edge "
+                    f"({fortran.physics_variables.rhopedn = }), but neped "
+                    f"({fortran.physics_variables.neped}) differs from "
+                    f"nesep ({fortran.physics_variables.nesep})",
+                    stacklevel=2,
                 )
 
-            # Core temperature should always be calculated (later) as being
-            # higher than the pedestal temperature, if and only if the
-            # volume-averaged temperature never drops below the pedestal
-            # temperature. Prevent this by adjusting te, and its lower bound
-            # (which will only have an effect if this is an optimisation run)
-            if fortran.physics_variables.te <= fortran.physics_variables.teped:
+        # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
+        #  -> Potential hollowed density profile
+        if (
+            fortran.numerics.ioptimz >= 0
+            and not (
+                fortran.numerics.icc[
+                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                ]
+                == 81
+            ).any()
+        ):
+            if (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any():
                 warn(
-                    f"Volume-averaged temperature ({fortran.physics_variables.te}) has been "
-                    f"forced to exceed input pedestal height ({fortran.physics_variables.teped}). "
-                    "Changing to te = teped*1.001"
+                    "neped set with fgwped without constraint eq 81 (neped<ne0)",
+                    stacklevel=2,
                 )
-                fortran.physics_variables.te = fortran.physics_variables.teped * 1.001
-
-            if (
-                fortran.numerics.ioptimz >= 0
-                and (fortran.numerics.ixc[: fortran.numerics.nvar] == 4).any()
-                and fortran.numerics.boundl[3] < fortran.physics_variables.teped * 1.001
-            ):
+            if (fortran.numerics.ixc[: fortran.numerics.nvar] == 6).any():
                 warn(
-                    "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped"
+                    "dene used as iteration variable without constraint 81 (neped<ne0)",
+                    stacklevel=2,
                 )
-                fortran.numerics.boundl[3] = fortran.physics_variables.teped * 1.001
-                fortran.numerics.boundu[3] = max(
-                    fortran.numerics.boundu[3], fortran.numerics.boundl[3]
-                )
-
-            # Density checks
-            # Case where pedestal density is set manually
-            if (
-                fortran.physics_variables.fgwped < 0
-                or not (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any()
-            ):
-                # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
-                if fortran.physics_variables.neped < fortran.physics_variables.nesep:
-                    raise ProcessValidationError(
-                        "Density pedestal is lower than separatrix density",
-                        neped=fortran.physics_variables.neped,
-                        nesep=fortran.physics_variables.nesep,
-                    )
-
-                # Issue #589 Pedestal density is set manually using neped,
-                # but pedestal width = 0.
-                if (
-                    abs(fortran.physics_variables.rhopedn - 1.0) <= 1e-7
-                    and (
-                        fortran.physics_variables.neped
-                        - fortran.physics_variables.nesep
-                    )
-                    >= 1e-7
-                ):
-                    warn(
-                        "Density pedestal is at plasma edge "
-                        f"({fortran.physics_variables.rhopedn = }), but neped "
-                        f"({fortran.physics_variables.neped}) differs from "
-                        f"nesep ({fortran.physics_variables.nesep})"
-                    )
-
-            # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
-            #  -> Potential hollowed density profile
-            if (
-                fortran.numerics.ioptimz >= 0
-                and not (
-                    fortran.numerics.icc[
-                        : fortran.numerics.neqns + fortran.numerics.nineqns
-                    ]
-                    == 81
-                ).any()
-            ):
-                if (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any():
-                    warn("neped set with fgwped without constraint eq 81 (neped<ne0)")
-                if (fortran.numerics.ixc[: fortran.numerics.nvar] == 6).any():
-                    warn(
-                        "dene used as iteration variable without constraint 81 (neped<ne0)"
-                    )
 
     # Cannot use Psep/R and PsepB/qAR limits at the same time
     if (
@@ -487,7 +490,8 @@ def check_process():
             and fortran.physics_variables.ipedestal
         ):
             warn(
-                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model"
+                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
+                stacklevel=2,
             )
 
     if fortran.physics_variables.i_single_null == 0:
@@ -495,7 +499,7 @@ def check_process():
         fortran.build_variables.vgaptop = fortran.build_variables.vgap_xpoint_divertor
         fortran.build_variables.shldtth = fortran.build_variables.shldlth
         fortran.build_variables.d_vv_top = fortran.build_variables.d_vv_bot
-        warn("Double-null: Upper vertical build forced to match lower")
+        warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
         fortran.physics_variables.idivrt = 1
 
@@ -514,7 +518,8 @@ def check_process():
             and fortran.physics_variables.i_plasma_current != 9
         ):
             warn(
-                "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used"
+                "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
+                stacklevel=2,
             )
 
         # If using Peng and Strickler (1986) model (itartpf == 0)
@@ -555,7 +560,8 @@ def check_process():
         # Call a lvl 3 error if superconductor magnets are used
         elif fortran.tfcoil_variables.i_tf_sup == 1:
             warn(
-                "Joints res not cal. for SC (itart = 1) TF (fortran.tfcoil_variables.i_tf_sup = 1)"
+                "Joints res not cal. for SC (itart = 1) TF (fortran.tfcoil_variables.i_tf_sup = 1)",
+                stacklevel=2,
             )
 
         # Aluminium magnets initalisation / checks
@@ -596,7 +602,7 @@ def check_process():
             fortran.physics_variables.ftar == 1.0
             or fortran.physics_variables.ftar == 0.0
         ):
-            warn("Operating with a single null in a double null machine")
+            warn("Operating with a single null in a double null machine", stacklevel=2)
 
         # Set the TF coil shape to picture frame (if default value)
         if fortran.tfcoil_variables.i_tf_shape == 0:
@@ -826,12 +832,12 @@ def check_process():
     if fortran.tfcoil_variables.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if fortran.tfcoil_variables.i_tf_sup == 0:
-            fortran.tfcoil_variables.eyoung_ins = 20.0e9
-
-        # SC magnets
-        # Value from DDD11-2 v2 2 (2009)
-        elif fortran.tfcoil_variables.i_tf_sup == 1:
+        if (
+            fortran.tfcoil_variables.i_tf_sup == 0
+            or fortran.tfcoil_variables.i_tf_sup == 1
+        ):
+            # SC magnets
+            # Value from DDD11-2 v2 2 (2009)
             fortran.tfcoil_variables.eyoung_ins = 20.0e9
 
         # Cryo-aluminum magnets (Kapton polymer)
@@ -855,16 +861,16 @@ def check_process():
     elif fortran.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
         if fortran.tfcoil_variables.i_tf_sc_mat in [1, 4, 5]:
-            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036–42. https://doi.org/10.1088/0953-2048/16/9/313.
+            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
             fortran.tfcoil_variables.eyoung_cond_axial = 32e9
         elif fortran.tfcoil_variables.i_tf_sc_mat == 2:
             # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
             fortran.tfcoil_variables.eyoung_cond_axial = 80e9
         elif fortran.tfcoil_variables.i_tf_sc_mat in [3, 7]:
-            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236–39. https://doi.org/10.1109/77.783280.
+            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
             fortran.tfcoil_variables.eyoung_cond_axial = 6.8e9
         elif fortran.tfcoil_variables.i_tf_sc_mat in [6, 8, 9]:
-            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426–431 (2005): 699–704. https://doi.org/10.1016/j.physc.2005.01.045.
+            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
             fortran.tfcoil_variables.eyoung_cond_axial = 145e9
 
         if fortran.tfcoil_variables.i_tf_cond_eyoung_trans == 0:
@@ -996,22 +1002,23 @@ def check_process():
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if fortran.stellarator_variables.istell == 0:
-        if fortran.fwbs_variables.iblanket == 1 or fortran.fwbs_variables.iblanket == 3:
-            fsum = (
-                fortran.fwbs_variables.breeder_multiplier
-                + fortran.fwbs_variables.vfcblkt
-                + fortran.fwbs_variables.vfpblkt
+    if fortran.stellarator_variables.istell == 0 and (
+        fortran.fwbs_variables.iblanket == 1 or fortran.fwbs_variables.iblanket == 3
+    ):
+        fsum = (
+            fortran.fwbs_variables.breeder_multiplier
+            + fortran.fwbs_variables.vfcblkt
+            + fortran.fwbs_variables.vfpblkt
+        )
+        if fsum >= 1.0:
+            raise ProcessValidationError(
+                "Blanket material fractions do not sum to 1.0",
+                iblanket=fortran.fwbs_variables.iblanket,
+                breeder_multiplier=fortran.fwbs_variables.breeder_multiplier,
+                vfcblkt=fortran.fwbs_variables.vfcblkt,
+                vfpblkt=fortran.fwbs_variables.vfpblkt,
+                fsum=fsum,
             )
-            if fsum >= 1.0:
-                raise ProcessValidationError(
-                    "Blanket material fractions do not sum to 1.0",
-                    iblanket=fortran.fwbs_variables.iblanket,
-                    breeder_multiplier=fortran.fwbs_variables.breeder_multiplier,
-                    vfcblkt=fortran.fwbs_variables.vfcblkt,
-                    vfpblkt=fortran.fwbs_variables.vfpblkt,
-                    fsum=fsum,
-                )
 
     # Initialise superconductor cable parameters
     if fortran.tfcoil_variables.i_tf_sup == 1:
@@ -1023,12 +1030,14 @@ def check_process():
         if fortran.tfcoil_variables.tmargmin_tf > 0.0001:
             warn(
                 "tmargmin_tf and tmargmin should not both be specified in IN.DAT "
-                "tmargmin_tf has been ignored"
+                "tmargmin_tf has been ignored",
+                stacklevel=2,
             )
         if fortran.tfcoil_variables.tmargmin_cs > 0.0001:
             warn(
                 "tmargmin_cs and tmargmin should not both be specified in IN.DAT "
-                "tmargmin_cs has been ignored"
+                "tmargmin_cs has been ignored",
+                stacklevel=2,
             )
 
         fortran.tfcoil_variables.tmargmin_tf = fortran.tfcoil_variables.tmargmin
@@ -1040,11 +1049,11 @@ def check_process():
     ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
-        warn("tauee_in is for use with isc=48 only")
+        warn("tauee_in is for use with isc=48 only", stacklevel=2)
 
     if fortran.physics_variables.aspect > 1.7 and fortran.physics_variables.isc == 46:
         # NSTX scaling is for A<1.7
-        warn("NSTX scaling is for A<1.7")
+        warn("NSTX scaling is for A<1.7", stacklevel=2)
 
     if (
         fortran.physics_variables.i_plasma_current == 2

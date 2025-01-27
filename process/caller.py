@@ -50,8 +50,7 @@ class Caller:
         # Check for same shape: mfile length can change between iterations
         if isinstance(previous, float) or previous.shape == current.shape:
             return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
-        else:
-            return False
+        return False
 
     def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
         """Evalutate models until results are idempotent.
@@ -144,7 +143,7 @@ class Caller:
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {
                     var: val
-                    for var in mfile.data.keys()
+                    for var in mfile.data
                     if isinstance(val := mfile.data[var].get_scan(-1), float)
                 }
 
@@ -158,17 +157,16 @@ class Caller:
 
                 # Compare previous and current mfiles for agreement
                 nonconverged_vars = {}
-                for var in previous_mfile_data.keys():
+                for var in previous_mfile_data:
                     previous_value = previous_mfile_data[var]
                     current_value = mfile_data.get(var, np.nan)
                     if self.check_agreement(previous_value, current_value):
                         continue
-                    else:
-                        # Value has changed between previous and current mfiles
-                        nonconverged_vars[var] = [
-                            previous_value,
-                            current_value,
-                        ]
+                    # Value has changed between previous and current mfiles
+                    nonconverged_vars[var] = [
+                        previous_value,
+                        current_value,
+                    ]
 
                 if len(nonconverged_vars) == 0:
                     # Previous and current mfiles agree (idempotent)
@@ -196,7 +194,8 @@ class Caller:
             )
 
             warnings.warn(
-                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m"
+                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m",
+                stacklevel=2,
             )
 
             # Close idempotence files, write final output file and mfile

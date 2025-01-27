@@ -65,20 +65,16 @@ class Config:
     def _lowercase(self, objekt):
         if isinstance(objekt, list):
             return [self._lowercase(item) for item in objekt]
-        elif isinstance(objekt, dict):
+        if isinstance(objekt, dict):
             return {
                 key.lower(): self._lowercase(value) for key, value in objekt.items()
             }
-        else:
-            return objekt
+        return objekt
 
     def _search_config_for(self, config, *keys):
         """Recursively search config (a dict) for keys."""
         try:
-            if isinstance(keys[0], str):
-                search_key = keys[0].lower()
-            else:
-                search_key = keys[0]
+            search_key = keys[0].lower() if isinstance(keys[0], str) else keys[0]
             value = config[search_key]
         except IndexError:
             raise
@@ -89,10 +85,9 @@ class Config:
 
         if isinstance(config, dict) and len(keys) > 1:
             return self._search_config_for(value, *keys[1:])
-        elif not isinstance(value, dict) and len(keys) > 1:
+        if not isinstance(value, dict) and len(keys) > 1:
             raise KeyError(f"{search_key} cannot be found in {value}")
-        else:
-            return self._lowercase(value)
+        return self._lowercase(value)
 
     def get(self, *config_keys, default=None):
         """
@@ -111,9 +106,8 @@ class Config:
             if default:
                 logger.info(f"Using default for {config_keys}")
                 return default
-            else:
-                logger.exception(
-                    f"Cannot find value or default for {config_keys} in configuration"
-                )
+            logger.exception(
+                f"Cannot find value or default for {config_keys} in configuration"
+            )
         except (IndexError, TypeError):
             raise
