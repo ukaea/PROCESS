@@ -135,7 +135,7 @@ def itersc(temperature, bmax, strain, bc20max, tc0max):
     diter = 0.82  # ITER strand diameter (mm)
     cuiter = 0.5  # ITER strand copper fraction
 
-    jscaling, bcrit, tcrit = Bottura_scaling(
+    jscaling, bcrit, tcrit = bottura_scaling(
         csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
     )
 
@@ -246,21 +246,21 @@ def gl_nbti(thelium, bmax, strain, bc20max, t_c0):
 
     \\begin{equation}
     J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
-    [B_{c2}(\\epsilon_I)*(1-t^\\nu)\\right]^{n-3}b^{p-1}(1-b)^q~.
+    [B_{c2}(\\epsilon_i)*(1-t^\\nu)\\right]^{n-3}b^{p-1}(1-b)^q~.
     \\end{equation}
 
     - \\( \\thelium \\) -- Coolant/SC temperature [K]
     - \\( \\bmax \\) -- Magnetic field at conductor [T]
     - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
-    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
-    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
+    - \\( \\B_{c2}(\\epsilon_i) \\) -- Strain dependent upper critical field [T]
+    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_i)*(1-t^\\nu) [unitless]
     - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
     - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
     - \\( \\A(\\epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
     - \\( \\J_{c,TS} \\) --  Critical current density in superconductor [A / m\\(^-2\\)]
     """
 
-    A_0 = 1102e6
+    a_0 = 1102e6
     p = 0.49
     q = 0.56
     n = 1.83
@@ -272,17 +272,17 @@ def gl_nbti(thelium, bmax, strain, bc20max, t_c0):
     u = 0.0
     w = 2.2
 
-    epsilon_I = strain - em
+    epsilon_i = strain - em
 
     strain_func = (
-        1 + c2 * (epsilon_I) ** 2 + c3 * (epsilon_I) ** 3 + c4 * (epsilon_I) ** 4
+        1 + c2 * (epsilon_i) ** 2 + c3 * (epsilon_i) ** 3 + c4 * (epsilon_i) ** 4
     )
 
-    T_e = t_c0 * strain_func ** (1 / w)
+    t_e = t_c0 * strain_func ** (1 / w)
 
-    t_reduced = thelium / T_e
+    t_reduced = thelium / t_e
 
-    A_e = A_0 * strain_func ** (u / w)
+    a_e = a_0 * strain_func ** (u / w)
 
     # Critical Field
     bcrit = bc20max * (1 - t_reduced**v) * strain_func
@@ -290,21 +290,21 @@ def gl_nbti(thelium, bmax, strain, bc20max, t_c0):
     b_reduced = bmax / bcrit
 
     # Critical temperature (K)
-    tcrit = T_e
+    tcrit = t_e
 
     # Critical current density (A/m2)
     if b_reduced <= 1.0:
         jcrit = (
-            A_e
-            * (T_e * (1 - t_reduced**2)) ** 2
+            a_e
+            * (t_e * (1 - t_reduced**2)) ** 2
             * bcrit ** (n - 3)
             * b_reduced ** (p - 1)
             * (1 - b_reduced) ** q
         )
     else:  # Fudge to yield negative single valued function of Jc for fields above Bc2
         jcrit = (
-            A_e
-            * (T_e * (1 - t_reduced**2)) ** 2
+            a_e
+            * (t_e * (1 - t_reduced**2)) ** 2
             * bcrit ** (n - 3)
             * b_reduced ** (p - 1)
             * (1 - b_reduced) ** 1.0
@@ -325,14 +325,14 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
 
     \\begin{equation}
     J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
-    [B_{c2}(\\epsilon_I)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
+    [B_{c2}(\\epsilon_i)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
     \\end{equation}
 
     - \\( \\thelium \\) -- Coolant/SC temperature [K]
     - \\( \\bmax \\) -- Magnetic field at conductor [T]
     - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
-    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
-    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
+    - \\( \\B_{c2}(\\epsilon_i) \\) -- Strain dependent upper critical field [T]
+    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_i)*(1-t^\\nu) [unitless]
     - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
     - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
     - \\( \\A(epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
@@ -340,7 +340,7 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
     - \\( \\epsilon_{m} \\) -- Strain at which peak in J_c occurs [\\%]
     """
     # critical current density prefactor
-    A_0 = 2.95e2
+    a_0 = 2.95e2
     # flux pinning field scaling parameters
     p = 0.32
     q = 2.50
@@ -356,17 +356,17 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
     u = 0.0
     w = 2.2
 
-    epsilon_I = strain - em
+    epsilon_i = strain - em
 
     strain_func = (
-        1 + c2 * (epsilon_I) ** 2 + c3 * (epsilon_I) ** 3 + c4 * (epsilon_I) ** 4
+        1 + c2 * (epsilon_i) ** 2 + c3 * (epsilon_i) ** 3 + c4 * (epsilon_i) ** 4
     )
 
-    T_e = t_c0 * strain_func ** (1 / w)
+    t_e = t_c0 * strain_func ** (1 / w)
 
-    t_reduced = thelium / T_e
+    t_reduced = thelium / t_e
 
-    A_e = A_0 * strain_func ** (u / w)
+    a_e = a_0 * strain_func ** (u / w)
 
     #  Critical Field
     bcrit = bc20max * (1 - t_reduced) ** s * strain_func
@@ -374,12 +374,12 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
     b_reduced = bmax / bcrit
 
     #  Critical temperature (K)
-    tcrit = T_e
+    tcrit = t_e
 
     #  Critical current density (A/m2)
     jcrit = (
-        A_e
-        * (T_e * (1 - t_reduced**2)) ** 2
+        a_e
+        * (t_e * (1 - t_reduced**2)) ** 2
         * bcrit ** (n - 3)
         * b_reduced ** (p - 1)
         * (1 - b_reduced) ** q
@@ -430,7 +430,7 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     a = 1.4
     b = 2.005
     # critical current density prefactor
-    A_0 = 2.2e8
+    a_0 = 2.2e8
     # flux pinning field scaling parameters
     p = 0.39
     q = 0.9
@@ -448,7 +448,7 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     tcrit = 0.999965 * t_c0
 
     # finding A(T); constants based on a Newton polynomial fit to pubished data
-    A_t = A_0 + (u * thelium**2) + (v * thelium)
+    a_t = a_0 + (u * thelium**2) + (v * thelium)
 
     # Critical current density (A/m2)
     # In the original formula bcrit must be > bmax to prevent NaNs.
@@ -457,9 +457,9 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     # giving a negative but real value of jcrit.
 
     if bcrit > bmax:
-        jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
     else:
-        jcrit = (A_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
+        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
 
     # print("thelium = ", thelium, "   bcrit = ", bcrit, "   bmax = ", bmax, "   1 - bmax / bcrit = ", 1 - bmax / bcrit)
 
@@ -508,7 +508,7 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
     # epsilon_{0,a}
     eps0a = 0.00312
 
-    jscaling, bcrit, tcrit = Bottura_scaling(
+    jscaling, bcrit, tcrit = bottura_scaling(
         csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
     )
 
@@ -518,7 +518,7 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
     return jcrit, bcrit, tcrit
 
 
-def Bottura_scaling(
+def bottura_scaling(
     csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
 ):
     """

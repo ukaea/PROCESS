@@ -21,6 +21,7 @@ extend-select = [
     "INT",
     "ISC",
     "LOG",
+    "N",
     "NPY",
     "PD",
     "PERF",

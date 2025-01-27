@@ -2363,10 +2363,10 @@ class Physics:
             # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
 
             # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
-            Fp = physics_variables.p0 / physics_variables.vol_avg_pressure
+            fp = physics_variables.p0 / physics_variables.vol_avg_pressure
 
             physics_variables.beta_norm_max = 3.7e0 + (
-                (physics_variables.c_beta / Fp) * (12.5e0 - 3.5e0 * Fp)
+                (physics_variables.c_beta / fp) * (12.5e0 - 3.5e0 * fp)
             )
 
         # calculate_beta_limit() returns the beta_max for beta
@@ -5934,7 +5934,7 @@ class Physics:
         """
 
         # Number of radial data points along the profile
-        NR = plasma_profile.profile_size
+        nr = plasma_profile.profile_size
 
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
@@ -5969,18 +5969,18 @@ class Physics:
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
 
         # Prevent division by zero
-        if ne[NR - 1] == 0.0:
-            ne[NR - 1] = 1e-4 * ne[NR - 2]
-            ni[NR - 1] = 1e-4 * ni[NR - 2]
+        if ne[nr - 1] == 0.0:
+            ne[nr - 1] = 1e-4 * ne[nr - 2]
+            ni[nr - 1] = 1e-4 * ni[nr - 2]
 
         # Prevent division by zero
-        if tempe[NR - 1] == 0.0:
-            tempe[NR - 1] = 1e-4 * tempe[NR - 2]
-            tempi[NR - 1] = 1e-4 * tempi[NR - 2]
+        if tempe[nr - 1] == 0.0:
+            tempe[nr - 1] = 1e-4 * tempe[nr - 2]
+            tempi[nr - 1] = 1e-4 * tempi[nr - 2]
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
-        radial_elements = np.arange(2, NR)
+        radial_elements = np.arange(2, nr)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -6004,7 +6004,7 @@ class Physics:
             * (
                 _calculate_l31_coefficient(
                     radial_elements,
-                    NR,
+                    nr,
                     physics_variables.rmajor,
                     physics_variables.bt,
                     physics_variables.triang,
@@ -6020,7 +6020,7 @@ class Physics:
                 * dlogne_drho
                 + _calculate_l31_32_coefficient(
                     radial_elements,
-                    NR,
+                    nr,
                     physics_variables.rmajor,
                     physics_variables.bt,
                     physics_variables.triang,
@@ -6036,7 +6036,7 @@ class Physics:
                 * dlogte_drho
                 + _calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    NR,
+                    nr,
                     physics_variables.rmajor,
                     physics_variables.bt,
                     physics_variables.triang,
@@ -6282,7 +6282,7 @@ class Physics:
         return c_bs * f_peak**0.25 * beta_poloidal * np.sqrt(inverse_aspect)
 
     @staticmethod
-    def bootstrap_fraction_gi_I(
+    def bootstrap_fraction_gi_I(  # noqa: N802
         beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
@@ -6336,7 +6336,7 @@ class Physics:
         return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
     @staticmethod
-    def bootstrap_fraction_gi_II(
+    def bootstrap_fraction_gi_II(  # noqa: N802
         beta_poloidal: float,
         pressure_index: float,
         temperature_index: float,
@@ -7233,8 +7233,8 @@ class Physics:
             # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
             qratio = q / qstar
             # Greenwald density in m^-3
-            nGW = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
-            nratio = dnla / nGW
+            n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
+            nratio = dnla / n_gw
             tauee = (
                 hfact
                 * 6.94e-7

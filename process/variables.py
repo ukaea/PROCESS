@@ -1,7 +1,7 @@
 """Provides wrappers around variables to the whole of PROCESS that hydrate the code with various functionalities"""
 
 
-def AnnotatedVariable(
+def AnnotatedVariable(  # noqa: N802
     tp: type,
     *args,
     docstring: str = "",

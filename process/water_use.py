@@ -219,7 +219,7 @@ class WaterUse:
             )
 
             # find 'forced evaporation' driven by heat inserted into system
-            deltaE = (
+            deltae = (
                 water_usage_variables.waterdens
                 * water_usage_variables.latentheat
                 * windfunction
@@ -231,7 +231,7 @@ class WaterUse:
 
             # find evaporation ratio: ratio of the heat used to evaporate water
             #   to the total heat discharged through the tower
-            water_usage_variables.evapratio = deltaE / heatloadmet
+            water_usage_variables.evapratio = deltae / heatloadmet
             # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
 
             water_usage_variables.volheat = (

@@ -848,8 +848,8 @@ def dict_ixc_full():
         DICT_IXC_FULL['5'] = {'name' : 'beta', 'lb' : 0.001, 'ub' : 1.0}
     """
 
-    with open(SOURCEDIR + "/iteration_variables.f90") as myFile:
-        lines = myFile.readlines()
+    with open(SOURCEDIR + "/iteration_variables.f90") as my_file:
+        lines = my_file.readlines()
 
     ixc_full = {}
 

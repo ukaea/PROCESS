@@ -2073,11 +2073,11 @@ def test_brookscoil(pfcoil):
     c = 1.0e0
     a = 1.5e0 * c
     b = c
-    N = 1.0e0
+    n = 1.0e0
 
-    l_self = 0.025491e0 * c * 100.0e0 * N**2 * 1.0e-6
+    l_self = 0.025491e0 * c * 100.0e0 * n**2 * 1.0e-6
     # Self-inductance of 1m Brooks coil: standard formula
-    l_self_p = pfcoil.selfinductance(a, b, c, N)
+    l_self_p = pfcoil.selfinductance(a, b, c, n)
     # Self-inductance of 1m Brooks coil: PROCESS formula
 
     assert (l_self / l_self_p < 1.05e0) and (l_self / l_self_p > 0.95e0)

@@ -70,7 +70,7 @@ def scan_mfile_name():
 
 
 @pytest.fixture
-def scan_2D_mfile_name():
+def scan_2d_mfile_name():
     """Return the name of a 2D scan mfile to test.
 
     :return: name of the mfile

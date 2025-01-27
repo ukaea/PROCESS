@@ -63,7 +63,7 @@ def process_obj(monkeypatch):
     return Process()
 
 
-def test_Process(process_obj):
+def test_process(process_obj):
     """Test that Process objects can be created.
 
     Check the process_obj fixture can make an object of type Process.
@@ -143,7 +143,7 @@ def single_run(monkeypatch, input_file, tmp_path):
     return single_run
 
 
-def test_SingleRun(single_run):
+def test_single_run(single_run):
     """Assert SingleRun objects can be created.
 
     :param single_run: single_run fixture
