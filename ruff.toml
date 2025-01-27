@@ -26,6 +26,7 @@ extend-select = [
     "Q",
     "RSE",
     "SIM",
+    "SLF",
     "SLOT",
     "T10",
     "TID",
