@@ -53,8 +53,15 @@ where $z_{\text{TF}}$ is the height of the inside of the TF leg and $\mathrm{d}z
 
 ### Calculate cryostat volume
 
+We calculate the cryostat volume by taking the outer dimensions of the cryostat structure and then remove that of the inside structure. This is just subtracting the volumes of two cylinders.
 
+$$
+\mathtt{vol\_cryostat}, V_{\text{cryostat}} = \\
+\underbrace{\left[\pi \left(r_{\text{cryostat}}+dr_{\text{cryostat}}\right)^2 \times 2\left(\mathtt{z\_cryostat\_half\_inside}+ dr_{\text{cryostat}}\right)\right]}_{\text{Outer shell}} \\
+- \underbrace{\left[\pi r_{\text{cryostat}}+^2 \times 2\left(\mathtt{z\_cryostat\_half\_inside}\right) \right]}_{\text{Inner shell}}
+$$
 
+where $dr_{\text{cryostat}}$ is the uniform thickness of the cryostat that is set at input by the user with `dr_cryostat =`
 
 -------------------
 
