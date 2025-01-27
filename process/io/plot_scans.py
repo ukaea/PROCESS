@@ -414,23 +414,18 @@ def main(args=None):
                     ouput_array[ii] = m_file.data[output_name].get_scan(conv_i[ii])
                 output_arrays[input_file][output_name] = ouput_array
             # Second variable scan
-            if output_names2 != []:
-                for output_name2 in output_names2:
-                    ouput_array2 = np.zeros(n_scan)
+            for output_name2 in output_names2:
+                ouput_array2 = np.zeros(n_scan)
 
-                    # Check if the output variable exists in the MFILE
-                    if output_name2 not in m_file.data:
-                        print(
-                            f"Warning : `{output_name2}` does not exist in PROCESS dicts"
-                        )
-                        print(f"Warning : `{output_name2}` will not be output")
-                        continue
+                # Check if the output variable exists in the MFILE
+                if output_name2 not in m_file.data:
+                    print(f"Warning : `{output_name2}` does not exist in PROCESS dicts")
+                    print(f"Warning : `{output_name2}` will not be output")
+                    continue
 
-                    for ii in range(n_scan):
-                        ouput_array2[ii] = m_file.data[output_name2].get_scan(
-                            conv_i[ii]
-                        )
-                    output_arrays2[input_file][output_name2] = ouput_array2
+                for ii in range(n_scan):
+                    ouput_array2[ii] = m_file.data[output_name2].get_scan(conv_i[ii])
+                output_arrays2[input_file][output_name2] = ouput_array2
             # Terminal output
             if term_output:
                 print(f"\n{input_file} scan output\n")
