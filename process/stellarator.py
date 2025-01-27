@@ -2251,9 +2251,15 @@ class Stellarator:
             )
             po.ovarre(
                 self.outfile,
-                "External cryostat shell volume (m3)",
+                "External cryostat shell volume (m^3)",
                 "(vol_cryostat)",
                 fwbs_variables.vol_cryostat,
+            )
+            po.ovarre(
+                self.outfile,
+                "Internal volume of the cryostat structure (m^3)",
+                "(vol_cryostat_internal)",
+                fwbs_variables.vol_cryostat_internal,
             )
             po.ovarre(
                 self.outfile,
