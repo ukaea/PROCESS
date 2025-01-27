@@ -413,8 +413,7 @@ def search_des(dictionary, description):
 
     """
     descriptions = [dictionary[key].var_descript.lower() for key in dictionary.data]
-    matches = [item for item in descriptions if description.lower() in item.lower()]
-    return matches
+    return [item for item in descriptions if description.lower() in item.lower()]
 
 
 def get_unit(variable_desc):

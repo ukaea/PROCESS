@@ -130,7 +130,9 @@ def run_monte_carlo(args):
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
                     m_file = mf.MFile(mfilepath)
-                    outputDataSet.extend([m_file.data[item].get_scan(-1) for item in m_file.data])
+                    outputDataSet.extend([
+                        m_file.data[item].get_scan(-1) for item in m_file.data
+                    ])
 
                     # Append process data to list of all mfile data
                     MFileDataSet.append(outputDataSet)

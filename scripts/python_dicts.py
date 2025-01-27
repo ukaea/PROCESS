@@ -84,7 +84,9 @@ def get_non_dunder_class_members(_object: object) -> dict:
     :return non_dunder_members: a dictionary mapping a members name to the underlying member
     :type non_dunder_members: dict
     """
-    return {name: value for name, value in inspect.getmembers(_object) if name[0:2] != "__"}
+    return {
+        name: value for name, value in inspect.getmembers(_object) if name[0:2] != "__"
+    }
 
 
 def get_annotated_variables(parent_name: str, _object) -> list[AnnotatedVariableData]:
