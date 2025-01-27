@@ -34,7 +34,7 @@ using input array `fimp(1,...,14)`. The available species along with their `fimp
 - `fimp(14)`: Tungsten, (`ixc = 136`)
 
 As stated above, the number density fractions for hydrogen (all isotopes) and
-helium need not be set, as they are calculated by the code to ensure 
+helium should not be set, as they are calculated by the code. This is to ensure 
 plasma quasi-neutrality taking into account the fuel ratios
 `f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
@@ -108,7 +108,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 6. **Fuel Ion Density Calculation**
 
     $$
-    \mathtt{nd_fuel_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
+    \mathtt{nd\_fuel\_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
     $$
 
     - Calculate the fuel ion density (`nd_fuel_ions`).
