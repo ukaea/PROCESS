@@ -450,7 +450,7 @@ class PFCoil:
         pfflux = 0.0e0
         nocoil = 0
         for ccount in range(pfv.ngrp):
-            for i in range(pfv.ncls[ccount]):
+            for _i in range(pfv.ncls[ccount]):
                 pfflux = pfflux + (
                     pf.ccls[ccount]
                     * pfv.sxlg[nocoil, pfv.ncirt - 1]
@@ -543,7 +543,7 @@ class PFCoil:
         dz = 0
 
         for ii in range(pfv.ngrp):
-            for ij in range(pfv.ncls[ii]):
+            for _ij in range(pfv.ncls[ii]):
                 if pfv.ipfloc[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.ohcth
@@ -728,7 +728,7 @@ class PFCoil:
         c = 0
         pfv.itr_sum = 0.0e0
         for m in range(pfv.ngrp):
-            for n in range(pfv.ncls[m]):
+            for _n in range(pfv.ncls[m]):
                 pfv.itr_sum = pfv.itr_sum + (pfv.rpf[c] * pfv.turns[c] * pfv.cptdin[c])
                 c = c + 1
 
@@ -1302,7 +1302,7 @@ class PFCoil:
         # Non-Central Solenoid coils' contributions
         jj = 0
         for iii in range(pfv.ngrp):
-            for jjj in range(pfv.ncls[iii]):
+            for _jjj in range(pfv.ncls[iii]):
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
                 if iii == ii - 1:

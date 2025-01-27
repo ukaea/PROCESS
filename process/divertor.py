@@ -332,7 +332,7 @@ class Divertor:
         tdiv = tdivges
         tpts = tptsges
 
-        for i in range(15):
+        for _i in range(15):
             #  Find derivatives for Newton's method
 
             tptsp = tpts * (1.0e0 + epsilon)

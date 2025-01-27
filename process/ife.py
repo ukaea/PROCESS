@@ -150,10 +150,10 @@ class IFE:
         process_output.write(
             self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 2 + "Height (m)"
         )
-        for title, name, thickness, radius in radial_build_data:
+        for title, _name, thickness, radius in radial_build_data:
             process_output.obuild(self.outfile, title, thickness, radius)
 
-        for title, name, thickness, radius in radial_build_data:
+        for title, name, thickness, _radius in radial_build_data:
             if name is None:
                 continue
             process_output.ovarre(self.outfile, f"{title} (m)", f"({name})", thickness)
@@ -182,7 +182,7 @@ class IFE:
                 self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Radius (m)"
             )
 
-            for title, name, thickness, radius in vertical_build_data[:11]:
+            for title, _name, thickness, radius in vertical_build_data[:11]:
                 process_output.obuild(self.outfile, title, thickness, radius)
 
             process_output.obuild(
@@ -214,16 +214,16 @@ class IFE:
             process_output.write(
                 self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)"
             )
-            for title, name, thickness, radius in vertical_build_data:
+            for title, _name, thickness, radius in vertical_build_data:
                 process_output.obuild(self.outfile, title, thickness, radius)
         else:
             process_output.oheadr(self.outfile, "Vertical build")
             process_output.write(
                 self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Height (m)"
             )
-            for title, name, thickness, radius in vertical_build_data:
+            for title, _name, thickness, radius in vertical_build_data:
                 process_output.obuild(self.outfile, title, thickness, radius)
-            for title, name, thickness, radius in vertical_build_data:
+            for title, name, thickness, _radius in vertical_build_data:
                 if name is None:
                     continue
                 process_output.ovarre(

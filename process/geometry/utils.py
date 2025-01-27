@@ -124,8 +124,8 @@ def ellips_fill_vertices(
     r2 = ((np.cos(angs) / a2) ** 2 + (np.sin(angs) / b2) ** 2) ** (-0.5)
     xs2 = r2 * np.cos(angs) + x0
     ys2 = r2 * np.sin(angs) + y0
-    verts = list(zip(xs1, ys1))
-    verts.extend(list(zip(xs2, ys2)))
+    verts = list(zip(xs1, ys1, strict=False))
+    verts.extend(list(zip(xs2, ys2, strict=False)))
     endpoint = verts[-1:]
     verts.extend(endpoint)
 

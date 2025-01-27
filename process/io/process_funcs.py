@@ -367,7 +367,7 @@ def vary_iteration_variables(itervars, lbs, ubs, u_seed=None):
     new_values = []
 
     generator = default_rng(seed=u_seed)
-    for varname, lbnd, ubnd in zip(itervars, lbs, ubs):
+    for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
         new_value = generator.uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)

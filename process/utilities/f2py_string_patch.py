@@ -49,6 +49,7 @@ def string_to_f2py_compatible(
             warnings.warn(
                 f"String string of length {len(string)} is trying to initiate as {target} with length \
                 {target_size}. String string will be truncated!",
+                stacklevel=2,
             )
 
         string = string[0:target_size]

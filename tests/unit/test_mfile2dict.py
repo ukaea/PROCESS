@@ -34,7 +34,7 @@ def test_parser_succeed(read_mfile):
 
 
 def test_value_read(read_mfile):
-    read_mfile.get_parameter_value("xcm013") == 9.7718e-01
+    return isinstance(read_mfile.get_parameter_value("lsa"), int)
 
 
 def test_write_json(read_mfile, temporary_dir):

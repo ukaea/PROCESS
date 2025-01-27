@@ -1142,7 +1142,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             header = "#sample_index"
 
             # Uncertain input variables
-            for u_dict in self.uncertainties:
+            for _u_dict in self.uncertainties:
                 header += " {u_dict['varname']:10s}"
 
             # normalised iteration varialbes

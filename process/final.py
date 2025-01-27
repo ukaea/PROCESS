@@ -68,8 +68,12 @@ def output_once_through():
         for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns]]
     ]
     units = [f2py_compatible_to_string(i) for i in units]
-    physical_constraint = [f"{c} {u}" for c, u in zip(value.tolist(), units)]
-    physical_residual = [f"{c} {u}" for c, u in zip(residual.tolist(), units)]
+    physical_constraint = [
+        f"{c} {u}" for c, u in zip(value.tolist(), units, strict=False)
+    ]
+    physical_residual = [
+        f"{c} {u}" for c, u in zip(residual.tolist(), units, strict=False)
+    ]
 
     table_data = {
         "Constraint Name": labels,

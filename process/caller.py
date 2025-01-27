@@ -194,7 +194,8 @@ class Caller:
             )
 
             warnings.warn(
-                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m"
+                f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m",
+                stacklevel=2,
             )
 
             # Close idempotence files, write final output file and mfile

@@ -613,8 +613,8 @@ def arc_fill(axis, r1, r2, color="pink"):
     angs = np.linspace(rtangle, 0, endpoint=True)
     xs2 = r2 * np.cos(angs)
     ys2 = r2 * np.sin(angs)
-    verts = list(zip(xs1, ys1))
-    verts.extend(list(zip(xs2, ys2)))
+    verts = list(zip(xs1, ys1, strict=False))
+    verts.extend(list(zip(xs2, ys2, strict=False)))
     endpoint = [(r2, 0)]
     verts.extend(endpoint)
     path = Path(verts, closed=True)
@@ -1842,7 +1842,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             ]
             axis.add_patch(
                 patches.Polygon(
-                    xy=list(zip(x, y)),
+                    xy=list(zip(x, y, strict=False)),
                     color="darkgreen",
                     label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
                 )
@@ -1863,7 +1863,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             ]
             axis.add_patch(
                 patches.Polygon(
-                    xy=list(zip(x, y)),
+                    xy=list(zip(x, y, strict=False)),
                     color="blue",
                     label=(
                         f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n"

@@ -163,7 +163,7 @@ class Power:
         jpf = -1
         poloidalenergy[:] = 0.0e0
         for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
-            for jjpf2 in range(
+            for _jjpf2 in range(
                 pfcoil_variables.ncls[jjpf]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1

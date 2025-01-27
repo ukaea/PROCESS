@@ -395,7 +395,7 @@ class MFILEParser(abc.MutableMapping):
                 _doc.add(tomlkit.nl())
 
             for group_name, data in self._mfile_data.items():
-                for var_name, var_data in data.items():
+                for var_name in data:
                     _doc[group_name][var_name].comment(
                         self._mfile_data[group_name][var_name]["description"]
                     )
