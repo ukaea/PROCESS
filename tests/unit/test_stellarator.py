@@ -224,7 +224,7 @@ class StbildParam(NamedTuple):
 
     dr_fw_inboard: Any = None
 
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
 
     dr_shld_vv_gap_inboard: Any = None
 
@@ -312,7 +312,7 @@ class StbildParam(NamedTuple):
 
     expected_dr_fw_inboard: Any = None
 
-    expected_fwoth: Any = None
+    expected_dr_fw_outboard: Any = None
 
     expected_gapsto: Any = None
 
@@ -351,7 +351,7 @@ class StbildParam(NamedTuple):
             dr_vv_outboard=0.35000000000000003,
             fwarea=0,
             dr_fw_inboard=0,
-            fwoth=0,
+            dr_fw_outboard=0,
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
@@ -395,7 +395,7 @@ class StbildParam(NamedTuple):
             expected_bore=17.79214950143977,
             expected_fwarea=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
-            expected_fwoth=0.018000000000000002,
+            expected_dr_fw_outboard=0.018000000000000002,
             expected_gapsto=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
@@ -421,7 +421,7 @@ class StbildParam(NamedTuple):
             dr_vv_outboard=0.35000000000000003,
             fwarea=1918.8188778803135,
             dr_fw_inboard=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
@@ -465,7 +465,7 @@ class StbildParam(NamedTuple):
             expected_bore=17.79214950143977,
             expected_fwarea=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
-            expected_fwoth=0.018000000000000002,
+            expected_dr_fw_outboard=0.018000000000000002,
             expected_gapsto=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
@@ -521,7 +521,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
-    monkeypatch.setattr(build_variables, "fwoth", stbildparam.fwoth)
+    monkeypatch.setattr(build_variables, "dr_fw_outboard", stbildparam.dr_fw_outboard)
 
     monkeypatch.setattr(
         build_variables, "dr_shld_vv_gap_inboard", stbildparam.dr_shld_vv_gap_inboard
@@ -626,9 +626,13 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.fwarea == pytest.approx(stbildparam.expected_fwarea)
 
-    assert build_variables.dr_fw_inboard == pytest.approx(stbildparam.expected_dr_fw_inboard)
+    assert build_variables.dr_fw_inboard == pytest.approx(
+        stbildparam.expected_dr_fw_inboard
+    )
 
-    assert build_variables.fwoth == pytest.approx(stbildparam.expected_fwoth)
+    assert build_variables.dr_fw_outboard == pytest.approx(
+        stbildparam.expected_dr_fw_outboard
+    )
 
     assert build_variables.gapsto == pytest.approx(stbildparam.expected_gapsto)
 
@@ -2806,7 +2810,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_blkt_inboard: Any = None
     dr_blkt_outboard: Any = None
     dr_fw_inboard: Any = None
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
     dr_shld_inboard: Any = None
     shldoth: Any = None
     cfactr: Any = None
@@ -2837,7 +2841,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_blkt_inboard=0.83499999999999996,
             dr_blkt_outboard=1.085,
             dr_fw_inboard=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             dr_shld_inboard=0.20000000000000001,
             shldoth=0.20000000000000001,
             cfactr=0.75000000000000011,
@@ -2887,10 +2891,14 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.dr_blkt_outboard,
     )
     monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", sctfcoilnuclearheatingiter90param.dr_fw_inboard
+        build_variables,
+        "dr_fw_inboard",
+        sctfcoilnuclearheatingiter90param.dr_fw_inboard,
     )
     monkeypatch.setattr(
-        build_variables, "fwoth", sctfcoilnuclearheatingiter90param.fwoth
+        build_variables,
+        "dr_fw_outboard",
+        sctfcoilnuclearheatingiter90param.dr_fw_outboard,
     )
     monkeypatch.setattr(
         build_variables,
