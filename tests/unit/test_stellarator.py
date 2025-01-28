@@ -248,7 +248,7 @@ class StbildParam(NamedTuple):
 
     rspo: Any = None
 
-    scrapli: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
 
     scraplo: Any = None
 
@@ -363,7 +363,7 @@ class StbildParam(NamedTuple):
             rsldi=0,
             rsldo=0,
             rspo=0,
-            scrapli=0.15000000000000002,
+            dr_fw_plasma_gap_inboard=0.15000000000000002,
             scraplo=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             shldoth=0.70000000000000007,
@@ -433,7 +433,7 @@ class StbildParam(NamedTuple):
             rsldi=18.947733982157342,
             rsldo=25.602266017842663,
             rspo=22,
-            scrapli=0.15000000000000002,
+            dr_fw_plasma_gap_inboard=0.15000000000000002,
             scraplo=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             shldoth=0.70000000000000007,
@@ -549,7 +549,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
 
-    monkeypatch.setattr(build_variables, "scrapli", stbildparam.scrapli)
+    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", stbildparam.dr_fw_plasma_gap_inboard)
 
     monkeypatch.setattr(build_variables, "scraplo", stbildparam.scraplo)
 

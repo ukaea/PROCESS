@@ -100,7 +100,7 @@ class ProcessTracker:
         "dr_tf_shld_gap",
         "dr_bore",
         "dr_cs",
-        "scrapli",
+        "dr_fw_plasma_gap_inboard",
         "dr_blkt_outboard",
         "dr_cs_precomp",
         "tfthko",

@@ -147,7 +147,7 @@ class BldgsSizesParam(NamedTuple):
     thshield_vb: Any
     dr_shld_inboard: Any
     shldoth: Any
-    scrapli: Any
+    dr_fw_plasma_gap_inboard: Any
     scraplo: Any
     dr_fw_inboard: Any
     dr_fw_outboard: Any
@@ -290,7 +290,7 @@ class BldgsSizesParam(NamedTuple):
             thshield_vb=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
-            scrapli=0.22500000000000003,
+            dr_fw_plasma_gap_inboard=0.22500000000000003,
             scraplo=0.22500000000000003,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
@@ -429,7 +429,7 @@ class BldgsSizesParam(NamedTuple):
             thshield_vb=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
-            scrapli=0.22500000000000003,
+            dr_fw_plasma_gap_inboard=0.22500000000000003,
             scraplo=0.22500000000000003,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
@@ -702,7 +702,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
     )
     monkeypatch.setattr(build_variables, "shldoth", bldgssizesparam.shldoth)
-    monkeypatch.setattr(build_variables, "scrapli", bldgssizesparam.scrapli)
+    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", bldgssizesparam.dr_fw_plasma_gap_inboard)
     monkeypatch.setattr(build_variables, "scraplo", bldgssizesparam.scraplo)
     monkeypatch.setattr(build_variables, "dr_fw_inboard", bldgssizesparam.dr_fw_inboard)
     monkeypatch.setattr(

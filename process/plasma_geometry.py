@@ -233,7 +233,7 @@ class PlasmaGeom:
         #  Scrape-off layer thicknesses
         if physics_variables.i_plasma_wall_gap == 0:
             build_variables.scraplo = 0.1e0 * physics_variables.rminor
-            build_variables.scrapli = 0.1e0 * physics_variables.rminor
+            build_variables.dr_fw_plasma_gap_inboard = 0.1e0 * physics_variables.rminor
 
         # ======================================================================
 

@@ -135,7 +135,7 @@ RADIAL_BUILD = [
     "vvblgapi",
     "dr_blkt_inboard",
     "dr_fw_inboard",
-    "scrapli",
+    "dr_fw_plasma_gap_inboard",
     "rminori",
     "rminoro",
     "scraplo",
@@ -3381,7 +3381,7 @@ def main(args=None):
     global dr_shld_inboard
     global dr_blkt_inboard
     global dr_fw_inboard
-    global scrapli
+    global dr_fw_plasma_gap_inboard
     global rmajor
     global rminor
     global scraplo
@@ -3404,7 +3404,7 @@ def main(args=None):
     dr_shld_inboard = m_file.data["dr_shld_inboard"].get_scan(scan)
     dr_blkt_inboard = m_file.data["dr_blkt_inboard"].get_scan(scan)
     dr_fw_inboard = m_file.data["dr_fw_inboard"].get_scan(scan)
-    scrapli = m_file.data["scrapli"].get_scan(scan)
+    dr_fw_plasma_gap_inboard = m_file.data["dr_fw_plasma_gap_inboard"].get_scan(scan)
     rmajor = m_file.data["rmajor"].get_scan(scan)
     rminor = m_file.data["rminor"].get_scan(scan)
     scraplo = m_file.data["scraplo"].get_scan(scan)

@@ -425,7 +425,7 @@ class Stellarator:
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.dr_fw_inboard
-            + build_variables.scrapli
+            + build_variables.dr_fw_plasma_gap_inboard
             + physics_variables.rminor
         )
 
@@ -440,7 +440,7 @@ class Stellarator:
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.dr_fw_inboard
-            + build_variables.scrapli
+            + build_variables.dr_fw_plasma_gap_inboard
             + physics_variables.rminor
         )
 
@@ -453,7 +453,7 @@ class Stellarator:
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.dr_fw_inboard
-            + build_variables.scrapli
+            + build_variables.dr_fw_plasma_gap_inboard
         )
 
         # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
@@ -468,7 +468,7 @@ class Stellarator:
         build_variables.rsldi = (
             physics_variables.rmajor
             - physics_variables.rminor
-            - build_variables.scrapli
+            - build_variables.dr_fw_plasma_gap_inboard
             - build_variables.dr_fw_inboard
             - build_variables.dr_blkt_inboard
             - build_variables.dr_shld_inboard
@@ -508,7 +508,7 @@ class Stellarator:
                 + build_variables.dr_shld_inboard
                 + build_variables.dr_blkt_inboard
                 + build_variables.dr_fw_inboard
-                + build_variables.scrapli
+                + build_variables.dr_fw_plasma_gap_inboard
                 + physics_variables.rminor
             )
             + (
@@ -530,7 +530,7 @@ class Stellarator:
 
         # Average minor radius of the first wall
         awall = physics_variables.rminor + 0.5e0 * (
-            build_variables.scrapli + build_variables.scraplo
+            build_variables.dr_fw_plasma_gap_inboard + build_variables.scraplo
         )
         build_variables.fwarea = (
             physics_variables.a_plasma_surface * awall / physics_variables.rminor
@@ -673,19 +673,19 @@ class Stellarator:
                 build_variables.dr_fw_inboard,
             )
 
-            radius = radius + build_variables.scrapli
+            radius = radius + build_variables.dr_fw_plasma_gap_inboard
             po.obuild(
                 self.outfile,
                 "Inboard scrape-off",
-                build_variables.scrapli,
+                build_variables.dr_fw_plasma_gap_inboard,
                 radius,
-                "(scrapli)",
+                "(dr_fw_plasma_gap_inboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Inboard scrape-off radial thickness (m)",
-                "(scrapli)",
-                build_variables.scrapli,
+                "(dr_fw_plasma_gap_inboard)",
+                build_variables.dr_fw_plasma_gap_inboard,
             )
 
             radius = radius + physics_variables.rminor
@@ -1174,7 +1174,7 @@ class Stellarator:
         #  Uses fwbs_variables.fhole etc. to take account of gaps due to ports etc.
 
         r1 = physics_variables.rminor + 0.5e0 * (
-            build_variables.scrapli
+            build_variables.dr_fw_plasma_gap_inboard
             + build_variables.dr_fw_inboard
             + build_variables.scraplo
             + build_variables.dr_fw_outboard
@@ -1884,7 +1884,7 @@ class Stellarator:
         #  fwbs_variables.fvoldw accounts for ports, support, etc. additions
 
         r1 = physics_variables.rminor + 0.5e0 * (
-            build_variables.scrapli
+            build_variables.dr_fw_plasma_gap_inboard
             + build_variables.dr_fw_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.dr_shld_inboard
@@ -2948,7 +2948,7 @@ class Stellarator:
         radvv = (
             physics_variables.rmajor
             - physics_variables.rminor
-            - build_variables.scrapli
+            - build_variables.dr_fw_plasma_gap_inboard
             - build_variables.dr_fw_inboard
             - build_variables.dr_blkt_inboard
             - build_variables.vvblgap

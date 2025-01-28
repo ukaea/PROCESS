@@ -1670,7 +1670,7 @@ class Build:
         if physics_variables.i_single_null == 1:
             #  Check if build_variables.vgaptop has been set too small
             build_variables.vgaptop = max(
-                0.5e0 * (build_variables.scrapli + build_variables.scraplo),
+                0.5e0 * (build_variables.dr_fw_plasma_gap_inboard + build_variables.scraplo),
                 build_variables.vgaptop,
             )
 
@@ -1772,7 +1772,7 @@ class Build:
                         + build_variables.vvblgap
                         + build_variables.dr_blkt_inboard
                         + build_variables.dr_fw_inboard
-                        + 3.0e0 * build_variables.scrapli
+                        + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
                     )
                     + tfcoil_variables.drtop
                 )
@@ -1827,7 +1827,7 @@ class Build:
                 + build_variables.vvblgap
                 + build_variables.dr_blkt_inboard
                 + build_variables.dr_fw_inboard
-                + 3.0e0 * build_variables.scrapli
+                + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
             )
             + tfcoil_variables.drtop
         ):
@@ -1867,7 +1867,7 @@ class Build:
             + build_variables.vvblgap
             + build_variables.dr_blkt_inboard
             + build_variables.dr_fw_inboard
-            + build_variables.scrapli
+            + build_variables.dr_fw_plasma_gap_inboard
             + physics_variables.rminor
         )
 
@@ -1875,7 +1875,7 @@ class Build:
         build_variables.rsldi = (
             physics_variables.rmajor
             - physics_variables.rminor
-            - build_variables.scrapli
+            - build_variables.dr_fw_plasma_gap_inboard
             - build_variables.dr_fw_inboard
             - build_variables.dr_blkt_inboard
             - build_variables.dr_shld_inboard
@@ -1957,7 +1957,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.scrapli+build_variables.scraplo)) )
+        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.scraplo)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -1984,7 +1984,7 @@ class Build:
             r1 = (
                 physics_variables.rmajor
                 - physics_variables.rminor
-                - build_variables.scrapli
+                - build_variables.dr_fw_plasma_gap_inboard
             )
 
             #  Horizontal distance between inside edges,
@@ -2020,7 +2020,7 @@ class Build:
             r2 = r1 - (
                 physics_variables.rmajor
                 - physics_variables.rminor
-                - build_variables.scrapli
+                - build_variables.dr_fw_plasma_gap_inboard
             )
 
             #  Distance between r1 and inner edge of outboard section
@@ -2293,11 +2293,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.scrapli
+            radius = radius + build_variables.dr_fw_plasma_gap_inboard
             radial_build_data.append([
                 "Inboard scrape-off",
-                "scrapli",
-                build_variables.scrapli,
+                "dr_fw_plasma_gap_inboard",
+                build_variables.dr_fw_plasma_gap_inboard,
                 radius,
             ])
 
