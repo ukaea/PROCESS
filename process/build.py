@@ -1644,7 +1644,7 @@ class Build:
         """
 
         if fwbs_variables.blktmodel > 0:
-            build_variables.blnkith = (
+            build_variables.dr_blkt_inboard = (
                 build_variables.blbuith
                 + build_variables.blbmith
                 + build_variables.blbpith
@@ -1660,7 +1660,7 @@ class Build:
 
         #  Top/bottom blanket thickness
         build_variables.blnktth = 0.5e0 * (
-            build_variables.blnkith + build_variables.blnkoth
+            build_variables.dr_blkt_inboard + build_variables.blnkoth
         )
 
         if physics_variables.i_single_null == 1:
@@ -1766,7 +1766,7 @@ class Build:
                         + build_variables.dr_shld_thermal_inboard
                         + build_variables.shldith
                         + build_variables.vvblgap
-                        + build_variables.blnkith
+                        + build_variables.dr_blkt_inboard
                         + build_variables.fwith
                         + 3.0e0 * build_variables.scrapli
                     )
@@ -1821,7 +1821,7 @@ class Build:
                 + build_variables.dr_shld_thermal_inboard
                 + build_variables.shldith
                 + build_variables.vvblgap
-                + build_variables.blnkith
+                + build_variables.dr_blkt_inboard
                 + build_variables.fwith
                 + 3.0e0 * build_variables.scrapli
             )
@@ -1861,7 +1861,7 @@ class Build:
         build_variables.rbld = (
             build_variables.r_sh_inboard_out
             + build_variables.vvblgap
-            + build_variables.blnkith
+            + build_variables.dr_blkt_inboard
             + build_variables.fwith
             + build_variables.scrapli
             + physics_variables.rminor
@@ -1873,7 +1873,7 @@ class Build:
             - physics_variables.rminor
             - build_variables.scrapli
             - build_variables.fwith
-            - build_variables.blnkith
+            - build_variables.dr_blkt_inboard
             - build_variables.shldith
         )
 
@@ -2273,11 +2273,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.blnkith
+            radius = radius + build_variables.dr_blkt_inboard
             radial_build_data.append([
                 "Inboard blanket",
-                "blnkith",
-                build_variables.blnkith,
+                "dr_blkt_inboard",
+                build_variables.dr_blkt_inboard,
                 radius,
             ])
 

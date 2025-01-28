@@ -51,7 +51,7 @@ To change the value or add/remove a regular input
 i.add_parameter("blnktthdsd", 0.5)
 i.add_parameter("iavail", 1)
 i.remove_parameter("blnkithsddd")
-i.remove_parameter("blnkith")
+i.remove_parameter("dr_blkt_inboard")
 i.add_parameter("sweep", [3.0, 3.0])
 ```
 

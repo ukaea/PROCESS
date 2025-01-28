@@ -39,7 +39,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     fwoth: Any = None
 
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
 
     blnkoth: Any = None
 
@@ -136,7 +136,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             fwoth=0.018000000000000002,
-            blnkith=0.75500000000000012,
+            dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
@@ -186,7 +186,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             fwoth=0.018000000000000002,
-            blnkith=0.75500000000000012,
+            dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
             shldith=0.30000000000000004,
             shldoth=0.80000000000000004,
@@ -258,7 +258,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(build_variables, "fwoth", nuclearheatingmagnetsparam.fwoth)
 
-    monkeypatch.setattr(build_variables, "blnkith", nuclearheatingmagnetsparam.blnkith)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_inboard", nuclearheatingmagnetsparam.dr_blkt_inboard
+    )
 
     monkeypatch.setattr(build_variables, "blnkoth", nuclearheatingmagnetsparam.blnkoth)
 
@@ -1374,7 +1376,7 @@ class ComponentMassesParam(NamedTuple):
     rmajor: Any = None
     idivrt: Any = None
     a_plasma_surface: Any = None
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
     blbuith: Any = None
     blbmith: Any = None
     blbpith: Any = None
@@ -1466,7 +1468,7 @@ class ComponentMassesParam(NamedTuple):
             rmajor=8,
             idivrt=1,
             a_plasma_surface=1173.8427771245592,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             blbuith=0.36499999999999999,
             blbmith=0.17000000000000001,
             blbpith=0.29999999999999999,
@@ -1569,7 +1571,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
     )
-    monkeypatch.setattr(build_variables, "blnkith", componentmassesparam.blnkith)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_inboard", componentmassesparam.dr_blkt_inboard
+    )
     monkeypatch.setattr(build_variables, "blbuith", componentmassesparam.blbuith)
     monkeypatch.setattr(build_variables, "blbmith", componentmassesparam.blbmith)
     monkeypatch.setattr(build_variables, "blbpith", componentmassesparam.blbpith)

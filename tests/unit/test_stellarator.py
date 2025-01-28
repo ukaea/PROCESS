@@ -208,7 +208,7 @@ class StbildParam(NamedTuple):
 
     blbuoth: Any = None
 
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
 
     blnkoth: Any = None
 
@@ -343,7 +343,7 @@ class StbildParam(NamedTuple):
             blbpoth=0.34999999999999998,
             blbuith=0.36499999999999999,
             blbuoth=0.46500000000000002,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             blnkoth=0.80000000000000004,
             blnktth=0,
             dr_bore=1.4199999999999999,
@@ -413,7 +413,7 @@ class StbildParam(NamedTuple):
             blbpoth=0.34999999999999998,
             blbuith=0.36499999999999999,
             blbuoth=0.46500000000000002,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             blnkoth=0.80000000000000004,
             blnktth=0.75,
             dr_bore=17.79214950143977,
@@ -503,7 +503,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "blbuoth", stbildparam.blbuoth)
 
-    monkeypatch.setattr(build_variables, "blnkith", stbildparam.blnkith)
+    monkeypatch.setattr(build_variables, "dr_blkt_inboard", stbildparam.dr_blkt_inboard)
 
     monkeypatch.setattr(build_variables, "blnkoth", stbildparam.blnkoth)
 
@@ -2799,7 +2799,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
 
 class SctfcoilNuclearHeatingIter90Param(NamedTuple):
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
     blnkoth: Any = None
     fwith: Any = None
     fwoth: Any = None
@@ -2830,7 +2830,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     "sctfcoilnuclearheatingiter90param",
     (
         SctfcoilNuclearHeatingIter90Param(
-            blnkith=0.83499999999999996,
+            dr_blkt_inboard=0.83499999999999996,
             blnkoth=1.085,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
@@ -2873,7 +2873,9 @@ def test_sctfcoil_nuclear_heating_iter90(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        build_variables, "blnkith", sctfcoilnuclearheatingiter90param.blnkith
+        build_variables,
+        "dr_blkt_inboard",
+        sctfcoilnuclearheatingiter90param.dr_blkt_inboard,
     )
     monkeypatch.setattr(
         build_variables, "blnkoth", sctfcoilnuclearheatingiter90param.blnkoth

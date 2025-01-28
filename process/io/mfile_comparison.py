@@ -55,7 +55,7 @@ DEFAULT_COMPARE_PARAMS = [
     "n_tf",
     "shldith",
     "shldoth",
-    "blnkith",
+    "dr_blkt_inboard",
     "blnkoth",
     "fusion_power",
     "plasma_current_MA",
@@ -159,7 +159,7 @@ BASELINE_LIST = [
     "d_vv_bot",
     "shldith",
     "vvblgap",
-    "blnkith",
+    "dr_blkt_inboard",
     "fwith",
     "scrapli",
     "scraplo",
@@ -194,7 +194,7 @@ BASELINE_LIST = [
 ]
 
 BLANKET_COMPARE_PARAMS = [
-    "blnkith",
+    "dr_blkt_inboard",
     "blnkoth",
     "fusion_power",
     "pnucblkt",
@@ -249,7 +249,7 @@ GENERIC_LIST = [
     "dr_vv_inboard",
     "shldith",
     "vvblgap",
-    "blnkith",
+    "dr_blkt_inboard",
     "fwith",
     "scrapli",
     "scraplo",

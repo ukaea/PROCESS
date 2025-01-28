@@ -1159,7 +1159,7 @@ def check_process():
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
     if fortran.fwbs_variables.iblnkith == 0:
-        fortran.build_variables.blnkith = 0.0
+        fortran.build_variables.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model

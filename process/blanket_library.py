@@ -155,7 +155,7 @@ class BlanketLibrary:
             r1 = r1 + build_variables.shldith
         # ... blanket (m)
         elif icomponent == 0:
-            r1 = r1 + build_variables.shldith + build_variables.blnkith
+            r1 = r1 + build_variables.shldith + build_variables.dr_blkt_inboard
 
         # Horizontal distance between inside edges (m)
         # i.e. outer radius of inboard part to inner radius of outboard part
@@ -169,7 +169,7 @@ class BlanketLibrary:
         )
         # Sheild
         if icomponent == 1:
-            r2 = build_variables.blnkith + r2 + build_variables.blnkoth
+            r2 = build_variables.dr_blkt_inboard + r2 + build_variables.blnkoth
         # Vaccum Vessel
         if icomponent == 2:
             r2 = build_variables.rsldo - r1
@@ -198,7 +198,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 blanket_library.hblnkt,
-                build_variables.blnkith,
+                build_variables.dr_blkt_inboard,
                 build_variables.blnkoth,
                 build_variables.blnktth,
             )
@@ -250,7 +250,7 @@ class BlanketLibrary:
             r2 = r2 - build_variables.shldith
         # ... blanket (m)
         if icomponent == 0:
-            r2 = r2 - build_variables.shldith - build_variables.blnkith
+            r2 = r2 - build_variables.shldith - build_variables.dr_blkt_inboard
 
         # Calculate distance between r1 and inner edge of outboard ...
         # ... section (m)
@@ -287,7 +287,7 @@ class BlanketLibrary:
                 r2,
                 r3,
                 blanket_library.hblnkt,
-                build_variables.blnkith,
+                build_variables.dr_blkt_inboard,
                 build_variables.blnkoth,
                 build_variables.blnktth,
             )
@@ -631,7 +631,7 @@ class BlanketLibrary:
             blanket_library.bldepti = build_variables.blbuith
             blanket_library.bldepto = build_variables.blbuoth
         else:
-            blanket_library.bldepti = 0.8e0 * build_variables.blnkith
+            blanket_library.bldepti = 0.8e0 * build_variables.dr_blkt_inboard
             blanket_library.bldepto = 0.8e0 * build_variables.blnkoth
 
         # Using the total perimeter of the machine, segment the outboard
@@ -1323,7 +1323,7 @@ class BlanketLibrary:
                 / (
                     physics_variables.rmajor
                     - (physics_variables.rmajor / physics_variables.aspect)
-                    - (build_variables.blnkith / 2)
+                    - (build_variables.dr_blkt_inboard / 2)
                 )
             )
         # We do not use this if there is no IB blanket, but will use edge as fill value
