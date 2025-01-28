@@ -86,11 +86,11 @@ def run_monte_carlo(args):
     config = UncertaintiesConfig(args.configfile)
     config.setup()
 
-    NEQNS, itervars = get_neqns_itervars()
+    neqns, itervars = get_neqns_itervars()
 
     config.factor = 1.0
 
-    LBS, UBS = get_variable_range(itervars, config.factor)
+    lbs, ubs = get_variable_range(itervars, config.factor)
 
     config.checks_before_run()
     config.set_sample_values()
@@ -147,7 +147,7 @@ def run_monte_carlo(args):
                 print("PROCESS has stopped without finishing!")
 
             if config.vary_iteration_variables is True:
-                vary_iteration_variables(itervars, LBS, UBS)
+                vary_iteration_variables(itervars, lbs, ubs)
 
         config.write_error_summary(j)
 
@@ -157,10 +157,10 @@ def run_monte_carlo(args):
     return mfile_data_set, index_data_set, column_data_set
 
 
-def write_Morris_Method_Output(X, S):
+def write_morris_method_output(x, s):
     """Writes Morris Method output to .txt file
-    :param args: X: morris method input bounds
-    :param args: S: morris method output
+    :param args: x: morris method input bounds
+    :param args: s: morris method output
     :type args: dict
     :return: None
     """
@@ -169,16 +169,16 @@ def write_Morris_Method_Output(X, S):
         # create sensistivity indices header
         f.write("Parameter mu mu_star sigma mu_star_conf\n")
         # print the sensistivity indices
-        for i in range(X["num_vars"]):
+        for i in range(x["num_vars"]):
             f.write(
-                f"{X['names'][i]} {S['mu'][i]:f} {S['mu_star'][i]:f} {S['sigma'][i]:f} {S['mu_star_conf'][i]:f}\n"
+                f"{x['names'][i]} {s['mu'][i]:f} {s['mu_star'][i]:f} {s['sigma'][i]:f} {s['mu_star_conf'][i]:f}\n"
             )
 
 
-def write_Sobol_Output(X, S):
+def write_sobol_output(x, s):
     """Writes Sobol Method output to .txt file
-    :param args: X: sobol method input bounds
-    :param args: S: sobol method output
+    :param args: x: sobol method input bounds
+    :param args: s: sobol method output
     :type args: dict
     :return: None
     """
@@ -187,9 +187,9 @@ def write_Sobol_Output(X, S):
         # create first order header
         f.write("Parameter S1 S1_conf ST ST_conf\n")
         # print first order Sobol indices
-        for i in range(X["num_vars"]):
+        for i in range(x["num_vars"]):
             f.write(
-                f"{X['names'][i]} {S['S1'][i]:f} {S['S1_conf'][i]:f} {S['ST'][i]:f} {S['ST_conf'][i]:f}\n"
+                f"{x['names'][i]} {s['S1'][i]:f} {s['S1_conf'][i]:f} {s['ST'][i]:f} {s['ST_conf'][i]:f}\n"
             )
 
 
@@ -272,13 +272,13 @@ def run_morris_method(args):
 
         if process_status == 1.0:
             # read the figure of merit from the MFILE
-            FoM = m_file.data[config.figure_of_merit].get_scan(-1)
-            sols = np.append(sols, FoM)
+            fom = m_file.data[config.figure_of_merit].get_scan(-1)
+            sols = np.append(sols, fom)
         else:
-            # if run doesn't converge set FoM to previous value
+            # if run doesn't converge set fom to previous value
             fail = np.append(fail, run_id)
             if run_id == 0:
-                # if first run doesn't converge set FoM to mean
+                # if first run doesn't converge set fom to mean
                 sols = np.append(sols, config.output_mean)
             else:
                 sols = np.append(sols, sols[np.size(sols) - 1])
@@ -288,7 +288,7 @@ def run_morris_method(args):
     # np.savetxt("error_log.txt", fail)
 
     # write output file
-    write_Morris_Method_Output(config.morris_uncertainties, params_sol)
+    write_morris_method_output(config.morris_uncertainties, params_sol)
 
     # create list of variables used in MFILE
     column_data_set = column_data_list(config.wdir)
@@ -356,7 +356,7 @@ def run_sobol_method(args):
             capcost = m_file.data[config.figure_of_merit].get_scan(-1)
             sols = np.append(sols, capcost)
         else:
-            # if run doesn't converge use mean FoM value
+            # if run doesn't converge use mean fom value
             fail = np.append(fail, run_id)
             sols = np.append(sols, config.output_mean)
 
@@ -365,7 +365,7 @@ def run_sobol_method(args):
     )
 
     # write output file
-    write_Sobol_Output(config.sobol_uncertainties, params_sol)
+    write_sobol_output(config.sobol_uncertainties, params_sol)
 
     # create list of variables used in MFILE
     column_data_set = column_data_list(config.wdir)
