@@ -586,7 +586,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3921E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7479E-01    
  # Vertical Build #
@@ -1749,7 +1749,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4002E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.5817E-01    
  # Vertical Build #
@@ -2912,7 +2912,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4068E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4468E-01    
  # Vertical Build #
@@ -4075,7 +4075,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4062E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4602E-01    
  # Vertical Build #
@@ -5238,7 +5238,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4003E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.5817E-01    
  # Vertical Build #
@@ -6401,7 +6401,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3918E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7538E-01    
  # Vertical Build #
@@ -7564,7 +7564,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3910E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7704E-01    
  # Vertical Build #
@@ -8727,7 +8727,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3983E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6229E-01    
  # Vertical Build #
@@ -9890,7 +9890,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4051E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4832E-01    
  # Vertical Build #
@@ -11053,7 +11053,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4047E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4911E-01    
  # Vertical Build #
@@ -12216,7 +12216,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3978E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6318E-01    
  # Vertical Build #
@@ -13379,7 +13379,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3908E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7762E-01    
  # Vertical Build #
@@ -14542,7 +14542,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3903E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7862E-01    
  # Vertical Build #
@@ -15705,7 +15705,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3975E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6375E-01    
  # Vertical Build #
@@ -16868,7 +16868,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4048E+00    
- Thermal_shield,_outboard_(m)____________________________________________ (thshield_ob)_________________      5.0000E-02    
+ Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4888E-01    
  # Vertical Build #
@@ -17766,7 +17766,7 @@ dr_tf_wp = 0.5
 
 * Thermal shield radial thickness [m]
 dr_shld_thermal_inboard = 0.050
-thshield_ob = 0.050
+dr_shld_thermal_outboard = 0.050
 thshield_vb = 0.050
 
 * Gap between thermal shield and vacuum vessel [m]

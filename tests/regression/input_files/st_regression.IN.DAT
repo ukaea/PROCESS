@@ -2130,7 +2130,7 @@ shldoth = 0.3
 * DESCRIPTION:   Outboard Shield Thickness (m)
 * JUSTIFICATION: 
 
-thshield_ob = 0.07    
+dr_shld_thermal_outboard = 0.07    
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
