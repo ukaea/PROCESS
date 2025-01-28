@@ -356,6 +356,109 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_current_profiles_over_time(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Plots the current profiles over time for PF circuits, CS coil, and plasma.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+
+    # t_between_pulse = mfile_data.data["t_between_pulse"].get_scan(scan)
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_precharge,
+        t_current_ramp_up,
+        t_fusion_ramp,
+        t_burn,
+        t_ramp_down,
+    ])
+
+    # Find the number of PF circuits, ncirt includes the CS and plasma circuits
+    ncirt = mfile_data.data["ncirt"].get_scan(scan)
+
+    # Extract PF circuit times
+    pf_circuits = {}
+    for i in range(int(ncirt - 2)):
+        pf_circuits[f"PF Circuit {i}"] = [
+            mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(int(ncirt - 2))
+        ]
+        # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+        axis.plot(
+            t_steps,
+            pf_circuits[f"PF Circuit {i}"],
+            label=f"PF Coil {i + 1}",
+            linestyle="--",
+        )
+
+    # Since CS may not always be present try to retireve values
+    try:
+        cs_circuit = [mfile_data.data[f"cs_t{i}"].get_scan(scan) for i in range(6)]
+        axis.plot(t_steps, cs_circuit, label="CS Coil", linestyle="--")
+    except KeyError:
+        print("CS circuit data not found in MFILE.")
+
+    # Plasma current values
+    plasmat1 = mfile_data.data["plasmat1"].get_scan(scan)
+    plasmat2 = mfile_data.data["plasmat2"].get_scan(scan)
+    plasmat3 = mfile_data.data["plasmat3"].get_scan(scan)
+    plasmat4 = mfile_data.data["plasmat4"].get_scan(scan)
+    plasmat5 = mfile_data.data["plasmat5"].get_scan(scan)
+
+    # x-coirdinates for the plasma current
+    x_plasma = t_steps[1:]
+    # x-coirdinates for the plasma current
+    y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
+
+    # Plot the plasma current
+    axis.plot(x_plasma, y_plasma, "black", linewidth=2, label="Plasma")
+
+    # Move the x-axis to 0 on the y-axis
+    axis.spines["bottom"].set_position("zero")
+
+    # Annotate key points
+    # Create a secondary x-axis for annotations
+    secax = axis.secondary_xaxis("bottom")
+    secax.set_xticks(t_steps)
+    secax.set_xticklabels([
+        "Precharge",
+        r"$I_{\text{P}}$ Ramp-Up",
+        "Fusion Ramp",
+        "Burn",
+        "Ramp Down",
+        "Between Pulse",
+    ])
+    secax.tick_params(axis="x", which="major", pad=15)
+    secax.set_xlabel("Pulse Phases", fontsize=12)
+
+    # Add axis labels
+    axis.set_xlabel("Time", fontsize=12)
+    axis.xaxis.set_label_coords(0.97, 0.5)
+    axis.set_ylabel("Current [A]", fontsize=12)
+
+    # Add a title
+    axis.set_title("Current Profiles Over Time", fontsize=14)
+
+    # Add a legend
+    axis.legend()
+
+    axis.set_yscale("symlog")
+
+    # Add a grid for better readability
+    axis.grid(True, linestyle="--", alpha=0.6)
+
+
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
@@ -3225,6 +3328,7 @@ def main_plot(
     fig4,
     fig5,
     fig6,
+    fig7,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3346,6 +3450,9 @@ def main_plot(
 
     plot_11 = fig6.add_subplot(221)
     plot_density_limit_comparison(plot_11, m_file_data, scan)
+
+    plot_12 = fig7.add_subplot(111)
+    plot_current_profiles_over_time(plot_12, m_file_data, scan)
 
 
 def main(args=None):
@@ -3615,6 +3722,7 @@ def main(args=None):
     page4 = plt.figure(figsize=(12, 9), dpi=80)
     page5 = plt.figure(figsize=(12, 9), dpi=80)
     page6 = plt.figure(figsize=(12, 9), dpi=80)
+    page7 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3624,6 +3732,7 @@ def main(args=None):
         page4,
         page5,
         page6,
+        page7,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3638,6 +3747,7 @@ def main(args=None):
         pdf.savefig(page4)
         pdf.savefig(page5)
         pdf.savefig(page6)
+        pdf.savefig(page7)
 
     # show fig if option used
     if args.show:
@@ -3649,6 +3759,7 @@ def main(args=None):
     plt.close(page4)
     plt.close(page5)
     plt.close(page6)
+    plt.close(page7)
 
 
 if __name__ == "__main__":
