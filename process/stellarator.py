@@ -803,8 +803,8 @@ class Stellarator:
         #  F.C. Moon, J. Appl. Phys. 53(12) (1982) 9112
         #
         #  Values based on regression analysis by Greifswald, March 2014
-        M_struc = 1.3483e0 * (1000.0e0 * tfcoil_variables.estotftgj) ** 0.7821e0
-        msupstr = 1000.0e0 * M_struc  # kg
+        m_struc = 1.3483e0 * (1000.0e0 * tfcoil_variables.estotftgj) ** 0.7821e0
+        msupstr = 1000.0e0 * m_struc  # kg
 
         ################################################################
         # Intercoil support structure calculation:
@@ -882,25 +882,25 @@ class Stellarator:
         Code PROCESS, F. Warmer, 21/06/2013
         """
         Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
-        R = physics_variables.rmajor
-        P_div = physics_variables.pdivt
+        r = physics_variables.rmajor
+        p_div = physics_variables.pdivt
         alpha = divertor_variables.anginc
         xi_p = divertor_variables.xpertin
         T_scrape = divertor_variables.tdiv
 
         #  Scrape-off temperature in Joules
 
-        E = T_scrape * constants.electron_charge
+        e = T_scrape * constants.electron_charge
 
         #  Sound speed of particles (m/s)
 
-        c_s = np.sqrt(E / (physics_variables.afuel * constants.umass))
+        c_s = np.sqrt(e / (physics_variables.afuel * constants.umass))
 
         #  Island size (m)
 
         w_r = 4.0e0 * np.sqrt(
             stellarator_variables.bmn
-            * R
+            * r
             / (stellarator_variables.shear * stellarator_variables.n_res)
         )
 
@@ -911,7 +911,7 @@ class Stellarator:
         #  Length 'along' plasma (m)
 
         l_p = (
-            2 * np.pi * R * (stellarator_variables.m_res) / stellarator_variables.n_res
+            2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
         )
 
         #  Connection length from X-point to divertor plate (m)
@@ -949,7 +949,7 @@ class Stellarator:
 
         #  Divertor heat load (MW/m2)
 
-        q_div = stellarator_variables.f_asym * (P_div / a_eff)
+        q_div = stellarator_variables.f_asym * (p_div / a_eff)
 
         #  Transfer to global variables
 
@@ -3106,7 +3106,7 @@ class Stellarator:
 
     def j_max_protect_am2(self, tau_quench, t_detect, fcu, fcond, temp, acs, aturn):
         temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
-        q_cu_array_sA2m4 = [
+        q_cu_array_sa2m4 = [
             1.08514e17,
             1.12043e17,
             1.12406e17,
@@ -3121,7 +3121,7 @@ class Stellarator:
             5.06414e16,
             4.76531e16,
         ]
-        q_he_array_sA2m4 = [
+        q_he_array_sa2m4 = [
             3.44562e16,
             9.92398e15,
             4.90462e15,
@@ -3137,8 +3137,8 @@ class Stellarator:
             1.32773e14,
         ]
 
-        q_he = maths_library.find_y_nonuniform_x(temp, temp_k, q_he_array_sA2m4, 13)
-        q_cu = maths_library.find_y_nonuniform_x(temp, temp_k, q_cu_array_sA2m4, 13)
+        q_he = maths_library.find_y_nonuniform_x(temp, temp_k, q_he_array_sa2m4, 13)
+        q_cu = maths_library.find_y_nonuniform_x(temp, temp_k, q_cu_array_sa2m4, 13)
 
         # This leaves out the contribution from the superconductor fraction for now
         return (acs / aturn) * np.sqrt(
@@ -5128,7 +5128,7 @@ class Neoclassics:
         neoclassics_module.d112 = self.calc_integrated_radial_transport_coeffs(index=2)
         neoclassics_module.d113 = self.calc_integrated_radial_transport_coeffs(index=3)
 
-        neoclassics_module.gamma_flux = self.neoclassics_calc_Gamma_flux(
+        neoclassics_module.gamma_flux = self.neoclassics_calc_gamma_flux(
             neoclassics_module.densities,
             neoclassics_module.temperatures,
             neoclassics_module.dr_densities,
@@ -5253,9 +5253,9 @@ class Neoclassics:
         """Calculates the energy on the given grid
         which is given by the gauss laguerre roots.
         """
-        K = np.repeat((neoclassics_module.roots / KEV)[:, np.newaxis], 4, axis=1)
+        k = np.repeat((neoclassics_module.roots / KEV)[:, np.newaxis], 4, axis=1)
 
-        return (K * neoclassics_module.temperatures).T
+        return (k * neoclassics_module.temperatures).T
 
     def neoclassics_calc_nu(self):
         """Calculates the collision frequency"""
@@ -5536,7 +5536,7 @@ class Neoclassics:
             axis=1,
         )
 
-    def neoclassics_calc_Gamma_flux(
+    def neoclassics_calc_gamma_flux(
         self, densities, temperatures, dr_densities, dr_temperatures
     ):
         """Calculates the Energy flux by neoclassical particle transport"""

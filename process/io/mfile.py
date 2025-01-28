@@ -248,14 +248,14 @@ class MFile:
         """
         if "#" in line[:2]:
             combined = " ".join(line[1:-1])
-            EXCLUSIONS = [
+            exclusions = [
                 "Feasible",
                 "feasible",
                 "Errors",
                 "Waveforms",
                 "Power Reactor Optimisation Code",
             ]
-            if any(exclusion not in combined for exclusion in EXCLUSIONS):
+            if any(exclusion not in combined for exclusion in exclusions):
                 self.current_module = combined
                 self.mfile_modules[self.current_module] = []
 

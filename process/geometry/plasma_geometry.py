@@ -101,10 +101,12 @@ def plasma_geometry(
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter
-        R = rmajor + rminor * np.cos(x + triang * np.sin(x) - square * np.sin(2 * x))
-        Z = kappa * rminor * np.sin(x + square * np.sin(2 * x))
-
-        return PlasmaGeometry(rs=R, zs=Z, kappa=kappa)
+        return PlasmaGeometry(
+            rs=rmajor
+            + rminor * np.cos(x + triang * np.sin(x) - square * np.sin(2 * x)),
+            zs=kappa * rminor * np.sin(x + square * np.sin(2 * x)),
+            kappa=kappa,
+        )
 
     # Explicit return statement at the end of the function
     return None

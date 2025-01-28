@@ -27,36 +27,36 @@ def feasible_point(filename, position):
     """
     mfile_data = mf.MFile(filename)
     finished = False
-    scanPoint = 0
-    numScans = 1
+    scan_point = 0
+    num_scans = 1
 
     for value in mfile_data.data:
         if "isweep" in value:
-            numScans = int(mfile_data.data["isweep"].get_scan(-1))
+            num_scans = int(mfile_data.data["isweep"].get_scan(-1))
             break
 
     # Assign start point
-    checkPoint = 1 if position == "first" else numScans
+    check_point = 1 if position == "first" else num_scans
 
     while finished is False:
         for value in mfile_data.data:
             # Look for feasible scan points (with ifail = 1)
             if "ifail" in value and "vmcon_error_flag_(ifail)" not in value:
-                if mfile_data.data[value].get_scan(checkPoint) == 1:
+                if mfile_data.data[value].get_scan(check_point) == 1:
                     finished = True
-                    scanPoint = checkPoint
+                    scan_point = check_point
                 else:
                     if position == "last":
-                        if checkPoint == 1:
+                        if check_point == 1:
                             finished = True
                         else:
-                            checkPoint = checkPoint - 1
+                            check_point = check_point - 1
                     elif position == "first":
-                        if checkPoint == numScans:
+                        if check_point == num_scans:
                             finished = True
                         else:
-                            checkPoint = checkPoint + 1
-    return scanPoint
+                            check_point = check_point + 1
+    return scan_point
 
 
 def get_iteration_variables(filename, scan):
@@ -108,9 +108,7 @@ def replace_iteration_variables(iteration_vars, in_data):
 
 def main(args=None):
     parser = argparse.ArgumentParser(
-        description="Creates a new IN.DAT using "
-        "iteration variable values "
-        "from MFILE.DAT."
+        description="Creates a new IN.DAT using iteration variable values from MFILE.DAT."
     )
 
     parser.add_argument(

@@ -121,7 +121,7 @@ def plot_full_sankey(
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
-        PLASMA = [
+        plasma = [
             fusion_power,
             pinjmw,
             p_plasma_ohmic_mw,
@@ -130,7 +130,7 @@ def plot_full_sankey(
             -neutron_power_total,
         ]
         sankey.add(
-            flows=PLASMA,
+            flows=plasma,
             # [left(in), down(in), down(in), up(out), up(out), right(out)]
             orientations=[0, -1, -1, 1, 1, 0],
             trunklength=0.5,
@@ -140,8 +140,8 @@ def plot_full_sankey(
         )
 
         # Check to see if the fusion components balance
-        if _ == 0 and sqrt(sum(PLASMA) ** 2) > 0.1:
-            print("FUSION power balance =", sum(PLASMA), "\n")
+        if _ == 0 and sqrt(sum(plasma) ** 2) > 0.1:
+            print("FUSION power balance =", sum(plasma), "\n")
             exit()
 
         if _ == 1:
@@ -154,7 +154,7 @@ def plot_full_sankey(
         # ------------------------------------- NEUTRONICS - 1 ------------------------------------
 
         # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
-        NEUTRONS = [
+        neutrons = [
             neutron_power_total,
             -pnucdiv,
             -pnucfw,
@@ -163,7 +163,7 @@ def plot_full_sankey(
             -pnucemblkt,
         ]
         sankey.add(
-            flows=NEUTRONS,
+            flows=neutrons,
             # left(in), up(out), up(out), up(out), up(out), right(out)
             orientations=[0, 1, 1, 1, 1, 0],
             trunklength=0.5,
@@ -175,8 +175,8 @@ def plot_full_sankey(
         )
 
         # Checking to see if the neutronics components balance
-        if _ == 0 and sqrt(sum(NEUTRONS) ** 2) > 0.1:
-            print("NEUTRONS power balance =", sum(NEUTRONS), "\n")
+        if _ == 0 and sqrt(sum(neutrons) ** 2) > 0.1:
+            print("NEUTRONS power balance =", sum(neutrons), "\n")
             exit()
 
         # Check to see if connections balance
@@ -191,9 +191,9 @@ def plot_full_sankey(
         # --------------------------------- CHARGED PARTICLES - 2 ---------------------------------
 
         # Charge P.+Ohmic, Alpha+Injected, -Divertor, -1st Wall, -Photons
-        CHARGEDP = [pcharohmmw, palpinjmw, -pdivt, -palpfwmw, -pradmw]
+        chargedp = [pcharohmmw, palpinjmw, -pdivt, -palpfwmw, -pradmw]
         sankey.add(
-            flows=CHARGEDP,
+            flows=chargedp,
             # down(in), down(in), up(out), up(out), right(out)
             orientations=[-1, -1, 1, -1, 0],
             trunklength=0.5,
@@ -204,8 +204,8 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0 and sqrt(sum(CHARGEDP) ** 2) > 0.1:
-            print("CHARGEDP power balance =", sum(CHARGEDP))
+        if _ == 0 and sqrt(sum(chargedp) ** 2) > 0.1:
+            print("CHARGEDP power balance =", sum(chargedp))
             exit()
 
         # Check to see if connections balance
@@ -224,9 +224,9 @@ def plot_full_sankey(
         # ------------------------------------- RADIATION - 3 -------------------------------------
 
         # Photons, -1st Wall, -Divertor, -H&CD
-        RADIATION = [pradmw, -pradfw, -praddiv, -pradhcd]
+        radiation = [pradmw, -pradfw, -praddiv, -pradhcd]
         sankey.add(
-            flows=RADIATION,
+            flows=radiation,
             # right(in), up(out), up(out), up(out)
             orientations=[
                 0,
@@ -242,8 +242,8 @@ def plot_full_sankey(
             labels=[None, None, None, None],
         )
 
-        if _ == 0 and sqrt(sum(RADIATION) ** 2) > 0.1:
-            print("RADIATION power balance =", sum(RADIATION))
+        if _ == 0 and sqrt(sum(radiation) ** 2) > 0.1:
+            print("RADIATION power balance =", sum(radiation))
             exit()
 
         if _ == 0:
@@ -257,9 +257,9 @@ def plot_full_sankey(
         # -------------------------------------- DIVERTOR - 4 -------------------------------------
 
         # Charged P., Neutrons, Photons, Coolant Pumping, Total Divertor
-        DIVERTOR = [pdivt, pnucdiv, praddiv, htpmw_div, -pthermdiv]
+        divertor = [pdivt, pnucdiv, praddiv, htpmw_div, -pthermdiv]
         sankey.add(
-            flows=DIVERTOR,
+            flows=divertor,
             # down(in), up(in), down(in), up(in), right(out)
             orientations=[-1, -1, -1, -1, 0],
             trunklength=0.5,
@@ -270,8 +270,8 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0 and sqrt(sum(DIVERTOR) ** 2) > 0.1:
-            print("DIVERTOR power balance =", sum(DIVERTOR))
+        if _ == 0 and sqrt(sum(divertor) ** 2) > 0.1:
+            print("DIVERTOR power balance =", sum(divertor))
             exit()
 
         if _ == 0:
@@ -289,9 +289,9 @@ def plot_full_sankey(
         # ---------------------------------------- 1ST WALL - 5 ---------------------------------------
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
-        FIRST_WALL = [palpfwmw, pnucfw, pradfw, htpmwfw, -pthermfw]
+        first_wall = [palpfwmw, pnucfw, pradfw, htpmwfw, -pthermfw]
         sankey.add(
-            flows=FIRST_WALL,
+            flows=first_wall,
             orientations=[0, -1, 1, -1, 0],
             trunklength=0.5,
             pathlengths=[0.25, 0.25, 0.25, 0.25, 0.25],
@@ -301,8 +301,8 @@ def plot_full_sankey(
             labels=[None, None, None, None, None],
         )
 
-        if _ == 0 and sqrt(sum(FIRST_WALL) ** 2) > 0.1:
-            print("FIRST_WALL power balance =", sum(FIRST_WALL))
+        if _ == 0 and sqrt(sum(first_wall) ** 2) > 0.1:
+            print("FIRST_WALL power balance =", sum(first_wall))
             exit()
 
         """# -------------------------------------- BLANKET - 6 --------------------------------------
@@ -601,9 +601,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion power, Injected power + ohmic power, - total plasma power
-        PLASMA = [fusion_power, pinjmw + p_plasma_ohmic_mw, -totalplasma]
+        plasma = [fusion_power, pinjmw + p_plasma_ohmic_mw, -totalplasma]
         sankey.add(
-            flows=PLASMA,
+            flows=plasma,
             orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
             pathlengths=[
                 0.5,
@@ -616,15 +616,15 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------- ENERGY DEPOSITION - 1 ---------------------------------
 
         # Plasma power, - divertor deposited power, - blanket deposited power
-        DEPOSITION = [totalplasma, -totalblktetc - totaldivetc - totalcpetc]
+        deposition = [totalplasma, -totalblktetc - totaldivetc - totalcpetc]
         # Check if difference >2 between plasma and divertor + blanket
-        if _ == 1 and sqrt(sum(DEPOSITION) ** 2) > 2:
+        if _ == 1 and sqrt(sum(deposition) ** 2) > 2:
             print(
                 "\ncomponents power balance difference =",
                 totalplasma - totaldivetc - totalblktetc - totalcpetc,
             )
         sankey.add(
-            flows=DEPOSITION,
+            flows=deposition,
             orientations=[0, 0],  # [right(in), up(in), right(out)]
             prior=0,  # PLASMA
             connect=(2, 0),  # Plasma --> None
@@ -635,20 +635,20 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # -------------------------------------- BLANKET - 2 --------------------------------------
 
         # Blanket deposited power, blanket energy multiplication, - primary heat
-        BLANKETSETC = [
+        blanketsetc = [
             totalblktetc + totaldivetc + totalcpetc,
             emultmw,
             -pthermmw_p - totaldivetc - totalcpetc - pnucshld,
         ]
         # Check if difference >2 between primary heat and blanket + blanket multiplication
-        if _ == 1 and sqrt(sum(BLANKETSETC) ** 2) > 2:
+        if _ == 1 and sqrt(sum(blanketsetc) ** 2) > 2:
             print(
                 "blankets etc. power balance",
                 totalblktetc + emultmw,
                 -pthermmw_p - pnucshld,
             )
         sankey.add(
-            flows=BLANKETSETC,
+            flows=blanketsetc,
             orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
             prior=1,  # DEPOSITION
             connect=(1, 0),  # Blanket/etc. --> None
@@ -659,13 +659,13 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # ------------------------------------- HEAT LOSS - 3 -------------------------------------
 
         # Primary heat, -Gross electric power, -difference (loss)
-        PRIMARY = [
+        primary = [
             pthermmw_p + totaldivetc + totalcpetc + pnucshld,
             -pgrossmw,
             -pthermmw_p + pgrossmw - totaldivetc - totalcpetc - pnucshld,
         ]
         sankey.add(
-            flows=PRIMARY,
+            flows=primary,
             orientations=[0, -1, 0],  # [right(in), down(out), right(out)]
             prior=2,  # BLANKETSETC
             connect=(2, 0),  # Primary Heat --> None
@@ -678,9 +678,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # If net electric is +ve or -ve changes the flow organisation
         if pnetelmw >= 0:  # net electric is +ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [pgrossmw, -pnetelmw, -precircmw]
+            net = [pgrossmw, -pnetelmw, -precircmw]
             sankey.add(
-                flows=NET,
+                flows=net,
                 orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
                 prior=3,  # PRIMARY
                 connect=(1, 0),  # Gross electric --> None
@@ -689,9 +689,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             )
         elif pnetelmw < 0:  # net electric is -ve
             # Gross electric power, -net electric power, -recirculated power
-            NET = [-pnetelmw, pgrossmw, -precircmw]
+            net = [-pnetelmw, pgrossmw, -precircmw]
             sankey.add(
-                flows=NET,
+                flows=net,
                 orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
                 prior=3,  # PRIMARY
                 connect=(1, 1),  # Gross electric --> None
@@ -702,16 +702,16 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
 
         # Recirculated power, -Core Systems, -Heating System
-        RECIRC = [precircmw, -pcoresystems - htpmw, -pinjwp + ppumpmw]
+        recirc = [precircmw, -pcoresystems - htpmw, -pinjwp + ppumpmw]
         # Check if difference >2 between recirculated power and the output sum
-        if sum(RECIRC) ** 2 > 2:
+        if sum(recirc) ** 2 > 2:
             print(
                 "Recirc. Power Balance",
                 precircmw,
                 -pcoresystems + ppumpmw - pinjwp - htpmw,
             )
         sankey.add(
-            flows=RECIRC,
+            flows=recirc,
             orientations=[0, 1, 0],  # [left(in), down(out), left(out)]
             prior=4,  # NET
             connect=(2, 0),  # Recirc. Power --> None
@@ -722,9 +722,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- LOSSES - 6 --------------------------------------
 
         # HCD: Heating system, -Plasma heating, -losses
-        HCD = [pinjwp - ppumpmw, -pinjmw, -pinjwp + pinjmw + ppumpmw]
+        hcd = [pinjwp - ppumpmw, -pinjmw, -pinjwp + pinjmw + ppumpmw]
         sankey.add(
-            flows=HCD,
+            flows=hcd,
             orientations=[0, -1, 0],  # [left(in), up(out), left(out)]
             prior=5,  # RECIRC
             connect=(2, 0),  # Heating System --> None

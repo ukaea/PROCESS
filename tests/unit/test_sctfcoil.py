@@ -14004,24 +14004,24 @@ def test_vv_stress_on_quench():
             sctf.vv_stress_on_quench(
                 # TF shape
                 H_coil=9.5,
-                Ri_coil=3.55,
-                Ro_coil=15.62,
-                Rm_coil=7.66,
+                ri_coil=3.55,
+                ro_coil=15.62,
+                rm_coil=7.66,
                 ccl_length_coil=51.1,
                 theta1_coil=48,
                 # VV shape
                 H_vv=7.9,
-                Ri_vv=4.45,
-                Ro_vv=13.09,
-                Rm_vv=7.88,
+                ri_vv=4.45,
+                ro_vv=13.09,
+                rm_vv=7.88,
                 theta1_vv=1,
                 # TF properties
                 n_tf=18,
                 n_tf_turn=192,
-                S_rp=0.55,
-                S_cc=0.94,
+                s_rp=0.55,
+                s_cc=0.94,
                 taud=30,
-                I_op=83200,
+                i_op=83200,
                 # VV properties
                 d_vv=0.12,  # for 6.6 restistance -> lambda2 = 2.1
             )

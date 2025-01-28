@@ -165,9 +165,9 @@ class Vmcon(_Solver):
         """
         problem = VmconProblem(self.evaluators, self.meq, self.m - self.meq)
 
-        B = None
+        bb = None
         if self.b is not None:
-            B = np.identity(numerics.nvar) * self.b
+            bb = np.identity(numerics.nvar) * self.b
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
             numerics.nviter = i + 1
@@ -215,7 +215,7 @@ class Vmcon(_Solver):
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
-                initial_B=B,
+                initial_B=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied,
             )

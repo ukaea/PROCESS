@@ -67,16 +67,16 @@ def main(args=None):
 
     # read in data
     names = np.loadtxt(input, dtype=str, usecols=[0], skiprows=1)
-    S1 = np.loadtxt(input, usecols=[1], skiprows=1)
-    S1_conf = np.loadtxt(input, usecols=[2], skiprows=1)
-    ST = np.loadtxt(input, usecols=[3], skiprows=1)
-    ST_conf = np.loadtxt(input, usecols=[4], skiprows=1)
+    s1 = np.loadtxt(input, usecols=[1], skiprows=1)
+    s1_conf = np.loadtxt(input, usecols=[2], skiprows=1)
+    st = np.loadtxt(input, usecols=[3], skiprows=1)
+    st_conf = np.loadtxt(input, usecols=[4], skiprows=1)
 
     x = np.arange(len(names))
     width = 0.35
 
-    plt.bar(x - width / 2, S1, width, label="$S_1$", yerr=S1_conf)
-    plt.bar(x + width / 2, ST, width, label="$S_T$", yerr=ST_conf)
+    plt.bar(x - width / 2, s1, width, label="$S_1$", yerr=s1_conf)
+    plt.bar(x + width / 2, st, width, label="$S_T$", yerr=st_conf)
     plt.xticks(x, names)
     plt.tick_params(labelsize=16)
     plt.legend(fontsize=16)

@@ -79,24 +79,24 @@ def run_monte_carlo(args):
 
     :param args: None
     :type args: None
-    :return: MFileDataSet, indexDataSet
+    :return: mfile_data_set, index_data_set
     :rtype: list
     """
 
     config = UncertaintiesConfig(args.configfile)
     config.setup()
 
-    NEQNS, itervars = get_neqns_itervars()
+    neqns, itervars = get_neqns_itervars()
 
     config.factor = 1.0
 
-    LBS, UBS = get_variable_range(itervars, config.factor)
+    lbs, ubs = get_variable_range(itervars, config.factor)
 
     config.checks_before_run()
     config.set_sample_values()
     RUN_ID = 0
-    MFileDataSet = []
-    indexDataSet = []
+    mfile_data_set = []
+    index_data_set = []
     outputDataSet = []
 
     for j in range(config.no_samples):
@@ -124,7 +124,7 @@ def run_monte_carlo(args):
                         )
 
                     # add run to index list
-                    indexDataSet.append(f"run{RUN_ID}")
+                    index_data_set.append(f"run{RUN_ID}")
 
                     # collect the process solution
                     mfilepath = Path(config.wdir) / "MFILE.DAT"
@@ -134,7 +134,7 @@ def run_monte_carlo(args):
                     ])
 
                     # Append process data to list of all mfile data
-                    MFileDataSet.append(outputDataSet)
+                    mfile_data_set.append(outputDataSet)
                     outputDataSet = []
 
                     RUN_ID += 1
@@ -147,20 +147,20 @@ def run_monte_carlo(args):
                 print("PROCESS has stopped without finishing!")
 
             if config.vary_iteration_variables is True:
-                vary_iteration_variables(itervars, LBS, UBS)
+                vary_iteration_variables(itervars, lbs, ubs)
 
         config.write_error_summary(j)
 
     # create list of variables used in MFILE
-    columnDataSet = column_data_list(config.wdir)
+    column_data_set = column_data_list(config.wdir)
 
-    return MFileDataSet, indexDataSet, columnDataSet
+    return mfile_data_set, index_data_set, column_data_set
 
 
-def write_Morris_Method_Output(X, S):
+def write_morris_method_output(x, s):
     """Writes Morris Method output to .txt file
-    :param args: X: morris method input bounds
-    :param args: S: morris method output
+    :param args: x: morris method input bounds
+    :param args: s: morris method output
     :type args: dict
     :return: None
     """
@@ -169,16 +169,16 @@ def write_Morris_Method_Output(X, S):
         # create sensistivity indices header
         f.write("Parameter mu mu_star sigma mu_star_conf\n")
         # print the sensistivity indices
-        for i in range(X["num_vars"]):
+        for i in range(x["num_vars"]):
             f.write(
-                f"{X['names'][i]} {S['mu'][i]:f} {S['mu_star'][i]:f} {S['sigma'][i]:f} {S['mu_star_conf'][i]:f}\n"
+                f"{x['names'][i]} {s['mu'][i]:f} {s['mu_star'][i]:f} {s['sigma'][i]:f} {s['mu_star_conf'][i]:f}\n"
             )
 
 
-def write_Sobol_Output(X, S):
+def write_sobol_output(x, s):
     """Writes Sobol Method output to .txt file
-    :param args: X: sobol method input bounds
-    :param args: S: sobol method output
+    :param args: x: sobol method input bounds
+    :param args: s: sobol method output
     :type args: dict
     :return: None
     """
@@ -187,16 +187,16 @@ def write_Sobol_Output(X, S):
         # create first order header
         f.write("Parameter S1 S1_conf ST ST_conf\n")
         # print first order Sobol indices
-        for i in range(X["num_vars"]):
+        for i in range(x["num_vars"]):
             f.write(
-                f"{X['names'][i]} {S['S1'][i]:f} {S['S1_conf'][i]:f} {S['ST'][i]:f} {S['ST_conf'][i]:f}\n"
+                f"{x['names'][i]} {s['S1'][i]:f} {s['S1_conf'][i]:f} {s['ST'][i]:f} {s['ST_conf'][i]:f}\n"
             )
 
 
 def column_data_list(working_dir):
     """Reads the list outputs in MFILE.DAT file
     :param args: args
-    :return: columnDataSet
+    :return: column_data_set
     :rtype: list
     """
     # CONFIG = UncertaintiesConfig(args.configfile)
@@ -214,7 +214,7 @@ def run_morris_method(args):
     """Runs Morris method uncertainty analysis
 
     :param args: None
-    :return: MFileDataSet, indexDataSet
+    :return: mfile_data_set, index_data_set
     :rtype: list
     """
 
@@ -223,8 +223,8 @@ def run_morris_method(args):
 
     sols = np.array([])
     fail = np.array([])
-    MFileDataSet = []
-    indexDataSet = []
+    mfile_data_set = []
+    index_data_set = []
     outputDataSet = []
 
     # Set up the sample needed using latin hypercube scaling
@@ -260,11 +260,11 @@ def run_morris_method(args):
         outputDataSet.extend([m_file.data[item].get_scan(-1) for item in m_file.data])
 
         # Append process data to list of all mfile data
-        MFileDataSet.append(outputDataSet)
+        mfile_data_set.append(outputDataSet)
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append(f"run{run_id}")
+        index_data_set.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -272,13 +272,13 @@ def run_morris_method(args):
 
         if process_status == 1.0:
             # read the figure of merit from the MFILE
-            FoM = m_file.data[config.figure_of_merit].get_scan(-1)
-            sols = np.append(sols, FoM)
+            fom = m_file.data[config.figure_of_merit].get_scan(-1)
+            sols = np.append(sols, fom)
         else:
-            # if run doesn't converge set FoM to previous value
+            # if run doesn't converge set fom to previous value
             fail = np.append(fail, run_id)
             if run_id == 0:
-                # if first run doesn't converge set FoM to mean
+                # if first run doesn't converge set fom to mean
                 sols = np.append(sols, config.output_mean)
             else:
                 sols = np.append(sols, sols[np.size(sols) - 1])
@@ -288,18 +288,18 @@ def run_morris_method(args):
     # np.savetxt("error_log.txt", fail)
 
     # write output file
-    write_Morris_Method_Output(config.morris_uncertainties, params_sol)
+    write_morris_method_output(config.morris_uncertainties, params_sol)
 
     # create list of variables used in MFILE
-    columnDataSet = column_data_list(config.wdir)
+    column_data_set = column_data_list(config.wdir)
 
-    return MFileDataSet, indexDataSet, columnDataSet
+    return mfile_data_set, index_data_set, column_data_set
 
 
 def run_sobol_method(args):
     """Runs Sobol method uncertainty analysis
     :param args: None
-    :return: MFileDataSet, indexDataSet
+    :return: mfile_data_set, index_data_set
     :rtype: list
     """
 
@@ -309,8 +309,8 @@ def run_sobol_method(args):
     # Setup output arrays
     sols = np.array([])
     fail = np.array([])
-    MFileDataSet = []
-    indexDataSet = []
+    mfile_data_set = []
+    index_data_set = []
     outputDataSet = []
 
     # Generate samples
@@ -342,11 +342,11 @@ def run_sobol_method(args):
         outputDataSet.extend([m_file.data[item].get_scan(-1) for item in m_file.data])
 
         # Append process data to list of all mfile data
-        MFileDataSet.append(outputDataSet)
+        mfile_data_set.append(outputDataSet)
         outputDataSet = []
 
         # add run to index list
-        indexDataSet.append(f"run{run_id}")
+        index_data_set.append(f"run{run_id}")
 
         # We need to find a way to catch failed runs
         process_status = m_file.data["ifail"].get_scan(-1)
@@ -356,7 +356,7 @@ def run_sobol_method(args):
             capcost = m_file.data[config.figure_of_merit].get_scan(-1)
             sols = np.append(sols, capcost)
         else:
-            # if run doesn't converge use mean FoM value
+            # if run doesn't converge use mean fom value
             fail = np.append(fail, run_id)
             sols = np.append(sols, config.output_mean)
 
@@ -365,30 +365,32 @@ def run_sobol_method(args):
     )
 
     # write output file
-    write_Sobol_Output(config.sobol_uncertainties, params_sol)
+    write_sobol_output(config.sobol_uncertainties, params_sol)
 
     # create list of variables used in MFILE
-    columnDataSet = column_data_list(config.wdir)
+    column_data_set = column_data_list(config.wdir)
 
-    return MFileDataSet, indexDataSet, columnDataSet
+    return mfile_data_set, index_data_set, column_data_set
 
 
 def main(args=None):
     args = parse_args(args)
 
     if args.method == "monte_carlo":
-        MFileDataSet, indexDataSet, columnDataSet = run_monte_carlo(args)
+        mfile_data_set, index_data_set, column_data_set = run_monte_carlo(args)
     elif args.method == "morris_method":
-        MFileDataSet, indexDataSet, columnDataSet = run_morris_method(args)
+        mfile_data_set, index_data_set, column_data_set = run_morris_method(args)
     elif args.method == "sobol_method":
-        MFileDataSet, indexDataSet, columnDataSet = run_sobol_method(args)
+        mfile_data_set, index_data_set, column_data_set = run_sobol_method(args)
     else:
         print("Uncertainty method not recognised!")
 
     # create list of variables used in MFILE
-    # columnDataSet = column_data_list(args)
+    # column_data_set = column_data_list(args)
 
-    df = pd.DataFrame(data=MFileDataSet, columns=columnDataSet, index=indexDataSet)
+    df = pd.DataFrame(
+        data=mfile_data_set, columns=column_data_set, index=index_data_set
+    )
     df.to_hdf("uncertainties_data.h5", key="df", mode="w")
     print("UQ finished!")
 
