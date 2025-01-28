@@ -924,14 +924,14 @@ class PFCoil:
                             bv.dr_bore
                             + bv.dr_cs
                             + bv.dr_cs_precomp
-                            + bv.gapoh
+                            + bv.dr_cs_tf_gap
                             + bv.tfcth
                             + pfv.rpf[i]
                         ) and pf.rcls[ii, ij] >= (
                             bv.dr_bore
                             + bv.dr_cs
                             + bv.dr_cs_precomp
-                            + bv.gapoh
+                            + bv.dr_cs_tf_gap
                             - pfv.rpf[i]
                         ):
                             pf_tf_collision += 1
@@ -1974,14 +1974,14 @@ class PFCoil:
                     pfv.coheof,
                 )
                 op.oblnkl(self.outfile)
-                # MDK add bv.dr_cs, bv.dr_bore and bv.gapoh as they can be iteration variables
+                # MDK add bv.dr_cs, bv.dr_bore and bv.dr_cs_tf_gap as they can be iteration variables
                 op.ovarre(self.outfile, "CS inside radius (m)", "(dr_bore)", bv.dr_bore)
                 op.ovarre(self.outfile, "CS thickness (m)", "(dr_cs)", bv.dr_cs)
                 op.ovarre(
                     self.outfile,
                     "Gap between central solenoid and TF coil (m)",
-                    "(gapoh)",
-                    bv.gapoh,
+                    "(dr_cs_tf_gap)",
+                    bv.dr_cs_tf_gap,
                 )
                 op.ovarre(
                     self.outfile,

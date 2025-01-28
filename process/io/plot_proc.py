@@ -125,7 +125,7 @@ RADIAL_BUILD = [
     "dr_bore",
     "dr_cs",
     "dr_cs_precomp",
-    "gapoh",
+    "dr_cs_tf_gap",
     "tfcth",
     "tftsgap",
     "thshield_ib",
@@ -504,7 +504,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     ang = i * spacing
     angl = ang - spacing / 2
     angu = ang + spacing / 2
-    r1, null = cumulative_radial_build2("gapoh", mfile_data, scan)
+    r1, null = cumulative_radial_build2("dr_cs_tf_gap", mfile_data, scan)
     r2, null = cumulative_radial_build2("tfcth", mfile_data, scan)
     r4, r3 = cumulative_radial_build2("tfthko", mfile_data, scan)
 
@@ -3369,7 +3369,7 @@ def main(args=None):
 
     global dr_bore
     global dr_cs
-    global gapoh
+    global dr_cs_tf_gap
     global tfcth
     global gapds
     global ddwi
@@ -3393,7 +3393,7 @@ def main(args=None):
 
     dr_bore = m_file.data["dr_bore"].get_scan(scan)
     dr_cs = m_file.data["dr_cs"].get_scan(scan)
-    gapoh = m_file.data["gapoh"].get_scan(scan)
+    dr_cs_tf_gap = m_file.data["dr_cs_tf_gap"].get_scan(scan)
     tfcth = m_file.data["tfcth"].get_scan(scan)
     gapds = m_file.data["gapds"].get_scan(scan)
     shldith = m_file.data["shldith"].get_scan(scan)

@@ -1238,7 +1238,7 @@
     {
       "no": 246,
       "level": 3,
-      "message": "CHECK: Invalid stress model if dr_bore + gapoh + dr_cs = 0. Don't use constraint 31"
+      "message": "CHECK: Invalid stress model if dr_bore + dr_cs_tf_gap + dr_cs = 0. Don't use constraint 31"
     },
     {
       "no": 247,
