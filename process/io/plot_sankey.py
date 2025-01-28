@@ -23,24 +23,24 @@ def main(args=None):
     ###########################################################
     # Usage
 
-    PARSER = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Program to plot\
      the power flow in PROCESS using a Sankey diagram."
     )
 
-    PARSER.add_argument("-e", "--end", default="pdf", help="file format, default = pdf")
+    parser.add_argument("-e", "--end", default="pdf", help="file format, default = pdf")
 
-    PARSER.add_argument(
+    parser.add_argument(
         "-m", "--mfile", default="MFILE.DAT", help="mfile name, default = MFILE.DAT"
     )
 
-    ARGS = PARSER.parse_args(args)
+    args = parser.parse_args(args)
 
     #########################################################
     # main program
 
-    plot_sankey(ARGS.mfile)
-    savefig("SankeyPowerFlow." + ARGS.end)
+    plot_sankey(args.mfile)
+    savefig("SankeyPowerFlow." + args.end)
 
     show()
 
