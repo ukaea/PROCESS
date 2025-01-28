@@ -2346,7 +2346,7 @@ class Sctfcoil:
             # TODO: is this the correct current?
             i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
             # VV properties
-            d_vv=build_variables.d_vv_shell_thickness,
+            d_vv=build_variables.dr_vv_shell_thickness,
         )
 
     def tf_field_and_force(self):

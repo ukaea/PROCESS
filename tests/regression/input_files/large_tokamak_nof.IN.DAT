@@ -279,7 +279,7 @@ thshield_vb = 0.050
 gapds = 0.02
 
 * Inboard vacuum vessel radial thickness [m]
-d_vv_in  = 0.3
+dr_vv_inboard  = 0.3
 
 * Outboard vacuum vessel radial thickness [m]
 d_vv_out = 0.3

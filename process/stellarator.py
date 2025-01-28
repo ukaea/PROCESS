@@ -421,7 +421,7 @@ class Stellarator:
             + build_variables.dr_cs_tf_gap
             + build_variables.dr_tf_inboard
             + build_variables.gapds
-            + build_variables.d_vv_in
+            + build_variables.dr_vv_inboard
             + build_variables.shldith
             + build_variables.blnkith
             + build_variables.fwith
@@ -436,7 +436,7 @@ class Stellarator:
             + build_variables.dr_cs_tf_gap
             + build_variables.dr_tf_inboard
             + build_variables.gapds
-            + build_variables.d_vv_in
+            + build_variables.dr_vv_inboard
             + build_variables.shldith
             + build_variables.blnkith
             + build_variables.fwith
@@ -449,7 +449,7 @@ class Stellarator:
         build_variables.required_radial_space = (
             build_variables.dr_tf_inboard / 2.0e0
             + build_variables.gapds
-            + build_variables.d_vv_in
+            + build_variables.dr_vv_inboard
             + build_variables.shldith
             + build_variables.blnkith
             + build_variables.fwith
@@ -504,7 +504,7 @@ class Stellarator:
         build_variables.hmax = 0.5e0 * (
             (
                 build_variables.gapds
-                + build_variables.d_vv_in
+                + build_variables.dr_vv_inboard
                 + build_variables.shldith
                 + build_variables.blnkith
                 + build_variables.fwith
@@ -602,19 +602,19 @@ class Stellarator:
             po.obuild(self.outfile, "Gap", build_variables.gapds, radius, "(gapds)")
             po.ovarre(self.outfile, "Gap (m)", "(gapds)", build_variables.gapds)
 
-            radius = radius + build_variables.d_vv_in
+            radius = radius + build_variables.dr_vv_inboard
             po.obuild(
                 self.outfile,
                 "Vacuum vessel",
-                build_variables.d_vv_in,
+                build_variables.dr_vv_inboard,
                 radius,
-                "(d_vv_in)",
+                "(dr_vv_inboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Vacuum vessel radial thickness (m)",
-                "(d_vv_in)",
-                build_variables.d_vv_in,
+                "(dr_vv_inboard)",
+                build_variables.dr_vv_inboard,
             )
 
             radius = radius + build_variables.shldith
@@ -1873,7 +1873,7 @@ class Stellarator:
             + build_variables.shldoth
         )
         fwbs_variables.vdewin = (
-            (build_variables.d_vv_in + build_variables.d_vv_out)
+            (build_variables.dr_vv_inboard + build_variables.d_vv_out)
             / 2.0e0
             * physics_variables.a_plasma_surface
             * r1
@@ -2956,7 +2956,7 @@ class Stellarator:
                 * tfcoil_variables.ritfc
                 * physics_variables.rminor**2
                 / (
-                    (build_variables.d_vv_in + build_variables.d_vv_out)
+                    (build_variables.dr_vv_inboard + build_variables.d_vv_out)
                     / 2
                     * tfcoil_variables.tdmptf
                     * radvv
@@ -2971,7 +2971,7 @@ class Stellarator:
         sctfcoil_module.vv_stress_quench = (
             f_vv_actual
             * 1e6
-            * ((build_variables.d_vv_in + build_variables.d_vv_out) / 2)
+            * ((build_variables.dr_vv_inboard + build_variables.d_vv_out) / 2)
         )
 
         # the conductor fraction is meant of the cable space#
