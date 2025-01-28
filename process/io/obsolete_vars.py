@@ -73,7 +73,7 @@ OBS_VARS = {
     "pcoreradmw": "p_plasma_inner_rad_mw",
     "pedgeradmw": "p_plasma_outer_rad_mw",
     "rad_fraction_core": "rad_fraction_LCFS",
-    "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
+    "thshield": ["dr_shld_thermal_inboard", "thshield_ob", "thshield_vb"],
     "igeom": None,
     "fgamp": None,
     "divleg_profile_inner": None,

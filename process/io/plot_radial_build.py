@@ -89,7 +89,7 @@ def get_radial_build(m_file):
         "dr_cs_tf_gap",
         "dr_tf_inboard",
         "tftsgap",
-        "thshield_ib",
+        "dr_shld_thermal_inboard",
         "gapds",
         "d_vv_in",
         "shldith",
