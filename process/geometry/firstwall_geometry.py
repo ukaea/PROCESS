@@ -19,7 +19,7 @@ def first_wall_geometry_single_null(
     blnktth: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
+    dr_fw_inboard: float,
     fwoth: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
@@ -45,8 +45,8 @@ def first_wall_geometry_single_null(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
     :param fwoth: outboard first wall radial thickness
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
@@ -77,7 +77,7 @@ def first_wall_geometry_single_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
+        dr_fw_inboard=dr_fw_inboard,
         fwoth=fwoth,
         tfwvt=tfwvt,
         top_point=top_point,
@@ -103,7 +103,7 @@ def first_wall_geometry_lower(
     triang: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
+    dr_fw_inboard: float,
     fwoth: float,
     tfwvt: float,
     top_point: float,
@@ -116,8 +116,8 @@ def first_wall_geometry_lower(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
     :param fwoth: outboard first wall radial thickness
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
@@ -131,7 +131,7 @@ def first_wall_geometry_lower(
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
         c_blnkith,
         c_fwoth,
-        fwith,
+        dr_fw_inboard,
         fwoth,
         top_point,
         -tfwvt,
@@ -153,7 +153,7 @@ def first_wall_geometry_double_null(
     blnktth: float,
     c_blnkith: float,
     c_fwoth: float,
-    fwith: float,
+    dr_fw_inboard: float,
     fwoth: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
@@ -170,8 +170,8 @@ def first_wall_geometry_double_null(
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
     :type c_fwoth: float
-    :param fwith: inboard first wall radial thickness
-    :type fwith: float
+    :param dr_fw_inboard: inboard first wall radial thickness
+    :type dr_fw_inboard: float
     :param fwoth: outboard first wall radial thickness
     :type fwoth: float
     :param tfwvt: top first wall vertical thickness
@@ -191,7 +191,7 @@ def first_wall_geometry_double_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
+        dr_fw_inboard=dr_fw_inboard,
         fwoth=fwoth,
         tfwvt=tfwvt,
         top_point=top_point,
@@ -208,7 +208,7 @@ def first_wall_geometry_double_null(
         triang=triang,
         c_blnkith=c_blnkith,
         c_fwoth=c_fwoth,
-        fwith=fwith,
+        dr_fw_inboard=dr_fw_inboard,
         fwoth=fwoth,
         tfwvt=tfwvt,
         top_point=top_point,

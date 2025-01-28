@@ -414,7 +414,7 @@ class Build:
                     + build_variables.vvblgap
                     + build_variables.shldtth
                     + build_variables.blnktth
-                    + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                    + 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
                     + build_variables.vgaptop
                     + physics_variables.rminor * physics_variables.kappa
                 )
@@ -533,7 +533,7 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.blnktth
 
-                fwtth = 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                fwtth = 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
                 po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
                 po.ovarre(
                     self.mfile,
@@ -746,7 +746,7 @@ class Build:
                 + build_variables.shldtth
                 + build_variables.vvblgap
                 + build_variables.blnktth
-                + 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+                + 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
                 + build_variables.vgaptop
                 + physics_variables.rminor * physics_variables.kappa
             )
@@ -1767,7 +1767,7 @@ class Build:
                         + build_variables.dr_shld_inboard
                         + build_variables.vvblgap
                         + build_variables.dr_blkt_inboard
-                        + build_variables.fwith
+                        + build_variables.dr_fw_inboard
                         + 3.0e0 * build_variables.scrapli
                     )
                     + tfcoil_variables.drtop
@@ -1822,7 +1822,7 @@ class Build:
                 + build_variables.dr_shld_inboard
                 + build_variables.vvblgap
                 + build_variables.dr_blkt_inboard
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
                 + 3.0e0 * build_variables.scrapli
             )
             + tfcoil_variables.drtop
@@ -1862,7 +1862,7 @@ class Build:
             build_variables.r_sh_inboard_out
             + build_variables.vvblgap
             + build_variables.dr_blkt_inboard
-            + build_variables.fwith
+            + build_variables.dr_fw_inboard
             + build_variables.scrapli
             + physics_variables.rminor
         )
@@ -1872,7 +1872,7 @@ class Build:
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.scrapli
-            - build_variables.fwith
+            - build_variables.dr_fw_inboard
             - build_variables.dr_blkt_inboard
             - build_variables.dr_shld_inboard
         )
@@ -1961,7 +1961,7 @@ class Build:
             + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
-            - 0.5e0 * (build_variables.fwith + build_variables.fwoth)
+            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.fwoth)
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
@@ -2281,11 +2281,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.fwith
+            radius = radius + build_variables.dr_fw_inboard
             radial_build_data.append([
                 "Inboard first wall",
-                "fwith",
-                build_variables.fwith,
+                "dr_fw_inboard",
+                build_variables.dr_fw_inboard,
                 radius,
             ])
 

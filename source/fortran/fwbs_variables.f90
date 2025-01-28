@@ -262,7 +262,7 @@ module fwbs_variables
   ! ---------------
 
   integer :: iblanket_thickness
-  !! Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, fwith or fwoth when `iblanket=3`):
+  !! Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or fwoth when `iblanket=3`):
   !!
   !! - =1 thin    0.53 m inboard, 0.91 m outboard
   !! - =2 medium  0.64 m inboard, 1.11 m outboard

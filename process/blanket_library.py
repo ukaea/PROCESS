@@ -128,7 +128,7 @@ class BlanketLibrary:
             htop = physics_variables.rminor * physics_variables.kappa + 0.5 * (
                 build_variables.scrapli
                 + build_variables.scraplo
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
                 + build_variables.fwoth
             )
             # Shield
@@ -161,7 +161,7 @@ class BlanketLibrary:
         # i.e. outer radius of inboard part to inner radius of outboard part
         # Blanket
         r2 = (
-            build_variables.fwith
+            build_variables.dr_fw_inboard
             + build_variables.scrapli
             + 2.0 * physics_variables.rminor
             + build_variables.scraplo
@@ -1640,7 +1640,7 @@ class BlanketLibrary:
         (blanket_library.tpeakfwi, _, _, blanket_library.mffwpi) = self.fw.fw_temp(
             output,
             fwbs_variables.afw,
-            build_variables.fwith,
+            build_variables.dr_fw_inboard,
             build_variables.fwareaib,
             fwbs_variables.psurffwi,
             blanket_library.pnucfwi,
@@ -1655,7 +1655,7 @@ class BlanketLibrary:
         #     int(output),
         #     self.outfile,
         #     fwbs_variables.afw,
-        #     build_variables.fwith,
+        #     build_variables.dr_fw_inboard,
         #     build_variables.fwareaib,
         #     fwbs_variables.psurffwi,
         #     blanket_library.pnucfwi,
