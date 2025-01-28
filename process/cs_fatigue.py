@@ -39,18 +39,18 @@ class CsFatigue:
         # Mean stress ratio
         # Fatigue Stress Assessment in Fusion Magnet Components
         # J. Lorenzo, X. Sarasola, M. Mantsinen
-        R = residual_stress_MPa / (max_hoop_stress_MPa + residual_stress_MPa)
+        r = residual_stress_MPa / (max_hoop_stress_MPa + residual_stress_MPa)
 
         # Calculated constant for a given stress ratio using Walker equation
         # https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
-        CR = csfv.paris_coefficient / (1.0e0 - R) ** n
+        cr = csfv.paris_coefficient / (1.0e0 - r) ** n
 
         # select given increase in crack area
         delta = 1.0e-4
 
         # Initialise number of cycles
-        N_pulse = 0.0
-        Kmax = 0.0
+        n_pulse = 0.0
+        k_max = 0.0
 
         # factor 2 taken as saftey factors in the crack sizes
         # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
@@ -58,10 +58,10 @@ class CsFatigue:
         while (
             (a <= t_structural_vertical / csfv.sf_vertical_crack)
             and (c <= t_structural_radial / csfv.sf_radial_crack)
-            and (Kmax <= csfv.fracture_toughness / csfv.sf_fast_fracture)
+            and (k_max <= csfv.fracture_toughness / csfv.sf_fast_fracture)
         ):
             # find SIF max from SIF_a and SIF_c
-            Ka, Kc = self.surface_stress_intensity_factor(
+            k_a, k_c = self.surface_stress_intensity_factor(
                 hoop_stress_MPa,
                 t_structural_vertical,
                 t_structural_radial,
@@ -69,18 +69,18 @@ class CsFatigue:
                 c,
                 pi_2_arr,
             )
-            Kmax = max(Ka, Kc)
+            k_max = max(k_a, k_c)
 
             # run euler_method and find number of cycles needed to give crack increase
-            deltaN = delta / (CR * (Kmax**csfv.paris_power_law))
+            delta_n = delta / (cr * (k_max**csfv.paris_power_law))
 
             # update a and c, N (+= doesnt work for fortran (?) reasons)
-            a = a + delta * (Ka / Kmax) ** csfv.paris_power_law
-            c = c + delta * (Kc / Kmax) ** csfv.paris_power_law
-            N_pulse = N_pulse + deltaN
+            a = a + delta * (k_a / k_max) ** csfv.paris_power_law
+            c = c + delta * (k_c / k_max) ** csfv.paris_power_law
+            n_pulse = n_pulse + delta_n
 
         # two pulses - ramp to Vsmax and ramp down per cycle
-        return N_pulse / 2.0e0, t_crack_radial
+        return n_pulse / 2.0e0, t_crack_radial
 
     @staticmethod
     @njit(cache=True)
@@ -106,12 +106,12 @@ class CsFatigue:
         sin_phi_2 = np.sin(phi) ** 2.0e0
 
         if a <= c:
-            Q = 1.0e0 + 1.464e0 * a_c**1.65e0
+            q = 1.0e0 + 1.464e0 * a_c**1.65e0
             m1 = 1.0e0
             f_phi = (a_c**2.0e0 * cos_phi_2 + sin_phi_2) ** 0.25e0
         else:  # elif a > c:
             c_a = c / a
-            Q = 1.0e0 + 1.464e0 * c_a**1.65e0
+            q = 1.0e0 + 1.464e0 * c_a**1.65e0
             m1 = np.sqrt(c_a)
             f_phi = (c_a**2.0e0 * sin_phi_2 + cos_phi_2) ** 0.25e0
 
@@ -139,7 +139,7 @@ class CsFatigue:
                     1.0e0 / np.cos(np.sqrt(a_t) * np.pi * c / (2.0e0 * w))
                 )
             )
-            * np.sqrt(np.pi * a / Q)
+            * np.sqrt(np.pi * a / q)
         )
 
     @staticmethod
@@ -170,7 +170,7 @@ class CsFatigue:
             # reuse of calc
             a_c = a / c
 
-            Q = 1.0e0 + 1.464e0 * a_c**1.65e0
+            q = 1.0e0 + 1.464e0 * a_c**1.65e0
             m1 = 1.13e0 - 0.09e0 * a_c
             m2 = -0.54e0 + 0.89e0 / (0.2e0 + a_c)
             m3 = 0.5e0 - 1.0e0 / (0.65e0 + a_c) + 14.0e0 * (1 - a_c) ** 24.0e0
@@ -188,7 +188,7 @@ class CsFatigue:
             c_a = c / a
             c_a_4 = c_a**4.0e0
 
-            Q = 1.0e0 + 1.464e0 * c_a**1.65e0
+            q = 1.0e0 + 1.464e0 * c_a**1.65e0
             m1 = np.sqrt(c_a) * (1.0e0 + 0.04e0 * c_a)
 
             m2 = 0.2e0 * c_a_4
@@ -223,5 +223,5 @@ class CsFatigue:
                     1.0e0 / np.cos(np.sqrt(a_t) * np.pi * c / (2.0e0 * w))
                 )
             )
-            * np.sqrt(np.pi * a / Q)
+            * np.sqrt(np.pi * a / q)
         )
