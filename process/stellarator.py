@@ -489,11 +489,11 @@ class Stellarator:
 
         #  Radius to centre of outboard TF coil legs
 
-        build_variables.gapsto = build_variables.gapomin
+        build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
         build_variables.r_tf_outboard_mid = (
             build_variables.rsldo
             + build_variables.dr_vv_outboard
-            + build_variables.gapsto
+            + build_variables.dr_shld_vv_gap_outboard
             + 0.5e0 * build_variables.dr_tf_outboard
         )
 
@@ -518,7 +518,7 @@ class Stellarator:
                 + build_variables.dr_blkt_outboard
                 + build_variables.dr_shld_outboard
                 + build_variables.dr_vv_outboard
-                + build_variables.gapsto
+                + build_variables.dr_shld_vv_gap_outboard
             )
         )
 
@@ -776,9 +776,20 @@ class Stellarator:
                 "(dr_vv_outboard)",
             )
 
-            radius = radius + build_variables.gapsto
-            po.obuild(self.outfile, "Gap", build_variables.gapsto, radius, "(gapsto)")
-            po.ovarre(self.outfile, "Gap (m)", "(gapsto)", build_variables.gapsto)
+            radius = radius + build_variables.dr_shld_vv_gap_outboard
+            po.obuild(
+                self.outfile,
+                "Gap",
+                build_variables.dr_shld_vv_gap_outboard,
+                radius,
+                "(dr_shld_vv_gap_outboard)",
+            )
+            po.ovarre(
+                self.outfile,
+                "Gap (m)",
+                "(dr_shld_vv_gap_outboard)",
+                build_variables.dr_shld_vv_gap_outboard,
+            )
 
             radius = radius + build_variables.dr_tf_outboard
             po.obuild(

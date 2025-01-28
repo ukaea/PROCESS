@@ -232,7 +232,7 @@ class StbildParam(NamedTuple):
 
     gapomin: Any = None
 
-    gapsto: Any = None
+    dr_shld_vv_gap_outboard: Any = None
 
     hmax: Any = None
 
@@ -314,7 +314,7 @@ class StbildParam(NamedTuple):
 
     expected_dr_fw_outboard: Any = None
 
-    expected_gapsto: Any = None
+    expected_dr_shld_vv_gap_outboard: Any = None
 
     expected_hmax: Any = None
 
@@ -355,7 +355,7 @@ class StbildParam(NamedTuple):
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
-            gapsto=0,
+            dr_shld_vv_gap_outboard=0,
             hmax=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=0,
@@ -396,7 +396,7 @@ class StbildParam(NamedTuple):
             expected_fwarea=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
-            expected_gapsto=0.025000000000000005,
+            expected_dr_shld_vv_gap_outboard=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
             expected_rbld=22,
@@ -425,7 +425,7 @@ class StbildParam(NamedTuple):
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
-            gapsto=0.025000000000000005,
+            dr_shld_vv_gap_outboard=0.025000000000000005,
             hmax=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=26.367558258201448,
@@ -466,7 +466,7 @@ class StbildParam(NamedTuple):
             expected_fwarea=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
-            expected_gapsto=0.025000000000000005,
+            expected_dr_shld_vv_gap_outboard=0.025000000000000005,
             expected_hmax=3.7022660178426601,
             expected_r_tf_outboard_mid=26.367558258201448,
             expected_rbld=22,
@@ -531,7 +531,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "gapomin", stbildparam.gapomin)
 
-    monkeypatch.setattr(build_variables, "gapsto", stbildparam.gapsto)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_vv_gap_outboard", stbildparam.dr_shld_vv_gap_outboard
+    )
 
     monkeypatch.setattr(build_variables, "hmax", stbildparam.hmax)
 
@@ -644,7 +646,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.expected_dr_fw_outboard
     )
 
-    assert build_variables.gapsto == pytest.approx(stbildparam.expected_gapsto)
+    assert build_variables.dr_shld_vv_gap_outboard == pytest.approx(
+        stbildparam.expected_dr_shld_vv_gap_outboard
+    )
 
     assert build_variables.hmax == pytest.approx(stbildparam.expected_hmax)
 

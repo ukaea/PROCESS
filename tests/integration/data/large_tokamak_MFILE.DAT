@@ -581,7 +581,7 @@
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_outboard)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
- Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3653E+00    
+ Vessel_to_TF_radial_gap_(m)_____________________________________________ (dr_shld_vv_gap_outboard)______________________      1.3653E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      9.2950E-01    
