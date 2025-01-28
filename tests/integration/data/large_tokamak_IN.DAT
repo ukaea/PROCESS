@@ -289,7 +289,7 @@ dr_tf_wp = 0.5
 ****************
 
 * Thermal shield radial thickness [m]
-thshield_ib = 0.050
+dr_shld_thermal_inboard = 0.050
 thshield_ob = 0.050
 thshield_vb = 0.050
 

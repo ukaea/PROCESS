@@ -2035,7 +2035,7 @@ tftsgap = 0.01
 * DESCRIPTION:   Minimum Metal-to-Metal Gap Between TF Coil and Thermal Shield (m)
 * JUSTIFICATION: 
 
-thshield_ib = 0.05   
+dr_shld_thermal_inboard = 0.05   
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 

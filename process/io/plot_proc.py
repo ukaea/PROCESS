@@ -128,7 +128,7 @@ RADIAL_BUILD = [
     "dr_cs_tf_gap",
     "dr_tf_inboard",
     "tftsgap",
-    "thshield_ib",
+    "dr_shld_thermal_inboard",
     "gapds",
     "d_vv_in",
     "shldith",
@@ -454,7 +454,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("dr_tf_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=TFC_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("thshield_ib", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_shld_thermal_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=THERMAL_SHIELD_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("d_vv_in", mfile_data, scan)
@@ -1478,20 +1478,20 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     y4 = mfile_data.data["yarc(4)"].get_scan(scan)
     x5 = mfile_data.data["xarc(5)"].get_scan(scan)
     y5 = mfile_data.data["yarc(5)"].get_scan(scan)
-    thshield_ib = mfile_data.data["thshield_ib"].get_scan(scan)
+    dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
     thshield_ob = mfile_data.data["thshield_ob"].get_scan(scan)
     tftsgap = mfile_data.data["tftsgap"].get_scan(scan)
     if y3 != 0:
         print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
 
-    if thshield_ib != thshield_ob:
+    if dr_shld_thermal_inboard != thshield_ob:
         print(
-            "thshield_ib and thshield_ob are different. Using thshield_ib"
+            "dr_shld_thermal_inboard and thshield_ob are different. Using dr_shld_thermal_inboard"
             "for the poloidal plot of the thermal shield."
         )
 
     for offset, colour in (
-        (thshield_ib + tftsgap, THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
+        (dr_shld_thermal_inboard + tftsgap, THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         (tftsgap, "white"),
         (0.0, TFC_COLOUR[colour_scheme - 1]),
     ):

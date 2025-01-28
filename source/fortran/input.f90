@@ -194,7 +194,7 @@ contains
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
-      thshield_ib, thshield_ob, thshield_vb, iprecomp, &
+      dr_shld_thermal_inboard, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, tftsgap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
@@ -1427,8 +1427,8 @@ contains
        case ('tftsgap')
           call parse_real_variable('tftsgap', tftsgap, 0.0D0, 5.0D0, &
                'Minimum gap between TF and thermal shield for manufacturing etc. (m)')
-       case ('thshield_ib')
-          call parse_real_variable('thshield_ib', thshield_ib, 0.0D0, 10.0D0, &
+       case ('dr_shld_thermal_inboard')
+          call parse_real_variable('dr_shld_thermal_inboard', dr_shld_thermal_inboard, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, inboard (m)')
        case ('thshield_ob')
           call parse_real_variable('thshield_ob', thshield_ob, 0.0D0, 10.0D0, &
