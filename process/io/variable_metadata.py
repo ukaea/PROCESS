@@ -9,7 +9,7 @@ class VariableMetadata:
 
 
 var_dicts = {
-    "shldith": VariableMetadata(
+    "dr_shld_inboard": VariableMetadata(
         latex=r"$\Delta R_\mathrm{sh}$ [$m$]",
         description="Inboard shield thickness",
         units="m",

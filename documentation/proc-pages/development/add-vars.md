@@ -171,7 +171,7 @@ After following the instruction to add an input variable, you can make the varia
   !!         <LI> 2  hldivlim
   ...
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `shldith` : Inboard neutron shield thickness </UL>
+  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>
 ```
 
 `scan_select` case example:
@@ -181,8 +181,8 @@ After following the instruction to add an input variable, you can make the varia
       b_crit_upper_nbti = swp(iscn)
       vlab = 'Bc2(0K)' ; xlab = 'GL_NbTi Bc2(0K)'
   case(55)
-      shldith = swp(iscn)
-      vlab = 'shldith' ; xlab = 'Inboard neutronic shield'
+      dr_shld_inboard = swp(iscn)
+      vlab = 'dr_shld_inboard' ; xlab = 'Inboard neutronic shield'
 ```
 
 ## Add a constraint equation

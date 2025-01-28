@@ -131,7 +131,7 @@ RADIAL_BUILD = [
     "dr_shld_thermal_inboard",
     "gapds",
     "dr_vv_inboard",
-    "shldith",
+    "dr_shld_inboard",
     "vvblgapi",
     "dr_blkt_inboard",
     "fwith",
@@ -460,7 +460,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("dr_vv_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("shldith", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_shld_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("dr_blkt_inboard", mfile_data, scan)
@@ -1219,11 +1219,11 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
     # Side nearest to the plasma
     radx_near = (
         cumulative_radial_build("vvblgapo", mfile_data, scan)
-        + cumulative_radial_build("shldith", mfile_data, scan)
+        + cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
     ) / 2.0
     rminx_near = (
         cumulative_radial_build("vvblgapo", mfile_data, scan)
-        - cumulative_radial_build("shldith", mfile_data, scan)
+        - cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
     ) / 2.0
 
     if i_single_null == 1:
@@ -1275,7 +1275,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
     else:
         blnktth = 0.0
 
-    c_shldith = cumulative_radial_build("shldith", mfile_data, scan)
+    c_shldith = cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
     c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
 
     if i_single_null == 1:
@@ -2354,9 +2354,9 @@ def plot_geometry_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    in_blanket_thk = mfile_data.data["shldith"].get_scan(scan) + mfile_data.data[
-        "dr_blkt_inboard"
-    ].get_scan(scan)
+    in_blanket_thk = mfile_data.data["dr_shld_inboard"].get_scan(
+        scan
+    ) + mfile_data.data["dr_blkt_inboard"].get_scan(scan)
     out_blanket_thk = mfile_data.data["shldoth"].get_scan(scan) + mfile_data.data[
         "blnkoth"
     ].get_scan(scan)
@@ -3376,7 +3376,7 @@ def main(args=None):
     global dr_tf_inboard
     global gapds
     global ddwi
-    global shldith
+    global dr_shld_inboard
     global dr_blkt_inboard
     global fwith
     global scrapli
@@ -3399,7 +3399,7 @@ def main(args=None):
     dr_cs_tf_gap = m_file.data["dr_cs_tf_gap"].get_scan(scan)
     dr_tf_inboard = m_file.data["dr_tf_inboard"].get_scan(scan)
     gapds = m_file.data["gapds"].get_scan(scan)
-    shldith = m_file.data["shldith"].get_scan(scan)
+    dr_shld_inboard = m_file.data["dr_shld_inboard"].get_scan(scan)
     dr_blkt_inboard = m_file.data["dr_blkt_inboard"].get_scan(scan)
     fwith = m_file.data["fwith"].get_scan(scan)
     scrapli = m_file.data["scrapli"].get_scan(scan)

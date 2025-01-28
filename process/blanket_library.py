@@ -152,10 +152,10 @@ class BlanketLibrary:
         r1 = build_variables.rsldi
         # ... shield (m)
         if icomponent == 1:
-            r1 = r1 + build_variables.shldith
+            r1 = r1 + build_variables.dr_shld_inboard
         # ... blanket (m)
         elif icomponent == 0:
-            r1 = r1 + build_variables.shldith + build_variables.dr_blkt_inboard
+            r1 = r1 + build_variables.dr_shld_inboard + build_variables.dr_blkt_inboard
 
         # Horizontal distance between inside edges (m)
         # i.e. outer radius of inboard part to inner radius of outboard part
@@ -211,7 +211,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 blanket_library.hshld,
-                build_variables.shldith,
+                build_variables.dr_shld_inboard,
                 build_variables.shldoth,
                 build_variables.shldtth,
             )
@@ -247,10 +247,10 @@ class BlanketLibrary:
         r2 = r1 - build_variables.rsldi
         # ... shield (m)
         if icomponent == 1:
-            r2 = r2 - build_variables.shldith
+            r2 = r2 - build_variables.dr_shld_inboard
         # ... blanket (m)
         if icomponent == 0:
-            r2 = r2 - build_variables.shldith - build_variables.dr_blkt_inboard
+            r2 = r2 - build_variables.dr_shld_inboard - build_variables.dr_blkt_inboard
 
         # Calculate distance between r1 and inner edge of outboard ...
         # ... section (m)
@@ -301,7 +301,7 @@ class BlanketLibrary:
                 r2,
                 r3,
                 blanket_library.hshld,
-                build_variables.shldith,
+                build_variables.dr_shld_inboard,
                 build_variables.shldoth,
                 build_variables.shldtth,
             )
@@ -1562,7 +1562,7 @@ class BlanketLibrary:
         if fwbs_variables.icooldual == 2:
             f_nuc_pow_bz_liq = 1 - fwbs_variables.f_nuc_pow_bz_struct
 
-            # Inboard blanket calc. Will return 0 if no inboard shldith thickness
+            # Inboard blanket calc. Will return 0 if no inboard dr_shld_inboard thickness
             pnucblkti_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
