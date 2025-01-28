@@ -169,7 +169,7 @@ class BlanketLibrary:
         )
         # Sheild
         if icomponent == 1:
-            r2 = build_variables.dr_blkt_inboard + r2 + build_variables.blnkoth
+            r2 = build_variables.dr_blkt_inboard + r2 + build_variables.dr_blkt_outboard
         # Vaccum Vessel
         if icomponent == 2:
             r2 = build_variables.rsldo - r1
@@ -199,7 +199,7 @@ class BlanketLibrary:
                 r2,
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
-                build_variables.blnkoth,
+                build_variables.dr_blkt_outboard,
                 build_variables.blnktth,
             )
         elif icomponent == 1:
@@ -260,7 +260,7 @@ class BlanketLibrary:
             r3 = r3 - build_variables.shldoth
         # ... blanket (m)
         if icomponent == 0:
-            r3 = r3 - build_variables.shldoth - build_variables.blnkoth
+            r3 = r3 - build_variables.shldoth - build_variables.dr_blkt_outboard
 
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
@@ -288,7 +288,7 @@ class BlanketLibrary:
                 r3,
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
-                build_variables.blnkoth,
+                build_variables.dr_blkt_outboard,
                 build_variables.blnktth,
             )
         if icomponent == 1:
@@ -632,7 +632,7 @@ class BlanketLibrary:
             blanket_library.bldepto = build_variables.blbuoth
         else:
             blanket_library.bldepti = 0.8e0 * build_variables.dr_blkt_inboard
-            blanket_library.bldepto = 0.8e0 * build_variables.blnkoth
+            blanket_library.bldepto = 0.8e0 * build_variables.dr_blkt_outboard
 
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
@@ -1343,7 +1343,7 @@ class BlanketLibrary:
             / (
                 physics_variables.rmajor
                 + (physics_variables.rmajor / physics_variables.aspect)
-                + (build_variables.blnkoth / 2)
+                + (build_variables.dr_blkt_outboard / 2)
             )
         )
 

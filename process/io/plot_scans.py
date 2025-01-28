@@ -237,7 +237,7 @@ def main(args=None):
         38: "boundu(129)",
         39: "boundu(131)",
         40: "boundu(135)",
-        41: "blnkoth",
+        41: "dr_blkt_outboard",
         42: "fimp(9)",
         43: "Obsolete",  # Removed
         44: "alstrtf",

@@ -38,7 +38,7 @@ depending on the switches used.
  Plasma outboard edge                         3.265          12.408   (rminor)            
  Outboard scrape-off                          0.225          12.633   (scraplo)           IP, ITV
  Outboard first wall                          0.018          12.651   (fwoth)             
- Outboard blanket                             0.982          13.633   (blnkoth)           IP*
+ Outboard blanket                             0.982          13.633   (dr_blkt_outboard)           IP*
  Gap                                          0.020          13.653   (vvblgap)           IP
  Vacuum vessel (and shielding)                1.100          14.753   (dr_vv_outboard+shldoth)  IP
  Gap                                          1.900          16.652   (gapsto)            

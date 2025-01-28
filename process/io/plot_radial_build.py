@@ -100,7 +100,7 @@ def get_radial_build(m_file):
         "rminor",
         "scraplo",
         "fwoth",
-        "blnkoth",
+        "dr_blkt_outboard",
         "vvblgap",
         "dr_vv_outboard",
         "shldoth",
@@ -188,7 +188,7 @@ def main(args=None):
         "boundu(129)",
         "boundu(131)",
         "boundu(135)",
-        "blnkoth",
+        "dr_blkt_outboard",
         "fimp(9)",
         "Obsolete",  # Removed
         "alstrtf",

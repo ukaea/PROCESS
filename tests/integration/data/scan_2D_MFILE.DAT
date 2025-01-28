@@ -582,7 +582,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3921E+00    
@@ -1745,7 +1745,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4002E+00    
@@ -2908,7 +2908,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4068E+00    
@@ -4071,7 +4071,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4062E+00    
@@ -5234,7 +5234,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4003E+00    
@@ -6397,7 +6397,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3918E+00    
@@ -7560,7 +7560,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3910E+00    
@@ -8723,7 +8723,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3983E+00    
@@ -9886,7 +9886,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4051E+00    
@@ -11049,7 +11049,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4047E+00    
@@ -12212,7 +12212,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3978E+00    
@@ -13375,7 +13375,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3908E+00    
@@ -14538,7 +14538,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3903E+00    
@@ -15701,7 +15701,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3975E+00    
@@ -16864,7 +16864,7 @@
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (fwoth)_______________________      1.8000E-02    
- Outboard_blanket_radial_thickness_(m)___________________________________ (blnkoth)_____________________      1.0000E+00    
+ Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (dr_vv_outboard)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4048E+00    
@@ -17800,7 +17800,7 @@ scrapli = 0.25
 scraplo = 0.25
 
 * Outboard blanket radial thickness [m]
-blnkoth = 1.0
+dr_blkt_outboard = 1.0
 
 * Cryostat thickness [m]
 dr_cryostat = 0.15 

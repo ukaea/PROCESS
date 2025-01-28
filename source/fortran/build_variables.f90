@@ -51,7 +51,7 @@ module build_variables
   real(dp) :: dr_blkt_inboard
   !! inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0.0 if `iblnkith=0`)
 
-  real(dp) :: blnkoth
+  real(dp) :: dr_blkt_outboard
   !! outboard blanket thickness (m); calculated if `blktmodel>0`
 
   real(dp) :: blnktth
@@ -312,7 +312,7 @@ module build_variables
     blbuith = 0.365D0
     blbuoth = 0.465D0
     dr_blkt_inboard = 0.115D0
-    blnkoth = 0.235D0
+    dr_blkt_outboard = 0.235D0
     blnktth = 0.0D0
     dr_bore = 1.42D0
     f_z_cryostat = 4.268D0

@@ -101,7 +101,7 @@ class ProcessTracker:
         "dr_bore",
         "dr_cs",
         "scrapli",
-        "blnkoth",
+        "dr_blkt_outboard",
         "dr_cs_precomp",
         "tfthko",
         "dr_blkt_inboard",

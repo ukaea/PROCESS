@@ -77,7 +77,7 @@ module scan_module
   !!         <LI> 38 Neon upper limit
   !!         <LI> 39 Argon upper limit
   !!         <LI> 40 Xenon upper limit
-  !!         <LI> 41 blnkoth
+  !!         <LI> 41 dr_blkt_outboard
   !!         <LI> 42 Argon fraction fimp(9)
   !!         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum
   !!         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material
@@ -593,7 +593,7 @@ contains
     !! author: J Morris, UKAEA, Culham Science Centre
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	use build_variables, only: blnkoth, dr_shld_inboard, scrapli, scraplo, dr_cs
+	use build_variables, only: dr_blkt_outboard, dr_shld_inboard, scrapli, scraplo, dr_cs
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
@@ -734,8 +734,8 @@ contains
             boundu(135) = swp(iscn)
             vlab = 'boundu(135)' ; xlab = ' Xenon upper limit'
         case (41)
-            blnkoth = swp(iscn)
-            vlab = 'blnkoth' ; xlab = 'Outboard blanket thick.'
+            dr_blkt_outboard = swp(iscn)
+            vlab = 'dr_blkt_outboard' ; xlab = 'Outboard blanket thick.'
         case (42)
             fimp(9) = swp(iscn)
             impurity_arr_frac(9) = fimp(9)
