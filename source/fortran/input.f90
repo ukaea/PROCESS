@@ -199,7 +199,7 @@ contains
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
-      blbpoth, gapds, fwith, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
+      blbpoth, dr_shld_vv_gap_inboard, fwith, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, dr_vv_outboard, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
@@ -1358,8 +1358,8 @@ contains
        case ('dr_cs_tf_gap')
           call parse_real_variable('dr_cs_tf_gap', dr_cs_tf_gap, 0.0D0, 10.0D0, &
                'Gap between OHC and TF coil (m)')
-       case ('gapds')
-          call parse_real_variable('gapds', gapds, 0.0D0, 10.0D0, &
+       case ('dr_shld_vv_gap_inboard')
+          call parse_real_variable('dr_shld_vv_gap_inboard', dr_shld_vv_gap_inboard, 0.0D0, 10.0D0, &
                'Gap between inboard vacuum vessel and shield (m)')
        case ('gapomin')
           call parse_real_variable('gapomin', gapomin, 0.0D0, 10.0D0, &

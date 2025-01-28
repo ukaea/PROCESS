@@ -262,7 +262,7 @@ module numerics
   !! <LI> (58) thwcndut
   !! <LI> (59) fcutfsu
   !! <LI> (60) cpttf
-  !! <LI> (61) gapds
+  !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)
   !! <LI> (63) ftpeak (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)

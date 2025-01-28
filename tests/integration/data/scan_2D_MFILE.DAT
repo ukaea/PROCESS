@@ -573,7 +573,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.7479E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -1736,7 +1736,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.5817E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -2899,7 +2899,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.4468E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -4062,7 +4062,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.4602E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -5225,7 +5225,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.5817E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -6388,7 +6388,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.7538E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -7551,7 +7551,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.7704E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -8714,7 +8714,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.6229E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -9877,7 +9877,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.4832E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -11040,7 +11040,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.4911E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -12203,7 +12203,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.6318E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -13366,7 +13366,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.7762E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -14529,7 +14529,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.7862E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -15692,7 +15692,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.6375E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -16855,7 +16855,7 @@
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      8.4888E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
- thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
+ thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
@@ -17770,7 +17770,7 @@ dr_shld_thermal_outboard = 0.050
 thshield_vb = 0.050
 
 * Gap between thermal shield and vacuum vessel [m]
-gapds = 0.02
+dr_shld_vv_gap_inboard = 0.02
 
 * Inboard vacuum vessel radial thickness [m]
 dr_vv_inboard  = 0.3
