@@ -215,7 +215,7 @@ class Vmcon(_Solver):
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
-                initial_B=bb,
+                initial_b=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied,
             )
