@@ -139,7 +139,7 @@ class Scan:
         )
         for iscan_1 in range(1, scan_module.isweep + 1):
             for iscan_2 in range(1, scan_module.isweep_2 + 1):
-                iscan_R = scan_module.scan_2d_write_point_header(
+                iscan_r = scan_module.scan_2d_write_point_header(
                     iscan, iscan_1, iscan_2
                 )
                 ifail = self.doopt()
@@ -149,7 +149,7 @@ class Scan:
                 outvar, sweep_1_vals, sweep_2_vals = scan_module.scan_2d_store_output(
                     ifail,
                     iscan_1,
-                    iscan_R,
+                    iscan_r,
                     iscan,
                     scan_module.noutvars,
                     scan_module.ipnscns,
