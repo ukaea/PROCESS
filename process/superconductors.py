@@ -325,7 +325,7 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
 
     \\begin{equation}
     J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
-    [B_{c2}(\\epsilon_i)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
+    [B_{c2}(\\epsilon_I)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
     \\end{equation}
 
     - \\( \\thelium \\) -- Coolant/SC temperature [K]
