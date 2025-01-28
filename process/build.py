@@ -1655,7 +1655,7 @@ class Build:
                 + build_variables.blbpoth
             )
             build_variables.shldtth = 0.5e0 * (
-                build_variables.shldith + build_variables.shldoth
+                build_variables.dr_shld_inboard + build_variables.shldoth
             )
 
         #  Top/bottom blanket thickness
@@ -1764,7 +1764,7 @@ class Build:
                     - (
                         build_variables.dr_tf_shld_gap
                         + build_variables.dr_shld_thermal_inboard
-                        + build_variables.shldith
+                        + build_variables.dr_shld_inboard
                         + build_variables.vvblgap
                         + build_variables.dr_blkt_inboard
                         + build_variables.fwith
@@ -1819,7 +1819,7 @@ class Build:
             - (
                 build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
-                + build_variables.shldith
+                + build_variables.dr_shld_inboard
                 + build_variables.vvblgap
                 + build_variables.dr_blkt_inboard
                 + build_variables.fwith
@@ -1854,7 +1854,7 @@ class Build:
 
         # Radial position of the plasma facing side of inboard neutronic shield [m]
         build_variables.r_sh_inboard_out = (
-            build_variables.r_sh_inboard_in + build_variables.shldith
+            build_variables.r_sh_inboard_in + build_variables.dr_shld_inboard
         )
 
         #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
@@ -1874,7 +1874,7 @@ class Build:
             - build_variables.scrapli
             - build_variables.fwith
             - build_variables.dr_blkt_inboard
-            - build_variables.shldith
+            - build_variables.dr_shld_inboard
         )
 
         #  Radius to outer edge of outboard shield
@@ -2257,11 +2257,11 @@ class Build:
                 radius,
             ])
 
-            radius += build_variables.shldith
+            radius += build_variables.dr_shld_inboard
             radial_build_data.append([
                 "Inner radiation shield",
-                "shldith",
-                build_variables.shldith,
+                "dr_shld_inboard",
+                build_variables.dr_shld_inboard,
                 radius,
             ])
 

@@ -199,7 +199,7 @@ contains
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
-      blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
+      blbpoth, gapds, fwith, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
@@ -1397,8 +1397,8 @@ contains
        case ('scraplo')
           call parse_real_variable('scraplo', scraplo, 0.0D0, 10.0D0, &
                'Outboard scrapeoff length (m)')
-       case ('shldith')
-          call parse_real_variable('shldith', shldith, 0.0D0, 10.0D0, &
+       case ('dr_shld_inboard')
+          call parse_real_variable('dr_shld_inboard', dr_shld_inboard, 0.0D0, 10.0D0, &
                'Inboard shield thickness (m)')
        case ('shldlth')
           call parse_real_variable('shldlth', shldlth, 0.0D0, 10.0D0, &

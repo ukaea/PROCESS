@@ -294,7 +294,7 @@ module numerics
   !! <LI> (90) blbuith
   !! <LI> (91) blbuoth
   !! <LI> (92) fflutf (f-value for equation 53)
-  !! <LI> (93) shldith
+  !! <LI> (93) dr_shld_inboard
   !! <LI> (94) shldoth
   !! <LI> (95) fptfnuc (f-value for equation 54)
   !! <LI> (96) fvvhe (f-value for equation 55)

@@ -92,7 +92,7 @@ def get_radial_build(m_file):
         "dr_shld_thermal_inboard",
         "gapds",
         "dr_vv_inboard",
-        "shldith",
+        "dr_shld_inboard",
         "vvblgap",
         "dr_blkt_inboard",
         "fwith",
@@ -202,7 +202,7 @@ def main(args=None):
         "rad_fraction_sol",
         "",
         "b_crit_upper_nbti",
-        "shldith",
+        "dr_shld_inboard",
         "crypmw_max",
         "bt",  # Genuinly bt lower bound
         "scrapli",

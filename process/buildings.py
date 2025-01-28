@@ -541,7 +541,7 @@ class Buildings:
                 )
             )
             hcomp_rad_thk = (
-                build_variables.shldith
+                build_variables.dr_shld_inboard
                 + build_variables.dr_blkt_inboard
                 + build_variables.fwith
             )
@@ -555,7 +555,7 @@ class Buildings:
                         + build_variables.scrapli
                         + build_variables.fwith
                         + build_variables.dr_blkt_inboard
-                        + build_variables.shldith
+                        + build_variables.dr_shld_inboard
                     )
                 )
             ) / tfcoil_variables.n_tf
