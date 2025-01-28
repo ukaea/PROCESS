@@ -197,7 +197,7 @@ contains
       dr_shld_thermal_inboard, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
-      rinboard, blnkoth, fseppc, plsepo, blnkith, &
+      rinboard, blnkoth, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
@@ -1289,7 +1289,7 @@ contains
        case ('blbuoth')
           call parse_real_variable('blbuoth', blbuoth, 0.0D0, 2.0D0, &
                'Outboard blanket breeding unit thickness (m)')
-       case ('blnkith')
+       case ('dr_blkt_inboard')
           if (iblanket == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
@@ -1297,11 +1297,11 @@ contains
             write(outfile,*) 'please remove it from the input file'
             write(outfile,*) '**********'
          else
-            call parse_real_variable('blnkith', blnkith, 0.0D0, 10.0D0, &
+            call parse_real_variable('dr_blkt_inboard', dr_blkt_inboard, 0.0D0, 10.0D0, &
                 'Inboard blanket thickness (m)')
 	  ! Inboard blanket does not exist if the thickness is below a certain limit.
-            if(blnkith>=0.0D00.and.blnkith<=1.0D-3) then
-              blnkith = 0.0D00 ! Inboard blanket thickness is zero
+            if(dr_blkt_inboard>=0.0D00.and.dr_blkt_inboard<=1.0D-3) then
+              dr_blkt_inboard = 0.0D00 ! Inboard blanket thickness is zero
 	      iblnkith = 0     ! Inboard blanket does not exist
             end if
           end if
@@ -2245,13 +2245,13 @@ contains
           call parse_int_variable('iblanket_thickness', iblanket_thickness, 1, 3, &
                'Blanket thickness switch')
           if (iblanket_thickness == 1) then
-            blnkith = 0.53D0
+            dr_blkt_inboard = 0.53D0
             blnkoth = 0.91D0
           else if (iblanket_thickness == 2) then
-            blnkith = 0.64D0
+            dr_blkt_inboard = 0.64D0
             blnkoth = 1.11D0
           else if (iblanket_thickness == 3) then
-            blnkith = 0.75D0
+            dr_blkt_inboard = 0.75D0
             blnkoth = 1.30D0
           end if
        case ('npdiv')

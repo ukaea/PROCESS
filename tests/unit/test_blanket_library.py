@@ -446,7 +446,7 @@ def test_component_half_height(
 class DshapedComponentParam(NamedTuple):
     rsldi: Any = None
     shldith: Any = None
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
     fwith: Any = None
     scrapli: Any = None
     scraplo: Any = None
@@ -503,7 +503,7 @@ class DshapedComponentParam(NamedTuple):
         DshapedComponentParam(
             rsldi=1.5,
             shldith=0.40000000000000002,
-            blnkith=0,
+            dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
@@ -556,7 +556,7 @@ class DshapedComponentParam(NamedTuple):
         DshapedComponentParam(
             rsldi=1.5,
             shldith=0.40000000000000002,
-            blnkith=0,
+            dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
@@ -609,7 +609,7 @@ class DshapedComponentParam(NamedTuple):
         DshapedComponentParam(
             rsldi=1.5,
             shldith=0.40000000000000002,
-            blnkith=0,
+            dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
             scraplo=0.10000000000000001,
@@ -675,7 +675,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     """
     monkeypatch.setattr(build_variables, "rsldi", dshapedcomponentparam.rsldi)
     monkeypatch.setattr(build_variables, "shldith", dshapedcomponentparam.shldith)
-    monkeypatch.setattr(build_variables, "blnkith", dshapedcomponentparam.blnkith)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_inboard", dshapedcomponentparam.dr_blkt_inboard
+    )
     monkeypatch.setattr(build_variables, "fwith", dshapedcomponentparam.fwith)
     monkeypatch.setattr(build_variables, "scrapli", dshapedcomponentparam.scrapli)
     monkeypatch.setattr(build_variables, "scraplo", dshapedcomponentparam.scraplo)
@@ -733,7 +735,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
 class EllipticalComponentParam(NamedTuple):
     rsldi: Any = None
     shldith: Any = None
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
     rsldo: Any = None
     shldoth: Any = None
     blnkoth: Any = None
@@ -789,7 +791,7 @@ class EllipticalComponentParam(NamedTuple):
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
             shldith=0.30000000000000004,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
             blnkoth=1,
@@ -841,7 +843,7 @@ class EllipticalComponentParam(NamedTuple):
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
             shldith=0.30000000000000004,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
             blnkoth=1,
@@ -893,7 +895,7 @@ class EllipticalComponentParam(NamedTuple):
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
             shldith=0.30000000000000004,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
             blnkoth=1,
@@ -960,7 +962,9 @@ def test_elliptical_component(
     """
     monkeypatch.setattr(build_variables, "rsldi", ellipticalcomponentparam.rsldi)
     monkeypatch.setattr(build_variables, "shldith", ellipticalcomponentparam.shldith)
-    monkeypatch.setattr(build_variables, "blnkith", ellipticalcomponentparam.blnkith)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
+    )
     monkeypatch.setattr(build_variables, "rsldo", ellipticalcomponentparam.rsldo)
     monkeypatch.setattr(build_variables, "shldoth", ellipticalcomponentparam.shldoth)
     monkeypatch.setattr(build_variables, "blnkoth", ellipticalcomponentparam.blnkoth)
@@ -1489,7 +1493,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     bt: Any = None
     aspect: Any = None
     rmajor: Any = None
-    blnkith: Any = None
+    dr_blkt_inboard: Any = None
     blnkoth: Any = None
     ip: Any = None
     ofile: Any = None
@@ -1523,7 +1527,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             blnkoth=1,
             ip=0,
             ofile=11,
@@ -1560,7 +1564,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
-            blnkith=0.70000000000000007,
+            dr_blkt_inboard=0.70000000000000007,
             blnkoth=1,
             ip=0,
             ofile=11,
@@ -1649,7 +1653,7 @@ def test_liquid_breeder_properties(
         physics_variables, "rmajor", liquidbreederpropertiesparam.rmajor
     )
     monkeypatch.setattr(
-        build_variables, "blnkith", liquidbreederpropertiesparam.blnkith
+        build_variables, "dr_blkt_inboard", liquidbreederpropertiesparam.dr_blkt_inboard
     )
     monkeypatch.setattr(
         build_variables, "blnkoth", liquidbreederpropertiesparam.blnkoth

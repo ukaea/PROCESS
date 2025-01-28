@@ -104,7 +104,7 @@ class ProcessTracker:
         "blnkoth",
         "dr_cs_precomp",
         "tfthko",
-        "blnkith",
+        "dr_blkt_inboard",
         "vvblgap",
         "scraplo",
         "dr_cs_tf_gap",

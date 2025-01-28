@@ -96,7 +96,7 @@ module fwbs_variables
   integer :: iblnkith
   !! switch for inboard blanket:
   !!
-  !! - =0 No inboard blanket (blnkith=0.0)
+  !! - =0 No inboard blanket (dr_blkt_inboard=0.0)
   !! - =1 Inboard blanket present
 
   integer :: inuclear
@@ -262,7 +262,7 @@ module fwbs_variables
   ! ---------------
 
   integer :: iblanket_thickness
-  !! Blanket thickness switch (Do not set blnkith, blnkoth, fwith or fwoth when `iblanket=3`):
+  !! Blanket thickness switch (Do not set dr_blkt_inboard, blnkoth, fwith or fwoth when `iblanket=3`):
   !!
   !! - =1 thin    0.53 m inboard, 0.91 m outboard
   !! - =2 medium  0.64 m inboard, 1.11 m outboard

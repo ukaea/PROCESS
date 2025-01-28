@@ -420,7 +420,9 @@ class CCFE_HCPB:
 
         else:
             # Average breeding blanket thickness [m]
-            th_blanket_av = 0.5 * (build_variables.blnkoth + build_variables.blnkith)
+            th_blanket_av = 0.5 * (
+                build_variables.blnkoth + build_variables.dr_blkt_inboard
+            )
 
             # Average neutronic shield thickness [m]
             th_shield_av = 0.5 * (build_variables.shldoth + build_variables.shldith)
