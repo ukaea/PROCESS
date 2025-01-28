@@ -1619,7 +1619,7 @@ class Build:
         return ripple, r_tf_outboard_midmin, flag
 
     def tf_in_cs_bore_calc(self):
-        build_variables.dr_bore += build_variables.tfcth + build_variables.gapoh
+        build_variables.dr_bore += build_variables.tfcth + build_variables.dr_cs_tf_gap
 
     def calculate_radial_build(self, output: bool) -> None:
         """
@@ -1681,7 +1681,9 @@ class Build:
 
         if build_variables.tf_in_cs == 1:
             build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore - build_variables.tfcth - build_variables.gapoh
+                build_variables.dr_bore
+                - build_variables.tfcth
+                - build_variables.dr_cs_tf_gap
             )
         else:
             # Inboard side inner radius [m]
@@ -1689,7 +1691,7 @@ class Build:
                 build_variables.dr_bore
                 + build_variables.dr_cs
                 + build_variables.dr_cs_precomp
-                + build_variables.gapoh
+                + build_variables.dr_cs_tf_gap
             )
 
         # Issue #514 Radial dimensions of inboard leg
@@ -1825,7 +1827,7 @@ class Build:
             build_variables.r_vv_inboard_out = (
                 build_variables.r_tf_inboard_out
                 + build_variables.dr_cs
-                + build_variables.gapoh
+                + build_variables.dr_cs_tf_gap
                 + build_variables.dr_cs_precomp
                 + build_variables.tftsgap
                 + build_variables.thshield_ib
@@ -2109,7 +2111,7 @@ class Build:
                 po.ocmmnt(
                     self.outfile,
                     (
-                        "the true dr_bore size used for calculations is dr_bore + tfcth + gapoh)\n"
+                        "the true dr_bore size used for calculations is dr_bore + tfcth + dr_cs_tf_gap)\n"
                     ),
                 )
             if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
@@ -2129,7 +2131,7 @@ class Build:
                     radius
                     + build_variables.dr_bore
                     - build_variables.tfcth
-                    - build_variables.gapoh
+                    - build_variables.dr_cs_tf_gap
                 )
 
                 radial_build_data.append([
@@ -2137,7 +2139,7 @@ class Build:
                     "dr_bore",
                     build_variables.dr_bore
                     - build_variables.tfcth
-                    - build_variables.gapoh,
+                    - build_variables.dr_cs_tf_gap,
                     radius,
                 ])
             elif build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking < 2:
@@ -2145,14 +2147,14 @@ class Build:
                     radius
                     + build_variables.dr_bore
                     - build_variables.tfcth
-                    - build_variables.gapoh
+                    - build_variables.dr_cs_tf_gap
                 )
                 radial_build_data.append([
                     "Machine dr_bore hole",
                     "dr_bore",
                     build_variables.dr_bore
                     - build_variables.tfcth
-                    - build_variables.gapoh,
+                    - build_variables.dr_cs_tf_gap,
                     radius,
                 ])
             else:
@@ -2172,11 +2174,11 @@ class Build:
                     radius,
                 ])
 
-                radius += build_variables.gapoh
+                radius += build_variables.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",
-                    "gapoh",
-                    build_variables.gapoh,
+                    "dr_cs_tf_gap",
+                    build_variables.dr_cs_tf_gap,
                     radius,
                 ])
 
@@ -2196,11 +2198,11 @@ class Build:
                 radius,
             ])
             if build_variables.tf_in_cs == 0:
-                radius = radius + build_variables.gapoh
+                radius = radius + build_variables.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",
-                    "gapoh",
-                    build_variables.gapoh,
+                    "dr_cs_tf_gap",
+                    build_variables.dr_cs_tf_gap,
                     radius,
                 ])
 

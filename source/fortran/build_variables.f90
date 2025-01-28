@@ -105,7 +105,7 @@ module build_variables
   real(dp) :: gapds
   !! gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
 
-  real(dp) :: gapoh
+  real(dp) :: dr_cs_tf_gap
   !! gap between central solenoid and TF coil (m) (`iteration variable 42`)
 
   real(dp) :: gapomin
@@ -330,7 +330,7 @@ module build_variables
     fwith = 0.0D0
     fwoth = 0.0D0
     gapds = 0.155D0
-    gapoh = 0.08D0
+    dr_cs_tf_gap = 0.08D0
     gapomin = 0.234D0
     gapsto = 0.0D0
     hmax = 0.0D0

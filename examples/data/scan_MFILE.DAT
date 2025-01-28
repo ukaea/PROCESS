@@ -422,7 +422,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -629,7 +629,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -1417,7 +1417,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -1624,7 +1624,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -2412,7 +2412,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -2619,7 +2619,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -3407,7 +3407,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -3614,7 +3614,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -4402,7 +4402,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -4609,7 +4609,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -5397,7 +5397,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -5604,7 +5604,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -6392,7 +6392,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -6599,7 +6599,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -7387,7 +7387,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -7594,7 +7594,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -8382,7 +8382,7 @@
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      2.2626E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      7.0754E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
- CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (gapoh)_______________________      5.0000E-02 ITV
+ CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (tfcth)_______________________      1.4000E+00 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
@@ -8589,7 +8589,7 @@
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      1.2788E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore.)_______________________      2.2626E+00    
  CS_thickness_(m)________________________________________________________ (dr_cs.)______________________      7.0754E-01    
- Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (gapoh)_______________________      5.0000E-02 ITV
+ Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      1.1774E+01 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      7.7989E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      5.4592E+00 OP 
@@ -9030,7 +9030,7 @@ boundu(38) = 1.0
 ixc = 39 * fjohc0
 boundu(39) = 1.0
 ixc = 41 * fcohbop
-ixc = 42 * gapoh
+ixc = 42 * dr_cs_tf_gap
 boundl(42) = 0.05
 boundu(42) = 0.1
 ixc = 44 * fvsbrnni
@@ -9087,7 +9087,7 @@ d_vv_out = 0.30 * Outboard vacuum vessel thickness (tf coil / shield) (m)
 d_vv_top = 0.30 * Topside vacuum vessel thickness (tf coil / shield) (m)
 d_vv_bot = 0.30 * Underside vacuum vessel thickness (tf coil / shield) (m)
 gapds    = 0.12 * Gap between inboard vacuum vessel and tf coil (m)
-gapoh    = 0.05 * Gap between central solenoid and tf coil (m)
+dr_cs_tf_gap    = 0.05 * Gap between central solenoid and tf coil (m)
 gapomin  = 0.20 * Minimum gap between outboard vacuum vessel and tf coil (m)
 iohcl    = 1 * Switch for existence of central solenoid;
 dr_cs    = 0.8181 * Central solenoid thickness (m)
@@ -9331,7 +9331,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      fjohc          =  5.7941E-01
                      fjohc0         =  5.3923E-01
                      fcohbop        =  9.3176E-01
-                     gapoh          =  5.0000E-02
+                     dr_cs_tf_gap          =  5.0000E-02
                      fvsbrnni       =  3.9566E-01
                      fstrcase       =  1.0000E+00
                      fstrcond       =  9.2007E-01

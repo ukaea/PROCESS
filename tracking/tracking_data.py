@@ -107,7 +107,7 @@ class ProcessTracker:
         "blnkith",
         "vvblgap",
         "scraplo",
-        "gapoh",
+        "dr_cs_tf_gap",
         "gapsto",
         "shldoth",
         "tfcth",

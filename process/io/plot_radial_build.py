@@ -86,7 +86,7 @@ def get_radial_build(m_file):
         "dr_bore",
         "dr_cs",
         "dr_cs_precomp",
-        "gapoh",
+        "dr_cs_tf_gap",
         "tfcth",
         "tftsgap",
         "thshield_ib",
@@ -111,7 +111,7 @@ def get_radial_build(m_file):
     ]
     if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "tfcth"
-        radial_labels[2] = "gapoh"
+        radial_labels[2] = "dr_cs_tf_gap"
         radial_labels[3] = "dr_cs"
         radial_labels[4] = "dr_cs_precomp"
         radial_labels[5] = "tftsgap"

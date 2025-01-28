@@ -24,7 +24,7 @@ depending on the switches used.
  Machine dr_bore                                 2.124           2.124   (dr_bore)              IP, ITV
  Central solenoid                             0.500           2.624   (dr_cs)             IP, ITV
  CS precompression                            0.065           2.689   (dr_cs_precomp)           
- Gap                                          0.050           2.739   (gapoh)             IP, ITV
+ Gap                                          0.050           2.739   (dr_cs_tf_gap)             IP, ITV
  TF coil inboard leg                          1.400           4.139   (tfcth)             IP
  Gap                                          0.050           4.189   (tftsgap)           IP
  Thermal shield, inboard                      0.050           4.239   (thshield_ib)       IP

@@ -2016,7 +2016,7 @@ iprecomp = 0
 * DESCRIPTION:   Fraction of space occupied by CS pre-comp structure
 * JUSTIFICATION: Not used. No CS pre-compression
 
-gapoh = 0.0 
+dr_cs_tf_gap = 0.0 
 * DESCRIPTION:   Gap Between Central Solenoid and TF Coil (m)
 * JUSTIFICATION: 
 
