@@ -47,5 +47,31 @@ ignore = ["COM812", "FBT", "G004", "PD901"]
 [lint.per-file-ignores]
 "tests/*" = ["ARG"]
 
+[lint.pep8-naming]
+ignore-names = [
+    "*PROCESS*",
+    "*Bt*",
+    "*Bp*",
+    "*keV*",
+    "*MPa*",
+    "*H*",
+    "*T*",
+    "*D*",
+    "*He*",
+    "*Be*",
+    "C",
+    "N",
+    "O",
+    "Ne",
+    "Si",
+    "Ar",
+    "Fe",
+    "Ni",
+    "Kr",
+    "Xe",
+    "W",
+]
+
+
 [format]
 preview = true
