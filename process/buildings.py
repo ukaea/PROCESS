@@ -535,7 +535,7 @@ class Buildings:
                 build_variables.hmax
                 - (
                     build_variables.dr_tf_inboard
-                    + build_variables.tftsgap
+                    + build_variables.dr_tf_shld_gap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
                 )
@@ -579,7 +579,7 @@ class Buildings:
                 build_variables.hmax
                 - (
                     build_variables.dr_tf_inboard
-                    + build_variables.tftsgap
+                    + build_variables.dr_tf_shld_gap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
                 )

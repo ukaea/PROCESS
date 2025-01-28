@@ -2031,7 +2031,7 @@ dr_cs_tf_gap = 0.0
 * DESCRIPTION:   TF coil thickness (m)
 * JUSTIFICATION: Turned off, alculated in-situ. NOT RECOMMENDED FOR USE
 
-tftsgap = 0.01
+dr_tf_shld_gap = 0.01
 * DESCRIPTION:   Minimum Metal-to-Metal Gap Between TF Coil and Thermal Shield (m)
 * JUSTIFICATION: 
 
