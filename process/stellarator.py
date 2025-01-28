@@ -416,7 +416,7 @@ class Stellarator:
         )
         build_variables.fwoth = build_variables.fwith
 
-        build_variables.bore = physics_variables.rmajor - (
+        build_variables.dr_bore = physics_variables.rmajor - (
             build_variables.ohcth
             + build_variables.gapoh
             + build_variables.tfcth
@@ -431,7 +431,7 @@ class Stellarator:
 
         #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
         build_variables.rbld = (
-            build_variables.bore
+            build_variables.dr_bore
             + build_variables.ohcth
             + build_variables.gapoh
             + build_variables.tfcth
@@ -573,12 +573,12 @@ class Stellarator:
             po.obuild(self.outfile, "Device centreline", 0.0e0, radius)
 
             drbild = (
-                build_variables.bore + build_variables.ohcth + build_variables.gapoh
+                build_variables.dr_bore + build_variables.ohcth + build_variables.gapoh
             )
             radius = radius + drbild
-            po.obuild(self.outfile, "Machine bore", drbild, radius, "(bore)")
+            po.obuild(self.outfile, "Machine dr_bore", drbild, radius, "(dr_bore)")
             po.ovarre(
-                self.outfile, "Machine build_variables.bore (m)", "(bore)", drbild
+                self.outfile, "Machine build_variables.dr_bore (m)", "(dr_bore)", drbild
             )
 
             radius = radius + build_variables.tfcth
@@ -2827,7 +2827,7 @@ class Stellarator:
         )
         # the average minor coil radius
 
-        tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil bore
+        tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
 
         tfcoil_variables.tfleng = (
             stellarator_configuration.stella_config_coillength
@@ -3746,11 +3746,11 @@ class Stellarator:
         )
         po.ovarre(
             self.outfile,
-            "Clear horizontal bore (m)",
+            "Clear horizontal dr_bore (m)",
             "(tf_total_h_width)",
             tf_total_h_width,
         )
-        po.ovarre(self.outfile, "Clear vertical bore (m)", "(tfborev)", tfborev)
+        po.ovarre(self.outfile, "Clear vertical dr_bore (m)", "(tfborev)", tfborev)
 
         po.osubhd(self.outfile, "Conductor Information :")
         po.ovarre(

@@ -127,7 +127,7 @@ class PFCoil:
         # First break up Central Solenoid solenoid into 'filaments'
 
         # Central Solenoid mean radius
-        pfv.rohc = bv.bore + 0.5e0 * bv.ohcth
+        pfv.rohc = bv.dr_bore + 0.5e0 * bv.ohcth
 
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
@@ -473,9 +473,9 @@ class PFCoil:
                 * constants.pi
                 * constants.pi
                 * (
-                    (bv.bore * bv.bore)
+                    (bv.dr_bore * bv.dr_bore)
                     + (bv.ohcth * bv.ohcth) / 6.0e0
-                    + (bv.ohcth * bv.bore) / 2.0e0
+                    + (bv.ohcth * bv.dr_bore) / 2.0e0
                 )
                 / (bv.hmax * pfv.ohhghf * 2.0e0)
             )
@@ -733,7 +733,7 @@ class PFCoil:
                 c = c + 1
 
         pfv.itr_sum = pfv.itr_sum + (
-            (bv.bore + 0.5 * bv.ohcth)
+            (bv.dr_bore + 0.5 * bv.ohcth)
             * pfv.turns[pfv.nohc - 1]
             * pfv.cptdin[pfv.nohc - 1]
         )
@@ -921,14 +921,14 @@ class PFCoil:
                         ):
                             pf_tf_collision += 1
                         if pf.rcls[ii, ij] <= (  # Inboard TF coil collision
-                            bv.bore
+                            bv.dr_bore
                             + bv.ohcth
                             + bv.precomp
                             + bv.gapoh
                             + bv.tfcth
                             + pfv.rpf[i]
                         ) and pf.rcls[ii, ij] >= (
-                            bv.bore + bv.ohcth + bv.precomp + bv.gapoh - pfv.rpf[i]
+                            bv.dr_bore + bv.ohcth + bv.precomp + bv.gapoh - pfv.rpf[i]
                         ):
                             pf_tf_collision += 1
                         if (  # Vertical TF coil collision
@@ -1970,8 +1970,8 @@ class PFCoil:
                     pfv.coheof,
                 )
                 op.oblnkl(self.outfile)
-                # MDK add bv.ohcth, bv.bore and bv.gapoh as they can be iteration variables
-                op.ovarre(self.outfile, "CS inside radius (m)", "(bore)", bv.bore)
+                # MDK add bv.ohcth, bv.dr_bore and bv.gapoh as they can be iteration variables
+                op.ovarre(self.outfile, "CS inside radius (m)", "(dr_bore)", bv.dr_bore)
                 op.ovarre(self.outfile, "CS thickness (m)", "(ohcth)", bv.ohcth)
                 op.ovarre(
                     self.outfile,

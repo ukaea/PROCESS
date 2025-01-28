@@ -57,7 +57,7 @@ module build_variables
   real(dp) :: blnktth
   !! top blanket thickness (m), = mean of inboard and outboard blanket thicknesses
 
-  real(dp) :: bore
+  real(dp) :: dr_bore
   !! central solenoid inboard radius (m) (`iteration variable 29`)
 
   real(dp) :: f_z_cryostat
@@ -201,10 +201,10 @@ module build_variables
   !! Not used by default (-1) must be larger than 1 otherwise
 
   real(dp) :: dr_tf_inner_bore
-  !! TF coil horizontal inner bore (m)
+  !! TF coil horizontal inner dr_bore (m)
 
   real(dp) :: dh_tf_inner_bore
-  !! TF coil vertical inner bore (m)
+  !! TF coil vertical inner dr_bore (m)
 
   real(dp) :: scrapli
   !! Gap between plasma and first wall, inboard side (m) (if `i_plasma_wall_gap=1`)
@@ -314,7 +314,7 @@ module build_variables
     blnkith = 0.115D0
     blnkoth = 0.235D0
     blnktth = 0.0D0
-    bore = 1.42D0
+    dr_bore = 1.42D0
     f_z_cryostat = 4.268D0
     dr_cryostat = 0.07D0
     d_vv_in = 0.07D0

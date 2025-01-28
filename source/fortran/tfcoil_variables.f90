@@ -524,7 +524,7 @@ module tfcoil_variables
   !! surface area of toroidal shells covering TF coils (m2)
 
   real(dp) :: tficrn
-  !! TF coil half-width - inner bore (m)
+  !! TF coil half-width - inner dr_bore (m)
 
   real(dp) :: tfind
   !! TF coil inductance (H)
@@ -590,7 +590,7 @@ module tfcoil_variables
   !! Number of TF coils (default = 50 for stellarators). Number of TF coils outer legs for ST
 
   real(dp) :: tfocrn
-  !! TF coil half-width - outer bore (m)
+  !! TF coil half-width - outer dr_bore (m)
 
   real(dp) :: tfsai
   !! area of the inboard TF coil legs (m2)

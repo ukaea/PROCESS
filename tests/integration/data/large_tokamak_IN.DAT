@@ -231,10 +231,10 @@ ixc = 18
 boundl(18) = 3.0
 q = 3.5
 
-* Machine bore [m]
+* Machine dr_bore [m]
 ixc = 29
 boundl(29) = 0.1
-bore = 2.0
+dr_bore = 2.0
 
 * fvsbrnni
 ixc = 44

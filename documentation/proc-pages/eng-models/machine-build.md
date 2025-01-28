@@ -21,7 +21,7 @@ depending on the switches used.
  ************************************************ Radial Build ***************************************
  
  Device centreline                            0.000           0.000                       
- Machine bore                                 2.124           2.124   (bore)              IP, ITV
+ Machine dr_bore                                 2.124           2.124   (dr_bore)              IP, ITV
  Central solenoid                             0.500           2.624   (ohcth)             IP, ITV
  CS precompression                            0.065           2.689   (precomp)           
  Gap                                          0.050           2.739   (gapoh)             IP, ITV
