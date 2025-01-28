@@ -1899,7 +1899,7 @@ class Build:
         build_variables.r_tf_outboard_mid = (
             build_variables.rsldo
             + build_variables.vvblgap
-            + build_variables.d_vv_out
+            + build_variables.dr_vv_outboard
             + build_variables.gapomin
             + build_variables.dr_shld_thermal_outboard
             + build_variables.dr_tf_shld_gap
@@ -1926,7 +1926,7 @@ class Build:
             build_variables.gapsto = (
                 build_variables.r_tf_outboard_mid
                 - 0.5e0 * build_variables.tfthko
-                - build_variables.d_vv_out
+                - build_variables.dr_vv_outboard
                 - build_variables.rsldo
                 - build_variables.dr_shld_thermal_outboard
                 - build_variables.dr_tf_shld_gap
@@ -2353,11 +2353,11 @@ class Build:
                 radius,
             ])
 
-            radius += build_variables.d_vv_out
+            radius += build_variables.dr_vv_outboard
             radial_build_data.append([
                 "Outboard vacuum vessel",
-                "d_vv_out",
-                build_variables.d_vv_out,
+                "dr_vv_outboard",
+                build_variables.dr_vv_outboard,
                 radius,
             ])
 

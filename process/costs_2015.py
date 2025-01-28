@@ -844,7 +844,7 @@ class Costs2015:
         #  ITER reference vacuum vessel cost (2014 $)
         self.s_cref[31] = 537.0e6
         #  Scale with outermost midplane radius of vacuum vessel squared (m2)
-        self.s_k[31] = (build_variables.rsldo + build_variables.d_vv_out) ** 2
+        self.s_k[31] = (build_variables.rsldo + build_variables.dr_vv_outboard) ** 2
         self.s_kref[31] = 94.09e0
         self.s_cost[31] = (
             self.s_cost_factor[31]

@@ -282,7 +282,7 @@ gapds = 0.02
 dr_vv_inboard  = 0.3
 
 * Outboard vacuum vessel radial thickness [m]
-d_vv_out = 0.3
+dr_vv_outboard = 0.3
 
 * Topside vacuum vessel radial thickness [m]
 d_vv_top = 0.3

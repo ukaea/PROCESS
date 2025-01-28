@@ -2134,7 +2134,7 @@ dr_shld_thermal_outboard = 0.07
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-d_vv_out = 0.3
+dr_vv_outboard = 0.3
 * DESCRIPTION:   Outboard vaccum vessel thickness
 * JUSTIFICATION: 
 
