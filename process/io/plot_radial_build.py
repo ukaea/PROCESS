@@ -102,7 +102,7 @@ def get_radial_build(m_file):
         "fwoth",
         "blnkoth",
         "vvblgap",
-        "d_vv_out",
+        "dr_vv_outboard",
         "shldoth",
         "gapsto",
         "dr_shld_thermal_outboard",

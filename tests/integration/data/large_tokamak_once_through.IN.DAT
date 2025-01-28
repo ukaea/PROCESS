@@ -98,7 +98,7 @@ blnkoth  = 1.0 * outboard blanket thickness (m); calculated if `blktmodel>0`
 dr_bore     = 2.003843190236783 * central solenoid inboard radius (m) (`iteration variable 29`)
 dr_cryostat    = 0.15 * cryostat thickness (m)
 dr_vv_inboard  = 0.3 * vacuum vessel inboard thickness (TF coil / shield) (m)
-d_vv_out = 0.3 * vacuum vessel outboard thickness (TF coil / shield) (m)
+dr_vv_outboard = 0.3 * vacuum vessel outboard thickness (TF coil / shield) (m)
 d_vv_top = 0.3 * vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)
 d_vv_bot = 0.3 * vacuum vessel underside thickness (TF coil / shield) (m)
 gapds    = 0.02 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)

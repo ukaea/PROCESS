@@ -492,7 +492,7 @@ class Stellarator:
         build_variables.gapsto = build_variables.gapomin
         build_variables.r_tf_outboard_mid = (
             build_variables.rsldo
-            + build_variables.d_vv_out
+            + build_variables.dr_vv_outboard
             + build_variables.gapsto
             + 0.5e0 * build_variables.tfthko
         )
@@ -517,7 +517,7 @@ class Stellarator:
                 + build_variables.fwoth
                 + build_variables.blnkoth
                 + build_variables.shldoth
-                + build_variables.d_vv_out
+                + build_variables.dr_vv_outboard
                 + build_variables.gapsto
             )
         )
@@ -755,13 +755,13 @@ class Stellarator:
                 build_variables.shldoth,
             )
 
-            radius = radius + build_variables.d_vv_out
+            radius = radius + build_variables.dr_vv_outboard
             po.obuild(
                 self.outfile,
                 "Vacuum vessel",
-                build_variables.d_vv_out,
+                build_variables.dr_vv_outboard,
                 radius,
-                "(d_vv_out)",
+                "(dr_vv_outboard)",
             )
 
             radius = radius + build_variables.gapsto
@@ -1875,7 +1875,7 @@ class Stellarator:
             + build_variables.shldoth
         )
         fwbs_variables.vdewin = (
-            (build_variables.dr_vv_inboard + build_variables.d_vv_out)
+            (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0e0
             * physics_variables.a_plasma_surface
             * r1
@@ -2958,7 +2958,7 @@ class Stellarator:
                 * tfcoil_variables.ritfc
                 * physics_variables.rminor**2
                 / (
-                    (build_variables.dr_vv_inboard + build_variables.d_vv_out)
+                    (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
                     / 2
                     * tfcoil_variables.tdmptf
                     * radvv
@@ -2973,7 +2973,7 @@ class Stellarator:
         sctfcoil_module.vv_stress_quench = (
             f_vv_actual
             * 1e6
-            * ((build_variables.dr_vv_inboard + build_variables.d_vv_out) / 2)
+            * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
         )
 
         # the conductor fraction is meant of the cable space#
