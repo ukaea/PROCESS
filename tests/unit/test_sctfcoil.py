@@ -426,7 +426,7 @@ class TfCurrentParam(NamedTuple):
 
     r_tf_inboard_in: Any = None
 
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
 
     bt: Any = None
 
@@ -471,7 +471,7 @@ class TfCurrentParam(NamedTuple):
             tfareain=27.308689677971632,
             r_tf_inboard_out=4.20194118510911,
             r_tf_inboard_in=2.9939411851091102,
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             bt=5.3292000000000002,
             rmajor=8.8901000000000003,
             tfc_current=0,
@@ -554,7 +554,7 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_in", tfcurrentparam.r_tf_inboard_in
     )
 
-    monkeypatch.setattr(build_variables, "tfcth", tfcurrentparam.tfcth)
+    monkeypatch.setattr(build_variables, "dr_tf_inboard", tfcurrentparam.dr_tf_inboard)
 
     monkeypatch.setattr(physics_variables, "bt", tfcurrentparam.bt)
 
@@ -919,7 +919,7 @@ class TfResHeatingParam(NamedTuple):
     i_cp_joints: Any = None
     tinstf: Any = None
     tfthko: Any = None
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
     r_cp_top: Any = None
     hmax: Any = None
     r_tf_inboard_in: Any = None
@@ -1131,7 +1131,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             i_cp_joints=1,
             tinstf=0,
             tfthko=0.15483000000000002,
-            tfcth=0.15483000000000002,
+            dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.87643571428571443,
             hmax=4.4214285714285717,
             r_tf_inboard_in=0,
@@ -1181,7 +1181,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             i_cp_joints=1,
             tinstf=0,
             tfthko=0.15483000000000002,
-            tfcth=0.15483000000000002,
+            dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.85843571428571441,
             hmax=4.4214285714285717,
             r_tf_inboard_in=0,
@@ -1282,7 +1282,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(build_variables, "tfthko", tfresheatingparam.tfthko)
 
-    monkeypatch.setattr(build_variables, "tfcth", tfresheatingparam.tfcth)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
+    )
 
     monkeypatch.setattr(build_variables, "r_cp_top", tfresheatingparam.r_cp_top)
 
@@ -1827,7 +1829,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     r_tf_outboard_mid: Any = None
 
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
 
     r_tf_inboard_mid: Any = None
 
@@ -1960,7 +1962,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
         TfCoilAreaAndMassesParam(
             hr1=0,
             r_tf_outboard_mid=16.519405859443332,
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
@@ -2032,7 +2034,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
         TfCoilAreaAndMassesParam(
             hr1=0,
             r_tf_outboard_mid=16.519405859443332,
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
@@ -2122,7 +2124,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, sctfcoil
         build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
     )
 
-    monkeypatch.setattr(build_variables, "tfcth", tfcoilareaandmassesparam.tfcth)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_inboard", tfcoilareaandmassesparam.dr_tf_inboard
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
@@ -2415,7 +2419,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
 
 
 class TfWpGeomParam(NamedTuple):
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -2482,7 +2486,7 @@ class TfWpGeomParam(NamedTuple):
     "tfwpgeomparam",
     (
         TfWpGeomParam(
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
@@ -2515,7 +2519,7 @@ class TfWpGeomParam(NamedTuple):
             expected_a_ground_ins=0.028582295732936136,
         ),
         TfWpGeomParam(
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
@@ -2562,7 +2566,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "tfcth", tfwpgeomparam.tfcth)
+    monkeypatch.setattr(build_variables, "dr_tf_inboard", tfwpgeomparam.dr_tf_inboard)
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_in", tfwpgeomparam.r_tf_inboard_in
@@ -3403,7 +3407,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
 
 class StressclParam(NamedTuple):
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
 
     r_tf_inboard_mid: Any = None
 
@@ -3588,7 +3592,7 @@ class StressclParam(NamedTuple):
     "stressclparam",
     (
         StressclParam(
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             tf_in_cs=0,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
@@ -3711,7 +3715,7 @@ class StressclParam(NamedTuple):
             expected_str_wp=0.0015619754370069119,
         ),
         StressclParam(
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             tf_in_cs=0,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
@@ -3894,7 +3898,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.ohhghf,
         stressclparam.dr_cs,
         stressclparam.tf_in_cs,
-        stressclparam.tfcth,
+        stressclparam.dr_tf_inboard,
         stressclparam.dr_cs_tf_gap,
         stressclparam.ipfres,
         stressclparam.coheof,
@@ -14035,7 +14039,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     values they use to test the model for JA DEMO concept. Includes the assumptions
     and approximations in the models integration with PROCESS.
     """
-    monkeypatch.setattr(build_variables, "tfcth", 1.4)  # Baseline 2018 value
+    monkeypatch.setattr(build_variables, "dr_tf_inboard", 1.4)  # Baseline 2018 value
     monkeypatch.setattr(build_variables, "hmax", 8.8)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_inboard_mid", 3.55)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_outboard_mid", 15.62)  # Table 2
@@ -14044,7 +14048,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(
         build_variables,
         "r_tf_inboard_out",
-        build_variables.r_tf_inboard_mid + (build_variables.tfcth / 2),
+        build_variables.r_tf_inboard_mid + (build_variables.dr_tf_inboard / 2),
     )
     monkeypatch.setattr(build_variables, "tfthko", 0)  # simplifies
 

@@ -60,7 +60,7 @@ class Vacuum:
                 pv.vol_plasma,
                 buv.shldoth,
                 buv.shldith,
-                buv.tfcth,
+                buv.dr_tf_inboard,
                 buv.rsldi - buv.gapds - buv.d_vv_in,
                 tfv.n_tf,
                 tv.t_between_pulse,

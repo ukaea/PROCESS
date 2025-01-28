@@ -312,30 +312,30 @@ contains
   !---------------------------------
 
   subroutine init_itv_13
-    !! <LI> (13) tfcth (NOT RECOMMENDED)
+    !! <LI> (13) dr_tf_inboard (NOT RECOMMENDED)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(13) = 'tfcth         '
+    lablxc(13) = 'dr_tf_inboard         '
     boundl(13) = 0.100D0
     boundu(13) = 5.000D0
   end subroutine init_itv_13
 
   real(kind(1.d0)) function itv_13()
-    use build_variables, only: tfcth
+    use build_variables, only: dr_tf_inboard
     use error_handling, only: report_error
     use stellarator_variables, only: istell
     implicit none
-    itv_13 = tfcth
+    itv_13 = dr_tf_inboard
     if (istell /= 0) then
         call report_error(46)
     end if
   end function itv_13
 
   subroutine set_itv_13(ratio)
-    use build_variables, only: tfcth
+    use build_variables, only: dr_tf_inboard
     implicit none
     real(kind(1.d0)) :: ratio
-    tfcth = ratio
+    dr_tf_inboard = ratio
   end subroutine set_itv_13
 
   !---------------------------------

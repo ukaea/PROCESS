@@ -238,7 +238,7 @@
     {
       "no": 46,
       "level": 3,
-      "message": "LOADXC: Do not use tfcth as an iteration variable if istell=1"
+      "message": "LOADXC: Do not use dr_tf_inboard as an iteration variable if istell=1"
     },
     {
       "no": 47,
@@ -498,7 +498,7 @@
     {
       "no": 98,
       "level": 2,
-      "message": "SCTFCOIL: Negative winding pack thickness; increase tfcth or its lower bound"
+      "message": "SCTFCOIL: Negative winding pack thickness; increase dr_tf_inboard or its lower bound"
     },
     {
       "no": 99,

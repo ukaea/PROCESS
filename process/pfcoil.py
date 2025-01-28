@@ -174,7 +174,8 @@ class PFCoil:
                     pf.zcls[j, k] = signn[k] * (
                         bv.hmax * pfv.ohhghf
                         + 0.1e0
-                        + 0.5e0 * (bv.hmax * (1.0e0 - pfv.ohhghf) + bv.tfcth + 0.1e0)
+                        + 0.5e0
+                        * (bv.hmax * (1.0e0 - pfv.ohhghf) + bv.dr_tf_inboard + 0.1e0)
                     )
 
             elif pfv.ipfloc[j] == 2:
@@ -184,7 +185,7 @@ class PFCoil:
                     if pv.itart == 1 and pv.itartpf == 0:
                         pf.zcls[j, k] = (bv.hmax - pfv.zref[j]) * signn[k]
                     else:
-                        # pf.zcls(j,k) = (bv.hmax + bv.tfcth + 0.86e0) * signn(k)
+                        # pf.zcls(j,k) = (bv.hmax + bv.dr_tf_inboard + 0.86e0) * signn(k)
                         if top_bottom == 1:  # this coil is above midplane
                             pf.zcls[j, k] = bv.hpfu + 0.86e0
                             top_bottom = -1
@@ -548,7 +549,7 @@ class PFCoil:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.dr_cs
                     dz = 0.5e0 * (
-                        bv.hmax * (1.0e0 - pfv.ohhghf) + bv.tfcth + 0.1e0
+                        bv.hmax * (1.0e0 - pfv.ohhghf) + bv.dr_tf_inboard + 0.1e0
                     )  # ???
                     area = 4.0e0 * dx * dz * pfv.pf_current_safety_factor
 
@@ -925,7 +926,7 @@ class PFCoil:
                             + bv.dr_cs
                             + bv.dr_cs_precomp
                             + bv.dr_cs_tf_gap
-                            + bv.tfcth
+                            + bv.dr_tf_inboard
                             + pfv.rpf[i]
                         ) and pf.rcls[ii, ij] >= (
                             bv.dr_bore

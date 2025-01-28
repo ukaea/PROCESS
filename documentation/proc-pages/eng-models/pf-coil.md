@@ -29,11 +29,11 @@ into account `i_single_null` and other recent changes e.g. rclsnorm)
 
 `ipfloc(j)` = 1: PF coils are placed above the central solenoid (one group only);
 *R* = `rohc` + `rpf1`<br>
-*Z* = $\pm$(`hmax` * `ohhghf` + 0.1 + 0.5 * (`hmax` * (1 - `ohhghf`) + `tfcth` + 0.1))
+*Z* = $\pm$(`hmax` * `ohhghf` + 0.1 + 0.5 * (`hmax` * (1 - `ohhghf`) + `dr_tf_inboard` + 0.1))
 
 `ipfloc(j)` = 2: PF coils are placed above the TF coils (one group only);<br>
 *R* = `rmajor` + `rpf2`<br>
-*Z* = $\pm$(`hmax` * `tfcth` + 0.86)
+*Z* = $\pm$(`hmax` * `dr_tf_inboard` + 0.86)
 
 `ipfloc(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
 *R* = `rtot` + `tfthko`/2 + `routr`<br>
