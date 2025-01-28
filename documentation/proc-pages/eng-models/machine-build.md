@@ -29,7 +29,7 @@ depending on the switches used.
  Gap                                          0.050           4.189   (tftsgap)           IP
  Thermal shield, inboard                      0.050           4.239   (dr_shld_thermal_inboard)       IP
  Gap                                          0.020           4.259   (gapds)             IP
- Vacuum vessel (and shielding)                0.600           4.859   (d_vv_in + shldith) IP
+ Vacuum vessel (and shielding)                0.600           4.859   (dr_vv_inboard + shldith) IP
  Gap                                          0.020           4.879   (vvblgap)           IP
  Inboard blanket                              0.755           5.634   (blnkith)           IP*
  Inboard first wall                           0.018           5.652   (fwith)             

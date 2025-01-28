@@ -33,7 +33,7 @@ def ccfe_hcpb():
 class NuclearHeatingMagnetsParam(NamedTuple):
     fwith: Any = None
 
-    d_vv_in: Any = None
+    dr_vv_inboard: Any = None
 
     d_vv_out: Any = None
 
@@ -133,7 +133,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
     (
         NuclearHeatingMagnetsParam(
             fwith=0.018000000000000002,
-            d_vv_in=0.30000000000000004,
+            dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             fwoth=0.018000000000000002,
             blnkith=0.75500000000000012,
@@ -183,7 +183,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
         ),
         NuclearHeatingMagnetsParam(
             fwith=0.018000000000000002,
-            d_vv_in=0.30000000000000004,
+            dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             fwoth=0.018000000000000002,
             blnkith=0.75500000000000012,
@@ -248,7 +248,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(build_variables, "fwith", nuclearheatingmagnetsparam.fwith)
 
-    monkeypatch.setattr(build_variables, "d_vv_in", nuclearheatingmagnetsparam.d_vv_in)
+    monkeypatch.setattr(
+        build_variables, "dr_vv_inboard", nuclearheatingmagnetsparam.dr_vv_inboard
+    )
 
     monkeypatch.setattr(
         build_variables, "d_vv_out", nuclearheatingmagnetsparam.d_vv_out

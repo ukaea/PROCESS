@@ -200,7 +200,7 @@ contains
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
-      r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
+      r_cp_top, dr_vv_inboard, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
       tfcbv, hccl, rbrt, triv, shov, admv, i_bldgs_v, i_bldgs_size, &
@@ -1318,8 +1318,8 @@ contains
        case ('dr_cryostat')
           call parse_real_variable('dr_cryostat', dr_cryostat, 0.0D0, 10.0D0, &
                'cryostat wall thickness (m)')
-       case ('d_vv_in')
-          call parse_real_variable('d_vv_in', d_vv_in, 0.0D0, 10.0D0, &
+       case ('dr_vv_inboard')
+          call parse_real_variable('dr_vv_inboard', dr_vv_inboard, 0.0D0, 10.0D0, &
                'Inboard vacuum vessel thickness (m)')
        case ('d_vv_out')
           call parse_real_variable('d_vv_out', d_vv_out, 0.0D0, 10.0D0, &

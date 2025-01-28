@@ -14075,7 +14075,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )  # chosen to achieve Ro_vv in Table 2
 
     monkeypatch.setattr(build_variables, "d_vv_out", 0.06)  # Section 3
-    monkeypatch.setattr(build_variables, "d_vv_in", 0.06)  # Section 3
+    monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "d_vv_top", 0.06)  # Section 3
 
     monkeypatch.setattr(tfcoil_variables, "tfleng", 51.1)  # Table 2
@@ -14088,7 +14088,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "tfc_current", 83200 * 192)  # Section 3
 
     monkeypatch.setattr(
-        build_variables, "r_vv_inboard_out", 4.45 + (build_variables.d_vv_in / 2)
+        build_variables, "r_vv_inboard_out", 4.45 + (build_variables.dr_vv_inboard / 2)
     )  # Table 2
 
     sctfcoil.vv_stress_on_quench()

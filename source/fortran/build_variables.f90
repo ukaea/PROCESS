@@ -66,7 +66,7 @@ module build_variables
   real(dp) :: dr_cryostat
   !! cryostat thickness (m)
 
-  real(dp) :: d_vv_in
+  real(dp) :: dr_vv_inboard
   !! vacuum vessel inboard thickness (TF coil / shield) (m)
 
   real(dp) :: d_vv_out
@@ -317,7 +317,7 @@ module build_variables
     dr_bore = 1.42D0
     f_z_cryostat = 4.268D0
     dr_cryostat = 0.07D0
-    d_vv_in = 0.07D0
+    dr_vv_inboard = 0.07D0
     d_vv_out = 0.07D0
     d_vv_top = 0.07D0
     d_vv_bot = 0.07D0
