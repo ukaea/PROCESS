@@ -58,7 +58,7 @@ class Vacuum:
                 0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.dr_fw_plasma_gap_outboard),
                 pv.a_plasma_surface,
                 pv.vol_plasma,
-                buv.shldoth,
+                buv.dr_shld_outboard,
                 buv.dr_shld_inboard,
                 buv.dr_tf_inboard,
                 buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,

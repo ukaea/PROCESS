@@ -106,7 +106,7 @@ dr_cs    = 0.546816593988753 * Central solenoid thickness (m) (`iteration variab
 dr_fw_plasma_gap_inboard  = 0.25 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
 dr_fw_plasma_gap_outboard  = 0.25 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
 dr_shld_inboard  = 0.3 * inboard shield thickness (m) (`iteration variable 93`)
-shldoth  = 0.800 * outboard shield thickness (m) (`iteration variable 94`)
+dr_shld_outboard  = 0.800 * outboard shield thickness (m) (`iteration variable 94`)
 dr_tf_inboard    = 1.2 * inboard TF coil thickness; (centrepost for ST) (m)
 dr_shld_thermal_inboard = 0.050 * TF-VV thermal shield thickness; inboard (m)
 dr_shld_thermal_outboard = 0.050 * TF-VV thermal shield thickness; outboard (m)

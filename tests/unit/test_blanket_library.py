@@ -471,7 +471,7 @@ class DshapedComponentParam(NamedTuple):
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
-    shldoth: Any = None
+    dr_shld_outboard: Any = None
     shldtth: Any = None
     rsldo: Any = None
     dr_vv_inboard: Any = None
@@ -528,7 +528,7 @@ class DshapedComponentParam(NamedTuple):
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldoth=0.30000000000000004,
+            dr_shld_outboard=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
@@ -581,7 +581,7 @@ class DshapedComponentParam(NamedTuple):
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldoth=0.30000000000000004,
+            dr_shld_outboard=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
@@ -634,7 +634,7 @@ class DshapedComponentParam(NamedTuple):
             shareaib=208.91591146372122,
             shareaob=1013.8483589087293,
             sharea=1222.7642703724505,
-            shldoth=0.30000000000000004,
+            dr_shld_outboard=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
@@ -718,7 +718,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(build_variables, "shareaib", dshapedcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", dshapedcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", dshapedcomponentparam.sharea)
-    monkeypatch.setattr(build_variables, "shldoth", dshapedcomponentparam.shldoth)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_outboard", dshapedcomponentparam.dr_shld_outboard
+    )
     monkeypatch.setattr(build_variables, "shldtth", dshapedcomponentparam.shldtth)
     monkeypatch.setattr(build_variables, "rsldo", dshapedcomponentparam.rsldo)
     monkeypatch.setattr(
@@ -767,7 +769,7 @@ class EllipticalComponentParam(NamedTuple):
     dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     rsldo: Any = None
-    shldoth: Any = None
+    dr_shld_outboard: Any = None
     dr_blkt_outboard: Any = None
     blareaib: Any = None
     blareaob: Any = None
@@ -823,7 +825,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
-            shldoth=0.80000000000000004,
+            dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             blareaib=0,
             blareaob=0,
@@ -875,7 +877,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
-            shldoth=0.80000000000000004,
+            dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
@@ -927,7 +929,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
-            shldoth=0.80000000000000004,
+            dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
@@ -998,7 +1000,9 @@ def test_elliptical_component(
         build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
     )
     monkeypatch.setattr(build_variables, "rsldo", ellipticalcomponentparam.rsldo)
-    monkeypatch.setattr(build_variables, "shldoth", ellipticalcomponentparam.shldoth)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_outboard", ellipticalcomponentparam.dr_shld_outboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_blkt_outboard", ellipticalcomponentparam.dr_blkt_outboard
     )
