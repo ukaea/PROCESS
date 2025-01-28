@@ -1763,7 +1763,7 @@ class Build:
                     - physics_variables.rminor * physics_variables.triang
                     - (
                         build_variables.tftsgap
-                        + build_variables.thshield_ib
+                        + build_variables.dr_shld_thermal_inboard
                         + build_variables.shldith
                         + build_variables.vvblgap
                         + build_variables.blnkith
@@ -1818,7 +1818,7 @@ class Build:
             - physics_variables.rminor * physics_variables.triang
             - (
                 build_variables.tftsgap
-                + build_variables.thshield_ib
+                + build_variables.dr_shld_thermal_inboard
                 + build_variables.shldith
                 + build_variables.vvblgap
                 + build_variables.blnkith
@@ -1837,7 +1837,7 @@ class Build:
                 + build_variables.dr_cs_tf_gap
                 + build_variables.dr_cs_precomp
                 + build_variables.tftsgap
-                + build_variables.thshield_ib
+                + build_variables.dr_shld_thermal_inboard
                 + build_variables.gapds
                 + build_variables.d_vv_in
             )
@@ -1845,7 +1845,7 @@ class Build:
             build_variables.r_vv_inboard_out = (
                 build_variables.r_tf_inboard_out
                 + build_variables.tftsgap
-                + build_variables.thshield_ib
+                + build_variables.dr_shld_thermal_inboard
                 + build_variables.gapds
                 + build_variables.d_vv_in
             )
@@ -2233,11 +2233,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.thshield_ib
+            radius = radius + build_variables.dr_shld_thermal_inboard
             radial_build_data.append([
                 "Thermal shield, inboard",
-                "thshield_ib",
-                build_variables.thshield_ib,
+                "dr_shld_thermal_inboard",
+                build_variables.dr_shld_thermal_inboard,
                 radius,
             ])
 

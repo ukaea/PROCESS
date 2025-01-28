@@ -258,7 +258,7 @@ module build_variables
   real(dp) :: tftsgap
   !! Minimum metal-to-metal gap between TF coil and thermal shield (m)
 
-  real(dp) :: thshield_ib
+  real(dp) :: dr_shld_thermal_inboard
   !! TF-VV thermal shield thickness, inboard (m)
 
   real(dp) :: thshield_ob
@@ -373,7 +373,7 @@ module build_variables
     tfootfi = 1.19D0
     tfthko = 0.0D0
     tftsgap = 0.05D0
-    thshield_ib = 0.05D0
+    dr_shld_thermal_inboard = 0.05D0
     thshield_ob = 0.05D0
     thshield_vb = 0.05D0
     vgap_vv_thermalshield = 0.163D0

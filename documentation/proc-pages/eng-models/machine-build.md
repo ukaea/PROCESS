@@ -27,7 +27,7 @@ depending on the switches used.
  Gap                                          0.050           2.739   (dr_cs_tf_gap)             IP, ITV
  TF coil inboard leg                          1.400           4.139   (dr_tf_inboard)             IP
  Gap                                          0.050           4.189   (tftsgap)           IP
- Thermal shield, inboard                      0.050           4.239   (thshield_ib)       IP
+ Thermal shield, inboard                      0.050           4.239   (dr_shld_thermal_inboard)       IP
  Gap                                          0.020           4.259   (gapds)             IP
  Vacuum vessel (and shielding)                0.600           4.859   (d_vv_in + shldith) IP
  Gap                                          0.020           4.879   (vvblgap)           IP

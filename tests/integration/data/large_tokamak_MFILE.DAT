@@ -568,7 +568,7 @@
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      9.2950E-01 ITV
  TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
- Thermal_shield,_inboard_(m)_____________________________________________ (thshield_ib)_________________      5.0000E-02    
+ Thermal_shield,_inboard_(m)_____________________________________________ (dr_shld_thermal_inboard)_________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02    
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_in)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (shldith)_____________________      3.0000E-01    
@@ -1480,7 +1480,7 @@ dr_tf_wp = 0.5
 ****************
 
 * Thermal shield radial thickness [m]
-thshield_ib = 0.050
+dr_shld_thermal_inboard = 0.050
 thshield_ob = 0.050
 thshield_vb = 0.050
 
