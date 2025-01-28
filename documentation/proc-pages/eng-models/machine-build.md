@@ -41,7 +41,7 @@ depending on the switches used.
  Outboard blanket                             0.982          13.633   (dr_blkt_outboard)           IP*
  Gap                                          0.020          13.653   (dr_shld_blkt_gap)           IP
  Vacuum vessel (and shielding)                1.100          14.753   (dr_vv_outboard+dr_shld_outboard)  IP
- Gap                                          1.900          16.652   (gapsto)            
+ Gap                                          1.900          16.652   (dr_shld_vv_gap_outboard)            
  Thermal shield, outboard                     0.050          16.702   (dr_shld_thermal_outboard)       IP
  Gap                                          0.050          16.752   (dr_tf_shld_gap)           IP
  TF coil outboard leg                         1.400          18.152   (dr_tf_outboard)          

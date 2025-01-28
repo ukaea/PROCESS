@@ -1931,7 +1931,7 @@ class Build:
         #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
         if r_tf_outboard_midl > build_variables.r_tf_outboard_mid:
             build_variables.r_tf_outboard_mid = r_tf_outboard_midl
-            build_variables.gapsto = (
+            build_variables.dr_shld_vv_gap_outboard = (
                 build_variables.r_tf_outboard_mid
                 - 0.5e0 * build_variables.dr_tf_outboard
                 - build_variables.dr_vv_outboard
@@ -1947,9 +1947,9 @@ class Build:
                 build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_inboard
             )
         else:
-            build_variables.gapsto = build_variables.gapomin
+            build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
-        #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.gapsto value
+        #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
         #  call rippl(tfcoil_variables.ripmax,rmajor,rminor,r_tf_outboard_mid,n_tf,ripple,r_tf_outboard_midl)
         (
             tfcoil_variables.ripple,
@@ -2370,11 +2370,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.gapsto
+            radius = radius + build_variables.dr_shld_vv_gap_outboard
             radial_build_data.append([
                 "Vessel to TF gap",
-                "gapsto",
-                build_variables.gapsto,
+                "dr_shld_vv_gap_outboard",
+                build_variables.dr_shld_vv_gap_outboard,
                 radius,
             ])
 

@@ -1024,7 +1024,7 @@ $$
   TF coil leg to a larger radius. The outboard ripple is directly obtained reverting the ripple fit to provide
   \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) as a function of the ripple.
   The minimal \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) is technically obtained
-  by increasing the gap between the vacuum vessel and the coil (gapsto).
+  by increasing the gap between the vacuum vessel and the coil (dr_shld_vv_gap_outboard).
 </p>
 
 <p style='text-align: justify;'>

@@ -114,7 +114,7 @@ module build_variables
   real(dp) :: gapomin
   !! minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)
 
-  real(dp) :: gapsto
+  real(dp) :: dr_shld_vv_gap_outboard
   !! gap between outboard vacuum vessel and TF coil (m)
 
   real(dp) :: hmax
@@ -336,7 +336,7 @@ module build_variables
     dr_shld_vv_gap_inboard = 0.155D0
     dr_cs_tf_gap = 0.08D0
     gapomin = 0.234D0
-    gapsto = 0.0D0
+    dr_shld_vv_gap_outboard = 0.0D0
     hmax = 0.0D0
     hpfdif = 0.0D0
     hpfu = 0.0D0

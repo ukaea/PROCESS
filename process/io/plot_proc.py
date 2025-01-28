@@ -144,7 +144,7 @@ RADIAL_BUILD = [
     "vvblgapo",
     "dr_shld_outboard",
     "dr_vv_outboard",
-    "gapsto",
+    "dr_shld_vv_gap_outboard",
     "dr_shld_thermal_outboard",
     "dr_tf_shld_gap",
     "dr_tf_outboard",
@@ -264,9 +264,7 @@ def cumulative_radial_build(section, mfile_data, scan):
         if item == "rminori" or item == "rminoro":
             cumulative_build += mfile_data.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
-            cumulative_build += mfile_data.data["dr_shld_blkt_gap"].get_scan(
-                scan
-            )
+            cumulative_build += mfile_data.data["dr_shld_blkt_gap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             cumulative_build += mfile_data.data["dr_vv_inboard"].get_scan(scan)
         elif "dr_vv_outboard" in item:
@@ -3391,7 +3389,7 @@ def main(args=None):
     global dr_blkt_outboard
     global dr_shld_outboard
     global ddwi
-    global gapsto
+    global dr_shld_vv_gap_outboard
     global dr_tf_outboard
     global r_cryostat_inboard
     global z_cryostat_half_inside
@@ -3413,7 +3411,7 @@ def main(args=None):
     dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
     dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
     dr_shld_outboard = m_file.data["dr_shld_outboard"].get_scan(scan)
-    gapsto = m_file.data["gapsto"].get_scan(scan)
+    dr_shld_vv_gap_outboard = m_file.data["dr_shld_vv_gap_outboard"].get_scan(scan)
     dr_tf_outboard = m_file.data["dr_tf_outboard"].get_scan(scan)
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
     z_cryostat_half_inside = m_file.data["z_cryostat_half_inside"].get_scan(scan)
