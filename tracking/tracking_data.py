@@ -305,7 +305,7 @@ class TrackedVariable:
         # message: latest commit message when `title` was run at time `date` (possibly unique)
         # hash: latest commit hash when `title` was run at time `date` (possibly unique)
 
-    def add_datapoint(self, title, data, message, hash, timestamp):
+    def add_datapoint(self, title, data, message, commit_hash, timestamp):
         """
         Adds a tuple to this graph
 
@@ -314,7 +314,7 @@ class TrackedVariable:
         data: the value of the variable, `name`, on `title` run at time `date` (possibly unique)
         message: latest commit message when `title` was run at time `date` (possibly unique)
         """
-        self._data.append((title, timestamp, data, message, hash))
+        self._data.append((title, timestamp, data, message, commit_hash))
 
     def as_dataframe(self):
         """

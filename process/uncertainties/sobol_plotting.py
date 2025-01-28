@@ -60,17 +60,17 @@ def main(args=None):
     args = parse_args(args)
 
     # setput files
-    input = args.datafile
+    input_raw = args.datafile
     output = args.outputfile
     pdf = bpdf.PdfPages(output)
     page = plt.figure(figsize=(12, 9), dpi=80)
 
     # read in data
-    names = np.loadtxt(input, dtype=str, usecols=[0], skiprows=1)
+    names = np.loadtxt(input_raw, dtype=str, usecols=[0], skiprows=1)
     s1 = np.loadtxt(input, usecols=[1], skiprows=1)
-    s1_conf = np.loadtxt(input, usecols=[2], skiprows=1)
+    s1_conf = np.loadtxt(input_raw, usecols=[2], skiprows=1)
     st = np.loadtxt(input, usecols=[3], skiprows=1)
-    st_conf = np.loadtxt(input, usecols=[4], skiprows=1)
+    st_conf = np.loadtxt(input_raw, usecols=[4], skiprows=1)
 
     x = np.arange(len(names))
     width = 0.35

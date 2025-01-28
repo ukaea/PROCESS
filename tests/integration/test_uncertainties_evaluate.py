@@ -175,8 +175,8 @@ def test_morris_plotting(temp_data):
     :param temp_data: temporary data dir
     :type temp_data: Path
     """
-    input = temp_data / "morris_method_output.txt"
-    input_str = str(input)
+    input_raw = temp_data / "morris_method_output.txt"
+    input_str = str(input_raw)
 
     output = temp_data / "morris_output.pdf"
     output_str = str(output)
@@ -194,8 +194,8 @@ def test_sobol_plotting(temp_data):
     :param temp_data: temporary data dir
     :type temp_data: Path
     """
-    input = temp_data / "sobol.txt"
-    input_str = str(input)
+    input_raw = temp_data / "sobol.txt"
+    input_str = str(input_raw)
 
     output = temp_data / "sobol_output.pdf"
     output_str = str(output)

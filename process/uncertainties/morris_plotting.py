@@ -60,15 +60,15 @@ def main(args=None):
     args = parse_args(args)
 
     # setput files
-    input = args.datafile
+    input_ra = args.datafile
     output = args.outputfile
     pdf = bpdf.PdfPages(output)
     page = plt.figure(figsize=(12, 9), dpi=80)
 
     # read in data
-    n = np.loadtxt(input, dtype=str, usecols=[0], skiprows=1)
-    z = np.loadtxt(input, usecols=[2], skiprows=1)
-    y = np.loadtxt(input, usecols=[3], skiprows=1)
+    n = np.loadtxt(input_ra, dtype=str, usecols=[0], skiprows=1)
+    z = np.loadtxt(input_ra, usecols=[2], skiprows=1)
+    y = np.loadtxt(input_ra, usecols=[3], skiprows=1)
 
     plt.scatter(z, y)
 

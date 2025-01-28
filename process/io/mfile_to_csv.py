@@ -76,7 +76,7 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     return obj["vars"]
 
 
-def read_mfile(mfilename="MFILE.DAT", vars=None):
+def read_mfile(mfilename="MFILE.DAT", variables=None):
     """Returns specified variable values from identified file.
 
     :param args: input filename, variable names
@@ -84,8 +84,8 @@ def read_mfile(mfilename="MFILE.DAT", vars=None):
     :return: variable descriptions, names, and values
     :rtype: list of tuples
     """
-    if vars is None:
-        vars = []
+    if variables is None:
+        variables = []
     print("Reading from MFILE:", mfilename)
 
     m_file = MFile(mfilename)

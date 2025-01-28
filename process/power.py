@@ -1573,8 +1573,8 @@ class Power:
                 physics_variables.pradmw,
                 "OP ",
             )
-            sum = physics_variables.pscalingmw + physics_variables.pradmw
-            po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
+            total = physics_variables.pscalingmw + physics_variables.pradmw
+            po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
         elif physics_variables.iradloss == 1:
             po.ocmmnt(
                 self.outfile,
@@ -1601,7 +1601,7 @@ class Power:
                 physics_variables.pscalingmw + physics_variables.pinnerzoneradmw,
                 "OP ",
             )
-            sum = physics_variables.pscalingmw + physics_variables.pinnerzoneradmw
+            total = physics_variables.pscalingmw + physics_variables.pinnerzoneradmw
         elif physics_variables.iradloss == 2:
             po.ocmmnt(
                 self.outfile,
@@ -1618,7 +1618,7 @@ class Power:
             po.ovarrf(
                 self.outfile, "Total (MW)", "", physics_variables.pscalingmw, "OP "
             )
-            sum = physics_variables.pscalingmw
+            total = physics_variables.pscalingmw
         else:
             logger.error(
                 f"{'The value of physics_variables.iradloss appears to be invalid.'}"
@@ -1678,7 +1678,7 @@ class Power:
         po.oblnkl(self.outfile)
         if (
             abs(
-                sum
+                total
                 - (
                     physics_variables.f_alpha_plasma
                     * physics_variables.alpha_power_total
@@ -1730,14 +1730,14 @@ class Power:
             self.htpmw_mech,
             "OP ",
         )
-        sum = (
+        total = (
             physics_variables.fusion_power
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
             + physics_variables.p_plasma_ohmic_mw
         )
-        po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
+        po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
         po.oblnkl(self.outfile)
         # po.ovarrf(self.outfile,'Heat extracted from armour and first wall (MW)','(pthermfw)',pthermfw, 'OP ')
         po.ovarrf(
@@ -1789,7 +1789,7 @@ class Power:
         po.oblnkl(self.outfile)
         if (
             abs(
-                sum
+                total
                 - (
                     self.pthermfw_blkt
                     + self.pthermshld
@@ -1889,7 +1889,7 @@ class Power:
             heat_transport_variables.fachtmw,
             "OP ",
         )
-        sum = (
+        total_plant_power = (
             heat_transport_variables.pnetelmw
             + heat_transport_variables.pinjwp
             + heat_transport_variables.htpmw
@@ -1900,11 +1900,10 @@ class Power:
             + heat_transport_variables.fachtmw
             + pfcoil_variables.pfwpmw
         )
-        tot_plant_power = sum
         po.ovarrf(
-            self.outfile, "Total (MW)", "(tot_plant_power)", tot_plant_power, "OP "
+            self.outfile, "Total (MW)", "(tot_plant_power)", total_plant_power, "OP "
         )
-        po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
+        po.ovarrf(self.outfile, "Total (MW)", "", total_plant_power, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
@@ -1917,7 +1916,7 @@ class Power:
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
         )
         po.oblnkl(self.outfile)
-        if abs(sum - heat_transport_variables.pgrossmw) > 5.0e0:
+        if abs(total_plant_power - heat_transport_variables.pgrossmw) > 5.0e0:
             logger.warning(
                 f"{'WARNING: Electrical Power balance is in error by more than 5 MW.'}"
             )
@@ -1942,8 +1941,8 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        sum = physics_variables.fusion_power + fwbs_variables.emultmw
-        po.ovarrf(self.outfile, "Total (MW)", "", sum, "OP ")
+        total_power = physics_variables.fusion_power + fwbs_variables.emultmw
+        po.ovarrf(self.outfile, "Total (MW)", "", total_power, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
@@ -1978,7 +1977,7 @@ class Power:
         po.oblnkl(self.outfile)
         if (
             abs(
-                sum
+                total_power
                 - (
                     heat_transport_variables.pnetelmw
                     + self.rejected_main
