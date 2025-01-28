@@ -2307,7 +2307,7 @@ class Sctfcoil:
             build_variables.r_tf_outboard_mid
             - (build_variables.tfthko / 2)
             - build_variables.dr_tf_shld_gap
-            - build_variables.thshield_ob
+            - build_variables.dr_shld_thermal_outboard
             - build_variables.gapsto
             - (build_variables.d_vv_out / 2)
         )

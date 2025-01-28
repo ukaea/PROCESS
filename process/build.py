@@ -1901,7 +1901,7 @@ class Build:
             + build_variables.vvblgap
             + build_variables.d_vv_out
             + build_variables.gapomin
-            + build_variables.thshield_ob
+            + build_variables.dr_shld_thermal_outboard
             + build_variables.dr_tf_shld_gap
             + 0.5e0 * build_variables.tfthko
         )
@@ -1928,7 +1928,7 @@ class Build:
                 - 0.5e0 * build_variables.tfthko
                 - build_variables.d_vv_out
                 - build_variables.rsldo
-                - build_variables.thshield_ob
+                - build_variables.dr_shld_thermal_outboard
                 - build_variables.dr_tf_shld_gap
                 - build_variables.vvblgap
             )
@@ -2369,11 +2369,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.thshield_ob
+            radius = radius + build_variables.dr_shld_thermal_outboard
             radial_build_data.append([
                 "Ouboard thermal shield",
-                "thshield_ob",
-                build_variables.thshield_ob,
+                "dr_shld_thermal_outboard",
+                build_variables.dr_shld_thermal_outboard,
                 radius,
             ])
 
