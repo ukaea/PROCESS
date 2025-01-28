@@ -111,7 +111,7 @@ class ProcessTracker:
         "gapsto",
         "shldoth",
         "dr_tf_inboard",
-        "gapds",
+        "dr_shld_vv_gap_inboard",
         "pnucshld",
         "pnucblkt",
         "triang",

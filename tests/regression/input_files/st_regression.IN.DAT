@@ -2039,7 +2039,7 @@ dr_shld_thermal_inboard = 0.05
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-gapds = 0.01 
+dr_shld_vv_gap_inboard = 0.01 
 * DESCRIPTION:   Gap Between inboard Vacuum Vessel and Thermal Shield (m)
 * JUSTIFICATION: 
 

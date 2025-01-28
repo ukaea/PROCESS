@@ -28,7 +28,7 @@ depending on the switches used.
  TF coil inboard leg                          1.400           4.139   (dr_tf_inboard)             IP
  Gap                                          0.050           4.189   (dr_tf_shld_gap)           IP
  Thermal shield, inboard                      0.050           4.239   (dr_shld_thermal_inboard)       IP
- Gap                                          0.020           4.259   (gapds)             IP
+ Gap                                          0.020           4.259   (dr_shld_vv_gap_inboard)             IP
  Vacuum vessel (and shielding)                0.600           4.859   (dr_vv_inboard + dr_shld_inboard) IP
  Gap                                          0.020           4.879   (vvblgap)           IP
  Inboard blanket                              0.755           5.634   (dr_blkt_inboard)           IP*

@@ -102,7 +102,7 @@ module build_variables
   real(dp) :: fwoth
   !! outboard first wall thickness, initial estimate as calculated (m)
 
-  real(dp) :: gapds
+  real(dp) :: dr_shld_vv_gap_inboard
   !! gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
 
   real(dp) :: dr_cs_tf_gap
@@ -329,7 +329,7 @@ module build_variables
     fwareaob = 0.0D0
     fwith = 0.0D0
     fwoth = 0.0D0
-    gapds = 0.155D0
+    dr_shld_vv_gap_inboard = 0.155D0
     dr_cs_tf_gap = 0.08D0
     gapomin = 0.234D0
     gapsto = 0.0D0

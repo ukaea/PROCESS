@@ -226,7 +226,7 @@ class StbildParam(NamedTuple):
 
     fwoth: Any = None
 
-    gapds: Any = None
+    dr_shld_vv_gap_inboard: Any = None
 
     dr_cs_tf_gap: Any = None
 
@@ -352,7 +352,7 @@ class StbildParam(NamedTuple):
             fwarea=0,
             fwith=0,
             fwoth=0,
-            gapds=0.025000000000000005,
+            dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             gapsto=0,
@@ -422,7 +422,7 @@ class StbildParam(NamedTuple):
             fwarea=1918.8188778803135,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
-            gapds=0.025000000000000005,
+            dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             gapsto=0.025000000000000005,
@@ -523,7 +523,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "fwoth", stbildparam.fwoth)
 
-    monkeypatch.setattr(build_variables, "gapds", stbildparam.gapds)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_vv_gap_inboard", stbildparam.dr_shld_vv_gap_inboard
+    )
 
     monkeypatch.setattr(build_variables, "dr_cs_tf_gap", stbildparam.dr_cs_tf_gap)
 

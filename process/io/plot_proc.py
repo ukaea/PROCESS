@@ -129,7 +129,7 @@ RADIAL_BUILD = [
     "dr_tf_inboard",
     "dr_tf_shld_gap",
     "dr_shld_thermal_inboard",
-    "gapds",
+    "dr_shld_vv_gap_inboard",
     "dr_vv_inboard",
     "dr_shld_inboard",
     "vvblgapi",
@@ -1129,11 +1129,11 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
     # Outer side (furthest from plasma)
     radx_outer = (
         cumulative_radial_build("dr_vv_outboard", mfile_data, scan)
-        + cumulative_radial_build("gapds", mfile_data, scan)
+        + cumulative_radial_build("dr_shld_vv_gap_inboard", mfile_data, scan)
     ) / 2.0
     rminx_outer = (
         cumulative_radial_build("dr_vv_outboard", mfile_data, scan)
-        - cumulative_radial_build("gapds", mfile_data, scan)
+        - cumulative_radial_build("dr_shld_vv_gap_inboard", mfile_data, scan)
     ) / 2.0
 
     # Inner side (nearest to the plasma)
@@ -3376,7 +3376,7 @@ def main(args=None):
     global dr_cs
     global dr_cs_tf_gap
     global dr_tf_inboard
-    global gapds
+    global dr_shld_vv_gap_inboard
     global ddwi
     global dr_shld_inboard
     global dr_blkt_inboard
@@ -3400,7 +3400,7 @@ def main(args=None):
     dr_cs = m_file.data["dr_cs"].get_scan(scan)
     dr_cs_tf_gap = m_file.data["dr_cs_tf_gap"].get_scan(scan)
     dr_tf_inboard = m_file.data["dr_tf_inboard"].get_scan(scan)
-    gapds = m_file.data["gapds"].get_scan(scan)
+    dr_shld_vv_gap_inboard = m_file.data["dr_shld_vv_gap_inboard"].get_scan(scan)
     dr_shld_inboard = m_file.data["dr_shld_inboard"].get_scan(scan)
     dr_blkt_inboard = m_file.data["dr_blkt_inboard"].get_scan(scan)
     fwith = m_file.data["fwith"].get_scan(scan)
