@@ -95,7 +95,7 @@ def get_radial_build(m_file):
         "dr_shld_inboard",
         "vvblgap",
         "dr_blkt_inboard",
-        "fwith",
+        "dr_fw_inboard",
         "scrapli",
         "rminor",
         "scraplo",
