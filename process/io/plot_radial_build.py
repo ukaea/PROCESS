@@ -107,7 +107,7 @@ def get_radial_build(m_file):
         "gapsto",
         "dr_shld_thermal_outboard",
         "dr_tf_shld_gap",
-        "tfthko",
+        "dr_tf_outboard",
     ]
     if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "dr_tf_inboard"

@@ -37,7 +37,9 @@ class Buildings:
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        tfro = build_variables.r_tf_outboard_mid + (build_variables.tfthko * 0.5e0)
+        tfro = build_variables.r_tf_outboard_mid + (
+            build_variables.dr_tf_outboard * 0.5e0
+        )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
         tfri = build_variables.r_tf_inboard_mid - (
             build_variables.dr_tf_inboard * 0.5e0
@@ -48,7 +50,9 @@ class Buildings:
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
-        tf_vertical_dim = 2.0e0 * (build_variables.hmax + build_variables.tfthko)
+        tf_vertical_dim = 2.0e0 * (
+            build_variables.hmax + build_variables.dr_tf_outboard
+        )
 
         # Find mass of each TF coil, in tonnes
         tfmtn = 1.0e-3 * tfcoil_variables.whttf / tfcoil_variables.n_tf

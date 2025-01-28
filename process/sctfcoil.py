@@ -1182,7 +1182,7 @@ class Sctfcoil:
             )
         else:
             tfcoil_variables.tfind = (
-                (build_variables.hmax + build_variables.tfthko)
+                (build_variables.hmax + build_variables.dr_tf_outboard)
                 * RMU0
                 / constants.pi
                 * np.log(
@@ -1519,10 +1519,10 @@ class Sctfcoil:
         # Mid-plane inner/out radial position of the TF coil outer leg [m]
 
         sctfcoil_module.r_tf_outboard_in = (
-            build_variables.r_tf_outboard_mid - build_variables.tfthko * 0.5e0
+            build_variables.r_tf_outboard_mid - build_variables.dr_tf_outboard * 0.5e0
         )
         sctfcoil_module.r_tf_outboard_out = (
-            build_variables.r_tf_outboard_mid + build_variables.tfthko * 0.5e0
+            build_variables.r_tf_outboard_mid + build_variables.dr_tf_outboard * 0.5e0
         )
 
         # TF coil width in toroidal direction at inboard leg outer edge [m]
@@ -1548,7 +1548,9 @@ class Sctfcoil:
             )
 
         # Area of rectangular cross-section TF outboard leg [m2]
-        tfcoil_variables.arealeg = tfcoil_variables.tftort * build_variables.tfthko
+        tfcoil_variables.arealeg = (
+            tfcoil_variables.tftort * build_variables.dr_tf_outboard
+        )
         # ---
 
     def tf_current(self):
@@ -1707,8 +1709,8 @@ class Sctfcoil:
                 )
 
                 # Radii and length of midline of coil segments
-                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.tfthko
-                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.tfthko
+                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_outboard
+                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_outboard
                 tfcoil_variables.tfleng = (
                     tfcoil_variables.tfleng + 0.25e0 * self.circumference(aa, bb)
                 )
@@ -1845,7 +1847,7 @@ class Sctfcoil:
                 build_variables.r_tf_inboard_out,
                 build_variables.r_cp_top,
                 sctfcoil_module.h_cp_top,
-                build_variables.hmax + build_variables.tfthko,
+                build_variables.hmax + build_variables.dr_tf_outboard,
                 tfcoil_variables.thkcas,
                 tfcoil_variables.casthi,
                 tfcoil_variables.tinstf,
@@ -1863,13 +1865,13 @@ class Sctfcoil:
         # Leg ground insulation area per coil [m2]
         sctfcoil_module.a_leg_gr_ins = tfcoil_variables.arealeg - (
             tfcoil_variables.tftort - 2.0e0 * tfcoil_variables.tinstf
-        ) * (build_variables.tfthko - 2.0e0 * tfcoil_variables.tinstf)
+        ) * (build_variables.dr_tf_outboard - 2.0e0 * tfcoil_variables.tinstf)
 
         # Outboard leg turns insulation area per coil [m2]
         sctfcoil_module.a_leg_ins = 2.0e0 * tfcoil_variables.thicndut * (
             tfcoil_variables.tftort - 2.0e0 * tfcoil_variables.tinstf
         ) + 2.0e0 * tfcoil_variables.thicndut * tfcoil_variables.n_tf_turn * (
-            build_variables.tfthko
+            build_variables.dr_tf_outboard
             - 2.0e0 * (tfcoil_variables.thicndut + tfcoil_variables.tinstf)
         )  # toroidal direction + radial direction
 
@@ -1911,7 +1913,7 @@ class Sctfcoil:
 
                 # Area of joint contact (all legs)
                 a_joints = (
-                    build_variables.tfthko
+                    build_variables.dr_tf_outboard
                     * tfcoil_variables.th_joint_contact
                     * n_contact_tot
                 )
@@ -2305,7 +2307,7 @@ class Sctfcoil:
         ri_vv = build_variables.r_vv_inboard_out - (build_variables.dr_vv_outboard / 2)
         ro_vv = (
             build_variables.r_tf_outboard_mid
-            - (build_variables.tfthko / 2)
+            - (build_variables.dr_tf_outboard / 2)
             - build_variables.dr_tf_shld_gap
             - build_variables.dr_shld_thermal_outboard
             - build_variables.gapsto
@@ -3056,7 +3058,7 @@ class Sctfcoil:
                 )
             )
             * (
-                build_variables.tfthko
+                build_variables.dr_tf_outboard
                 - 2.0e0 * (tfcoil_variables.thicndut + tfcoil_variables.tinstf)
             )
         )
@@ -4584,8 +4586,8 @@ class Sctfcoil:
         po.ovarre(
             self.outfile,
             "Total outboard leg radial thickness (m)",
-            "(tfthko)",
-            build_variables.tfthko,
+            "(dr_tf_outboard)",
+            build_variables.dr_tf_outboard,
         )
         po.ovarre(
             self.outfile,
@@ -4697,8 +4699,8 @@ class Sctfcoil:
             po.ovarre(
                 self.outfile,
                 "Distance from the midplane to the top of the centrepost (m)",
-                "(hmax + tfthko)",
-                build_variables.hmax + build_variables.tfthko,
+                "(hmax + dr_tf_outboard)",
+                build_variables.hmax + build_variables.dr_tf_outboard,
             )
 
         # Turn/WP gemoetry
@@ -5695,7 +5697,7 @@ class Sctfcoil:
         tf_total_width = (
             build_variables.dr_tf_inner_bore
             + build_variables.dr_tf_inboard
-            + build_variables.tfthko
+            + build_variables.dr_tf_outboard
         )
         po.oblnkl(self.outfile)
         po.obuild(

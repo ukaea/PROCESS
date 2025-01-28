@@ -485,7 +485,7 @@ class Stellarator:
         )
 
         #  Thickness of outboard TF coil legs
-        build_variables.tfthko = build_variables.dr_tf_inboard
+        build_variables.dr_tf_outboard = build_variables.dr_tf_inboard
 
         #  Radius to centre of outboard TF coil legs
 
@@ -494,7 +494,7 @@ class Stellarator:
             build_variables.rsldo
             + build_variables.dr_vv_outboard
             + build_variables.gapsto
-            + 0.5e0 * build_variables.tfthko
+            + 0.5e0 * build_variables.dr_tf_outboard
         )
 
         #  Height to inside edge of TF coil
@@ -780,19 +780,19 @@ class Stellarator:
             po.obuild(self.outfile, "Gap", build_variables.gapsto, radius, "(gapsto)")
             po.ovarre(self.outfile, "Gap (m)", "(gapsto)", build_variables.gapsto)
 
-            radius = radius + build_variables.tfthko
+            radius = radius + build_variables.dr_tf_outboard
             po.obuild(
                 self.outfile,
                 "Coil outboard leg",
-                build_variables.tfthko,
+                build_variables.dr_tf_outboard,
                 radius,
-                "(tfthko)",
+                "(dr_tf_outboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Coil outboard leg radial thickness (m)",
-                "(tfthko)",
-                build_variables.tfthko,
+                "(dr_tf_outboard)",
+                build_variables.dr_tf_outboard,
             )
 
     def ststrc(self, output):
@@ -1866,7 +1866,7 @@ class Stellarator:
 
         fwbs_variables.r_cryostat_inboard = (
             build_variables.r_tf_outboard_mid
-            + 0.5e0 * build_variables.tfthko
+            + 0.5e0 * build_variables.dr_tf_outboard
             + fwbs_variables.dr_pf_cryostat
         )
         adewex = fwbs_variables.r_cryostat_inboard - physics_variables.rmajor
@@ -2757,7 +2757,7 @@ class Stellarator:
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of inboard leg in radial direction
-        build_variables.tfthko = (
+        build_variables.dr_tf_outboard = (
             tfcoil_variables.thkcas
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.casthi
@@ -3661,8 +3661,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total outboard leg radial thickness (m)",
-            "(tfthko)",
-            build_variables.tfthko,
+            "(dr_tf_outboard)",
+            build_variables.dr_tf_outboard,
         )
         po.ovarre(
             self.outfile,
