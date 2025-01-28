@@ -99,7 +99,7 @@ class ProcessTracker:
         "thshield",
         "tftsgap",
         "dr_bore",
-        "ohcth",
+        "dr_cs",
         "scrapli",
         "blnkoth",
         "precomp",

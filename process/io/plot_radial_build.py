@@ -84,7 +84,7 @@ def get_radial_build(m_file):
 
     radial_labels = [
         "dr_bore",
-        "ohcth",
+        "dr_cs",
         "precomp",
         "gapoh",
         "tfcth",
@@ -112,7 +112,7 @@ def get_radial_build(m_file):
     if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "tfcth"
         radial_labels[2] = "gapoh"
-        radial_labels[3] = "ohcth"
+        radial_labels[3] = "dr_cs"
         radial_labels[4] = "precomp"
         radial_labels[5] = "tftsgap"
 
@@ -210,7 +210,7 @@ def main(args=None):
         "sig_tf_wp_max",
         "copperaoh_m2_max",
         "coheof",
-        "ohcth",
+        "dr_cs",
         "ohhghf",
         "csfv.n_cycle_min",
         "pfv.oh_steel_frac",

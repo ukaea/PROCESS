@@ -373,12 +373,12 @@
     {
       "no": 73,
       "level": 2,
-      "message": "INDUCT: Max no. of segments noh for OH coil > nohmax; increase ohcth lower bound"
+      "message": "INDUCT: Max no. of segments noh for OH coil > nohmax; increase dr_cs lower bound"
     },
     {
       "no": 74,
       "level": 3,
-      "message": "INDUCT: Negative square root imminent; raise ohcth or its upper limit"
+      "message": "INDUCT: Negative square root imminent; raise dr_cs or its upper limit"
     },
     {
       "no": 75,
@@ -1238,7 +1238,7 @@
     {
       "no": 246,
       "level": 3,
-      "message": "CHECK: Invalid stress model if dr_bore + gapoh + ohcth = 0. Don't use constraint 31"
+      "message": "CHECK: Invalid stress model if dr_bore + gapoh + dr_cs = 0. Don't use constraint 31"
     },
     {
       "no": 247,

@@ -258,7 +258,7 @@ def main(args=None):
         60: "sig_tf_wp_max",
         61: "copperaoh_m2_max",
         62: "coheof",
-        63: "ohcth",
+        63: "dr_cs",
         64: "ohhghf",
         65: "csfv.n_cycle_min",
         66: "pfv.oh_steel_frac",

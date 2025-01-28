@@ -2002,7 +2002,7 @@ boundu(29) = 0.8
 * JUSTIFICATION: 
 
 ixc = 16
-ohcth = 0.25
+dr_cs = 0.25
 boundl(16) = 0.03
 boundu(16) = 0.5
 * DESCRIPTION:   Central Solenoid Thickness (m)

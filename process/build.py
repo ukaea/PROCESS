@@ -1670,7 +1670,11 @@ class Build:
                 * np.pi
                 * build_variables.fcspc
                 * build_variables.sigallpc
-                * (build_variables.dr_bore + build_variables.dr_bore + build_variables.ohcth)
+                * (
+                    build_variables.dr_bore
+                    + build_variables.dr_bore
+                    + build_variables.dr_cs
+                )
             )
         else:
             build_variables.precomp = 0.0e0
@@ -1683,7 +1687,7 @@ class Build:
             # Inboard side inner radius [m]
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
-                + build_variables.ohcth
+                + build_variables.dr_cs
                 + build_variables.precomp
                 + build_variables.gapoh
             )
@@ -1820,7 +1824,7 @@ class Build:
             #  Radial position of vacuum vessel [m]
             build_variables.r_vv_inboard_out = (
                 build_variables.r_tf_inboard_out
-                + build_variables.ohcth
+                + build_variables.dr_cs
                 + build_variables.gapoh
                 + build_variables.precomp
                 + build_variables.tftsgap
@@ -2098,7 +2102,9 @@ class Build:
             if build_variables.tf_in_cs == 1:
                 po.ocmmnt(
                     self.outfile,
-                    ("\n (The stated machine dr_bore size is just for the hollow space, "),
+                    (
+                        "\n (The stated machine dr_bore size is just for the hollow space, "
+                    ),
                 )
                 po.ocmmnt(
                     self.outfile,
@@ -2174,11 +2180,11 @@ class Build:
                     radius,
                 ])
 
-            radius = radius + build_variables.ohcth
+            radius = radius + build_variables.dr_cs
             radial_build_data.append([
                 "Central solenoid",
-                "ohcth",
-                build_variables.ohcth,
+                "dr_cs",
+                build_variables.dr_cs,
                 radius,
             ])
 
