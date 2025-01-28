@@ -102,7 +102,7 @@ class ProcessTracker:
         "dr_cs",
         "scrapli",
         "blnkoth",
-        "precomp",
+        "dr_cs_precomp",
         "tfthko",
         "blnkith",
         "vvblgap",
