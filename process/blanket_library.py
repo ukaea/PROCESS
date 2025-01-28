@@ -225,7 +225,7 @@ class BlanketLibrary:
                 r2,
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
-                build_variables.d_vv_out,
+                build_variables.dr_vv_outboard,
                 (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
             )
 
@@ -316,7 +316,7 @@ class BlanketLibrary:
                 r3,
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
-                build_variables.d_vv_out,
+                build_variables.dr_vv_outboard,
                 (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
             )
 

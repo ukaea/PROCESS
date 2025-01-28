@@ -14077,7 +14077,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         build_variables, "gapsto", 1.7
     )  # chosen to achieve Ro_vv in Table 2
 
-    monkeypatch.setattr(build_variables, "d_vv_out", 0.06)  # Section 3
+    monkeypatch.setattr(build_variables, "dr_vv_outboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "d_vv_top", 0.06)  # Section 3
 

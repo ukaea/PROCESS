@@ -402,8 +402,8 @@ class CCFE_HCPB:
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.dr_vv_inboard
-        if build_variables.d_vv_out > d_vv_all:
-            d_vv_all = build_variables.d_vv_out
+        if build_variables.dr_vv_outboard > d_vv_all:
+            d_vv_all = build_variables.dr_vv_outboard
 
         if d_vv_all > 1.0e-6:
             ccfe_hcpb_module.vv_density = fwbs_variables.vvmass / fwbs_variables.vdewin
@@ -443,7 +443,7 @@ class CCFE_HCPB:
         ccfe_hcpb_module.x_shield = (
             ccfe_hcpb_module.shield_density * th_shield_av
             + ccfe_hcpb_module.vv_density
-            * (build_variables.dr_vv_inboard + build_variables.d_vv_out)
+            * (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0
         ) / 1000.0
 

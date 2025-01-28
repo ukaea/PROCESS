@@ -2302,14 +2302,14 @@ class Sctfcoil:
         # ri and ro for VV dont consider the shield widths
         # because it is assumed the shield is on the plasma side
         # of the VV
-        ri_vv = build_variables.r_vv_inboard_out - (build_variables.d_vv_out / 2)
+        ri_vv = build_variables.r_vv_inboard_out - (build_variables.dr_vv_outboard / 2)
         ro_vv = (
             build_variables.r_tf_outboard_mid
             - (build_variables.tfthko / 2)
             - build_variables.dr_tf_shld_gap
             - build_variables.dr_shld_thermal_outboard
             - build_variables.gapsto
-            - (build_variables.d_vv_out / 2)
+            - (build_variables.dr_vv_outboard / 2)
         )
 
         # Assume the radius of the first ellipse of the VV is in the same proportion to

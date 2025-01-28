@@ -218,7 +218,7 @@ class StbildParam(NamedTuple):
 
     dr_vv_inboard: Any = None
 
-    d_vv_out: Any = None
+    dr_vv_outboard: Any = None
 
     fwarea: Any = None
 
@@ -348,7 +348,7 @@ class StbildParam(NamedTuple):
             blnktth=0,
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
-            d_vv_out=0.35000000000000003,
+            dr_vv_outboard=0.35000000000000003,
             fwarea=0,
             fwith=0,
             fwoth=0,
@@ -418,7 +418,7 @@ class StbildParam(NamedTuple):
             blnktth=0.75,
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
-            d_vv_out=0.35000000000000003,
+            dr_vv_outboard=0.35000000000000003,
             fwarea=1918.8188778803135,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
@@ -513,7 +513,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_inboard", stbildparam.dr_vv_inboard)
 
-    monkeypatch.setattr(build_variables, "d_vv_out", stbildparam.d_vv_out)
+    monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
     monkeypatch.setattr(build_variables, "fwarea", stbildparam.fwarea)
 

@@ -9191,7 +9191,7 @@ def test_calc_remote_handling_costs(
 class CalcNPlantAndVvCostsParam(NamedTuple):
     rsldo: Any = None
 
-    d_vv_out: Any = None
+    dr_vv_outboard: Any = None
 
     helpow: Any = None
 
@@ -9225,7 +9225,7 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
     (
         CalcNPlantAndVvCostsParam(
             rsldo=13.471451612903225,
-            d_vv_out=0.32000000000000006,
+            dr_vv_outboard=0.32000000000000006,
             helpow=142703.41458500578,
             cost_factor_vv=1,
             costexp=0.80000000000000004,
@@ -10312,7 +10312,7 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
         ),
         CalcNPlantAndVvCostsParam(
             rsldo=13.459451612903226,
-            d_vv_out=0.32000000000000006,
+            dr_vv_outboard=0.32000000000000006,
             helpow=823308.59959198488,
             cost_factor_vv=1,
             costexp=0.80000000000000004,
@@ -11414,7 +11414,9 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
 
     monkeypatch.setattr(build_variables, "rsldo", calcnplantandvvcostsparam.rsldo)
 
-    monkeypatch.setattr(build_variables, "d_vv_out", calcnplantandvvcostsparam.d_vv_out)
+    monkeypatch.setattr(
+        build_variables, "dr_vv_outboard", calcnplantandvvcostsparam.dr_vv_outboard
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "helpow", calcnplantandvvcostsparam.helpow

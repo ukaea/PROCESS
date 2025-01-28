@@ -143,7 +143,7 @@ RADIAL_BUILD = [
     "blnkoth",
     "vvblgapo",
     "shldoth",
-    "d_vv_out",
+    "dr_vv_outboard",
     "gapsto",
     "dr_shld_thermal_outboard",
     "dr_tf_shld_gap",
@@ -267,8 +267,8 @@ def cumulative_radial_build(section, mfile_data, scan):
             cumulative_build += mfile_data.data["vvblgap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             cumulative_build += mfile_data.data["dr_vv_inboard"].get_scan(scan)
-        elif "d_vv_out" in item:
-            cumulative_build += mfile_data.data["d_vv_out"].get_scan(scan)
+        elif "dr_vv_outboard" in item:
+            cumulative_build += mfile_data.data["dr_vv_outboard"].get_scan(scan)
         else:
             cumulative_build += mfile_data.data[item].get_scan(scan)
         if item == section:
@@ -304,8 +304,8 @@ def cumulative_radial_build2(section, mfile_data, scan):
             build = mfile_data.data["vvblgap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             build = mfile_data.data["dr_vv_inboard"].get_scan(scan)
-        elif "d_vv_out" in item:
-            build = mfile_data.data["d_vv_out"].get_scan(scan)
+        elif "dr_vv_outboard" in item:
+            build = mfile_data.data["dr_vv_outboard"].get_scan(scan)
         else:
             build = mfile_data.data[item].get_scan(scan)
         cumulative_build += build
@@ -482,7 +482,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("shldoth", mfile_data, scan)
     arc_fill(axis, r1, r2, color=SHIELD_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("d_vv_out", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_vv_outboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("dr_shld_thermal_outboard", mfile_data, scan)
@@ -1128,11 +1128,11 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
 
     # Outer side (furthest from plasma)
     radx_outer = (
-        cumulative_radial_build("d_vv_out", mfile_data, scan)
+        cumulative_radial_build("dr_vv_outboard", mfile_data, scan)
         + cumulative_radial_build("gapds", mfile_data, scan)
     ) / 2.0
     rminx_outer = (
-        cumulative_radial_build("d_vv_out", mfile_data, scan)
+        cumulative_radial_build("dr_vv_outboard", mfile_data, scan)
         - cumulative_radial_build("gapds", mfile_data, scan)
     ) / 2.0
 
@@ -3575,8 +3575,8 @@ def main(args=None):
             build = m_file.data["vvblgap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             build = m_file.data["dr_vv_inboard"].get_scan(scan)
-        elif "d_vv_out" in item:
-            build = m_file.data["d_vv_out"].get_scan(scan)
+        elif "dr_vv_outboard" in item:
+            build = m_file.data["dr_vv_outboard"].get_scan(scan)
         else:
             build = m_file.data[item].get_scan(scan)
 
