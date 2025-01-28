@@ -2124,7 +2124,7 @@ dr_blkt_outboard = 1.0
 * JUSTIFICATION: Possibly from Jonathan Shimwell
 
 *ixc = 94
-shldoth = 0.3 
+dr_shld_outboard = 0.3 
 *boundl(94) = 0.3
 *boundu(94) = 1.0
 * DESCRIPTION:   Outboard Shield Thickness (m)

@@ -591,7 +591,7 @@ class Buildings:
             hcomp_rad_thk = (
                 build_variables.dr_fw_outboard
                 + build_variables.dr_blkt_outboard
-                + build_variables.shldoth
+                + build_variables.dr_shld_outboard
             )
             hcomp_tor_thk = (
                 2
@@ -602,7 +602,7 @@ class Buildings:
                     + build_variables.dr_fw_plasma_gap_outboard
                     + build_variables.dr_fw_outboard
                     + build_variables.dr_blkt_outboard
-                    + build_variables.shldoth
+                    + build_variables.dr_shld_outboard
                 )
             ) / tfcoil_variables.n_tf
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (

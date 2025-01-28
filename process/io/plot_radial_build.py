@@ -103,7 +103,7 @@ def get_radial_build(m_file):
         "dr_blkt_outboard",
         "vvblgap",
         "dr_vv_outboard",
-        "shldoth",
+        "dr_shld_outboard",
         "gapsto",
         "dr_shld_thermal_outboard",
         "dr_tf_shld_gap",

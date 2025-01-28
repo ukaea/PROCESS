@@ -1659,7 +1659,7 @@ class Build:
                 + build_variables.blbpoth
             )
             build_variables.shldtth = 0.5e0 * (
-                build_variables.dr_shld_inboard + build_variables.shldoth
+                build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
             )
 
         #  Top/bottom blanket thickness
@@ -1892,7 +1892,7 @@ class Build:
             + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
-            + build_variables.shldoth
+            + build_variables.dr_shld_outboard
         )
 
         #  Thickness of outboard TF coil legs
@@ -2354,11 +2354,11 @@ class Build:
                 radius,
             ])
 
-            radius += build_variables.shldoth
+            radius += build_variables.dr_shld_outboard
             radial_build_data.append([
                 "Outer radiation shield",
-                "shldoth",
-                build_variables.shldoth,
+                "dr_shld_outboard",
+                build_variables.dr_shld_outboard,
                 radius,
             ])
 

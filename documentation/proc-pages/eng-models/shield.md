@@ -8,5 +8,5 @@ may or may not be used to produce electricity, depending on the value of the
 switch `iprimshld`. The shield coolant fraction by volume is set via the input 
 parameter `vfshld`.
 
-The inboard and outboard shield thicknesses (`dr_shld_inboard` and `shldoth`, 
+The inboard and outboard shield thicknesses (`dr_shld_inboard` and `dr_shld_outboard`, 
 respectively) may be used as iteration variables.

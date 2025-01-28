@@ -401,7 +401,7 @@ class Stellarator:
                 + build_variables.blbpoth
             )
             build_variables.shldtth = 0.5e0 * (
-                build_variables.dr_shld_inboard + build_variables.shldoth
+                build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
             )
 
         #  Top/bottom blanket thickness
@@ -481,7 +481,7 @@ class Stellarator:
             + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
-            + build_variables.shldoth
+            + build_variables.dr_shld_outboard
         )
 
         #  Thickness of outboard TF coil legs
@@ -516,7 +516,7 @@ class Stellarator:
                 + build_variables.dr_fw_plasma_gap_outboard
                 + build_variables.dr_fw_outboard
                 + build_variables.dr_blkt_outboard
-                + build_variables.shldoth
+                + build_variables.dr_shld_outboard
                 + build_variables.dr_vv_outboard
                 + build_variables.gapsto
             )
@@ -752,19 +752,19 @@ class Stellarator:
                 build_variables.dr_blkt_outboard,
             )
 
-            radius = radius + build_variables.shldoth
+            radius = radius + build_variables.dr_shld_outboard
             po.obuild(
                 self.outfile,
                 "Outboard shield",
-                build_variables.shldoth,
+                build_variables.dr_shld_outboard,
                 radius,
-                "(shldoth)",
+                "(dr_shld_outboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Outer radiation shield radial thickness (m)",
-                "(shldoth)",
-                build_variables.shldoth,
+                "(dr_shld_outboard)",
+                build_variables.dr_shld_outboard,
             )
 
             radius = radius + build_variables.dr_vv_outboard
@@ -1228,7 +1228,7 @@ class Stellarator:
         )
 
         volshldi = build_variables.shareaib * build_variables.dr_shld_inboard
-        volshldo = build_variables.shareaob * build_variables.shldoth
+        volshldo = build_variables.shareaob * build_variables.dr_shld_outboard
         fwbs_variables.volshld = volshldi + volshldo
 
         #  Neutron power lost through holes in first wall (eventually absorbed by
@@ -1583,7 +1583,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.dr_shld_inboard / decayshldi)
                 )
                 pnucshldo = pnucso * (
-                    1.0e0 - np.exp(-build_variables.shldoth / decayshldo)
+                    1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
                 )
 
                 fwbs_variables.pnucshld = pnucshldi + pnucshldo
@@ -1892,7 +1892,7 @@ class Stellarator:
             + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
-            + build_variables.shldoth
+            + build_variables.dr_shld_outboard
         )
         fwbs_variables.vdewin = (
             (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
@@ -1947,8 +1947,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Outboard shield thickness (m)",
-                "(shldoth)",
-                build_variables.shldoth,
+                "(dr_shld_outboard)",
+                build_variables.dr_shld_outboard,
             )
             po.ovarre(
                 self.outfile,
@@ -2388,7 +2388,7 @@ class Stellarator:
                 + build_variables.dr_blkt_inboard
             )
             dshoeq = (
-                build_variables.shldoth
+                build_variables.dr_shld_outboard
                 + build_variables.dr_fw_outboard
                 + build_variables.dr_blkt_outboard
             )

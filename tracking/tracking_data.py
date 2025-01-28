@@ -109,7 +109,7 @@ class ProcessTracker:
         "dr_fw_plasma_gap_outboard",
         "dr_cs_tf_gap",
         "gapsto",
-        "shldoth",
+        "dr_shld_outboard",
         "dr_tf_inboard",
         "dr_shld_vv_gap_inboard",
         "pnucshld",

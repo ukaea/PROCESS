@@ -429,7 +429,7 @@ class CCFE_HCPB:
             th_blanket_av = build_variables.dr_blkt_outboard
 
             # The CP shield in considered in a separate calcualtion [m]
-            th_shield_av = build_variables.shldoth
+            th_shield_av = build_variables.dr_shld_outboard
 
         else:
             # Average breeding blanket thickness [m]
@@ -439,7 +439,7 @@ class CCFE_HCPB:
 
             # Average neutronic shield thickness [m]
             th_shield_av = 0.5 * (
-                build_variables.shldoth + build_variables.dr_shld_inboard
+                build_variables.dr_shld_outboard + build_variables.dr_shld_inboard
             )
 
         # Exponents (tonne/m2)
@@ -587,11 +587,11 @@ class CCFE_HCPB:
         # Calculation of average blanket/shield thickness [m]
         if physics_variables.itart == 1:
             # The CP shield in considered in a separate calcualtion
-            th_shield_av = build_variables.shldoth
+            th_shield_av = build_variables.dr_shld_outboard
         else:
             # Average neutronic shield thickness [m]
             th_shield_av = 0.5 * (
-                build_variables.shldoth + build_variables.dr_shld_inboard
+                build_variables.dr_shld_outboard + build_variables.dr_shld_inboard
             )
 
         # Decay length [m-2]
