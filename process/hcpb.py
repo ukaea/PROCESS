@@ -3,7 +3,6 @@ import numpy as np
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
     build_variables,
-    buildings_variables,
     ccfe_hcpb_module,
     constants,
     constraint_variables,
@@ -1530,48 +1529,4 @@ class CCFE_HCPB:
             "Isentropic efficiency of first wall / blanket coolant pumps",
             "(etaiso)",
             fwbs_variables.etaiso,
-        )
-
-        po.osubhd(self.outfile, "Other volumes, masses and areas :")
-        po.ovarre(
-            self.outfile,
-            "First wall area (m2)",
-            "(fwarea)",
-            build_variables.fwarea,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Cryostat internal radius (m)",
-            "(r_cryostat_inboard)",
-            fwbs_variables.r_cryostat_inboard,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Cryostat internal half-height (m)",
-            "(z_cryostat_half_inside)",
-            fwbs_variables.z_cryostat_half_inside,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Vertical clearance from TF coil to cryostat (m)",
-            "(dz_tf_cryostat)",
-            buildings_variables.dz_tf_cryostat,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Divertor area (m2)",
-            "(divsur)",
-            divertor_variables.divsur,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Divertor mass (kg)",
-            "(divmas)",
-            divertor_variables.divmas,
-            "OP ",
         )
