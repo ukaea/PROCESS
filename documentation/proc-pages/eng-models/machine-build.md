@@ -36,7 +36,7 @@ depending on the switches used.
  Inboard scrape-off                           0.225           5.877   (dr_fw_plasma_gap_inboard)           IP, ITV
  Plasma geometric centre                      3.265           9.142   (rminor)            
  Plasma outboard edge                         3.265          12.408   (rminor)            
- Outboard scrape-off                          0.225          12.633   (scraplo)           IP, ITV
+ Outboard scrape-off                          0.225          12.633   (dr_fw_plasma_gap_outboard)           IP, ITV
  Outboard first wall                          0.018          12.651   (dr_fw_outboard)             
  Outboard blanket                             0.982          13.633   (dr_blkt_outboard)           IP*
  Gap                                          0.020          13.653   (vvblgap)           IP

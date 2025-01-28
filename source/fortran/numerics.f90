@@ -275,7 +275,7 @@ module numerics
   !! <LI> (71) fq (f-value for equation 45)
   !! <LI> (72) fipir (f-value for equation 46)
   !! <LI> (73) dr_fw_plasma_gap_inboard
-  !! <LI> (74) scraplo
+  !! <LI> (74) dr_fw_plasma_gap_outboard
   !! <LI> (75) tfootfi
   !! <LI> (76) NOT USED
   !! <LI> (77) NOT USED

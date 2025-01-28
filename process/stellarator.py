@@ -478,7 +478,7 @@ class Stellarator:
         build_variables.rsldo = (
             physics_variables.rmajor
             + physics_variables.rminor
-            + build_variables.scraplo
+            + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
             + build_variables.shldoth
@@ -513,7 +513,7 @@ class Stellarator:
             )
             + (
                 physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
                 + build_variables.dr_fw_outboard
                 + build_variables.dr_blkt_outboard
                 + build_variables.shldoth
@@ -530,7 +530,8 @@ class Stellarator:
 
         # Average minor radius of the first wall
         awall = physics_variables.rminor + 0.5e0 * (
-            build_variables.dr_fw_plasma_gap_inboard + build_variables.scraplo
+            build_variables.dr_fw_plasma_gap_inboard
+            + build_variables.dr_fw_plasma_gap_outboard
         )
         build_variables.fwarea = (
             physics_variables.a_plasma_surface * awall / physics_variables.rminor
@@ -706,19 +707,19 @@ class Stellarator:
                 "(rminor)",
             )
 
-            radius = radius + build_variables.scraplo
+            radius = radius + build_variables.dr_fw_plasma_gap_outboard
             po.obuild(
                 self.outfile,
                 "Outboard scrape-off",
-                build_variables.scraplo,
+                build_variables.dr_fw_plasma_gap_outboard,
                 radius,
-                "(scraplo)",
+                "(dr_fw_plasma_gap_outboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Outboard scrape-off radial thickness (m)",
-                "(scraplo)",
-                build_variables.scraplo,
+                "(dr_fw_plasma_gap_outboard)",
+                build_variables.dr_fw_plasma_gap_outboard,
             )
 
             radius = radius + build_variables.dr_fw_outboard
@@ -1176,7 +1177,7 @@ class Stellarator:
         r1 = physics_variables.rminor + 0.5e0 * (
             build_variables.dr_fw_plasma_gap_inboard
             + build_variables.dr_fw_inboard
-            + build_variables.scraplo
+            + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
         )
         if heat_transport_variables.ipowerflow == 0:
@@ -1888,7 +1889,7 @@ class Stellarator:
             + build_variables.dr_fw_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.dr_shld_inboard
-            + build_variables.scraplo
+            + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
             + build_variables.shldoth

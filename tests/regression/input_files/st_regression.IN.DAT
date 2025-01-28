@@ -2082,7 +2082,7 @@ dr_blkt_inboard = 0.0
 *i_plasma_wall_gap = 
 * DESCRIPTION:   Switch for scrapeoff width (default = 1)
 * =0 use 10% of rminor
-* =1 use input (dr_fw_plasma_gap_inboard and scraplo)
+* =1 use input (dr_fw_plasma_gap_inboard and dr_fw_plasma_gap_outboard)
 * JUSTIFICATION: Not set, assuming default value
 
 *ixc = 73
@@ -2097,7 +2097,7 @@ dr_fw_plasma_gap_inboard = 0.1
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 *ixc = 74
-scraplo = 0.1
+dr_fw_plasma_gap_outboard = 0.1
 *boundl(74) = 
 *boundu(74) = 
 * DESCRIPTION:   Gap Between Plasma and First Wall Outboard Side (m)

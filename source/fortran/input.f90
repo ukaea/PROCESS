@@ -198,7 +198,7 @@ contains
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
-      dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
+      dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, dr_fw_plasma_gap_outboard, vgaptop, &
       blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, dr_vv_outboard, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
@@ -1394,8 +1394,8 @@ contains
        case ('dr_fw_plasma_gap_inboard')
           call parse_real_variable('dr_fw_plasma_gap_inboard', dr_fw_plasma_gap_inboard, 0.0D0, 10.0D0, &
                'Inboard scrapeoff length (m)')
-       case ('scraplo')
-          call parse_real_variable('scraplo', scraplo, 0.0D0, 10.0D0, &
+       case ('dr_fw_plasma_gap_outboard')
+          call parse_real_variable('dr_fw_plasma_gap_outboard', dr_fw_plasma_gap_outboard, 0.0D0, 10.0D0, &
                'Outboard scrapeoff length (m)')
        case ('dr_shld_inboard')
           call parse_real_variable('dr_shld_inboard', dr_shld_inboard, 0.0D0, 10.0D0, &

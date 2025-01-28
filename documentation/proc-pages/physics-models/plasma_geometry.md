@@ -264,7 +264,7 @@ treats the scrape-off layer merely as a gap.
 The plasma and first wall clearance can be calculated or input by setting the `i_plasma_wall_gap` switch.
 
 - `i_plasma_wall_gap` == 0, then the inboard and outboard plasma wall gaps are set to be 10% of the plasma minor radius ($a$).
-- `i_plasma_wall_gap` == 1, then the inboard and outboard plasma wall gaps are set by defining `dr_fw_plasma_gap_inboard` and `scraplo` respectively.
+- `i_plasma_wall_gap` == 1, then the inboard and outboard plasma wall gaps are set by defining `dr_fw_plasma_gap_inboard` and `dr_fw_plasma_gap_outboard` respectively.
 
 
 ------------------

@@ -1670,7 +1670,11 @@ class Build:
         if physics_variables.i_single_null == 1:
             #  Check if build_variables.vgaptop has been set too small
             build_variables.vgaptop = max(
-                0.5e0 * (build_variables.dr_fw_plasma_gap_inboard + build_variables.scraplo),
+                0.5e0
+                * (
+                    build_variables.dr_fw_plasma_gap_inboard
+                    + build_variables.dr_fw_plasma_gap_outboard
+                ),
                 build_variables.vgaptop,
             )
 
@@ -1885,7 +1889,7 @@ class Build:
         build_variables.rsldo = (
             physics_variables.rmajor
             + physics_variables.rminor
-            + build_variables.scraplo
+            + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
             + build_variables.dr_blkt_outboard
             + build_variables.shldoth
@@ -1957,7 +1961,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.scraplo)) )
+        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -1993,7 +1997,7 @@ class Build:
             r2 = (
                 physics_variables.rmajor
                 + physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
             ) - r1
             #  Calculate surface area, assuming 100% coverage
             # maths_library.eshellarea was not working across
@@ -2028,7 +2032,7 @@ class Build:
             r3 = (
                 physics_variables.rmajor
                 + physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
             ) - r1
 
             #  Calculate surface area, assuming 100% coverage
@@ -2317,11 +2321,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.scraplo
+            radius = radius + build_variables.dr_fw_plasma_gap_outboard
             radial_build_data.append([
                 "Outboard scrape-off",
-                "scraplo",
-                build_variables.scraplo,
+                "dr_fw_plasma_gap_outboard",
+                build_variables.dr_fw_plasma_gap_outboard,
                 radius,
             ])
 
