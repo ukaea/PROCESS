@@ -124,7 +124,7 @@ thin = 0.0
 RADIAL_BUILD = [
     "dr_bore",
     "dr_cs",
-    "precomp",
+    "dr_cs_precomp",
     "gapoh",
     "tfcth",
     "tftsgap",
@@ -448,7 +448,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("dr_cs", mfile_data, scan)
     arc_fill(axis, r1, r2, color=SOLENOID_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("precomp", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_cs_precomp", mfile_data, scan)
     arc_fill(axis, r1, r2, color=CSCOMPRESSION_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("tfcth", mfile_data, scan)
@@ -2108,7 +2108,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     # Plot CS compression structure
     r_precomp_outer, r_precomp_inner = cumulative_radial_build2(
-        "precomp", mfile_data, scan
+        "dr_cs_precomp", mfile_data, scan
     )
     axis.add_patch(
         patches.Rectangle(

@@ -137,7 +137,7 @@ p = \frac{F}{2 \pi f \sigma (2r+t) }
 $$
 
 where:
-$p$ = `precomp`   CS coil precompression structure thickness (m)
+$p$ = `dr_cs_precomp`   CS coil precompression structure thickness (m)
 $F$ = `fseppc`    Separation force
 $f$ = `fcspc`     Fraction of space occupied by pre-compression structure
 $\sigma$ = `sigallpc`   allowable stress in pre-compression structure (Pa)  

@@ -881,7 +881,7 @@ def check_process():
                 fortran.build_variables.dr_bore
                 + fortran.build_variables.gapoh
                 + fortran.build_variables.dr_cs
-                + fortran.build_variables.precomp
+                + fortran.build_variables.dr_cs_precomp
             )
             <= 0
         )  # dr_bore + gapoh + dr_cs = 0

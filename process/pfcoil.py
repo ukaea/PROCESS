@@ -923,12 +923,16 @@ class PFCoil:
                         if pf.rcls[ii, ij] <= (  # Inboard TF coil collision
                             bv.dr_bore
                             + bv.dr_cs
-                            + bv.precomp
+                            + bv.dr_cs_precomp
                             + bv.gapoh
                             + bv.tfcth
                             + pfv.rpf[i]
                         ) and pf.rcls[ii, ij] >= (
-                            bv.dr_bore + bv.dr_cs + bv.precomp + bv.gapoh - pfv.rpf[i]
+                            bv.dr_bore
+                            + bv.dr_cs
+                            + bv.dr_cs_precomp
+                            + bv.gapoh
+                            - pfv.rpf[i]
                         ):
                             pf_tf_collision += 1
                         if (  # Vertical TF coil collision

@@ -1665,7 +1665,7 @@ class Build:
 
         # Calculate pre-compression structure thickness is build_variables.iprecomp=1
         if build_variables.iprecomp == 1:
-            build_variables.precomp = build_variables.fseppc / (
+            build_variables.dr_cs_precomp = build_variables.fseppc / (
                 2.0e0
                 * np.pi
                 * build_variables.fcspc
@@ -1677,7 +1677,7 @@ class Build:
                 )
             )
         else:
-            build_variables.precomp = 0.0e0
+            build_variables.dr_cs_precomp = 0.0e0
 
         if build_variables.tf_in_cs == 1:
             build_variables.r_tf_inboard_in = (
@@ -1688,7 +1688,7 @@ class Build:
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
                 + build_variables.dr_cs
-                + build_variables.precomp
+                + build_variables.dr_cs_precomp
                 + build_variables.gapoh
             )
 
@@ -1826,7 +1826,7 @@ class Build:
                 build_variables.r_tf_inboard_out
                 + build_variables.dr_cs
                 + build_variables.gapoh
-                + build_variables.precomp
+                + build_variables.dr_cs_precomp
                 + build_variables.tftsgap
                 + build_variables.thshield_ib
                 + build_variables.gapds
@@ -2188,11 +2188,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.precomp
+            radius = radius + build_variables.dr_cs_precomp
             radial_build_data.append([
                 "CS precompression",
-                "precomp",
-                build_variables.precomp,
+                "dr_cs_precomp",
+                build_variables.dr_cs_precomp,
                 radius,
             ])
             if build_variables.tf_in_cs == 0:
