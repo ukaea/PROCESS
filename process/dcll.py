@@ -92,8 +92,10 @@ class DCLL:
 
     def run(self, output: bool):
         # MDK (27/11/2015)
-        build_variables.dr_fw_inboard = 2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
-        build_variables.fwoth = build_variables.dr_fw_inboard
+        build_variables.dr_fw_inboard = (
+            2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
+        )
+        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 
         self.blanket_library.component_volumes()
         self.blanket_library.primary_coolant_properties(output=output)
@@ -664,7 +666,7 @@ class DCLL:
         # First wall volume (m^3)
         fwbs_variables.volfw = (
             build_variables.fwareaib * build_variables.dr_fw_inboard
-            + build_variables.fwareaob * build_variables.fwoth
+            + build_variables.fwareaob * build_variables.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
         dcll_module.fwmass_stl = (
@@ -730,7 +732,11 @@ class DCLL:
         dcll_module.mass_segm_ob = (
             fwbs_variables.whtblkt * (fwbs_variables.volblkto / fwbs_variables.volblkt)
             + fwbs_variables.fwmass
-            * (build_variables.fwareaob * build_variables.fwoth / fwbs_variables.volfw)
+            * (
+                build_variables.fwareaob
+                * build_variables.dr_fw_outboard
+                / fwbs_variables.volfw
+            )
             + fwbs_variables.fw_armour_mass
             * (
                 physics_variables.a_plasma_surface_outboard
@@ -861,8 +867,8 @@ class DCLL:
             po.ovarrf(
                 self.outfile,
                 "Outboard radial first wall thickness (m)",
-                "(fwoth)",
-                build_variables.fwoth,
+                "(dr_fw_outboard)",
+                build_variables.dr_fw_outboard,
             )
             po.ovarrf(
                 self.outfile,

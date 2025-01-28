@@ -585,7 +585,7 @@ class Buildings:
                 )
             )
             hcomp_rad_thk = (
-                build_variables.fwoth
+                build_variables.dr_fw_outboard
                 + build_variables.dr_blkt_outboard
                 + build_variables.shldoth
             )
@@ -596,7 +596,7 @@ class Buildings:
                     physics_variables.rmajor
                     + physics_variables.rminor
                     + build_variables.scraplo
-                    + build_variables.fwoth
+                    + build_variables.dr_fw_outboard
                     + build_variables.dr_blkt_outboard
                     + build_variables.shldoth
                 )

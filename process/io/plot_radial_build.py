@@ -99,7 +99,7 @@ def get_radial_build(m_file):
         "scrapli",
         "rminor",
         "scraplo",
-        "fwoth",
+        "dr_fw_outboard",
         "dr_blkt_outboard",
         "vvblgap",
         "dr_vv_outboard",
