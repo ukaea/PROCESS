@@ -44,7 +44,7 @@ ixc = 16 * ohcth
 boundl(16) = 0.5
 ixc = 18 * q
 boundl(18) = 3.5
-ixc = 29 * bore
+ixc = 29 * dr_bore
 boundl(29) = 0.1
 ixc = 36 * fbeta_max
 ixc = 37 * coheof
@@ -101,7 +101,7 @@ ixc = 110 * ftaulimit
 
 blnkith  = 0.755 * Inboard blanket thickness (m);
 blnkoth  = 0.982 * Outboard blanket thickness (m)
-bore     = 2.483 * Central solenoid inboard radius (m)
+dr_bore     = 2.483 * Central solenoid inboard radius (m)
 dr_cryostat    = 0.15 * Cryostat thickness (m)
 d_vv_in  = 0.30 * Inboard vacuum vessel thickness (tf coil / shield) (m)
 d_vv_out = 0.30 * Outboard vacuum vessel thickness (tf coil / shield) (m)
@@ -345,7 +345,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      fwalld         =  1.3100E-01
                      ohcth          =  5.5242E-01
                      q              =  3.5000E+00
-                     bore           =  2.3322E+00
+                     dr_bore           =  2.3322E+00
                      fbeta_max       =  4.8251E-01
                      coheof         =  2.0726E+07
                      fjohc          =  5.7941E-01

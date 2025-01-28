@@ -214,7 +214,7 @@ class StbildParam(NamedTuple):
 
     blnktth: Any = None
 
-    bore: Any = None
+    dr_bore: Any = None
 
     d_vv_in: Any = None
 
@@ -346,7 +346,7 @@ class StbildParam(NamedTuple):
             blnkith=0.70000000000000007,
             blnkoth=0.80000000000000004,
             blnktth=0,
-            bore=1.4199999999999999,
+            dr_bore=1.4199999999999999,
             d_vv_in=0.35000000000000003,
             d_vv_out=0.35000000000000003,
             fwarea=0,
@@ -416,7 +416,7 @@ class StbildParam(NamedTuple):
             blnkith=0.70000000000000007,
             blnkoth=0.80000000000000004,
             blnktth=0.75,
-            bore=17.79214950143977,
+            dr_bore=17.79214950143977,
             d_vv_in=0.35000000000000003,
             d_vv_out=0.35000000000000003,
             fwarea=1918.8188778803135,
@@ -509,7 +509,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "blnktth", stbildparam.blnktth)
 
-    monkeypatch.setattr(build_variables, "bore", stbildparam.bore)
+    monkeypatch.setattr(build_variables, "dr_bore", stbildparam.dr_bore)
 
     monkeypatch.setattr(build_variables, "d_vv_in", stbildparam.d_vv_in)
 
@@ -618,7 +618,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     stellarator.stbild(False)
     assert build_variables.blnktth == pytest.approx(stbildparam.expected_blnktth)
 
-    assert build_variables.bore == pytest.approx(stbildparam.expected_bore)
+    assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
     assert build_variables.fwarea == pytest.approx(stbildparam.expected_fwarea)
 

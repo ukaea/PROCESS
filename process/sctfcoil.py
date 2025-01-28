@@ -1260,7 +1260,7 @@ class Sctfcoil:
                 int(tfcoil_variables.n_tf_wp_layers),
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
-                build_variables.bore,
+                build_variables.dr_bore,
                 build_variables.hmax,
                 pfcoil_variables.ohhghf,
                 build_variables.ohcth,
@@ -2389,8 +2389,8 @@ class Sctfcoil:
         else:
             r_in_outwp = sctfcoil_module.r_tf_outboard_in + tfcoil_variables.tinstf
 
-        # If the TF coil has no bore it would induce division by 0.
-        # In this situation, the bore radius is set to a very small value : 1.0e-9 m
+        # If the TF coil has no dr_bore it would induce division by 0.
+        # In this situation, the dr_bore radius is set to a very small value : 1.0e-9 m
         if abs(r_in_wp) < np.finfo(float(r_in_wp)).eps:
             r_in_wp = 1.0e-9
 
@@ -2467,7 +2467,7 @@ class Sctfcoil:
         is calculated by numerical integration over the cross-sectional area.
         The contribution from the cross-sectional area of the
         coil itself is calculated by taking the field as B(r)/2.
-        The field in the bore is calculated for unit current.
+        The field in the dr_bore is calculated for unit current.
         Top/bottom symmetry is assumed.
 
         :param tfthk: TF coil thickness (m)
@@ -2496,9 +2496,9 @@ class Sctfcoil:
         tfind = 0
 
         for _ in range(NINTERVALS):
-            # Field in the bore for unit current
+            # Field in the dr_bore for unit current
             b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a bore
+            # Find out if there is a dr_bore
             if x0 - r < ai:
                 h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
                 h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
@@ -2507,7 +2507,7 @@ class Sctfcoil:
                 # Include the contribution from the straight section
                 h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + yarc[0]
 
-            # Assume B in TF coil = 1/2  B in bore
+            # Assume B in TF coil = 1/2  B in dr_bore
             # Multiply by 2 for upper and lower halves of coil
             tfind += b * dr * (2.0e0 * h_bore + h_thick)
             r = r - dr
@@ -2522,9 +2522,9 @@ class Sctfcoil:
         r = x0 + dr / 2.0e0
 
         for _ in range(NINTERVALS):
-            # Field in the bore for unit current
+            # Field in the dr_bore for unit current
             b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a bore
+            # Find out if there is a dr_bore
             if r - x0 < ai:
                 h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
                 h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
@@ -2532,7 +2532,7 @@ class Sctfcoil:
                 h_bore = 0.0e0
                 h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2)
 
-            # Assume B in TF coil = 1/2  B in bore
+            # Assume B in TF coil = 1/2  B in dr_bore
             # Multiply by 2 for upper and lower halves of coil
             tfind += b * dr * (2.0e0 * h_bore + h_thick)
             r = r + dr
@@ -3524,7 +3524,7 @@ class Sctfcoil:
         n_tf_wp_layers,
         i_tf_bucking,
         r_tf_inboard_in,
-        bore,
+        dr_bore,
         hmax,
         ohhghf,
         ohcth,
@@ -3714,7 +3714,7 @@ class Sctfcoil:
                 # CS not used as wedge support tf_in_cs = 1
                 radtf[0] = 0.001
             else:
-                radtf[0] = bore
+                radtf[0] = dr_bore
 
             # Superconducting CS
             if ipfres == 0:
@@ -3724,7 +3724,7 @@ class Sctfcoil:
 
                 # CS vertical cross-section area [m2]
                 if tf_in_cs == 1:
-                    a_oh = 2.0e0 * hmax * ohhghf * (bore - tfcth)
+                    a_oh = 2.0e0 * hmax * ohhghf * (dr_bore - tfcth)
                 else:
                     a_oh = 2.0e0 * hmax * ohhghf * ohcth
 
@@ -3828,9 +3828,9 @@ class Sctfcoil:
 
             # Outer radius of the CS
             if tf_in_cs == 1:
-                radtf[1] = bore - tfcth - gapoh
+                radtf[1] = dr_bore - tfcth - gapoh
             else:
-                radtf[1] = bore + ohcth
+                radtf[1] = dr_bore + ohcth
 
             # Assumed to be Kapton for the moment
             # Ref : https://www.dupont.com/content/dam/dupont/products-and-services/membranes-and-films/polyimde-films/documents/DEC-Kapton-summary-of-properties.pdf
@@ -4144,8 +4144,8 @@ class Sctfcoil:
         elif i_tf_stress_model in (0, 2):
             # Extended plane strain calculation [Pa]
             # Issues #1414 and #998
-            # Permits build_variables.bore >= 0, O(n) in layers
-            # If build_variables.bore > 0, same result as generalized plane strain calculation
+            # Permits build_variables.dr_bore >= 0, O(n) in layers
+            # If build_variables.dr_bore > 0, same result as generalized plane strain calculation
 
             (
                 radial_array,
@@ -4502,7 +4502,7 @@ class Sctfcoil:
         elif tfcoil_variables.i_tf_bucking in (2, 3) and build_variables.tf_in_cs == 1:
             po.ocmmnt(
                 self.outfile,
-                "  -> TF in contact with bore filler support (bucked and weged design)",
+                "  -> TF in contact with dr_bore filler support (bucked and weged design)",
             )
 
         elif tfcoil_variables.i_tf_bucking in (2, 3) and build_variables.tf_in_cs == 0:

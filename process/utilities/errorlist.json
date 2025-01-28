@@ -1238,7 +1238,7 @@
     {
       "no": 246,
       "level": 3,
-      "message": "CHECK: Invalid stress model if bore + gapoh + ohcth = 0. Don't use constraint 31"
+      "message": "CHECK: Invalid stress model if dr_bore + gapoh + ohcth = 0. Don't use constraint 31"
     },
     {
       "no": 247,

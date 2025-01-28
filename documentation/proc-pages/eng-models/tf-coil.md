@@ -582,9 +582,9 @@ $$
     another for the radial to toroidal direction. Although more coherent and
     complete this model is not yet used by default as more FEA validations
     are needed. `i_tf_stress_model = 0` is the older model, which is O(n^3)
-    in the number of layers and fails if there is a solid bore. 
+    in the number of layers and fails if there is a solid dr_bore. 
     `i_tf_stress_model = 2` is the newr model, which is O(n) and accepts a solid
-    bore, but is otherwise identical to the older model `i_tf_stress_model = 0`.
+    dr_bore, but is otherwise identical to the older model `i_tf_stress_model = 0`.
   </p>
 
 <p style='text-align: justify;'>
@@ -863,7 +863,7 @@ selected with the `i_tf_bucking` integer switch.
   </p>
 
 <p style='text-align: justify;'>
-  It is also possible to fill the CS coil bore with structural material to
+  It is also possible to fill the CS coil dr_bore with structural material to
   further support the TF centering forces. Although not currently implemented
   in <em>PROCESS</em>, to technical issues prevents simulating its structural
   effects. Please contact the <em>PROCESS</em> team if you wish to consider

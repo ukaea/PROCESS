@@ -196,7 +196,7 @@ contains
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, tfcth, &
-      iohcl, tftsgap, f_z_cryostat, bore, plleno, scrapli, gapomin, dr_cryostat, &
+      iohcl, tftsgap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
@@ -1316,9 +1316,9 @@ contains
             call parse_real_variable('blnkoth', blnkoth, 0.0D0, 10.0D0, &
                 'Outboard blanket thickness (m)')
           end if
-       case ('bore')
-          call parse_real_variable('bore', bore, 0.0D0, 50.0D0, &
-               'Machine bore (m)')
+       case ('dr_bore')
+          call parse_real_variable('dr_bore', dr_bore, 0.0D0, 50.0D0, &
+               'Machine dr_bore (m)')
        case ('f_z_cryostat')
           call parse_real_variable('f_z_cryostat', f_z_cryostat, 2.0D0, 10.0D0, &
                'Cryostat lid height scaling factor (m)')

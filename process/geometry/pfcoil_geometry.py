@@ -12,7 +12,7 @@ def pfcoil_geometry(
     coils_z: list[float],
     coils_dr: list[float],
     coils_dz: list[float],
-    bore: float,
+    dr_bore: float,
     ohcth: float,
     ohdz: float,
 ) -> tuple[np.ndarray, np.ndarray, RectangleGeometry]:
@@ -26,8 +26,8 @@ def pfcoil_geometry(
     :type coils_dr: List[float]
     :param coils_dz: list of pf coil vertical thicknesses
     :type coils_dz: List[float]
-    :param bore: central solenoid inboard radius
-    :type bore: float
+    :param dr_bore: central solenoid inboard radius
+    :type dr_bore: float
     :param ohcth: central solenoid thickness
     :type ohcth: float
     :param ohdz: central solenoid vertical thickness
@@ -46,7 +46,7 @@ def pfcoil_geometry(
         z_points.append([z_1, z_2, z_2, z_1, z_1])
 
     central_coil = RectangleGeometry(
-        anchor_x=bore, anchor_z=(-ohdz / 2), width=ohcth, height=ohdz
+        anchor_x=dr_bore, anchor_z=(-ohdz / 2), width=ohcth, height=ohdz
     )
 
     return r_points, z_points, central_coil

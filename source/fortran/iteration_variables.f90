@@ -669,25 +669,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_29
-    !! <LI> (29) bore
+    !! <LI> (29) dr_bore
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(29) = 'bore          '
+    lablxc(29) = 'dr_bore          '
     boundl(29) = 0.100D0
     boundu(29) = 10.00D0
   end subroutine init_itv_29
 
   real(kind(1.d0)) function itv_29()
-    use build_variables, only: bore
+    use build_variables, only: dr_bore
     implicit none
-    itv_29 = bore
+    itv_29 = dr_bore
   end function itv_29
 
   subroutine set_itv_29(ratio)
-    use build_variables, only: bore
+    use build_variables, only: dr_bore
     implicit none
     real(kind(1.d0)) :: ratio
-    bore = ratio
+    dr_bore = ratio
   end subroutine set_itv_29
 
   !---------------------------------
