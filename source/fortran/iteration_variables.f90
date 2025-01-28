@@ -1399,25 +1399,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_61
-    !! <LI> (61) gapds
+    !! <LI> (61) dr_shld_vv_gap_inboard
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(61) = 'gapds         '
+    lablxc(61) = 'dr_shld_vv_gap_inboard         '
     boundl(61) = 0.001D0
     boundu(61) = 10.00D0
   end subroutine init_itv_61
 
   real(kind(1.d0)) function itv_61()
-    use build_variables, only: gapds
+    use build_variables, only: dr_shld_vv_gap_inboard
     implicit none
-    itv_61 = gapds
+    itv_61 = dr_shld_vv_gap_inboard
   end function itv_61
 
   subroutine set_itv_61(ratio)
-    use build_variables, only: gapds
+    use build_variables, only: dr_shld_vv_gap_inboard
     implicit none
     real(kind(1.d0)) :: ratio
-    gapds = ratio
+    dr_shld_vv_gap_inboard = ratio
   end subroutine set_itv_61
 
   !---------------------------------

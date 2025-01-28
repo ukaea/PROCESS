@@ -1838,7 +1838,7 @@ class Build:
                 + build_variables.dr_cs_precomp
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
-                + build_variables.gapds
+                + build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
             )
         else:
@@ -1846,7 +1846,7 @@ class Build:
                 build_variables.r_tf_inboard_out
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
-                + build_variables.gapds
+                + build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
             )
         # Radial position of the inner side of inboard neutronic shield [m]
@@ -2241,11 +2241,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.gapds
+            radius = radius + build_variables.dr_shld_vv_gap_inboard
             radial_build_data.append([
                 "Thermal shield to vessel radial gap",
-                "gapds",
-                build_variables.gapds,
+                "dr_shld_vv_gap_inboard",
+                build_variables.dr_shld_vv_gap_inboard,
                 radius,
             ])
 

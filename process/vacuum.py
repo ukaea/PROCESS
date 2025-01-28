@@ -61,7 +61,7 @@ class Vacuum:
                 buv.shldoth,
                 buv.dr_shld_inboard,
                 buv.dr_tf_inboard,
-                buv.rsldi - buv.gapds - buv.dr_vv_inboard,
+                buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
                 tfv.n_tf,
                 tv.t_between_pulse,
                 pv.dene,

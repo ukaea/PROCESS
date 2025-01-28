@@ -420,7 +420,7 @@ class Stellarator:
             build_variables.dr_cs
             + build_variables.dr_cs_tf_gap
             + build_variables.dr_tf_inboard
-            + build_variables.gapds
+            + build_variables.dr_shld_vv_gap_inboard
             + build_variables.dr_vv_inboard
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
@@ -435,7 +435,7 @@ class Stellarator:
             + build_variables.dr_cs
             + build_variables.dr_cs_tf_gap
             + build_variables.dr_tf_inboard
-            + build_variables.gapds
+            + build_variables.dr_shld_vv_gap_inboard
             + build_variables.dr_vv_inboard
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
@@ -448,7 +448,7 @@ class Stellarator:
         # that ensures that there is enough space between coils and plasma.
         build_variables.required_radial_space = (
             build_variables.dr_tf_inboard / 2.0e0
-            + build_variables.gapds
+            + build_variables.dr_shld_vv_gap_inboard
             + build_variables.dr_vv_inboard
             + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
@@ -503,7 +503,7 @@ class Stellarator:
 
         build_variables.hmax = 0.5e0 * (
             (
-                build_variables.gapds
+                build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
                 + build_variables.dr_shld_inboard
                 + build_variables.dr_blkt_inboard
@@ -598,9 +598,20 @@ class Stellarator:
                 build_variables.dr_tf_inboard,
             )
 
-            radius = radius + build_variables.gapds
-            po.obuild(self.outfile, "Gap", build_variables.gapds, radius, "(gapds)")
-            po.ovarre(self.outfile, "Gap (m)", "(gapds)", build_variables.gapds)
+            radius = radius + build_variables.dr_shld_vv_gap_inboard
+            po.obuild(
+                self.outfile,
+                "Gap",
+                build_variables.dr_shld_vv_gap_inboard,
+                radius,
+                "(dr_shld_vv_gap_inboard)",
+            )
+            po.ovarre(
+                self.outfile,
+                "Gap (m)",
+                "(dr_shld_vv_gap_inboard)",
+                build_variables.dr_shld_vv_gap_inboard,
+            )
 
             radius = radius + build_variables.dr_vv_inboard
             po.obuild(
