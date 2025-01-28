@@ -351,6 +351,15 @@ $$
 
 -------------------------
 
+### 25: TITAN Reversed-Field_Pinch scaling
+
+Is selected with `i_confinement_time = 25`
+
+!!! warning 
+    This scaling has been removed
+
+-------------------------
+
 ### 26: ELM-free: ITERH-97P scaling
 
 Is selected with `i_confinement_time = 26`
