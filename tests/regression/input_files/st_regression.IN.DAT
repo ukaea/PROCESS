@@ -2054,7 +2054,7 @@ boundu(93) = 1.0
 * DESCRIPTION:   Inboard Shield Thickness (m) 
 * JUSTIFICATION: Adjusted for above [(dr_shld_inboard + dr_vv_inboard)~0.6 from KTaylor, neutronics]
 
-vvblgap = 0.01 
+dr_shld_blkt_gap = 0.01 
 * DESCRIPTION:   Gap Between Vacuum Vessel and Blanket (m)
 * JUSTIFICATION: No inboard vacuum vessel or blanket
 
