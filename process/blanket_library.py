@@ -127,7 +127,7 @@ class BlanketLibrary:
             # Blanket
             htop = physics_variables.rminor * physics_variables.kappa + 0.5 * (
                 build_variables.dr_fw_plasma_gap_inboard
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
                 + build_variables.dr_fw_inboard
                 + build_variables.dr_fw_outboard
             )
@@ -164,7 +164,7 @@ class BlanketLibrary:
             build_variables.dr_fw_inboard
             + build_variables.dr_fw_plasma_gap_inboard
             + 2.0 * physics_variables.rminor
-            + build_variables.scraplo
+            + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
         )
         # Sheild
@@ -659,7 +659,7 @@ class BlanketLibrary:
             * (
                 physics_variables.rmajor
                 + physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
             )
         ) / fwbs_variables.nblktmodto
 
@@ -1119,7 +1119,7 @@ class BlanketLibrary:
             a = (
                 build_variables.dr_fw_plasma_gap_inboard
                 + 2.0 * physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
             )
 
             # Internal half-height of blanket (m)
@@ -1187,7 +1187,7 @@ class BlanketLibrary:
             a = (
                 physics_variables.rmajor
                 + physics_variables.rminor
-                + build_variables.scraplo
+                + build_variables.dr_fw_plasma_gap_outboard
                 - r1
             )
 

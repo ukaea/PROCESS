@@ -138,7 +138,7 @@ RADIAL_BUILD = [
     "dr_fw_plasma_gap_inboard",
     "rminori",
     "rminoro",
-    "scraplo",
+    "dr_fw_plasma_gap_outboard",
     "dr_fw_outboard",
     "dr_blkt_outboard",
     "vvblgapo",
@@ -1394,11 +1394,11 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
 
         # Upper first wall: inner surface
         radx_inner = (
-            cumulative_radial_build("scraplo", mfile_data, scan)
+            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile_data, scan)
             + cumulative_radial_build("dr_fw_inboard", mfile_data, scan)
         ) / 2.0
         rminx_inner = (
-            cumulative_radial_build("scraplo", mfile_data, scan)
+            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile_data, scan)
             - cumulative_radial_build("dr_fw_inboard", mfile_data, scan)
         ) / 2.0
 
@@ -3384,7 +3384,7 @@ def main(args=None):
     global dr_fw_plasma_gap_inboard
     global rmajor
     global rminor
-    global scraplo
+    global dr_fw_plasma_gap_outboard
     global dr_fw_outboard
     global dr_blkt_outboard
     global shldoth
@@ -3407,7 +3407,7 @@ def main(args=None):
     dr_fw_plasma_gap_inboard = m_file.data["dr_fw_plasma_gap_inboard"].get_scan(scan)
     rmajor = m_file.data["rmajor"].get_scan(scan)
     rminor = m_file.data["rminor"].get_scan(scan)
-    scraplo = m_file.data["scraplo"].get_scan(scan)
+    dr_fw_plasma_gap_outboard = m_file.data["dr_fw_plasma_gap_outboard"].get_scan(scan)
     dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
     dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
     shldoth = m_file.data["shldoth"].get_scan(scan)

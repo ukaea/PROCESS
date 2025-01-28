@@ -211,7 +211,7 @@ module build_variables
   !! Iteration variable: ixc = 73
   !! Scan variable: nsweep = 58
 
-  real(dp) :: scraplo
+  real(dp) :: dr_fw_plasma_gap_outboard
   !! Gap between plasma and first wall, outboard side (m) (if `i_plasma_wall_gap=1`)
   !! Iteration variable: ixc = 74
   !! Scan variable: nsweep = 59
@@ -359,7 +359,7 @@ module build_variables
     dr_tf_inner_bore = 0.0D0
     dh_tf_inner_bore = 0.0D0
     dr_fw_plasma_gap_inboard = 0.14D0
-    scraplo = 0.15D0
+    dr_fw_plasma_gap_outboard = 0.15D0
     sharea = 0.0D0
     shareaib = 0.0D0
     shareaob = 0.0D0

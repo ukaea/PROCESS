@@ -106,7 +106,7 @@ class ProcessTracker:
         "tfthko",
         "dr_blkt_inboard",
         "vvblgap",
-        "scraplo",
+        "dr_fw_plasma_gap_outboard",
         "dr_cs_tf_gap",
         "gapsto",
         "shldoth",

@@ -64,7 +64,7 @@ var_dicts = {
         description="Inner FW to plasma gap",
         units="m",
     ),
-    "scraplo": VariableMetadata(
+    "dr_fw_plasma_gap_outboard": VariableMetadata(
         latex=r"$\Delta R_\mathrm{FW-sep}^\mathrm{out}$ [$m$]",
         description="Outer FW to plasma gap",
         units="m",

@@ -250,7 +250,7 @@ class StbildParam(NamedTuple):
 
     dr_fw_plasma_gap_inboard: Any = None
 
-    scraplo: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
 
     dr_shld_inboard: Any = None
 
@@ -364,7 +364,7 @@ class StbildParam(NamedTuple):
             rsldo=0,
             rspo=0,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
-            scraplo=0.30000000000000004,
+            dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             shldoth=0.70000000000000007,
             shldtth=0.70000000000000007,
@@ -434,7 +434,7 @@ class StbildParam(NamedTuple):
             rsldo=25.602266017842663,
             rspo=22,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
-            scraplo=0.30000000000000004,
+            dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             shldoth=0.70000000000000007,
             shldtth=0.70000000000000007,
@@ -549,9 +549,17 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
 
-    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", stbildparam.dr_fw_plasma_gap_inboard)
+    monkeypatch.setattr(
+        build_variables,
+        "dr_fw_plasma_gap_inboard",
+        stbildparam.dr_fw_plasma_gap_inboard,
+    )
 
-    monkeypatch.setattr(build_variables, "scraplo", stbildparam.scraplo)
+    monkeypatch.setattr(
+        build_variables,
+        "dr_fw_plasma_gap_outboard",
+        stbildparam.dr_fw_plasma_gap_outboard,
+    )
 
     monkeypatch.setattr(build_variables, "dr_shld_inboard", stbildparam.dr_shld_inboard)
 
