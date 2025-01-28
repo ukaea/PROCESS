@@ -255,7 +255,7 @@ module build_variables
   real(dp) :: tfthko
   !! Outboard TF coil thickness (m)
 
-  real(dp) :: tftsgap
+  real(dp) :: dr_tf_shld_gap
   !! Minimum metal-to-metal gap between TF coil and thermal shield (m)
 
   real(dp) :: dr_shld_thermal_inboard
@@ -372,7 +372,7 @@ module build_variables
     tfoffset = 0.0D0
     tfootfi = 1.19D0
     tfthko = 0.0D0
-    tftsgap = 0.05D0
+    dr_tf_shld_gap = 0.05D0
     dr_shld_thermal_inboard = 0.05D0
     thshield_ob = 0.05D0
     thshield_vb = 0.05D0

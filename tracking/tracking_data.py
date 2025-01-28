@@ -97,7 +97,7 @@ class ProcessTracker:
         "fwith",
         "fwoth",
         "thshield",
-        "tftsgap",
+        "dr_tf_shld_gap",
         "dr_bore",
         "dr_cs",
         "scrapli",

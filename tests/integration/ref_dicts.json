@@ -7560,7 +7560,7 @@
         "tfthko": 0.0,
         "tftmp": 4.5,
         "tftort": 1.0,
-        "tftsgap": 0.05,
+        "dr_tf_shld_gap": 0.05,
         "tfwmatmax": 823.0,
         "tgain": 85.0,
         "th_joint_contact": 0.03,
@@ -10808,7 +10808,7 @@
         "tfthko": "Outboard TF coil thickness (m)",
         "tftmp": "peak helium coolant temperature in TF coils and PF coils (K)",
         "tftort": "TF coil toroidal thickness (m)",
-        "tftsgap": "Minimum metal-to-metal gap between TF coil and thermal shield (m)",
+        "dr_tf_shld_gap": "Minimum metal-to-metal gap between TF coil and thermal shield (m)",
         "tfwmatmax": "maximum temperature of first wall material (K) (`secondary_cycle>1`)",
         "tgain": "IFE target gain (if `ifedrv = 0`) (`iteration variable 83`)",
         "th_joint_contact": "TF sliding joints contact pad width [m]",
@@ -14535,7 +14535,7 @@
             "lb": 0.01,
             "ub": 293.0
         },
-        "tftsgap": {
+        "dr_tf_shld_gap": {
             "lb": 0.0,
             "ub": 5.0
         },
@@ -17078,7 +17078,7 @@
             "tfoffset",
             "tfootfi",
             "tfthko",
-            "tftsgap",
+            "dr_tf_shld_gap",
             "thshield",
             "vgap_vv_thermalshield",
             "vgap_xpoint_divertor",
@@ -20779,7 +20779,7 @@
         "tfinsgap": "real_variable",
         "tfootfi": "real_variable",
         "tftmp": "real_variable",
-        "tftsgap": "real_variable",
+        "dr_tf_shld_gap": "real_variable",
         "tfwmatmax": "real_variable",
         "tgain": "real_variable",
         "th_joint_contact": "real_variable",
