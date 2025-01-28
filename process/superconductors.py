@@ -331,8 +331,8 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
     - \\( \\thelium \\) -- Coolant/SC temperature [K]
     - \\( \\bmax \\) -- Magnetic field at conductor [T]
     - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
-    - \\( \\B_{c2}(\\epsilon_i) \\) -- Strain dependent upper critical field [T]
-    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_i)*(1-t^\\nu) [unitless]
+    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
+    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
     - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
     - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
     - \\( \\A(epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
