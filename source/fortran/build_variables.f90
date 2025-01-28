@@ -151,7 +151,7 @@ module build_variables
   real(dp) :: dr_cs
   !! Central solenoid thickness (m) (`iteration variable 16`)
 
-  real(dp) :: precomp
+  real(dp) :: dr_cs_precomp
   !! CS coil precompression structure thickness (m)
 
   real(dp) :: rbld
@@ -345,7 +345,7 @@ module build_variables
     iprecomp = 1
     tf_in_cs = 0
     dr_cs = 0.811D0
-    precomp = 0.0D0
+    dr_cs_precomp = 0.0D0
     rbld = 0.0D0
     required_radial_space = 0.0D0
     rinboard = 0.651D0

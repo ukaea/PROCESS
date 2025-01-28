@@ -85,7 +85,7 @@ def get_radial_build(m_file):
     radial_labels = [
         "dr_bore",
         "dr_cs",
-        "precomp",
+        "dr_cs_precomp",
         "gapoh",
         "tfcth",
         "tftsgap",
@@ -113,7 +113,7 @@ def get_radial_build(m_file):
         radial_labels[1] = "tfcth"
         radial_labels[2] = "gapoh"
         radial_labels[3] = "dr_cs"
-        radial_labels[4] = "precomp"
+        radial_labels[4] = "dr_cs_precomp"
         radial_labels[5] = "tftsgap"
 
     radial_build = [
