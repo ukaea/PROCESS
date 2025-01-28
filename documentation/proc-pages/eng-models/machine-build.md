@@ -42,7 +42,7 @@ depending on the switches used.
  Gap                                          0.020          13.653   (vvblgap)           IP
  Vacuum vessel (and shielding)                1.100          14.753   (d_vv_out+shldoth)  IP
  Gap                                          1.900          16.652   (gapsto)            
- Thermal shield, outboard                     0.050          16.702   (thshield_ob)       IP
+ Thermal shield, outboard                     0.050          16.702   (dr_shld_thermal_outboard)       IP
  Gap                                          0.050          16.752   (dr_tf_shld_gap)           IP
  TF coil outboard leg                         1.400          18.152   (tfthko)          
 
