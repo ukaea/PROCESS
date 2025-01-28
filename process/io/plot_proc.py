@@ -147,7 +147,7 @@ RADIAL_BUILD = [
     "gapsto",
     "dr_shld_thermal_outboard",
     "dr_tf_shld_gap",
-    "tfthko",
+    "dr_tf_outboard",
 ]
 
 vertical_lower = [
@@ -506,7 +506,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     angu = ang + spacing / 2
     r1, null = cumulative_radial_build2("dr_cs_tf_gap", mfile_data, scan)
     r2, null = cumulative_radial_build2("dr_tf_inboard", mfile_data, scan)
-    r4, r3 = cumulative_radial_build2("tfthko", mfile_data, scan)
+    r4, r3 = cumulative_radial_build2("dr_tf_outboard", mfile_data, scan)
 
     # Coil width
     w = r2 * np.tan(spacing / 2)
@@ -547,7 +547,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     if (iefrf == 5) or (iefrf == 8):
         # Neutral beam geometry
         a = w
-        b = tfthko
+        b = dr_tf_outboard
         c = beamwd + 2 * nbshield
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
@@ -3390,7 +3390,7 @@ def main(args=None):
     global shldoth
     global ddwi
     global gapsto
-    global tfthko
+    global dr_tf_outboard
     global r_cryostat_inboard
     global z_cryostat_half_inside
     global dr_cryostat
@@ -3412,7 +3412,7 @@ def main(args=None):
     dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
     shldoth = m_file.data["shldoth"].get_scan(scan)
     gapsto = m_file.data["gapsto"].get_scan(scan)
-    tfthko = m_file.data["tfthko"].get_scan(scan)
+    dr_tf_outboard = m_file.data["dr_tf_outboard"].get_scan(scan)
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
     z_cryostat_half_inside = m_file.data["z_cryostat_half_inside"].get_scan(scan)
     dr_cryostat = m_file.data["dr_cryostat"].get_scan(scan)

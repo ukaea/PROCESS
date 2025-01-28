@@ -158,7 +158,7 @@ class PFCoil:
         # Scale PF coil locations
         signn[0] = 1.0e0
         signn[1] = -1.0e0
-        pf.rclsnorm = bv.r_tf_outboard_mid + 0.5e0 * bv.tfthko + pfv.routr
+        pf.rclsnorm = bv.r_tf_outboard_mid + 0.5e0 * bv.dr_tf_outboard + pfv.routr
 
         # Place the PF coils:
 
@@ -918,7 +918,9 @@ class PFCoil:
                         if pf.rcls[ii, ij] <= (  # Outboard TF coil collision
                             pf.rclsnorm - pfv.routr + pfv.rpf[i]
                         ) and pf.rcls[ii, ij] >= (
-                            bv.r_tf_outboard_mid - (0.5 * bv.tfthko) - pfv.rpf[i]
+                            bv.r_tf_outboard_mid
+                            - (0.5 * bv.dr_tf_outboard)
+                            - pfv.rpf[i]
                         ):
                             pf_tf_collision += 1
                         if pf.rcls[ii, ij] <= (  # Inboard TF coil collision
@@ -939,7 +941,7 @@ class PFCoil:
                         if (  # Vertical TF coil collision
                             abs(pf.zcls[ii, ij]) <= bv.hpfu + pfv.rpf[i]
                             and abs(pf.zcls[ii, ij])
-                            >= bv.hpfu - (0.5 * bv.tfthko) - pfv.rpf[i]
+                            >= bv.hpfu - (0.5 * bv.dr_tf_outboard) - pfv.rpf[i]
                         ):
                             pf_tf_collision += 1
 

@@ -588,7 +588,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    tfthko: Any = None
+    dr_tf_outboard: Any = None
 
     tfareain: Any = None
 
@@ -645,7 +645,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_cp_top=4.20194118510911,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            tfthko=1.208,
+            dr_tf_outboard=1.208,
             tfareain=0,
             ritfc=0,
             tftort=1,
@@ -675,7 +675,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_cp_top=4.4822055399518357,
             r_tf_inboard_in=2.9538679176819831,
             r_tf_inboard_out=4.4822055399518357,
-            tfthko=1.5283376222698528,
+            dr_tf_outboard=1.5283376222698528,
             tfareain=35.703669036223495,
             ritfc=241812532.66279837,
             tftort=1.7488698442633552,
@@ -732,7 +732,9 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_out", tfglobalgeometryparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(build_variables, "tfthko", tfglobalgeometryparam.tfthko)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_outboard", tfglobalgeometryparam.dr_tf_outboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfareain", tfglobalgeometryparam.tfareain)
 
@@ -866,7 +868,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     n_tf: Any = None
 
-    tfthko: Any = None
+    dr_tf_outboard: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -918,7 +920,7 @@ class TfResHeatingParam(NamedTuple):
     fcoolleg: Any = None
     i_cp_joints: Any = None
     tinstf: Any = None
-    tfthko: Any = None
+    dr_tf_outboard: Any = None
     dr_tf_inboard: Any = None
     r_cp_top: Any = None
     hmax: Any = None
@@ -957,7 +959,7 @@ class TfResHeatingParam(NamedTuple):
             acasetf=0,
             tinstf=0,
             n_tf=12,
-            tfthko=0.15483000000000002,
+            dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             r_cp_top=0.87643571428571443,
@@ -984,7 +986,7 @@ class TfResHeatingParam(NamedTuple):
             acasetf=0.00061190425043863676,
             tinstf=0,
             n_tf=12,
-            tfthko=0.15483000000000002,
+            dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             r_cp_top=0.85843571428571441,
@@ -1043,7 +1045,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf", restfinternalgeomparam.n_tf)
 
-    monkeypatch.setattr(build_variables, "tfthko", restfinternalgeomparam.tfthko)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_outboard", restfinternalgeomparam.dr_tf_outboard
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_in", restfinternalgeomparam.r_tf_inboard_in
@@ -1130,7 +1134,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             fcoolleg=0.20000000000000001,
             i_cp_joints=1,
             tinstf=0,
-            tfthko=0.15483000000000002,
+            dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.87643571428571443,
             hmax=4.4214285714285717,
@@ -1180,7 +1184,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
             fcoolleg=0.20000000000000001,
             i_cp_joints=1,
             tinstf=0,
-            tfthko=0.15483000000000002,
+            dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.85843571428571441,
             hmax=4.4214285714285717,
@@ -1280,7 +1284,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", tfresheatingparam.tinstf)
 
-    monkeypatch.setattr(build_variables, "tfthko", tfresheatingparam.tfthko)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
@@ -14050,7 +14056,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         "r_tf_inboard_out",
         build_variables.r_tf_inboard_mid + (build_variables.dr_tf_inboard / 2),
     )
-    monkeypatch.setattr(build_variables, "tfthko", 0)  # simplifies
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0)  # simplifies
 
     monkeypatch.setattr(physics_variables, "rminor", 2.96)  # Baseline 2018
     monkeypatch.setattr(physics_variables, "kappa", 1.848)  # Baseline 2018
@@ -14071,7 +14077,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(
         build_variables, "dr_shld_thermal_outboard", 0.05
     )  # Baseline 2018
-    monkeypatch.setattr(build_variables, "tfthko", 1.4)  # Baseline 2018
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", 1.4)  # Baseline 2018
     monkeypatch.setattr(
         build_variables, "gapsto", 1.7
     )  # chosen to achieve Ro_vv in Table 2

@@ -588,7 +588,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3921E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7479E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.7479E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -671,7 +671,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1879E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.7479E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.7479E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7479E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7838E+01 OP 
@@ -1751,7 +1751,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4002E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.5817E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.5817E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -1834,7 +1834,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1962E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.5817E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.5817E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.5817E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7798E+01 OP 
@@ -2914,7 +2914,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4068E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4468E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.4468E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -2997,7 +2997,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.2030E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.4468E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.4468E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4468E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7766E+01 OP 
@@ -4077,7 +4077,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4062E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4602E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.4602E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -4160,7 +4160,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.2023E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.4602E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.4602E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4602E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7769E+01 OP 
@@ -5240,7 +5240,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4003E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.5817E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.5817E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -5323,7 +5323,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1962E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.5817E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.5817E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.5817E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7798E+01 OP 
@@ -6403,7 +6403,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3918E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7538E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.7538E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -6486,7 +6486,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1876E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.7538E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.7538E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7538E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7840E+01 OP 
@@ -7566,7 +7566,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3910E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7704E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.7704E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -7649,7 +7649,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1868E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.7704E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.7704E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7704E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7844E+01 OP 
@@ -8729,7 +8729,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3983E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6229E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.6229E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -8812,7 +8812,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1942E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.6229E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.6229E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6229E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7808E+01 OP 
@@ -9892,7 +9892,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4051E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4832E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.4832E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -9975,7 +9975,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.2012E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.4832E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.4832E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4832E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7775E+01 OP 
@@ -11055,7 +11055,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4047E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4911E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.4911E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -11138,7 +11138,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.2008E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.4911E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.4911E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4911E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7777E+01 OP 
@@ -12218,7 +12218,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3978E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6318E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.6318E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -12301,7 +12301,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1937E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.6318E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.6318E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6318E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7810E+01 OP 
@@ -13381,7 +13381,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3908E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7762E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.7762E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -13464,7 +13464,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1865E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.7762E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.7762E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7762E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7845E+01 OP 
@@ -14544,7 +14544,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3903E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.7862E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.7862E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -14627,7 +14627,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1860E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.7862E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.7862E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.7862E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7847E+01 OP 
@@ -15707,7 +15707,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.3975E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.6375E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.6375E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -15790,7 +15790,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1935E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.6375E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.6375E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6375E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7812E+01 OP 
@@ -16870,7 +16870,7 @@
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.4048E+00    
  Thermal_shield,_outboard_(m)____________________________________________ (dr_shld_thermal_outboard)_________________      5.0000E-02    
  Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
- TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      8.4888E-01    
+ TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (dr_tf_outboard)______________________      8.4888E-01    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
@@ -16953,7 +16953,7 @@
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.2009E+00 OP 
  Outboard_leg_centre_radius_(m)__________________________________________ (r_tf_outboard_mid)___________      1.4984E+01 OP 
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.4888E-01 ITV
- Total_outboard_leg_radial_thickness_(m)_________________________________ (tfthko)______________________      8.4888E-01    
+ Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.4888E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7776E+01 OP 
