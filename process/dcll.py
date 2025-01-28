@@ -476,7 +476,9 @@ class DCLL:
             - build_variables.blbuith
         )
         build_variables.blbmoth = (
-            build_variables.blnkoth - dcll_module.r_backwall - build_variables.blbuoth
+            build_variables.dr_blkt_outboard
+            - dcll_module.r_backwall
+            - build_variables.blbuoth
         )
 
         # Fraction of EUROfer (volume composition for EURO + He structures)
@@ -509,7 +511,7 @@ class DCLL:
             ) + (
                 fwbs_variables.volblkto
                 * (dcll_module.bz_r_ob * (1 - fwbs_variables.r_f_liq_ob))
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
@@ -525,7 +527,7 @@ class DCLL:
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * fwbs_variables.r_f_liq_ob
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
             dcll_module.vol_bz_liq_ib = (
                 fwbs_variables.volblkti
@@ -537,7 +539,7 @@ class DCLL:
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * fwbs_variables.r_f_liq_ob
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
 
             if fwbs_variables.ifci > 0:
@@ -548,7 +550,7 @@ class DCLL:
                 ) + (
                     fwbs_variables.volblkto
                     * dcll_module.r_fci
-                    / build_variables.blnkoth
+                    / build_variables.dr_blkt_outboard
                 )
 
             # Back Wall
@@ -559,7 +561,7 @@ class DCLL:
             ) + (
                 fwbs_variables.volblkto
                 * dcll_module.r_backwall
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
 
             # Manifold/BSS
@@ -570,7 +572,7 @@ class DCLL:
             ) + (
                 fwbs_variables.volblkto
                 * build_variables.blbmoth
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
 
         else:
@@ -581,7 +583,7 @@ class DCLL:
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * (1 - fwbs_variables.r_f_liq_ob)
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
@@ -592,33 +594,33 @@ class DCLL:
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * fwbs_variables.r_f_liq_ob
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
             dcll_module.vol_bz_liq_ob = (
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
                 * fwbs_variables.r_f_liq_ob
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.ifci > 0:
                 dcll_module.vol_fci = (
                     fwbs_variables.volblkto
                     * dcll_module.r_fci
-                    / build_variables.blnkoth
+                    / build_variables.dr_blkt_outboard
                 )
 
             # Back Wall
             dcll_module.vol_bw = (
                 fwbs_variables.volblkto
                 * dcll_module.r_backwall
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
 
             # Manifold/BSS
             dcll_module.vol_bss = (
                 fwbs_variables.volblkto
                 * build_variables.blbmoth
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
             )
 
         # Calculate masses

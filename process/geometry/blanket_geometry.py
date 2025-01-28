@@ -20,7 +20,7 @@ def blanket_geometry_single_null(
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
-    blnkoth: float,
+    dr_blkt_outboard: float,
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of blanket in a single null configuration
 
@@ -46,8 +46,8 @@ def blanket_geometry_single_null(
     :type c_blnkoth: float
     :param dr_blkt_inboard: inboard blanket radial thickness
     :type dr_blkt_inboard: float
-    :param blnkoth: outboard blanket radial thickness
-    :type blnkoth: float
+    :param dr_blkt_outboard: outboard blanket radial thickness
+    :type dr_blkt_outboard: float
     :return: dataclass returning radial and vertical coordinates
     :rtype: ArbitraryGeometry
     """
@@ -77,7 +77,7 @@ def blanket_geometry_single_null(
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,
-        blnkoth=blnkoth,
+        dr_blkt_outboard=dr_blkt_outboard,
         divgap=divgap,
     )
 
@@ -103,7 +103,7 @@ def blanket_geometry_lower(
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
-    blnkoth: float,
+    dr_blkt_outboard: float,
     divgap: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
@@ -118,8 +118,8 @@ def blanket_geometry_lower(
     :type c_blnkoth: float
     :param dr_blkt_inboard: inboard blanket radial thickness
     :type dr_blkt_inboard: float
-    :param blnkoth: outboard blanket radial thickness
-    :type blnkoth: float
+    :param dr_blkt_outboard: outboard blanket radial thickness
+    :type dr_blkt_outboard: float
     :param divgap: divertor structure vertical thickness
     :type divgap: float
     :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the blanket geometry below the midplane
@@ -127,7 +127,13 @@ def blanket_geometry_lower(
     """
     # Lower blanket
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
-        c_shldith, c_blnkoth, dr_blkt_inboard, blnkoth, divgap, -blnktth, triang
+        c_shldith,
+        c_blnkoth,
+        dr_blkt_inboard,
+        dr_blkt_outboard,
+        divgap,
+        -blnktth,
+        triang,
     )
     # outboard radial and vertical coordinates
     rs_lower_outboard = np.concatenate([rs1, rs2[::-1]])
@@ -146,7 +152,7 @@ def blanket_geometry_double_null(
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
-    blnkoth: float,
+    dr_blkt_outboard: float,
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of blanket in a double null configuration
     In a double null configuration, the geometry of the lower blanket is reflected across the midplane to create the section of blanket above the midplane
@@ -163,8 +169,8 @@ def blanket_geometry_double_null(
     :type c_blnkoth: float
     :param dr_blkt_inboard: inboard blanket radial thickness
     :type dr_blkt_inboard: float
-    :param blnkoth: outboard blanket radial thickness
-    :type blnkoth: float
+    :param dr_blkt_outboard: outboard blanket radial thickness
+    :type dr_blkt_outboard: float
     :return: dataclass returning radial and vertical coordinates
     :rtype: ArbitraryGeometry
     """
@@ -182,7 +188,7 @@ def blanket_geometry_double_null(
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,
-        blnkoth=blnkoth,
+        dr_blkt_outboard=dr_blkt_outboard,
         divgap=divgap,
     )
 
@@ -200,7 +206,7 @@ def blanket_geometry_double_null(
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,
-        blnkoth=blnkoth,
+        dr_blkt_outboard=dr_blkt_outboard,
         divgap=divgap,
     )
     rs_1 = np.concatenate([rs_upper_outboard, rs_lower_outboard[::-1]])

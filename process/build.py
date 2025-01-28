@@ -1649,7 +1649,7 @@ class Build:
                 + build_variables.blbmith
                 + build_variables.blbpith
             )
-            build_variables.blnkoth = (
+            build_variables.dr_blkt_outboard = (
                 build_variables.blbuoth
                 + build_variables.blbmoth
                 + build_variables.blbpoth
@@ -1660,7 +1660,7 @@ class Build:
 
         #  Top/bottom blanket thickness
         build_variables.blnktth = 0.5e0 * (
-            build_variables.dr_blkt_inboard + build_variables.blnkoth
+            build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
         if physics_variables.i_single_null == 1:
@@ -1883,7 +1883,7 @@ class Build:
             + physics_variables.rminor
             + build_variables.scraplo
             + build_variables.fwoth
-            + build_variables.blnkoth
+            + build_variables.dr_blkt_outboard
             + build_variables.shldoth
         )
 
@@ -2329,11 +2329,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.blnkoth
+            radius = radius + build_variables.dr_blkt_outboard
             radial_build_data.append([
                 "Outboard blanket",
-                "blnkoth",
-                build_variables.blnkoth,
+                "dr_blkt_outboard",
+                build_variables.dr_blkt_outboard,
                 radius,
             ])
 

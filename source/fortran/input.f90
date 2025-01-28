@@ -197,7 +197,7 @@ contains
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
-      rinboard, blnkoth, fseppc, plsepo, dr_blkt_inboard, &
+      rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, dr_vv_outboard, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
@@ -1305,15 +1305,15 @@ contains
 	      iblnkith = 0     ! Inboard blanket does not exist
             end if
           end if
-       case ('blnkoth')
+       case ('dr_blkt_outboard')
            if (iblanket == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
-            write(outfile,*) 'ERROR. BLNKOTH input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
+            write(outfile,*) 'ERROR. dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
             write(outfile,*) 'please remove it from the input file'
             write(outfile,*) '**********'
           else
-            call parse_real_variable('blnkoth', blnkoth, 0.0D0, 10.0D0, &
+            call parse_real_variable('dr_blkt_outboard', dr_blkt_outboard, 0.0D0, 10.0D0, &
                 'Outboard blanket thickness (m)')
           end if
        case ('dr_bore')
@@ -2246,13 +2246,13 @@ contains
                'Blanket thickness switch')
           if (iblanket_thickness == 1) then
             dr_blkt_inboard = 0.53D0
-            blnkoth = 0.91D0
+            dr_blkt_outboard = 0.91D0
           else if (iblanket_thickness == 2) then
             dr_blkt_inboard = 0.64D0
-            blnkoth = 1.11D0
+            dr_blkt_outboard = 1.11D0
           else if (iblanket_thickness == 3) then
             dr_blkt_inboard = 0.75D0
-            blnkoth = 1.30D0
+            dr_blkt_outboard = 1.30D0
           end if
        case ('npdiv')
           call parse_int_variable('npdiv', npdiv, 0, 4, &
