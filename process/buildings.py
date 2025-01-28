@@ -552,7 +552,7 @@ class Buildings:
                     physics_variables.rmajor
                     - (
                         physics_variables.rminor
-                        + build_variables.scrapli
+                        + build_variables.dr_fw_plasma_gap_inboard
                         + build_variables.dr_fw_inboard
                         + build_variables.dr_blkt_inboard
                         + build_variables.dr_shld_inboard

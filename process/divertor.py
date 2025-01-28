@@ -38,7 +38,7 @@ class Divertor:
                 pv.rmajor,
                 pv.rminor,
                 pv.triang,
-                bv.scrapli,
+                bv.dr_fw_plasma_gap_inboard,
                 bv.vgap_xpoint_divertor,
                 pv.pdivt,
                 output=output,
@@ -749,7 +749,7 @@ class Divertor:
         rmajor: float,
         rminor: float,
         triang: float,
-        scrapli: float,
+        dr_fw_plasma_gap_inboard: float,
         vgap_xpoint_divertor: float,
         pdivt: float,
         output: bool,
@@ -772,8 +772,8 @@ class Divertor:
         :param triang: plasma triangularity
         :type triang: float
 
-        :param scrapli: inboard scrape-off width (m)
-        :type scrapli: float
+        :param dr_fw_plasma_gap_inboard: inboard scrape-off width (m)
+        :type dr_fw_plasma_gap_inboard: float
 
         :param vgap_xpoint_divertor: top scrape-off width (m)
         :type vgap_xpoint_divertor: float
@@ -790,7 +790,7 @@ class Divertor:
 
         #  Thickness of centrepost + first wall at divertor height
 
-        r1 = rmajor - rminor * triang - 3.0e0 * scrapli + tfv.drtop
+        r1 = rmajor - rminor * triang - 3.0e0 * dr_fw_plasma_gap_inboard + tfv.drtop
 
         #  Outer radius of divertor region
 

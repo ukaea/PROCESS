@@ -126,7 +126,7 @@ class BlanketLibrary:
         else:
             # Blanket
             htop = physics_variables.rminor * physics_variables.kappa + 0.5 * (
-                build_variables.scrapli
+                build_variables.dr_fw_plasma_gap_inboard
                 + build_variables.scraplo
                 + build_variables.dr_fw_inboard
                 + build_variables.dr_fw_outboard
@@ -162,7 +162,7 @@ class BlanketLibrary:
         # Blanket
         r2 = (
             build_variables.dr_fw_inboard
-            + build_variables.scrapli
+            + build_variables.dr_fw_plasma_gap_inboard
             + 2.0 * physics_variables.rminor
             + build_variables.scraplo
             + build_variables.dr_fw_outboard
@@ -650,7 +650,7 @@ class BlanketLibrary:
             * (
                 physics_variables.rmajor
                 - physics_variables.rminor
-                - build_variables.scrapli
+                - build_variables.dr_fw_plasma_gap_inboard
             )
         ) / fwbs_variables.nblktmodti
         blanket_library.blwidto = (
@@ -1117,7 +1117,7 @@ class BlanketLibrary:
 
             # Mid-plane distance from inboard to outboard side (m)
             a = (
-                build_variables.scrapli
+                build_variables.dr_fw_plasma_gap_inboard
                 + 2.0 * physics_variables.rminor
                 + build_variables.scraplo
             )
@@ -1159,7 +1159,7 @@ class BlanketLibrary:
             a = r1 - (
                 physics_variables.rmajor
                 - physics_variables.rminor
-                - build_variables.scrapli
+                - build_variables.dr_fw_plasma_gap_inboard
             )
 
             # Calculate ellipse circumference using Ramanujan approximation (m)

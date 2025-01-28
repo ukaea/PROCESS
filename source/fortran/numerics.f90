@@ -274,7 +274,7 @@ module numerics
   !! <LI> (70) vcool
   !! <LI> (71) fq (f-value for equation 45)
   !! <LI> (72) fipir (f-value for equation 46)
-  !! <LI> (73) scrapli
+  !! <LI> (73) dr_fw_plasma_gap_inboard
   !! <LI> (74) scraplo
   !! <LI> (75) tfootfi
   !! <LI> (76) NOT USED

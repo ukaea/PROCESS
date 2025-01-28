@@ -2082,11 +2082,11 @@ dr_blkt_inboard = 0.0
 *i_plasma_wall_gap = 
 * DESCRIPTION:   Switch for scrapeoff width (default = 1)
 * =0 use 10% of rminor
-* =1 use input (scrapli and scraplo)
+* =1 use input (dr_fw_plasma_gap_inboard and scraplo)
 * JUSTIFICATION: Not set, assuming default value
 
 *ixc = 73
-scrapli = 0.1
+dr_fw_plasma_gap_inboard = 0.1
 *boundl(73) = 0.1
 *boundu(73) = 1.0
 * DESCRIPTION:   Gap Between Plasma Seaparatrix and FW Inboard Side (m)

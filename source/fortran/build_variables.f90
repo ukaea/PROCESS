@@ -209,7 +209,7 @@ module build_variables
   real(dp) :: dh_tf_inner_bore
   !! TF coil vertical inner dr_bore (m)
 
-  real(dp) :: scrapli
+  real(dp) :: dr_fw_plasma_gap_inboard
   !! Gap between plasma and first wall, inboard side (m) (if `i_plasma_wall_gap=1`)
   !! Iteration variable: ixc = 73
   !! Scan variable: nsweep = 58
@@ -362,7 +362,7 @@ module build_variables
     f_r_cp = 1.4D0
     dr_tf_inner_bore = 0.0D0
     dh_tf_inner_bore = 0.0D0
-    scrapli = 0.14D0
+    dr_fw_plasma_gap_inboard = 0.14D0
     scraplo = 0.15D0
     sharea = 0.0D0
     shareaib = 0.0D0
