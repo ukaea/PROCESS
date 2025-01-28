@@ -22,7 +22,7 @@ depending on the switches used.
  
  Device centreline                            0.000           0.000                       
  Machine dr_bore                                 2.124           2.124   (dr_bore)              IP, ITV
- Central solenoid                             0.500           2.624   (ohcth)             IP, ITV
+ Central solenoid                             0.500           2.624   (dr_cs)             IP, ITV
  CS precompression                            0.065           2.689   (precomp)           
  Gap                                          0.050           2.739   (gapoh)             IP, ITV
  TF coil inboard leg                          1.400           4.139   (tfcth)             IP

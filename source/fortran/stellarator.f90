@@ -51,7 +51,7 @@ contains
     !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use build_variables, only: gapoh, iohcl, ohcth, tfootfi
+    use build_variables, only: gapoh, iohcl, dr_cs, tfootfi
     use current_drive_variables, only: irfcd
     use pfcoil_variables, only: ohhghf
     use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q, rmajor, &
@@ -90,7 +90,7 @@ contains
 
     !  Build quantities
 
-    ohcth = 0.0D0
+    dr_cs = 0.0D0
     iohcl = 0
     ohhghf = 0.0D0
     gapoh = 0.0D0

@@ -198,7 +198,7 @@ contains
       blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
-      ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
+      dr_cs, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
@@ -1366,8 +1366,8 @@ contains
        case ('tf_in_cs')
           call parse_int_variable('tf_in_cs', tf_in_cs, 0, 1, &
                'Switch for placing TF coils inside of the CS')
-       case ('ohcth')
-          call parse_real_variable('ohcth', ohcth, 0.0D0, 10.0D0, &
+       case ('dr_cs')
+          call parse_real_variable('dr_cs', dr_cs, 0.0D0, 10.0D0, &
                'Central Solenoid thickness (m)')
        case ('rinboard')
           call parse_real_variable('rinboard', rinboard, 0.1D0, 10.0D0, &

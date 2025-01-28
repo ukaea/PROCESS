@@ -203,10 +203,10 @@ ixc = 13
 boundl(13) = 0.7
 tfcth = 1.2
 
-* ohcth [m]
+* dr_cs [m]
 ixc = 16
 boundl(16) = 0.3
-ohcth = 0.5
+dr_cs = 0.5
 
 * q
 ixc = 18

@@ -417,7 +417,7 @@ class Stellarator:
         build_variables.fwoth = build_variables.fwith
 
         build_variables.dr_bore = physics_variables.rmajor - (
-            build_variables.ohcth
+            build_variables.dr_cs
             + build_variables.gapoh
             + build_variables.tfcth
             + build_variables.gapds
@@ -432,7 +432,7 @@ class Stellarator:
         #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
         build_variables.rbld = (
             build_variables.dr_bore
-            + build_variables.ohcth
+            + build_variables.dr_cs
             + build_variables.gapoh
             + build_variables.tfcth
             + build_variables.gapds
@@ -573,7 +573,7 @@ class Stellarator:
             po.obuild(self.outfile, "Device centreline", 0.0e0, radius)
 
             drbild = (
-                build_variables.dr_bore + build_variables.ohcth + build_variables.gapoh
+                build_variables.dr_bore + build_variables.dr_cs + build_variables.gapoh
             )
             radius = radius + drbild
             po.obuild(self.outfile, "Machine dr_bore", drbild, radius, "(dr_bore)")

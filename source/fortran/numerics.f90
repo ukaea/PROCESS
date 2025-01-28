@@ -217,7 +217,7 @@ module numerics
   !! <LI> (13) tfcth (NOT RECOMMENDED)
   !! <LI> (14) fwalld (f-value for equation 8)
   !! <LI> (15) fvs (f-value for equation 12)
-  !! <LI> (16) ohcth
+  !! <LI> (16) dr_cs
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
   !! <LI> (19) beam_energy

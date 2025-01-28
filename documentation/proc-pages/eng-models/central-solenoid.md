@@ -7,8 +7,8 @@ it. `PROCESS` calculates the amount of flux required to produce the plasma curre
 amount actually available. The code measures the magnetic flux in units of Volt.seconds (= Webers).
 
 Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
-is present, and should be assigned a non-zero thickness `ohcth`. A value of `iohcl` = 0 denotes 
-that no central solenoid is present, in which case the thickness `ohcth` should be zero. No PF 
+is present, and should be assigned a non-zero thickness `dr_cs`. A value of `iohcl` = 0 denotes 
+that no central solenoid is present, in which case the thickness `dr_cs` should be zero. No PF 
 coils should be located at positions defined by `ipfloc(j)` = 1 if no central solenoid is present.
 
 The central solenoid can be either resistive or superconducting (controlled via switch `ipfres` as 
@@ -129,7 +129,7 @@ solenoid usually consists of several coils, which can have opposite currents.  T
 forces that tend to separate the coils.  To prevent this, ITER has "tie-plates" which hold the coil 
 segments together.  PROCESS has a corresponding structure, known as the pre-compression structure, 
 made up of two cylinders, one on the inside and one on the outside, of the same thickness. The 
-radii of the two cylinders are `dr_bore` and `dr_bore` + `ohcth`.  The thickness is derived using the 
+radii of the two cylinders are `dr_bore` and `dr_bore` + `dr_cs`.  The thickness is derived using the 
 separation force and the combined cross-sectional area:
 
 $$
