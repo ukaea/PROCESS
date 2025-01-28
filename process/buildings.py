@@ -586,7 +586,7 @@ class Buildings:
             )
             hcomp_rad_thk = (
                 build_variables.fwoth
-                + build_variables.blnkoth
+                + build_variables.dr_blkt_outboard
                 + build_variables.shldoth
             )
             hcomp_tor_thk = (
@@ -597,7 +597,7 @@ class Buildings:
                     + physics_variables.rminor
                     + build_variables.scraplo
                     + build_variables.fwoth
-                    + build_variables.blnkoth
+                    + build_variables.dr_blkt_outboard
                     + build_variables.shldoth
                 )
             ) / tfcoil_variables.n_tf

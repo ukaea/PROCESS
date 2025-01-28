@@ -290,7 +290,7 @@ class DcllMassesParam(NamedTuple):
 
     blbmith: Any = None
 
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
 
     blbuoth: Any = None
 
@@ -524,7 +524,7 @@ class DcllMassesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             blbuith=0.36499999999999999,
             blbmith=0.17000000000000001,
-            blnkoth=0.98199999999999998,
+            dr_blkt_outboard=0.98199999999999998,
             blbuoth=0.46500000000000002,
             blbmoth=0.27000000000000002,
             a_plasma_surface=1403.2719775669307,
@@ -644,7 +644,7 @@ class DcllMassesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             blbuith=0.36499999999999999,
             blbmith=0.37000000000000011,
-            blnkoth=0.98199999999999998,
+            dr_blkt_outboard=0.98199999999999998,
             blbuoth=0.46500000000000002,
             blbmoth=0.49699999999999994,
             a_plasma_surface=1403.2719775669307,
@@ -787,7 +787,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(build_variables, "blbmith", dcllmassesparam.blbmith)
 
-    monkeypatch.setattr(build_variables, "blnkoth", dcllmassesparam.blnkoth)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_outboard", dcllmassesparam.dr_blkt_outboard
+    )
 
     monkeypatch.setattr(build_variables, "blbuoth", dcllmassesparam.blbuoth)
 

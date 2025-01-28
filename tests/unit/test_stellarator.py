@@ -210,7 +210,7 @@ class StbildParam(NamedTuple):
 
     dr_blkt_inboard: Any = None
 
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
 
     blnktth: Any = None
 
@@ -344,7 +344,7 @@ class StbildParam(NamedTuple):
             blbuith=0.36499999999999999,
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
-            blnkoth=0.80000000000000004,
+            dr_blkt_outboard=0.80000000000000004,
             blnktth=0,
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
@@ -414,7 +414,7 @@ class StbildParam(NamedTuple):
             blbuith=0.36499999999999999,
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
-            blnkoth=0.80000000000000004,
+            dr_blkt_outboard=0.80000000000000004,
             blnktth=0.75,
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
@@ -505,7 +505,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_blkt_inboard", stbildparam.dr_blkt_inboard)
 
-    monkeypatch.setattr(build_variables, "blnkoth", stbildparam.blnkoth)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
+    )
 
     monkeypatch.setattr(build_variables, "blnktth", stbildparam.blnktth)
 
@@ -2800,7 +2802,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
 
 class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_blkt_inboard: Any = None
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
     fwith: Any = None
     fwoth: Any = None
     dr_shld_inboard: Any = None
@@ -2831,7 +2833,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     (
         SctfcoilNuclearHeatingIter90Param(
             dr_blkt_inboard=0.83499999999999996,
-            blnkoth=1.085,
+            dr_blkt_outboard=1.085,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
             dr_shld_inboard=0.20000000000000001,
@@ -2878,7 +2880,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.dr_blkt_inboard,
     )
     monkeypatch.setattr(
-        build_variables, "blnkoth", sctfcoilnuclearheatingiter90param.blnkoth
+        build_variables,
+        "dr_blkt_outboard",
+        sctfcoilnuclearheatingiter90param.dr_blkt_outboard,
     )
     monkeypatch.setattr(
         build_variables, "fwith", sctfcoilnuclearheatingiter90param.fwith

@@ -140,7 +140,7 @@ RADIAL_BUILD = [
     "rminoro",
     "scraplo",
     "fwoth",
-    "blnkoth",
+    "dr_blkt_outboard",
     "vvblgapo",
     "shldoth",
     "dr_vv_outboard",
@@ -476,7 +476,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("fwoth", mfile_data, scan)
     arc_fill(axis, r1, r2, color=FIRSTWALL_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("blnkoth", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_blkt_outboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=BLANKET_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("shldoth", mfile_data, scan)
@@ -1276,16 +1276,16 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
         blnktth = 0.0
 
     c_shldith = cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
-    c_blnkoth = cumulative_radial_build("blnkoth", mfile_data, scan)
+    c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
 
     if i_single_null == 1:
         # Upper blanket: outer surface
         radx_outer = (
-            cumulative_radial_build("blnkoth", mfile_data, scan)
+            cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
             + cumulative_radial_build("vvblgapi", mfile_data, scan)
         ) / 2.0
         rminx_outer = (
-            cumulative_radial_build("blnkoth", mfile_data, scan)
+            cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
             - cumulative_radial_build("vvblgapi", mfile_data, scan)
         ) / 2.0
 
@@ -1310,7 +1310,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
-            blnkoth=blnkoth,
+            dr_blkt_outboard=dr_blkt_outboard,
         )
 
         # Plot blanket
@@ -1336,7 +1336,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
-            blnkoth=blnkoth,
+            dr_blkt_outboard=dr_blkt_outboard,
         )
         # Plot blanket
         axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
@@ -2360,7 +2360,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         scan
     ) + mfile_data.data["dr_blkt_inboard"].get_scan(scan)
     out_blanket_thk = mfile_data.data["shldoth"].get_scan(scan) + mfile_data.data[
-        "blnkoth"
+        "dr_blkt_outboard"
     ].get_scan(scan)
 
     data = [
@@ -3386,7 +3386,7 @@ def main(args=None):
     global rminor
     global scraplo
     global fwoth
-    global blnkoth
+    global dr_blkt_outboard
     global shldoth
     global ddwi
     global gapsto
@@ -3409,7 +3409,7 @@ def main(args=None):
     rminor = m_file.data["rminor"].get_scan(scan)
     scraplo = m_file.data["scraplo"].get_scan(scan)
     fwoth = m_file.data["fwoth"].get_scan(scan)
-    blnkoth = m_file.data["blnkoth"].get_scan(scan)
+    dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
     shldoth = m_file.data["shldoth"].get_scan(scan)
     gapsto = m_file.data["gapsto"].get_scan(scan)
     tfthko = m_file.data["tfthko"].get_scan(scan)

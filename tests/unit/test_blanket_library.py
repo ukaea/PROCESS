@@ -454,7 +454,7 @@ class DshapedComponentParam(NamedTuple):
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
     blnktth: Any = None
     shareaib: Any = None
     shareaob: Any = None
@@ -511,7 +511,7 @@ class DshapedComponentParam(NamedTuple):
             blareaib=0,
             blareaob=0,
             blarea=0,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blnktth=0.5,
             shareaib=0,
             shareaob=0,
@@ -564,7 +564,7 @@ class DshapedComponentParam(NamedTuple):
             blareaib=196.97785938008002,
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blnktth=0.5,
             shareaib=0,
             shareaob=0,
@@ -617,7 +617,7 @@ class DshapedComponentParam(NamedTuple):
             blareaib=196.97785938008002,
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blnktth=0.5,
             shareaib=208.91591146372122,
             shareaob=1013.8483589087293,
@@ -687,7 +687,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(build_variables, "blareaib", dshapedcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", dshapedcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", dshapedcomponentparam.blarea)
-    monkeypatch.setattr(build_variables, "blnkoth", dshapedcomponentparam.blnkoth)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
+    )
     monkeypatch.setattr(build_variables, "blnktth", dshapedcomponentparam.blnktth)
     monkeypatch.setattr(build_variables, "shareaib", dshapedcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", dshapedcomponentparam.shareaob)
@@ -742,7 +744,7 @@ class EllipticalComponentParam(NamedTuple):
     dr_blkt_inboard: Any = None
     rsldo: Any = None
     shldoth: Any = None
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
@@ -798,7 +800,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blareaib=0,
             blareaob=0,
             blarea=0,
@@ -850,7 +852,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
@@ -902,7 +904,7 @@ class EllipticalComponentParam(NamedTuple):
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
@@ -973,7 +975,9 @@ def test_elliptical_component(
     )
     monkeypatch.setattr(build_variables, "rsldo", ellipticalcomponentparam.rsldo)
     monkeypatch.setattr(build_variables, "shldoth", ellipticalcomponentparam.shldoth)
-    monkeypatch.setattr(build_variables, "blnkoth", ellipticalcomponentparam.blnkoth)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_outboard", ellipticalcomponentparam.dr_blkt_outboard
+    )
     monkeypatch.setattr(build_variables, "blareaib", ellipticalcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", ellipticalcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", ellipticalcomponentparam.blarea)
@@ -1502,7 +1506,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     aspect: Any = None
     rmajor: Any = None
     dr_blkt_inboard: Any = None
-    blnkoth: Any = None
+    dr_blkt_outboard: Any = None
     ip: Any = None
     ofile: Any = None
     expected_den_liq: Any = None
@@ -1536,7 +1540,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             aspect=3,
             rmajor=8,
             dr_blkt_inboard=0.70000000000000007,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             ip=0,
             ofile=11,
             expected_den_liq=9753.2497999999996,
@@ -1573,7 +1577,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             aspect=3,
             rmajor=8,
             dr_blkt_inboard=0.70000000000000007,
-            blnkoth=1,
+            dr_blkt_outboard=1,
             ip=0,
             ofile=11,
             expected_den_liq=305.30702851374997,
@@ -1664,7 +1668,9 @@ def test_liquid_breeder_properties(
         build_variables, "dr_blkt_inboard", liquidbreederpropertiesparam.dr_blkt_inboard
     )
     monkeypatch.setattr(
-        build_variables, "blnkoth", liquidbreederpropertiesparam.blnkoth
+        build_variables,
+        "dr_blkt_outboard",
+        liquidbreederpropertiesparam.dr_blkt_outboard,
     )
 
     blanket_library_fixture.liquid_breeder_properties()

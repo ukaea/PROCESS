@@ -395,7 +395,7 @@ class Stellarator:
                 + build_variables.blbmith
                 + build_variables.blbpith
             )
-            build_variables.blnkoth = (
+            build_variables.dr_blkt_outboard = (
                 build_variables.blbuoth
                 + build_variables.blbmoth
                 + build_variables.blbpoth
@@ -407,7 +407,7 @@ class Stellarator:
         #  Top/bottom blanket thickness
 
         build_variables.blnktth = 0.5e0 * (
-            build_variables.dr_blkt_inboard + build_variables.blnkoth
+            build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
         # First Wall
@@ -480,7 +480,7 @@ class Stellarator:
             + physics_variables.rminor
             + build_variables.scraplo
             + build_variables.fwoth
-            + build_variables.blnkoth
+            + build_variables.dr_blkt_outboard
             + build_variables.shldoth
         )
 
@@ -515,7 +515,7 @@ class Stellarator:
                 physics_variables.rminor
                 + build_variables.scraplo
                 + build_variables.fwoth
-                + build_variables.blnkoth
+                + build_variables.dr_blkt_outboard
                 + build_variables.shldoth
                 + build_variables.dr_vv_outboard
                 + build_variables.gapsto
@@ -725,19 +725,19 @@ class Stellarator:
                 build_variables.fwoth,
             )
 
-            radius = radius + build_variables.blnkoth
+            radius = radius + build_variables.dr_blkt_outboard
             po.obuild(
                 self.outfile,
                 "Outboard blanket",
-                build_variables.blnkoth,
+                build_variables.dr_blkt_outboard,
                 radius,
-                "(blnkoth)",
+                "(dr_blkt_outboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Outboard blanket radial thickness (m)",
-                "(blnkoth)",
-                build_variables.blnkoth,
+                "(dr_blkt_outboard)",
+                build_variables.dr_blkt_outboard,
             )
 
             radius = radius + build_variables.shldoth
@@ -1194,13 +1194,17 @@ class Stellarator:
         fwbs_variables.volblkti = (
             build_variables.blareaib * build_variables.dr_blkt_inboard
         )
-        fwbs_variables.volblkto = build_variables.blareaob * build_variables.blnkoth
+        fwbs_variables.volblkto = (
+            build_variables.blareaob * build_variables.dr_blkt_outboard
+        )
         fwbs_variables.volblkt = fwbs_variables.volblkti + fwbs_variables.volblkto
 
         #  Shield volume
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
 
-        r1 = r1 + 0.5e0 * (build_variables.dr_blkt_inboard + build_variables.blnkoth)
+        r1 = r1 + 0.5e0 * (
+            build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
+        )
         build_variables.sharea = (
             physics_variables.a_plasma_surface * r1 / physics_variables.rminor
         )
@@ -1320,7 +1324,7 @@ class Stellarator:
                 )
 
                 fwbs_variables.pnucblkt = pneut2 * (
-                    1.0e0 - np.exp(-build_variables.blnkoth / decaybl)
+                    1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybl)
                 )
 
                 #  Nuclear heating in the shield
@@ -1479,7 +1483,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.dr_blkt_inboard / decaybzi)
                 )
                 pnucbzo = pnucbso * (
-                    1.0e0 - np.exp(-build_variables.blnkoth / decaybzo)
+                    1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybzo)
                 )
 
                 #  Calculate coolant pumping powers from input fraction.
@@ -1678,7 +1682,7 @@ class Stellarator:
                     + build_variables.blbpith * (1.0e0 - fwbs_variables.fblhebpi)
                 )
                 + fwbs_variables.volblkto
-                / build_variables.blnkoth
+                / build_variables.dr_blkt_outboard
                 * (
                     build_variables.blbuoth * fwbs_variables.fblss
                     + build_variables.blbmoth * (1.0e0 - fwbs_variables.fblhebmo)
@@ -1697,7 +1701,7 @@ class Stellarator:
                     + (
                         fwbs_variables.volblkto
                         * build_variables.blbuoth
-                        / build_variables.blnkoth
+                        / build_variables.dr_blkt_outboard
                     )
                 )
             )
@@ -1713,7 +1717,7 @@ class Stellarator:
                     + (
                         fwbs_variables.volblkto
                         * build_variables.blbuoth
-                        / build_variables.blnkoth
+                        / build_variables.dr_blkt_outboard
                     )
                 )
             )
@@ -1745,16 +1749,16 @@ class Stellarator:
                 + fwbs_variables.volblkto
                 / fwbs_variables.volblkt
                 * (  # outboard portion
-                    (build_variables.blbuoth / build_variables.blnkoth)
+                    (build_variables.blbuoth / build_variables.dr_blkt_outboard)
                     * (
                         1.0e0
                         - fwbs_variables.fblbe
                         - fwbs_variables.fblbreed
                         - fwbs_variables.fblss
                     )
-                    + (build_variables.blbmoth / build_variables.blnkoth)
+                    + (build_variables.blbmoth / build_variables.dr_blkt_outboard)
                     * fwbs_variables.fblhebmo
-                    + (build_variables.blbpoth / build_variables.blnkoth)
+                    + (build_variables.blbpoth / build_variables.dr_blkt_outboard)
                     * fwbs_variables.fblhebpo
                 )
             )
@@ -1871,7 +1875,7 @@ class Stellarator:
             + build_variables.dr_shld_inboard
             + build_variables.scraplo
             + build_variables.fwoth
-            + build_variables.blnkoth
+            + build_variables.dr_blkt_outboard
             + build_variables.shldoth
         )
         fwbs_variables.vdewin = (
@@ -1986,8 +1990,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Outboard blanket thickness (m)",
-                "(blnkoth)",
-                build_variables.blnkoth,
+                "(dr_blkt_outboard)",
+                build_variables.dr_blkt_outboard,
             )
             po.ovarre(
                 self.outfile,
@@ -2226,7 +2230,7 @@ class Stellarator:
             #             po.write(self.outfile,600) volblkti, volblkto, volblkt,                whtblkt, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             #     else:
-            #         po.write(self.outfile,602) volblkti, volblkto, volblkt, whtblkt, vfblkt,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.blnkoth) * fblbe, whtblbe,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.blnkoth) * fblbreed, whtblbreed,             fwbs_variables.volblkti/fwbs_variables.volblkt/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.volblkto/fwbs_variables.volblkt/build_variables.blnkoth * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #         po.write(self.outfile,602) volblkti, volblkto, volblkt, whtblkt, vfblkt,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.volblkti/fwbs_variables.volblkt/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.volblkto/fwbs_variables.volblkt/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 
@@ -2370,7 +2374,7 @@ class Stellarator:
             dshoeq = (
                 build_variables.shldoth
                 + build_variables.fwoth
-                + build_variables.blnkoth
+                + build_variables.dr_blkt_outboard
             )
 
             # Winding pack radial thickness, including groundwall insulation
