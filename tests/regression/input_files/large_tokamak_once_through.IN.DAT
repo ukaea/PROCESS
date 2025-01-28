@@ -111,7 +111,7 @@ dr_tf_inboard    = 1.2 * inboard TF coil thickness; (centrepost for ST) (m)
 dr_shld_thermal_inboard = 0.050 * TF-VV thermal shield thickness; inboard (m)
 dr_shld_thermal_outboard = 0.050 * TF-VV thermal shield thickness; outboard (m)
 thshield_vb = 0.050 * TF-VV thermal shield thickness; vertical build (m)
-vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
+dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Buildings Variables----------------*
 

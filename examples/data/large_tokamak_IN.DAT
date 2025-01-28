@@ -312,7 +312,7 @@ d_vv_bot = 0.3
 dr_shld_inboard = 0.3
 
 * Gap between vacuum vessel and blanket [m]
-vvblgap = 0.02
+dr_shld_blkt_gap = 0.02
 
 * Inboard blanket radial thickness [m]
 dr_blkt_inboard = 0.7

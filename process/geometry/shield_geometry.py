@@ -44,7 +44,7 @@ def shield_geometry_single_null(
     )
 
     # Side nearest to plasma
-    kapx = (cumulative_upper["vvblgap"]) / rminx_near
+    kapx = (cumulative_upper["dr_shld_blkt_gap"]) / rminx_near
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
         radx_near, rminx_near, triang, kapx
     )

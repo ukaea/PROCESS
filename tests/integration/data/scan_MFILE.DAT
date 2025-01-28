@@ -429,7 +429,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -1424,7 +1424,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -2419,7 +2419,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -3414,7 +3414,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -4409,7 +4409,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -5404,7 +5404,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -6399,7 +6399,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -7394,7 +7394,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -8389,7 +8389,7 @@
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (dr_shld_vv_gap_inboard)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
  Inner_radiation_shield_radial_thickness_(m)_____________________________ (dr_shld_inboard)_____________________      3.0000E-01    
- Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_shld_blkt_gap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.5500E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
  Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.2500E-01    
@@ -9099,7 +9099,7 @@ shldtth  = 0.30 * Upper/lower shield thickness (m);
 dr_tf_inboard    = 1.05 * Inboard tf coil thickness; (centrepost for st) (m)
 dr_tf_shld_gap  = 0.05 * manufacturing/thermal expansion gap between TF and thermal shield (m)
 vgap2    = 0.05 * Vertical gap between vacuum vessel and tf coil (m)
-vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
+dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 

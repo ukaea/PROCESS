@@ -30,7 +30,7 @@ depending on the switches used.
  Thermal shield, inboard                      0.050           4.239   (dr_shld_thermal_inboard)       IP
  Gap                                          0.020           4.259   (dr_shld_vv_gap_inboard)             IP
  Vacuum vessel (and shielding)                0.600           4.859   (dr_vv_inboard + dr_shld_inboard) IP
- Gap                                          0.020           4.879   (vvblgap)           IP
+ Gap                                          0.020           4.879   (dr_shld_blkt_gap)           IP
  Inboard blanket                              0.755           5.634   (dr_blkt_inboard)           IP*
  Inboard first wall                           0.018           5.652   (dr_fw_inboard)             
  Inboard scrape-off                           0.225           5.877   (dr_fw_plasma_gap_inboard)           IP, ITV
@@ -39,7 +39,7 @@ depending on the switches used.
  Outboard scrape-off                          0.225          12.633   (dr_fw_plasma_gap_outboard)           IP, ITV
  Outboard first wall                          0.018          12.651   (dr_fw_outboard)             
  Outboard blanket                             0.982          13.633   (dr_blkt_outboard)           IP*
- Gap                                          0.020          13.653   (vvblgap)           IP
+ Gap                                          0.020          13.653   (dr_shld_blkt_gap)           IP
  Vacuum vessel (and shielding)                1.100          14.753   (dr_vv_outboard+dr_shld_outboard)  IP
  Gap                                          1.900          16.652   (gapsto)            
  Thermal shield, outboard                     0.050          16.702   (dr_shld_thermal_outboard)       IP
@@ -68,7 +68,7 @@ case the machine is not symmetric about the midplane.
  Thermal shield                               0.050           8.236   (thshield)          
  Gap                                          0.050           8.186   (vgap_vv_thermalshield)             
  Vacuum vessel (and shielding)                0.600           8.136   (d_vv_top+shldtth)  
- Gap                                          0.020           7.536   (vvblgap)           
+ Gap                                          0.020           7.536   (dr_shld_blkt_gap)           
  Top blanket                                  0.869           7.516   (blnktth)           
  Top first wall                               0.018           6.647   (fwtth)             
  Top scrape-off                               0.600           6.629   (vgaptop)           

@@ -276,7 +276,7 @@ module build_variables
   real(dp) :: vgaptop
   !! vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)
 
-  real(dp) :: vvblgap
+  real(dp) :: dr_shld_blkt_gap
   !! gap between vacuum vessel and blanket (m)
 
   real(dp) :: plleni
@@ -379,7 +379,7 @@ module build_variables
     vgap_vv_thermalshield = 0.163D0
     vgap_xpoint_divertor= 0.0D0
     vgaptop = 0.60D0
-    vvblgap = 0.05D0
+    dr_shld_blkt_gap = 0.05D0
     plleni = 1.0D0
     plleno = 1.0D0
     plsepi = 1.0D0

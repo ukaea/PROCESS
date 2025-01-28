@@ -411,7 +411,7 @@ class Build:
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
-                    + build_variables.vvblgap
+                    + build_variables.dr_shld_blkt_gap
                     + build_variables.shldtth
                     + build_variables.blnktth
                     + 0.5e0
@@ -513,11 +513,11 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vvblgap,
+                    build_variables.dr_shld_blkt_gap,
                     vbuild,
-                    "(vvblgap)",
+                    "(dr_shld_blkt_gap)",
                 )
-                vbuild = vbuild - build_variables.vvblgap
+                vbuild = vbuild - build_variables.dr_shld_blkt_gap
 
                 po.obuild(
                     self.outfile,
@@ -747,7 +747,7 @@ class Build:
                 + build_variables.vgap_vv_thermalshield
                 + build_variables.d_vv_top
                 + build_variables.shldtth
-                + build_variables.vvblgap
+                + build_variables.dr_shld_blkt_gap
                 + build_variables.blnktth
                 + 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
@@ -1773,7 +1773,7 @@ class Build:
                         build_variables.dr_tf_shld_gap
                         + build_variables.dr_shld_thermal_inboard
                         + build_variables.dr_shld_inboard
-                        + build_variables.vvblgap
+                        + build_variables.dr_shld_blkt_gap
                         + build_variables.dr_blkt_inboard
                         + build_variables.dr_fw_inboard
                         + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
@@ -1828,7 +1828,7 @@ class Build:
                 build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
                 + build_variables.dr_shld_inboard
-                + build_variables.vvblgap
+                + build_variables.dr_shld_blkt_gap
                 + build_variables.dr_blkt_inboard
                 + build_variables.dr_fw_inboard
                 + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
@@ -1868,7 +1868,7 @@ class Build:
         #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
         build_variables.rbld = (
             build_variables.r_sh_inboard_out
-            + build_variables.vvblgap
+            + build_variables.dr_shld_blkt_gap
             + build_variables.dr_blkt_inboard
             + build_variables.dr_fw_inboard
             + build_variables.dr_fw_plasma_gap_inboard
@@ -1906,7 +1906,7 @@ class Build:
         #  Radius to centre of outboard TF coil legs
         build_variables.r_tf_outboard_mid = (
             build_variables.rsldo
-            + build_variables.vvblgap
+            + build_variables.dr_shld_blkt_gap
             + build_variables.dr_vv_outboard
             + build_variables.gapomin
             + build_variables.dr_shld_thermal_outboard
@@ -1938,7 +1938,7 @@ class Build:
                 - build_variables.rsldo
                 - build_variables.dr_shld_thermal_outboard
                 - build_variables.dr_tf_shld_gap
-                - build_variables.vvblgap
+                - build_variables.dr_shld_blkt_gap
             )
             build_variables.dr_tf_inner_bore = (
                 build_variables.r_tf_outboard_mid
@@ -2274,11 +2274,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.vvblgap
+            radius = radius + build_variables.dr_shld_blkt_gap
             radial_build_data.append([
                 "Gap",
-                "vvblgap",
-                build_variables.vvblgap,
+                "dr_shld_blkt_gap",
+                build_variables.dr_shld_blkt_gap,
                 radius,
             ])
 
@@ -2346,11 +2346,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.vvblgap
+            radius = radius + build_variables.dr_shld_blkt_gap
             radial_build_data.append([
                 "Gap",
-                "vvblgap",
-                build_variables.vvblgap,
+                "dr_shld_blkt_gap",
+                build_variables.dr_shld_blkt_gap,
                 radius,
             ])
 
