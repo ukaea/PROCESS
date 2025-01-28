@@ -1390,7 +1390,7 @@ the divertor. PROCESS treats the scrape-off layer merely as a gap.
 Switch \texttt{i_plasma_wall_gap} determines whether the inboard and outboard gaps
 should be calculated as 10\% of the plasma minor radius
 (\texttt{i_plasma_wall_gap\ =\ 0}), or set equal to the input values
-\texttt{dr_fw_plasma_gap_inboard} and \texttt{scraplo} (\texttt{i_plasma_wall_gap\ =\ 1}).
+\texttt{dr_fw_plasma_gap_inboard} and \texttt{dr_fw_plasma_gap_outboard} (\texttt{i_plasma_wall_gap\ =\ 1}).
 
 \end{document}
 

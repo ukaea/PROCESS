@@ -303,7 +303,7 @@ dr_blkt_inboard = 0.7
 dr_fw_plasma_gap_inboard = 0.25
 
 * Outboard scrape-off-layer radial thickness [m]
-scraplo = 0.25
+dr_fw_plasma_gap_outboard = 0.25
 
 * Outboard blanket radial thickness [m]
 dr_blkt_outboard = 1.0

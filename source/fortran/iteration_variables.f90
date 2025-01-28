@@ -1716,25 +1716,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_74
-    !! <LI> (74) scraplo
+    !! <LI> (74) dr_fw_plasma_gap_outboard
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(74) = 'scraplo       '
+    lablxc(74) = 'dr_fw_plasma_gap_outboard       '
     boundl(74) = 0.001D0
     boundu(74) = 10.00D0
   end subroutine init_itv_74
 
   real(kind(1.d0)) function itv_74()
-    use build_variables, only: scraplo
+    use build_variables, only: dr_fw_plasma_gap_outboard
     implicit none
-    itv_74 = scraplo
+    itv_74 = dr_fw_plasma_gap_outboard
   end function itv_74
 
   subroutine set_itv_74(ratio)
-    use build_variables, only: scraplo
+    use build_variables, only: dr_fw_plasma_gap_outboard
     implicit none
     real(kind(1.d0)) :: ratio
-    scraplo = ratio
+    dr_fw_plasma_gap_outboard = ratio
   end subroutine set_itv_74
 
   !---------------------------------

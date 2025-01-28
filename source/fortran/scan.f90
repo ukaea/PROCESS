@@ -94,7 +94,7 @@ module scan_module
   !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap
-  !!         <LI> 59 `scraplo` : Outboard plasma-first wall gap
+  !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
   !!         <LI> 62 coheof : CS coil current density at EOF
@@ -593,7 +593,7 @@ contains
     !! author: J Morris, UKAEA, Culham Science Centre
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	use build_variables, only: dr_blkt_outboard, dr_shld_inboard, dr_fw_plasma_gap_inboard, scraplo, dr_cs
+	use build_variables, only: dr_blkt_outboard, dr_shld_inboard, dr_fw_plasma_gap_inboard, dr_fw_plasma_gap_outboard, dr_cs
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
@@ -787,8 +787,8 @@ contains
             dr_fw_plasma_gap_inboard = swp(iscn)
             vlab = 'dr_fw_plasma_gap_inboard' ; xlab = 'Inboard FW-plasma sep gap'
         case(59)
-            scraplo = swp(iscn)
-            vlab = 'scraplo' ; xlab = 'Outboard FW-plasma sep gap'
+            dr_fw_plasma_gap_outboard = swp(iscn)
+            vlab = 'dr_fw_plasma_gap_outboard' ; xlab = 'Outboard FW-plasma sep gap'
         case (60)
             sig_tf_wp_max = swp(iscn)
             vlab = 'sig_tf_wp_max' ; xlab = 'Allowable_stress_in_tf_coil_conduit_Tresca_(pa)'

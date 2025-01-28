@@ -595,7 +595,7 @@ class Buildings:
                 * (
                     physics_variables.rmajor
                     + physics_variables.rminor
-                    + build_variables.scraplo
+                    + build_variables.dr_fw_plasma_gap_outboard
                     + build_variables.dr_fw_outboard
                     + build_variables.dr_blkt_outboard
                     + build_variables.shldoth

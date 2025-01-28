@@ -98,7 +98,7 @@ def get_radial_build(m_file):
         "dr_fw_inboard",
         "dr_fw_plasma_gap_inboard",
         "rminor",
-        "scraplo",
+        "dr_fw_plasma_gap_outboard",
         "dr_fw_outboard",
         "dr_blkt_outboard",
         "vvblgap",
@@ -206,7 +206,7 @@ def main(args=None):
         "crypmw_max",
         "bt",  # Genuinly bt lower bound
         "dr_fw_plasma_gap_inboard",
-        "scraplo",
+        "dr_fw_plasma_gap_outboard",
         "sig_tf_wp_max",
         "copperaoh_m2_max",
         "coheof",

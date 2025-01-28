@@ -55,7 +55,7 @@ class Vacuum:
                 pv.fusion_power,
                 pv.rmajor,
                 pv.rminor,
-                0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.scraplo),
+                0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.dr_fw_plasma_gap_outboard),
                 pv.a_plasma_surface,
                 pv.vol_plasma,
                 buv.shldoth,

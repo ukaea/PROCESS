@@ -254,7 +254,7 @@ def main(args=None):
         56: "crypmw_max",
         57: "bt",  # Genuinly bt lower bound
         58: "dr_fw_plasma_gap_inboard",
-        59: "scraplo",
+        59: "dr_fw_plasma_gap_outboard",
         60: "sig_tf_wp_max",
         61: "copperaoh_m2_max",
         62: "coheof",
