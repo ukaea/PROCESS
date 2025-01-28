@@ -330,7 +330,7 @@ dr_blkt_outboard = 1.0
 dr_cryostat = 0.15 
 
 * Outboard shield thickness [m]
-shldoth = 0.800
+dr_shld_outboard = 0.800
 
 * Divertor structure vertical thickness [m]
 divfix = 0.62 

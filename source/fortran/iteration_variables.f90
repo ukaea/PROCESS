@@ -2089,25 +2089,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_94
-    !! <LI> (94) shldoth
+    !! <LI> (94) dr_shld_outboard
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(94) = 'shldoth       '
+    lablxc(94) = 'dr_shld_outboard       '
     boundl(94) = 0.001D0
     boundu(94) = 10.00D0
   end subroutine init_itv_94
 
   real(kind(1.d0)) function itv_94()
-    use build_variables, only: shldoth
+    use build_variables, only: dr_shld_outboard
     implicit none
-    itv_94 = shldoth
+    itv_94 = dr_shld_outboard
   end function itv_94
 
   subroutine set_itv_94(ratio)
-    use build_variables, only: shldoth
+    use build_variables, only: dr_shld_outboard
     implicit none
     real(kind(1.d0)) :: ratio
-    shldoth = ratio
+    dr_shld_outboard = ratio
   end subroutine set_itv_94
 
   !---------------------------------

@@ -142,7 +142,7 @@ RADIAL_BUILD = [
     "dr_fw_outboard",
     "dr_blkt_outboard",
     "vvblgapo",
-    "shldoth",
+    "dr_shld_outboard",
     "dr_vv_outboard",
     "gapsto",
     "dr_shld_thermal_outboard",
@@ -479,7 +479,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("dr_blkt_outboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=BLANKET_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("shldoth", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_shld_outboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=SHIELD_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("dr_vv_outboard", mfile_data, scan)
@@ -1138,11 +1138,11 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
 
     # Inner side (nearest to the plasma)
     radx_inner = (
-        cumulative_radial_build("shldoth", mfile_data, scan)
+        cumulative_radial_build("dr_shld_outboard", mfile_data, scan)
         + cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
     rminx_inner = (
-        cumulative_radial_build("shldoth", mfile_data, scan)
+        cumulative_radial_build("dr_shld_outboard", mfile_data, scan)
         - cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
 
@@ -1208,11 +1208,11 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
 
     # Side furthest from plasma
     radx_far = (
-        cumulative_radial_build("shldoth", mfile_data, scan)
+        cumulative_radial_build("dr_shld_outboard", mfile_data, scan)
         + cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
     rminx_far = (
-        cumulative_radial_build("shldoth", mfile_data, scan)
+        cumulative_radial_build("dr_shld_outboard", mfile_data, scan)
         - cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
 
@@ -2359,9 +2359,9 @@ def plot_geometry_info(axis, mfile_data, scan):
     in_blanket_thk = mfile_data.data["dr_shld_inboard"].get_scan(
         scan
     ) + mfile_data.data["dr_blkt_inboard"].get_scan(scan)
-    out_blanket_thk = mfile_data.data["shldoth"].get_scan(scan) + mfile_data.data[
-        "dr_blkt_outboard"
-    ].get_scan(scan)
+    out_blanket_thk = mfile_data.data["dr_shld_outboard"].get_scan(
+        scan
+    ) + mfile_data.data["dr_blkt_outboard"].get_scan(scan)
 
     data = [
         ("rmajor", "$R_0$", "m"),
@@ -3387,7 +3387,7 @@ def main(args=None):
     global dr_fw_plasma_gap_outboard
     global dr_fw_outboard
     global dr_blkt_outboard
-    global shldoth
+    global dr_shld_outboard
     global ddwi
     global gapsto
     global dr_tf_outboard
@@ -3410,7 +3410,7 @@ def main(args=None):
     dr_fw_plasma_gap_outboard = m_file.data["dr_fw_plasma_gap_outboard"].get_scan(scan)
     dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
     dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
-    shldoth = m_file.data["shldoth"].get_scan(scan)
+    dr_shld_outboard = m_file.data["dr_shld_outboard"].get_scan(scan)
     gapsto = m_file.data["gapsto"].get_scan(scan)
     dr_tf_outboard = m_file.data["dr_tf_outboard"].get_scan(scan)
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)

@@ -234,7 +234,7 @@ module build_variables
   real(dp) :: shldlth
   !! lower (under divertor) shield thickness (m)
 
-  real(dp) :: shldoth
+  real(dp) :: dr_shld_outboard
   !! outboard shield thickness (m) (`iteration variable 94`)
 
   real(dp) :: shldtth
@@ -369,7 +369,7 @@ module build_variables
     shareaob = 0.0D0
     dr_shld_inboard = 0.69D0
     shldlth = 0.7D0
-    shldoth = 1.05D0
+    dr_shld_outboard = 1.05D0
     shldtth = 0.6D0
     sigallpc = 3.0D8
     dr_tf_inboard = 0.0D0

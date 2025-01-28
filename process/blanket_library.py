@@ -212,7 +212,7 @@ class BlanketLibrary:
                 r2,
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
-                build_variables.shldoth,
+                build_variables.dr_shld_outboard,
                 build_variables.shldtth,
             )
         elif icomponent == 2:
@@ -257,10 +257,12 @@ class BlanketLibrary:
         r3 = build_variables.rsldo - r1
         # ... shield (m)
         if icomponent == 1:
-            r3 = r3 - build_variables.shldoth
+            r3 = r3 - build_variables.dr_shld_outboard
         # ... blanket (m)
         if icomponent == 0:
-            r3 = r3 - build_variables.shldoth - build_variables.dr_blkt_outboard
+            r3 = (
+                r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
+            )
 
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
@@ -302,7 +304,7 @@ class BlanketLibrary:
                 r3,
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
-                build_variables.shldoth,
+                build_variables.dr_shld_outboard,
                 build_variables.shldtth,
             )
         if icomponent == 2:
