@@ -140,7 +140,7 @@ class BldgsSizesParam(NamedTuple):
     r_cryostat_inboard: Any
     bktlife: Any
     hmax: Any
-    tfcth: Any
+    dr_tf_inboard: Any
     tftsgap: Any
     thshield_ib: Any
     thshield_ob: Any
@@ -283,7 +283,7 @@ class BldgsSizesParam(NamedTuple):
             r_cryostat_inboard=19.48258241468535,
             bktlife=0,
             hmax=9.0730900215620327,
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             tftsgap=0.05000000000000001,
             thshield_ib=0.050000000000000003,
             thshield_ob=0.050000000000000003,
@@ -422,7 +422,7 @@ class BldgsSizesParam(NamedTuple):
             r_cryostat_inboard=19.482980877139834,
             bktlife=19.216116010620578,
             hmax=9.0730900215620327,
-            tfcth=1.208,
+            dr_tf_inboard=1.208,
             tftsgap=0.05000000000000001,
             thshield_ib=0.050000000000000003,
             thshield_ob=0.050000000000000003,
@@ -683,7 +683,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     )
     monkeypatch.setattr(fwbs_variables, "bktlife", bldgssizesparam.bktlife)
     monkeypatch.setattr(build_variables, "hmax", bldgssizesparam.hmax)
-    monkeypatch.setattr(build_variables, "tfcth", bldgssizesparam.tfcth)
+    monkeypatch.setattr(build_variables, "dr_tf_inboard", bldgssizesparam.dr_tf_inboard)
     monkeypatch.setattr(build_variables, "tftsgap", bldgssizesparam.tftsgap)
     monkeypatch.setattr(build_variables, "thshield_ib", bldgssizesparam.thshield_ib)
     monkeypatch.setattr(build_variables, "thshield_ob", bldgssizesparam.thshield_ob)

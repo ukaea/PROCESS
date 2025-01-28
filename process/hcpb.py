@@ -978,7 +978,7 @@ class CCFE_HCPB:
         # ---
         # ! Fraction of the nuclear power absorbed by the copper centrepost
         # ! (0.08 m e-folding decay length)
-        # f_neut_absorb_cp = 1.0D0 - exp( -2.0D0*tfcth / 0.08D0)
+        # f_neut_absorb_cp = 1.0D0 - exp( -2.0D0*dr_tf_inboard / 0.08D0)
         #
         # ! Nuclear power
         # pnuc_cp = pneut * f_geom_cp * f_neut_absorb_cp

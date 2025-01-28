@@ -110,7 +110,7 @@ class ProcessTracker:
         "dr_cs_tf_gap",
         "gapsto",
         "shldoth",
-        "tfcth",
+        "dr_tf_inboard",
         "gapds",
         "pnucshld",
         "pnucblkt",
