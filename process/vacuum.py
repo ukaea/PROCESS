@@ -59,7 +59,7 @@ class Vacuum:
                 pv.a_plasma_surface,
                 pv.vol_plasma,
                 buv.shldoth,
-                buv.shldith,
+                buv.dr_shld_inboard,
                 buv.dr_tf_inboard,
                 buv.rsldi - buv.gapds - buv.dr_vv_inboard,
                 tfv.n_tf,

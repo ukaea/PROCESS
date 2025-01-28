@@ -93,7 +93,7 @@ class ProcessTracker:
         "pheat",
         "bootstrap_current_fraction",
         "pinjmw",
-        "shldith",
+        "dr_shld_inboard",
         "fwith",
         "fwoth",
         "thshield",

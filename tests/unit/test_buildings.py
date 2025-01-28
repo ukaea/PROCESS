@@ -145,7 +145,7 @@ class BldgsSizesParam(NamedTuple):
     dr_shld_thermal_inboard: Any
     thshield_ob: Any
     thshield_vb: Any
-    shldith: Any
+    dr_shld_inboard: Any
     shldoth: Any
     scrapli: Any
     scraplo: Any
@@ -288,7 +288,7 @@ class BldgsSizesParam(NamedTuple):
             dr_shld_thermal_inboard=0.050000000000000003,
             thshield_ob=0.050000000000000003,
             thshield_vb=0.050000000000000003,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             scrapli=0.22500000000000003,
             scraplo=0.22500000000000003,
@@ -427,7 +427,7 @@ class BldgsSizesParam(NamedTuple):
             dr_shld_thermal_inboard=0.050000000000000003,
             thshield_ob=0.050000000000000003,
             thshield_vb=0.050000000000000003,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             scrapli=0.22500000000000003,
             scraplo=0.22500000000000003,
@@ -694,7 +694,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     )
     monkeypatch.setattr(build_variables, "thshield_ob", bldgssizesparam.thshield_ob)
     monkeypatch.setattr(build_variables, "thshield_vb", bldgssizesparam.thshield_vb)
-    monkeypatch.setattr(build_variables, "shldith", bldgssizesparam.shldith)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
+    )
     monkeypatch.setattr(build_variables, "shldoth", bldgssizesparam.shldoth)
     monkeypatch.setattr(build_variables, "scrapli", bldgssizesparam.scrapli)
     monkeypatch.setattr(build_variables, "scraplo", bldgssizesparam.scraplo)

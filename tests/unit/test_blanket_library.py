@@ -445,7 +445,7 @@ def test_component_half_height(
 
 class DshapedComponentParam(NamedTuple):
     rsldi: Any = None
-    shldith: Any = None
+    dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     fwith: Any = None
     scrapli: Any = None
@@ -502,7 +502,7 @@ class DshapedComponentParam(NamedTuple):
     (
         DshapedComponentParam(
             rsldi=1.5,
-            shldith=0.40000000000000002,
+            dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
@@ -555,7 +555,7 @@ class DshapedComponentParam(NamedTuple):
         ),
         DshapedComponentParam(
             rsldi=1.5,
-            shldith=0.40000000000000002,
+            dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
@@ -608,7 +608,7 @@ class DshapedComponentParam(NamedTuple):
         ),
         DshapedComponentParam(
             rsldi=1.5,
-            shldith=0.40000000000000002,
+            dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             fwith=0.018000000000000002,
             scrapli=0.10000000000000001,
@@ -674,7 +674,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(build_variables, "rsldi", dshapedcomponentparam.rsldi)
-    monkeypatch.setattr(build_variables, "shldith", dshapedcomponentparam.shldith)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_inboard", dshapedcomponentparam.dr_shld_inboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", dshapedcomponentparam.dr_blkt_inboard
     )
@@ -734,7 +736,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
 
 class EllipticalComponentParam(NamedTuple):
     rsldi: Any = None
-    shldith: Any = None
+    dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     rsldo: Any = None
     shldoth: Any = None
@@ -790,7 +792,7 @@ class EllipticalComponentParam(NamedTuple):
     (
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
@@ -842,7 +844,7 @@ class EllipticalComponentParam(NamedTuple):
         ),
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
@@ -894,7 +896,7 @@ class EllipticalComponentParam(NamedTuple):
         ),
         EllipticalComponentParam(
             rsldi=4.0833333333333339,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
             shldoth=0.80000000000000004,
@@ -961,7 +963,9 @@ def test_elliptical_component(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(build_variables, "rsldi", ellipticalcomponentparam.rsldi)
-    monkeypatch.setattr(build_variables, "shldith", ellipticalcomponentparam.shldith)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_inboard", ellipticalcomponentparam.dr_shld_inboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
     )

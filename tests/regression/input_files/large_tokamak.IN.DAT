@@ -309,7 +309,7 @@ d_vv_top = 0.3
 d_vv_bot = 0.3
 
 * Inboard vacuum vessel thickness [m]
-shldith = 0.3
+dr_shld_inboard = 0.3
 
 * Gap between vacuum vessel and blanket [m]
 vvblgap = 0.02

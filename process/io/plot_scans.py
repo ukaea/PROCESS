@@ -250,7 +250,7 @@ def main(args=None):
         51: "ftar",
         52: "rad_fraction_sol",
         54: "b_crit_upper_nbti",
-        55: "shldith",
+        55: "dr_shld_inboard",
         56: "crypmw_max",
         57: "bt",  # Genuinly bt lower bound
         58: "scrapli",

@@ -90,7 +90,7 @@ module scan_module
   !!         <LI> 51 Power fraction to lower DN Divertor ftar
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `shldith` : Inboard neutron shield thickness
+  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness
   !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `scrapli` : Inboard plasma-first wall gap
@@ -593,7 +593,7 @@ contains
     !! author: J Morris, UKAEA, Culham Science Centre
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	use build_variables, only: blnkoth, shldith, scrapli, scraplo, dr_cs
+	use build_variables, only: blnkoth, dr_shld_inboard, scrapli, scraplo, dr_cs
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
@@ -775,8 +775,8 @@ contains
             b_crit_upper_nbti = swp(iscn)
             vlab = 'Bc2(0K)' ; xlab = 'GL_NbTi Bc2(0K)'
         case(55)
-            shldith = swp(iscn)
-            vlab = 'shldith' ; xlab = 'Inboard neutronic shield'
+            dr_shld_inboard = swp(iscn)
+            vlab = 'dr_shld_inboard' ; xlab = 'Inboard neutronic shield'
         case(56)
             crypmw_max = swp(iscn)
             vlab = 'crypmw_max' ; xlab = 'max allowable crypmw'

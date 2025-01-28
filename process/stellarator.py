@@ -401,7 +401,7 @@ class Stellarator:
                 + build_variables.blbpoth
             )
             build_variables.shldtth = 0.5e0 * (
-                build_variables.shldith + build_variables.shldoth
+                build_variables.dr_shld_inboard + build_variables.shldoth
             )
 
         #  Top/bottom blanket thickness
@@ -422,7 +422,7 @@ class Stellarator:
             + build_variables.dr_tf_inboard
             + build_variables.gapds
             + build_variables.dr_vv_inboard
-            + build_variables.shldith
+            + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.fwith
             + build_variables.scrapli
@@ -437,7 +437,7 @@ class Stellarator:
             + build_variables.dr_tf_inboard
             + build_variables.gapds
             + build_variables.dr_vv_inboard
-            + build_variables.shldith
+            + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.fwith
             + build_variables.scrapli
@@ -450,7 +450,7 @@ class Stellarator:
             build_variables.dr_tf_inboard / 2.0e0
             + build_variables.gapds
             + build_variables.dr_vv_inboard
-            + build_variables.shldith
+            + build_variables.dr_shld_inboard
             + build_variables.dr_blkt_inboard
             + build_variables.fwith
             + build_variables.scrapli
@@ -471,7 +471,7 @@ class Stellarator:
             - build_variables.scrapli
             - build_variables.fwith
             - build_variables.dr_blkt_inboard
-            - build_variables.shldith
+            - build_variables.dr_shld_inboard
         )
 
         #  Radius to outer edge of outboard shield
@@ -505,7 +505,7 @@ class Stellarator:
             (
                 build_variables.gapds
                 + build_variables.dr_vv_inboard
-                + build_variables.shldith
+                + build_variables.dr_shld_inboard
                 + build_variables.dr_blkt_inboard
                 + build_variables.fwith
                 + build_variables.scrapli
@@ -617,19 +617,19 @@ class Stellarator:
                 build_variables.dr_vv_inboard,
             )
 
-            radius = radius + build_variables.shldith
+            radius = radius + build_variables.dr_shld_inboard
             po.obuild(
                 self.outfile,
                 "Inboard shield",
-                build_variables.shldith,
+                build_variables.dr_shld_inboard,
                 radius,
-                "(shldith)",
+                "(dr_shld_inboard)",
             )
             po.ovarre(
                 self.outfile,
                 "Inner radiation shield radial thickness (m)",
-                "(shldith)",
-                build_variables.shldith,
+                "(dr_shld_inboard)",
+                build_variables.dr_shld_inboard,
             )
 
             radius = radius + build_variables.dr_blkt_inboard
@@ -1211,7 +1211,7 @@ class Stellarator:
             0.5e0 * build_variables.sharea * fwbs_variables.fvolso
         )
 
-        volshldi = build_variables.shareaib * build_variables.shldith
+        volshldi = build_variables.shareaib * build_variables.dr_shld_inboard
         volshldo = build_variables.shareaob * build_variables.shldoth
         fwbs_variables.volshld = volshldi + volshldo
 
@@ -1564,7 +1564,7 @@ class Stellarator:
                 #  Neutron power deposited in the shield (MW)
 
                 pnucshldi = pnucsi * (
-                    1.0e0 - np.exp(-build_variables.shldith / decayshldi)
+                    1.0e0 - np.exp(-build_variables.dr_shld_inboard / decayshldi)
                 )
                 pnucshldo = pnucso * (
                     1.0e0 - np.exp(-build_variables.shldoth / decayshldo)
@@ -1868,7 +1868,7 @@ class Stellarator:
             build_variables.scrapli
             + build_variables.fwith
             + build_variables.dr_blkt_inboard
-            + build_variables.shldith
+            + build_variables.dr_shld_inboard
             + build_variables.scraplo
             + build_variables.fwoth
             + build_variables.blnkoth
@@ -1921,8 +1921,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Inboard shield thickness (m)",
-                "(shldith)",
-                build_variables.shldith,
+                "(dr_shld_inboard)",
+                build_variables.dr_shld_inboard,
             )
             po.ovarre(
                 self.outfile,
@@ -2363,7 +2363,7 @@ class Stellarator:
             # N.B. The vacuum vessel appears to be ignored
 
             dshieq = (
-                build_variables.shldith
+                build_variables.dr_shld_inboard
                 + build_variables.fwith
                 + build_variables.dr_blkt_inboard
             )
@@ -2933,7 +2933,7 @@ class Stellarator:
             - build_variables.fwith
             - build_variables.dr_blkt_inboard
             - build_variables.vvblgap
-            - build_variables.shldith
+            - build_variables.dr_shld_inboard
         )
 
         # Actual VV force density

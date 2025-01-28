@@ -225,7 +225,7 @@ module build_variables
   real(dp) :: shareaob
   !! outboard shield surface area (m2)
 
-  real(dp) :: shldith
+  real(dp) :: dr_shld_inboard
   !! inboard shield thickness (m) (`iteration variable 93`)
 
   real(dp) :: shldlth
@@ -363,7 +363,7 @@ module build_variables
     sharea = 0.0D0
     shareaib = 0.0D0
     shareaob = 0.0D0
-    shldith = 0.69D0
+    dr_shld_inboard = 0.69D0
     shldlth = 0.7D0
     shldoth = 1.05D0
     shldtth = 0.6D0

@@ -2065,25 +2065,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_93
-    !! <LI> (93) shldith
+    !! <LI> (93) dr_shld_inboard
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(93) = 'shldith       '
+    lablxc(93) = 'dr_shld_inboard       '
     boundl(93) = 0.001D0
     boundu(93) = 10.00D0
   end subroutine init_itv_93
 
   real(kind(1.d0)) function itv_93()
-    use build_variables, only: shldith
+    use build_variables, only: dr_shld_inboard
     implicit none
-    itv_93 = shldith
+    itv_93 = dr_shld_inboard
   end function itv_93
 
   subroutine set_itv_93(ratio)
-    use build_variables, only: shldith
+    use build_variables, only: dr_shld_inboard
     implicit none
     real(kind(1.d0)) :: ratio
-    shldith = ratio
+    dr_shld_inboard = ratio
   end subroutine set_itv_93
 
   !---------------------------------

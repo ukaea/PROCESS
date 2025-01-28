@@ -43,7 +43,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     blnkoth: Any = None
 
-    shldith: Any = None
+    dr_shld_inboard: Any = None
 
     shldoth: Any = None
 
@@ -138,7 +138,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             fwoth=0.018000000000000002,
             dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             afw=0.0060000000000000001,
             pitch=0.02,
@@ -188,7 +188,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             fwoth=0.018000000000000002,
             dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             afw=0.0060000000000000001,
             pitch=0.02,
@@ -264,7 +264,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(build_variables, "blnkoth", nuclearheatingmagnetsparam.blnkoth)
 
-    monkeypatch.setattr(build_variables, "shldith", nuclearheatingmagnetsparam.shldith)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_inboard", nuclearheatingmagnetsparam.dr_shld_inboard
+    )
 
     monkeypatch.setattr(build_variables, "shldoth", nuclearheatingmagnetsparam.shldoth)
 
@@ -540,7 +542,7 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
 
 class NuclearHeatingShieldParam(NamedTuple):
-    shldith: Any = None
+    dr_shld_inboard: Any = None
 
     shldoth: Any = None
 
@@ -575,7 +577,7 @@ class NuclearHeatingShieldParam(NamedTuple):
     "nuclearheatingshieldparam",
     (
         NuclearHeatingShieldParam(
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             whtshld=2294873.8131476045,
             pnucshld=0,
@@ -592,7 +594,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             expected_exp_shield2=0.25426760591013942,
         ),
         NuclearHeatingShieldParam(
-            shldith=0.30000000000000004,
+            dr_shld_inboard=0.30000000000000004,
             shldoth=0.80000000000000004,
             whtshld=2297808.3935174854,
             pnucshld=1.3611259588044891,
@@ -623,7 +625,9 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "shldith", nuclearheatingshieldparam.shldith)
+    monkeypatch.setattr(
+        build_variables, "dr_shld_inboard", nuclearheatingshieldparam.dr_shld_inboard
+    )
 
     monkeypatch.setattr(build_variables, "shldoth", nuclearheatingshieldparam.shldoth)
 

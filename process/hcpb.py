@@ -82,7 +82,7 @@ class CCFE_HCPB:
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
             fwbs_variables.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
                 physics_variables.neutron_power_total,
-                build_variables.shldith,
+                build_variables.dr_shld_inboard,
                 physics_variables.rmajor,
             )
 
@@ -92,7 +92,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnuc_cp_sh,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.neutron_power_total, build_variables.shldith
+                physics_variables.neutron_power_total, build_variables.dr_shld_inboard
             )
 
         else:  # No CP
@@ -425,7 +425,9 @@ class CCFE_HCPB:
             )
 
             # Average neutronic shield thickness [m]
-            th_shield_av = 0.5 * (build_variables.shldoth + build_variables.shldith)
+            th_shield_av = 0.5 * (
+                build_variables.shldoth + build_variables.dr_shld_inboard
+            )
 
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
@@ -575,7 +577,9 @@ class CCFE_HCPB:
             th_shield_av = build_variables.shldoth
         else:
             # Average neutronic shield thickness [m]
-            th_shield_av = 0.5 * (build_variables.shldoth + build_variables.shldith)
+            th_shield_av = 0.5 * (
+                build_variables.shldoth + build_variables.dr_shld_inboard
+            )
 
         # Decay length [m-2]
         y = (ccfe_hcpb_module.shield_density / 1000) * th_shield_av
