@@ -37,7 +37,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     dr_vv_outboard: Any = None
 
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
 
     dr_blkt_inboard: Any = None
 
@@ -135,7 +135,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_fw_inboard=0.018000000000000002,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             dr_shld_inboard=0.30000000000000004,
@@ -185,7 +185,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_fw_inboard=0.018000000000000002,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             dr_shld_inboard=0.30000000000000004,
@@ -246,7 +246,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", nuclearheatingmagnetsparam.dr_fw_inboard)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_inboard", nuclearheatingmagnetsparam.dr_fw_inboard
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", nuclearheatingmagnetsparam.dr_vv_inboard
@@ -256,7 +258,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         build_variables, "dr_vv_outboard", nuclearheatingmagnetsparam.dr_vv_outboard
     )
 
-    monkeypatch.setattr(build_variables, "fwoth", nuclearheatingmagnetsparam.fwoth)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_outboard", nuclearheatingmagnetsparam.dr_fw_outboard
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", nuclearheatingmagnetsparam.dr_blkt_inboard
@@ -1297,7 +1301,7 @@ def test_st_centrepost_nuclear_heating(
 class TbrShimwellParam(NamedTuple):
     dr_fw_inboard: Any = None
 
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
 
     tbrmin: Any = None
 
@@ -1323,7 +1327,7 @@ class TbrShimwellParam(NamedTuple):
     (
         TbrShimwellParam(
             dr_fw_inboard=0.018000000000000002,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             tbrmin=1.1499999999999999,
             fw_armour_thickness=0.0030000000000000001,
             ip=0,
@@ -1349,9 +1353,13 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", tbrshimwellparam.dr_fw_inboard)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_inboard", tbrshimwellparam.dr_fw_inboard
+    )
 
-    monkeypatch.setattr(build_variables, "fwoth", tbrshimwellparam.fwoth)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_outboard", tbrshimwellparam.dr_fw_outboard
+    )
 
     monkeypatch.setattr(constraint_variables, "tbrmin", tbrshimwellparam.tbrmin)
 
@@ -1393,7 +1401,7 @@ class ComponentMassesParam(NamedTuple):
     fwareaib: Any = None
     dr_fw_inboard: Any = None
     fwareaob: Any = None
-    fwoth: Any = None
+    dr_fw_outboard: Any = None
     fwarea: Any = None
     volblkt: Any = None
     vfblkt: Any = None
@@ -1485,7 +1493,7 @@ class ComponentMassesParam(NamedTuple):
             fwareaib=505.96109565204046,
             dr_fw_inboard=0.018000000000000002,
             fwareaob=838.00728058362097,
-            fwoth=0.018000000000000002,
+            dr_fw_outboard=0.018000000000000002,
             fwarea=1343.9683762356615,
             volblkt=1182.5433772195902,
             vfblkt=0.25,
@@ -1590,9 +1598,13 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
     monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
     monkeypatch.setattr(build_variables, "fwareaib", componentmassesparam.fwareaib)
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
+    )
     monkeypatch.setattr(build_variables, "fwareaob", componentmassesparam.fwareaob)
-    monkeypatch.setattr(build_variables, "fwoth", componentmassesparam.fwoth)
+    monkeypatch.setattr(
+        build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
+    )
     monkeypatch.setattr(build_variables, "fwarea", componentmassesparam.fwarea)
     monkeypatch.setattr(fwbs_variables, "volblkt", componentmassesparam.volblkt)
     monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)

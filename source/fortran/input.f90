@@ -193,7 +193,7 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, shldoth, &
-      shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
+      shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, vvblgap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
@@ -1345,8 +1345,8 @@ contains
        !       case ('dr_fw_inboard')
        !          call parse_real_variable('dr_fw_inboard', dr_fw_inboard, 0.0D0, 10.0D0, &
        !               'Inboard first wall thickness, initial estimate (m)')
-       !       case ('fwoth')
-       !          call parse_real_variable('fwoth', fwoth, 0.0D0, 10.0D0, &
+       !       case ('dr_fw_outboard')
+       !          call parse_real_variable('dr_fw_outboard', dr_fw_outboard, 0.0D0, 10.0D0, &
        !               'Outboard first wall thickness, initial estimate (m)')
        case ('dr_cs_tf_gap')
           call parse_real_variable('dr_cs_tf_gap', dr_cs_tf_gap, 0.0D0, 10.0D0, &
@@ -2200,7 +2200,7 @@ contains
 
           if (iblanket == 3) then
               dr_fw_inboard = 0.03D0
-              fwoth = 0.03D0
+              dr_fw_outboard = 0.03D0
               fw_armour_thickness = 0.003D0
           end if
        case ('iblnkith')
