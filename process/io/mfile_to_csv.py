@@ -93,7 +93,7 @@ def read_mfile(mfilename="MFILE.DAT", variables=None):
     output_vars = []
 
     # for each variable named in the input varfile, get the description and data value
-    for var_name in vars:
+    for var_name in variables:
         if var_name not in m_file.data:
             print(f"Variable '{var_name}' not in MFILE. Skipping and moving on...")
         else:
