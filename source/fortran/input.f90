@@ -196,7 +196,7 @@ contains
       shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, vvblgap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
-      iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
+      iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
@@ -1384,8 +1384,8 @@ contains
        case ('f_r_cp')
           call parse_real_variable('f_r_cp', f_r_cp, 1.0D0, 100.0D0, &
               'Ratio between the top and the midplane TF CP outer radius (-) ')
-       case ('scrapli')
-          call parse_real_variable('scrapli', scrapli, 0.0D0, 10.0D0, &
+       case ('dr_fw_plasma_gap_inboard')
+          call parse_real_variable('dr_fw_plasma_gap_inboard', dr_fw_plasma_gap_inboard, 0.0D0, 10.0D0, &
                'Inboard scrapeoff length (m)')
        case ('scraplo')
           call parse_real_variable('scraplo', scraplo, 0.0D0, 10.0D0, &

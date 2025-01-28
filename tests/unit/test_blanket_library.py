@@ -358,7 +358,7 @@ class ComponentHalfHeightParam(NamedTuple):
     vgap_vv_thermalshield: Any = None
     blnktth: Any = None
     shldtth: Any = None
-    scrapli: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
     scraplo: Any = None
     dr_fw_inboard: Any = None
     dr_fw_outboard: Any = None
@@ -382,7 +382,7 @@ class ComponentHalfHeightParam(NamedTuple):
             vgap_vv_thermalshield=0.16300000000000001,
             blnktth=0.85000000000000009,
             shldtth=0.59999999999999998,
-            scrapli=0.25,
+            dr_fw_plasma_gap_inboard=0.25,
             scraplo=0.25,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
@@ -425,7 +425,7 @@ def test_component_half_height(
     )
     monkeypatch.setattr(build_variables, "blnktth", componenthalfheightparam.blnktth)
     monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
-    monkeypatch.setattr(build_variables, "scrapli", componenthalfheightparam.scrapli)
+    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", componenthalfheightparam.dr_fw_plasma_gap_inboard)
     monkeypatch.setattr(build_variables, "scraplo", componenthalfheightparam.scraplo)
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", componenthalfheightparam.dr_fw_inboard
@@ -452,7 +452,7 @@ class DshapedComponentParam(NamedTuple):
     dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     dr_fw_inboard: Any = None
-    scrapli: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
     scraplo: Any = None
     dr_fw_outboard: Any = None
     blareaib: Any = None
@@ -509,7 +509,7 @@ class DshapedComponentParam(NamedTuple):
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
-            scrapli=0.10000000000000001,
+            dr_fw_plasma_gap_inboard=0.10000000000000001,
             scraplo=0.10000000000000001,
             dr_fw_outboard=0.018000000000000002,
             blareaib=0,
@@ -562,7 +562,7 @@ class DshapedComponentParam(NamedTuple):
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
-            scrapli=0.10000000000000001,
+            dr_fw_plasma_gap_inboard=0.10000000000000001,
             scraplo=0.10000000000000001,
             dr_fw_outboard=0.018000000000000002,
             blareaib=196.97785938008002,
@@ -615,7 +615,7 @@ class DshapedComponentParam(NamedTuple):
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
-            scrapli=0.10000000000000001,
+            dr_fw_plasma_gap_inboard=0.10000000000000001,
             scraplo=0.10000000000000001,
             dr_fw_outboard=0.018000000000000002,
             blareaib=196.97785938008002,
@@ -687,7 +687,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", dshapedcomponentparam.dr_fw_inboard
     )
-    monkeypatch.setattr(build_variables, "scrapli", dshapedcomponentparam.scrapli)
+    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", dshapedcomponentparam.dr_fw_plasma_gap_inboard)
     monkeypatch.setattr(build_variables, "scraplo", dshapedcomponentparam.scraplo)
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", dshapedcomponentparam.dr_fw_outboard
@@ -1391,7 +1391,7 @@ def test_external_cryo_geometry(
 
 
 class BlanketModPolHeightParam(NamedTuple):
-    scrapli: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
     scraplo: Any = None
     fwbsshape: Any = None
     nblktmodpi: Any = None
@@ -1413,7 +1413,7 @@ class BlanketModPolHeightParam(NamedTuple):
     "blanketmodpolheightparam",
     (
         BlanketModPolHeightParam(
-            scrapli=0.25,
+            dr_fw_plasma_gap_inboard=0.25,
             scraplo=0.25,
             fwbsshape=2,
             nblktmodpi=7,
@@ -1431,7 +1431,7 @@ class BlanketModPolHeightParam(NamedTuple):
             expected_bllengo=1.7853902013340495,
         ),
         BlanketModPolHeightParam(
-            scrapli=0.10000000000000001,
+            dr_fw_plasma_gap_inboard=0.10000000000000001,
             scraplo=0.10000000000000001,
             fwbsshape=1,
             nblktmodpi=7,
@@ -1466,7 +1466,7 @@ def test_blanket_mod_pol_height(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "scrapli", blanketmodpolheightparam.scrapli)
+    monkeypatch.setattr(build_variables, "dr_fw_plasma_gap_inboard", blanketmodpolheightparam.dr_fw_plasma_gap_inboard)
     monkeypatch.setattr(build_variables, "scraplo", blanketmodpolheightparam.scraplo)
     monkeypatch.setattr(fwbs_variables, "fwbsshape", blanketmodpolheightparam.fwbsshape)
     monkeypatch.setattr(

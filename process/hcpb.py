@@ -63,7 +63,7 @@ class CCFE_HCPB:
             r_sh_inboard_out_top = (
                 physics_variables.rmajor
                 - physics_variables.rminor * physics_variables.triang
-                - 3 * build_variables.scrapli
+                - 3 * build_variables.dr_fw_plasma_gap_inboard
             )
 
             # Half height of the CP at the largest shield radius [m]

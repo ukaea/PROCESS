@@ -527,7 +527,7 @@ module physics_variables
   !! Switch for plasma-first wall clearances at the mid-plane:
   !!
   !! - =0 use 10% of plasma minor radius
-  !! - =1 use input (`scrapli` and `scraplo`)
+  !! - =1 use input (`dr_fw_plasma_gap_inboard` and `scraplo`)
 
   integer :: i_plasma_geometry
   !! switch for plasma elongation and triangularity calculations:

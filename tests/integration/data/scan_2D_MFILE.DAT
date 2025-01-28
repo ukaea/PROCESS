@@ -579,7 +579,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -1742,7 +1742,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -2905,7 +2905,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -4068,7 +4068,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -5231,7 +5231,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -6394,7 +6394,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -7557,7 +7557,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -8720,7 +8720,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -9883,7 +9883,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -11046,7 +11046,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -12209,7 +12209,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -13372,7 +13372,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -14535,7 +14535,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -15698,7 +15698,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -16861,7 +16861,7 @@
  Gap_(m)_________________________________________________________________ (vvblgap)_____________________      2.0000E-02    
  Inboard_blanket_radial_thickness_(m)____________________________________ (dr_blkt_inboard)_____________________      7.0000E-01    
  Inboard_first_wall_radial_thickness_(m)_________________________________ (dr_fw_inboard)_______________________      1.8000E-02    
- Inboard_scrape-off_radial_thickness_(m)_________________________________ (scrapli)_____________________      2.5000E-01    
+ Inboard_scrape-off_radial_thickness_(m)_________________________________ (dr_fw_plasma_gap_inboard)_____________________      2.5000E-01    
  Outboard_scrape-off_radial_thickness_(m)________________________________ (scraplo)_____________________      2.5000E-01    
  Outboard_first_wall_radial_thickness_(m)________________________________ (dr_fw_outboard)_______________________      1.8000E-02    
  Outboard_blanket_radial_thickness_(m)___________________________________ (dr_blkt_outboard)_____________________      1.0000E+00    
@@ -17794,7 +17794,7 @@ vvblgap = 0.02
 dr_blkt_inboard = 0.7
 
 * Inboard scrape-off-layer radial thickness [m]
-scrapli = 0.25
+dr_fw_plasma_gap_inboard = 0.25
 
 * Outboard scrape-off-layer radial thickness [m]
 scraplo = 0.25

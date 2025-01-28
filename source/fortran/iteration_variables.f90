@@ -1692,25 +1692,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_73
-    !! <LI> (73) scrapli
+    !! <LI> (73) dr_fw_plasma_gap_inboard
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(73) = 'scrapli       '
+    lablxc(73) = 'dr_fw_plasma_gap_inboard       '
     boundl(73) = 0.001D0
     boundu(73) = 10.00D0
   end subroutine init_itv_73
 
   real(kind(1.d0)) function itv_73()
-    use build_variables, only: scrapli
+    use build_variables, only: dr_fw_plasma_gap_inboard
     implicit none
-    itv_73 = scrapli
+    itv_73 = dr_fw_plasma_gap_inboard
   end function itv_73
 
   subroutine set_itv_73(ratio)
-    use build_variables, only: scrapli
+    use build_variables, only: dr_fw_plasma_gap_inboard
     implicit none
     real(kind(1.d0)) :: ratio
-    scrapli = ratio
+    dr_fw_plasma_gap_inboard = ratio
   end subroutine set_itv_73
 
   !---------------------------------

@@ -59,7 +59,7 @@ var_dicts = {
         description="Ratio of alpha heating time to energy confinement time",
         units="",
     ),
-    "scrapli": VariableMetadata(
+    "dr_fw_plasma_gap_inboard": VariableMetadata(
         latex=r"$\Delta R_\mathrm{FW-sep}$ [$m$]",
         description="Inner FW to plasma gap",
         units="m",

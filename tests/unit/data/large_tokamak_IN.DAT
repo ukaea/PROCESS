@@ -318,7 +318,7 @@ vvblgap = 0.02
 dr_blkt_inboard = 0.7
 
 * Inboard scrape-off-layer radial thickness [m]
-scrapli = 0.25
+dr_fw_plasma_gap_inboard = 0.25
 
 * Outboard scrape-off-layer radial thickness [m]
 scraplo = 0.25
