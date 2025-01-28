@@ -471,7 +471,9 @@ class DCLL:
 
         # Manifold/BSS (m) also vars from elsewhere in process but set here
         build_variables.blbmith = (
-            build_variables.blnkith - dcll_module.r_backwall - build_variables.blbuith
+            build_variables.dr_blkt_inboard
+            - dcll_module.r_backwall
+            - build_variables.blbuith
         )
         build_variables.blbmoth = (
             build_variables.blnkoth - dcll_module.r_backwall - build_variables.blbuoth
@@ -503,7 +505,7 @@ class DCLL:
                 fwbs_variables.volblkti
                 * dcll_module.bz_r_ib
                 * (1 - fwbs_variables.r_f_liq_ib)
-                / build_variables.blnkith
+                / build_variables.dr_blkt_inboard
             ) + (
                 fwbs_variables.volblkto
                 * (dcll_module.bz_r_ob * (1 - fwbs_variables.r_f_liq_ob))
@@ -518,7 +520,7 @@ class DCLL:
                 fwbs_variables.volblkti
                 * dcll_module.bz_r_ib
                 * fwbs_variables.r_f_liq_ib
-                / build_variables.blnkith
+                / build_variables.dr_blkt_inboard
             ) + (
                 fwbs_variables.volblkto
                 * dcll_module.bz_r_ob
@@ -529,7 +531,7 @@ class DCLL:
                 fwbs_variables.volblkti
                 * dcll_module.bz_r_ib
                 * fwbs_variables.r_f_liq_ib
-                / build_variables.blnkith
+                / build_variables.dr_blkt_inboard
             )
             dcll_module.vol_bz_liq_ob = (
                 fwbs_variables.volblkto
@@ -542,7 +544,7 @@ class DCLL:
                 dcll_module.vol_fci = (
                     fwbs_variables.volblkti
                     * dcll_module.r_fci
-                    / build_variables.blnkith
+                    / build_variables.dr_blkt_inboard
                 ) + (
                     fwbs_variables.volblkto
                     * dcll_module.r_fci
@@ -553,7 +555,7 @@ class DCLL:
             dcll_module.vol_bw = (
                 fwbs_variables.volblkti
                 * dcll_module.r_backwall
-                / build_variables.blnkith
+                / build_variables.dr_blkt_inboard
             ) + (
                 fwbs_variables.volblkto
                 * dcll_module.r_backwall
@@ -564,7 +566,7 @@ class DCLL:
             dcll_module.vol_bss = (
                 fwbs_variables.volblkti
                 * build_variables.blbmith
-                / build_variables.blnkith
+                / build_variables.dr_blkt_inboard
             ) + (
                 fwbs_variables.volblkto
                 * build_variables.blbmoth

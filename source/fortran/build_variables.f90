@@ -48,7 +48,7 @@ module build_variables
   real(dp) :: blbuoth
   !! outboard blanket breeding zone thickness (m) (`blktmodel>0`) (`iteration variable 91`)
 
-  real(dp) :: blnkith
+  real(dp) :: dr_blkt_inboard
   !! inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0.0 if `iblnkith=0`)
 
   real(dp) :: blnkoth
@@ -311,7 +311,7 @@ module build_variables
     blbpoth = 0.35D0
     blbuith = 0.365D0
     blbuoth = 0.465D0
-    blnkith = 0.115D0
+    dr_blkt_inboard = 0.115D0
     blnkoth = 0.235D0
     blnktth = 0.0D0
     dr_bore = 1.42D0

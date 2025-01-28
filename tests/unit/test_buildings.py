@@ -151,7 +151,7 @@ class BldgsSizesParam(NamedTuple):
     scraplo: Any
     fwith: Any
     fwoth: Any
-    blnkith: Any
+    dr_blkt_inboard: Any
     blnkoth: Any
     r_cp_top: Any
     divfix: Any
@@ -294,7 +294,7 @@ class BldgsSizesParam(NamedTuple):
             scraplo=0.22500000000000003,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
-            blnkith=0.75500000000000012,
+            dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
             r_cp_top=4.20194118510911,
             divfix=0.62100000000000011,
@@ -433,7 +433,7 @@ class BldgsSizesParam(NamedTuple):
             scraplo=0.22500000000000003,
             fwith=0.018000000000000002,
             fwoth=0.018000000000000002,
-            blnkith=0.75500000000000012,
+            dr_blkt_inboard=0.75500000000000012,
             blnkoth=0.98199999999999998,
             r_cp_top=4.20194118510911,
             divfix=0.62100000000000011,
@@ -700,7 +700,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(build_variables, "scraplo", bldgssizesparam.scraplo)
     monkeypatch.setattr(build_variables, "fwith", bldgssizesparam.fwith)
     monkeypatch.setattr(build_variables, "fwoth", bldgssizesparam.fwoth)
-    monkeypatch.setattr(build_variables, "blnkith", bldgssizesparam.blnkith)
+    monkeypatch.setattr(
+        build_variables, "dr_blkt_inboard", bldgssizesparam.dr_blkt_inboard
+    )
     monkeypatch.setattr(build_variables, "blnkoth", bldgssizesparam.blnkoth)
     monkeypatch.setattr(build_variables, "r_cp_top", bldgssizesparam.r_cp_top)
     monkeypatch.setattr(divertor_variables, "divfix", bldgssizesparam.divfix)

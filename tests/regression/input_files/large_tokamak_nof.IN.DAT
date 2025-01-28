@@ -297,7 +297,7 @@ shldith = 0.3
 vvblgap = 0.02
 
 * Inboard blanket radial thickness [m]
-blnkith = 0.7
+dr_blkt_inboard = 0.7
 
 * Inboard scrape-off-layer radial thickness [m]
 scrapli = 0.25
