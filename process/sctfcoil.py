@@ -2274,11 +2274,11 @@ class Sctfcoil:
         machines.
         """
         H_coil = build_variables.hmax + (build_variables.tfcth / 2)
-        Ri_coil = build_variables.r_tf_inboard_mid
-        Ro_coil = build_variables.r_tf_outboard_mid
-        # NOTE: Rm is measured from the outside edge of the coil because thats where
+        ri_coil = build_variables.r_tf_inboard_mid
+        ro_coil = build_variables.r_tf_outboard_mid
+        # NOTE: rm is measured from the outside edge of the coil because thats where
         # the radius of the first ellipse is measured from
-        Rm_coil = build_variables.r_tf_inboard_out + tfcoil_variables.tfa[0]
+        rm_coil = build_variables.r_tf_inboard_out + tfcoil_variables.tfa[0]
 
         H_vv = (
             physics_variables.rminor * physics_variables.kappa
@@ -2287,11 +2287,11 @@ class Sctfcoil:
             + build_variables.shldtth
             + (build_variables.d_vv_top / 2)
         )
-        # Ri and Ro for VV dont consider the shield widths
+        # ri and ro for VV dont consider the shield widths
         # because it is assumed the shield is on the plasma side
         # of the VV
-        Ri_vv = build_variables.r_vv_inboard_out - (build_variables.d_vv_out / 2)
-        Ro_vv = (
+        ri_vv = build_variables.r_vv_inboard_out - (build_variables.d_vv_out / 2)
+        ro_vv = (
             build_variables.r_tf_outboard_mid
             - (build_variables.tfthko / 2)
             - build_variables.tftsgap
@@ -2303,35 +2303,35 @@ class Sctfcoil:
         # Assume the radius of the first ellipse of the VV is in the same proportion to
         # that of the plasma facing radii of the two structures
         tf_vv_frac = build_variables.r_tf_inboard_out / build_variables.r_vv_inboard_out
-        Rm_vv = build_variables.r_vv_inboard_out + (
+        rm_vv = build_variables.r_vv_inboard_out + (
             tfcoil_variables.tfa[0] * tf_vv_frac
         )
 
         sctfcoil_module.vv_stress_quench = vv_stress_on_quench(
             # TF shape
             H_coil=H_coil,
-            Ri_coil=Ri_coil,
-            Ro_coil=Ro_coil,
-            Rm_coil=Rm_coil,
+            ri_coil=ri_coil,
+            ro_coil=ro_coil,
+            rm_coil=rm_coil,
             ccl_length_coil=tfcoil_variables.tfleng,
             theta1_coil=tfcoil_variables.theta1_coil,
             # VV shape
             H_vv=H_vv,
-            Ri_vv=Ri_vv,
-            Ro_vv=Ro_vv,
-            Rm_vv=Rm_vv,
+            ri_vv=ri_vv,
+            ro_vv=ro_vv,
+            rm_vv=rm_vv,
             theta1_vv=tfcoil_variables.theta1_vv,
             # TF properties
             n_tf=tfcoil_variables.n_tf,
             n_tf_turn=tfcoil_variables.n_tf_turn,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
-            S_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
+            s_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
             # TODO: Does this calculation of Scc exclude the area of the case down the side?
-            S_cc=sctfcoil_module.a_case_front + sctfcoil_module.a_case_nose,
+            s_cc=sctfcoil_module.a_case_front + sctfcoil_module.a_case_nose,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
-            I_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
+            i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
             # VV properties
             d_vv=build_variables.d_vv_in,
         )
@@ -6475,13 +6475,13 @@ def extended_plane_strain(
     # Factor that multiplies r linearly in the force density
     f_rec_fac = np.zeros((nlayers,))
     # Factor that multiplies r reciprocally in the force density
-    f_int_A = np.zeros((nlayers,))
+    f_int_a = np.zeros((nlayers,))
     # Force density integral that adds to Lame parameter A
-    f_int_B = np.zeros((nlayers,))
+    f_int_b = np.zeros((nlayers,))
     # Force density integral that adds to Lame parameter B
 
     # Layer transfer matrices
-    M_int = np.zeros(
+    m_int = np.zeros(
         (
             5,
             5,
@@ -6490,7 +6490,7 @@ def extended_plane_strain(
     )
     # Matrix that transforms the Lame parmeter vector from the
     # outer radius to the inner radius of each layer
-    M_ext = np.zeros(
+    m_ext = np.zeros(
         (
             5,
             5,
@@ -6500,7 +6500,7 @@ def extended_plane_strain(
     # Matrix that transforms the Lame parmeter vector from the
     # inner radius of one layer to the outer radius of the
     # next inner.
-    M_tot = np.zeros(
+    m_tot = np.zeros(
         (
             5,
             5,
@@ -6537,7 +6537,7 @@ def extended_plane_strain(
     # A helper variable to store [radius, 1, 0, 0, 0] in row
 
     # Boundary condition matrix
-    M_bc = np.zeros(
+    m_bc = np.zeros(
         (
             4,
             5,
@@ -6546,7 +6546,7 @@ def extended_plane_strain(
     # Boundary condition matrix. Multiply this with the
     # outermost solution vector, (A,B,eps_z,1.0,eps_z_slip),
     # to obtain a zero vector.
-    M_toinv = np.zeros(
+    m_toinv = np.zeros(
         (
             4,
             4,
@@ -6554,14 +6554,14 @@ def extended_plane_strain(
     )
     # Matrix to invert to get the solution
     RHS_vec = np.zeros((4,))
-    # Right-hand-side vector to divide M_toinv
-    A_vec_solution = np.zeros((5,))
+    # Right-hand-side vector to divide m_toinv
+    a_vec_solution = np.zeros((5,))
     # Solution vector, Lame parameters at outer radius, strain
     # of force-carrying layers, and strain of slip layers
     # (A,B,eps_z,1,eps_z_slip)
 
     # Constructing the solution everywhere
-    A_vec_layer = np.zeros((5,))
+    a_vec_layer = np.zeros((5,))
     # Lame parameters and strains vector at outer radius
     # of each layer
 
@@ -6620,14 +6620,14 @@ def extended_plane_strain(
         * (d_curr * currents_enclosed / np.pi - d_curr**2 * rad[:nlayers] ** 2)
     )
     # Force density integral that adds to Lame parameter A
-    f_int_A[:] = 0.5e0 * f_lin_fac * (
+    f_int_a[:] = 0.5e0 * f_lin_fac * (
         rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2
     ) + f_rec_fac * np.log(rad[1 : nlayers + 1] / rad[:nlayers])
     if f_rec_fac[0] == 0e0:
-        f_int_A[0] = 0.5e0 * f_lin_fac[0] * (rad[1] ** 2 - rad[0] ** 2)
+        f_int_a[0] = 0.5e0 * f_lin_fac[0] * (rad[1] ** 2 - rad[0] ** 2)
 
     # Force density integral that adds to Lame parameter B
-    f_int_B[:] = 0.25e0 * f_lin_fac * (
+    f_int_b[:] = 0.25e0 * f_lin_fac * (
         rad[1 : nlayers + 1] ** 4 - rad[:nlayers] ** 4
     ) + 0.5e0 * f_rec_fac * (rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2)
 
@@ -6635,69 +6635,69 @@ def extended_plane_strain(
     # Section 5 in the writeup
     # With Section 12 anisotropic materials properties
     # ***
-    # M_int[kk] multiplies Lame parameter vector of layer kk (A,B,eps_z,1.0,eps_z_slip)
+    # m_int[kk] multiplies Lame parameter vector of layer kk (A,B,eps_z,1.0,eps_z_slip)
     # and transforms the values at the outer radius to the values at the inner radius
     for kk in range(nlayers):
-        M_int[0, 0, kk] = 1.0e0
-        M_int[1, 1, kk] = 1.0e0
-        M_int[2, 2, kk] = 1.0e0
-        M_int[3, 3, kk] = 1.0e0
-        M_int[4, 4, kk] = 1.0e0
+        m_int[0, 0, kk] = 1.0e0
+        m_int[1, 1, kk] = 1.0e0
+        m_int[2, 2, kk] = 1.0e0
+        m_int[3, 3, kk] = 1.0e0
+        m_int[4, 4, kk] = 1.0e0
 
-        M_int[0, 3, kk] = -0.5e0 / ey_bar_t[kk] * f_int_A[kk]
-        M_int[1, 3, kk] = 0.5e0 / ey_bar_t[kk] * f_int_B[kk]
+        m_int[0, 3, kk] = -0.5e0 / ey_bar_t[kk] * f_int_a[kk]
+        m_int[1, 3, kk] = 0.5e0 / ey_bar_t[kk] * f_int_b[kk]
 
     # Transformation matrix between layers
     # Section 6 in the writeup
     # With Section 12 anisotropic materials properties
     # With Section 15 inner slip-decoupled layers
     # ***
-    # M_ext[kk] multiplies Lame parameter vector of layer kk (A,B,eps_z,1.0,eps_z_slip)
+    # m_ext[kk] multiplies Lame parameter vector of layer kk (A,B,eps_z,1.0,eps_z_slip)
     # and transforms the values at the inner radius to the values at the outer radius
     # of layer kk-1
     for kk in range(1, nonslip_layer - 1):
         ey_fac = ey_bar_t[kk] / ey_bar_t[kk - 1]
-        M_ext[0, 2, kk] = 0.0e0
-        M_ext[0, 4, kk] = 0.5e0 * (ey_fac * nu_bar_zt[kk] - nu_bar_zt[kk - 1])
+        m_ext[0, 2, kk] = 0.0e0
+        m_ext[0, 4, kk] = 0.5e0 * (ey_fac * nu_bar_zt[kk] - nu_bar_zt[kk - 1])
 
     if nonslip_layer > 1:
         ey_fac = ey_bar_t[nonslip_layer - 1] / ey_bar_t[nonslip_layer - 2]
-        M_ext[0, 2, nonslip_layer - 1] = 0.5e0 * ey_fac * nu_bar_zt[nonslip_layer - 1]
-        M_ext[0, 4, nonslip_layer - 1] = 0.5e0 * (-nu_bar_zt[nonslip_layer - 2])
+        m_ext[0, 2, nonslip_layer - 1] = 0.5e0 * ey_fac * nu_bar_zt[nonslip_layer - 1]
+        m_ext[0, 4, nonslip_layer - 1] = 0.5e0 * (-nu_bar_zt[nonslip_layer - 2])
 
     for kk in range(nonslip_layer, nlayers):
         ey_fac = ey_bar_t[kk] / ey_bar_t[kk - 1]
-        M_ext[0, 2, kk] = 0.5e0 * (ey_fac * nu_bar_zt[kk] - nu_bar_zt[kk - 1])
-        M_ext[0, 4, kk] = 0.0e0
+        m_ext[0, 2, kk] = 0.5e0 * (ey_fac * nu_bar_zt[kk] - nu_bar_zt[kk - 1])
+        m_ext[0, 4, kk] = 0.0e0
 
     for kk in range(1, nlayers):
         ey_fac = ey_bar_t[kk] / ey_bar_t[kk - 1]
-        M_ext[0, 0, kk] = 0.5e0 * (ey_fac * (1 + nu_bar_t[kk]) + 1 - nu_bar_t[kk - 1])
+        m_ext[0, 0, kk] = 0.5e0 * (ey_fac * (1 + nu_bar_t[kk]) + 1 - nu_bar_t[kk - 1])
         if rad[kk] > 0e0:
-            M_ext[0, 1, kk] = (
+            m_ext[0, 1, kk] = (
                 0.5e0
                 / rad[kk] ** 2
                 * (1 - nu_bar_t[kk - 1] - ey_fac * (1 - nu_bar_t[kk]))
             )
 
-        M_ext[1, 0, kk] = rad[kk] ** 2 * (1 - M_ext[0, 0, kk])
-        M_ext[1, 1, kk] = 1 - rad[kk] ** 2 * M_ext[0, 1, kk]
-        M_ext[1, 2, kk] = -(rad[kk] ** 2) * M_ext[0, 2, kk]
-        M_ext[1, 4, kk] = -(rad[kk] ** 2) * M_ext[0, 4, kk]
-        M_ext[2, 2, kk] = 1.0e0
-        M_ext[3, 3, kk] = 1.0e0
-        M_ext[4, 4, kk] = 1.0e0
+        m_ext[1, 0, kk] = rad[kk] ** 2 * (1 - m_ext[0, 0, kk])
+        m_ext[1, 1, kk] = 1 - rad[kk] ** 2 * m_ext[0, 1, kk]
+        m_ext[1, 2, kk] = -(rad[kk] ** 2) * m_ext[0, 2, kk]
+        m_ext[1, 4, kk] = -(rad[kk] ** 2) * m_ext[0, 4, kk]
+        m_ext[2, 2, kk] = 1.0e0
+        m_ext[3, 3, kk] = 1.0e0
+        m_ext[4, 4, kk] = 1.0e0
 
     # Total transformation matrix, from Lame parmeters at outside to
     # Lame parameters at inside of each layer
     # Section 7 in the writeup
     # ***
-    M_tot[:, :, nlayers - 1] = M_int[:, :, nlayers - 1]
+    m_tot[:, :, nlayers - 1] = m_int[:, :, nlayers - 1]
 
     for kk in range(nlayers - 2, -1, -1):
-        M_tot[:, :, kk] = np.ascontiguousarray(M_int[:, :, kk]) @ (
-            np.ascontiguousarray(M_ext[:, :, kk + 1])
-            @ np.ascontiguousarray(M_tot[:, :, kk + 1])
+        m_tot[:, :, kk] = np.ascontiguousarray(m_int[:, :, kk]) @ (
+            np.ascontiguousarray(m_ext[:, :, kk + 1])
+            @ np.ascontiguousarray(m_tot[:, :, kk + 1])
         )
 
     # Axial force inner product. Dot-product this with the
@@ -6727,13 +6727,13 @@ def extended_plane_strain(
     v_force_row[:, :] = v_force_row - 2e0 * np.pi * ey_bar_z[
         nonslip_layer - 1
     ] * nu_bar_tz[nonslip_layer - 1] * (
-        rad_row_helper @ np.ascontiguousarray(M_tot[:, :, nonslip_layer - 1])
+        rad_row_helper @ np.ascontiguousarray(m_tot[:, :, nonslip_layer - 1])
     )
     for kk in range(nonslip_layer, nlayers):
         rad_row_helper[0, :] = [rad[kk] ** 2, 1e0, 0e0, 0e0, 0e0]
         v_force_row[:, :] = v_force_row + 2e0 * np.pi * (
             ey_bar_z[kk - 1] * nu_bar_tz[kk - 1] - ey_bar_z[kk] * nu_bar_tz[kk]
-        ) * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, kk]))
+        ) * (rad_row_helper @ np.ascontiguousarray(m_tot[:, :, kk]))
 
     # Include the effect of axial stiffness
     v_force_row[0, 2] += ey_bar_z_area
@@ -6746,7 +6746,7 @@ def extended_plane_strain(
             * np.pi
             * ey_bar_z[nonslip_layer - 2]
             * nu_bar_tz[nonslip_layer - 2]
-            * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, nonslip_layer - 1]))
+            * (rad_row_helper @ np.ascontiguousarray(m_tot[:, :, nonslip_layer - 1]))
         )
         rad_row_helper[0, :] = [rad[0] ** 2, 1e0, 0e0, 0e0, 0e0]
         v_force_row_slip[:, :] -= (
@@ -6754,7 +6754,7 @@ def extended_plane_strain(
             * np.pi
             * ey_bar_z[0]
             * nu_bar_tz[0]
-            * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, 0]))
+            * (rad_row_helper @ np.ascontiguousarray(m_tot[:, :, 0]))
         )
         for kk in range(1, nonslip_layer - 1):
             rad_row_helper[0, :] = [rad[kk] ** 2, 1e0, 0e0, 0e0, 0e0]
@@ -6762,7 +6762,7 @@ def extended_plane_strain(
                 2e0
                 * np.pi
                 * (ey_bar_z[kk - 1] * nu_bar_tz[kk - 1] - ey_bar_z[kk] * nu_bar_tz[kk])
-                * (rad_row_helper @ np.ascontiguousarray(M_tot[:, :, kk]))
+                * (rad_row_helper @ np.ascontiguousarray(m_tot[:, :, kk]))
             )
         # Include the effect of axial stiffness
         v_force_row_slip[0, 4] += ey_bar_z_area_slip
@@ -6778,7 +6778,7 @@ def extended_plane_strain(
     # Section 9 in the writeup
     # ***
     # Outer boundary condition row, zero radial stress
-    M_bc[0, :] = [
+    m_bc[0, :] = [
         (1e0 + nu_bar_t[nlayers - 1]) * rad[nlayers] ** 2,
         -1e0 + nu_bar_t[nlayers - 1],
         nu_bar_zt[nlayers - 1] * rad[nlayers] ** 2,
@@ -6788,7 +6788,7 @@ def extended_plane_strain(
     # Inner boundary condition row, zero radial stress
     # or zero displacement if rad(1)=0
     if nonslip_layer > 1:
-        M_bc[1, :] = [
+        m_bc[1, :] = [
             (1e0 + nu_bar_t[0]) * rad[0] ** 2,
             -1e0 + nu_bar_t[0],
             0e0,
@@ -6796,7 +6796,7 @@ def extended_plane_strain(
             nu_bar_zt[0] * rad[0] ** 2,
         ]
     else:
-        M_bc[1, :] = [
+        m_bc[1, :] = [
             (1e0 + nu_bar_t[0]) * rad[0] ** 2,
             -1e0 + nu_bar_t[0],
             nu_bar_zt[0] * rad[0] ** 2,
@@ -6804,65 +6804,65 @@ def extended_plane_strain(
             0e0,
         ]
 
-    M_bc[1, :] = np.ascontiguousarray(M_bc[1, :]) @ np.ascontiguousarray(M_tot[:, :, 0])
+    m_bc[1, :] = np.ascontiguousarray(m_bc[1, :]) @ np.ascontiguousarray(m_tot[:, :, 0])
     # Axial force boundary condition
-    M_bc[2, :] = v_force_row[0, :]
-    M_bc[2, 3] = M_bc[2, 3] - v_force
+    m_bc[2, :] = v_force_row[0, :]
+    m_bc[2, 3] = m_bc[2, 3] - v_force
     # Axial force boundary condition of slip layers
-    M_bc[3, :] = v_force_row_slip[0, :]
+    m_bc[3, :] = v_force_row_slip[0, :]
 
     # The solution, the outermost Lame parameters A,B
     # and the axial strains of the force-carrying and
     # slip layers eps_z and eps_z_slip.
     # Section 10 in the writeup
     # ***
-    M_toinv[:, :3] = M_bc[
+    m_toinv[:, :3] = m_bc[
         :,
         :3,
     ]
-    M_toinv[:, 3] = M_bc[:, 4]
-    RHS_vec[:] = -M_bc[:, 3]
+    m_toinv[:, 3] = m_bc[:, 4]
+    RHS_vec[:] = -m_bc[:, 3]
 
-    A_vec_solution[:4] = np.linalg.solve(M_toinv, RHS_vec)
+    a_vec_solution[:4] = np.linalg.solve(m_toinv, RHS_vec)
 
-    A_vec_solution[4] = A_vec_solution[3]
-    A_vec_solution[3] = 1
+    a_vec_solution[4] = a_vec_solution[3]
+    a_vec_solution[3] = 1
 
     # Radial/toroidal/vertical stress radial distribution
     # ------
     # Radial displacement, stress and strain distributions
 
-    A_vec_layer[:] = A_vec_solution[:]
+    a_vec_layer[:] = a_vec_solution[:]
     for ii in range(nlayers - 1, -1, -1):
-        A_layer = A_vec_layer[0]
-        B_layer = A_vec_layer[1]
+        a_layer = a_vec_layer[0]
+        b_layer = a_vec_layer[1]
 
         dradius = (rad[ii + 1] - rad[ii]) / (n_radial_array - 1)
 
         for jj in range(ii * n_radial_array, (ii + 1) * n_radial_array):
             rradius[jj] = rad[ii] + dradius * (jj - (n_radial_array * ii))
 
-            f_int_A_plot = 0.5e0 * f_lin_fac[ii] * (
+            f_int_a_plot = 0.5e0 * f_lin_fac[ii] * (
                 rad[ii + 1] ** 2 - rradius[jj] ** 2
             ) + f_rec_fac[ii] * np.log(rad[ii + 1] / (rradius[jj]))
-            f_int_B_plot = 0.25e0 * f_lin_fac[ii] * (
+            f_int_b_plot = 0.25e0 * f_lin_fac[ii] * (
                 rad[ii + 1] ** 4 - rradius[jj] ** 4
             ) + 0.5e0 * f_rec_fac[ii] * (rad[ii + 1] ** 2 - rradius[jj] ** 2)
-            A_plot = A_layer - 0.5e0 / ey_bar_t[ii] * f_int_A_plot
-            B_plot = B_layer + 0.5e0 / ey_bar_t[ii] * f_int_B_plot
+            a_plot = a_layer - 0.5e0 / ey_bar_t[ii] * f_int_a_plot
+            b_plot = b_layer + 0.5e0 / ey_bar_t[ii] * f_int_b_plot
 
             # Radial displacement
-            r_deflect[jj] = A_plot * rradius[jj] + B_plot / rradius[jj]
+            r_deflect[jj] = a_plot * rradius[jj] + b_plot / rradius[jj]
 
             # Radial strain
-            str_r[jj] = A_plot - B_plot / rradius[jj] ** 2
+            str_r[jj] = a_plot - b_plot / rradius[jj] ** 2
             # Azimuthal strain
-            str_t[jj] = A_plot + B_plot / rradius[jj] ** 2
+            str_t[jj] = a_plot + b_plot / rradius[jj] ** 2
             # Axial strain
             if ii < nonslip_layer - 1:
-                str_z[jj] = A_vec_solution[4]
+                str_z[jj] = a_vec_solution[4]
             else:
-                str_z[jj] = A_vec_solution[2]
+                str_z[jj] = a_vec_solution[2]
 
             # Radial stress
             sigr[jj] = ey_bar_t[ii] * (
@@ -6877,8 +6877,8 @@ def extended_plane_strain(
                 str_z[jj] + (nu_bar_tz[ii] * (str_r[jj] + str_t[jj]))
             )
 
-        A_vec_layer = np.ascontiguousarray(M_tot[:, :, ii]) @ A_vec_solution
-        A_vec_layer = np.ascontiguousarray(M_ext[:, :, ii]) @ A_vec_layer
+        a_vec_layer = np.ascontiguousarray(m_tot[:, :, ii]) @ a_vec_solution
+        a_vec_layer = np.ascontiguousarray(m_ext[:, :, ii]) @ a_vec_layer
     # ------
 
     return rradius, sigr, sigt, sigz, str_r, str_t, str_z, r_deflect
@@ -7125,27 +7125,27 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
     return eyoung_j_out, a_out, poisson_j_perp_out
 
 
-def _inductance_factor(H, Ri, Ro, Rm, theta1):
+def _inductance_factor(H, ri, ro, rm, theta1):
     """Calculates the inductance factor for a toroidal structure
     using surrogate 2 #1866.
 
     Author: Timothy Nunn, UKAEA
 
     :param H: the maximum height of the structure
-    :param Ri: the radius of the inboard side of the structure CCL
-    :param Ro: the radius of the outboard side of the structure CCL
-    :param Rm: the radius at which `H` occurs
+    :param ri: the radius of the inboard side of the structure CCL
+    :param ro: the radius of the outboard side of the structure CCL
+    :param rm: the radius at which `H` occurs
     :param theta1: the polar angle of the point at which one circular arc is
     joined to another circular arc in the approximation to the structure CCL,
     using an arbitrary origin of coordinates (Rc2, Zc2).
     """
     # NOTE: the following properties are not those of the plasma but of
     # the VV/coil structures
-    major_radius = (Ro + Ri) / 2
-    minor_radius = (Ro - Ri) / 2
+    major_radius = (ro + ri) / 2
+    minor_radius = (ro - ri) / 2
 
     aspect_ratio = major_radius / minor_radius
-    triangularity = (major_radius - Rm) / minor_radius
+    triangularity = (major_radius - rm) / minor_radius
     elongation = H / minor_radius
 
     return (
@@ -7161,24 +7161,24 @@ def _inductance_factor(H, Ri, Ro, Rm, theta1):
 def vv_stress_on_quench(
     # TF shape
     H_coil,
-    Ri_coil,
-    Ro_coil,
-    Rm_coil,
+    ri_coil,
+    ro_coil,
+    rm_coil,
     ccl_length_coil,
     theta1_coil,
     # VV shape
     H_vv,
-    Ri_vv,
-    Ro_vv,
-    Rm_vv,
+    ri_vv,
+    ro_vv,
+    rm_vv,
     theta1_vv,
     # TF properties
     n_tf,
     n_tf_turn,
-    S_rp,
-    S_cc,
+    s_rp,
+    s_cc,
     taud,
-    I_op,
+    i_op,
     # VV properties
     d_vv,
 ):
@@ -7198,28 +7198,28 @@ def vv_stress_on_quench(
     2. the VV
 
     :param H_coil: the maximum height of the TF coil CCL
-    :param Ri_coil: the radius of the inboard edge of the TF coil CCL
-    :param Ro_coil: the radius of the outboard edge of the TF coil CCL
-    :param Rm_coil: the radius where the maximum height of the TF coil CCL occurs
+    :param ri_coil: the radius of the inboard edge of the TF coil CCL
+    :param ro_coil: the radius of the outboard edge of the TF coil CCL
+    :param rm_coil: the radius where the maximum height of the TF coil CCL occurs
     :param ccl_length_coil: the length of the TF coil CCL
     :param theta1_coil: the polar angle of the point at which one circular arc is
     joined to another circular arc in the approximation to the coil CCL,
     using an arbitrary origin of coordinates (Rc2, Zc2).
 
     :param H_vv: the maximum height of the VV CCL
-    :param Ri_vv: the radius of the inboard edge of the VV CCL
-    :param Ro_vv: the radius of the outboard edge of the VV CCL
-    :param Rm_vv: the radius where the maximum height of the VV CCL occurs
+    :param ri_vv: the radius of the inboard edge of the VV CCL
+    :param ro_vv: the radius of the outboard edge of the VV CCL
+    :param rm_vv: the radius where the maximum height of the VV CCL occurs
     :param theta1_vv: the polar angle of the point at which one circular arc is
     joined to another circular arc in the approximation to the VV CCL,
     using an arbitrary origin of coordinates (Rc2, Zc2).
 
     :param n_tf: the number of TF coils
     :param n_tf_turn: the number of turns per TF coil
-    :param S_rp: the cross-sectional area of the radial plates of the TF coil
-    :param S_cc: the cross-sectional area of the TF coil case
+    :param s_rp: the cross-sectional area of the radial plates of the TF coil
+    :param s_cc: the cross-sectional area of the TF coil case
     :param taud: the discharge time of the TF coil when quench occurs
-    :param I_op: the 'normal' operating current of the TF coil
+    :param i_op: the 'normal' operating current of the TF coil
 
     :param d_vv: the thickness of the vacuum vessel
 
@@ -7240,19 +7240,19 @@ def vv_stress_on_quench(
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
     # Poloidal loop resistance (PLR) in ohms
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (S_cc + S_rp))) * 1e-6
+    plr_coil = ((0.5 * ccl_length_coil) / (n_tf * (s_cc + s_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * 0.94) * 1e-6
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
         (constants.rmu0 / np.pi)
         * H_coil
-        * _inductance_factor(H_coil, Ri_coil, Ro_coil, Rm_coil, theta1_coil)
+        * _inductance_factor(H_coil, ri_coil, ro_coil, rm_coil, theta1_coil)
     )
     vv_self_inductance = (
         (constants.rmu0 / np.pi)
         * H_vv
-        * _inductance_factor(H_vv, Ri_vv, Ro_vv, Rm_vv, theta1_vv)
+        * _inductance_factor(H_vv, ri_vv, ro_vv, rm_vv, theta1_vv)
     )
 
     # s^-1
@@ -7263,25 +7263,25 @@ def vv_stress_on_quench(
     # approximate time at which the maximum force (and stress) will occur on the VV
     tmaxforce = np.log((lambda0 + lambda1) / (2 * lambda0)) / (lambda1 - lambda0)
 
-    I0 = I_op * np.exp(-lambda0 * tmaxforce)
-    I1 = (
+    i0 = i_op * np.exp(-lambda0 * tmaxforce)
+    i1 = (
         lambda0
         * n_tf
         * n_tf_turn
-        * I_op
+        * i_op
         * (
             (np.exp(-lambda1 * tmaxforce) - np.exp(-lambda0 * tmaxforce))
             / (lambda0 - lambda1)
         )
     )
-    I2 = (lambda1 / lambda2) * I1
+    i2 = (lambda1 / lambda2) * i1
 
-    A_vv = (Ro_vv + Ri_vv) / (Ro_vv - Ri_vv)
-    B_vvi = (constants.rmu0 * (n_tf * n_tf_turn * I0 + I1 + (I2 / 2))) / (
-        2 * np.pi * Ri_vv
+    a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
+    b_vvi = (constants.rmu0 * (n_tf * n_tf_turn * i0 + i1 + (i2 / 2))) / (
+        2 * np.pi * ri_vv
     )
-    J_vvi = I2 / (2 * np.pi * d_vv * Ri_vv)
+    j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)
 
-    zeta = 1 + ((A_vv - 1) * np.log((A_vv + 1) / (A_vv - 1)) / (2 * A_vv))
+    zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    return zeta * B_vvi * J_vvi * Ri_vv
+    return zeta * b_vvi * j_vvi * ri_vv
