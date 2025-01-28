@@ -48,7 +48,7 @@ ixc = 5 * beta
 ixc = 6 * dene
 ixc = 10 * hfact
 boundu(10) = 1.2
-ixc = 13 * tfcth
+ixc = 13 * dr_tf_inboard
 boundl(13) = 0.7
 ixc = 16 * dr_cs
 boundl(16) = 0.3
@@ -107,7 +107,7 @@ scrapli  = 0.25 * Gap between plasma and first wall; inboard side (m) (if `iscrp
 scraplo  = 0.25 * Gap between plasma and first wall; outboard side (m) (if `iscrp=1`)
 shldith  = 0.3 * inboard shield thickness (m) (`iteration variable 93`)
 shldoth  = 0.800 * outboard shield thickness (m) (`iteration variable 94`)
-tfcth    = 1.2 * inboard TF coil thickness; (centrepost for ST) (m)
+dr_tf_inboard    = 1.2 * inboard TF coil thickness; (centrepost for ST) (m)
 thshield_ib = 0.050 * TF-VV thermal shield thickness; inboard (m)
 thshield_ob = 0.050 * TF-VV thermal shield thickness; outboard (m)
 thshield_vb = 0.050 * TF-VV thermal shield thickness; vertical build (m)

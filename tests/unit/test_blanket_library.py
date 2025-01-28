@@ -1173,7 +1173,7 @@ def test_apply_coverage_factors(
 class ExternalCryoGeometryParam(NamedTuple):
     f_z_cryostat: Any = None
     hmax: Any = None
-    tfcth: Any = None
+    dr_tf_inboard: Any = None
     dr_cryostat: Any = None
     r_cryostat_inboard: Any = None
     dr_pf_cryostat: Any = None
@@ -1202,7 +1202,7 @@ class ExternalCryoGeometryParam(NamedTuple):
         ExternalCryoGeometryParam(
             f_z_cryostat=4.2679999999999998,
             hmax=8.8182171641274945,
-            tfcth=0.92672586247397692,
+            dr_tf_inboard=0.92672586247397692,
             dr_cryostat=0.15000000000000002,
             r_cryostat_inboard=0,
             dr_pf_cryostat=0.5,
@@ -1302,7 +1302,9 @@ def test_external_cryo_geometry(
         build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
     )
     monkeypatch.setattr(build_variables, "hmax", externalcryogeometryparam.hmax)
-    monkeypatch.setattr(build_variables, "tfcth", externalcryogeometryparam.tfcth)
+    monkeypatch.setattr(
+        build_variables, "dr_tf_inboard", externalcryogeometryparam.dr_tf_inboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_cryostat", externalcryogeometryparam.dr_cryostat
     )

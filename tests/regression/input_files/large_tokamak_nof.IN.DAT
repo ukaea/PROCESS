@@ -198,10 +198,10 @@ te = 12.0
 ixc = 10
 boundu(10) = 1.2
 
-* tfcth [m]
+* dr_tf_inboard [m]
 ixc = 13
 boundl(13) = 0.7
-tfcth = 1.2
+dr_tf_inboard = 1.2
 
 * dr_cs [m]
 ixc = 16

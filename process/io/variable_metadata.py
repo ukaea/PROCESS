@@ -23,7 +23,7 @@ var_dicts = {
     "bt": VariableMetadata(
         latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T"
     ),
-    "tfcth": VariableMetadata(
+    "dr_tf_inboard": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}$ [$m$]",
         description="TF coil thickness",
         units="m",

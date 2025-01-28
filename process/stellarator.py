@@ -419,7 +419,7 @@ class Stellarator:
         build_variables.dr_bore = physics_variables.rmajor - (
             build_variables.dr_cs
             + build_variables.dr_cs_tf_gap
-            + build_variables.tfcth
+            + build_variables.dr_tf_inboard
             + build_variables.gapds
             + build_variables.d_vv_in
             + build_variables.shldith
@@ -434,7 +434,7 @@ class Stellarator:
             build_variables.dr_bore
             + build_variables.dr_cs
             + build_variables.dr_cs_tf_gap
-            + build_variables.tfcth
+            + build_variables.dr_tf_inboard
             + build_variables.gapds
             + build_variables.d_vv_in
             + build_variables.shldith
@@ -447,7 +447,7 @@ class Stellarator:
         # Bc stellarators cannot scale physics_variables.rminor reasonably well an additional constraint equation is required,
         # that ensures that there is enough space between coils and plasma.
         build_variables.required_radial_space = (
-            build_variables.tfcth / 2.0e0
+            build_variables.dr_tf_inboard / 2.0e0
             + build_variables.gapds
             + build_variables.d_vv_in
             + build_variables.shldith
@@ -485,7 +485,7 @@ class Stellarator:
         )
 
         #  Thickness of outboard TF coil legs
-        build_variables.tfthko = build_variables.tfcth
+        build_variables.tfthko = build_variables.dr_tf_inboard
 
         #  Radius to centre of outboard TF coil legs
 
@@ -583,16 +583,19 @@ class Stellarator:
                 self.outfile, "Machine build_variables.dr_bore (m)", "(dr_bore)", drbild
             )
 
-            radius = radius + build_variables.tfcth
+            radius = radius + build_variables.dr_tf_inboard
             po.obuild(
                 self.outfile,
                 "Coil inboard leg",
-                build_variables.tfcth,
+                build_variables.dr_tf_inboard,
                 radius,
-                "(tfcth)",
+                "(dr_tf_inboard)",
             )
             po.ovarre(
-                self.outfile, "Coil inboard leg (m)", "(deltf)", build_variables.tfcth
+                self.outfile,
+                "Coil inboard leg (m)",
+                "(deltf)",
+                build_variables.dr_tf_inboard,
             )
 
             radius = radius + build_variables.gapds
@@ -2726,7 +2729,7 @@ class Stellarator:
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of inboard leg in toroidal direction
 
-        build_variables.tfcth = (
+        build_variables.dr_tf_inboard = (
             tfcoil_variables.thkcas
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.casthi
@@ -2739,11 +2742,11 @@ class Stellarator:
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
         tfcoil_variables.arealeg = (
-            build_variables.tfcth * tfcoil_variables.tftort
+            build_variables.dr_tf_inboard * tfcoil_variables.tftort
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
         tfcoil_variables.acasetf = (
-            build_variables.tfcth * tfcoil_variables.tftort
+            build_variables.dr_tf_inboard * tfcoil_variables.tftort
         ) - awpc  # [m^2] Cross-sectional area of surrounding case
 
         tfcoil_variables.tfocrn = (
@@ -3630,8 +3633,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total inboard leg radial thickness (m)",
-            "(tfcth)",
-            build_variables.tfcth,
+            "(dr_tf_inboard)",
+            build_variables.dr_tf_inboard,
         )
         po.ovarre(
             self.outfile,
