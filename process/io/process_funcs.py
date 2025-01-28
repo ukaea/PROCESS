@@ -447,8 +447,8 @@ def set_variable_in_indat(in_dat, varname, value):
     elif "(" in varname:
         name = varname.split("(")[0]
         # Fortran numbering converted to Python numbering!
-        id = int((varname.split("("))[1].split(")")[0]) - 1
-        in_dat.change_array(name, id, float(value))
+        identity = int((varname.split("("))[1].split(")")[0]) - 1
+        in_dat.change_array(name, identity, float(value))
 
     else:
         in_dat.add_parameter(varname, value)
