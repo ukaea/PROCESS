@@ -4,20 +4,7 @@ import logging
 
 import numba
 import numpy as np
-
-from process.fortran import rebco_variables
-from process.fortran import global_variables
-from process.fortran import tfcoil_variables
-from process.fortran import physics_variables
-from process.fortran import build_variables
-from process.fortran import constants
-from process.fortran import sctfcoil_module
-from process.fortran import process_output as po
-from process.fortran import error_handling
-from process.fortran import fwbs_variables
-from process.fortran import pfcoil_variables
-from process.fortran import numerics
-from process.fortran import divertor_variables
+from scipy import optimize
 
 import process.superconductors as superconductors
 from process.fortran import (
