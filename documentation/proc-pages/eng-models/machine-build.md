@@ -26,7 +26,7 @@ depending on the switches used.
  CS precompression                            0.065           2.689   (dr_cs_precomp)           
  Gap                                          0.050           2.739   (dr_cs_tf_gap)             IP, ITV
  TF coil inboard leg                          1.400           4.139   (dr_tf_inboard)             IP
- Gap                                          0.050           4.189   (tftsgap)           IP
+ Gap                                          0.050           4.189   (dr_tf_shld_gap)           IP
  Thermal shield, inboard                      0.050           4.239   (dr_shld_thermal_inboard)       IP
  Gap                                          0.020           4.259   (gapds)             IP
  Vacuum vessel (and shielding)                0.600           4.859   (dr_vv_inboard + shldith) IP
@@ -43,7 +43,7 @@ depending on the switches used.
  Vacuum vessel (and shielding)                1.100          14.753   (d_vv_out+shldoth)  IP
  Gap                                          1.900          16.652   (gapsto)            
  Thermal shield, outboard                     0.050          16.702   (thshield_ob)       IP
- Gap                                          0.050          16.752   (tftsgap)           IP
+ Gap                                          0.050          16.752   (dr_tf_shld_gap)           IP
  TF coil outboard leg                         1.400          18.152   (tfthko)          
 
 ```
@@ -64,7 +64,7 @@ case the machine is not symmetric about the midplane.
  Single null case
                                           Thickness (m)    Height (m)
  TF coil                                      1.576           9.862   (dr_tf_inboard)             
- Gap                                          0.050           8.286   (tftsgap)           
+ Gap                                          0.050           8.286   (dr_tf_shld_gap)           
  Thermal shield                               0.050           8.236   (thshield)          
  Gap                                          0.050           8.186   (vgap_vv_thermalshield)             
  Vacuum vessel (and shielding)                0.600           8.136   (d_vv_top+shldtth)  
@@ -80,7 +80,7 @@ case the machine is not symmetric about the midplane.
  Vacuum vessel (and shielding)                1.000          -9.652   (d_vv_bot+shldlth)  
  Gap                                          0.050          -9.702   (vgap_vv_thermalshield)             
  Thermal shield                               0.050          -9.752   (thshield)          
- Gap                                          0.050          -9.802   (tftsgap)           
+ Gap                                          0.050          -9.802   (dr_tf_shld_gap)           
  TF coil                                      1.576         -11.379   (dr_tf_inboard)    
 
 ```

@@ -424,7 +424,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -439,7 +439,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -1419,7 +1419,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -1434,7 +1434,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -2414,7 +2414,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -2429,7 +2429,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -3409,7 +3409,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -3424,7 +3424,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -4404,7 +4404,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -4419,7 +4419,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -5399,7 +5399,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -5414,7 +5414,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -6394,7 +6394,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -6409,7 +6409,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -7389,7 +7389,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -7404,7 +7404,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -8384,7 +8384,7 @@
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      5.9140E-02    
  CS_precompresion_to_TF_coil_radial_gap_(m)______________________________ (dr_cs_tf_gap)_______________________      5.0000E-02 ITV
  TF_coil_inboard_leg_(m)_________________________________________________ (dr_tf_inboard)_______________________      1.4000E+00 ITV
- TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (tftsgap)_____________________      5.0000E-02    
+ TF_coil_inboard_leg_insulation_gap_(m)__________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  Thermal_shield_(m)______________________________________________________ (thshield)____________________      5.0000E-02    
  thermal_shield_to_vessel_radial_gap_(m)_________________________________ (gapds)_______________________      2.0000E-02 ITV
  Inboard_vacuum_vessel_radial_thickness_(m)______________________________ (dr_vv_inboard)_____________________      3.0000E-01    
@@ -8399,7 +8399,7 @@
  Outer_radiation_shield_radial_thickness_(m)_____________________________ (shldoth)_____________________      8.0000E-01    
  Outboard_vacuum_vessel_radial_thickness_(m)_____________________________ (d_vv_out)____________________      3.0000E-01    
  Vessel_to_TF_radial_gap_(m)_____________________________________________ (gapsto)______________________      1.7772E+00    
- Gap_(m)_________________________________________________________________ (tftsgap)_____________________      5.0000E-02    
+ Gap_(m)_________________________________________________________________ (dr_tf_shld_gap)_____________________      5.0000E-02    
  TF_coil_outboard_leg_radial_thickness_(m)_______________________________ (tfthko)______________________      1.4000E+00    
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
@@ -9097,7 +9097,7 @@ shldith  = 0.30 * Inboard shield thickness (m)
 shldoth  = 0.80 * Outboard shield thickness (m)
 shldtth  = 0.30 * Upper/lower shield thickness (m);
 dr_tf_inboard    = 1.05 * Inboard tf coil thickness; (centrepost for st) (m)
-tftsgap  = 0.05 * manufacturing/thermal expansion gap between TF and thermal shield (m)
+dr_tf_shld_gap  = 0.05 * manufacturing/thermal expansion gap between TF and thermal shield (m)
 vgap2    = 0.05 * Vertical gap between vacuum vessel and tf coil (m)
 vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
 

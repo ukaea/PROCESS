@@ -134,7 +134,7 @@ class Build:
                 vbuild = (
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
-                    + build_variables.tftsgap
+                    + build_variables.dr_tf_shld_gap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
                     + build_variables.d_vv_top
@@ -177,11 +177,11 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.tftsgap,
+                    build_variables.dr_tf_shld_gap,
                     vbuild,
-                    "(tftsgap)",
+                    "(dr_tf_shld_gap)",
                 )
-                vbuild = vbuild - build_variables.tftsgap
+                vbuild = vbuild - build_variables.dr_tf_shld_gap
 
                 po.obuild(
                     self.outfile,
@@ -362,13 +362,13 @@ class Build:
                     "(thshield_vb)",
                 )
 
-                vbuild = vbuild - build_variables.tftsgap
+                vbuild = vbuild - build_variables.dr_tf_shld_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.tftsgap,
+                    build_variables.dr_tf_shld_gap,
                     vbuild,
-                    "(tftsgap)",
+                    "(dr_tf_shld_gap)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_inboard
@@ -407,7 +407,7 @@ class Build:
                 vbuild = (
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
-                    + build_variables.tftsgap
+                    + build_variables.dr_tf_shld_gap
                     + build_variables.thshield_vb
                     + build_variables.vgap_vv_thermalshield
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
@@ -452,11 +452,11 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.tftsgap,
+                    build_variables.dr_tf_shld_gap,
                     vbuild,
-                    "(tftsgap)",
+                    "(dr_tf_shld_gap)",
                 )
-                vbuild = vbuild - build_variables.tftsgap
+                vbuild = vbuild - build_variables.dr_tf_shld_gap
 
                 po.obuild(
                     self.outfile,
@@ -655,13 +655,13 @@ class Build:
                     "(thshield_vb)",
                 )
 
-                vbuild = vbuild - build_variables.tftsgap
+                vbuild = vbuild - build_variables.dr_tf_shld_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.tftsgap,
+                    build_variables.dr_tf_shld_gap,
                     vbuild,
-                    "(tftsgap)",
+                    "(dr_tf_shld_gap)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_inboard
@@ -729,7 +729,7 @@ class Build:
             + build_variables.d_vv_bot
             + build_variables.vgap_vv_thermalshield
             + build_variables.thshield_vb
-            + build_variables.tftsgap
+            + build_variables.dr_tf_shld_gap
         )
 
         #  Vertical locations of divertor coils
@@ -739,7 +739,7 @@ class Build:
         else:
             build_variables.hpfu = (
                 build_variables.dr_tf_inboard
-                + build_variables.tftsgap
+                + build_variables.dr_tf_shld_gap
                 + build_variables.thshield_vb
                 + build_variables.vgap_vv_thermalshield
                 + build_variables.d_vv_top
@@ -1762,7 +1762,7 @@ class Build:
                     physics_variables.rmajor
                     - physics_variables.rminor * physics_variables.triang
                     - (
-                        build_variables.tftsgap
+                        build_variables.dr_tf_shld_gap
                         + build_variables.dr_shld_thermal_inboard
                         + build_variables.shldith
                         + build_variables.vvblgap
@@ -1817,7 +1817,7 @@ class Build:
             > physics_variables.rmajor
             - physics_variables.rminor * physics_variables.triang
             - (
-                build_variables.tftsgap
+                build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
                 + build_variables.shldith
                 + build_variables.vvblgap
@@ -1836,7 +1836,7 @@ class Build:
                 + build_variables.dr_cs
                 + build_variables.dr_cs_tf_gap
                 + build_variables.dr_cs_precomp
-                + build_variables.tftsgap
+                + build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
                 + build_variables.gapds
                 + build_variables.dr_vv_inboard
@@ -1844,7 +1844,7 @@ class Build:
         else:
             build_variables.r_vv_inboard_out = (
                 build_variables.r_tf_inboard_out
-                + build_variables.tftsgap
+                + build_variables.dr_tf_shld_gap
                 + build_variables.dr_shld_thermal_inboard
                 + build_variables.gapds
                 + build_variables.dr_vv_inboard
@@ -1902,7 +1902,7 @@ class Build:
             + build_variables.d_vv_out
             + build_variables.gapomin
             + build_variables.thshield_ob
-            + build_variables.tftsgap
+            + build_variables.dr_tf_shld_gap
             + 0.5e0 * build_variables.tfthko
         )
 
@@ -1929,7 +1929,7 @@ class Build:
                 - build_variables.d_vv_out
                 - build_variables.rsldo
                 - build_variables.thshield_ob
-                - build_variables.tftsgap
+                - build_variables.dr_tf_shld_gap
                 - build_variables.vvblgap
             )
             build_variables.dr_tf_inner_bore = (
@@ -2225,11 +2225,11 @@ class Build:
                     radius,
                 ])
 
-            radius = radius + build_variables.tftsgap
+            radius = radius + build_variables.dr_tf_shld_gap
             radial_build_data.append([
                 "TF coil inboard leg insulation gap",
-                "tftsgap",
-                build_variables.tftsgap,
+                "dr_tf_shld_gap",
+                build_variables.dr_tf_shld_gap,
                 radius,
             ])
 
@@ -2377,11 +2377,11 @@ class Build:
                 radius,
             ])
 
-            radius = radius + build_variables.tftsgap
+            radius = radius + build_variables.dr_tf_shld_gap
             radial_build_data.append([
                 "Gap",
-                "tftsgap",
-                build_variables.tftsgap,
+                "dr_tf_shld_gap",
+                build_variables.dr_tf_shld_gap,
                 radius,
             ])
 

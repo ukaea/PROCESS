@@ -196,7 +196,7 @@ contains
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       dr_shld_thermal_inboard, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
-      iohcl, tftsgap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
+      iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
@@ -1417,8 +1417,8 @@ contains
        case ('tfootfi')
           call parse_real_variable('tfootfi', tfootfi, 0.2D0, 5.0D0, &
                'TFC outboard/inboard leg thickness')
-       case ('tftsgap')
-          call parse_real_variable('tftsgap', tftsgap, 0.0D0, 5.0D0, &
+       case ('dr_tf_shld_gap')
+          call parse_real_variable('dr_tf_shld_gap', dr_tf_shld_gap, 0.0D0, 5.0D0, &
                'Minimum gap between TF and thermal shield for manufacturing etc. (m)')
        case ('dr_shld_thermal_inboard')
           call parse_real_variable('dr_shld_thermal_inboard', dr_shld_thermal_inboard, 0.0D0, 10.0D0, &

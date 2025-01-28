@@ -127,7 +127,7 @@ RADIAL_BUILD = [
     "dr_cs_precomp",
     "dr_cs_tf_gap",
     "dr_tf_inboard",
-    "tftsgap",
+    "dr_tf_shld_gap",
     "dr_shld_thermal_inboard",
     "gapds",
     "dr_vv_inboard",
@@ -146,7 +146,7 @@ RADIAL_BUILD = [
     "d_vv_out",
     "gapsto",
     "thshield_ob",
-    "tftsgap",
+    "dr_tf_shld_gap",
     "tfthko",
 ]
 
@@ -158,7 +158,7 @@ vertical_lower = [
     "d_vv_bot",
     "vgap_vv_thermalshield",
     "thshield_vb",
-    "tftsgap",
+    "dr_tf_shld_gap",
     "dr_tf_inboard",
 ]
 
@@ -1480,7 +1480,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     y5 = mfile_data.data["yarc(5)"].get_scan(scan)
     dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
     thshield_ob = mfile_data.data["thshield_ob"].get_scan(scan)
-    tftsgap = mfile_data.data["tftsgap"].get_scan(scan)
+    dr_tf_shld_gap = mfile_data.data["dr_tf_shld_gap"].get_scan(scan)
     if y3 != 0:
         print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
 
@@ -1491,8 +1491,11 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
         )
 
     for offset, colour in (
-        (dr_shld_thermal_inboard + tftsgap, THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
-        (tftsgap, "white"),
+        (
+            dr_shld_thermal_inboard + dr_tf_shld_gap,
+            THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        ),
+        (dr_tf_shld_gap, "white"),
         (0.0, TFC_COLOUR[colour_scheme - 1]),
     ):
         # Check for TF coil shape
@@ -3542,7 +3545,7 @@ def main(args=None):
             "d_vv_top",
             "vgap_vv_thermalshield",
             "thshield_vb",
-            "tftsgap",
+            "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]
     else:
@@ -3556,7 +3559,7 @@ def main(args=None):
             "d_vv_top",
             "vgap_vv_thermalshield",
             "thshield_vb",
-            "tftsgap",
+            "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]
 
