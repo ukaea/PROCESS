@@ -38,10 +38,10 @@ A list of publications using PROCESS is given [here](https://ukaea.github.io/PRO
 If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository.
 
 ## Contacts
-[James Morris](james.morris2@ukaea.uk)
+[James Morris](mailto:james.morris2@ukaea.uk)
 
-[Jonathan Maddock](jonathan.maddock@ukaea.uk)
+[Jonathan Maddock](mailto:jonathan.maddock@ukaea.uk)
 
-[Michael Kovari](michael.kovari@ukaea.uk)
+[Michael Kovari](mailto:michael.kovari@ukaea.uk)
 
-[Stuart Muldrew](stuart.muldrew@ukaea.uk)
+[Stuart Muldrew](mailto:stuart.muldrew@ukifs.uk)

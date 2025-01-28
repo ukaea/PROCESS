@@ -5,6 +5,16 @@ The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961
 
 Below is a list of publications using or citing PROCESS by year:
 
+## 2025
+
+[Hybrid hydrogen-electricity production using Spherical Tokamaks: a cost-driver sensitivity study and techno-economic analysis](https://iopscience.iop.org/article/10.1088/1741-4326/adaa01)   
+J. Hidalgo-Salaverri, T. Griffiths, Z. Xuereb Conti, P. Cano-Megias, R. Chacartegui, M. Bluck, J. Ayllon-Guerola, A. Mancini, M. Garcia-Munoz, E. Viezzer   
+Nuclear Fusion (2025) in press   
+
+[Definition of an EU-DEMO design point robust to epistemic plasma physics uncertainties](https://iopscience.iop.org/article/10.1088/1741-4326/ada6d9)   
+M. Coleman, H. Zohm, C. Bourdelle, F. Maviglia, A. Pearce, M. Siccinio, A. Spagnuolo, S. Wiesen   
+Nuclear Fusion (2025) in press 
+
 ## 2024
 
 [Optimizing the cost of the STEP programme](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2023.0413)   
@@ -27,25 +37,29 @@ Philosophical Transactions of the Royal Society A (2024) 382:20230416
 E. Tholerus, F.J. Casson, S.P. Marsden, T. Wilson, D. Brunetti, P. Fox, S.J. Freethy, T.C. Hender, S.S. Henderson, A. Hudoba, K.K. Kirov, F. Koechl, H. Meyer, S.I. Muldrew, C. Olde, B.S. Patel, C.M. Roach, S. Saarelma, G. Xia   
 Nuclear Fusion 64 (2024) 106030   
 
+[Runaway electron beam formation, vertical motion, termination and wall loads in EU-DEMO](https://arxiv.org/abs/2407.03940)   
+F. Vannini, V. Bandaru, H. Bergstroem, N. Schwarz, F. J. Artola, M. Hoelzl, G. Pautasso, E. Nardon, F. Maviglia, M. L. Richiusa, E. Emanuelli, the JOREK team  
+arXiv (2024) 2407.03940   
+
 [The Influence of Confinement Scaling on Spherical Tokamak Power Plant Design and Performance](https://ieeexplore.ieee.org/abstract/document/10522478)   
 C. Ashe, S.I. Muldrew   
-IEEE Transactions on Plasma Science (Early Access)
+IEEE Transactions on Plasma Science 52(9) (2024) 3985-3991   
 
 [Overview of European efforts and advances in Stellarator power plant studies](https://www.sciencedirect.com/science/article/pii/S0920379624002394)   
 F. Warmer, J. Alguacil, D. Biek, T. Bogaarts, G. Bongiovì, V. Bykov, J.P. Catalán, R.K. Duligal, I. Fernández-Berceruelo, S. Giambrone, C. Hume, M. Hrecinuc, R. Kembleton, J. Lion, T. Lyytinen, J.A. Noguerón Valiente, I. Palermo, V. Queral, D. Rapisarda, W.J. Rutten, L. Sanchis, X. Sarasola, K. Sedlak, A. Snicker, D. Sosa, F.R. Urgorri   
 Fusion Engineering and Design 202 (2024) 114386   
 
 [Transitioning From Top–Down to Bottom–Up Cost Assessments in Fusion](https://ieeexplore.ieee.org/abstract/document/10482860)   
-M. Butcher, H. Lux, J. Foster   
-IEEE Transactions on Plasma Science (Early Access)   
+M.T. Butcher, H. Lux, J. Foster   
+IEEE Transactions on Plasma Science 52(9) (2024) 3608-3614   
 
 [Using Bayesian Networks as Metamodels for Predicting Uncertain Fusion Economics in Spherical Tokamaks](https://ieeexplore.ieee.org/abstract/document/10453409)   
 T. Griffiths, Z. Xuereb Conti, J. Hidalgo-Salaverri, M. Bluck   
-IEEE Transactions on Plasma Science (Early Access)   
+IEEE Transactions on Plasma Science 52(9) (2024) 3953-3959   
 
 [Extrapolating Costs to Commercial Fusion Power Plants](https://ieeexplore.ieee.org/abstract/document/10452156)   
 J. Foster, H. Lux, S. Knight, D. Wolff, S.I. Muldrew   
-IEEE Transactions on Plasma Science (Early Access)   
+IEEE Transactions on Plasma Science 52(9) (2024) 3772-3777   
 
 [Conceptual design workflow for the STEP Prototype Powerplant](https://www.sciencedirect.com/science/article/pii/S0920379624000917)   
 S.I. Muldrew, C. Harrington, J. Keep, C. Waldon, C. Ashe, R. Chapman, C. Griesel, A.J. Pearce, F. Casson, S.P. Marsden, E. Tholerus   
