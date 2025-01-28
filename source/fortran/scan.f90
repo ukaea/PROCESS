@@ -55,7 +55,7 @@ module scan_module
   !!         <LI> 16 rmajor
   !!         <LI> 17 bmxlim
   !!         <LI> 18 gammax
-  !!         <LI> 19 boundl(16: ohcth)
+  !!         <LI> 19 boundl(16: dr_cs)
   !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
@@ -98,7 +98,7 @@ module scan_module
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
   !!         <LI> 62 coheof : CS coil current density at EOF
-  !!         <LI> 63 ohcth : CS thickness (m)
+  !!         <LI> 63 dr_cs : CS thickness (m)
   !!         <LI> 64 ohhghf : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90
   !!         <LI> 66 oh_steel_frac: Steel fraction in CS coil
@@ -593,7 +593,7 @@ contains
     !! author: J Morris, UKAEA, Culham Science Centre
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	use build_variables, only: blnkoth, shldith, scrapli, scraplo, ohcth
+	use build_variables, only: blnkoth, shldith, scrapli, scraplo, dr_cs
     use constraint_variables, only: fiooic, walalw, bmxlim, fqval, taulimit, &
         gammax, t_burn_min, tbrmin, fjprot, pnetelin, powfmax
 	use cost_variables, only: cfactr, iavail, fkind, startupratio
@@ -799,8 +799,8 @@ contains
             coheof = swp(iscn)
             vlab = 'coheof' ; xlab = 'CS coil current density at EOF (A/m2)'
         case (63)
-            ohcth = swp(iscn)
-            vlab = 'ohcth' ; xlab = 'CS coil thickness (m)'
+            dr_cs = swp(iscn)
+            vlab = 'dr_cs' ; xlab = 'CS coil thickness (m)'
         case (64)
             ohhghf = swp(iscn)
             vlab = 'ohhghf' ; xlab = 'CS height (m)'

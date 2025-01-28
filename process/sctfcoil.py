@@ -1263,7 +1263,7 @@ class Sctfcoil:
                 build_variables.dr_bore,
                 build_variables.hmax,
                 pfcoil_variables.ohhghf,
-                build_variables.ohcth,
+                build_variables.dr_cs,
                 build_variables.tf_in_cs,
                 build_variables.tfcth,
                 build_variables.gapoh,
@@ -3526,7 +3526,7 @@ class Sctfcoil:
         dr_bore,
         hmax,
         ohhghf,
-        ohcth,
+        dr_cs,
         tf_in_cs,
         tfcth,
         gapoh,
@@ -3725,7 +3725,7 @@ class Sctfcoil:
                 if tf_in_cs == 1:
                     a_oh = 2.0e0 * hmax * ohhghf * (dr_bore - tfcth)
                 else:
-                    a_oh = 2.0e0 * hmax * ohhghf * ohcth
+                    a_oh = 2.0e0 * hmax * ohhghf * dr_cs
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
@@ -3829,7 +3829,7 @@ class Sctfcoil:
             if tf_in_cs == 1:
                 radtf[1] = dr_bore - tfcth - gapoh
             else:
-                radtf[1] = dr_bore + ohcth
+                radtf[1] = dr_bore + dr_cs
 
             # Assumed to be Kapton for the moment
             # Ref : https://www.dupont.com/content/dam/dupont/products-and-services/membranes-and-films/polyimde-films/documents/DEC-Kapton-summary-of-properties.pdf

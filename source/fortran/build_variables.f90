@@ -145,7 +145,7 @@ module build_variables
   !! - = 0 TF coil is outside the CS (default)
   !! - = 1 TF coil is inside the CS
 
-  real(dp) :: ohcth
+  real(dp) :: dr_cs
   !! Central solenoid thickness (m) (`iteration variable 16`)
 
   real(dp) :: precomp
@@ -340,7 +340,7 @@ module build_variables
     iohcl = 1
     iprecomp = 1
     tf_in_cs = 0
-    ohcth = 0.811D0
+    dr_cs = 0.811D0
     precomp = 0.0D0
     rbld = 0.0D0
     required_radial_space = 0.0D0

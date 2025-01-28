@@ -123,7 +123,7 @@ thin = 0.0
 
 RADIAL_BUILD = [
     "dr_bore",
-    "ohcth",
+    "dr_cs",
     "precomp",
     "gapoh",
     "tfcth",
@@ -445,7 +445,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     arc(axis, rmajor, style="dashed")
 
     # Colour in the main components
-    r2, r1 = cumulative_radial_build2("ohcth", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_cs", mfile_data, scan)
     arc_fill(axis, r1, r2, color=SOLENOID_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("precomp", mfile_data, scan)
@@ -2073,7 +2073,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     coil_text = []
 
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
-    ohcth = mfile_data.data["ohcth"].get_scan(scan)
+    dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
     ohdz = mfile_data.data["ohdz"].get_scan(scan)
 
     # Number of coils, both PF and CS
@@ -2102,7 +2102,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         coils_dr=coils_dr,
         coils_dz=coils_dz,
         dr_bore=dr_bore,
-        ohcth=ohcth,
+        dr_cs=dr_cs,
         ohdz=ohdz,
     )
 
@@ -3368,7 +3368,7 @@ def main(args=None):
         i_tf_wp_geom = 0
 
     global dr_bore
-    global ohcth
+    global dr_cs
     global gapoh
     global tfcth
     global gapds
@@ -3392,7 +3392,7 @@ def main(args=None):
     global j_plasma_0
 
     dr_bore = m_file.data["dr_bore"].get_scan(scan)
-    ohcth = m_file.data["ohcth"].get_scan(scan)
+    dr_cs = m_file.data["dr_cs"].get_scan(scan)
     gapoh = m_file.data["gapoh"].get_scan(scan)
     tfcth = m_file.data["tfcth"].get_scan(scan)
     gapds = m_file.data["gapds"].get_scan(scan)

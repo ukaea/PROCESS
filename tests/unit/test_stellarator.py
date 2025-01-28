@@ -236,7 +236,7 @@ class StbildParam(NamedTuple):
 
     hmax: Any = None
 
-    ohcth: Any = None
+    dr_cs: Any = None
 
     r_tf_outboard_mid: Any = None
 
@@ -357,7 +357,7 @@ class StbildParam(NamedTuple):
             gapomin=0.025000000000000005,
             gapsto=0,
             hmax=6.2927927927927927,
-            ohcth=0,
+            dr_cs=0,
             r_tf_outboard_mid=0,
             rbld=0,
             rsldi=0,
@@ -427,7 +427,7 @@ class StbildParam(NamedTuple):
             gapomin=0.025000000000000005,
             gapsto=0.025000000000000005,
             hmax=6.2927927927927927,
-            ohcth=0,
+            dr_cs=0,
             r_tf_outboard_mid=26.367558258201448,
             rbld=22,
             rsldi=18.947733982157342,
@@ -531,7 +531,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "hmax", stbildparam.hmax)
 
-    monkeypatch.setattr(build_variables, "ohcth", stbildparam.ohcth)
+    monkeypatch.setattr(build_variables, "dr_cs", stbildparam.dr_cs)
 
     monkeypatch.setattr(
         build_variables, "r_tf_outboard_mid", stbildparam.r_tf_outboard_mid

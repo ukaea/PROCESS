@@ -389,25 +389,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_16
-    !! <LI> (16) ohcth
+    !! <LI> (16) dr_cs
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(16) = 'ohcth         '
+    lablxc(16) = 'dr_cs         '
     boundl(16) = 0.010D0
     boundu(16) = 10.00D0
   end subroutine init_itv_16
 
   real(kind(1.d0)) function itv_16()
-    use build_variables, only: ohcth
+    use build_variables, only: dr_cs
     implicit none
-    itv_16 = ohcth
+    itv_16 = dr_cs
   end function itv_16
 
   subroutine set_itv_16(ratio)
-    use build_variables, only: ohcth
+    use build_variables, only: dr_cs
     implicit none
     real(kind(1.d0)) :: ratio
-    ohcth = ratio
+    dr_cs = ratio
   end subroutine set_itv_16
 
   !---------------------------------
