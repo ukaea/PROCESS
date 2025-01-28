@@ -1266,7 +1266,7 @@ class Sctfcoil:
                 build_variables.dr_cs,
                 build_variables.tf_in_cs,
                 build_variables.tfcth,
-                build_variables.gapoh,
+                build_variables.dr_cs_tf_gap,
                 pfcoil_variables.ipfres,
                 pfcoil_variables.coheof,
                 pfcoil_variables.cohbop,
@@ -3529,7 +3529,7 @@ class Sctfcoil:
         dr_cs,
         tf_in_cs,
         tfcth,
-        gapoh,
+        dr_cs_tf_gap,
         ipfres,
         coheof,
         cohbop,
@@ -3827,7 +3827,7 @@ class Sctfcoil:
 
             # Outer radius of the CS
             if tf_in_cs == 1:
-                radtf[1] = dr_bore - tfcth - gapoh
+                radtf[1] = dr_bore - tfcth - dr_cs_tf_gap
             else:
                 radtf[1] = dr_bore + dr_cs
 

@@ -981,25 +981,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_42
-    !! <LI> (42) gapoh
+    !! <LI> (42) dr_cs_tf_gap
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(42) = 'gapoh         '
+    lablxc(42) = 'dr_cs_tf_gap         '
     boundl(42) = 0.001D0
     boundu(42) = 10.00D0
   end subroutine init_itv_42
 
   real(kind(1.d0)) function itv_42()
-    use build_variables, only: gapoh
+    use build_variables, only: dr_cs_tf_gap
     implicit none
-    itv_42 = gapoh
+    itv_42 = dr_cs_tf_gap
   end function
 
   subroutine set_itv_42(ratio)
-    use build_variables, only: gapoh
+    use build_variables, only: dr_cs_tf_gap
     implicit none
     real(kind(1.d0)) :: ratio
-    gapoh = ratio
+    dr_cs_tf_gap = ratio
   end subroutine set_itv_42
 
   !! <LI> (43) NOT USED

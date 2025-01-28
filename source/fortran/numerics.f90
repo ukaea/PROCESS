@@ -243,7 +243,7 @@ module numerics
   !! <LI> (39) fjohc0 (f-value for equation 27)
   !! <LI> (40) fgamcd (f-value for equation 37)
   !! <LI> (41) fcohbop
-  !! <LI> (42) gapoh
+  !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
   !! <LI> (44) fvsbrnni
   !! <LI> (45) fqval (f-value for equation 28)

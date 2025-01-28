@@ -198,7 +198,7 @@ contains
       blbpith, aplasmin, blbuoth, tfcth, &
       iohcl, tftsgap, f_z_cryostat, dr_bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
-      dr_cs, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
+      dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
@@ -1348,8 +1348,8 @@ contains
        !       case ('fwoth')
        !          call parse_real_variable('fwoth', fwoth, 0.0D0, 10.0D0, &
        !               'Outboard first wall thickness, initial estimate (m)')
-       case ('gapoh')
-          call parse_real_variable('gapoh', gapoh, 0.0D0, 10.0D0, &
+       case ('dr_cs_tf_gap')
+          call parse_real_variable('dr_cs_tf_gap', dr_cs_tf_gap, 0.0D0, 10.0D0, &
                'Gap between OHC and TF coil (m)')
        case ('gapds')
           call parse_real_variable('gapds', gapds, 0.0D0, 10.0D0, &
