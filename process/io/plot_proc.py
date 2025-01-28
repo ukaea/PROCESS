@@ -429,6 +429,8 @@ def plot_current_profiles_over_time(
 
     # Annotate key points
     # Create a secondary x-axis for annotations
+    # Annotate key points
+    # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
     secax.set_xticks(t_steps)
     secax.set_xticklabels([
@@ -438,13 +440,13 @@ def plot_current_profiles_over_time(
         "Burn",
         "Ramp Down",
         "Between Pulse",
-    ])
-    secax.tick_params(axis="x", which="major", pad=15)
+    ], rotation=60)
+    secax.tick_params(axis="x", which="major")
     secax.set_xlabel("Pulse Phases", fontsize=12)
 
     # Add axis labels
-    axis.set_xlabel("Time", fontsize=12)
-    axis.xaxis.set_label_coords(0.97, 0.5)
+    axis.set_xlabel("Time [s]", fontsize=12)
+    axis.xaxis.set_label_coords(1.05, 0.5)
     axis.set_ylabel("Current [A]", fontsize=12)
 
     # Add a title
