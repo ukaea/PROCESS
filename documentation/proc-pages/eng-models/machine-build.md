@@ -32,7 +32,7 @@ depending on the switches used.
  Vacuum vessel (and shielding)                0.600           4.859   (dr_vv_inboard + dr_shld_inboard) IP
  Gap                                          0.020           4.879   (vvblgap)           IP
  Inboard blanket                              0.755           5.634   (dr_blkt_inboard)           IP*
- Inboard first wall                           0.018           5.652   (fwith)             
+ Inboard first wall                           0.018           5.652   (dr_fw_inboard)             
  Inboard scrape-off                           0.225           5.877   (scrapli)           IP, ITV
  Plasma geometric centre                      3.265           9.142   (rminor)            
  Plasma outboard edge                         3.265          12.408   (rminor)            

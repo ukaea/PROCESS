@@ -543,7 +543,7 @@ class Buildings:
             hcomp_rad_thk = (
                 build_variables.dr_shld_inboard
                 + build_variables.dr_blkt_inboard
-                + build_variables.fwith
+                + build_variables.dr_fw_inboard
             )
             hcomp_tor_thk = (
                 2
@@ -553,7 +553,7 @@ class Buildings:
                     - (
                         physics_variables.rminor
                         + build_variables.scrapli
-                        + build_variables.fwith
+                        + build_variables.dr_fw_inboard
                         + build_variables.dr_blkt_inboard
                         + build_variables.dr_shld_inboard
                     )
