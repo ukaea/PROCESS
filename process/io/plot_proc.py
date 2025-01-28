@@ -130,7 +130,7 @@ RADIAL_BUILD = [
     "tftsgap",
     "dr_shld_thermal_inboard",
     "gapds",
-    "d_vv_in",
+    "dr_vv_inboard",
     "shldith",
     "vvblgapi",
     "blnkith",
@@ -265,8 +265,8 @@ def cumulative_radial_build(section, mfile_data, scan):
             cumulative_build += mfile_data.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
             cumulative_build += mfile_data.data["vvblgap"].get_scan(scan)
-        elif "d_vv_in" in item:
-            cumulative_build += mfile_data.data["d_vv_in"].get_scan(scan)
+        elif "dr_vv_inboard" in item:
+            cumulative_build += mfile_data.data["dr_vv_inboard"].get_scan(scan)
         elif "d_vv_out" in item:
             cumulative_build += mfile_data.data["d_vv_out"].get_scan(scan)
         else:
@@ -302,8 +302,8 @@ def cumulative_radial_build2(section, mfile_data, scan):
             build = mfile_data.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
             build = mfile_data.data["vvblgap"].get_scan(scan)
-        elif "d_vv_in" in item:
-            build = mfile_data.data["d_vv_in"].get_scan(scan)
+        elif "dr_vv_inboard" in item:
+            build = mfile_data.data["dr_vv_inboard"].get_scan(scan)
         elif "d_vv_out" in item:
             build = mfile_data.data["d_vv_out"].get_scan(scan)
         else:
@@ -457,7 +457,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     r2, r1 = cumulative_radial_build2("dr_shld_thermal_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=THERMAL_SHIELD_COLOUR[colour_scheme - 1])
 
-    r2, r1 = cumulative_radial_build2("d_vv_in", mfile_data, scan)
+    r2, r1 = cumulative_radial_build2("dr_vv_inboard", mfile_data, scan)
     arc_fill(axis, r1, r2, color=VESSEL_COLOUR[colour_scheme - 1])
 
     r2, r1 = cumulative_radial_build2("shldith", mfile_data, scan)
@@ -1139,11 +1139,11 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
     # Inner side (nearest to the plasma)
     radx_inner = (
         cumulative_radial_build("shldoth", mfile_data, scan)
-        + cumulative_radial_build("d_vv_in", mfile_data, scan)
+        + cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
     rminx_inner = (
         cumulative_radial_build("shldoth", mfile_data, scan)
-        - cumulative_radial_build("d_vv_in", mfile_data, scan)
+        - cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
 
     if i_single_null == 1:
@@ -1209,11 +1209,11 @@ def plot_shield(axis, mfile_data, scan, colour_scheme):
     # Side furthest from plasma
     radx_far = (
         cumulative_radial_build("shldoth", mfile_data, scan)
-        + cumulative_radial_build("d_vv_in", mfile_data, scan)
+        + cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
     rminx_far = (
         cumulative_radial_build("shldoth", mfile_data, scan)
-        - cumulative_radial_build("d_vv_in", mfile_data, scan)
+        - cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
 
     # Side nearest to the plasma
@@ -3568,8 +3568,8 @@ def main(args=None):
             build = m_file.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
             build = m_file.data["vvblgap"].get_scan(scan)
-        elif "d_vv_in" in item:
-            build = m_file.data["d_vv_in"].get_scan(scan)
+        elif "dr_vv_inboard" in item:
+            build = m_file.data["dr_vv_inboard"].get_scan(scan)
         elif "d_vv_out" in item:
             build = m_file.data["d_vv_out"].get_scan(scan)
         else:

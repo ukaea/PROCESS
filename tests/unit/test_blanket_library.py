@@ -462,7 +462,7 @@ class DshapedComponentParam(NamedTuple):
     shldoth: Any = None
     shldtth: Any = None
     rsldo: Any = None
-    d_vv_in: Any = None
+    dr_vv_inboard: Any = None
     d_vv_out: Any = None
     d_vv_top: Any = None
     d_vv_bot: Any = None
@@ -519,7 +519,7 @@ class DshapedComponentParam(NamedTuple):
             shldoth=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
-            d_vv_in=0.20000000000000001,
+            dr_vv_inboard=0.20000000000000001,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -572,7 +572,7 @@ class DshapedComponentParam(NamedTuple):
             shldoth=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
-            d_vv_in=0.20000000000000001,
+            dr_vv_inboard=0.20000000000000001,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -625,7 +625,7 @@ class DshapedComponentParam(NamedTuple):
             shldoth=0.30000000000000004,
             shldtth=0.60000000000000009,
             rsldo=8.4000000000000004,
-            d_vv_in=0.20000000000000001,
+            dr_vv_inboard=0.20000000000000001,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -691,7 +691,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(build_variables, "shldoth", dshapedcomponentparam.shldoth)
     monkeypatch.setattr(build_variables, "shldtth", dshapedcomponentparam.shldtth)
     monkeypatch.setattr(build_variables, "rsldo", dshapedcomponentparam.rsldo)
-    monkeypatch.setattr(build_variables, "d_vv_in", dshapedcomponentparam.d_vv_in)
+    monkeypatch.setattr(
+        build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
+    )
     monkeypatch.setattr(build_variables, "d_vv_out", dshapedcomponentparam.d_vv_out)
     monkeypatch.setattr(build_variables, "d_vv_top", dshapedcomponentparam.d_vv_top)
     monkeypatch.setattr(build_variables, "d_vv_bot", dshapedcomponentparam.d_vv_bot)
@@ -743,7 +745,7 @@ class EllipticalComponentParam(NamedTuple):
     shareaob: Any = None
     sharea: Any = None
     shldtth: Any = None
-    d_vv_in: Any = None
+    dr_vv_inboard: Any = None
     d_vv_out: Any = None
     d_vv_top: Any = None
     d_vv_bot: Any = None
@@ -799,7 +801,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaob=0,
             sharea=0,
             shldtth=0.59999999999999998,
-            d_vv_in=0.30000000000000004,
+            dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -851,7 +853,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaob=0,
             sharea=0,
             shldtth=0.59999999999999998,
-            d_vv_in=0.30000000000000004,
+            dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -903,7 +905,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
             shldtth=0.59999999999999998,
-            d_vv_in=0.30000000000000004,
+            dr_vv_inboard=0.30000000000000004,
             d_vv_out=0.30000000000000004,
             d_vv_top=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
@@ -970,7 +972,9 @@ def test_elliptical_component(
     monkeypatch.setattr(build_variables, "shareaob", ellipticalcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)
     monkeypatch.setattr(build_variables, "shldtth", ellipticalcomponentparam.shldtth)
-    monkeypatch.setattr(build_variables, "d_vv_in", ellipticalcomponentparam.d_vv_in)
+    monkeypatch.setattr(
+        build_variables, "dr_vv_inboard", ellipticalcomponentparam.dr_vv_inboard
+    )
     monkeypatch.setattr(build_variables, "d_vv_out", ellipticalcomponentparam.d_vv_out)
     monkeypatch.setattr(build_variables, "d_vv_top", ellipticalcomponentparam.d_vv_top)
     monkeypatch.setattr(build_variables, "d_vv_bot", ellipticalcomponentparam.d_vv_bot)

@@ -2043,7 +2043,7 @@ gapds = 0.01
 * DESCRIPTION:   Gap Between inboard Vacuum Vessel and Thermal Shield (m)
 * JUSTIFICATION: 
 
-d_vv_in = 0.2 
+dr_vv_inboard = 0.2 
 * DESCRIPTION:   Vacuum Vessel Thickness (m)
 * JUSTIFICATION: Removed to avoid temporary problems with cryo plant
 
@@ -2052,7 +2052,7 @@ shldith = 0.4
 boundl(93) = 0.01
 boundu(93) = 1.0
 * DESCRIPTION:   Inboard Shield Thickness (m) 
-* JUSTIFICATION: Adjusted for above [(shldith + d_vv_in)~0.6 from KTaylor, neutronics]
+* JUSTIFICATION: Adjusted for above [(shldith + dr_vv_inboard)~0.6 from KTaylor, neutronics]
 
 vvblgap = 0.01 
 * DESCRIPTION:   Gap Between Vacuum Vessel and Blanket (m)
