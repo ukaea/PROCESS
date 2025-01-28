@@ -193,7 +193,7 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
-      shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, vvblgap, &
+      shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
@@ -1445,8 +1445,8 @@ contains
        case ('vgaptop')
           call parse_real_variable('vgaptop', vgaptop, 0.0D0, 10.0D0, &
                'Top vert gap between plasma and first wall (m)')
-       case ('vvblgap')
-          call parse_real_variable('vvblgap', vvblgap, 0.0D0, 5.0D0, &
+       case ('dr_shld_blkt_gap')
+          call parse_real_variable('dr_shld_blkt_gap', dr_shld_blkt_gap, 0.0D0, 5.0D0, &
                'Gap between vacuum vessel and blanket (m)')
 
           !  TF coil settings

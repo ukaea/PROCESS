@@ -2952,7 +2952,7 @@ class Stellarator:
             - build_variables.dr_fw_plasma_gap_inboard
             - build_variables.dr_fw_inboard
             - build_variables.dr_blkt_inboard
-            - build_variables.vvblgap
+            - build_variables.dr_shld_blkt_gap
             - build_variables.dr_shld_inboard
         )
 

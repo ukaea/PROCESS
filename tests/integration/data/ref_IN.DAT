@@ -120,7 +120,7 @@ shldtth  = 0.30 * Upper/lower shield thickness (m);
 dr_tf_inboard    = 1.05 * Inboard tf coil thickness; (centrepost for st) (m)
 dr_tf_shld_gap  = 0.05 * manufacturing/thermal expansion gap between TF and thermal shield (m)
 vgap2    = 0.05 * Vertical gap between vacuum vessel and tf coil (m)
-vvblgap  = 0.02 * gap between vacuum vessel and blanket (m)
+dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 

@@ -105,7 +105,7 @@ class ProcessTracker:
         "dr_cs_precomp",
         "dr_tf_outboard",
         "dr_blkt_inboard",
-        "vvblgap",
+        "dr_shld_blkt_gap",
         "dr_fw_plasma_gap_outboard",
         "dr_cs_tf_gap",
         "gapsto",

@@ -264,7 +264,9 @@ def cumulative_radial_build(section, mfile_data, scan):
         if item == "rminori" or item == "rminoro":
             cumulative_build += mfile_data.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
-            cumulative_build += mfile_data.data["vvblgap"].get_scan(scan)
+            cumulative_build += mfile_data.data["dr_shld_blkt_gap"].get_scan(
+                scan
+            )
         elif "dr_vv_inboard" in item:
             cumulative_build += mfile_data.data["dr_vv_inboard"].get_scan(scan)
         elif "dr_vv_outboard" in item:
@@ -301,7 +303,7 @@ def cumulative_radial_build2(section, mfile_data, scan):
         if item == "rminori" or item == "rminoro":
             build = mfile_data.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
-            build = mfile_data.data["vvblgap"].get_scan(scan)
+            build = mfile_data.data["dr_shld_blkt_gap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             build = mfile_data.data["dr_vv_inboard"].get_scan(scan)
         elif "dr_vv_outboard" in item:
@@ -3556,7 +3558,7 @@ def main(args=None):
             "vgaptop",
             "fwtth",
             "blnktth",
-            "vvblgap",
+            "dr_shld_blkt_gap",
             "shldtth",
             "d_vv_top",
             "vgap_vv_thermalshield",
@@ -3572,7 +3574,7 @@ def main(args=None):
         if item == "rminori" or item == "rminoro":
             build = m_file.data["rminor"].get_scan(scan)
         elif item == "vvblgapi" or item == "vvblgapo":
-            build = m_file.data["vvblgap"].get_scan(scan)
+            build = m_file.data["dr_shld_blkt_gap"].get_scan(scan)
         elif "dr_vv_inboard" in item:
             build = m_file.data["dr_vv_inboard"].get_scan(scan)
         elif "dr_vv_outboard" in item:

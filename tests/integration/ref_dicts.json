@@ -8014,7 +8014,7 @@
         "vtfkv": 0.0,
         "vtfskv": 0.0,
         "vv_density": 0.0,
-        "vvblgap": 0.05,
+        "dr_shld_blkt_gap": 0.05,
         "vvhealw": 1.0,
         "vvhemax": 0.0,
         "vvhemaxi": 0.0,
@@ -11126,7 +11126,7 @@
         "vtfkv": "TF coil voltage for resistive coil including bus (kV)",
         "vtfskv": "voltage across a TF coil during quench (kV)",
         "vv_density": "Vacuum vessel density [kg/m3]",
-        "vvblgap": "gap between vacuum vessel and blanket (m)",
+        "dr_shld_blkt_gap": "gap between vacuum vessel and blanket (m)",
         "vvhealw": "allowed maximum helium concentration in vacuum vessel at end of plant life (appm)\n (`iblanket =2`) (`constraint equation 55`)",
         "vvhemax": "maximum helium concentration in vacuum vessel at end of plant life (appm)\n (`iblanket=2` (KIT HCPB))",
         "vvhemaxi": "maximum final He. conc in IB VV [appm]",
@@ -14991,7 +14991,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "vvblgap": {
+        "dr_shld_blkt_gap": {
             "lb": 0.0,
             "ub": 5.0
         },
@@ -17083,7 +17083,7 @@
             "vgap_vv_thermalshield",
             "vgap_xpoint_divertor",
             "vgaptop",
-            "vvblgap",
+            "dr_shld_blkt_gap",
             "plleni",
             "plleno",
             "plsepi",
@@ -20902,7 +20902,7 @@
         "vgap_xpoint_divertor": "real_variable",
         "vgap_vv_thermalshield": "real_variable",
         "vgaptop": "real_variable",
-        "vvblgap": "real_variable",
+        "dr_shld_blkt_gap": "real_variable",
         "vvhealw": "real_variable",
         "walalw": "real_variable",
         "wallpf": "real_variable",
