@@ -866,7 +866,7 @@ def check_process():
     # -------
     # TF stress model not defined of r_tf_inboard = 0
     # Unless i_tf_stress_model == 2
-    # -> If bore + gapoh + ohcth = 0 and fixed and stress constraint is used
+    # -> If dr_bore + gapoh + ohcth = 0 and fixed and stress constraint is used
     #    Generate a lvl 3 error proposing not to use any stress constraints
     if (
         (
@@ -875,16 +875,16 @@ def check_process():
                 or (fortran.numerics.ixc[: fortran.numerics.nvar] == 29).any()
                 or (fortran.numerics.ixc[: fortran.numerics.nvar] == 42).any()
             )
-        )  # No bore,gapoh, ohcth iteration
+        )  # No dr_bore,gapoh, ohcth iteration
         and (
             abs(
-                fortran.build_variables.bore
+                fortran.build_variables.dr_bore
                 + fortran.build_variables.gapoh
                 + fortran.build_variables.ohcth
                 + fortran.build_variables.precomp
             )
             <= 0
-        )  # bore + gapoh + ohcth = 0
+        )  # dr_bore + gapoh + ohcth = 0
         and (
             (
                 fortran.numerics.icc[
@@ -901,10 +901,10 @@ def check_process():
         )  # Stress constraints (31 or 32) is used
         and (
             fortran.tfcoil_variables.i_tf_stress_model != 2
-        )  # TF stress model can't handle no bore
+        )  # TF stress model can't handle no dr_bore
     ):
         raise ProcessValidationError(
-            "Invalid stress model if bore + gapoh + ohcth = 0. Don't use constraint 31"
+            "Invalid stress model if dr_bore + gapoh + ohcth = 0. Don't use constraint 31"
         )
 
     # Make sure that plane stress model is not used for resistive magnets

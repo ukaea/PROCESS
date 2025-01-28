@@ -115,7 +115,7 @@ class Structure:
         :param ipfres: switch denoting whether PF & CS coils are resistive
         :type ipfres: integer
 
-        :param tf_h_width: TF coil horizontal bore (m)
+        :param tf_h_width: TF coil horizontal dr_bore (m)
         :type tf_h_width: float
 
         :param tfhmax: TF coil max height (m)

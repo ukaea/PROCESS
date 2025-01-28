@@ -98,7 +98,7 @@ class ProcessTracker:
         "fwoth",
         "thshield",
         "tftsgap",
-        "bore",
+        "dr_bore",
         "ohcth",
         "scrapli",
         "blnkoth",

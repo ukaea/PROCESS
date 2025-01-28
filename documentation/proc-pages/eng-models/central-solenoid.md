@@ -129,7 +129,7 @@ solenoid usually consists of several coils, which can have opposite currents.  T
 forces that tend to separate the coils.  To prevent this, ITER has "tie-plates" which hold the coil 
 segments together.  PROCESS has a corresponding structure, known as the pre-compression structure, 
 made up of two cylinders, one on the inside and one on the outside, of the same thickness. The 
-radii of the two cylinders are `bore` and `bore` + `ohcth`.  The thickness is derived using the 
+radii of the two cylinders are `dr_bore` and `dr_bore` + `ohcth`.  The thickness is derived using the 
 separation force and the combined cross-sectional area:
 
 $$

@@ -1995,7 +1995,7 @@ rmajor = 4.5
 *---------------*
 
 ixc = 29
-bore = 0.3
+dr_bore = 0.3
 boundl(29) = 0.1
 boundu(29) = 0.8
 * DESCRIPTION:   Bore radius (m)

@@ -179,8 +179,8 @@ var_dicts = {
         description="CS coil thickness",
         units="m",
     ),
-    "bore": VariableMetadata(
-        latex=r"$\Delta R_{\mathrm{bore}}$[$m$]", description="Bore radius", units="m"
+    "dr_bore": VariableMetadata(
+        latex=r"$\Delta R_{\mathrm{dr_bore}}$[$m$]", description="Bore radius", units="m"
     ),
     "dnla": VariableMetadata(
         latex=r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]",

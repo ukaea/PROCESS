@@ -122,7 +122,7 @@ NBSHIELD_COLOUR = ["black", "black"]
 thin = 0.0
 
 RADIAL_BUILD = [
-    "bore",
+    "dr_bore",
     "ohcth",
     "precomp",
     "gapoh",
@@ -2072,7 +2072,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     coils_dz = []
     coil_text = []
 
-    bore = mfile_data.data["bore"].get_scan(scan)
+    dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
     ohcth = mfile_data.data["ohcth"].get_scan(scan)
     ohdz = mfile_data.data["ohdz"].get_scan(scan)
 
@@ -2101,7 +2101,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         coils_z=coils_z,
         coils_dr=coils_dr,
         coils_dz=coils_dz,
-        bore=bore,
+        dr_bore=dr_bore,
         ohcth=ohcth,
         ohdz=ohdz,
     )
@@ -3367,7 +3367,7 @@ def main(args=None):
     else:
         i_tf_wp_geom = 0
 
-    global bore
+    global dr_bore
     global ohcth
     global gapoh
     global tfcth
@@ -3391,7 +3391,7 @@ def main(args=None):
     global dr_cryostat
     global j_plasma_0
 
-    bore = m_file.data["bore"].get_scan(scan)
+    dr_bore = m_file.data["dr_bore"].get_scan(scan)
     ohcth = m_file.data["ohcth"].get_scan(scan)
     gapoh = m_file.data["gapoh"].get_scan(scan)
     tfcth = m_file.data["tfcth"].get_scan(scan)

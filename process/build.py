@@ -1619,7 +1619,7 @@ class Build:
         return ripple, r_tf_outboard_midmin, flag
 
     def tf_in_cs_bore_calc(self):
-        build_variables.bore += build_variables.tfcth + build_variables.gapoh
+        build_variables.dr_bore += build_variables.tfcth + build_variables.gapoh
 
     def calculate_radial_build(self, output: bool) -> None:
         """
@@ -1670,19 +1670,19 @@ class Build:
                 * np.pi
                 * build_variables.fcspc
                 * build_variables.sigallpc
-                * (build_variables.bore + build_variables.bore + build_variables.ohcth)
+                * (build_variables.dr_bore + build_variables.dr_bore + build_variables.ohcth)
             )
         else:
             build_variables.precomp = 0.0e0
 
         if build_variables.tf_in_cs == 1:
             build_variables.r_tf_inboard_in = (
-                build_variables.bore - build_variables.tfcth - build_variables.gapoh
+                build_variables.dr_bore - build_variables.tfcth - build_variables.gapoh
             )
         else:
             # Inboard side inner radius [m]
             build_variables.r_tf_inboard_in = (
-                build_variables.bore
+                build_variables.dr_bore
                 + build_variables.ohcth
                 + build_variables.precomp
                 + build_variables.gapoh
@@ -1891,7 +1891,7 @@ class Build:
             + 0.5e0 * build_variables.tfthko
         )
 
-        # TF coil horizontal build_variables.bore [m]
+        # TF coil horizontal build_variables.dr_bore [m]
         build_variables.dr_tf_inner_bore = (
             build_variables.r_tf_outboard_mid - 0.5e0 * build_variables.tfthko
         ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.tfcth)
@@ -2098,12 +2098,12 @@ class Build:
             if build_variables.tf_in_cs == 1:
                 po.ocmmnt(
                     self.outfile,
-                    ("\n (The stated machine bore size is just for the hollow space, "),
+                    ("\n (The stated machine dr_bore size is just for the hollow space, "),
                 )
                 po.ocmmnt(
                     self.outfile,
                     (
-                        "the true bore size used for calculations is bore + tfcth + gapoh)\n"
+                        "the true dr_bore size used for calculations is dr_bore + tfcth + gapoh)\n"
                     ),
                 )
             if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
@@ -2121,15 +2121,15 @@ class Build:
             if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
                 radius = (
                     radius
-                    + build_variables.bore
+                    + build_variables.dr_bore
                     - build_variables.tfcth
                     - build_variables.gapoh
                 )
 
                 radial_build_data.append([
-                    "Machine bore wedge support cylinder",
-                    "bore",
-                    build_variables.bore
+                    "Machine dr_bore wedge support cylinder",
+                    "dr_bore",
+                    build_variables.dr_bore
                     - build_variables.tfcth
                     - build_variables.gapoh,
                     radius,
@@ -2137,30 +2137,30 @@ class Build:
             elif build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking < 2:
                 radius = (
                     radius
-                    + build_variables.bore
+                    + build_variables.dr_bore
                     - build_variables.tfcth
                     - build_variables.gapoh
                 )
                 radial_build_data.append([
-                    "Machine bore hole",
-                    "bore",
-                    build_variables.bore
+                    "Machine dr_bore hole",
+                    "dr_bore",
+                    build_variables.dr_bore
                     - build_variables.tfcth
                     - build_variables.gapoh,
                     radius,
                 ])
             else:
-                radius = radius + build_variables.bore
+                radius = radius + build_variables.dr_bore
                 radial_build_data.append([
-                    "Machine bore",
-                    "bore",
-                    build_variables.bore,
+                    "Machine dr_bore",
+                    "dr_bore",
+                    build_variables.dr_bore,
                     radius,
                 ])
             if build_variables.tf_in_cs == 1:
                 radius += build_variables.tfcth
                 radial_build_data.append([
-                    "TF coil inboard leg (in bore)",
+                    "TF coil inboard leg (in dr_bore)",
                     "tfcth",
                     build_variables.tfcth,
                     radius,

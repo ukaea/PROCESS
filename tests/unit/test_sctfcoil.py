@@ -3407,7 +3407,7 @@ class StressclParam(NamedTuple):
 
     r_tf_inboard_mid: Any = None
 
-    bore: Any = None
+    dr_bore: Any = None
 
     ohcth: Any = None
 
@@ -3592,7 +3592,7 @@ class StressclParam(NamedTuple):
             tf_in_cs=0,
             gapoh=0.01,
             r_tf_inboard_mid=3.5979411851091103,
-            bore=2.3322000000000003,
+            dr_bore=2.3322000000000003,
             ohcth=0.55242000000000002,
             hmax=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
@@ -3715,7 +3715,7 @@ class StressclParam(NamedTuple):
             tf_in_cs=0,
             gapoh=0.01,
             r_tf_inboard_mid=3.5979411851091103,
-            bore=2.3322000000000003,
+            dr_bore=2.3322000000000003,
             ohcth=0.55242000000000002,
             hmax=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
@@ -3889,7 +3889,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.n_tf_wp_layers,
         stressclparam.i_tf_bucking,
         stressclparam.r_tf_inboard_in,
-        stressclparam.bore,
+        stressclparam.dr_bore,
         stressclparam.hmax,
         stressclparam.ohhghf,
         stressclparam.ohcth,

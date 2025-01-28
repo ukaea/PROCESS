@@ -83,7 +83,7 @@ def get_radial_build(m_file):
         pass
 
     radial_labels = [
-        "bore",
+        "dr_bore",
         "ohcth",
         "precomp",
         "gapoh",

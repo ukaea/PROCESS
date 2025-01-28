@@ -230,7 +230,7 @@ module numerics
   !! <LI> (26) ffuspow (f-value for equation 9)
   !! <LI> (27) fhldiv (f-value for equation 18)
   !! <LI> (28) fradpwr (f-value for equation 17), total radiation fraction
-  !! <LI> (29) bore
+  !! <LI> (29) dr_bore
   !! <LI> (30) fmva (f-value for equation 19)
   !! <LI> (31) gapomin
   !! <LI> (32) frminor (f-value for equation 21)
