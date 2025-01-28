@@ -260,7 +260,7 @@ class StbildParam(NamedTuple):
 
     dr_tf_inboard: Any = None
 
-    tfthko: Any = None
+    dr_tf_outboard: Any = None
 
     available_radial_space: Any = None
 
@@ -369,7 +369,7 @@ class StbildParam(NamedTuple):
             shldoth=0.70000000000000007,
             shldtth=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
-            tfthko=0.78058448071757114,
+            dr_tf_outboard=0.78058448071757114,
             available_radial_space=0,
             f_avspace=1,
             required_radial_space=0,
@@ -439,7 +439,7 @@ class StbildParam(NamedTuple):
             shldoth=0.70000000000000007,
             shldtth=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
-            tfthko=0.78058448071757114,
+            dr_tf_outboard=0.78058448071757114,
             available_radial_space=1.8828828828828827,
             f_avspace=1,
             required_radial_space=2.0332922403587861,
@@ -569,7 +569,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_tf_inboard", stbildparam.dr_tf_inboard)
 
-    monkeypatch.setattr(build_variables, "tfthko", stbildparam.tfthko)
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", stbildparam.dr_tf_outboard)
 
     monkeypatch.setattr(
         build_variables, "available_radial_space", stbildparam.available_radial_space

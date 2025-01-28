@@ -44,7 +44,7 @@ depending on the switches used.
  Gap                                          1.900          16.652   (gapsto)            
  Thermal shield, outboard                     0.050          16.702   (dr_shld_thermal_outboard)       IP
  Gap                                          0.050          16.752   (dr_tf_shld_gap)           IP
- TF coil outboard leg                         1.400          18.152   (tfthko)          
+ TF coil outboard leg                         1.400          18.152   (dr_tf_outboard)          
 
 ```
 
