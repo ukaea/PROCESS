@@ -54,7 +54,7 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
     fig2, ax2 = plt.subplots()
 
     # Read cost data
-    for id, item in enumerate(mfile_list):
+    for identity, item in enumerate(mfile_list):
         cost = np.zeros(18)
         cost[0] = item.data["c21"].get_scan(-1)  # Site and Buildings
         cost[1] = item.data["c221"].get_scan(-1)  # Reactor Systems
@@ -103,8 +103,10 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
         sizes2 = [cost[14], cost[15], cost[16], cost[17]]
 
         # Plot bar charts
-        ax.bar(index + id * bar_width, sizes, bar_width, label=args.f[id])
-        ax2.bar(index2 + id * bar_width, sizes2, bar_width, label=args.f[id])
+        ax.bar(index + identity * bar_width, sizes, bar_width, label=args.f[identity])
+        ax2.bar(
+            index2 + identity * bar_width, sizes2, bar_width, label=args.f[identity]
+        )
 
     # Plot labels
     ax.set_xticks(index + (len(mfile_list) - 1) * 0.5 * bar_width)
@@ -157,7 +159,7 @@ def comp_new(args, mfile_list: list[str], inflate: float):
     fig, ax = plt.subplots()
 
     # Read cost data
-    for id, item in enumerate(mfile_list):
+    for identity, item in enumerate(mfile_list):
         cost = np.zeros(12)
         cost[0] = item.data["s09"].get_scan(-1)  # Buildings
         cost[1] = item.data["s13"].get_scan(-1)  # Land
@@ -199,7 +201,7 @@ def comp_new(args, mfile_list: list[str], inflate: float):
         ]
 
         # Plot bar chart
-        ax.bar(index + id * bar_width, sizes, bar_width, label=args.f[id])
+        ax.bar(index + identity * bar_width, sizes, bar_width, label=args.f[identity])
 
     # Plot labels
     ax.set_xticks(index + (len(mfile_list) - 1) * 0.5 * bar_width)
