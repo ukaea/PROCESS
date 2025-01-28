@@ -2107,7 +2107,7 @@ class Build:
             po.ovarrf(
                 self.outfile,
                 "Inboard build thickness (m)",
-                "(inboard_build)",
+                "(dr_inboard_build)",
                 physics_variables.rmajor - physics_variables.rminor,
                 "OP ",
             )
