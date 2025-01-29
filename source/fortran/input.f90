@@ -311,7 +311,7 @@ contains
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
-      i_rad_loss, te, alphan, rmajor, plasma_square, kappa, iinvqd, fkzohm, beamfus0, &
+      i_rad_loss, te, alphan, rmajor, plasma_square, kappa, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
@@ -641,9 +641,6 @@ contains
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &
                'Switch for ignited plasma assumption')
-       case ('iinvqd')
-          call parse_int_variable('iinvqd', iinvqd, 0, 1, &
-               'Switch for inverse quadrature')
        case ('ilhthresh')
           call parse_int_variable('ilhthresh', ilhthresh, 1, 21, &
                'Switch for L-H power threshold to enforce')

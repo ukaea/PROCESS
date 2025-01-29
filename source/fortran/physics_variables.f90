@@ -347,12 +347,6 @@ module physics_variables
   !! - =0 do not assume plasma ignition
   !! - =1 assume ignited (but include auxiliary power in costs)</UL
 
-  integer :: iinvqd
-  !! switch for inverse quadrature in L-mode scaling laws 5 and 9:
-  !!
-  !! - =0 inverse quadrature not used
-  !! - =1 inverse quadrature with Neo-Alcator tau-E used
-
   integer :: ipedestal
   !! switch for pedestal profiles:
   !!
@@ -993,7 +987,6 @@ module physics_variables
     idivrt = 2
     i_beta_fast_alpha = 1
     ignite = 0
-    iinvqd = 1
     ipedestal = 1
     i_pfirsch_schluter_current = 0
     neped = 4.0D19

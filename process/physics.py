@@ -2265,7 +2265,6 @@ class Physics:
             physics_variables.dnla,
             physics_variables.eps,
             physics_variables.hfact,
-            physics_variables.iinvqd,
             physics_variables.i_confinement_time,
             physics_variables.ignite,
             physics_variables.kappa,
@@ -5393,7 +5392,6 @@ class Physics:
                 physics_variables.dnla,
                 physics_variables.eps,
                 1.0,
-                physics_variables.iinvqd,
                 iisc,
                 physics_variables.ignite,
                 physics_variables.kappa,
@@ -5853,7 +5851,6 @@ class Physics:
                 physics_variables.dnla,
                 physics_variables.eps,
                 1.0,
-                physics_variables.iinvqd,
                 iisc,
                 physics_variables.ignite,
                 physics_variables.kappa,
@@ -6645,7 +6642,6 @@ class Physics:
             physics_variables.dnla,
             physics_variables.eps,
             hhh,
-            physics_variables.iinvqd,
             physics_module.iscz,
             physics_variables.ignite,
             physics_variables.kappa,
@@ -6703,7 +6699,6 @@ class Physics:
         dnla,
         eps,
         hfact,
-        iinvqd,
         i_confinement_time,
         ignite,
         kappa,
@@ -6735,7 +6730,6 @@ class Physics:
         dnla      : input real :  line-averaged electron density (/m3)
         eps       : input real :  inverse aspect ratio
         hfact     : input real :  H factor on energy confinement scalings
-        iinvqd    : input integer :  switch for inverse quadrature
         i_confinement_time       : input integer :  switch for energy confinement scaling to use
         ignite    : input integer :  switch for ignited calculation
         kappa     : input real :  plasma elongation
@@ -6847,9 +6841,6 @@ class Physics:
             np.pi * rminor**2
         )
 
-        # Calculate Neo-Alcator confinement time (used in several scalings)
-        taueena = 0.07e0 * n20 * rminor * rmajor * rmajor * qstar
-
         # Electron energy confinement times
 
         # ========================================================================
@@ -6862,7 +6853,6 @@ class Physics:
 
         # Nec-Alcator(NA) OH scaling
         if i_confinement_time == 1:
-            # t_electron_confinement = taueena
             t_electron_confinement = hfact * confinement.neo_alcator_confinement_time(
                 n20, rminor, rmajor, qstar
             )
@@ -6902,11 +6892,6 @@ class Physics:
                 pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
 
-            if iinvqd != 0:
-                t_electron_confinement = 1.0e0 / np.sqrt(
-                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
-                )
-
         # ========================================================================
 
         # ITER Power scaling - ITER 89-P (L-mode)
@@ -6945,11 +6930,6 @@ class Physics:
             t_electron_confinement = hfact * confinement.goldston_confinement_time(
                 pcur, rmajor, rminor, kappa95, m_fuel_amu, powerht
             )
-
-            if iinvqd != 0:
-                t_electron_confinement = 1.0e0 / np.sqrt(
-                    1.0e0 / taueena**2 + 1.0e0 / t_electron_confinement**2
-                )
 
         # ========================================================================
 
