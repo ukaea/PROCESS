@@ -1,7 +1,14 @@
+import datetime
+import getpass
+import socket
+import subprocess
+from pathlib import Path
 from warnings import warn
 
+import process
 import process.fortran as fortran
 from process.exceptions import ProcessValidationError
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 def init_process():
@@ -31,7 +38,162 @@ def init_process():
     # Check input data for errors/ambiguities
     check_process()
 
-    fortran.main_module.run_summary()
+    run_summary()
+
+
+def get_git_summary() -> tuple[str, str]:
+    try:
+        directory = Path(process.__file__).parent
+
+        git_branch = (
+            subprocess.run(
+                "git rev-parse --abbrev-ref HEAD",
+                shell=True,
+                capture_output=True,
+                cwd=directory,
+                check=True,
+            )
+            .stdout.decode()
+            .strip()
+        )
+
+        git_tag = (
+            subprocess.run(
+                "git describe --tags",
+                shell=True,
+                capture_output=True,
+                cwd=directory,
+                check=True,
+            )
+            .stdout.decode()
+            .strip()
+        )
+
+        return git_branch, git_tag
+    except (subprocess.CalledProcessError, AttributeError):
+        return "", ""
+
+
+def run_summary():
+    """Write a summary of the PROCESS run to the output file and MFile"""
+    # Outfile and terminal #
+    for outfile in [fortran.constants.nout, fortran.constants.iotty]:
+        # PROCESS code header
+        fortran.process_output.oblnkl(outfile)
+        fortran.process_output.ostars(outfile, 110)
+        fortran.process_output.ocentr(outfile, "PROCESS", 110)
+        fortran.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
+        fortran.process_output.ostars(outfile, 110)
+        fortran.process_output.oblnkl(outfile)
+
+        # Run execution details
+        version = process.__version__
+        fortran.process_output.ocmmnt(outfile, f"Version : {version}")
+
+        git_branch, git_tag = get_git_summary()
+
+        fortran.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
+        fortran.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
+
+        date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
+            "%d/%m/%Y %Z"
+        )
+        time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
+
+        fortran.process_output.ocmmnt(outfile, f"Date : {date_string}")
+        fortran.process_output.ocmmnt(outfile, f"Time : {time_string}")
+
+        user = getpass.getuser()
+        machine = socket.gethostname()
+
+        fortran.process_output.ocmmnt(outfile, f"User : {user}")
+        fortran.process_output.ocmmnt(outfile, f"Computer : {machine}")
+        fortran.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
+
+        fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Input : {fileprefix}",
+        )
+        runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Run title : {runtitle}",
+        )
+
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
+        )
+
+        fortran.process_output.oblnkl(outfile)
+        fortran.process_output.ostars(outfile, 110)
+        fortran.process_output.oblnkl(outfile)
+
+        fortran.process_output.ocmmnt(
+            outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
+        )
+        fortran.process_output.ocmmnt(
+            outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
+        )
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
+        )
+        fortran.process_output.ocmmnt(
+            outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
+        )
+        fortran.process_output.ocmmnt(
+            outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
+        )
+
+        if fortran.numerics.minmax > 0:
+            minmax_string = "  -- minimise "
+            minmax_sign = "+"
+        else:
+            minmax_string = "  -- maximise "
+            minmax_sign = "-"
+
+        fom_string = f2py_compatible_to_string(
+            fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
+        )
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
+        )
+        fortran.process_output.ocmmnt(
+            outfile,
+            f"Convergence parameter : {fortran.numerics.epsvmc}",
+        )
+
+        fortran.process_output.oblnkl(outfile)
+        fortran.process_output.ostars(outfile, 110)
+
+    # MFile #
+    mfile = fortran.constants.mfile
+
+    fortran.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    fortran.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
+    fortran.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
+    fortran.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
+    fortran.process_output.ovarst(
+        mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"'
+    )
+    fortran.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    fortran.process_output.ovarst(
+        mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
+    )
+    fortran.process_output.ovarst(
+        mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"'
+    )
+
+    fortran.process_output.ovarin(
+        mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
+    )
+    if fortran.numerics.ioptimz == -2:
+        fortran.process_output.ovarin(
+            mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
+        )
 
 
 def init_all_module_vars():
