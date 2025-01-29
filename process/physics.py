@@ -7265,18 +7265,18 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 31:  # ITERH-PB98P(y), ELMy H-mode scaling
-            t_electron_confinement = (
-                hfact
-                * 0.0615e0
-                * pcur**0.9e0
-                * bt**0.1e0
-                * dnla19**0.4e0
-                * powerht ** (-0.66e0)
-                * rmajor**2
-                * kappaa**0.75e0
-                * aspect ** (-0.66e0)
-                * m_fuel_amu**0.2e0
+        # ITERH-PB98P(y), ELMy H-mode scaling
+        # WARNING: No reference found for this scaling. This may not be its real name
+        elif i_confinement_time == 31:
+            t_electron_confinement = hfact * confinement.iter_pb98py_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                afuel,
             )
 
         # ==========================================================================

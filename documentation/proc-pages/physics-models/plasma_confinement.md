@@ -416,6 +416,19 @@ $$
 
 -------------------------
 
+### 31: ITERH-PB98P(y) H mode scaling
+
+Is selected with `i_confinement_time = 31`
+
+$$
+\tau_{\text{E}} =  0.0615 M^{0.2} I^{0.9} R^{2.0} \kappa_{\text{IPB}}^{0.75} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.1} P^{-0.66} \epsilon^{0.66}
+$$
+
+!!! warning
+    The origin, name and values of this scaling cannot be confirmed.
+
+-------------------------
+
 ### 32: IPB98(y) ELMy H-mode scaling
 
 Is selected with `i_confinement_time = 32`

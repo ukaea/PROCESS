@@ -1189,6 +1189,50 @@ def kaye_confinement_time(
     )
 
 
+def iter_pb98py_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    powerht: float,
+    rmajor: float,
+    kappa: float,
+    aspect: float,
+    afuel: float,
+) -> float:
+    """
+    Calculate the ITERH-PB98P(y) ELMy H-mode scaling confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    powerht (float): Net Heating power [MW]
+    rmajor (float): Plasma major radius [m]
+    kappa (float): Plasma elongation
+    aspect (float): Aspect ratio
+    afuel (float): Fuel atomic mass number
+
+    Returns:
+    float: ITERH-PB98P(y) ELMy H-mode confinement time [s]
+
+    Notes:
+
+    References:
+
+    """
+    return (
+        0.0615e0
+        * pcur**0.9e0
+        * bt**0.1e0
+        * dnla19**0.4e0
+        * powerht ** (-0.66e0)
+        * rmajor**2
+        * kappa**0.75e0
+        * aspect ** (-0.66e0)
+        * afuel**0.2e0
+    )
+
+
 def iter_ipb98y_confinement_time(
     pcur: float,
     bt: float,
