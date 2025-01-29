@@ -5409,7 +5409,7 @@ class Physics:
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
-                physics_variables.plasma_volume,
+                physics_variables.vol_plasma,
                 physics_variables.xarea,
                 physics_variables.zeff,
             )

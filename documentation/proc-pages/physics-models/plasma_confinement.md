@@ -667,17 +667,17 @@ derived directly from the energy confinement scaling law.
 
 `i_rad_loss = 0` -- Total power lost is scaling power plus radiation:
 
-`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
 
 
 `i_rad_loss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
   
-`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
 
 `i_rad_loss = 2` -- Total power lost is scaling power only, with no additional 
 allowance for radiation. This is not recommended for power plant models.
 
-`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/plasma_volume`
+`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
 
