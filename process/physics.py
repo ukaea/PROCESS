@@ -5448,7 +5448,7 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "Volume measure of elongation",
+                "ITER Physics Basis definition of elongation",
                 "(kappa_ipb)",
                 physics_variables.kappa_ipb,
                 "OP ",
