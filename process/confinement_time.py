@@ -1101,6 +1101,49 @@ def iter_96p_confinement_time(
     )
 
 
+def valovic_elmy_confinement_time(
+    pcur: float,
+    bt: float,
+    dnla19: float,
+    afuel: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Valovic modified ELMy-H mode scaling confinement time
+
+    Parameters:
+    hfact (float): H-factor
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    afuel (float): Fuel atomic mass number
+    rmajor (float): Plasma major radius [m]
+    rminor (float): Plasma minor radius [m]
+    kappa (float): Plasma elongation
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Valovic modified ELMy-H mode confinement time [s]
+
+    Notes:
+
+    References:
+    """
+    return (0.067e0
+        * pcur**0.9e0
+        * bt**0.17e0
+        * dnla19**0.45e0
+        * afuel**0.05e0
+        * rmajor**1.316e0
+        * rminor**0.79e0
+        * kappa**0.56e0
+        * powerht ** (-0.68e0)
+    )
+
+
 def iter_ipb98y_confinement_time(
     pcur: float,
     bt: float,

@@ -7233,18 +7233,21 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 29:  # Valovic modified ELMy-H mode scaling
+        # Valovic modified ELMy-H mode scaling
+        # WARNING: No reference found for this scaling. This may not be its real name
+        elif i_confinement_time == 29:
             t_electron_confinement = (
-                hfact
-                * 0.067e0
-                * pcur**0.9e0
-                * bt**0.17e0
-                * dnla19**0.45e0
-                * m_fuel_amu**0.05e0
-                * rmajor**1.316e0
-                * rminor**0.79e0
-                * kappa**0.56e0
-                * powerht ** (-0.68e0)
+            hfact
+            * confinement.valovic_elmy_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                afuel,
+                rmajor,
+                rminor,
+                kappa,
+                powerht,
+            )
             )
 
         # ==========================================================================
