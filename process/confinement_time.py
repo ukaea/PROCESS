@@ -671,52 +671,6 @@ def lackner_gottardi_confinement_time(
     )
 
 
-def iter_93h_confinement_time(
-    pcur: float,
-    bt: float,
-    powerht: float,
-    afuel: float,
-    rmajor: float,
-    dnla20: float,
-    aspect: float,
-    kappa: float,
-) -> float:
-    """
-    Calculate the ITER-93H scaling ELM-free confinement time
-
-    Parameters:
-    pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
-    powerht (float): Net Heating power [MW]
-    afuel (float): Fuel atomic mass number
-    rmajor (float): Plasma major radius [m]
-    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    aspect (float): Aspect ratio
-    kappa (float): Plasma elongation
-
-    Returns:
-    float: ITER-93H confinement time [s]
-
-    Notes:
-
-    References:
-        - K. Thomsen et al., “ITER H mode confinement database update,”
-        vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
-
-    """
-    return (
-        0.036e0
-        * pcur**1.06e0
-        * bt**0.32e0
-        * powerht ** (-0.67e0)
-        * afuel**0.41e0
-        * rmajor**1.79e0
-        * dnla20**0.17e0
-        * aspect**0.11e0
-        * kappa**0.66e0
-    )
-
-
 def neo_kaye_confinement_time(
     pcur: float,
     rmajor: float,
@@ -957,6 +911,52 @@ def lackner_gottardi_stellarator_confinement_time(
     )
 
 
+def iter_93h_confinement_time(
+    pcur: float,
+    bt: float,
+    powerht: float,
+    afuel: float,
+    rmajor: float,
+    dnla20: float,
+    aspect: float,
+    kappa: float,
+) -> float:
+    """
+    Calculate the ITER-93H scaling ELM-free confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Net Heating power [MW]
+    afuel (float): Fuel atomic mass number
+    rmajor (float): Plasma major radius [m]
+    dnla20 (float): Line averaged electron density in units of 10**20 m**-3
+    aspect (float): Aspect ratio
+    kappa (float): Plasma elongation
+
+    Returns:
+    float: ITER-93H confinement time [s]
+
+    Notes:
+
+    References:
+        - K. Thomsen et al., “ITER H mode confinement database update,”
+        vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
+
+    """
+    return (
+        0.036e0
+        * pcur**1.06e0
+        * bt**0.32e0
+        * powerht ** (-0.67e0)
+        * afuel**0.41e0
+        * rmajor**1.79e0
+        * dnla20**0.17e0
+        * aspect**0.11e0
+        * kappa**0.66e0
+    )
+
+
 def iter_h97p_confinement_time(
     pcur: float,
     bt: float,
@@ -1038,7 +1038,7 @@ def iter_h97p_elmy_confinement_time(
           doi: https://doi.org/10.1088/0741-3335/39/12b/009.
 
         - International Atomic Energy Agency, Vienna (Austria), "Technical basis for the ITER final design report, cost review and safety analysis (FDR)",
-          no. no.16. Dec. 1998.
+        no.16. Dec. 1998.
     """
     return (
         0.029e0
