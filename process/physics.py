@@ -7236,9 +7236,7 @@ class Physics:
         # Valovic modified ELMy-H mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif i_confinement_time == 29:
-            t_electron_confinement = (
-            hfact
-            * confinement.valovic_elmy_confinement_time(
+            t_electron_confinement = hfact * confinement.valovic_elmy_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7248,22 +7246,21 @@ class Physics:
                 kappa,
                 powerht,
             )
-            )
 
         # ==========================================================================
 
-        elif i_confinement_time == 30:  # Kaye PPPL Workshop April 1998 L-mode scaling
-            t_electron_confinement = (
-                hfact
-                * 0.021e0
-                * pcur**0.81e0
-                * bt**0.14e0
-                * kappa**0.7e0
-                * rmajor**2.01e0
-                * aspect ** (-0.18e0)
-                * dnla19**0.47e0
-                * m_fuel_amu**0.25e0
-                * powerht ** (-0.73e0)
+        # Kaye PPPL Workshop April 1998 L-mode scaling
+        # WARNING: No reference found for this scaling. This may not be its real name
+        elif i_confinement_time == 30:
+            t_electron_confinement = hfact * confinement.kaye_confinement_time(
+                pcur,
+                bt,
+                kappa,
+                rmajor,
+                aspect,
+                dnla19,
+                afuel,
+                powerht,
             )
 
         # ==========================================================================

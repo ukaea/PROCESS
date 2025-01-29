@@ -403,6 +403,19 @@ $$
 
 -------------------------
 
+### 30: Kaye modified L mode scaling
+
+Is selected with `i_confinement_time = 30`
+
+$$
+\tau_{\text{E}} =  0.021 M_{\text{i}}^{0.25} I^{0.81} R^{2.01} \kappa^{0.7} \overline{n}_{19}^{0.47} B_{\text{T}}^{0.14} P^{-0.73} \epsilon^{0.18}
+$$
+
+!!! warning
+    The origin, name and values of this scaling cannot be confirmed.
+
+-------------------------
+
 ### 32: IPB98(y) ELMy H-mode scaling
 
 Is selected with `i_confinement_time = 32`

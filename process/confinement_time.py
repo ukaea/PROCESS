@@ -1132,7 +1132,8 @@ def valovic_elmy_confinement_time(
 
     References:
     """
-    return (0.067e0
+    return (
+        0.067e0
         * pcur**0.9e0
         * bt**0.17e0
         * dnla19**0.45e0
@@ -1141,6 +1142,50 @@ def valovic_elmy_confinement_time(
         * rminor**0.79e0
         * kappa**0.56e0
         * powerht ** (-0.68e0)
+    )
+
+
+def kaye_confinement_time(
+    pcur: float,
+    bt: float,
+    kappa: float,
+    rmajor: float,
+    aspect: float,
+    dnla19: float,
+    afuel: float,
+    powerht: float,
+) -> float:
+    """
+    Calculate the Kaye PPPL Workshop April 1998 L-mode scaling confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    kappa (float): Plasma elongation
+    rmajor (float): Plasma major radius [m]
+    aspect (float): Aspect ratio
+    dnla19 (float): Line averaged electron density in units of 10**19 m**-3
+    afuel (float): Fuel atomic mass number
+    powerht (float): Net Heating power [MW]
+
+    Returns:
+    float: Kaye PPPL Workshop confinement time [s]
+
+    Notes:
+
+    References:
+        - Kaye PPPL Workshop April 1998
+    """
+    return (
+        0.021e0
+        * pcur**0.81e0
+        * bt**0.14e0
+        * kappa**0.7e0
+        * rmajor**2.01e0
+        * aspect ** (-0.18e0)
+        * dnla19**0.47e0
+        * afuel**0.25e0
+        * powerht ** (-0.73e0)
     )
 
 
