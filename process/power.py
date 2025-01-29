@@ -1601,7 +1601,9 @@ class Power:
                 physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
-            total = physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw
+            total = (
+                physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw
+            )
         elif physics_variables.iradloss == 2:
             po.ocmmnt(
                 self.outfile,
