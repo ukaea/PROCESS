@@ -74,16 +74,18 @@ def plot_full_sankey(
     palpfwmw = alpha_power_total * (
         1 - f_alpha_plasma
     )  # Alpha particles hitting first wall (MW)
-    pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
+    p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(
+        -1
+    )  # Total radiation Power (MW)
 
     # Used in [RADIATION]
-    praddiv = pradmw * m_file.data["fdiv"].get_scan(
+    praddiv = p_plasma_rad_mw * m_file.data["fdiv"].get_scan(
         -1
     )  # Radiation deposited on the divertor (MW)
-    pradhcd = pradmw * m_file.data["fhcd"].get_scan(
+    pradhcd = p_plasma_rad_mw * m_file.data["fhcd"].get_scan(
         -1
     )  # Radiation deposited on HCD (MW)
-    pradfw = pradmw - praddiv - pradhcd  # Radiation deposited in the FW (MW)
+    pradfw = p_plasma_rad_mw - praddiv - pradhcd  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
     htpmw_div = m_file.data["htpmw_div"].get_scan(-1)  # Divertor coolant pumping power
@@ -191,7 +193,7 @@ def plot_full_sankey(
         # --------------------------------- CHARGED PARTICLES - 2 ---------------------------------
 
         # Charge P.+Ohmic, Alpha+Injected, -Divertor, -1st Wall, -Photons
-        chargedp = [pcharohmmw, palpinjmw, -pdivt, -palpfwmw, -pradmw]
+        chargedp = [pcharohmmw, palpinjmw, -pdivt, -palpfwmw, -p_plasma_rad_mw]
         sankey.add(
             flows=chargedp,
             # down(in), down(in), up(out), up(out), right(out)
@@ -224,7 +226,7 @@ def plot_full_sankey(
         # ------------------------------------- RADIATION - 3 -------------------------------------
 
         # Photons, -1st Wall, -Divertor, -H&CD
-        radiation = [pradmw, -pradfw, -praddiv, -pradhcd]
+        radiation = [p_plasma_rad_mw, -pradfw, -praddiv, -pradhcd]
         sankey.add(
             flows=radiation,
             # right(in), up(out), up(out), up(out)
@@ -485,7 +487,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # Total Power in plasma (MW)
 
     # Used in [DEPOSITION]
-    pradmw = m_file.data["pradmw"].get_scan(-1)  # Total radiation Power (MW)
+    p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(
+        -1
+    )  # Total radiation Power (MW)
     fdiv = m_file.data["fdiv"].get_scan(-1)  # Area fraction taken up by divertor
     fdiv_2 = m_file.data["2*fdiv"].get_scan(
         -1
@@ -494,12 +498,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         fdiv_2 > 0
     ):  # Takes into account old MFILE representation of double null divertor
         fdiv = fdiv_2
-    praddiv = pradmw * fdiv  # Radiation deposited on the divertor (MW)
+    praddiv = p_plasma_rad_mw * fdiv  # Radiation deposited on the divertor (MW)
     fhcd = m_file.data["fhcd"].get_scan(
         -1
     )  # Area fraction covered by HCD and diagnostics
-    pradhcd = pradmw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
-    pradfw = pradmw - praddiv - pradhcd  # Radiation deposited in the blanket (MW)
+    pradhcd = p_plasma_rad_mw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
+    pradfw = (
+        p_plasma_rad_mw - praddiv - pradhcd
+    )  # Radiation deposited in the blanket (MW)
     pdivt = m_file.data["pdivt"].get_scan(
         -1
     )  # power to conducted to the divertor region (MW)

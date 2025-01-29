@@ -470,8 +470,8 @@ density and temperature profiles\footnote{H. Lux, R. Kemp, D.J. Ward, M.
   \textbar{} Des. \textbf{101}, 42-51 (2015)}
 
 The impurity number density fractions relative to the electron density
-are set using input array \texttt{fimp(1,...,nimp)}, where
-\texttt{nimp\ =\ 14} is the number of impurity species in the radiation
+are set using input array \texttt{fimp(1,...,n_impurities)}, where
+\texttt{n_impurities\ =\ 14} is the number of impurity species in the radiation
 model. The available impurities are as follows:
 
 \begin{longtable}[]{@{}cl@{}}
@@ -500,7 +500,7 @@ As stated above, the number density fractions for hydrogen (all
 isotopes) and helium need not be set, as they are calculated by the code
 to ensure that plasma quasi-neutrality is maintained, and taking into
 account the fuel ratios \texttt{f_deuterium}, \texttt{f_tritium} and
-\texttt{f_helium3}, and the alpha particle fraction \texttt{ralpne} which may
+\texttt{f_helium3}, and the alpha particle fraction \texttt{f_nd_alpha_electron} which may
 be input by the user.
 
 The impurity fraction of one of the elements listed in array
@@ -509,7 +509,7 @@ The impurity fraction of one of the elements listed in array
 The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
   \textbf{41} (2001) 665} \footnote{Fidone, Giruzzi and Granata, Nuclear
   Fusion \textbf{41} (2001) 1755} is assumed to originate from the
-plasma core. The wall reflection factor \texttt{ssync} may be set by the
+plasma core. The wall reflection factor \texttt{f_sync_reflect} may be set by the
 user.
 
 By changing the input parameter \texttt{coreradius}, the user may set
@@ -994,7 +994,7 @@ is derived directly from the energy confinement scaling law.
 \texttt{iradloss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
-\texttt{pscaling\ +\ pradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
+\texttt{pscaling\ +\ pden_plasma_rad_mw\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
 \texttt{iradloss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only

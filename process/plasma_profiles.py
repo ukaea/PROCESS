@@ -170,7 +170,7 @@ class PlasmaProfile:
         physics_variables.ne0 = physics_variables.dene * (
             1.0 + physics_variables.alphan
         )
-        physics_variables.ni0 = physics_variables.dnitot * (
+        physics_variables.ni0 = physics_variables.nd_ions_total * (
             1.0 + physics_variables.alphan
         )
 

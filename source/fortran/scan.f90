@@ -195,8 +195,8 @@ contains
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
-    use physics_variables, only: q, aspect, pradmw, dene, fusion_power, btot, tesep, &
-      pdivt, ralpne, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
+    use physics_variables, only: q, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
+      pdivt, f_nd_alpha_electron, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
       beta, beta_max, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
@@ -268,14 +268,14 @@ contains
     outvar(50,iscan) = pdivt/rmajor
     !outvar(51,iscan) = fimpvar #OBSOLETE
     outvar(51,iscan) = 0.0d0
-    outvar(52,iscan) = pradmw
+    outvar(52,iscan) = p_plasma_rad_mw
     outvar(53,iscan) = tpeak
     outvar(54,iscan) = fcutfsu
     outvar(55,iscan) = (wwp1+wwp2)*dr_tf_wp
     outvar(56,iscan) = acond
     outvar(57,iscan) = tfareain/n_tf
     outvar(58,iscan) = taulimit
-    outvar(66,iscan) = ralpne
+    outvar(66,iscan) = f_nd_alpha_electron
     outvar(69,iscan) = fimp(1)
     outvar(70,iscan) = fimp(2)
     outvar(71,iscan) = fimp(3)

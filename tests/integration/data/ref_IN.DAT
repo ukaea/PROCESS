@@ -89,7 +89,7 @@ ixc = 54 * ftmargtf
 ixc = 106 * ftmargoh
 ixc = 122 * oh_steel_frac
 ixc = 123 * foh_stress
-ixc = 109 * ralpne
+ixc = 109 * f_nd_alpha_electron
 ixc = 110 * ftaulimit
 
 *isweep = 3
@@ -285,7 +285,7 @@ q        = 3.247 * Safety factor 'near' plasma edge (iteration variable 18);
 q0       = 1.0 * Safety factor on axis
 rmajor   = 9.072 * Plasma major radius (m) (iteration variable 3)
 i_single_null    = 1 * Switch for single null / double null plasma;
-ssync    = 0.6 * Synchrotron wall reflectivity factor
+f_sync_reflect    = 0.6 * Synchrotron wall reflectivity factor
 te       = 13.07 * Volume averaged electron temperature (kev)
 *zfear    = 1 * High-z impurity switch; 0=iron; 1=argon
 plasma_res_factor = 0.66 * plasma resistivity pre-factor
@@ -372,5 +372,5 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      ftmargoh       =  1.0000E+00
                      oh_steel_frac  =  5.7875E-01
                      foh_stress     =  1.0000E+00
-                     ralpne         =  6.8940E-02
+                     f_nd_alpha_electron         =  6.8940E-02
                      ftaulimit      =  1.0000E+00

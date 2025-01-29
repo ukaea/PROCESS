@@ -221,11 +221,11 @@ class Stellarator:
                 physics_variables.taueff,
                 physics_variables.powerht,
             ) = self.physics.pcond(
-                physics_variables.afuel,
+                physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
-                physics_variables.dnitot,
+                physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
@@ -894,7 +894,7 @@ class Stellarator:
 
         #  Sound speed of particles (m/s)
 
-        c_s = np.sqrt(e / (physics_variables.afuel * constants.umass))
+        c_s = np.sqrt(e / (physics_variables.m_fuel_amu * constants.umass))
 
         #  Island size (m)
 
@@ -1239,12 +1239,16 @@ class Stellarator:
                 )
 
                 fwbs_variables.pradloss = (
-                    physics_variables.pradmw * fwbs_variables.fhole
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
                 )
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
-                fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+                fwbs_variables.praddiv = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                )
+                fwbs_variables.pradhcd = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                )
                 fwbs_variables.pradfw = (
-                    physics_variables.pradmw
+                    physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
                     - fwbs_variables.pradhcd
@@ -1359,22 +1363,26 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+                fwbs_variables.praddiv = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                )
 
                 #  Radiation power incident on HCD apparatus (MW)
 
-                fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+                fwbs_variables.pradhcd = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
 
                 fwbs_variables.pradloss = (
-                    physics_variables.pradmw * fwbs_variables.fhole
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
                 )
 
                 #  Radiation power incident on first wall (MW)
 
                 fwbs_variables.pradfw = (
-                    physics_variables.pradmw
+                    physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
                     - fwbs_variables.pradhcd
@@ -4097,7 +4105,7 @@ class Stellarator:
             * constants.electron_charge
             * (
                 physics_variables.dene * physics_variables.ten
-                + physics_variables.dnitot * physics_variables.tin
+                + physics_variables.nd_ions_total * physics_variables.tin
             )
             / physics_variables.btot**2
         )
@@ -4113,7 +4121,7 @@ class Stellarator:
         physics_module.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
-            * physics_variables.aion
+            * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
             / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
         ) / (
@@ -4176,7 +4184,7 @@ class Stellarator:
                 physics_variables.bt,
                 current_drive_variables.beam_current,
                 physics_variables.dene,
-                physics_variables.deni,
+                physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.beam_energy,
                 physics_variables.f_deuterium,
@@ -4243,8 +4251,8 @@ class Stellarator:
             physics_variables.bp,
             physics_variables.bt,
             physics_variables.dene,
-            physics_variables.deni,
-            physics_variables.dnitot,
+            physics_variables.nd_fuel_ions,
+            physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.alpha_power_density_total,
@@ -4292,35 +4300,35 @@ class Stellarator:
         )
 
         #  Calculate radiation power
-        radpwr_data = physics_funcs.radpwr(self.plasma_profile)
-        physics_variables.psyncpv = radpwr_data.psyncpv
+        radpwr_data = physics_funcs.calculate_radiation_powers(self.plasma_profile)
+        physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pcoreradpv = radpwr_data.pcoreradpv
         physics_variables.pedgeradpv = radpwr_data.pedgeradpv
-        physics_variables.pradpv = radpwr_data.pradpv
+        physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
         physics_variables.pcoreradpv = max(physics_variables.pcoreradpv, 0.0e0)
         physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
 
-        physics_variables.pinnerzoneradmw = (
+        physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pcoreradpv * physics_variables.vol_plasma
         )  # Should probably be vol_core
-        physics_variables.pouterzoneradmw = (
+        physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
         )
 
-        physics_variables.pradmw = (
-            physics_variables.pradpv * physics_variables.vol_plasma
+        physics_variables.p_plasma_rad_mw = (
+            physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
 
         #  Heating power to plasma (= Psol in divertor model)
         #  Ohmic power is zero in a stellarator
-        #  physics_variables.pradmw here is core + edge (no SOL)
+        #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.pradpv * physics_variables.vol_plasma
+            - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
         powht = max(
             0.00001e0, powht
@@ -4331,21 +4339,23 @@ class Stellarator:
                 powht + current_drive_variables.pinjmw
             )  # if not ignited add the auxiliary power
 
-        # Here the implementation sometimes leaves the accessible regime when pradmw> powht which is unphysical and
+        # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
         # is not taken care of by the rad module. We restrict the radiation power here by the heating power:
-        physics_variables.pradmw = max(0.0e0, physics_variables.pradmw)
+        physics_variables.p_plasma_rad_mw = max(
+            0.0e0, physics_variables.p_plasma_rad_mw
+        )
 
         #  Power to divertor, = (1-stellarator_variables.f_rad)*Psol
 
-        # The SOL radiation needs to be smaller than the physics_variables.pradmw
+        # The SOL radiation needs to be smaller than the physics_variables.p_plasma_rad_mw
         physics_variables.psolradmw = stellarator_variables.f_rad * powht
         physics_variables.pdivt = powht - physics_variables.psolradmw
 
         # Add SOL Radiation to total
-        physics_variables.pradmw = (
-            physics_variables.pradmw + physics_variables.psolradmw
+        physics_variables.p_plasma_rad_mw = (
+            physics_variables.p_plasma_rad_mw + physics_variables.psolradmw
         )
-        # pradpv = physics_variables.pradmw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pradpv, probably shouldn't be defined like that as the core does not lose SOL power.
+        # pden_plasma_rad_mw = physics_variables.p_plasma_rad_mw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pden_plasma_rad_mw, probably shouldn't be defined like that as the core does not lose SOL power.
 
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
@@ -4360,35 +4370,35 @@ class Stellarator:
 
         # Nominal mean photon wall load
         if physics_variables.iwalld == 1:
-            physics_variables.photon_wall = (
+            physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
-                * physics_variables.pradmw
+                * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
-                physics_variables.photon_wall = (
+                physics_variables.pflux_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.pradmw
+                    * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
                 )
             else:
-                physics_variables.photon_wall = (
+                physics_variables.pflux_fw_rad_mw = (
                     (
                         1.0e0
                         - fwbs_variables.fhole
                         - fwbs_variables.fhcd
                         - fwbs_variables.fdiv
                     )
-                    * physics_variables.pradmw
+                    * physics_variables.p_plasma_rad_mw
                     / build_variables.fwarea
                 )
 
-        constraint_variables.peakradwallload = (
-            physics_variables.photon_wall * constraint_variables.peakfactrad
+        constraint_variables.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
-        physics_variables.rad_fraction_total = physics_variables.pradmw / (
+        physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
@@ -4408,11 +4418,11 @@ class Stellarator:
             physics_variables.taueff,
             physics_variables.powerht,
         ) = self.physics.pcond(
-            physics_variables.afuel,
+            physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
             physics_variables.bt,
-            physics_variables.dnitot,
+            physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.eps,
@@ -4464,12 +4474,12 @@ class Stellarator:
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
-            physics_variables.deni,
+            physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.dnalp,
+            physics_variables.nd_alphas,
             physics_variables.taueff,
             physics_variables.vol_plasma,
         )
@@ -4748,14 +4758,14 @@ class Stellarator:
             * impurity_radiation_module.coreradius
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.afuel * constants.proton_mass * 1.0e6
+            dndt_neo_fuel * physics_variables.m_fuel_amu * constants.proton_mass * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
             * dndt_neo_e
             * physics_variables.a_plasma_surface
             * impurity_radiation_module.coreradius
-            * physics_variables.afuel
+            * physics_variables.m_fuel_amu
             * constants.proton_mass
             * 1.0e6
         )  # kg
@@ -5155,7 +5165,7 @@ class Neoclassics:
             * (1 - rho**2) ** physics_variables.alphan
         )
         densa = (
-            physics_variables.dnalp
+            physics_variables.nd_alphas
             * (1 + physics_variables.alphan)
             * (1 - rho**2) ** physics_variables.alphan
         )
@@ -5236,7 +5246,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.dnalp
+            * physics_variables.nd_alphas
             * (1 + physics_variables.alphan)
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
@@ -5363,9 +5373,9 @@ class Neoclassics:
         )
         density = np.array([
             physics_variables.dene,
-            physics_variables.deni * physics_variables.f_deuterium,
-            physics_variables.deni * (1 - physics_variables.f_deuterium),
-            physics_variables.dnalp,
+            physics_variables.nd_fuel_ions * physics_variables.f_deuterium,
+            physics_variables.nd_fuel_ions * (1 - physics_variables.f_deuterium),
+            physics_variables.nd_alphas,
         ])
 
         mass = np.array([

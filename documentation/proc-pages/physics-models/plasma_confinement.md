@@ -78,7 +78,7 @@ derived directly from the energy confinement scaling law.
 
 `iradloss = 0` -- Total power lost is scaling power plus radiation:
 
-`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
+`pscaling + pden_plasma_rad_mw = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
 
 
 `iradloss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
