@@ -1,7 +1,7 @@
+import datetime
 import getpass
 import socket
 import subprocess
-from datetime import datetime
 from pathlib import Path
 from warnings import warn
 
@@ -95,8 +95,10 @@ def run_summary():
         fortran.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
         fortran.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
-        date_string = datetime.now().strftime("%d/%m/%Y")
-        time_string = datetime.now().strftime("%H:%M")
+        date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
+            "%d/%m/%Y %Z"
+        )
+        time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
 
         fortran.process_output.ocmmnt(outfile, f"Date : {date_string}")
         fortran.process_output.ocmmnt(outfile, f"Time : {time_string}")
