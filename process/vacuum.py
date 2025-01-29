@@ -44,7 +44,7 @@ class Vacuum:
         #  2 nuclei * nucleus-pairs/sec * mass/nucleus
 
         # MDK Check this!!
-        gasld = 2.0e0 * pv.qfuel * pv.afuel * constants.umass
+        gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
 
         self.vacuum_model = f2py_compatible_to_string(vacv.vacuum_model)
 

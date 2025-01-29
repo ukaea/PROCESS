@@ -70,8 +70,8 @@ OBS_VARS = {
     "strain_wp": "str_wp",
     "fstrain_wp": "fstr_wp",
     "rad_fraction": "rad_fraction_total",
-    "pcoreradmw": "pinnerzoneradmw",
-    "pedgeradmw": "pouterzoneradmw",
+    "pcoreradmw": "p_plasma_inner_rad_mw",
+    "pedgeradmw": "p_plasma_outer_rad_mw",
     "rad_fraction_core": "rad_fraction_LCFS",
     "thshield": ["thshield_ib", "thshield_ob", "thshield_vb"],
     "igeom": None,
@@ -153,6 +153,12 @@ OBS_VARS = {
     "cwrmax": "f_r_conducting_wall",
     "ishape": "i_plasma_geometry",
     "iscrp": "i_plasma_wall_gap",
+    "peakfactrad": "f_fw_rad_max",
+    "nimp": "n_impurities",
+    "ssync": "f_sync_reflect",
+    "rnbeam": "f_nd_beam_electron",
+    "ralpne": "f_nd_alpha_electron",
+    "protium": "f_nd_protium_electrons",
 }
 
 OBS_VARS_HELP = {

@@ -342,12 +342,12 @@ contains
    subroutine constraint_err_001()
     !! Error in: Relationship between beta, temperature (keV) and density (consistency equation)
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
     write(*,*) 'beta_fast_alpha = ', beta_fast_alpha
     write(*,*) 'beta_beam = ', beta_beam
     write(*,*) 'dene = ', dene
     write(*,*) 'ten = ', ten
-    write(*,*) 'dnitot = ', dnitot
+    write(*,*) 'nd_ions_total = ', nd_ions_total
     write(*,*) 'tin = ', tin
     write(*,*) 'btot = ',btot
     write(*,*) 'beta = ', beta
@@ -408,7 +408,7 @@ contains
     !! - \( T_i \) -- density weighted average ion temperature [keV]
     !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
 
-    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, dnitot, tin, btot, beta
+    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
     use constants, only: electron_charge,rmu0
 
     implicit none
@@ -423,7 +423,7 @@ contains
     !! constraint derived type
 
       tmp_cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
-        2.0D3*rmu0*electron_charge * (dene*ten + dnitot*tin)/btot**2 )/beta
+        2.0D3*rmu0*electron_charge * (dene*ten + nd_ions_total*tin)/btot**2 )/beta
       tmp_con = beta * (1.0D0 - tmp_cc)
       tmp_err = beta * tmp_cc
       tmp_symbol = '='
@@ -450,7 +450,7 @@ contains
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
     !! ptrepv : input real : electron transport power per volume (MW/m3)
     !! ptripv : input real :  ion transport power per volume (MW/m3)
-    !! pradpv : input real : total radiation power per volume (MW/m3)
+    !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
     !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
     !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pradpv, &
+    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -479,7 +479,7 @@ contains
     pscaling = ptrepv + ptripv
     ! Total power lost is scaling power plus radiation:
     if (iradloss == 0) then
-        pnumerator = pscaling + pradpv
+        pnumerator = pscaling + pden_plasma_rad_mw
     else if (iradloss == 1) then
         pnumerator = pscaling + pcoreradpv
     else
@@ -569,7 +569,7 @@ contains
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! ptrepv : input real : electron transport power per volume (MW/m3)
-      !! pradpv : input real : total radiation power per volume (MW/m3)
+      !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
@@ -577,7 +577,7 @@ contains
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
-                                 alpha_power_electron_density, piepv, vol_plasma, pradpv
+                                 alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -592,7 +592,7 @@ contains
       pscaling = ptrepv
 	   ! Total power lost is scaling power plus radiation:
       if (iradloss == 0) then
-         pnumerator = pscaling + pradpv
+         pnumerator = pscaling + pden_plasma_rad_mw
       else if (iradloss == 1) then
          pnumerator = pscaling + pcoreradpv
       else
@@ -712,8 +712,8 @@ contains
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
-      !! dnbeam : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: ignite, beam_density_out, dnbeam
+      !! nd_beam_ions : input real : hot beam ion density, variable (/m3)
+      use physics_variables, only: ignite, beam_density_out, nd_beam_ions
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -723,9 +723,9 @@ contains
 
 	   ! Do not assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - beam_density_out/dnbeam
-         tmp_con    = dnbeam * (1.0D0 - tmp_cc)
-         tmp_err    = dnbeam * tmp_cc
+         tmp_cc     = 1.0D0 - beam_density_out/nd_beam_ions
+         tmp_con    = nd_beam_ions * (1.0D0 - tmp_cc)
+         tmp_err    = nd_beam_ions * tmp_cc
          tmp_symbol = '='
          tmp_units  = '/m3'
       else
@@ -1034,8 +1034,8 @@ contains
       !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
       !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
       !! fradpwr : input real : f-value for core radiation power limit
-      !! pradpv : input real : total radiation power per volume (MW/m3)
-      use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pradpv
+      !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
+      use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pden_plasma_rad_mw
       use current_drive_variables, only: pinjmw
       use constraint_variables, only: fradpwr
       implicit none
@@ -1049,9 +1049,9 @@ contains
       !! Maximum possible power/vol_plasma that can be radiated (local)
 
       pradmaxpv = pinjmw/vol_plasma + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
-      tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pradpv
+      tmp_cc =  1.0D0 - fradpwr * pradmaxpv / pden_plasma_rad_mw
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
-      tmp_err = pradpv * tmp_cc
+      tmp_err = pden_plasma_rad_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW/m3'
 
@@ -2606,8 +2606,8 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fradwall : input real : f-value for upper limit on radiation wall load
       !! maxradwallload : input real : Maximum permitted radiation wall load (MW/m^2)
-      !! peakradwallload : input real : Peak radiation wall load (MW/m^2)
-      use constraint_variables, only: fradwall, maxradwallload, peakradwallload
+      !! pflux_fw_rad_max_mw : input real : Peak radiation wall load (MW/m^2)
+      use constraint_variables, only: fradwall, maxradwallload, pflux_fw_rad_max_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2615,7 +2615,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fradwall * maxradwallload / peakradwallload
+      tmp_cc = 1.0d0 - fradwall * maxradwallload / pflux_fw_rad_max_mw
       tmp_con = maxradwallload
       tmp_err =  maxradwallload * tmp_cc
       tmp_symbol = '<'

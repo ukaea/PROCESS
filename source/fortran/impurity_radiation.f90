@@ -30,8 +30,8 @@ module impurity_radiation_module
   !! (It is recommended to turn on
   !! constraint eqn.17 with iteration variable 28: fradpwr.)
 
-  integer, public, parameter :: nimp = 14
-  !! nimp /14/ FIX : number of ion species in impurity radiation model
+  integer, public, parameter :: n_impurities = 14
+  !! n_impurities /14/ FIX : number of ion species in impurity radiation model
 
   real(dp), public :: coreradius
   !! coreradius /0.6/ : normalised radius defining the 'core' region
@@ -39,13 +39,13 @@ module impurity_radiation_module
   real(dp), public :: coreradiationfraction
   !! coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power
 
-  !! fimp(nimp) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :
+  !! fimp(n_impurities) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :
   !!        impurity number density fractions relative to electron density
   !!
-  real(dp), public, dimension(nimp) :: fimp
+  real(dp), public, dimension(n_impurities) :: fimp
 
-  character*2, public, dimension(nimp) :: imp_label
-  !! imp_label(nimp) : impurity ion species names:<UL>
+  character*2, public, dimension(n_impurities) :: imp_label
+  !! imp_label(n_impurities) : impurity ion species names:<UL>
   !! <LI> ( 1)  Hydrogen  (fraction calculated by code)
   !! <LI> ( 2)  Helium
   !! <LI> ( 3)  Beryllium
@@ -89,17 +89,17 @@ module impurity_radiation_module
   ! Temp_keV, Lz_Wm3, Zav
   ! since these can no longer be allocatable
 
-  character*2, dimension(nimp) :: impurity_arr_Label
-  integer, dimension(nimp) :: impurity_arr_Z
-  real(dp), dimension(nimp) :: impurity_arr_amass
-  real(dp), dimension(nimp) :: impurity_arr_frac
-  integer, dimension(nimp) :: impurity_arr_len_tab
-  real(dp), dimension(nimp, all_array_hotfix_len) :: impurity_arr_Temp_keV
-  real(dp), dimension(nimp, all_array_hotfix_len) :: impurity_arr_Lz_Wm3
-  real(dp), dimension(nimp, all_array_hotfix_len) :: impurity_arr_Zav
+  character*2, dimension(n_impurities) :: impurity_arr_Label
+  integer, dimension(n_impurities) :: impurity_arr_Z
+  real(dp), dimension(n_impurities) :: impurity_arr_amass
+  real(dp), dimension(n_impurities) :: impurity_arr_frac
+  integer, dimension(n_impurities) :: impurity_arr_len_tab
+  real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Temp_keV
+  real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Lz_Wm3
+  real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Zav
 
 
-!   type(imp_dat),  dimension(nimp), save, public :: impurity_arr
+!   type(imp_dat),  dimension(n_impurities), save, public :: impurity_arr
 
   logical, public :: toolow
   !! Used for reporting error in function pimpden

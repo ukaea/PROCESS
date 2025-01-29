@@ -59,7 +59,7 @@ ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
 | Input   | Description                                               |
 |---------|-----------------------------------------------------------|
-| $\mathtt{abeam}$, $m_{\text{u,ion}}$   | Beam ion mass ($\text{amu}$)                                       |
+| $\mathtt{m_beam_amu}$, $m_{\text{u,ion}}$   | Beam ion mass ($\text{amu}$)                                       |
 | $\mathtt{alphan}$  | Density profile factor                                    |
 | $\mathtt{alphat}$  | Temperature profile factor                                |
 | $\mathtt{aspect}$, $A$  | Aspect ratio                                              |

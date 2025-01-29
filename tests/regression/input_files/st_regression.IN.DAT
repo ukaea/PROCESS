@@ -261,7 +261,7 @@ boundu(9) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ixc = 109
-ralpne = 0.2
+f_nd_alpha_electron = 0.2
 boundl(109) = 0.001
 boundu(109) = 1.0
 * DESCRIPTION:   Thermal alpha density / electron density
@@ -595,7 +595,7 @@ coreradiationfraction = 0.7
 * DESCRIPTION:   SoL radiation fraction (default = 0.8)
 * JUSTIFICATION: Not set, using default
 
-ssync = 0.6 
+f_sync_reflect = 0.6 
 * DESCRIPTION:   Plasma synchrotron radiation wall reflectivity factor
 * JUSTIFICATION: 
 
@@ -622,9 +622,9 @@ boundu(28) = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*protium =  
-* DESCRIPTION:   Seeded protium density / electron density (default = 0.0)
-* JUSTIFICATION: Not used, no protium seeding.
+*f_nd_protium_electrons =  
+* DESCRIPTION:   Seeded f_nd_protium_electrons density / electron density (default = 0.0)
+* JUSTIFICATION: Not used, no f_nd_protium_electrons seeding.
 
 *f_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
@@ -2628,7 +2628,7 @@ outlet_temp_liq = 873.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ First Wall Loads ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-peakfactrad = 1.0
+f_fw_rad_max = 1.0
 * DESCRIPTION:   Radiation wall load peacking factor
 * JUSTIFICATION: We consider an average wall load value as a limit
 
@@ -2667,7 +2667,7 @@ peakfactrad = 1.0
 icc = 67
 * DESCRIPTION:   Upper limit on radiation wall load
 * JUSTIFICATION: To avoid melting the first wall
-* VARIABLES:     peakradwallload calculated in-situ 
+* VARIABLES:     pflux_fw_rad_max_mw calculated in-situ 
 
 maxradwallload = 1.2
 * DESCRIPTION:   Peak radiation wall load (MW/m^2) 
@@ -2848,10 +2848,10 @@ feffcd = 1.0
 *icc = 7
 * DESCRIPTION:   Equation for hot ion beam density (NBI)
 * JUSTIFICATION: Turned off, not using NBI
-* VARIABLES:     ignite,dnbeam Rest calculated in-situ
+* VARIABLES:     ignite,nd_beam_ions Rest calculated in-situ
 
 *ixc = 7
-*rnbeam = 
+*f_nd_beam_electron = 
 *boundl(7) = 
 *boundu(7) =  
 * DESCRIPTION:   Hot beam density / ne

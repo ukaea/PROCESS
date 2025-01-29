@@ -72,15 +72,35 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mp|search_for=PROTON+MASS
   real(dp), parameter :: proton_mass = 1.67262192595D-27
 
+  ! Proton mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mpu
+  real(dp), parameter :: m_proton_amu = 1.0072764665789
+
+  ! Protium atomic mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=1
+  real(dp), parameter :: m_protium_amu = 1.00782503223
+
   ! Deuteron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?md|search_for=DEUTERON+MASS
   real(dp), parameter :: deuteron_mass = 3.3435837768D-27
 
+  ! Deuteron mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?mdu
+  real(dp), parameter :: m_deuteron_amu = 2.013553212544
+
   ! Triton mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mt|search_for=TRITON+MASS
   real(dp), parameter :: triton_mass = 5.0073567512D-27
+
+  ! Triton mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?art
+  real(dp), parameter :: m_triton_amu = 3.01550071597
 
   ! Neutron mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
@@ -92,10 +112,85 @@ module constants
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mal|search_for=alpha+mass
   real(dp), parameter :: alpha_mass = 6.6446573450D-27
 
+  ! Alpha particle mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?malu
+  real(dp), parameter :: m_alpha_amu = 4.001506179129
+
+  ! Average Helium atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=He
+  real(dp), parameter :: m_helium_amu =  4.002602
+
   ! Helion (3He) mass [kg]
   ! Reference: National Institute of Standards and Technology (NIST)
   !            https://physics.nist.gov/cgi-bin/cuu/Value?mh|search_for=HELION
   real(dp), parameter :: helion_mass = 5.0064127862D-27
+
+  ! Helion (3He) mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/cuu/Value?arh
+  real(dp), parameter :: m_helion_amu = 3.014932246932
+
+  ! Beryllium atom (4Be) mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Be
+  real(dp), parameter :: m_beryllium_amu =  9.0121831
+
+  ! Average Carbon atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=C
+  real(dp), parameter :: m_carbon_amu =  12.0096
+
+  ! Average Nitrogen atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=N
+  real(dp), parameter :: m_nitrogen_amu =  14.00643
+
+  ! Average Oxygen atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=O
+  real(dp), parameter :: m_oxygen_amu =  15.99903
+
+  ! Average Neon atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Ne
+  real(dp), parameter :: m_neon_amu =  20.1797
+
+  ! Average Silicon atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Si
+  real(dp), parameter :: m_silicon_amu =  28.084
+
+  ! Average Argon atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Ar
+  real(dp), parameter :: m_argon_amu =  39.948
+
+  ! Average Iron atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Fe
+  real(dp), parameter :: m_iron_amu =  55.845
+
+  ! Average Nickel atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Ni
+  real(dp), parameter :: m_nickel_amu =  58.6934
+
+  ! Average Krypton atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Kr
+  real(dp), parameter :: m_krypton_amu =  83.798
+
+  ! Average Xenon atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Xe
+  real(dp), parameter :: m_xenon_amu =  131.293
+
+  ! Average Tungsten atom mass [amu]
+  ! Reference: National Institute of Standards and Technology (NIST)
+  !            https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=W
+  real(dp), parameter :: m_tungsten_amu =  183.84
 
   ! Speed of light in vacuum (c) [m/s]
   ! Reference: National Institute of Standards and Technology (NIST)

@@ -633,18 +633,22 @@ class CCFE_HCPB:
         if physics_variables.idivrt == 2:
             # Double null configuration
             fwbs_variables.praddiv = (
-                physics_variables.pradmw * 2.0 * fwbs_variables.fdiv
+                physics_variables.p_plasma_rad_mw * 2.0 * fwbs_variables.fdiv
             )
         else:
             # single null configuration
-            fwbs_variables.praddiv = physics_variables.pradmw * fwbs_variables.fdiv
+            fwbs_variables.praddiv = (
+                physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+            )
 
         # Radiation power incident on HCD apparatus (MW)
-        fwbs_variables.pradhcd = physics_variables.pradmw * fwbs_variables.fhcd
+        fwbs_variables.pradhcd = physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
 
         # Radiation power incident on first wall (MW)
         fwbs_variables.pradfw = (
-            physics_variables.pradmw - fwbs_variables.praddiv - fwbs_variables.pradhcd
+            physics_variables.p_plasma_rad_mw
+            - fwbs_variables.praddiv
+            - fwbs_variables.pradhcd
         )
 
         # If we have chosen pressurised water as the blanket coolant, set the

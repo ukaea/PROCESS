@@ -1569,11 +1569,11 @@ class Power:
             po.ovarrf(
                 self.outfile,
                 "Total net radiation power (MW)",
-                "(pradmw)",
-                physics_variables.pradmw,
+                "(p_plasma_rad_mw)",
+                physics_variables.p_plasma_rad_mw,
                 "OP ",
             )
-            total = physics_variables.pscalingmw + physics_variables.pradmw
+            total = physics_variables.pscalingmw + physics_variables.p_plasma_rad_mw
             po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
         elif physics_variables.iradloss == 1:
             po.ocmmnt(
@@ -1591,17 +1591,19 @@ class Power:
                 self.outfile,
                 'Radiation power from inside "coreradius" (MW)',
                 "(pcoreradmw.)",
-                physics_variables.pinnerzoneradmw,
+                physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Total (MW)",
                 "",
-                physics_variables.pscalingmw + physics_variables.pinnerzoneradmw,
+                physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
-            total = physics_variables.pscalingmw + physics_variables.pinnerzoneradmw
+            total = (
+                physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw
+            )
         elif physics_variables.iradloss == 2:
             po.ocmmnt(
                 self.outfile,
