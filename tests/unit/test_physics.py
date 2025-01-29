@@ -2981,7 +2981,6 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     )
 
     (
-        kappaa,
         ptrepv,
         ptripv,
         t_electron_confinement,
@@ -3021,8 +3020,6 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     assert physics_variables.kappa_ipb == pytest.approx(
         confinementtimeparam.expected_kappaa_ipb
     )
-
-    assert kappaa == pytest.approx(confinementtimeparam.expected_kappaa)
 
     assert powerht == pytest.approx(confinementtimeparam.expected_powerht)
 

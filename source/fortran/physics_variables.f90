@@ -526,8 +526,6 @@ module physics_variables
   real(dp) :: kappa95
   !! plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)
 
-  real(dp) :: kappaa
-  !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
 
   real(dp) :: kappa_ipb
   !! Separatrix elongation calculated for IPB scalings
@@ -1011,7 +1009,7 @@ module physics_variables
     plasma_square = 0.0D0
     kappa = 1.792D0
     kappa95 = 1.6D0
-    kappaa = 0.0D0
+
     kappa_ipb = 0.d0
     ne0 = 0.0D0
     ni0 = 0.0D0

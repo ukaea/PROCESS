@@ -213,7 +213,6 @@ class Stellarator:
 
         for iisc, i in enumerate(istlaw):
             (
-                physics_variables.kappaa,
                 physics_variables.ptrepv,
                 physics_variables.ptripv,
                 physics_variables.t_electron_confinement,
@@ -4453,7 +4452,6 @@ class Stellarator:
         #  N.B. stellarator_variables.iotabar replaces tokamak physics_variables.q95 in argument list
 
         (
-            physics_variables.kappaa,
             physics_variables.ptrepv,
             physics_variables.ptripv,
             physics_variables.t_electron_confinement,

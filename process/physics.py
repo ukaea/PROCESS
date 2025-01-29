@@ -2248,7 +2248,6 @@ class Physics:
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
         (
-            physics_variables.kappaa,
             physics_variables.ptrepv,
             physics_variables.ptripv,
             physics_variables.t_electron_confinement,
@@ -3555,14 +3554,6 @@ class Physics:
                     physics_variables.kappa95,
                     "OP ",
                 )
-
-            po.ovarrf(
-                self.outfile,
-                "Elongation, area ratio calc.",
-                "(kappaa)",
-                physics_variables.kappaa,
-                "OP ",
-            )
 
             if physics_variables.i_plasma_geometry in [0, 2, 6, 8, 9, 10, 11]:
                 po.ovarrf(
@@ -5375,7 +5366,6 @@ class Physics:
         # Put the ITPA value first
         for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
             (
-                physics_variables.kappaa,
                 ptrez,
                 ptriz,
                 taueez,
@@ -5834,7 +5824,6 @@ class Physics:
         # Put the ITPA value first
         for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
             (
-                physics_variables.kappaa,
                 ptrez,
                 ptriz,
                 taueez,
@@ -6625,7 +6614,6 @@ class Physics:
         """
 
         (
-            physics_variables.kappaa,
             ptrez,
             ptriz,
             taueezz,
@@ -6709,13 +6697,11 @@ class Physics:
         pcoreradpv: float,
         rmajor: float,
         rminor: float,
-        _te: float,
         ten: float,
         tin: float,
         q: float,
         qstar: float,
         vol_plasma: float,
-        a_plasma_poloidal: float,
         zeff: float,
     ) -> tuple[float, float, float, float, float, float, float]:
         """
@@ -6742,7 +6728,6 @@ class Physics:
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
         :param rminor: Plasma minor radius (m)
-        :param _te: Average electron temperature (keV)
         :param ten: Density weighted average electron temperature (keV)
         :param tin: Density weighted average ion temperature (keV)
         :param vol_plasma: Plasma volume (m3)
@@ -6750,7 +6735,6 @@ class Physics:
         :param zeff: Plasma effective charge
 
         :return: Tuple containing:
-            - kappaa (float): Plasma elongation calculated using area ratio
             - ptrepv (float): Electron transport power (MW/m3)
             - ptripv (float): Ion transport power (MW/m3)
             - t_electron_confinement (float): Electron energy confinement time (s)
@@ -6813,9 +6797,6 @@ class Physics:
 
         # Plasma current in MA
         pcur = plasma_current / 1.0e6
-
-        # Separatrix kappa defined with X-section for general use
-        kappaa = a_plasma_poloidal / (np.pi * rminor * rminor)
 
         # Separatrix kappa defined with plasma volume for IPB scalings
         # Updated version of kappa used by the IPB98 scalings correction in:
@@ -7550,7 +7531,6 @@ class Physics:
         )
 
         return (
-            kappaa,
             ptrepv,
             ptripv,
             t_electron_confinement,
