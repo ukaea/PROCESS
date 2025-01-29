@@ -20,7 +20,7 @@ def neo_alcator_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
 
     """
     return 0.07e0 * dene20 * rminor * rmajor * rmajor * qstar
@@ -43,7 +43,7 @@ def mirnov_confinement_time(rminor: float, kappa95: float, pcur: float) -> float
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return 0.2e0 * rminor * np.sqrt(kappa95) * pcur
 
@@ -76,7 +76,7 @@ def merezhkin_muhkovatov_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return (
         3.5e-3
@@ -110,7 +110,7 @@ def shimomura_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return 0.045e0 * rmajor * rminor * bt * np.sqrt(kappa95) * np.sqrt(afuel)
 
@@ -148,7 +148,7 @@ def kaye_goldston_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-         ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return (
         0.055e0
@@ -161,7 +161,7 @@ def kaye_goldston_confinement_time(
     )
 
 
-def iter_89P_confinement_time(
+def iter_89p_confinement_time(
     pcur: float,
     rmajor: float,
     rminor: float,
@@ -193,7 +193,7 @@ def iter_89P_confinement_time(
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-          ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+          "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return (
         0.048e0
@@ -335,7 +335,7 @@ def goldston_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-        ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+        "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
 
     """
     return (
@@ -381,11 +381,11 @@ def t10_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-            ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+            "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
     denfac = min(1.0e0, denfac)
-    t_electron_confinement = (
+    return (
         0.095e0
         * rmajor
         * rminor
@@ -395,7 +395,6 @@ def t10_confinement_time(
         / powerht**0.4e0
         * (zeff**2 * pcur**4 / (rmajor * rminor * qstar**3 * kappa95**1.5e0)) ** 0.08e0
     )
-    return t_electron_confinement
 
 
 def jaeri_confinement_time(
@@ -432,7 +431,7 @@ def jaeri_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-          ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+          "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     gjaeri = (
         zeff**0.4e0
@@ -485,7 +484,7 @@ def kaye_big_confinement_time(
 
     References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
-            ‘ITER physics design guidelines: 1989’, no. No. 10. Feb. 1990.
+            "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
     return (
         0.105e0
@@ -702,7 +701,7 @@ def iter_93h_confinement_time(
 
     References:
         - K. Thomsen et al., “ITER H mode confinement database update,”
-        vol. 34, no. 1, pp. 131–167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
+        vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
 
     """
     return (
@@ -829,7 +828,7 @@ def iter_h90_p_amended_confinement_time(
 
         References:
             - J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,”
-            Nuclear Fusion, vol. 32, no. 2, pp. 291–338, Feb. 1992,
+            Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
             doi: https://doi.org/10.1088/0029-5515/32/2/i11.
     ‌
     """
@@ -867,7 +866,7 @@ def sudo_et_al_confinement_time(
 
         References:
             - S. Sudo et al., “Scalings of energy confinement and density limit in stellarator/heliotron devices,”
-            Nuclear Fusion, vol. 30, no. 1, pp. 11–21, Jan. 1990,
+            Nuclear Fusion, vol. 30, no. 1, pp. 11-21, Jan. 1990,
             doi: https://doi.org/10.1088/0029-5515/30/1/002.
     ‌"""
 
@@ -904,7 +903,7 @@ def gyro_reduced_bohm_confinement_time(
     Notes:
 
     References:
-        - Goldston, R. J., H. Biglari, and G. W. Hammett. "E× B/B 2 vs. µ B/B as the Cause of Transport in Tokamaks."
+        - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. µ B/B as the Cause of Transport in Tokamaks."
           Bull. Am. Phys. Soc 34 (1989): 1964.
     """
     return (
@@ -943,7 +942,7 @@ def lackner_gottardi_stellarator_confinement_time(
 
         References:
             - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to plateau scaling,”
-            Nuclear Fusion, vol. 30, no. 4, pp. 767–770, Apr. 1990,
+            Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
             doi: https://doi.org/10.1088/0029-5515/30/4/018.
     ‌
     """
@@ -988,7 +987,7 @@ def iter_h97p_confinement_time(
 
         References:
             - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
-            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115–B127, Dec. 1997,
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
             doi: https://doi.org/10.1088/0741-3335/39/12b/009.
     ‌
     """
@@ -1035,10 +1034,10 @@ def iter_h97p_elmy_confinement_time(
 
     References:
         - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
-          Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115–B127, Dec. 1997,
+          Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
           doi: https://doi.org/10.1088/0741-3335/39/12b/009.
 
-        - International Atomic Energy Agency, Vienna (Austria), ‘Technical basis for the ITER final design report, cost review and safety analysis (FDR)’,
+        - International Atomic Energy Agency, Vienna (Austria), "Technical basis for the ITER final design report, cost review and safety analysis (FDR)",
           no. no.16. Dec. 1998.
     """
     return (
@@ -1085,7 +1084,7 @@ def iter_96p_confinement_time(
 
         References:
             - S. B. Kaye et al., “ITER L mode confinement database,”
-            Nuclear Fusion, vol. 37, no. 9, pp. 1303–1328, Sep. 1997,
+            Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997,
             doi: https://doi.org/10.1088/0029-5515/37/9/i10.
     ‌
     """
@@ -1134,10 +1133,10 @@ def iter_ipb98y_confinement_time(
 
     References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
-        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
     """
     return (
@@ -1184,10 +1183,10 @@ def iter_ipb98y1_confinement_time(
 
     References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
-        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
     """
     return (
@@ -1234,10 +1233,10 @@ def iter_ipb98y2_confinement_time(
 
     References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
-        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
     """
     return (
         0.0562e0
@@ -1283,10 +1282,10 @@ def iter_ipb98y3_confinement_time(
 
     References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
-        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
     """
     return (
         0.0564e0
@@ -1332,10 +1331,10 @@ def iter_ipb98y4_confinement_time(
 
     References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
-        Nuclear Fusion, vol. 39, no. 12, pp. 2175–2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-          Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+          Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
     """
     return (
         0.0587e0
@@ -1376,7 +1375,7 @@ def iss95_stellarator_confinement_time(
 
         References:
             - U. Stroth et al., “Energy confinement scaling from the international stellarator database,”
-              vol. 36, no. 8, pp. 1063–1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
+              vol. 36, no. 8, pp. 1063-1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
     ‌
     """
     return (
@@ -1416,7 +1415,7 @@ def iss04_stellarator_confinement_time(
 
         References:
             - H. Yamada et al., “Characterization of energy confinement in net-current free plasmas using the extended International Stellarator Database,”
-              vol. 45, no. 12, pp. 1684–1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
+              vol. 45, no. 12, pp. 1684-1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
     ‌
     """
     return (
@@ -1504,10 +1503,10 @@ def murari_confinement_time(
 
         References:
             - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
-             Nuclear Fusion, vol. 55, no. 7, pp. 073009–073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
+             Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
             - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-              Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+              Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
     ‌
     """
     return (
@@ -1552,7 +1551,7 @@ def petty08_confinement_time(
             Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
 
             - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
-            Nuclear Fusion, vol. 48, no. 9, pp. 099801–099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+            Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
     ‌
     """
     return (
@@ -1747,7 +1746,7 @@ def menard_nstx_confinement_time(
 
         References:
             - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
-             Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440–20170440, Feb. 2019,
+             Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
              doi: https://doi.org/10.1098/rsta.2017.0440.
     ‌
 
@@ -1796,7 +1795,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
 
     References:
         - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
-         Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440–20170440, Feb. 2019,
+         Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
          doi: https://doi.org/10.1098/rsta.2017.0440.
     ‌
     """
@@ -1873,7 +1872,7 @@ def nstx_gyro_bohm_confinement_time(
         References:
             - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara,
             “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,”
-            vol. 61, no. 3, pp. 035006–035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
+            vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
     ‌
     """
     return (
@@ -1920,7 +1919,7 @@ def itpa20_confinement_time(
 
     References:
         - G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,”
-          Nuclear Fusion, vol. 61, no. 7, pp. 076006–076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
+          Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
     """
     return (
         0.053

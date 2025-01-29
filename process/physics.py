@@ -3007,7 +3007,7 @@ class Physics:
         nTtau = ntau * te
 
         # Fusion reactions per second
-        fusrat = fusion_rate_density_total * plasma_volume
+        fusrat = fusion_rate_density_total * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -6836,7 +6836,7 @@ class Physics:
 
         # None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
         # “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
-        # vol. 48, no. 9, pp. 099801–099801, Aug. 2008,
+        # vol. 48, no. 9, pp. 099801099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
         physics_variables.kappa_ipb = (vol_plasma / (2.0 * np.pi * rmajor)) / (
@@ -6907,7 +6907,7 @@ class Physics:
 
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
-            t_electron_confinement = hfact * confinement.iter_89P_confinement_time(
+            t_electron_confinement = hfact * confinement.iter_89p_confinement_time(
                 pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
             )
 
@@ -7010,7 +7010,7 @@ class Physics:
         elif i_confinement_time == 14:
             t_electron_confinement = min(
                 hfact
-                * confinement.iter_89P_confinement_time(
+                * confinement.iter_89p_confinement_time(
                     pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
                 ),
                 hfact
