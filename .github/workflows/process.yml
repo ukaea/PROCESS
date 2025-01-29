@@ -190,7 +190,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Download tracking data
         run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
-      - name: Download large tokamak MFILE
+      - name: Download MFILEs
         uses: actions/download-artifact@v4
         with:
           name: tracked-mfiles
