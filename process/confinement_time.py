@@ -1567,6 +1567,65 @@ def petty08_confinement_time(
     )
 
 
+def lang_high_density_confinement_time(
+    plasma_current: float,
+    bt: float,
+    dnla: float,
+    powerht: float,
+    rmajor: float,
+    rminor: float,
+    q: float,
+    qstar: float,
+    aspect: float,
+    afuel: float,
+    kappa_ipb: float,
+) -> float:
+    """
+        Calculate the high density relevant confinement time
+
+        Parameters:
+        plasma_current (float): Plasma current [MA]
+        bt (float): Toroidal magnetic field [T]
+        dnla (float): Line averaged electron density [m**-3]
+        powerht (float): Net Heating power [MW]
+        rmajor (float): Plasma major radius [m]
+        rminor (float): Plasma minor radius [m]
+        q (float): Safety factor
+        qstar (float): Equivalent cylindrical edge safety factor
+        aspect (float): Aspect ratio
+        afuel (float): Fuel atomic mass number
+        kappa_ipb (float): Plasma elongation at 95% flux surface
+
+        Returns:
+        float: High density relevant confinement time [s]
+
+        Notes:
+
+        References:
+            - P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm, “Pellet Induced High Density Phases during ELM Suppression in ASDEX Upgrade,”
+             24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
+             Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
+    ‌
+    """
+    qratio = q / qstar
+    n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
+    nratio = dnla / n_gw
+    return (
+        6.94e-7
+        * plasma_current**1.3678e0
+        * bt**0.12e0
+        * dnla**0.032236e0
+        * (powerht * 1.0e6) ** (-0.74e0)
+        * rmajor**1.2345e0
+        * kappa_ipb**0.37e0
+        * aspect**2.48205e0
+        * afuel**0.2e0
+        * qratio**0.77e0
+        * aspect ** (-0.9e0 * np.log(aspect))
+        * nratio ** (-0.22e0 * np.log(nratio))
+    )
+
+
 def hubbard_nominal_confinement_time(
     pcur: float,
     bt: float,
@@ -1754,7 +1813,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
         )
 
     #  Equivalent to A < 1.7, use NSTX scaling
-    elif (1.0e0 / aspect) >= 0.6e0:
+    if (1.0e0 / aspect) >= 0.6e0:
         return menard_nstx_confinement_time(
             pcur,
             bt,
@@ -1765,29 +1824,28 @@ def menard_nstx_petty08_hybrid_confinement_time(
             aspect,
             afuel,
         )
-    else:
-        return (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * (
-            menard_nstx_confinement_time(
-                pcur,
-                bt,
-                dnla19,
-                powerht,
-                rmajor,
-                kappa_ipb,
-                aspect,
-                afuel,
-            )
-        ) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
-            petty08_confinement_time(
-                pcur,
-                bt,
-                dnla19,
-                powerht,
-                rmajor,
-                kappa_ipb,
-                aspect,
-            )
+    return (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * (
+        menard_nstx_confinement_time(
+            pcur,
+            bt,
+            dnla19,
+            powerht,
+            rmajor,
+            kappa_ipb,
+            aspect,
+            afuel,
         )
+    ) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
+        petty08_confinement_time(
+            pcur,
+            bt,
+            dnla19,
+            powerht,
+            rmajor,
+            kappa_ipb,
+            aspect,
+        )
+    )
 
 
 def nstx_gyro_bohm_confinement_time(

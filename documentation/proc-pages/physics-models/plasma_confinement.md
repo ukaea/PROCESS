@@ -494,6 +494,17 @@ $$
 
 -------------------------
 
+### 42: Lang high density H-mode scaling
+
+Is selected with `i_confinement_time = 42`
+
+$$
+\tau_{\text{E}} =  6.94\times 10^{-7} M^{0.2} \kappa_{\text{IPB}}^{0.37} \left(\frac{q_{95}}{q_{\text{cyl}}}\right)^{0.77} \\
+\times A^{2.48205} \frac{I^{1.3678} B_{\text{T}}^{0.12} R^{1.2345} \overline{n}^{0.032236}}{A^{0.9\ln{A}}P^{0.74}} \left(\frac{\overline{n}_{e}}{n_{\text{GW}}}\right)^{-0.22 \ln{\left(\frac{\overline{n}_e}{n_{\text{GW}}}\right)}}
+$$
+
+-------------------------
+
 ### 43: Hubbard I-mode nominal scaling
 
 Is selected with `i_confinement_time = 43`

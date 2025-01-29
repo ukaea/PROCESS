@@ -6839,7 +6839,7 @@ class Physics:
         # vol. 48, no. 9, pp. 099801–099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
-        physics_variables.kappa_ipb = vol_(plasma / (2.0 * np.pi * rmajor)) / (
+        physics_variables.kappa_ipb = (vol_plasma / (2.0 * np.pi * rmajor)) / (
             np.pi * rminor**2
         )
 
@@ -7432,27 +7432,23 @@ class Physics:
 
         # ==========================================================================
 
-        elif i_confinement_time == 42:  # High density relevant confinement scaling
-            # P.T. Lang et al. 2012, IAEA conference proceeding EX/P4-01
-            # q should be q95: incorrect if i_plasma_current = 2 (ST current scaling)
-            qratio = q / qstar
-            # Greenwald density in m^-3
-            n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
-            nratio = dnla / n_gw
+        # Lang high density relevant confinement scaling
+        elif i_confinement_time == 42:
             t_electron_confinement = (
                 hfact
-                * 6.94e-7
-                * plasma_current**1.3678e0
-                * bt**0.12e0
-                * dnla**0.032236e0
-                * (powerht * 1.0e6) ** (-0.74e0)
-                * rmajor**1.2345e0
-                * physics_variables.kappa_ipb**0.37e0
-                * aspect**2.48205e0
-                * m_fuel_amu**0.2e0
-                * qratio**0.77e0
-                * aspect ** (-0.9e0 * np.log(aspect))
-                * nratio ** (-0.22e0 * np.log(nratio))
+                * confinement.lang_high_density_confinement_time(
+                    plasma_current,
+                    bt,
+                    dnla,
+                    powerht,
+                    rmajor,
+                    rminor,
+                    q,
+                    qstar,
+                    aspect,
+                    afuel,
+                    physics_variables.kappa_ipb,
+                )
             )
 
         # ==========================================================================
