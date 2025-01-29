@@ -273,14 +273,6 @@ class PFCoil:
                 bfix,
                 gmat,
                 bvec,
-                rc,
-                zc,
-                cc,
-                xc,
-                umat,
-                vmat,
-                sigma,
-                work2,
             )
 
         # Equilibrium coil currents determined by SVD targeting B
@@ -425,14 +417,6 @@ class PFCoil:
                     bfix,
                     gmat,
                     bvec,
-                    rc,
-                    zc,
-                    cc,
-                    xc,
-                    umat,
-                    vmat,
-                    sigma,
-                    work2,
                 )
 
                 for ccount in range(ngrp0):
@@ -795,14 +779,6 @@ class PFCoil:
         bfix,
         gmat,
         bvec,
-        _rc,
-        _zc,
-        _cc,
-        _xc,
-        umat,
-        vmat,
-        sigma,
-        work2,
     ):
         """Calculates field coil currents.
 
