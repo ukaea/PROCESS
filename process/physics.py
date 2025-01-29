@@ -6690,85 +6690,73 @@ class Physics:
 
     @staticmethod
     def calculate_confinement_time(
-        m_fuel_amu,
-        alpha_power_total,
-        aspect,
-        bt,
-        nd_ions_total,
-        dene,
-        dnla,
-        eps,
-        hfact,
-        i_confinement_time,
-        ignite,
-        kappa,
-        kappa95,
-        non_alpha_charged_power,
-        pinjmw,
-        plasma_current,
-        pcoreradpv,
-        rmajor,
-        rminor,
-        _te,
-        ten,
-        tin,
-        q,
-        qstar,
-        vol_plasma,
-        a_plasma_poloidal,
-        zeff,
-    ):
-        """Routine to calculate the confinement times and
-        the transport power loss terms.
-        author: P J Knight, CCFE, Culham Science Centre
-        m_fuel_amu     : input real :  average mass of fuel (amu)
-        alpha_power_total    : input real :  alpha particle power (MW)
-        aspect    : input real :  aspect ratio
-        bt        : input real :  toroidal field on axis (T)
-        dene      : input real :  volume averaged electron density (/m3)
-        nd_ions_total    : input real :  total ion density (/m3)
-        dnla      : input real :  line-averaged electron density (/m3)
-        eps       : input real :  inverse aspect ratio
-        hfact     : input real :  H factor on energy confinement scalings
-        i_confinement_time       : input integer :  switch for energy confinement scaling to use
-        ignite    : input integer :  switch for ignited calculation
-        kappa     : input real :  plasma elongation
-        kappa95   : input real :  plasma elongation at 95% surface
-        kappaa    : output real : plasma elongation calculated using area ratio
-        non_alpha_charged_power : input real :  non-alpha charged particle fusion power (MW)
-        pinjmw    : input real :  auxiliary power to ions and electrons (MW)
-        plasma_current   : input real :  plasma current (A)
-        pcoreradpv: input real :  total core radiation power (MW/m3)
-        q         : input real :  edge safety factor (tokamaks), or
-        rotational transform iotabar (stellarators)
-        qstar     : input real :  equivalent cylindrical edge safety factor
-        rmajor    : input real :  plasma major radius (m)
-        rminor    : input real :  plasma minor radius (m)
-        te        : input real :  average electron temperature (keV)
-        ten       : input real :  density weighted average electron temp. (keV)
-        tin       : input real :  density weighted average ion temperature (keV)
-        vol_plasma       : input real :  plasma volume (m3)
-        a_plasma_poloidal     : input real :  plasma cross-sectional area (m2)
-        zeff      : input real :  plasma effective charge
-        ptrepv    : output real : electron transport power (MW/m3)
-        ptripv    : output real : ion transport power (MW/m3)
-        t_electron_confinement     : output real : electron energy confinement time (s)
-        t_energy_confinement    : output real : global energy confinement time (s)
-        t_ion_confinement     : output real : ion energy confinement time (s)
-        powerht   : output real : heating power (MW) assumed in calculation
-        This subroutine calculates the energy confinement time
-        using one of a large number of scaling laws, and the
-        transport power loss terms.
-        N. A. Uckan and ITER Physics Group,
-        "ITER Physics Design Guidelines: 1989",
-        ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
-        A. Murari et al 2015 Nucl. Fusion, 55, 073009
-        C.C. Petty 2008 Phys. Plasmas, 15, 080501
-        P.T. Lang et al. 2012 IAEA conference proceeding EX/P4-01
-        ITER physics basis Chapter 2, 1999 Nuclear Fusion 39 2175
-        Nuclear Fusion corrections, 2008 Nuclear Fusion 48 099801
-        Menard 2019, Phil. Trans. R. Soc. A 377:20170440
-        Kaye et al. 2006, Nucl. Fusion 46 848
+        m_fuel_amu: float,
+        alpha_power_total: float,
+        aspect: float,
+        bt: float,
+        nd_ions_total: float,
+        dene: float,
+        dnla: float,
+        eps: float,
+        hfact: float,
+        i_confinement_time: int,
+        ignite: int,
+        kappa: float,
+        kappa95: float,
+        non_alpha_charged_power: float,
+        pinjmw: float,
+        plasma_current: float,
+        pcoreradpv: float,
+        rmajor: float,
+        rminor: float,
+        _te: float,
+        ten: float,
+        tin: float,
+        q: float,
+        qstar: float,
+        vol_plasma: float,
+        a_plasma_poloidal: float,
+        zeff: float,
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """
+        Calculate the confinement times and the transport power loss terms.
+
+        :param m_fuel_amu: Average mass of fuel (amu)
+        :param alpha_power_total: Alpha particle power (MW)
+        :param aspect: Aspect ratio
+        :param bt: Toroidal field on axis (T)
+        :param nd_ions_total: Total ion density (/m3)
+        :param dene: Volume averaged electron density (/m3)
+        :param dnla: Line-averaged electron density (/m3)
+        :param eps: Inverse aspect ratio
+        :param hfact: H factor on energy confinement scalings
+        :param i_confinement_time: Switch for energy confinement scaling to use
+        :param ignite: Switch for ignited calculation
+        :param kappa: Plasma elongation
+        :param kappa95: Plasma elongation at 95% surface
+        :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
+        :param pinjmw: Auxiliary power to ions and electrons (MW)
+        :param plasma_current: Plasma current (A)
+        :param pcoreradpv: Total core radiation power (MW/m3)
+        :param q: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+        :param qstar: Equivalent cylindrical edge safety factor
+        :param rmajor: Plasma major radius (m)
+        :param rminor: Plasma minor radius (m)
+        :param _te: Average electron temperature (keV)
+        :param ten: Density weighted average electron temperature (keV)
+        :param tin: Density weighted average ion temperature (keV)
+        :param vol_plasma: Plasma volume (m3)
+        :param a_plasma_poloidal: Plasma cross-sectional area (m2)
+        :param zeff: Plasma effective charge
+
+        :return: Tuple containing:
+            - kappaa (float): Plasma elongation calculated using area ratio
+            - ptrepv (float): Electron transport power (MW/m3)
+            - ptripv (float): Ion transport power (MW/m3)
+            - t_electron_confinement (float): Electron energy confinement time (s)
+            - t_ion_confinement (float): Ion energy confinement time (s)
+            - t_energy_confinement (float): Global energy confinement time (s)
+            - powerht (float): Heating power (MW) assumed in calculation
         """
 
         eps2 = eps / 2.0e0
@@ -7538,8 +7526,20 @@ class Physics:
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
 
-        ptripv = 2.403e-22 * nd_ions_total * tin / t_ion_confinement
-        ptrepv = 2.403e-22 * dene * ten / t_electron_confinement
+        ptripv = (
+            (3 / 2)
+            * (constants.electron_charge / 1e3)
+            * nd_ions_total
+            * tin
+            / t_ion_confinement
+        )
+        ptrepv = (
+            (3 / 2)
+            * (constants.electron_charge / 1e3)
+            * dene
+            * ten
+            / t_electron_confinement
+        )
 
         ratio = nd_ions_total / dene * tin / ten
 
