@@ -2978,12 +2978,12 @@ class Physics:
             aspect (float): Plasma aspect ratio.
             dene (float): Electron density (/m3).
             te (float): Volume avergaed electron temperature (keV).
-            deni (float): Fuel ion density (/m3).
+            nd_fuel_ions (float): Fuel ion density (/m3).
             fusion_rate_density_total (float): Fusion reaction rate from plasma and beams (/m3/s).
             alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
             plasma_current (float): Plasma current (A).
             sbar (float): Exponent for aspect ratio (normally 1).
-            dnalp (float): Alpha ash density (/m3).
+            nd_alphas (float): Alpha ash density (/m3).
             t_energy_confinement (float): Global energy confinement time (s).
             vol_plasma (float): Plasma volume (m3).
 
@@ -3012,7 +3012,7 @@ class Physics:
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
         if alpha_rate_density_total != 0.0:
-            t_alpha_confinement = dnalp / alpha_rate_density_total
+            t_alpha_confinement = nd_alphas / alpha_rate_density_total
         else:  # only likely if DD is only active fusion reaction
             t_alpha_confinement = 0.0
 
@@ -3027,7 +3027,11 @@ class Physics:
         # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
-            burnup = dnalp / (dnalp + 0.5 * deni) / physics_variables.tauratio
+            burnup = (
+                nd_alphas
+                / (nd_alphas + 0.5 * nd_fuel_ions)
+                / physics_variables.tauratio
+            )
         else:
             burnup = physics_variables.burnup_in
 
@@ -5380,7 +5384,7 @@ class Physics:
                 taueffz,
                 powerhtz,
             ) = self.calculate_confinement_time(
-                physics_variables.afuel,
+                physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
@@ -6878,7 +6882,7 @@ class Physics:
             t_electron_confinement = (
                 hfact
                 * confinement.merezhkin_muhkovatov_confinement_time(
-                    rmajor, rminor, kappa95, qstar, dnla20, afuel, ten
+                    rmajor, rminor, kappa95, qstar, dnla20, m_fuel_amu, ten
                 )
             )
 
@@ -6887,7 +6891,7 @@ class Physics:
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
             t_electron_confinement = hfact * confinement.shimomura_confinement_time(
-                rmajor, rminor, bt, kappa95, afuel
+                rmajor, rminor, bt, kappa95, m_fuel_amu
             )
 
         # ========================================================================
@@ -6895,7 +6899,7 @@ class Physics:
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
             t_electron_confinement = hfact * confinement.kaye_goldston_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
 
             if iinvqd != 0:
@@ -6908,7 +6912,7 @@ class Physics:
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
             t_electron_confinement = hfact * confinement.iter_89p_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
 
         # ========================================================================
@@ -6916,7 +6920,7 @@ class Physics:
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
             t_electron_confinement = hfact * confinement.iter_89_0_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
         # ========================================================================
 
@@ -6926,7 +6930,7 @@ class Physics:
                 rminor,
                 rmajor,
                 kappa,
-                afuel,
+                m_fuel_amu,
                 pcur,
                 zeff,
                 dnla20,
@@ -6939,7 +6943,7 @@ class Physics:
         # Goldston scaling (L-mode)
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
             t_electron_confinement = hfact * confinement.goldston_confinement_time(
-                pcur, rmajor, rminor, kappa95, afuel, powerht
+                pcur, rmajor, rminor, kappa95, m_fuel_amu, powerht
             )
 
             if iinvqd != 0:
@@ -6962,7 +6966,7 @@ class Physics:
             t_electron_confinement = hfact * confinement.jaeri_confinement_time(
                 kappa95,
                 rminor,
-                afuel,
+                m_fuel_amu,
                 n20,
                 pcur,
                 bt,
@@ -6983,7 +6987,7 @@ class Physics:
                 kappa95,
                 pcur,
                 n20,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -6998,7 +7002,7 @@ class Physics:
                 kappa,
                 dnla20,
                 bt,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -7011,11 +7015,11 @@ class Physics:
             t_electron_confinement = min(
                 hfact
                 * confinement.iter_89p_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
                 ),
                 hfact
                 * confinement.iter_89_0_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, afuel, powerht
+                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
                 ),
             )
 
@@ -7045,7 +7049,7 @@ class Physics:
                 dnla20,
                 bt,
                 powerht,
-                afuel,
+                m_fuel_amu,
             )
 
         # ========================================================================
@@ -7078,7 +7082,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -7093,7 +7097,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -7108,7 +7112,7 @@ class Physics:
                 * confinement.iter_h90_p_amended_confinement_time(
                     pcur,
                     bt,
-                    afuel,
+                    m_fuel_amu,
                     rmajor,
                     powerht,
                     kappa,
@@ -7168,7 +7172,7 @@ class Physics:
                 pcur,
                 bt,
                 powerht,
-                afuel,
+                m_fuel_amu,
                 rmajor,
                 dnla20,
                 aspect,
@@ -7191,7 +7195,7 @@ class Physics:
                 rmajor,
                 aspect,
                 kappa,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7208,7 +7212,7 @@ class Physics:
                     rmajor,
                     aspect,
                     kappa,
-                    afuel,
+                    m_fuel_amu,
                 )
             )
 
@@ -7225,7 +7229,7 @@ class Physics:
                 rmajor,
                 aspect,
                 dnla19,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -7240,7 +7244,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                afuel,
+                m_fuel_amu,
                 rmajor,
                 rminor,
                 kappa,
@@ -7259,7 +7263,7 @@ class Physics:
                 rmajor,
                 aspect,
                 dnla19,
-                afuel,
+                m_fuel_amu,
                 powerht,
             )
 
@@ -7276,7 +7280,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7291,7 +7295,7 @@ class Physics:
                 rmajor,
                 kappa,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7306,7 +7310,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7321,7 +7325,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7336,7 +7340,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7351,7 +7355,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7400,7 +7404,7 @@ class Physics:
                 rmajor,
                 kappa95,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7446,7 +7450,7 @@ class Physics:
                     q,
                     qstar,
                     aspect,
-                    afuel,
+                    m_fuel_amu,
                     physics_variables.kappa_ipb,
                 )
             )
@@ -7499,7 +7503,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
-                afuel,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7516,7 +7520,7 @@ class Physics:
                     rmajor,
                     physics_variables.kappa_ipb,
                     aspect,
-                    afuel,
+                    m_fuel_amu,
                 )
             )
 
