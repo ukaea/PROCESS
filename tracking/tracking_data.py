@@ -203,7 +203,8 @@ class ProcessTracker:
         self.add_extra_metadata("commit_hash", commit_hash)
 
         if database:
-            date = self.tracking_file.meta.get("date").replace("/", "")
+            # split to remove timezone from date if present
+            date = self.tracking_file.meta.get("date").replace("/", "").split(" ")[0]
             time = self.tracking_file.meta.get("time")
 
             # for an mfile called foo.MFILE.DAT created at 16:00 on 15/11/2021
@@ -353,7 +354,8 @@ class TrackedData:
         title = metadata.get("title", "-")
         message = metadata.get("commit_message", "-")
         hash_ = metadata.get("commit_hash", "-")
-        date_str = metadata.get("date", "-")
+        # split to disregard timezone if present
+        date_str = metadata.get("date", "-").split(" ")[0]
         time_str = metadata.get("time", "-")
 
         # common format for the timestamp of the run
