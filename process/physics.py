@@ -5362,7 +5362,9 @@ class Physics:
 
         # for iisc in range(32, 48):
         # Put the ITPA value first
-        for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
+        for iisc in range(1, 49):
+            if iisc == 25:
+                continue
             (
                 ptrez,
                 ptriz,
@@ -7021,7 +7023,6 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                m_fuel_amu,
                 powerht,
             )
 
