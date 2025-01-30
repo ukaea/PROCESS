@@ -61,40 +61,58 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
 
 @nb.jit(nopython=True, cache=True)
 def vscalc(
-    csawth,
-    eps,
-    inductive_current_fraction,
-    gamma,
-    kappa,
-    rmajor,
-    res_plasma,
-    plasma_current,
-    t_fusion_ramp,
-    t_burn,
-    rli,
-    rmu0,
-):
-    """Volt-second requirements
-    author: P J Knight, CCFE, Culham Science Centre
-    csawth : input real :  coefficient for sawteeth effects
-    eps    : input real :  inverse aspect ratio
-    inductive_current_fraction  : input real :  fraction of plasma current produced inductively
-    gamma  : input real :  Ejima coeff for resistive start-up V-s component
-    kappa  : input real :  plasma elongation
-    plasma_current: input real :  plasma current (A)
-    rli    : input real :  plasma normalised inductivity
-    rmajor : input real :  plasma major radius (m)
-    res_plasma  : input real :  plasma resistance (ohm)
-    t_fusion_ramp  : input real :  heating time (s)
-    t_burn  : input real :  burn time (s)
-    phiint : output real : internal plasma volt-seconds (Wb)
-    rlp    : output real : plasma inductance (H)
-    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
-    vsind  : output real : internal and external plasma inductance V-s (Wb)
-    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
-    vsstt  : output real : total volt-seconds needed (Wb)
-    This subroutine calculates the volt-second requirements and some
-    other related items.
+    csawth: float,
+    eps: float,
+    inductive_current_fraction: float,
+    gamma: float,
+    kappa: float,
+    rmajor: float,
+    res_plasma: float,
+    plasma_current: float,
+    t_fusion_ramp: float,
+    t_burn: float,
+    rli: float,
+    rmu0: float,
+) -> tuple[float, float, float, float, float, float]:
+    """Calculate the volt-second requirements and related parameters for plasma physics.
+
+    :param csawth: Coefficient for sawteeth effects
+    :type csawth: float
+    :param eps: Inverse aspect ratio
+    :type eps: float
+    :param inductive_current_fraction: Fraction of plasma current produced inductively
+    :type inductive_current_fraction: float
+    :param gamma: Ejima coefficient for resistive start-up V-s component
+    :type gamma: float
+    :param kappa: Plasma elongation
+    :type kappa: float
+    :param rmajor: Plasma major radius (m)
+    :type rmajor: float
+    :param res_plasma: Plasma resistance (ohm)
+    :type res_plasma: float
+    :param plasma_current: Plasma current (A)
+    :type plasma_current: float
+    :param t_fusion_ramp: Heating time (s)
+    :type t_fusion_ramp: float
+    :param t_burn: Burn time (s)
+    :type t_burn: float
+    :param rli: Plasma normalized inductivity
+    :type rli: float
+    :param rmu0: Magnetic constant (H/m)
+    :type rmu0: float
+
+    :return: A tuple containing:
+        - phiint: Internal plasma volt-seconds (Wb)
+        - rlp: Plasma inductance (H)
+        - vsbrn: Volt-seconds needed during flat-top (heat+burn) (Wb)
+        - vsind: Internal and external plasma inductance V-s (Wb)
+        - vsres: Resistive losses in start-up volt-seconds (Wb)
+        - vsstt: Total volt-seconds needed (Wb)
+    :rtype: tuple[float, float, float, float, float, float]
+
+    :notes:
+
+    :references:
     """
     # Internal inductance
 
