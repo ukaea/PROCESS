@@ -2274,13 +2274,11 @@ class Physics:
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.te,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -5377,7 +5375,7 @@ class Physics:
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
                 physics_variables.bt,
-                physics_variables.dnitot,
+                physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
@@ -5392,13 +5390,11 @@ class Physics:
                 physics_variables.pcoreradpv,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.xarea,
                 physics_variables.zeff,
             )
 
@@ -6640,13 +6636,11 @@ class Physics:
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.te,
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.q,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -7489,7 +7483,7 @@ class Physics:
                 physics_variables.triang,
                 physics_variables.kappa_ipb,
                 eps,
-                physics_variables.aion,
+                physics_variables.m_ions_total_amu,
             )
 
         # ==========================================================================
