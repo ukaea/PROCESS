@@ -545,7 +545,7 @@ class PythonFortranInterfaceVariables:
             # this allow checking that module is a
             # fortran module and is the next best
             # thing to check this is a module.
-            # main_module is just the chosen arbitrary module
+            # physics_variables is just the chosen arbitrary module
             if type(module) == type(fortran.physics_variables):  # noqa: E721
                 classes[name] = cls._get_variables(module)
 
@@ -559,7 +559,7 @@ class PythonFortranInterfaceVariables:
         variables = []
 
         for name, function in inspect.getmembers(fortran_module):
-            # type(fortran.main_module.inform) => fortran subroutine
+            # type(fortran.physics_variables.init_physics_variables) => fortran subroutine
             # if its not a fortran subroutine, its a variable
             # because type `fortran` cannot be checked as a type
             if type(function) != type(fortran.physics_variables.init_physics_variables):  # noqa: E721
