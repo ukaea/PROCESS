@@ -395,7 +395,7 @@ class CCFE_HCPB:
         fwbs_variables.f_a_fw_coolant_inboard = (
             np.pi
             * fwbs_variables.radius_fw_channel**2
-            / (fwbs_variables.pitch * build_variables.dr_fw_inboard)
+            / (fwbs_variables.dx_fw_module * build_variables.dr_fw_inboard)
         )
 
         # outboard FW coolant void fraction
