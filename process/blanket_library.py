@@ -789,8 +789,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.radius_fw_channel
+                * fwbs_variables.radius_fw_channel
                 * blanket_library.bzfllengo
             )
             npblkto_liq = (
@@ -823,8 +823,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
                     * blanket_library.bzfllengi
                 )
                 # Have DEMO DCLL set here for now
@@ -862,8 +862,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.radius_fw_channel
+                * fwbs_variables.radius_fw_channel
                 * blanket_library.bzfllengo
             )
             npblkto_liq = (
@@ -904,8 +904,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
                     * blanket_library.bzfllengi
                 )
                 # Have DEMO DCLL set here for now
@@ -949,8 +949,8 @@ class BlanketLibrary:
                 fwbs_variables.vfblkt * fwbs_variables.volblkto
             ) / (
                 np.pi
-                * fwbs_variables.afw
-                * fwbs_variables.afw
+                * fwbs_variables.radius_fw_channel
+                * fwbs_variables.radius_fw_channel
                 * blanket_library.bzfllengo
             )
 
@@ -973,8 +973,8 @@ class BlanketLibrary:
                     fwbs_variables.vfblkt * fwbs_variables.volblkti
                 ) / (
                     np.pi
-                    * fwbs_variables.afw
-                    * fwbs_variables.afw
+                    * fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
                     * blanket_library.bzfllengi
                 )
 
@@ -1469,7 +1469,7 @@ class BlanketLibrary:
 
     def flow_velocity(self, i_channel_shape, mass_flow_rate, flow_density):
         """Calculate the coolant flow velocity (m/s) for given pipe mass flow rate and pipe size/shape.
-        N.B. Assumed that primary BB and FW coolants have same pipe radius (= afw).
+        N.B. Assumed that primary BB and FW coolants have same pipe radius (= radius_fw_channel).
         author: G. Graham, CCFE
 
         :param i_channel_shape: Switch for circular or rectangular channel crossection.
@@ -1482,7 +1482,10 @@ class BlanketLibrary:
 
         if i_channel_shape == 1:
             return mass_flow_rate / (
-                flow_density * np.pi * fwbs_variables.afw * fwbs_variables.afw
+                flow_density
+                * np.pi
+                * fwbs_variables.radius_fw_channel
+                * fwbs_variables.radius_fw_channel
             )
 
         # If secondary coolant then rectangular channels assumed
@@ -1520,7 +1523,7 @@ class BlanketLibrary:
             Coolant Channels            FW                      BB primary          BB Liquid Breeder/Coolant
 
             length (m)                  fw_channel_length
-            width (m)                   afw (radius, cicular)   afw                 a_bz_liq, b_bz_liq (rectangular)
+            width (m)                   radius_fw_channel (radius, cicular)   radius_fw_channel                 a_bz_liq, b_bz_liq (rectangular)
             wall thickness (m)          fw_wall                 fw_wall             th_wall_secondary
             pitch (m)                   pitch
             roughness epsilon           roughness
@@ -1653,7 +1656,7 @@ class BlanketLibrary:
         # This subroutine recalculates cp and rhof.
         (blanket_library.tpeakfwi, _, _, blanket_library.mffwpi) = self.fw.fw_temp(
             output,
-            fwbs_variables.afw,
+            fwbs_variables.radius_fw_channel,
             build_variables.dr_fw_inboard,
             build_variables.a_fw_inboard,
             fwbs_variables.psurffwi,
@@ -1668,7 +1671,7 @@ class BlanketLibrary:
         # ) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
-        #     fwbs_variables.afw,
+        #     fwbs_variables.radius_fw_channel,
         #     build_variables.dr_fw_inboard,
         #     build_variables.a_fw_inboard,
         #     fwbs_variables.psurffwi,
@@ -1677,7 +1680,7 @@ class BlanketLibrary:
         # )
         (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = self.fw.fw_temp(
             output,
-            fwbs_variables.afw,
+            fwbs_variables.radius_fw_channel,
             build_variables.dr_fw_outboard,
             build_variables.a_fw_outboard,
             fwbs_variables.psurffwo,
@@ -1687,7 +1690,7 @@ class BlanketLibrary:
         # (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
-        #     fwbs_variables.afw,
+        #     fwbs_variables.radius_fw_channel,
         #     build_variables.dr_fw_outboard,
         #     build_variables.a_fw_outboard,
         #     fwbs_variables.psurffwo,
@@ -1973,8 +1976,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Radius of first wall cooling channels (m)",
-                "(afw)",
-                fwbs_variables.afw,
+                "(radius_fw_channel)",
+                fwbs_variables.radius_fw_channel,
             )
             po.ovarre(
                 self.outfile,
@@ -2451,13 +2454,15 @@ class BlanketLibrary:
         # In preveious version of pumppower:
         # - elbow radius assumed = 0.018m for 90 degree elbow, from WCLL
         # - elbow radius assumed half that of 90 deg case for 180 deg elbow
-        # Intialised value for afw is 0.006m, so elbow radius = 3 * afw,
+        # Intialised value for radius_fw_channel is 0.006m, so elbow radius = 3 * radius_fw_channel,
         # aka 1.5 * pipe diameter, which seems to be engineering standard for
-        # a steel pipe long-radius elbow (short-radius elbow = 2 * afw).
+        # a steel pipe long-radius elbow (short-radius elbow = 2 * radius_fw_channel).
 
         # If primary coolant or secondary coolant (See DCLL)
         elbow_radius = (
-            (3 * fwbs_variables.afw) if (i_ps == 1) else fwbs_variables.b_bz_liq
+            (3 * fwbs_variables.radius_fw_channel)
+            if (i_ps == 1)
+            else fwbs_variables.b_bz_liq
         )
 
         # 90 degree elbow pressure drop coefficient
@@ -2537,7 +2542,7 @@ class BlanketLibrary:
         """
         # If primary coolant then circular channels assumed
         if i_channel_shape == 1:
-            return 2.0 * fwbs_variables.afw
+            return 2.0 * fwbs_variables.radius_fw_channel
 
         # If secondary coolant then rectangular channels assumed
         if i_channel_shape == 2:
