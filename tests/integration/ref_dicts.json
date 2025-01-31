@@ -3540,7 +3540,7 @@
         "pinjwp": 0.0,
         "pinjwpfix": 0.0,
         "p_plasma_inner_rad_mw": 0.0,
-        "pitch": 0.02,
+        "dx_fw_module": 0.02,
         "plasma_current": 0.0,
         "plasipf": 0.0,
         "plasma_res_factor": 1.0,
@@ -10298,7 +10298,7 @@
         "pinjwp": "injector wall plug power (MW)",
         "pinjwpfix": "secondary injector wall plug power (MW)",
         "p_plasma_inner_rad_mw": "radiation power from inner zone (MW)",
-        "pitch": "pitch of first wall cooling channels (m)",
+        "dx_fw_module": "pitch of first wall cooling channels (m)",
         "plasma_current": "plasma current (A)",
         "plasipf": "plasma driven current fraction (Bootstrap + Diamagnetic + PS)",
         "plasma_res_factor": "plasma resistivity pre-factor",
@@ -13913,7 +13913,7 @@
             "lb": 0.0,
             "ub": 1000.0
         },
-        "pitch": {
+        "dx_fw_module": {
             "lb": 0.0005,
             "ub": 0.1
         },
@@ -18085,7 +18085,7 @@
             "i_fw_coolant_type",
             "dr_fw_wall",
             "radius_fw_channel",
-            "pitch",
+            "dx_fw_module",
             "temp_fw_coolant_in",
             "temp_fw_coolant_out",
             "pres_fw_coolant",
@@ -20605,7 +20605,7 @@
         "pinjalw": "real_variable",
         "pinjfixmw": "real_variable",
         "pinjmax": "real_variable",
-        "pitch": "real_variable",
+        "dx_fw_module": "real_variable",
         "plasma_res_factor": "real_variable",
         "plleni": "real_variable",
         "plleno": "real_variable",
