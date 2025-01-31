@@ -74,41 +74,45 @@ def calculate_volt_second_requirements(
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
 
-    :param csawth: Coefficient for sawteeth effects
-    :type csawth: float
-    :param eps: Inverse aspect ratio
-    :type eps: float
-    :param inductive_current_fraction: Fraction of plasma current produced inductively
-    :type inductive_current_fraction: float
-    :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-    :type ejima_coeff: float
-    :param kappa: Plasma elongation
-    :type kappa: float
-    :param rmajor: Plasma major radius (m)
-    :type rmajor: float
-    :param res_plasma: Plasma resistance (ohm)
-    :type res_plasma: float
-    :param plasma_current: Plasma current (A)
-    :type plasma_current: float
-    :param t_fusion_ramp: Heating time (s)
-    :type t_fusion_ramp: float
-    :param t_burn: Burn time (s)
-    :type t_burn: float
-    :param rli: Plasma normalized inductivity
-    :type rli: float
+        :param csawth: Coefficient for sawteeth effects
+        :type csawth: float
+        :param eps: Inverse aspect ratio
+        :type eps: float
+        :param inductive_current_fraction: Fraction of plasma current produced inductively
+        :type inductive_current_fraction: float
+        :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+        :type ejima_coeff: float
+        :param kappa: Plasma elongation
+        :type kappa: float
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param res_plasma: Plasma resistance (ohm)
+        :type res_plasma: float
+        :param plasma_current: Plasma current (A)
+        :type plasma_current: float
+        :param t_fusion_ramp: Heating time (s)
+        :type t_fusion_ramp: float
+        :param t_burn: Burn time (s)
+        :type t_burn: float
+        :param rli: Plasma normalized inductivity
+        :type rli: float
 
-    :return: A tuple containing:
-        - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-        - rlp: Plasma inductance (H)
-        - vsbrn: Volt-seconds needed during flat-top (heat+burn) (Wb)
-        - vsind: Internal and external plasma inductance V-s (Wb)
-        - vsres: Resistive losses in start-up volt-seconds (Wb)
-        - vsstt: Total volt-seconds needed (Wb)
-    :rtype: tuple[float, float, float, float, float, float]
+        :return: A tuple containing:
+            - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+            - rlp: Plasma inductance (H)
+            - vsbrn: Volt-seconds needed during flat-top (heat+burn) (Wb)
+            - vsind: Internal and external plasma inductance V-s (Wb)
+            - vsres: Resistive losses in start-up volt-seconds (Wb)
+            - vsstt: Total volt-seconds needed (Wb)
+        :rtype: tuple[float, float, float, float, float, float]
 
-    :notes:
+        :notes:
 
-    :references:
+        :references:
+            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+              The Physics of Fluids, vol. 29, no. 3, pp. 790–793, Mar. 1986,
+              doi: https://doi.org/10.1063/1.865934.
+    ‌
     """
     # Internal inductance
 
@@ -120,8 +124,7 @@ def calculate_volt_second_requirements(
 
     vsres = ejima_coeff * constants.rmu0 * plasma_current * rmajor
 
-    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
-    # fit for external inductance
+    # Hirshman and Neilson fit for external inductance
 
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
@@ -5429,6 +5432,12 @@ class Physics:
                 "Ejima coefficient",
                 "(ejima_coeff)",
                 physics_variables.ejima_coeff,
+            )
+            po.ovarre(
+                self.outfile,
+                "Internal plasma V-s",
+                "(vs_plasma_internal)",
+                physics_variables.vs_plasma_internal,
             )
             po.ovarre(
                 self.outfile,
