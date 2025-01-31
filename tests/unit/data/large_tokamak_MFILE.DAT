@@ -482,7 +482,7 @@
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.7733E+01 OP 
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1976E+00 ITV
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.2080E+00    
- Ion_energy_confinement_time_(s)_________________________________________ (t_ion_confinement)_______________________      3.2080E+00    
+ Ion_energy_confinement_time_(s)_________________________________________ (t_ion_energy_confinement)_______________________      3.2080E+00    
  Electron_energy_confinement_time_(s)____________________________________ (t_electron_confinement)_______________________      3.2080E+00    
  n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5706E+20 OP 
  Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.2284E+21 OP 

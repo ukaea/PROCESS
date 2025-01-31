@@ -2251,7 +2251,7 @@ class ConfinementTimeParam(NamedTuple):
 
     expected_t_energy_confinement: Any = None
 
-    expected_t_ion_confinement: Any = None
+    expected_t_ion_energy_confinement: Any = None
 
 
 @pytest.mark.parametrize(
@@ -2295,7 +2295,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.012572050692511346,
             expected_ptripv=0.011158066358576262,
             expected_tauee=21.17616899712392,
-            expected_t_ion_confinement=21.17616899712392,
+            expected_t_ion_energy_confinement=21.17616899712392,
             expected_t_energy_confinement=21.17616899712392,
             expected_powerht=290.18368660937881,
         ),
@@ -2337,7 +2337,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08146744024696746,
             expected_ptripv=0.07230475970642361,
             expected_tauee=3.2679051814806361,
-            expected_t_ion_confinement=3.2679051814806361,
+            expected_t_ion_energy_confinement=3.2679051814806361,
             expected_t_energy_confinement=3.2679051814806366,
             expected_powerht=290.18368660937881,
         ),
@@ -2379,7 +2379,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.0813367174682195,
             expected_ptripv=0.07218873937883169,
             expected_tauee=3.2731572946627923,
-            expected_t_ion_confinement=3.2731572946627923,
+            expected_t_ion_energy_confinement=3.2731572946627923,
             expected_t_energy_confinement=3.2731572946627923,
             expected_powerht=290.18368660937881,
         ),
@@ -2421,7 +2421,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.12079262973297819,
             expected_ptripv=0.10720702701193681,
             expected_tauee=2.2040075681235445,
-            expected_t_ion_confinement=2.2040075681235445,
+            expected_t_ion_energy_confinement=2.2040075681235445,
             expected_t_energy_confinement=2.2040075681235445,
             expected_powerht=290.18368660937881,
         ),
@@ -2463,7 +2463,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08131814759597392,
             expected_ptripv=0.07217225806867361,
             expected_tauee=3.2739047552801135,
-            expected_t_ion_confinement=3.2739047552801135,
+            expected_t_ion_energy_confinement=3.2739047552801135,
             expected_t_energy_confinement=3.2739047552801135,
             expected_powerht=290.18368660937881,
         ),
@@ -2505,7 +2505,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08143510701705373,
             expected_ptripv=0.07227606300977574,
             expected_tauee=3.269202679985145,
-            expected_t_ion_confinement=3.269202679985145,
+            expected_t_ion_energy_confinement=3.269202679985145,
             expected_t_energy_confinement=3.2692026799851455,
             expected_powerht=290.18368660937881,
         ),
@@ -2547,7 +2547,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07271716311087716,
             expected_ptripv=0.06453863027150285,
             expected_tauee=3.6611421391548524,
-            expected_t_ion_confinement=3.6611421391548524,
+            expected_t_ion_energy_confinement=3.6611421391548524,
             expected_t_energy_confinement=3.6611421391548529,
             expected_powerht=290.18368660937881,
         ),
@@ -2589,7 +2589,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07853774801394538,
             expected_ptripv=0.06970457130869961,
             expected_tauee=3.3898077909969717,
-            expected_t_ion_confinement=3.3898077909969717,
+            expected_t_ion_energy_confinement=3.3898077909969717,
             expected_t_energy_confinement=3.3898077909969717,
             expected_powerht=290.18368660937881,
         ),
@@ -2631,7 +2631,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.0840021318362596,
             expected_ptripv=0.07455437336481374,
             expected_tauee=3.169298972363837,
-            expected_t_ion_confinement=3.169298972363837,
+            expected_t_ion_energy_confinement=3.169298972363837,
             expected_t_energy_confinement=3.169298972363837,
             expected_powerht=290.18368660937881,
         ),
@@ -2673,7 +2673,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08311313602000579,
             expected_ptripv=0.07376536331761714,
             expected_tauee=3.203198469625145,
-            expected_t_ion_confinement=3.203198469625145,
+            expected_t_ion_energy_confinement=3.203198469625145,
             expected_t_energy_confinement=3.203198469625145,
             expected_powerht=290.18368660937881,
         ),
@@ -2715,7 +2715,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07310605194452542,
             expected_ptripv=0.0648837805988509,
             expected_tauee=3.6416666339340682,
-            expected_t_ion_confinement=3.6416666339340682,
+            expected_t_ion_energy_confinement=3.6416666339340682,
             expected_t_energy_confinement=3.6416666339340686,
             expected_powerht=290.18368660937881,
         ),
@@ -2757,7 +2757,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08143238415417252,
             expected_ptripv=0.07227364638853734,
             expected_tauee=3.2693119926464509,
-            expected_t_ion_confinement=3.2693119926464509,
+            expected_t_ion_energy_confinement=3.2693119926464509,
             expected_t_energy_confinement=3.2693119926464513,
             expected_powerht=290.18368660937881,
         ),
@@ -2799,7 +2799,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08142885867164847,
             expected_ptripv=0.07227051741865713,
             expected_tauee=3.2694535383156871,
-            expected_t_ion_confinement=3.2694535383156871,
+            expected_t_ion_energy_confinement=3.2694535383156871,
             expected_t_energy_confinement=3.2694535383156871,
             expected_powerht=290.18368660937881,
         ),
@@ -2841,7 +2841,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.08143011939694184,
             expected_ptripv=0.07227163634959588,
             expected_tauee=3.2694029195542003,
-            expected_t_ion_confinement=3.2694029195542003,
+            expected_t_ion_energy_confinement=3.2694029195542003,
             expected_t_energy_confinement=3.2694029195542003,
             expected_powerht=290.18368660937881,
         ),
@@ -2883,7 +2883,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07960828601702878,
             expected_ptripv=0.07065470540932789,
             expected_tauee=3.3442231132583498,
-            expected_t_ion_confinement=3.3442231132583498,
+            expected_t_ion_energy_confinement=3.3442231132583498,
             expected_t_energy_confinement=3.3442231132583502,
             expected_powerht=290.18368660937881,
         ),
@@ -2925,7 +2925,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_ptrepv=0.07148441348179191,
             expected_ptripv=0.06344452856118785,
             expected_tauee=3.7242785823911264,
-            expected_t_ion_confinement=3.7242785823911264,
+            expected_t_ion_energy_confinement=3.7242785823911264,
             expected_t_energy_confinement=3.7242785823911264,
             expected_powerht=290.18368660937881,
         ),
@@ -2968,7 +2968,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         ptrepv,
         ptripv,
         t_electron_confinement,
-        t_ion_confinement,
+        t_ion_energy_confinement,
         t_energy_confinement,
         powerht,
     ) = physics.calculate_confinement_time(
@@ -3015,6 +3015,6 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         confinementtimeparam.expected_t_energy_confinement
     )
 
-    assert t_ion_confinement == pytest.approx(
-        confinementtimeparam.expected_t_ion_confinement
+    assert t_ion_energy_confinement == pytest.approx(
+        confinementtimeparam.expected_t_ion_energy_confinement
     )

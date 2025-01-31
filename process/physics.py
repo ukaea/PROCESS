@@ -2252,7 +2252,7 @@ class Physics:
             physics_variables.ptripv,
             physics_variables.t_electron_confinement,
             physics_variables.t_energy_confinement,
-            physics_variables.t_ion_confinement,
+            physics_variables.t_ion_energy_confinement,
             physics_variables.powerht,
         ) = self.calculate_confinement_time(
             physics_variables.m_fuel_amu,
@@ -5211,8 +5211,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Ion energy confinement time (s)",
-            "(t_ion_confinement)",
-            physics_variables.t_ion_confinement,
+            "(t_ion_energy_confinement)",
+            physics_variables.t_ion_energy_confinement,
             "OP ",
         )
         po.ovarrf(
@@ -6734,7 +6734,7 @@ class Physics:
             - ptrepv (float): Electron transport power (MW/m3)
             - ptripv (float): Ion transport power (MW/m3)
             - t_electron_confinement (float): Electron energy confinement time (s)
-            - t_ion_confinement (float): Ion energy confinement time (s)
+            - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
             - powerht (float): Heating power (MW) assumed in calculation
         """
@@ -6755,7 +6755,7 @@ class Physics:
             / ((np.sqrt(tin)) * (bt**2))
         )
         str2 = 2.0e0 * (kappa**2) / (1.0e0 + (kappa**2))
-        t_ion_confinement = 0.375e0 * rminor**2 / chii * str2
+        t_ion_energy_confinement = 0.375e0 * rminor**2 / chii * str2
 
         # ========================================================================
 
@@ -7496,7 +7496,7 @@ class Physics:
         # Ion energy confinement time
         # N.B. Overwrites earlier calculation above
 
-        t_ion_confinement = t_electron_confinement
+        t_ion_energy_confinement = t_electron_confinement
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
@@ -7507,7 +7507,7 @@ class Physics:
             * (constants.electron_charge / 1e3)
             * nd_ions_total
             * tin
-            / t_ion_confinement
+            / t_ion_energy_confinement
         )
         ptrepv = (
             (3 / 2)
@@ -7522,14 +7522,14 @@ class Physics:
         # Global energy confinement time
 
         t_energy_confinement = (ratio + 1.0e0) / (
-            ratio / t_ion_confinement + 1.0e0 / t_electron_confinement
+            ratio / t_ion_energy_confinement + 1.0e0 / t_electron_confinement
         )
 
         return (
             ptrepv,
             ptripv,
             t_electron_confinement,
-            t_ion_confinement,
+            t_ion_energy_confinement,
             t_energy_confinement,
             powerht,
         )
