@@ -1813,7 +1813,6 @@ def test_vscalc(vscalcparam):
         res_plasma=vscalcparam.res_plasma,
         t_burn=vscalcparam.t_burn,
         t_fusion_ramp=vscalcparam.t_fusion_ramp,
-        rmu0=constants.rmu0,
     )
 
     assert phiint == pytest.approx(vscalcparam.expected_phiint)
