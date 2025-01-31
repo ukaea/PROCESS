@@ -278,7 +278,7 @@ class StbildParam(NamedTuple):
 
     fhole: Any = None
 
-    fw_wall: Any = None
+    dr_fw_wall: Any = None
 
     ipowerflow: Any = None
 
@@ -378,7 +378,7 @@ class StbildParam(NamedTuple):
             fdiv=0.115,
             fhcd=0,
             fhole=0,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -448,7 +448,7 @@ class StbildParam(NamedTuple):
             fdiv=0.021924555536480182,
             fhcd=0,
             fhole=0,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -597,7 +597,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(fwbs_variables, "fhole", stbildparam.fhole)
 
-    monkeypatch.setattr(fwbs_variables, "fw_wall", stbildparam.fw_wall)
+    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", stbildparam.dr_fw_wall)
 
     monkeypatch.setattr(heat_transport_variables, "ipowerflow", stbildparam.ipowerflow)
 

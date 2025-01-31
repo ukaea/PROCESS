@@ -2069,7 +2069,7 @@
         "fw_channel_length": 4.0,
         "fw_density": 0.0,
         "fw_th_conductivity": 28.34,
-        "fw_wall": 0.003,
+        "dr_fw_wall": 0.003,
         "fwallcst": 0.0,
         "fwalld": 1.0,
         "a_fw_total": 0.0,
@@ -9661,7 +9661,7 @@
         "fw_channel_length": "Length of a single first wall channel (all in parallel) (m)\n (`iteration variable 114`, useful for `constraint equation 39`)",
         "fw_density": "FW density [kg/m3]",
         "fw_th_conductivity": "thermal conductivity of first wall material at 293 K (W/m/K) (Temperature dependence\n is as for unirradiated Eurofer)",
-        "fw_wall": "wall thickness of first wall coolant channels (m)",
+        "dr_fw_wall": "wall thickness of first wall coolant channels (m)",
         "fwallcst": "first wall cost (M$)",
         "fwalld": "f-value for maximum wall load (`constraint equation 8`, `iteration variable 14`)",
         "a_fw_total": "first wall total surface area (m2)",
@@ -12997,7 +12997,7 @@
             "lb": 1.0,
             "ub": 100.0
         },
-        "fw_wall": {
+        "dr_fw_wall": {
             "lb": 0.0005,
             "ub": 0.1
         },
@@ -18083,7 +18083,7 @@
             "afwi",
             "afwo",
             "i_fw_coolant_type",
-            "fw_wall",
+            "dr_fw_wall",
             "radius_fw_channel",
             "pitch",
             "temp_fw_coolant_in",
@@ -20358,7 +20358,7 @@
         "fw_armour_thickness": "real_variable",
         "fw_channel_length": "real_variable",
         "fw_th_conductivity": "real_variable",
-        "fw_wall": "real_variable",
+        "dr_fw_wall": "real_variable",
         "fwalld": "real_variable",
         "fwbs_nref": "real_variable",
         "fwbs_nu": "real_variable",
