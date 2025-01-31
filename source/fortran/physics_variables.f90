@@ -14,7 +14,7 @@ module physics_variables
 
   public
 
-  integer, parameter :: ipnlaws = 50
+  integer, parameter :: ipnlaws = 51
   !! number of energy confinement time scaling laws
 
   real(dp) :: m_beam_amu
@@ -469,7 +469,8 @@ module physics_variables
     'NSTX (Spherical)     (H)', &
     'NSTX-Petty08 Hybrid  (H)', &
     'NSTX gyro-Bohm Buxton(H)', &
-    'ITPA20               (H)' /)
+    'ITPA20               (H)', &
+    'ITPA20-IL               (H)' /)
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:
