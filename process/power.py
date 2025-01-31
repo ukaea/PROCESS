@@ -2268,7 +2268,7 @@ class Power:
         ensxpfm,
         t_pulse_repetition,
         cpttf,
-        n_tf,_coils
+        n_tf_coils,
     ):
         """
         Calculates cryogenic loads
