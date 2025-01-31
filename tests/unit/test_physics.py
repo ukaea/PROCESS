@@ -1745,7 +1745,7 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vsres: Any = None
 
-    expected_vsstt: Any = None
+    expected_vs_total_required: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1768,7 +1768,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_burn_required=42.109179697761263,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
-            expected_vsstt=356.56885503707593,
+            expected_vs_total_required=356.56885503707593,
         ),
         VoltSecondReqParam(
             csawth=1,
@@ -1787,7 +1787,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_burn_required=0.41692257126496302,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
-            expected_vsstt=314.87659791057968,
+            expected_vs_total_required=314.87659791057968,
         ),
     ),
 )
@@ -1801,7 +1801,7 @@ def test_vscalc(voltsecondreqparam):
     :type voltsecondreqparam: voltsecondreqparam
     """
 
-    vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vsstt = (
+    vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vs_total_required = (
         calculate_volt_second_requirements(
             csawth=voltsecondreqparam.csawth,
             eps=voltsecondreqparam.eps,
@@ -1831,7 +1831,9 @@ def test_vscalc(voltsecondreqparam):
 
     assert vsres == pytest.approx(voltsecondreqparam.expected_vsres)
 
-    assert vsstt == pytest.approx(voltsecondreqparam.expected_vsstt)
+    assert vs_total_required == pytest.approx(
+        voltsecondreqparam.expected_vs_total_required
+    )
 
 
 class PhyauxParam(NamedTuple):

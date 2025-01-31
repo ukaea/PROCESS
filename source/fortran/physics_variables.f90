@@ -873,7 +873,7 @@ module physics_variables
   real(dp) :: vsres
   !! resistive losses in startup V-s (Wb)
 
-  real(dp) :: vsstt
+  real(dp) :: vs_total_required
   !! total V-s needed (Wb)
 
   real(dp) :: wallmw
@@ -1116,7 +1116,7 @@ module physics_variables
     vshift = 0.0D0
     vsind = 0.0D0
     vsres = 0.0D0
-    vsstt = 0.0D0
+    vs_total_required = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
     a_plasma_poloidal = 0.0D0
