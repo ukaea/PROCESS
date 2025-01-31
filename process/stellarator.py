@@ -1837,21 +1837,21 @@ class Stellarator:
 
         #  External cryostat outboard major radius (m)
 
-        fwbs_variables.rdewex = (
+        fwbs_variables.r_cryostat_inboard = (
             build_variables.r_tf_outboard_mid
             + 0.5e0 * build_variables.tfthko
-            + fwbs_variables.rpf2dewar
+            + fwbs_variables.dr_pf_cryostat
         )
-        adewex = fwbs_variables.rdewex - physics_variables.rmajor
+        adewex = fwbs_variables.r_cryostat_inboard - physics_variables.rmajor
 
         #  External cryostat volume
 
-        fwbs_variables.vdewex = (
+        fwbs_variables.vol_cryostat = (
             4.0e0
             * (np.pi**2)
             * physics_variables.rmajor
             * adewex
-            * build_variables.ddwex
+            * build_variables.dr_cryostat
         )
 
         #  Internal vacuum vessel volume
@@ -1883,7 +1883,7 @@ class Stellarator:
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vdewex
+            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
         if output:
@@ -2238,22 +2238,28 @@ class Stellarator:
                 self.outfile,
                 "External cryostat inner radius (m)",
                 "",
-                fwbs_variables.rdewex - 2.0e0 * adewex,
+                fwbs_variables.r_cryostat_inboard - 2.0e0 * adewex,
             )
             po.ovarre(
                 self.outfile,
                 "External cryostat outer radius (m)",
-                "(rdewex)",
-                fwbs_variables.rdewex,
+                "(r_cryostat_inboard)",
+                fwbs_variables.r_cryostat_inboard,
             )
             po.ovarre(
                 self.outfile, "External cryostat minor radius (m)", "(adewex)", adewex
             )
             po.ovarre(
                 self.outfile,
-                "External cryostat shell volume (m3)",
-                "(vdewex)",
-                fwbs_variables.vdewex,
+                "External cryostat shell volume (m^3)",
+                "(vol_cryostat)",
+                fwbs_variables.vol_cryostat,
+            )
+            po.ovarre(
+                self.outfile,
+                "Internal volume of the cryostat structure (m^3)",
+                "(vol_cryostat_internal)",
+                fwbs_variables.vol_cryostat_internal,
             )
             po.ovarre(
                 self.outfile,

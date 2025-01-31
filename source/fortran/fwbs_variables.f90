@@ -418,18 +418,21 @@ module fwbs_variables
   !! nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)
   !#TODO: check usage of old blktmodel. Update to iblanket
 
-  real(dp) :: rdewex
+  real(dp) :: r_cryostat_inboard
   !! cryostat radius [m]
 
-  real(dp) :: zdewex
+  real(dp) :: z_cryostat_half_inside
   !! cryostat height [m]
 
-  real(dp) :: rpf2dewar
-  !! radial distance between outer edge of largest (`ipfloc=3`) PF coil (or stellarator
+  real(dp) :: dr_pf_cryostat
+  !! Radial distance between outer edge of furthest away PF coil (or stellarator
   !! modular coil) and cryostat [m]
 
-  real(dp) :: vdewex
-  !! cryostat volume [m^3]
+  real(dp) :: vol_cryostat
+  !! Cryostat structure volume [m^3]
+
+  real(dp) :: vol_cryostat_internal
+  !! Internal volume of the cryostat [m^3]
 
   real(dp) :: vdewin
   !! vacuum vessel volume [m^3]
@@ -772,10 +775,11 @@ module fwbs_variables
     pradloss = 0.0D0
     ptfnuc = 0.0D0
     ptfnucpm3 = 0.0D0
-    rdewex = 0.0D0
-    zdewex = 0.0D0
-    rpf2dewar = 0.5D0
-    vdewex = 0.0D0
+    r_cryostat_inboard = 0.0D0
+    z_cryostat_half_inside = 0.0D0
+    dr_pf_cryostat = 0.5D0
+    vol_cryostat = 0.0D0
+    vol_cryostat_internal = 0.0D0
     vdewin = 0.0D0
     vfshld = 0.25D0
     volblkt = 0.0D0

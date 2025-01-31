@@ -196,13 +196,13 @@ contains
       shldtth, shldlth, vgap_vv_thermalshield, plleni, fwoth, vvblgap, &
       thshield_ib, thshield_ob, thshield_vb, iprecomp, &
       blbpith, aplasmin, blbuoth, tfcth, &
-      iohcl, tftsgap, clhsf, bore, plleno, scrapli, gapomin, ddwex, &
+      iohcl, tftsgap, f_z_cryostat, bore, plleno, scrapli, gapomin, dr_cryostat, &
       rinboard, blnkoth, fseppc, plsepo, blnkith, &
       ohcth, plsepi, blbmith, gapoh, fcspc, scraplo, vgaptop, &
       blbpoth, gapds, fwith, vgap_xpoint_divertor, shldith, sigallpc, tfootfi, f_avspace,&
       r_cp_top, d_vv_in, d_vv_out, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
-      esbldgm3, fndt, row, wgt2, pibv, clh1, stcl, clh2, &
+      esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
       tfcbv, hccl, rbrt, triv, shov, admv, i_bldgs_v, i_bldgs_size, &
       mbvfac, pfbldgm3, wsvfac, rbvfac, rxcl, shmf, &
       aux_build_l, aux_build_w, aux_build_h, auxcool_l, auxcool_w, auxcool_h, &
@@ -276,7 +276,7 @@ contains
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
-      npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
+      npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
@@ -1319,11 +1319,11 @@ contains
        case ('bore')
           call parse_real_variable('bore', bore, 0.0D0, 50.0D0, &
                'Machine bore (m)')
-       case ('clhsf')
-          call parse_real_variable('clhsf', clhsf, 2.0D0, 10.0D0, &
+       case ('f_z_cryostat')
+          call parse_real_variable('f_z_cryostat', f_z_cryostat, 2.0D0, 10.0D0, &
                'Cryostat lid height scaling factor (m)')
-       case ('ddwex')
-          call parse_real_variable('ddwex', ddwex, 0.0D0, 10.0D0, &
+       case ('dr_cryostat')
+          call parse_real_variable('dr_cryostat', dr_cryostat, 0.0D0, 10.0D0, &
                'cryostat wall thickness (m)')
        case ('d_vv_in')
           call parse_real_variable('d_vv_in', d_vv_in, 0.0D0, 10.0D0, &
@@ -1379,8 +1379,8 @@ contains
        case ('rinboard')
           call parse_real_variable('rinboard', rinboard, 0.1D0, 10.0D0, &
                'Plasma inboard radius (m)')
-       case ('rpf2dewar')
-          call parse_real_variable('rpf2dewar', rpf2dewar, 0.1D0, 5.0D0, &
+       case ('dr_pf_cryostat')
+          call parse_real_variable('dr_pf_cryostat', dr_pf_cryostat, 0.1D0, 5.0D0, &
                'Outer PF coil to cryostat distance (m)')
        case ('i_r_cp_top')
           call parse_int_variable('i_r_cp_top', i_r_cp_top, 0, 2, &
@@ -2775,8 +2775,8 @@ contains
        case ('admv')
           call parse_real_variable('admv', admv, 1.0D4, 1.0D6, &
                'Administration building volume (m3)')
-       case ('clh1')
-          call parse_real_variable('clh1', clh1, 0.0D0, 20.0D0, &
+       case ('dz_tf_cryostat')
+          call parse_real_variable('dz_tf_cryostat', dz_tf_cryostat, 0.0D0, 20.0D0, &
                'Clearance TF coil to cryostat top (m)')
        case ('clh2')
           call parse_real_variable('clh2', clh2, 0.0D0, 30.0D0, &

@@ -81,7 +81,7 @@ class Buildings:
                 - build_variables.d_vv_top
                 - build_variables.d_vv_bot,
                 fwbs_variables.whtshld,
-                fwbs_variables.rdewex,
+                fwbs_variables.r_cryostat_inboard,
                 heat_transport_variables.helpow,
             )
 
@@ -201,14 +201,14 @@ class Buildings:
         crcl = 9.41e-6 * wt + 5.1e0
 
         # Building height (m)
-        # clh1 : clearance from TF coil to cryostat top, m
+        # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
         # stcl : clearance above crane to roof, m
         # Additional tfh allows TF coil to be lifted right out
         hrbi = (
             buildings_variables.clh2
             + 2.0e0 * tfh
-            + buildings_variables.clh1
+            + buildings_variables.dz_tf_cryostat
             + buildings_variables.trcl
             + crcl
             + buildings_variables.stcl
@@ -390,7 +390,7 @@ class Buildings:
         # Lateral size driven by radial width of largest component, from:
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
-            pfcoil_variables.pfrmax, fwbs_variables.rdewex, tf_radial_dim
+            pfcoil_variables.pfrmax, fwbs_variables.r_cryostat_inboard, tf_radial_dim
         )
         # Allow for biological shielding around reactor
         width_reactor_piece = width_reactor_piece + buildings_variables.bioshld_thk
