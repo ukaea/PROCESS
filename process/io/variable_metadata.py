@@ -350,7 +350,9 @@ var_dicts = {
         units="",
     ),
     "dx_fw_module": VariableMetadata(
-        latex=r"FW pitch [m]", description="Pitch of the first wall", units="m"
+        latex=r"FW pitch [m]",
+        description="Width of a FW module containing a cooling channel [m]",
+        units="m",
     ),
     "coe": VariableMetadata(
         latex=r"$\mathrm{LCOE}$ [$m\$/kWh$]",
