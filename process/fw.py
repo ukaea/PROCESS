@@ -249,7 +249,7 @@ class Fw:
             )
             po.ovarre(
                 self.outfile,
-                "Pitch of coolant channels (m)",
+                "Width of a FW module containing a cooling channel [m]",
                 "(dx_fw_module)",
                 fwbs_variables.dx_fw_module,
             )
