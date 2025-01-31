@@ -60,7 +60,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
 
 
 @nb.jit(nopython=True, cache=True)
-def vscalc(
+def calculate_volt_second_requirements(
     csawth: float,
     eps: float,
     inductive_current_fraction: float,
@@ -2317,7 +2317,7 @@ class Physics:
             physics_variables.vsind,
             physics_variables.vsres,
             physics_variables.vsstt,
-        ) = vscalc(
+        ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.inductive_current_fraction,

@@ -21,12 +21,12 @@ from process.physics import (
     calculate_plasma_current_peng,
     calculate_poloidal_beta,
     calculate_poloidal_field,
+    calculate_volt_second_requirements,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
     res_diff_time,
     rether,
-    vscalc,
 )
 from process.plasma_profiles import PlasmaProfile
 
@@ -1793,7 +1793,7 @@ class VscalcParam(NamedTuple):
 )
 def test_vscalc(vscalcparam):
     """
-    Automatically generated Regression Unit Test for vscalc.
+    Automatically generated Regression Unit Test for calculate_volt_second_requirements.
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
@@ -1801,7 +1801,7 @@ def test_vscalc(vscalcparam):
     :type vscalcparam: vscalcparam
     """
 
-    phiint, rlp, vsbrn, vsind, vsres, vsstt = vscalc(
+    phiint, rlp, vsbrn, vsind, vsres, vsstt = calculate_volt_second_requirements(
         csawth=vscalcparam.csawth,
         eps=vscalcparam.eps,
         inductive_current_fraction=vscalcparam.inductive_current_fraction,
