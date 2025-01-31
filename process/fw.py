@@ -22,106 +22,109 @@ class Fw:
     def fw_temp(
         self,
         output: bool,
-        radius_fw_channel,
-        thickness,
-        area,
-        prad_incident,
-        pnuc_deposited,
-        label,
-    ):
-        """Thermo-hydraulic calculations for the first wall
-        author: P J Knight, CCFE, Culham Science Centre
-        radius_fw_channel : input real : first wall coolant channel radius (m)
-        thickness : first wall thickness (dr_fw_inboard or dr_fw_outboard) (m)
-        area : input real : area of first wall section under consideration (m2)
-        (i.e. area of inboard wall or outboard wall)
-        prad_incident : input real : Surface heat flux on first wall (outboard and inboard) (MW)
-        pnuc_deposited : input real : nuclear power deposited in FW (IB or OB) (MW)
-        tpeakfw : output real : peak first wall temperature (K)
-        cfmean : output real : coolant specific heat capacity at constant
-        pressure (J/kg/K)
-        rhofmean : output real : coolant density (kg/m3)
-        massrate : output real : coolant mass flow rate in a single channel (kg/s)
-        label : input string : information string
-        Detailed thermal hydraulic model for the blanket (first wall +
-        breeding zone).
-        Given the heating incident on the first wall, and the coolant
-        outlet temperature, the maximum temperature of the first wall is
-        calculated to check it is below material limits (tfwmatmax).
+        radius_fw_channel: float,
+        dr_fw: float,
+        a_fw: float,
+        prad_incident: float,
+        pnuc_deposited: float,
+        label: str,
+    ) -> tuple:
+        """
+        Thermo-hydraulic calculations for the first wall.
+
+        Args:
+            output (bool): Flag to indicate if output is required.
+            radius_fw_channel (float): First wall coolant channel radius (m).
+            dr_fw (float): First wall thickness (m).
+            a_fw (float): Area of first wall section under consideration (m^2).
+            prad_incident (float): Surface heat flux on first wall (MW).
+            pnuc_deposited (float): Nuclear power deposited in FW (MW).
+            label (str): Information string.
+
+        Returns:
+            tuple: Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
+               coolant density (kg/m^3), and coolant mass flow rate in a single channel (kg/s).
+
+        Detailed thermal hydraulic model for the blanket (first wall + breeding zone).
+        Given the heating incident on the first wall, and the coolant outlet temperature,
+        the maximum temperature of the first wall is calculated to check it is below material limits.
         The routine is called separately for the inboard and outboard sides.
         The calculation of the maximum temperature is described by Gardner:
-        "Temperature distribution in the first wall", K:\\Power Plant Physics and
-        Technology\\ PROCESS\\PROCESS References & Systems Codes\\Pulsed option -
-        Gardner.
-        This is in turn taken from "Methods of First Wall Structural
-        Analysis with Application to the Long Pulse Commercial Tokamak Reactor
-        Design", R.J. LeClaire, MIT, PFC/RR-84-9
+        "Temperature distribution in the first wall", K:\\Power Plant Physics and Technology\\ PROCESS\\PROCESS References & Systems Codes\\Pulsed option - Gardner.
+        This is in turn taken from "Methods of First Wall Structural Analysis with Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire, MIT, PFC/RR-84-9.
         """
-        # First wall volume (inboard or outboard depending on arguments) (m3)
-        fwvol = area * thickness
 
-        # First wall channel area (m2)
-        channel_area = np.pi * radius_fw_channel**2
+        # First wall volume (inboard or outboard depending on arguments) (m^3)
+        vol_fw = a_fw * dr_fw
+
+        # First wall channel area (m^2)
+        a_fw_channel = np.pi * radius_fw_channel**2
 
         # Heat generation in the first wall due to neutron flux deposited in the material (W/m3)
-        qppp = 1e6 * pnuc_deposited / fwvol
+        pden_fw_nuclear = 1e6 * pnuc_deposited / vol_fw
 
         # the nuclear heating in the coolant is small. (W/m2)
         # Note that the full first wall volume is used including coolant even though
-        nuclear_heat_per_area = qppp * thickness
+        nuclear_heat_per_area = pden_fw_nuclear * dr_fw
 
         # Heat flux incident on the first wall surface (W/m2)
-        qpp = 1e6 * prad_incident / area
+        pflux_fw_rad = 1e6 * prad_incident / a_fw
 
         # Calculate inlet coolant fluid properties (fixed pressure)
-        ib_fluid_properties = FluidProperties.of(
+        inlet_coolant_properties = FluidProperties.of(
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
             temperature=fwbs_variables.temp_fw_coolant_in.item(),
             pressure=fwbs_variables.pres_fw_coolant.item(),
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
-        ob_fluid_properties = FluidProperties.of(
+        outlet_coolant_properties = FluidProperties.of(
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
             temperature=fwbs_variables.temp_fw_coolant_out.item(),
             pressure=fwbs_variables.pres_fw_coolant.item(),
         )
 
         # Mean properties (inlet + outlet)/2
-        rhofmean = (
-            ib_fluid_properties.density + ob_fluid_properties.density
-        ) / 2  # coolant density (kg/m3)
+        # Average coolant density (kg/m3)
+        den_fw_coolant_average = (
+            inlet_coolant_properties.density + outlet_coolant_properties.density
+        ) / 2
+
         # kfmean = (kfi + kfo) / 2  # coolant thermal conductivity (W/m.K)
         # viscfmean = (viscfi + viscfo) / 2  # coolant viscosity (Pa.s)
-        cfmean = (
-            ib_fluid_properties.specific_heat_const_p
-            + ob_fluid_properties.specific_heat_const_p
-        ) / 2  # coolant specific heat capacity (J/K)
 
-        # Heat load per unit length of one first wall pipe (W/m)
-        load = (nuclear_heat_per_area + qpp) * fwbs_variables.dx_fw_module
+        # Mean properties (inlet + outlet)/2
+        # Average coolant specific heat capacity (J/K)
+        heatcap_fw_coolant_average = (
+            inlet_coolant_properties.specific_heat_const_p
+            + outlet_coolant_properties.specific_heat_const_p
+        ) / 2
+
+        # Heat load per unit length of one first wall segment (W/m)
+        # Nuclear particle and radiation heating
+        load = (nuclear_heat_per_area + pflux_fw_rad) * fwbs_variables.dx_fw_module
 
         # Coolant mass flow rate (kg/s) (use mean properties)
-        massrate = (
+        mflow_fw_coolant = (
             fwbs_variables.fw_channel_length
             * load
-            / cfmean
+            / heatcap_fw_coolant_average
             / (fwbs_variables.temp_fw_coolant_out - fwbs_variables.temp_fw_coolant_in)
         )
 
         # Coolant mass flux in a single channel (kg/m2/s)
-        masflx = massrate / channel_area
+        mflux_fw_coolant = mflow_fw_coolant / a_fw_channel
 
         # Conditions at the outlet, where the temperature is highest
         # -----------------------------------------------------------
 
-        # Outlet coolant velocity (m/s)
-        velocity = masflx / ob_fluid_properties.density
+        # coolant velocity (m/s)
+        vel_fw_coolant_average = mflux_fw_coolant / outlet_coolant_properties.density
 
         # Mean temperature of the wall material on the plasma side of the coolant 'tpeak'
         # is the estimate from the previous iteration of the wall surface temperature
         # (underneath the armour)
-        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.tpeak) / 2  # (K)
+        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.tpeak) / 2
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
@@ -133,14 +136,14 @@ class Fw:
         # Thermal conductivity of first wall material (W/m.K)
         tkfw = self.fw_thermal_conductivity(temp_k)
 
-        # Heat transfer coefficient (W/m2K)
+        # Heat transfer coefficient (W m^-2 K^-1)
         hcoeff = self.heat_transfer(
-            masflx,
-            ob_fluid_properties.density,
+            mflux_fw_coolant,
+            outlet_coolant_properties.density,
             radius_fw_channel,
-            ob_fluid_properties.specific_heat_const_p,
-            ob_fluid_properties.viscosity,
-            ob_fluid_properties.thermal_conductivity,
+            outlet_coolant_properties.specific_heat_const_p,
+            outlet_coolant_properties.viscosity,
+            outlet_coolant_properties.thermal_conductivity,
         )
 
         # Temperature drops between first-wall surface and bulk coolant !
@@ -166,8 +169,8 @@ class Fw:
 
         # Worst case load (as above) per unit length in 1-D calculation (W/m)
         onedload = fwbs_variables.peaking_factor * (
-            qppp * fwbs_variables.dx_fw_module * thickness / 4
-            + qpp * fwbs_variables.dx_fw_module
+            pden_fw_nuclear * fwbs_variables.dx_fw_module * dr_fw / 4
+            + pflux_fw_rad * fwbs_variables.dx_fw_module
         )
 
         # Note I do NOT assume that the channel covers the full width of the first wall:
@@ -217,15 +220,15 @@ class Fw:
             )
             po.ovarre(
                 self.outfile,
-                "Radius of coolant channel (m)",
+                "Radius of FW coolant channel (m)",
                 "(radius_fw_channel)",
                 radius_fw_channel,
             )
             po.ovarre(
                 self.outfile,
-                "Mean surface heat flux on first wall (W/m2) ",
-                "(qpp)",
-                qpp,
+                "Mean surface radiation flux on first wall (W/m2) ",
+                "(pflux_fw_rad)",
+                pflux_fw_rad,
                 "OP ",
             )
             po.ovarre(
@@ -243,7 +246,7 @@ class Fw:
             )
             po.ovarre(
                 self.outfile,
-                "Length of a single coolant channel (all in parallel) (m)",
+                "Vertical length of a single coolant channel (all in parallel) (m)",
                 "(fw_channel_length)",
                 fwbs_variables.fw_channel_length,
             )
@@ -264,18 +267,22 @@ class Fw:
                 self.outfile,
                 "Coolant density (kg/m3)",
                 "(rhofo)",
-                ob_fluid_properties.density,
+                outlet_coolant_properties.density,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Coolant mass flow rate in one channel (kg/s)",
-                "(massrate)",
-                massrate,
+                "(mflow_fw_coolant)",
+                mflow_fw_coolant,
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Coolant velocity (m/s)", "(velocity)", velocity, "OP "
+                self.outfile,
+                "Coolant velocity (m/s)",
+                "(vel_fw_coolant_average)",
+                vel_fw_coolant_average,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
@@ -315,7 +322,12 @@ class Fw:
                 "OP ",
             )
 
-        return tpeakfw, cfmean, rhofmean, massrate
+        return (
+            tpeakfw,
+            heatcap_fw_coolant_average,
+            den_fw_coolant_average,
+            mflow_fw_coolant,
+        )
 
     def fw_thermal_conductivity(self, t):
         """Calculates the thermal conductivity of the first wall
