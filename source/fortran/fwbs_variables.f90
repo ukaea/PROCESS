@@ -315,7 +315,7 @@ module fwbs_variables
   !! - 'helium'
   !! - 'water'
 
-  real(dp) :: fw_wall
+  real(dp) :: dr_fw_wall
   !! wall thickness of first wall coolant channels [m]
 
   real(dp) :: radius_fw_channel
@@ -737,7 +737,7 @@ module fwbs_variables
     afwi = 0.008D0
     afwo = 0.008D0
     i_fw_coolant_type = 'helium'
-    fw_wall = 0.003D0
+    dr_fw_wall = 0.003D0
     radius_fw_channel = 0.006D0
     pitch = 0.02D0
     temp_fw_coolant_in = 573.0D0

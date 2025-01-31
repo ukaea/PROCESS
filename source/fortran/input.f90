@@ -270,7 +270,7 @@ contains
       pitch, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
+      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
@@ -1921,8 +1921,8 @@ contains
           call parse_real_variable('radius_fw_channel', radius_fw_channel, 1.0D-3, 0.5D0, &
                'Inner radius of first wall coolant channel (m)')
 
-       case ('fw_wall')
-          call parse_real_variable('fw_wall', fw_wall, 0.5D-3, 0.1D0, &
+       case ('dr_fw_wall')
+          call parse_real_variable('dr_fw_wall', dr_fw_wall, 0.5D-3, 0.1D0, &
                'wall thickness of first wall coolant channels (m)')
        case ('pitch')
           call parse_real_variable('pitch', pitch, 0.5D-3, 0.1D0, &
