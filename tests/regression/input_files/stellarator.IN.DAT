@@ -149,7 +149,7 @@ shear = 0.5 *Magnetic shear, derivative of iotabar
 
 blnkith = 0.6 *Inboard blanket thickness (m)
 blnkoth = 0.6 *Outboard blanket thickness (m)
-ddwex = 0.15 *Cryostat thickness (m)
+dr_cryostat = 0.15 *Cryostat thickness (m)
 d_vv_in = 0.5 *Vacuum vessel thickness (TF coil / shield) (m)
 d_vv_out = 0.5
 gapds = 0.1 *0.025 *Gap between inboard vacuum vessel and tf coil (m) -- what is with "gapsto" ??

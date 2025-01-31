@@ -2219,15 +2219,15 @@ i_r_cp_top = 2
 * Cryostat *
 *----------*
 
-*clhsf =  
+*f_z_cryostat =  
 * DESCRIPTION:   Cryostat lid height scaling factor (m)
 * JUSTIFICATION: Not scaling cryostat height.
 
-*ddwex = 
+*dr_cryostat = 
 * DESCRIPTION:   Cryostat wall thickness (m)
 * JUSTIFICATION: Not scaling cryostat height.
 
-*rpf2dewar = 
+*dr_pf_cryostat = 
 * DESCRIPTION:   radial distance between outer edge of largest (`ipfloc=3`) PF coil (or stellarator
 * modular coil) and cryostat [m])
 * JUSTIFICATION: Not scaling cryostat distance.

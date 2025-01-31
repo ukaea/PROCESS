@@ -60,10 +60,10 @@ module build_variables
   real(dp) :: bore
   !! central solenoid inboard radius (m) (`iteration variable 29`)
 
-  real(dp) :: clhsf
+  real(dp) :: f_z_cryostat
   !! cryostat lid height scaling factor (tokamaks)
 
-  real(dp) :: ddwex
+  real(dp) :: dr_cryostat
   !! cryostat thickness (m)
 
   real(dp) :: d_vv_in
@@ -315,8 +315,8 @@ module build_variables
     blnkoth = 0.235D0
     blnktth = 0.0D0
     bore = 1.42D0
-    clhsf = 4.268D0
-    ddwex = 0.07D0
+    f_z_cryostat = 4.268D0
+    dr_cryostat = 0.07D0
     d_vv_in = 0.07D0
     d_vv_out = 0.07D0
     d_vv_top = 0.07D0

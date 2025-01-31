@@ -3,6 +3,7 @@ import logging
 import numpy as np
 
 from process.fortran import (
+    blanket_library,
     build_variables,
     buildings_variables,
     constants,
@@ -131,7 +132,7 @@ class Build:
                 # Start at the top and work down.
 
                 vbuild = (
-                    buildings_variables.clh1
+                    buildings_variables.dz_tf_cryostat
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
@@ -149,17 +150,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Cryostat roof structure*",
-                    "(clh1)",
-                    buildings_variables.clh1,
+                    "(dz_tf_cryostat)",
+                    buildings_variables.dz_tf_cryostat,
                 )
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vbuild
@@ -384,13 +385,13 @@ class Build:
                 # Inner vertical dimension of TF coil
                 build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
 
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -402,7 +403,7 @@ class Build:
                 #  write(self.outfile, 20)
 
                 vbuild = (
-                    buildings_variables.clh1
+                    buildings_variables.dz_tf_cryostat
                     + build_variables.tfcth
                     + build_variables.tftsgap
                     + build_variables.thshield_vb
@@ -422,17 +423,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Cryostat roof structure*",
-                    "(clh1)",
-                    buildings_variables.clh1,
+                    "(dz_tf_cryostat)",
+                    buildings_variables.dz_tf_cryostat,
                 )
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vbuild
@@ -675,14 +676,14 @@ class Build:
                 # Inner vertical dimension of TF coil
                 build_variables.dh_tf_inner_bore = tf_height - 2 * build_variables.tfcth
 
-                vbuild = vbuild - buildings_variables.clh1
+                vbuild = vbuild - buildings_variables.dz_tf_cryostat
 
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.clh1,
+                    buildings_variables.dz_tf_cryostat,
                     vbuild,
-                    "(clh1)",
+                    "(dz_tf_cryostat)",
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -703,6 +704,10 @@ class Build:
 
         #  Other build quantities
 
+        # Output the cryostat geometry
+        _ = self.cryostat_output()
+
+        # Output the cdivertor geometry
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
         if build_variables.vgap_xpoint_divertor < 0.00001e0:
@@ -744,6 +749,50 @@ class Build:
             build_variables.hpfdif = (
                 build_variables.hpfu - (build_variables.hmax + build_variables.tfcth)
             ) / 2.0e0
+
+    def cryostat_output(self) -> None:
+        """
+        Outputs the cryostat geometry details to the output file.
+
+        Returns:
+            None
+        """
+        po.oheadr(self.outfile, "Cryostat build")
+        po.ovarrf(
+            self.outfile,
+            "Cryostat thickness (m)",
+            "(dr_cryostat)",
+            build_variables.dr_cryostat,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Cryostat intenral half height (m)",
+            "(z_cryostat_half_inside)",
+            fwbs_variables.z_cryostat_half_inside,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Vertical clearance from highest PF coil to cryostat (m)",
+            "(dz_pf_cryostat)",
+            blanket_library.dz_pf_cryostat,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Cryostat structure volume (m^3)",
+            "(vol_cryostat)",
+            fwbs_variables.vol_cryostat,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Cryostat internal volume (m^3)",
+            "(vol_cryostat_internal)",
+            fwbs_variables.vol_cryostat_internal,
+            "OP ",
+        )
 
     def divgeom(self, output: bool):
         """
@@ -2353,13 +2402,6 @@ class Build:
                     f"(radial_cum({index}))",
                     radius,
                 )
-
-            po.ovarre(
-                self.mfile,
-                "External cryostat thickness (excludes structure) (m)",
-                "(ddwex)",
-                build_variables.ddwex,
-            )
 
             if (current_drive_variables.iefrf in [5, 8]) or (
                 current_drive_variables.iefrffix in [5, 8]

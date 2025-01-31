@@ -34,7 +34,7 @@ module buildings_variables
     real(dp) :: chemlab_l, chemlab_w, chemlab_h
     !! Chemistry labs and treatment buldings length, width, height (m)
 
-    real(dp) :: clh1
+    real(dp) :: dz_tf_cryostat
     !! vertical clearance from TF coil to cryostat (m) (calculated for tokamaks)
 
     real(dp) :: clh2
@@ -328,7 +328,7 @@ module buildings_variables
       chemlab_l = 50.0D0
       chemlab_w = 30.0D0
       chemlab_h = 6.0D0
-      clh1 = 2.5D0
+      dz_tf_cryostat = 2.5D0
       clh2 = 15.0D0
       control_buildings_l = 80.0D0
       control_buildings_w = 60.0D0

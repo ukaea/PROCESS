@@ -327,7 +327,7 @@ scraplo = 0.25
 blnkoth = 1.0
 
 * Cryostat thickness [m]
-ddwex = 0.15 
+dr_cryostat = 0.15 
 
 * Outboard shield thickness [m]
 shldoth = 0.800
