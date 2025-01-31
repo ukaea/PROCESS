@@ -176,7 +176,7 @@ class Fw:
         # Temperature drop in first-wall material (K)
         deltat_solid_1D = (
             onedload
-            * fwbs_variables.fw_wall
+            * fwbs_variables.dr_fw_wall
             / (tkfw * effective_area_for_heat_transfer)
         )
 
@@ -184,14 +184,14 @@ class Fw:
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         # Calculate maximum distance travelled by surface heat load (m)
-        # fw_wall | Minimum distance travelled by surface heat load (m)
+        # dr_fw_wall | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
             (fwbs_variables.pitch / 2 - radius_fw_channel) ** 2
-            + (radius_fw_channel + fwbs_variables.fw_wall) ** 2
+            + (radius_fw_channel + fwbs_variables.dr_fw_wall) ** 2
         )
 
         # Mean distance travelled by surface heat (m)
-        mean_distance = (fwbs_variables.fw_wall + diagonal) / 2
+        mean_distance = (fwbs_variables.dr_fw_wall + diagonal) / 2
 
         # This heat starts off spread over width = 'pitch'.
         # It ends up spread over one half the circumference.

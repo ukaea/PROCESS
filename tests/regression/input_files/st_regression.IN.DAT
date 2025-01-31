@@ -2317,7 +2317,7 @@ etaiso = 0.9
 * DESCRIPTION:   Radius of first wall cooling channels [m] (default = 0.006)
 * JUSTIFICATION: 
 
-*fw_wall = 
+*dr_fw_wall = 
 * DESCRIPTION:   Wall thickness of first wall coolant channels [m] (default = 0.003)
 * JUSTIFICATION: 
 

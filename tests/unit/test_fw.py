@@ -35,7 +35,7 @@ class FwTempParam(NamedTuple):
 
     peaking_factor: Any = None
 
-    fw_wall: Any = None
+    dr_fw_wall: Any = None
 
     pnuc_deposited: Any = None
 
@@ -71,7 +71,7 @@ class FwTempParam(NamedTuple):
             fw_channel_length=4,
             tpeak=873,
             peaking_factor=1,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             pnuc_deposited=75.219932653459054,
             radius_fw_channel=0.0060000000000000001,
             thickness=0.018000000000000002,
@@ -93,7 +93,7 @@ class FwTempParam(NamedTuple):
             fw_channel_length=4,
             tpeak=873,
             peaking_factor=1,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             pnuc_deposited=121.50088652655793,
             radius_fw_channel=0.0060000000000000001,
             thickness=0.018000000000000002,
@@ -147,7 +147,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     monkeypatch.setattr(fwbs_variables, "peaking_factor", fwtempparam.peaking_factor)
 
-    monkeypatch.setattr(fwbs_variables, "fw_wall", fwtempparam.fw_wall)
+    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", fwtempparam.dr_fw_wall)
 
     tpeakfw, cfmean, rhofmean, massrate = fw.fw_temp(
         False,
