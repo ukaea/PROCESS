@@ -861,7 +861,7 @@ module physics_variables
   real(dp) :: vol_plasma
   !! plasma volume (m3)
 
-  real(dp) :: vsbrn
+  real(dp) :: vs_burn_required
   !! V-s needed during flat-top (heat + burn times) (Wb)
 
   real(dp) :: vshift
@@ -1112,7 +1112,7 @@ module physics_variables
     triang = 0.36D0
     triang95 = 0.24D0
     vol_plasma = 0.0D0
-    vsbrn = 0.0D0
+    vs_burn_required = 0.0D0
     vshift = 0.0D0
     vsind = 0.0D0
     vsres = 0.0D0

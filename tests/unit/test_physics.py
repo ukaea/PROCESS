@@ -1739,7 +1739,7 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_rlp: Any = None
 
-    expected_vsbrn: Any = None
+    expected_vs_burn_required: Any = None
 
     expected_vsind: Any = None
 
@@ -1765,7 +1765,7 @@ class VoltSecondReqParam(NamedTuple):
             t_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
-            expected_vsbrn=42.109179697761263,
+            expected_vs_burn_required=42.109179697761263,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
             expected_vsstt=356.56885503707593,
@@ -1784,7 +1784,7 @@ class VoltSecondReqParam(NamedTuple):
             t_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
-            expected_vsbrn=0.41692257126496302,
+            expected_vs_burn_required=0.41692257126496302,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
             expected_vsstt=314.87659791057968,
@@ -1801,7 +1801,7 @@ def test_vscalc(voltsecondreqparam):
     :type voltsecondreqparam: voltsecondreqparam
     """
 
-    vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt = (
+    vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vsstt = (
         calculate_volt_second_requirements(
             csawth=voltsecondreqparam.csawth,
             eps=voltsecondreqparam.eps,
@@ -1823,7 +1823,9 @@ def test_vscalc(voltsecondreqparam):
 
     assert rlp == pytest.approx(voltsecondreqparam.expected_rlp)
 
-    assert vsbrn == pytest.approx(voltsecondreqparam.expected_vsbrn)
+    assert vs_burn_required == pytest.approx(
+        voltsecondreqparam.expected_vs_burn_required
+    )
 
     assert vsind == pytest.approx(voltsecondreqparam.expected_vsind)
 
