@@ -624,7 +624,7 @@ module physics_variables
   real(dp) :: pedgeradpv
   !! edge radiation power per volume (MW/m3)
 
-  real(dp) :: phiint
+  real(dp) :: vs_plasma_internal
   !! internal plasma V-s
 
   real(dp) :: pflux_fw_rad_mw
@@ -1042,7 +1042,7 @@ module physics_variables
     p_plasma_outer_rad_mw = 0.0D0
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0
-    phiint = 0.0D0
+    vs_plasma_internal = 0.0D0
     pflux_fw_rad_mw = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0

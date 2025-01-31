@@ -98,7 +98,7 @@ def calculate_volt_second_requirements(
     :type rli: float
 
     :return: A tuple containing:
-        - phiint: Internal plasma volt-seconds (Wb)
+        - vs_plasma_internal: Internal plasma volt-seconds (Wb)
         - rlp: Plasma inductance (H)
         - vsbrn: Volt-seconds needed during flat-top (heat+burn) (Wb)
         - vsind: Internal and external plasma inductance V-s (Wb)
@@ -113,7 +113,7 @@ def calculate_volt_second_requirements(
     # Internal inductance
 
     rlpint = constants.rmu0 * rmajor * rli / 2.0
-    phiint = rlpint * plasma_current
+    vs_plasma_internal = rlpint * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
@@ -149,7 +149,7 @@ def calculate_volt_second_requirements(
     vsbrn = vburn * (t_fusion_ramp + t_burn)
     vsstt = vsstt + vsbrn
 
-    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+    return vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2307,7 +2307,7 @@ class Physics:
 
         # Calculate Volt-second requirements
         (
-            physics_variables.phiint,
+            physics_variables.vs_plasma_internal,
             physics_variables.rlp,
             physics_variables.vsbrn,
             physics_variables.vsind,

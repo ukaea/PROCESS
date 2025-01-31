@@ -1735,7 +1735,7 @@ class VoltSecondReqParam(NamedTuple):
 
     t_fusion_ramp: Any = None
 
-    expected_phiint: Any = None
+    expected_vs_plasma_internal: Any = None
 
     expected_rlp: Any = None
 
@@ -1763,7 +1763,7 @@ class VoltSecondReqParam(NamedTuple):
             res_plasma=3.7767895536275952e-09,
             t_burn=1000,
             t_fusion_ramp=10,
-            expected_phiint=111.57651734747576,
+            expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=42.109179697761263,
             expected_vsind=258.97124024420435,
@@ -1782,7 +1782,7 @@ class VoltSecondReqParam(NamedTuple):
             res_plasma=3.7767895536275952e-09,
             t_burn=0,
             t_fusion_ramp=10,
-            expected_phiint=111.57651734747576,
+            expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
             expected_vsbrn=0.41692257126496302,
             expected_vsind=258.97124024420435,
@@ -1801,7 +1801,7 @@ def test_vscalc(voltsecondreqparam):
     :type voltsecondreqparam: voltsecondreqparam
     """
 
-    phiint, rlp, vsbrn, vsind, vsres, vsstt = calculate_volt_second_requirements(
+    vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt = calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
         inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
@@ -1815,7 +1815,7 @@ def test_vscalc(voltsecondreqparam):
         t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
     )
 
-    assert phiint == pytest.approx(voltsecondreqparam.expected_phiint)
+    assert vs_plasma_internal == pytest.approx(voltsecondreqparam.expected_vs_plasma_internal)
 
     assert rlp == pytest.approx(voltsecondreqparam.expected_rlp)
 
