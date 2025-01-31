@@ -74,45 +74,55 @@ def calculate_volt_second_requirements(
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
 
-        :param csawth: Coefficient for sawteeth effects
-        :type csawth: float
-        :param eps: Inverse aspect ratio
-        :type eps: float
-        :param inductive_current_fraction: Fraction of plasma current produced inductively
-        :type inductive_current_fraction: float
-        :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-        :type ejima_coeff: float
-        :param kappa: Plasma elongation
-        :type kappa: float
-        :param rmajor: Plasma major radius (m)
-        :type rmajor: float
-        :param res_plasma: Plasma resistance (ohm)
-        :type res_plasma: float
-        :param plasma_current: Plasma current (A)
-        :type plasma_current: float
-        :param t_fusion_ramp: Heating time (s)
-        :type t_fusion_ramp: float
-        :param t_burn: Burn time (s)
-        :type t_burn: float
-        :param rli: Plasma normalized inductivity
-        :type rli: float
+            :param csawth: Coefficient for sawteeth effects
+            :type csawth: float
+            :param eps: Inverse aspect ratio
+            :type eps: float
+            :param inductive_current_fraction: Fraction of plasma current produced inductively
+            :type inductive_current_fraction: float
+            :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+            :type ejima_coeff: float
+            :param kappa: Plasma elongation
+            :type kappa: float
+            :param rmajor: Plasma major radius (m)
+            :type rmajor: float
+            :param res_plasma: Plasma resistance (ohm)
+            :type res_plasma: float
+            :param plasma_current: Plasma current (A)
+            :type plasma_current: float
+            :param t_fusion_ramp: Heating time (s)
+            :type t_fusion_ramp: float
+            :param t_burn: Burn time (s)
+            :type t_burn: float
+            :param rli: Plasma normalized inductivity
+            :type rli: float
 
-        :return: A tuple containing:
-            - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-            - rlp: Plasma inductance (H)
-            - vs_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
-            - vsind: Internal and external plasma inductance V-s (Wb)
-            - vsres: Resistive losses in start-up volt-seconds (Wb)
-            - vsstt: Total volt-seconds needed (Wb)
-        :rtype: tuple[float, float, float, float, float, float]
+            :return: A tuple containing:
+                - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+                - rlp: Plasma inductance (H)
+                - vs_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+                - vsind: Internal and external plasma inductance V-s (Wb)
+                - vsres: Resistive losses in start-up volt-seconds (Wb)
+                - vs_total_required: Total volt-seconds needed (Wb)
+            :rtype: tuple[float, float, float, float, float, float]
 
-        :notes:
+            :notes:
 
-        :references:
-            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-              The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
-              doi: https://doi.org/10.1063/1.865934.
+            :references:
+                - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+                “Volt-second analysis and consumption in Doublet III plasmas,”
+                Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+                https://doi.org/10.1088/0029-5515/22/10/006.
     ‌
+                - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+                “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+                Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+                doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+    ‌
+                - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+                The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+                doi: https://doi.org/10.1063/1.865934.
+        ‌
     """
     # Internal inductance
 
@@ -137,7 +147,7 @@ def calculate_volt_second_requirements(
     # Inductive V-s component
 
     vsind = rlp * plasma_current
-    vsstt = vsres + vsind
+    vs_total_required = vsres + vsind
 
     # Loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
@@ -150,9 +160,9 @@ def calculate_volt_second_requirements(
     # will be correct on subsequent calls.
 
     vs_burn_required = vburn * (t_fusion_ramp + t_burn)
-    vsstt = vsstt + vs_burn_required
+    vs_total_required = vs_total_required + vs_burn_required
 
-    return vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vsstt
+    return vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vs_total_required
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2315,7 +2325,7 @@ class Physics:
             physics_variables.vs_burn_required,
             physics_variables.vsind,
             physics_variables.vsres,
-            physics_variables.vsstt,
+            physics_variables.vs_total_required,
         ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
@@ -5415,9 +5425,9 @@ class Physics:
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
                 self.outfile,
-                "Total volt-second requirement (Wb)",
-                "(vsstt)",
-                physics_variables.vsstt,
+                "Total volt-seconds required for pulse (Wb)",
+                "(vs_total_required)",
+                physics_variables.vs_total_required,
                 "OP ",
             )
             po.ovarre(
