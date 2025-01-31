@@ -347,7 +347,7 @@ var_dicts = {
         description="Fraction of nuclear power deposited in the blanket structure",
         units="",
     ),
-    "pitch": VariableMetadata(
+    "dx_fw_module": VariableMetadata(
         latex=r"FW pitch [m]", description="Pitch of the first wall", units="m"
     ),
     "coe": VariableMetadata(

@@ -27,7 +27,7 @@ class FwTempParam(NamedTuple):
 
     temp_fw_coolant_out: Any = None
 
-    pitch: Any = None
+    dx_fw_module: Any = None
 
     fw_channel_length: Any = None
 
@@ -67,7 +67,7 @@ class FwTempParam(NamedTuple):
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
-            pitch=0.005000000000000001,
+            dx_fw_module=0.005000000000000001,
             fw_channel_length=4,
             tpeak=873,
             peaking_factor=1,
@@ -89,7 +89,7 @@ class FwTempParam(NamedTuple):
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
-            pitch=0.005000000000000001,
+            dx_fw_module=0.005000000000000001,
             fw_channel_length=4,
             tpeak=873,
             peaking_factor=1,
@@ -137,7 +137,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
         fwbs_variables, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
     )
 
-    monkeypatch.setattr(fwbs_variables, "pitch", fwtempparam.pitch)
+    monkeypatch.setattr(fwbs_variables, "dx_fw_module", fwtempparam.dx_fw_module)
 
     monkeypatch.setattr(
         fwbs_variables, "fw_channel_length", fwtempparam.fw_channel_length

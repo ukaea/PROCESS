@@ -78,7 +78,7 @@ Summary of key variables and switches:
 |        length (m)        |   `fw_channel_length`   | ---                      | ---                                  |
 |        width (m)         | `radius_fw_channel` (radius, cicular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
 |    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
-|        pitch (m)         |         `pitch`         | ---                      | ---                                  |
+|        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
 |     peak FW temp (K)     |         `tpeak`         | ---                      | ---                                  |
 |     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
@@ -110,7 +110,7 @@ Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
 Maximum distance travelled by surface heat load = $\texttt{diagonal}$
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{radius_fw_channel}\right)^2 }
+\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
 $$
 
 Typical distance travelled by surface heat load:
@@ -121,15 +121,15 @@ $$
 
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{radius_fw_channel}\right)^2 }
+\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
 $$
 
-The energy travels over a cross-section which is initially $= \texttt{pitch}$
+The energy travels over a cross-section which is initially $= \texttt{dx_fw_module}$
 It spreads out, arriving at the coolant pipe over an area of half the circumference.
 We use the mean of these values:
 
 $$ 
-\texttt{mean} \_ \texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{radius_fw_channel}}{2}
+\texttt{mean} \_ \texttt{width} = \frac{\texttt{dx_fw_module} + \pi \times \texttt{radius_fw_channel}}{2}
 $$
 
 The temperature difference between the plasma-facing surface and the coolant is then:

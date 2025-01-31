@@ -2325,7 +2325,7 @@ etaiso = 0.9
 * DESCRIPTION:   Wall thickness of first wall coolant channels [m] (default = 0.003)
 * JUSTIFICATION: 
 
-*pitch = 
+*dx_fw_module = 
 * DESCRIPTION:   Pitch of first wall cooling channels [m] (default = 0.02)
 * JUSTIFICATION: 
 
