@@ -72,7 +72,6 @@ def calculate_volt_second_requirements(
     t_fusion_ramp: float,
     t_burn: float,
     rli: float,
-    rmu0: float,
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
 
@@ -98,8 +97,6 @@ def calculate_volt_second_requirements(
     :type t_burn: float
     :param rli: Plasma normalized inductivity
     :type rli: float
-    :param rmu0: Magnetic constant (H/m)
-    :type rmu0: float
 
     :return: A tuple containing:
         - phiint: Internal plasma volt-seconds (Wb)
@@ -116,13 +113,13 @@ def calculate_volt_second_requirements(
     """
     # Internal inductance
 
-    rlpint = rmu0 * rmajor * rli / 2.0
+    rlpint = constants.rmu0 * rmajor * rli / 2.0
     phiint = rlpint * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = gamma * rmu0 * plasma_current * rmajor
+    vsres = gamma * constants.rmu0 * plasma_current * rmajor
 
     # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
     # fit for external inductance
@@ -131,7 +128,7 @@ def calculate_volt_second_requirements(
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+    rlpext = rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
     rlp = rlpext + rlpint
 
@@ -2329,7 +2326,6 @@ class Physics:
             times_variables.t_fusion_ramp,
             times_variables.t_burn,
             physics_variables.rli,
-            constants.rmu0,
         )
 
         # Calculate auxiliary physics related information
