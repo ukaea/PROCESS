@@ -59,12 +59,11 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     return conie * (ti - te) / (te**1.5)
 
 
-@nb.jit(nopython=True, cache=True)
 def calculate_volt_second_requirements(
     csawth: float,
     eps: float,
     inductive_current_fraction: float,
-    gamma: float,
+    ejima_coeff: float,
     kappa: float,
     rmajor: float,
     res_plasma: float,
@@ -81,8 +80,8 @@ def calculate_volt_second_requirements(
     :type eps: float
     :param inductive_current_fraction: Fraction of plasma current produced inductively
     :type inductive_current_fraction: float
-    :param gamma: Ejima coefficient for resistive start-up V-s component
-    :type gamma: float
+    :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+    :type ejima_coeff: float
     :param kappa: Plasma elongation
     :type kappa: float
     :param rmajor: Plasma major radius (m)
@@ -119,7 +118,7 @@ def calculate_volt_second_requirements(
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = gamma * constants.rmu0 * plasma_current * rmajor
+    vsres = ejima_coeff * constants.rmu0 * plasma_current * rmajor
 
     # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
     # fit for external inductance
@@ -2318,7 +2317,7 @@ class Physics:
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.inductive_current_fraction,
-            physics_variables.gamma,
+            physics_variables.ejima_coeff,
             physics_variables.kappa,
             physics_variables.rmajor,
             physics_variables.res_plasma,
@@ -5426,7 +5425,10 @@ class Physics:
                 "OP ",
             )
             po.ovarrf(
-                self.outfile, "Ejima coefficient", "(gamma)", physics_variables.gamma
+                self.outfile,
+                "Ejima coefficient",
+                "(ejima_coeff)",
+                physics_variables.ejima_coeff,
             )
             po.ovarre(
                 self.outfile,

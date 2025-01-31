@@ -310,7 +310,7 @@ contains
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
       i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, rli, triang, &
       itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
-      teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
+      teped, f_helium3, iwalld, ejima_coeff, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       i_rad_loss, te, alphan, rmajor, plasma_square, kappa, fkzohm, beamfus0, &
       tauratio, i_density_limit, bt, i_plasma_wall_gap, n_confinement_scalings, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
@@ -612,8 +612,8 @@ contains
        case ('fvsbrnni')
           call parse_real_variable('fvsbrnni', fvsbrnni, 0.0D0, 1.0D0, &
                'Non-inductive volt-sec burn fraction')
-       case ('gamma')
-          call parse_real_variable('gamma', gamma, 0.1D0, 1.0D0, &
+       case ('ejima_coeff')
+          call parse_real_variable('ejima_coeff', ejima_coeff, 0.1D0, 1.0D0, &
                'Ejima coefficient for resistive V-s formula')
        case ('hfact')
           call parse_real_variable('hfact', hfact, 0.01D0, 10.0D0, &

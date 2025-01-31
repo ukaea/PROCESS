@@ -1712,14 +1712,14 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
 
-class VscalcParam(NamedTuple):
+class VoltSecondReqParam(NamedTuple):
     csawth: Any = None
 
     eps: Any = None
 
     inductive_current_fraction: Any = None
 
-    gamma: Any = None
+    ejima_coeff: Any = None
 
     kappa: Any = None
 
@@ -1749,13 +1749,13 @@ class VscalcParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "vscalcparam",
+    "voltsecondreqparam",
     (
-        VscalcParam(
+        VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
             inductive_current_fraction=0.59999999999999998,
-            gamma=0.30000000000000004,
+            ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
@@ -1770,11 +1770,11 @@ class VscalcParam(NamedTuple):
             expected_vsres=55.488435095110333,
             expected_vsstt=356.56885503707593,
         ),
-        VscalcParam(
+        VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
             inductive_current_fraction=0.59999999999999998,
-            gamma=0.30000000000000004,
+            ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
             rli=1.2064840230894305,
@@ -1791,41 +1791,41 @@ class VscalcParam(NamedTuple):
         ),
     ),
 )
-def test_vscalc(vscalcparam):
+def test_vscalc(voltsecondreqparam):
     """
-    Automatically generated Regression Unit Test for calculate_volt_second_requirements.
+    Automatically generated Regression Unit Test for calculate_volt_second_requirements().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param vscalcparam: the data used to mock and assert in this test.
-    :type vscalcparam: vscalcparam
+    :param voltsecondreqparam: the data used to mock and assert in this test.
+    :type voltsecondreqparam: voltsecondreqparam
     """
 
     phiint, rlp, vsbrn, vsind, vsres, vsstt = calculate_volt_second_requirements(
-        csawth=vscalcparam.csawth,
-        eps=vscalcparam.eps,
-        inductive_current_fraction=vscalcparam.inductive_current_fraction,
-        gamma=vscalcparam.gamma,
-        kappa=vscalcparam.kappa,
-        plasma_current=vscalcparam.plasma_current,
-        rli=vscalcparam.rli,
-        rmajor=vscalcparam.rmajor,
-        res_plasma=vscalcparam.res_plasma,
-        t_burn=vscalcparam.t_burn,
-        t_fusion_ramp=vscalcparam.t_fusion_ramp,
+        csawth=voltsecondreqparam.csawth,
+        eps=voltsecondreqparam.eps,
+        inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
+        ejima_coeff=voltsecondreqparam.ejima_coeff,
+        kappa=voltsecondreqparam.kappa,
+        plasma_current=voltsecondreqparam.plasma_current,
+        rli=voltsecondreqparam.rli,
+        rmajor=voltsecondreqparam.rmajor,
+        res_plasma=voltsecondreqparam.res_plasma,
+        t_burn=voltsecondreqparam.t_burn,
+        t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
     )
 
-    assert phiint == pytest.approx(vscalcparam.expected_phiint)
+    assert phiint == pytest.approx(voltsecondreqparam.expected_phiint)
 
-    assert rlp == pytest.approx(vscalcparam.expected_rlp)
+    assert rlp == pytest.approx(voltsecondreqparam.expected_rlp)
 
-    assert vsbrn == pytest.approx(vscalcparam.expected_vsbrn)
+    assert vsbrn == pytest.approx(voltsecondreqparam.expected_vsbrn)
 
-    assert vsind == pytest.approx(vscalcparam.expected_vsind)
+    assert vsind == pytest.approx(voltsecondreqparam.expected_vsind)
 
-    assert vsres == pytest.approx(vscalcparam.expected_vsres)
+    assert vsres == pytest.approx(voltsecondreqparam.expected_vsres)
 
-    assert vsstt == pytest.approx(vscalcparam.expected_vsstt)
+    assert vsstt == pytest.approx(voltsecondreqparam.expected_vsstt)
 
 
 class PhyauxParam(NamedTuple):

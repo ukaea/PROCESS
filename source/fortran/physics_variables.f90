@@ -260,7 +260,7 @@ module physics_variables
   real(dp) :: fvsbrnni
   !! fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 
-  real(dp) :: gamma
+  real(dp) :: ejima_coeff
   !! Ejima coefficient for resistive startup V-s formula
 
   real(dp) :: f_beta_alpha_beam_thermal
@@ -973,7 +973,7 @@ module physics_variables
     fusion_rate_density_total = 0.0D0
     fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
-    gamma = 0.4D0
+    ejima_coeff = 0.4D0
     f_beta_alpha_beam_thermal = 0.0D0
     hfac = 0.0D0
     hfact = 1.0D0
