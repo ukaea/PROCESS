@@ -2944,7 +2944,7 @@ i_bootstrap_current = 4
 * DESCRIPTION:   Plasma resistivity pre-factor, used to scale plasma resistance
 * JUSTIFICATION: Not used, not scaling plasma resistance for ohmic heating
 
-*gamma =
+*ejima_coeff =
 * DESCRIPTION:   Ejima coefficient for resistive startup V-s formula
 * JUSTIFICATION: Not used.
 
