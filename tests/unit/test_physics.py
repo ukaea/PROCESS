@@ -1801,21 +1801,25 @@ def test_vscalc(voltsecondreqparam):
     :type voltsecondreqparam: voltsecondreqparam
     """
 
-    vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt = calculate_volt_second_requirements(
-        csawth=voltsecondreqparam.csawth,
-        eps=voltsecondreqparam.eps,
-        inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
-        ejima_coeff=voltsecondreqparam.ejima_coeff,
-        kappa=voltsecondreqparam.kappa,
-        plasma_current=voltsecondreqparam.plasma_current,
-        rli=voltsecondreqparam.rli,
-        rmajor=voltsecondreqparam.rmajor,
-        res_plasma=voltsecondreqparam.res_plasma,
-        t_burn=voltsecondreqparam.t_burn,
-        t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
+    vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt = (
+        calculate_volt_second_requirements(
+            csawth=voltsecondreqparam.csawth,
+            eps=voltsecondreqparam.eps,
+            inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
+            ejima_coeff=voltsecondreqparam.ejima_coeff,
+            kappa=voltsecondreqparam.kappa,
+            plasma_current=voltsecondreqparam.plasma_current,
+            rli=voltsecondreqparam.rli,
+            rmajor=voltsecondreqparam.rmajor,
+            res_plasma=voltsecondreqparam.res_plasma,
+            t_burn=voltsecondreqparam.t_burn,
+            t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
+        )
     )
 
-    assert vs_plasma_internal == pytest.approx(voltsecondreqparam.expected_vs_plasma_internal)
+    assert vs_plasma_internal == pytest.approx(
+        voltsecondreqparam.expected_vs_plasma_internal
+    )
 
     assert rlp == pytest.approx(voltsecondreqparam.expected_rlp)
 
