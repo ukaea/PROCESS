@@ -620,6 +620,16 @@ $$
 
 -------------------------
 
+### 50: ITPA20-IL H-mode scaling
+
+Is selected with `i_confinement_time = 50` [^23]
+
+$$
+\tau_{\text{E}} =  0.067 I^{1.29} B_{\text{T}}^{-0.13} P^{-0.644} \overline{n}_{19}^{0.15} M^{0.3} R^{1.19} \left(1+\delta \right)^{0.56} \kappa_{\text{IPB}}^{0.67} 
+$$
+
+-------------------------
+
 
 ### Effect of radiation on energy confinement
 
@@ -714,3 +724,4 @@ The value of `f_alpha_energy_confinement_min` can be set to the desired minimum 
 [^20]: J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,” Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019, doi: https://doi.org/10.1098/rsta.2017.0440.
 [^21]: P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
 [^22‌]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
+[^23]: T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048–126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
