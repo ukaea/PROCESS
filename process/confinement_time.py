@@ -2067,5 +2067,53 @@ def itpa20_confinement_time(
     )
 
 
+def itpa20_il_confinement_time(
+    pcur: float,
+    bt: float,
+    powerht: float,
+    dnla19: float,
+    aion: float,
+    rmajor: float,
+    triang: float,
+    kappa_ipb: float,
+) -> float:
+    """
+    Calculate the ITPA20-IL Issue #1852 confinement time
+
+    Parameters:
+    pcur (float): Plasma current [MA]
+    bt (float): Toroidal magnetic field [T]
+    powerht (float): Thermal power lost due to transport through the LCFS [MW]
+    dnla19 (float): Central line-averaged electron density in units of 10**19 m**-3
+    aion (float): Average mass of all ions (amu)
+    rmajor (float): Plasma major radius [m]
+    triang (float): Triangularity
+    kappa_ipb (float): IPB specific plasma separatrix elongation
+
+    Returns:
+    float: ITPA20-IL confinement time [s]
+
+    Notes:
+        - Mass term is the effective mass of the plasma, so we assume the total ion mass here
+        - This scaling uses the IPB defintiion of elongation, see reference for more information.
+
+    References:
+        - T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,”
+        Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
+    """
+
+    return (
+        0.067
+        * pcur**1.29
+        * bt**-0.13
+        * powerht ** (-0.644)
+        * dnla19**0.15
+        * aion**0.3
+        * rmajor**1.19
+        * (1 + triang) ** 0.56
+        * kappa_ipb**0.67
+    )
+
+
 if __name__ == "__main__":
     pass

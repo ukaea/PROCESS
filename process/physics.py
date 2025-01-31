@@ -7455,6 +7455,20 @@ class Physics:
 
         # ==========================================================================
 
+        elif i_confinement_time == 50:
+            t_electron_confinement = confinement.itpa20_il_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                physics_variables.m_ions_total_amu,
+                rmajor,
+                physics_variables.triang,
+                physics_variables.kappa_ipb,
+            )
+
+        # ==========================================================================
+
         else:
             error_handling.idiags[0] = i_confinement_time
             error_handling.report_error(81)
