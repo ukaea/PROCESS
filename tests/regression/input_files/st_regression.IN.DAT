@@ -2317,7 +2317,7 @@ etaiso = 0.9
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ First Wall ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*afw = 
+*radius_fw_channel = 
 * DESCRIPTION:   Radius of first wall cooling channels [m] (default = 0.006)
 * JUSTIFICATION: 
 

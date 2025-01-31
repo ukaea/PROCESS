@@ -453,7 +453,7 @@
     {
       "no": 89,
       "level": 3,
-      "message": "ITERATE_FW: Inner pipe radius afw >= outer pipe radius bfw"
+      "message": "ITERATE_FW: Inner pipe radius radius_fw_channel >= outer pipe radius bfw"
     },
     {
       "no": 90,

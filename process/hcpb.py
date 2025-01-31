@@ -46,7 +46,7 @@ class CCFE_HCPB:
 
         # MDK (27/11/2015)
         build_variables.dr_fw_inboard = (
-            2 * fwbs_variables.afw + 2 * fwbs_variables.fw_wall
+            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.fw_wall
         )
         build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 
@@ -394,7 +394,7 @@ class CCFE_HCPB:
         # inboard FW coolant void fraction
         fwbs_variables.f_a_fw_coolant_inboard = (
             np.pi
-            * fwbs_variables.afw**2
+            * fwbs_variables.radius_fw_channel**2
             / (fwbs_variables.pitch * build_variables.dr_fw_inboard)
         )
 
