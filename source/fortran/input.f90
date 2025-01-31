@@ -1933,7 +1933,7 @@ contains
                'wall thickness of first wall coolant channels (m)')
        case ('dx_fw_module')
           call parse_real_variable('dx_fw_module', dx_fw_module, 0.5D-3, 0.1D0, &
-               'pitch of first wall cooling channels (m)')
+               'Width of a FW module containing a cooling channel [m]')
        case ('temp_fw_coolant_in')
           call parse_real_variable('temp_fw_coolant_in', temp_fw_coolant_in, 300.0d0, 1500.0D0, &
                'inlet temperature of first wall coolant (K)')
