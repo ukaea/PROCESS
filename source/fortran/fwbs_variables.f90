@@ -322,7 +322,7 @@ module fwbs_variables
   !! radius of first wall cooling channels [m]
 
   real(dp) :: dx_fw_module
-  !! pitch of first wall cooling channels [m]
+  !! Width of a FW module containing a cooling channel [m]
 
   real(dp) :: temp_fw_coolant_in
   !! inlet temperature of first wall coolant [K]
