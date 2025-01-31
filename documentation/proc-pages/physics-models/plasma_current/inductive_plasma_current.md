@@ -1,6 +1,6 @@
 Currently in `PROCESS` the inductive current fraction from the CS is not calculated directly but is just equal to ($1 - \mathtt{fvsbrnni}$). Where $\mathtt{fvsbrnni}$ is the sum of the fractions of current driven by non inductive means.
 
-This calculated fraction (`inductive_current_fraction`) is then used in the `vscalc()` and `burn()` functions to calculate the volt-second requirements and the burn time for a pulsed machine.
+This calculated fraction (`inductive_current_fraction`) is then used in the `calculate_volt_second_requirements()` and `burn()` functions to calculate the volt-second requirements and the burn time for a pulsed machine.
 
 !!! info "Inductive plasma current fraction refactor"
 
