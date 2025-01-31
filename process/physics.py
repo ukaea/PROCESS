@@ -100,7 +100,7 @@ def calculate_volt_second_requirements(
         :return: A tuple containing:
             - vs_plasma_internal: Internal plasma volt-seconds (Wb)
             - rlp: Plasma inductance (H)
-            - vsbrn: Volt-seconds needed during flat-top (heat+burn) (Wb)
+            - vs_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
             - vsind: Internal and external plasma inductance V-s (Wb)
             - vsres: Resistive losses in start-up volt-seconds (Wb)
             - vsstt: Total volt-seconds needed (Wb)
@@ -110,7 +110,7 @@ def calculate_volt_second_requirements(
 
         :references:
             - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-              The Physics of Fluids, vol. 29, no. 3, pp. 790–793, Mar. 1986,
+              The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
               doi: https://doi.org/10.1063/1.865934.
     ‌
     """
@@ -149,10 +149,10 @@ def calculate_volt_second_requirements(
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vsbrn = vburn * (t_fusion_ramp + t_burn)
-    vsstt = vsstt + vsbrn
+    vs_burn_required = vburn * (t_fusion_ramp + t_burn)
+    vsstt = vsstt + vs_burn_required
 
-    return vs_plasma_internal, rlp, vsbrn, vsind, vsres, vsstt
+    return vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vsstt
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2312,7 +2312,7 @@ class Physics:
         (
             physics_variables.vs_plasma_internal,
             physics_variables.rlp,
-            physics_variables.vsbrn,
+            physics_variables.vs_burn_required,
             physics_variables.vsind,
             physics_variables.vsres,
             physics_variables.vsstt,
@@ -5448,9 +5448,9 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "Flat-top resistive (Wb)",
-                "(vsbrn)",
-                physics_variables.vsbrn,
+                "V-s needed during flat-top (heat + burn times) (Wb)",
+                "(vs_burn_required)",
+                physics_variables.vs_burn_required,
                 "OP ",
             )
 
