@@ -756,12 +756,12 @@ class BlanketLibrary:
 
         # FW Pipe Flow and Velocity ######
 
-        # Total number of first wall pipes from channel length and pitch (02/12/2015)
+        # Total number of first wall pipes from channel length and dx_fw_module (02/12/2015)
         blanket_library.npfwi = build_variables.a_fw_inboard / (
-            fwbs_variables.fw_channel_length * fwbs_variables.pitch
+            fwbs_variables.fw_channel_length * fwbs_variables.dx_fw_module
         )
         blanket_library.npfwo = build_variables.a_fw_outboard / (
-            fwbs_variables.fw_channel_length * fwbs_variables.pitch
+            fwbs_variables.fw_channel_length * fwbs_variables.dx_fw_module
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
@@ -1525,7 +1525,7 @@ class BlanketLibrary:
             length (m)                  fw_channel_length
             width (m)                   radius_fw_channel (radius, cicular)   radius_fw_channel                 a_bz_liq, b_bz_liq (rectangular)
             wall thickness (m)          dr_fw_wall                 dr_fw_wall             th_wall_secondary
-            pitch (m)                   pitch
+            dx_fw_module (m)                   dx_fw_module
             roughness epsilon           roughness
             peak FW temp (K)            tpeak
             maximum temp (K)            tfwmatmax

@@ -267,7 +267,7 @@ contains
       zeffdiv, hldivlim, rlenmax, divfix, c3div, &
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
-      pitch, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
+      dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
@@ -1927,8 +1927,8 @@ contains
        case ('dr_fw_wall')
           call parse_real_variable('dr_fw_wall', dr_fw_wall, 0.5D-3, 0.1D0, &
                'wall thickness of first wall coolant channels (m)')
-       case ('pitch')
-          call parse_real_variable('pitch', pitch, 0.5D-3, 0.1D0, &
+       case ('dx_fw_module')
+          call parse_real_variable('dx_fw_module', dx_fw_module, 0.5D-3, 0.1D0, &
                'pitch of first wall cooling channels (m)')
        case ('temp_fw_coolant_in')
           call parse_real_variable('temp_fw_coolant_in', temp_fw_coolant_in, 300.0d0, 1500.0D0, &
