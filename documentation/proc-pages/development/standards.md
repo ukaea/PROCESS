@@ -68,7 +68,26 @@ If converting between units it may be required to have some capital letters at t
 
 The agreed upon style is to name the variables by the following scheme:
 
-`var = <data type>_<system>_<description>_<units>`
+$\mathtt{var = \ <data type>\_<system>\_<description>\_<units>}$
+
+It may also be useful to use several data type prefixes to greater greater clarity.
+
+For example, a variable can look like:
+
+$$
+\mathtt{var = \ f\_a_\_tf\_wp}
+$$
+
+In system designation it means this:
+
+$$
+\mathtt{var = \ \text{Fraction}:\text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
+$$
+
+This means the variable represents the fraction of the TF coil area taken up by the winding pack.
+
+
+--------------
 
 #### System designations
 
@@ -80,7 +99,7 @@ Below are a few shorthand designations for different systems that should be used
 - First wall: `_fw_`
 - Divertor: `_div_`
 - Blanket: `_blkt_`
-- Shield: `_shield_`
+- Shield: `_shld_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
     - Electron cyclotron current drive: `_eccd_`
@@ -141,6 +160,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+#### Radii
+
+- Radii should start with the `radius_` prefix
+
+---------------------
+
 #### Velocities
 
 - Velocities should start with the `vel_` prefix
@@ -150,6 +175,22 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Mass
 
 - Masses should start with the `m_` prefix
+
+---------------------
+
+#### Mass flow rates
+
+- Mass flow rates should start with the `mflow_` prefix
+
+This should be used for units of $\text{kg} \cdot \text{s}^{-1}$
+
+---------------------
+
+#### Mass fluxes rates
+
+- Mass fluxes should start with the `mflux_` prefix
+
+This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
@@ -224,6 +265,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 #### Energies
 
 - Energies should start with the `e_` prefix
+
+---------------------
+
+#### Particle fluence
+
+- Fluences should start with the `flu_` prefix
 
 ---------------------
 
