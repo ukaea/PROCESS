@@ -345,7 +345,7 @@ class Stellarator:
 
         # First Wall
         build_variables.dr_fw_inboard = (
-            2.0e0 * fwbs_variables.afw + 2.0e0 * fwbs_variables.fw_wall
+            2.0e0 * fwbs_variables.radius_fw_channel + 2.0e0 * fwbs_variables.fw_wall
         )
         build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 

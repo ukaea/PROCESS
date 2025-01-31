@@ -22,7 +22,7 @@ class Fw:
     def fw_temp(
         self,
         output: bool,
-        afw,
+        radius_fw_channel,
         thickness,
         area,
         prad_incident,
@@ -31,7 +31,7 @@ class Fw:
     ):
         """Thermo-hydraulic calculations for the first wall
         author: P J Knight, CCFE, Culham Science Centre
-        afw : input real : first wall coolant channel radius (m)
+        radius_fw_channel : input real : first wall coolant channel radius (m)
         thickness : first wall thickness (dr_fw_inboard or dr_fw_outboard) (m)
         area : input real : area of first wall section under consideration (m2)
         (i.e. area of inboard wall or outboard wall)
@@ -61,7 +61,7 @@ class Fw:
         fwvol = area * thickness
 
         # First wall channel area (m2)
-        channel_area = np.pi * afw**2
+        channel_area = np.pi * radius_fw_channel**2
 
         # Heat generation in the first wall due to neutron flux deposited in the material (W/m3)
         qppp = 1e6 * pnuc_deposited / fwvol
@@ -137,7 +137,7 @@ class Fw:
         hcoeff = self.heat_transfer(
             masflx,
             ob_fluid_properties.density,
-            afw,
+            radius_fw_channel,
             ob_fluid_properties.specific_heat_const_p,
             ob_fluid_properties.viscosity,
             ob_fluid_properties.thermal_conductivity,
@@ -171,7 +171,7 @@ class Fw:
 
         # Note I do NOT assume that the channel covers the full width of the first wall:
         # Effective area for heat transfer (m2)
-        effective_area_for_heat_transfer = 2 * afw
+        effective_area_for_heat_transfer = 2 * radius_fw_channel
 
         # Temperature drop in first-wall material (K)
         deltat_solid_1D = (
@@ -186,7 +186,8 @@ class Fw:
         # Calculate maximum distance travelled by surface heat load (m)
         # fw_wall | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
-            (fwbs_variables.pitch / 2 - afw) ** 2 + (afw + fwbs_variables.fw_wall) ** 2
+            (fwbs_variables.pitch / 2 - radius_fw_channel) ** 2
+            + (radius_fw_channel + fwbs_variables.fw_wall) ** 2
         )
 
         # Mean distance travelled by surface heat (m)
@@ -195,14 +196,14 @@ class Fw:
         # This heat starts off spread over width = 'pitch'.
         # It ends up spread over one half the circumference.
         # Use the mean of these values.
-        mean_width = (fwbs_variables.pitch + np.pi * afw) / 2  # (m)
+        mean_width = (fwbs_variables.pitch + np.pi * radius_fw_channel) / 2  # (m)
 
         # As before, use a combined load 'onedload'
         # Temperature drop in first-wall material (K)
         deltat_solid = onedload * mean_distance / (tkfw * mean_width)
 
         # Temperature drop between channel inner wall and bulk coolant (K)
-        deltat_coolant = load / (2 * np.pi * afw * hcoeff)
+        deltat_coolant = load / (2 * np.pi * radius_fw_channel * hcoeff)
 
         # Peak first wall temperature (K)
         tpeakfw = fwbs_variables.temp_fw_coolant_out + deltat_solid + deltat_coolant
@@ -211,7 +212,12 @@ class Fw:
             po.oheadr(
                 self.outfile, "Heat transfer parameters at the coolant outlet: " + label
             )
-            po.ovarre(self.outfile, "Radius of coolant channel (m)", "(afw)", afw)
+            po.ovarre(
+                self.outfile,
+                "Radius of coolant channel (m)",
+                "(radius_fw_channel)",
+                radius_fw_channel,
+            )
             po.ovarre(
                 self.outfile,
                 "Mean surface heat flux on first wall (W/m2) ",
@@ -389,7 +395,7 @@ class Fw:
 
         # Bracketed term in Haaland equation
         bracket = (
-            fwbs_variables.roughness / fwbs_variables.afw / 3.7
+            fwbs_variables.roughness / fwbs_variables.radius_fw_channel / 3.7
         ) ** 1.11 + 6.9 / reynolds
 
         # Calculate Darcy friction factor
