@@ -6812,22 +6812,21 @@ class Physics:
 
         # User defined confinement time
         if i_confinement_time == 0:  # t_electron_energy_confinement is an input
-            t_electron_energy_confinement = hfact * physics_variables.tauee_in
+            t_electron_confinement = physics_variables.tauee_in
 
         # ========================================================================
 
         # Nec-Alcator(NA) OH scaling
         if i_confinement_time == 1:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.neo_alcator_confinement_time(n20, rminor, rmajor, qstar)
+            t_electron_confinement = confinement.neo_alcator_confinement_time(
+                n20, rminor, rmajor, qstar
             )
 
         # ========================================================================
 
         # "Mirnov"-like scaling (H-mode)
         elif i_confinement_time == 2:  # Mirnov scaling (H-mode)
-            t_electron_energy_confinement = hfact * confinement.mirnov_confinement_time(
+            t_electron_confinement = confinement.mirnov_confinement_time(
                 rminor, kappa95, pcur
             )
 
@@ -6835,91 +6834,70 @@ class Physics:
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.merezhkin_muhkovatov_confinement_time(
-                    rmajor, rminor, kappa95, qstar, dnla20, m_fuel_amu, ten
-                )
+            t_electron_confinement = confinement.merezhkin_muhkovatov_confinement_time(
+                rmajor, rminor, kappa95, qstar, dnla20, m_fuel_amu, ten
             )
 
         # ========================================================================
 
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.shimomura_confinement_time(
-                    rmajor, rminor, bt, kappa95, m_fuel_amu
-                )
+            t_electron_confinement = confinement.shimomura_confinement_time(
+                rmajor, rminor, bt, kappa95, m_fuel_amu
             )
 
         # ========================================================================
 
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.kaye_goldston_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
-                )
+            t_electron_confinement = confinement.kaye_goldston_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
 
         # ========================================================================
 
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_89p_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
-                )
+            t_electron_confinement = confinement.iter_89p_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
 
         # ========================================================================
 
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_89_0_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
-                )
+            t_electron_confinement = confinement.iter_89_0_confinement_time(
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
             )
         # ========================================================================
 
         # Rebut-Lallia offset linear scaling (L-mode)
         elif i_confinement_time == 8:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.rebut_lallia_confinement_time(
-                    rminor,
-                    rmajor,
-                    kappa,
-                    m_fuel_amu,
-                    pcur,
-                    zeff,
-                    dnla20,
-                    bt,
-                    powerht,
-                )
+            t_electron_confinement = confinement.rebut_lallia_confinement_time(
+                rminor,
+                rmajor,
+                kappa,
+                m_fuel_amu,
+                pcur,
+                zeff,
+                dnla20,
+                bt,
+                powerht,
             )
 
         # ========================================================================
 
         # Goldston scaling (L-mode)
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.goldston_confinement_time(
-                    pcur, rmajor, rminor, kappa95, m_fuel_amu, powerht
-                )
+            t_electron_confinement = confinement.goldston_confinement_time(
+                pcur, rmajor, rminor, kappa95, m_fuel_amu, powerht
             )
 
         # ========================================================================
 
         # T-10 scaling (L-mode)
         elif i_confinement_time == 10:
-            t_electron_energy_confinement = hfact * confinement.t10_confinement_time(
+            t_electron_confinement = confinement.t10_confinement_time(
                 dnla20, rmajor, qstar, bt, rminor, kappa95, powerht, zeff, pcur
             )
 
@@ -6927,7 +6905,7 @@ class Physics:
 
         # JAERI / Odajima-Shimomura L-mode scaling
         elif i_confinement_time == 11:  # JAERI scaling
-            t_electron_energy_confinement = hfact * confinement.jaeri_confinement_time(
+            t_electron_confinement = confinement.jaeri_confinement_time(
                 kappa95,
                 rminor,
                 m_fuel_amu,
@@ -6944,49 +6922,41 @@ class Physics:
 
         # Kaye "big"  L-mode scaling (based only on big tokamak data)
         elif i_confinement_time == 12:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.kaye_big_confinement_time(
-                    rmajor,
-                    rminor,
-                    bt,
-                    kappa95,
-                    pcur,
-                    n20,
-                    m_fuel_amu,
-                    powerht,
-                )
+            t_electron_confinement = confinement.kaye_big_confinement_time(
+                rmajor,
+                rminor,
+                bt,
+                kappa95,
+                pcur,
+                n20,
+                m_fuel_amu,
+                powerht,
             )
 
         # ========================================================================
 
         # ITER H90-P H-mode scaling
         elif i_confinement_time == 13:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_h90_p_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    dnla20,
-                    bt,
-                    m_fuel_amu,
-                    powerht,
-                )
+            t_electron_confinement = confinement.iter_h90_p_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                bt,
+                m_fuel_amu,
+                powerht,
             )
 
         # ========================================================================
 
         # Minimum of ITER 89-P and ITER 89-O
         elif i_confinement_time == 14:
-            t_electron_energy_confinement = min(
-                hfact
-                * confinement.iter_89p_confinement_time(
+            t_electron_confinement = min(
+                confinement.iter_89p_confinement_time(
                     pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
                 ),
-                hfact
-                * confinement.iter_89_0_confinement_time(
+                confinement.iter_89_0_confinement_time(
                     pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
                 ),
             )
@@ -6995,142 +6965,117 @@ class Physics:
 
         # Riedel scaling (L-mode)
         elif i_confinement_time == 15:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.riedel_l_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    dnla20,
-                    bt,
-                    powerht,
-                )
+            t_electron_confinement = confinement.riedel_l_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
             )
 
         # ========================================================================
 
         # Christiansen et al scaling (L-mode)
         elif i_confinement_time == 16:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.christiansen_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    dnla20,
-                    bt,
-                    powerht,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.christiansen_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
+                m_fuel_amu,
             )
 
         # ========================================================================
 
         # Lackner-Gottardi scaling (L-mode)
         elif i_confinement_time == 17:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.lackner_gottardi_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    dnla20,
-                    bt,
-                    powerht,
-                )
+            t_electron_confinement = confinement.lackner_gottardi_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
             )
 
         # ========================================================================
 
         # Neo-Kaye scaling (L-mode)
         elif i_confinement_time == 18:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.neo_kaye_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    dnla20,
-                    bt,
-                    powerht,
-                )
+            t_electron_confinement = confinement.neo_kaye_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                powerht,
             )
 
         # ======== ================================================================
 
         # Riedel scaling (H-mode)
         elif i_confinement_time == 19:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.riedel_h_confinement_time(
-                    pcur,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    dnla20,
-                    bt,
-                    m_fuel_amu,
-                    powerht,
-                )
+            t_electron_confinement = confinement.riedel_h_confinement_time(
+                pcur,
+                rmajor,
+                rminor,
+                kappa95,
+                dnla20,
+                bt,
+                m_fuel_amu,
+                powerht,
             )
 
         # ========================================================================
 
         # Amended version of ITER H90-P law
         elif i_confinement_time == 20:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_h90_p_amended_confinement_time(
-                    pcur,
-                    bt,
-                    m_fuel_amu,
-                    rmajor,
-                    powerht,
-                    kappa,
-                )
+            t_electron_confinement = confinement.iter_h90_p_amended_confinement_time(
+                pcur,
+                bt,
+                m_fuel_amu,
+                rmajor,
+                powerht,
+                kappa,
             )
 
         # ==========================================================================
 
         # Sudo et al. scaling (stellarators/heliotron)
         elif i_confinement_time == 21:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.sudo_et_al_confinement_time(
-                    rmajor,
-                    rminor,
-                    dnla20,
-                    bt,
-                    powerht,
-                )
+            t_electron_confinement = confinement.sudo_et_al_confinement_time(
+                rmajor,
+                rminor,
+                dnla20,
+                bt,
+                powerht,
             )
 
         # ==========================================================================
 
         # Gyro-reduced Bohm scaling
         elif i_confinement_time == 22:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.gyro_reduced_bohm_confinement_time(
-                    bt,
-                    dnla20,
-                    powerht,
-                    rminor,
-                    rmajor,
-                )
+            t_electron_confinement = confinement.gyro_reduced_bohm_confinement_time(
+                bt,
+                dnla20,
+                powerht,
+                rminor,
+                rmajor,
             )
 
         # ==========================================================================
 
         # Lackner-Gottardi stellarator scaling
         elif i_confinement_time == 23:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.lackner_gottardi_stellarator_confinement_time(
+            t_electron_confinement = (
+                confinement.lackner_gottardi_stellarator_confinement_time(
                     rmajor,
                     rminor,
                     dnla20,
@@ -7144,18 +7089,15 @@ class Physics:
 
         # ITER_93 ELM-free H-mode scaling
         elif i_confinement_time == 24:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_93h_confinement_time(
-                    pcur,
-                    bt,
-                    powerht,
-                    m_fuel_amu,
-                    rmajor,
-                    dnla20,
-                    aspect,
-                    kappa,
-                )
+            t_electron_confinement = confinement.iter_93h_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                m_fuel_amu,
+                rmajor,
+                dnla20,
+                aspect,
+                kappa,
             )
 
         # ==========================================================================
@@ -7166,54 +7108,45 @@ class Physics:
 
         # ELM-free: ITERH-97P
         elif i_confinement_time == 26:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_h97p_confinement_time(
-                    pcur,
-                    bt,
-                    powerht,
-                    dnla19,
-                    rmajor,
-                    aspect,
-                    kappa,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_h97p_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                rmajor,
+                aspect,
+                kappa,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # ELMy: ITERH-97P(y)
         elif i_confinement_time == 27:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_h97p_elmy_confinement_time(
-                    pcur,
-                    bt,
-                    powerht,
-                    dnla19,
-                    rmajor,
-                    aspect,
-                    kappa,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_h97p_elmy_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                dnla19,
+                rmajor,
+                aspect,
+                kappa,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # ITER-96P (= ITER-97L) L-mode scaling
         elif i_confinement_time == 28:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_96p_confinement_time(
-                    pcur,
-                    bt,
-                    kappa95,
-                    rmajor,
-                    aspect,
-                    dnla19,
-                    m_fuel_amu,
-                    powerht,
-                )
+            t_electron_confinement = confinement.iter_96p_confinement_time(
+                pcur,
+                bt,
+                kappa95,
+                rmajor,
+                aspect,
+                dnla19,
+                m_fuel_amu,
+                powerht,
             )
 
         # ==========================================================================
@@ -7221,18 +7154,15 @@ class Physics:
         # Valovic modified ELMy-H mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif i_confinement_time == 29:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.valovic_elmy_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    m_fuel_amu,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    powerht,
-                )
+            t_electron_confinement = confinement.valovic_elmy_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                m_fuel_amu,
+                rmajor,
+                rminor,
+                kappa,
+                powerht,
             )
 
         # ==========================================================================
@@ -7240,7 +7170,7 @@ class Physics:
         # Kaye PPPL Workshop April 1998 L-mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif i_confinement_time == 30:
-            t_electron_energy_confinement = hfact * confinement.kaye_confinement_time(
+            t_electron_confinement = confinement.kaye_confinement_time(
                 pcur,
                 bt,
                 kappa,
@@ -7256,108 +7186,90 @@ class Physics:
         # ITERH-PB98P(y), ELMy H-mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif i_confinement_time == 31:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_pb98py_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_pb98py_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # IPB98(y), ELMy H-mode scaling
         elif i_confinement_time == 32:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_ipb98y_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    kappa,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_ipb98y_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                kappa,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # IPB98(y,1), ELMy H-mode scaling
         elif i_confinement_time == 33:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_ipb98y1_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_ipb98y1_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # IPB98(y,2), ELMy H-mode scaling
         elif i_confinement_time == 34:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_ipb98y2_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_ipb98y2_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # IPB98(y,3), ELMy H-mode scaling
         elif i_confinement_time == 35:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_ipb98y3_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_ipb98y3_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # IPB98(y,4), ELMy H-mode scaling
         elif i_confinement_time == 36:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iter_ipb98y4_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.iter_ipb98y4_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
@@ -7365,16 +7277,13 @@ class Physics:
         # ISS95 stellarator scaling
         elif i_confinement_time == 37:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iss95_stellarator_confinement_time(
-                    rminor,
-                    rmajor,
-                    dnla19,
-                    bt,
-                    powerht,
-                    iotabar,
-                )
+            t_electron_confinement = confinement.iss95_stellarator_confinement_time(
+                rminor,
+                rmajor,
+                dnla19,
+                bt,
+                powerht,
+                iotabar,
             )
 
         # ==========================================================================
@@ -7382,23 +7291,20 @@ class Physics:
         # ISS04 stellarator scaling
         elif i_confinement_time == 38:
             iotabar = q  # dummy argument q is actual argument iotabar for stellarators
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.iss04_stellarator_confinement_time(
-                    rminor,
-                    rmajor,
-                    dnla19,
-                    bt,
-                    powerht,
-                    iotabar,
-                )
+            t_electron_confinement = confinement.iss04_stellarator_confinement_time(
+                rminor,
+                rmajor,
+                dnla19,
+                bt,
+                powerht,
+                iotabar,
             )
 
         # ==========================================================================
 
         # DS03 beta-independent H-mode scaling
         elif i_confinement_time == 39:
-            t_electron_energy_confinement = hfact * confinement.ds03_confinement_time(
+            t_electron_confinement = confinement.ds03_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7413,7 +7319,7 @@ class Physics:
 
         #  Murari "Non-power law" scaling
         elif i_confinement_time == 40:
-            t_electron_energy_confinement = hfact * confinement.murari_confinement_time(
+            t_electron_confinement = confinement.murari_confinement_time(
                 pcur,
                 rmajor,
                 physics_variables.kappa_ipb,
@@ -7426,107 +7332,88 @@ class Physics:
 
         # Petty08, beta independent dimensionless scaling
         elif i_confinement_time == 41:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.petty08_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                )
+            t_electron_confinement = confinement.petty08_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
             )
 
         # ==========================================================================
 
         # Lang high density relevant confinement scaling
         elif i_confinement_time == 42:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.lang_high_density_confinement_time(
-                    plasma_current,
-                    bt,
-                    dnla,
-                    powerht,
-                    rmajor,
-                    rminor,
-                    q,
-                    qstar,
-                    aspect,
-                    m_fuel_amu,
-                    physics_variables.kappa_ipb,
-                )
+            t_electron_confinement = confinement.lang_high_density_confinement_time(
+                plasma_current,
+                bt,
+                dnla,
+                powerht,
+                rmajor,
+                rminor,
+                q,
+                qstar,
+                aspect,
+                m_fuel_amu,
+                physics_variables.kappa_ipb,
             )
 
         # ==========================================================================
 
         # Hubbard 2017 I-mode confinement time scaling - nominal
         elif i_confinement_time == 43:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.hubbard_nominal_confinement_time(
-                    pcur,
-                    bt,
-                    dnla20,
-                    powerht,
-                )
+            t_electron_confinement = confinement.hubbard_nominal_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
             )
 
         # ==========================================================================
 
         # Hubbard 2017 I-mode confinement time scaling - lower
         elif i_confinement_time == 44:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.hubbard_lower_confinement_time(
-                    pcur,
-                    bt,
-                    dnla20,
-                    powerht,
-                )
+            t_electron_confinement = confinement.hubbard_lower_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
             )
 
         # ==========================================================================
 
         # Hubbard 2017 I-mode confinement time scaling - upper
         elif i_confinement_time == 45:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.hubbard_upper_confinement_time(
-                    pcur,
-                    bt,
-                    dnla20,
-                    powerht,
-                )
+            t_electron_confinement = confinement.hubbard_upper_confinement_time(
+                pcur,
+                bt,
+                dnla20,
+                powerht,
             )
 
         # ==========================================================================
 
         # Menard NSTX, ELMy H-mode scaling
         elif i_confinement_time == 46:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.menard_nstx_confinement_time(
-                    pcur,
-                    bt,
-                    dnla19,
-                    powerht,
-                    rmajor,
-                    physics_variables.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+            t_electron_confinement = confinement.menard_nstx_confinement_time(
+                pcur,
+                bt,
+                dnla19,
+                powerht,
+                rmajor,
+                physics_variables.kappa_ipb,
+                aspect,
+                m_fuel_amu,
             )
 
         # ==========================================================================
 
         # Menard NSTX-Petty08 Hybrid
         elif i_confinement_time == 47:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.menard_nstx_petty08_hybrid_confinement_time(
+            t_electron_confinement = (
+                confinement.menard_nstx_petty08_hybrid_confinement_time(
                     pcur,
                     bt,
                     dnla19,
@@ -7542,22 +7429,19 @@ class Physics:
 
         # NSTX gyro-Bohm (Buxton)
         elif i_confinement_time == 48:
-            t_electron_energy_confinement = (
-                hfact
-                * confinement.nstx_gyro_bohm_confinement_time(
-                    pcur,
-                    bt,
-                    powerht,
-                    rmajor,
-                    dnla20,
-                )
+            t_electron_confinement = confinement.nstx_gyro_bohm_confinement_time(
+                pcur,
+                bt,
+                powerht,
+                rmajor,
+                dnla20,
             )
 
         # ==========================================================================
 
         # ITPA20 H-mode scaling
         elif i_confinement_time == 49:
-            t_electron_energy_confinement = hfact * confinement.itpa20_confinement_time(
+            t_electron_confinement = confinement.itpa20_confinement_time(
                 pcur,
                 bt,
                 dnla19,
@@ -7577,6 +7461,7 @@ class Physics:
 
         # Ion energy confinement time
         # N.B. Overwrites earlier calculation above
+        t_electron_energy_confinement = hfact * t_electron_confinement
 
         t_ion_energy_confinement = t_electron_energy_confinement
 
