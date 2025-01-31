@@ -812,7 +812,7 @@ module physics_variables
   real(dp) :: f_sync_reflect
   !! synchrotron wall reflectivity factor
 
-  real(dp) :: t_electron_confinement
+  real(dp) :: t_electron_energy_confinement
   !! electron energy confinement time (sec)
 
   real(dp) :: tauee_in
@@ -1095,7 +1095,7 @@ module physics_variables
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
     f_sync_reflect = 0.6D0
-    t_electron_confinement = 0.0D0
+    t_electron_energy_confinement = 0.0D0
     tauee_in = 0.0D0
     t_energy_confinement = 0.0D0
     t_ion_energy_confinement = 0.0D0

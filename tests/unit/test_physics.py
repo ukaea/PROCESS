@@ -2967,7 +2967,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     (
         ptrepv,
         ptripv,
-        t_electron_confinement,
+        t_electron_energy_confinement,
         t_ion_energy_confinement,
         t_energy_confinement,
         powerht,
@@ -3009,7 +3009,9 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
 
     assert ptripv == pytest.approx(confinementtimeparam.expected_ptripv)
 
-    assert t_electron_confinement == pytest.approx(confinementtimeparam.expected_tauee)
+    assert t_electron_energy_confinement == pytest.approx(
+        confinementtimeparam.expected_tauee
+    )
 
     assert t_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_energy_confinement

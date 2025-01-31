@@ -967,7 +967,7 @@ J. Menard 2019, Phil. Trans. R. Soc. A 377:201704401\strut
 \begin{minipage}[t]{0.05\columnwidth}\centering\strut
 48\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
-Use input \texttt{t_electron_confinement\_in}\strut
+Use input \texttt{t_electron_energy_confinement\_in}\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 \strut
 \end{minipage}\tabularnewline
