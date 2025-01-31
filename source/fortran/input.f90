@@ -274,7 +274,7 @@ contains
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
-      declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
+      declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, rpf2dewar, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, iblnkith, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
@@ -1917,8 +1917,8 @@ contains
           call parse_real_array('zref', zref, isub1, ngrpmx, &
                'height of location 3 and 4 coil groups / minor radius', icode)
 
-       case ('afw')
-          call parse_real_variable('afw', afw, 1.0D-3, 0.5D0, &
+       case ('radius_fw_channel')
+          call parse_real_variable('radius_fw_channel', radius_fw_channel, 1.0D-3, 0.5D0, &
                'Inner radius of first wall coolant channel (m)')
 
        case ('fw_wall')
