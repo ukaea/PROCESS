@@ -938,10 +938,10 @@ def check_process():
     # is used for bucked and wedged design
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.iprecomp == 1
+        and fortran.build_variables.i_cs_precomp == 1
     ):
         raise ProcessValidationError(
-            "No CS precompression structure for bucked and wedged, use iprecomp = 0"
+            "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
         )
 
     # Number of stress calculation layers

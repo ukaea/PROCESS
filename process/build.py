@@ -1678,8 +1678,8 @@ class Build:
                 build_variables.vgaptop,
             )
 
-        # Calculate pre-compression structure thickness is build_variables.iprecomp=1
-        if build_variables.iprecomp == 1:
+        # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
+        if build_variables.i_cs_precomp == 1:
             build_variables.dr_cs_precomp = build_variables.fseppc / (
                 2.0e0
                 * np.pi
