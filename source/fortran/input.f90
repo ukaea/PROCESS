@@ -312,7 +312,7 @@ contains
       itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
       teped, f_helium3, iwalld, gamma, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       i_rad_loss, te, alphan, rmajor, plasma_square, kappa, fkzohm, beamfus0, &
-      tauratio, i_density_limit, bt, i_plasma_wall_gap, ipnlaws, beta_max, beta_min, &
+      tauratio, i_density_limit, bt, i_plasma_wall_gap, n_confinement_scalings, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
     use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
@@ -658,7 +658,7 @@ contains
           call parse_int_variable('i_rad_loss', i_rad_loss, 0, 2, &
                'Switch for radiation loss term inclusion in power balance')
        case ('i_confinement_time')
-          call parse_int_variable('i_confinement_time', i_confinement_time, 0, ipnlaws-1, &
+          call parse_int_variable('i_confinement_time', i_confinement_time, 0, n_confinement_scalings-1, &
                'Switch for confinement scaling law')
        case ('i_plasma_wall_gap')
           call parse_int_variable('i_plasma_wall_gap', i_plasma_wall_gap, 0, 1, &

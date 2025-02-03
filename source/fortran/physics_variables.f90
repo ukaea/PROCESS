@@ -14,7 +14,7 @@ module physics_variables
 
   public
 
-  integer, parameter :: ipnlaws = 51
+  integer, parameter :: n_confinement_scalings = 51
   !! number of energy confinement time scaling laws
 
   real(dp) :: m_beam_amu
@@ -266,7 +266,7 @@ module physics_variables
   real(dp) :: f_beta_alpha_beam_thermal
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
-  real(dp), dimension(ipnlaws) :: hfac
+  real(dp), dimension(n_confinement_scalings) :: hfac
   !! H factors for an ignited plasma for each energy confinement time scaling law
 
   real(dp) :: hfact
@@ -418,8 +418,8 @@ module physics_variables
   integer :: i_confinement_time
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
-  !! tauscl(ipnlaws) : labels describing energy confinement scaling laws
-  character*30, parameter, dimension(ipnlaws) :: tauscl = (/  &
+  !! tauscl(n_confinement_scalings) : labels describing energy confinement scaling laws
+  character*30, parameter, dimension(n_confinement_scalings) :: tauscl = (/  &
     'Input tauee_in                ', &
     'Neo-Alcator            (Ohmic)', &
     'Mirnov                     (H)', &

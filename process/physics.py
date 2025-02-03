@@ -5782,7 +5782,7 @@ class Physics:
 
         # Plot all of the confinement scalings for comparison when H = 1
         # Start from range 1 as the first i_confinement_time is a user input
-        for i_confinement_time in range(1, physics_variables.ipnlaws):
+        for i_confinement_time in range(1, physics_variables.n_confinement_scalings):
             if i_confinement_time == 25:
                 continue
             (
