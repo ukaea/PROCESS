@@ -716,7 +716,7 @@ module physics_variables
   real(dp) :: ptremw
   !! electron transport power (MW)
 
-  real(dp) :: ptrepv
+  real(dp) :: pden_electron_transport_loss_mw
   !! electron transport power per volume (MW/m3)
 
   real(dp) :: ptrimw
@@ -1065,7 +1065,7 @@ module physics_variables
     plhthresh = 0.0D0
     pthrmw = 0.0D0
     ptremw = 0.0D0
-    ptrepv = 0.0D0
+    pden_electron_transport_loss_mw = 0.0D0
     ptrimw = 0.0D0
     pscalingmw = 0.0D0
     pden_ion_transport_loss_mw = 0.0D0

@@ -213,7 +213,7 @@ class Stellarator:
 
         for iisc, i in enumerate(istlaw):
             (
-                physics_variables.ptrepv,
+                physics_variables.pden_electron_transport_loss_mw,
                 physics_variables.pden_ion_transport_loss_mw,
                 physics_variables.t_electron_energy_confinement,
                 physics_variables.t_ion_energy_confinement,
@@ -4452,7 +4452,7 @@ class Stellarator:
         #  N.B. stellarator_variables.iotabar replaces tokamak physics_variables.q95 in argument list
 
         (
-            physics_variables.ptrepv,
+            physics_variables.pden_electron_transport_loss_mw,
             physics_variables.pden_ion_transport_loss_mw,
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_ion_energy_confinement,
@@ -4489,7 +4489,8 @@ class Stellarator:
         )
 
         physics_variables.ptremw = (
-            physics_variables.ptrepv * physics_variables.vol_plasma
+            physics_variables.pden_electron_transport_loss_mw
+            * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
             physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma

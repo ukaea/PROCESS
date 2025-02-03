@@ -448,7 +448,7 @@ contains
     !! ignite : input integer : switch for ignition assumption:<UL>
     !! <LI> = 0 do not assume plasma ignition;
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-    !! ptrepv : input real : electron transport power per volume (MW/m3)
+    !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
     !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
     !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: i_rad_loss, ignite, ptrepv, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
+    use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -476,7 +476,7 @@ contains
     ! pscaling : Local real : total transport power per volume (MW/m3)
     real(dp) :: pscaling
     real(dp) :: pnumerator, pdenom
-    pscaling = ptrepv + pden_ion_transport_loss_mw
+    pscaling = pden_electron_transport_loss_mw + pden_ion_transport_loss_mw
     ! Total power lost is scaling power plus radiation:
     if (i_rad_loss == 0) then
         pnumerator = pscaling + pden_plasma_rad_mw
@@ -568,7 +568,7 @@ contains
       !! ignite : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! ptrepv : input real : electron transport power per volume (MW/m3)
+      !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
       !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
@@ -576,7 +576,7 @@ contains
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_rad_loss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
+      use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pcoreradpv, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
@@ -589,7 +589,7 @@ contains
       ! pscaling : Local real : total transport power per volume (MW/m3)
       real(dp) :: pscaling
       real(dp) :: pnumerator, pdenom
-      pscaling = ptrepv
+      pscaling = pden_electron_transport_loss_mw
 	   ! Total power lost is scaling power plus radiation:
       if (i_rad_loss == 0) then
          pnumerator = pscaling + pden_plasma_rad_mw

@@ -2248,7 +2248,7 @@ class Physics:
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
         (
-            physics_variables.ptrepv,
+            physics_variables.pden_electron_transport_loss_mw,
             physics_variables.pden_ion_transport_loss_mw,
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_energy_confinement,
@@ -2283,7 +2283,8 @@ class Physics:
         )
 
         physics_variables.ptremw = (
-            physics_variables.ptrepv * physics_variables.vol_plasma
+            physics_variables.pden_electron_transport_loss_mw
+            * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
             physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
@@ -2340,7 +2341,7 @@ class Physics:
             physics_variables.vol_plasma,
         )
 
-        # ptremw = physics_variables.ptrepv*physics_variables.vol_plasma
+        # ptremw = physics_variables.pden_electron_transport_loss_mw*physics_variables.vol_plasma
         # ptrimw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
@@ -6697,7 +6698,7 @@ class Physics:
         :param zeff: Plasma effective charge
 
         :return: Tuple containing:
-            - ptrepv (float): Electron transport power (MW/m3)
+            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
             - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
@@ -7431,7 +7432,7 @@ class Physics:
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, tin and ten are in keV, and ptrepv and pden_ion_transport_loss_mw are in MW/m3)
+        # (here, tin and ten are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
         pden_ion_transport_loss_mw = (
             (3 / 2)
@@ -7440,7 +7441,7 @@ class Physics:
             * tin
             / t_ion_energy_confinement
         )
-        ptrepv = (
+        pden_electron_transport_loss_mw = (
             (3 / 2)
             * (constants.electron_charge / 1e3)
             * dene
@@ -7463,7 +7464,7 @@ class Physics:
         ) / powerht
 
         return (
-            ptrepv,
+            pden_electron_transport_loss_mw,
             pden_ion_transport_loss_mw,
             t_electron_energy_confinement,
             t_ion_energy_confinement,
