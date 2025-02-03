@@ -1433,7 +1433,7 @@ class ComponentMassesParam(NamedTuple):
     armour_fw_bl_mass: Any = None
     volblkti: Any = None
     volblkto: Any = None
-    iblnkith: Any = None
+    i_blkt_inboard: Any = None
     fblhebmi: Any = None
     fblhebpi: Any = None
     fblhebmo: Any = None
@@ -1525,7 +1525,7 @@ class ComponentMassesParam(NamedTuple):
             armour_fw_bl_mass=0,
             volblkti=315.83946385183026,
             volblkto=866.70391336775992,
-            iblnkith=1,
+            i_blkt_inboard=1,
             fblhebmi=0.40000000000000002,
             fblhebpi=0.65949999999999998,
             fblhebmo=0.40000000000000002,
@@ -1648,7 +1648,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     )
     monkeypatch.setattr(fwbs_variables, "volblkti", componentmassesparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", componentmassesparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "iblnkith", componentmassesparam.iblnkith)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_inboard", componentmassesparam.i_blkt_inboard
+    )
     monkeypatch.setattr(fwbs_variables, "fblhebmi", componentmassesparam.fblhebmi)
     monkeypatch.setattr(fwbs_variables, "fblhebpi", componentmassesparam.fblhebpi)
     monkeypatch.setattr(fwbs_variables, "fblhebmo", componentmassesparam.fblhebmo)

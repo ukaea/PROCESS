@@ -621,7 +621,7 @@ class BlanketLibrary:
         included there.
 
         Returns the pressure drops as a list with the number of entries dependent upon
-        the switches icooldual and iblnkith.
+        the switches icooldual and i_blkt_inboard.
         """
         npoltoti = 0
         npoltoto = 0
@@ -670,7 +670,7 @@ class BlanketLibrary:
 
         if fwbs_variables.icooldual > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
                     min(
@@ -809,7 +809,7 @@ class BlanketLibrary:
                 flow_density=fwbs_variables.den_liq,
             )
 
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -890,7 +890,7 @@ class BlanketLibrary:
                 flow_density=fwbs_variables.den_liq,
             )
 
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -959,7 +959,7 @@ class BlanketLibrary:
                 flow_density=fwbs_variables.rhof_bl,
             )
 
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -1020,7 +1020,7 @@ class BlanketLibrary:
         # BB Presure Drops ###############
 
         # Long polodal flows
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             npoltoti = fwbs_variables.nopol * npblkti_liq
         npoltoto = fwbs_variables.nopol * npblkto_liq
 
@@ -1039,7 +1039,7 @@ class BlanketLibrary:
             label="Outboard blanket",
         )
 
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             deltap_bli = self.deltap_tot(
                 output,
                 icoolpump=1,
@@ -1071,7 +1071,7 @@ class BlanketLibrary:
                 nopolchan=npoltoto,
                 label="Outboard blanket breeder liquid",
             )
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 deltap_bli_liq = self.deltap_tot(
                     output,
                     icoolpump=2,
@@ -1097,7 +1097,7 @@ class BlanketLibrary:
                 ]
             return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
 
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
         return [deltap_fwi, deltap_fwo, deltap_blo]
 
@@ -1318,7 +1318,7 @@ class BlanketLibrary:
 
         # Magnetic feild strength in T for Hartmann calculation
         # IB
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             fwbs_variables.b_mag_blkt[0] = (
                 physics_variables.bt
                 * physics_variables.rmajor
@@ -1329,7 +1329,7 @@ class BlanketLibrary:
                 )
             )
         # We do not use this if there is no IB blanket, but will use edge as fill value
-        if fwbs_variables.iblnkith == 0:
+        if fwbs_variables.i_blkt_inboard == 0:
             fwbs_variables.b_mag_blkt[0] = (
                 physics_variables.bt
                 * physics_variables.rmajor
@@ -1544,7 +1544,7 @@ class BlanketLibrary:
         # IB/OB Blanket (MW)
 
         # Neutron power deposited in inboard blanket (MW)
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             blanket_library.pnucblkti = (
                 fwbs_variables.pnucblkt
                 * fwbs_variables.volblkti
@@ -1616,7 +1616,7 @@ class BlanketLibrary:
                 )
 
             # Outlet FW/inlet BB temp (mass flow FW = mass flow BB)
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 fwoutleti = (f_nuc_fwi * fwbs_variables.outlet_temp) + (
                     1 - f_nuc_fwi
                 ) * fwbs_variables.fwinlet
@@ -1717,7 +1717,7 @@ class BlanketLibrary:
             )
 
             # If there is an IB blanket...
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Mass flow rates for inboard blanket coolants (kg/s)
                 blanket_library.mfblkti = (
                     1.0e6
@@ -1756,7 +1756,7 @@ class BlanketLibrary:
             ) / (24 * 3600)
 
             # If there is an IB blanket...
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 # Mass flow rate for inboard blanket coolant (kg/s)
                 blanket_library.mfblkti = (
                     1.0e6
@@ -1782,7 +1782,7 @@ class BlanketLibrary:
 
             # If there is an IB blanket...
             # Mass flow rate for inboard blanket coolant (kg/s)
-            if fwbs_variables.iblnkith == 1:
+            if fwbs_variables.i_blkt_inboard == 1:
                 blanket_library.mfblkti = (
                     1.0e6
                     * (blanket_library.pnucblkti)
@@ -1805,14 +1805,14 @@ class BlanketLibrary:
             deltap_fwo = deltap[1]
             deltap_blo = deltap[2]
             if fwbs_variables.icooldual > 0:
-                if fwbs_variables.iblnkith == 1:
+                if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bli = deltap[3]
                     deltap_blo_liq = deltap[4]
                     deltap_bli_liq = deltap[5]
                 else:
                     deltap_blo_liq = deltap[3]
             else:
-                if fwbs_variables.iblnkith == 1:
+                if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bli = deltap[3]
 
         # Pumping Power
@@ -1820,9 +1820,9 @@ class BlanketLibrary:
         if fwbs_variables.ipump == 0:
             # Total pressure drop in the first wall/blanket  (Pa)
             if fwbs_variables.primary_pumping == 2:
-                if fwbs_variables.iblnkith == 1:
+                if fwbs_variables.i_blkt_inboard == 1:
                     deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
-                if fwbs_variables.iblnkith == 0:
+                if fwbs_variables.i_blkt_inboard == 0:
                     deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
             elif fwbs_variables.primary_pumping == 3:
                 deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
@@ -1852,9 +1852,9 @@ class BlanketLibrary:
                 deltap_fw = deltap_fwi + deltap_fwo
 
                 # Total pressure drop in the blanket (Pa)
-                if fwbs_variables.iblnkith == 1:
+                if fwbs_variables.i_blkt_inboard == 1:
                     deltap_blkt = deltap_bli + deltap_blo
-                if fwbs_variables.iblnkith == 0:
+                if fwbs_variables.i_blkt_inboard == 0:
                     deltap_blkt = deltap_blo
             elif fwbs_variables.primary_pumping == 3:
                 deltap_fw = primary_pumping_variables.dp_fw
@@ -1906,9 +1906,9 @@ class BlanketLibrary:
         if fwbs_variables.icooldual > 0:
             # Total pressure drop in the blanket (Pa)
             if fwbs_variables.primary_pumping == 2:
-                if fwbs_variables.iblnkith == 1:
+                if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bl_liq = deltap_bli_liq + deltap_blo_liq
-                if fwbs_variables.iblnkith == 0:
+                if fwbs_variables.i_blkt_inboard == 0:
                     deltap_bl_liq = deltap_blo_liq
             elif fwbs_variables.primary_pumping == 3:
                 deltap_bl_liq = primary_pumping_variables.dp_liq
