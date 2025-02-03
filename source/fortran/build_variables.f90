@@ -294,6 +294,12 @@ module build_variables
   real(dp) :: rspo
   !! outboard strike point radius (m)
 
+  real(dp) :: z_plasma_xpoint_upper
+  !! Vertical height of the upper plasma x-point (m)
+
+  real(dp) :: z_plasma_xpoint_lower
+  !! Vertical height of the lower plasma x-point (m)
+
   contains
 
   subroutine init_build_variables
@@ -386,5 +392,7 @@ module build_variables
     plsepo = 1.5D0
     rspo = 0.0D0
     r_sh_inboard_in = 0.0D0
+    z_plasma_xpoint_upper = 0.0D0
+    z_plasma_xpoint_lower = 0.0D0
   end subroutine init_build_variables
 end module build_variables

@@ -368,8 +368,8 @@ class ComponentHalfHeightParam(NamedTuple):
     dr_fw_outboard: Any = None
     d_vv_bot: Any = None
     d_vv_top: Any = None
-    rminor: Any = None
-    kappa: Any = None
+    z_plasma_xpoint_lower: Any = None
+    z_plasma_xpoint_upper: Any = None
     idivrt: Any = None
     divfix: Any = None
     icomponent: Any = None
@@ -392,8 +392,8 @@ class ComponentHalfHeightParam(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             d_vv_bot=0.30000000000000004,
             d_vv_top=0.30000000000000004,
-            rminor=2.6666666666666665,
-            kappa=1.8500000000000001,
+            z_plasma_xpoint_lower=4.93333333333333333,
+            z_plasma_xpoint_upper=4.93333333333333333,
             idivrt=1,
             divfix=0.62000000000000011,
             icomponent=0,
@@ -447,8 +447,16 @@ def test_component_half_height(
     )
     monkeypatch.setattr(build_variables, "d_vv_bot", componenthalfheightparam.d_vv_bot)
     monkeypatch.setattr(build_variables, "d_vv_top", componenthalfheightparam.d_vv_top)
-    monkeypatch.setattr(physics_variables, "rminor", componenthalfheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "kappa", componenthalfheightparam.kappa)
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_lower",
+        componenthalfheightparam.z_plasma_xpoint_lower,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_upper",
+        componenthalfheightparam.z_plasma_xpoint_upper,
+    )
     monkeypatch.setattr(physics_variables, "idivrt", componenthalfheightparam.idivrt)
     monkeypatch.setattr(divertor_variables, "divfix", componenthalfheightparam.divfix)
 

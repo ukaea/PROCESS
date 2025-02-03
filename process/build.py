@@ -104,18 +104,25 @@ class Build:
 
     def calculate_vertical_build(self, output: bool) -> None:
         """
-        This method determines the vertical build of the machine.
-        It calculates various parameters related to the build of the machine,
-        such as thicknesses, radii, and areas.
-        Results can be outputted with the `output` flag.
+        Determines the vertical build of the machine.
 
-        Args:
-            output (bool): Flag indicating whether to output results
+        This method calculates various parameters related to the vertical build of the machine,
+        such as thicknesses, radii, and areas. Results can be outputted with the `output` flag.
 
-        Returns:
-            None
-
+        :param output: Flag indicating whether to output results
+        :type output: bool
+        :returns: None
         """
+
+        # Set the X-point heights for the top and bottom of the plasma
+        # Assumes top-down plasma symmetry
+        build_variables.z_plasma_xpoint_upper = (
+            physics_variables.rminor * physics_variables.kappa
+        )
+        build_variables.z_plasma_xpoint_lower = (
+            physics_variables.rminor * physics_variables.kappa
+        )
+
         if output:
             po.oheadr(self.outfile, "Vertical Build")
 
@@ -141,7 +148,7 @@ class Build:
                     + build_variables.shldtth
                     + divertor_variables.divfix
                     + build_variables.vgaptop
-                    + physics_variables.rminor * physics_variables.kappa
+                    + build_variables.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -267,28 +274,28 @@ class Build:
 
                 po.obuild(
                     self.outfile,
-                    "Plasma top",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    build_variables.z_plasma_xpoint_upper,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
                 po.ovarre(
                     self.mfile,
-                    "Plasma half-height (m)",
-                    "(rminor*kappa)",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    "(z_plasma_xpoint_upper)",
+                    build_variables.z_plasma_xpoint_upper,
                 )
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
-                    "Plasma bottom",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma lower X-point height (m)",
+                    build_variables.z_plasma_xpoint_lower,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_lower)",
                 )
 
                 vbuild = vbuild - build_variables.vgap_xpoint_divertor
@@ -417,7 +424,7 @@ class Build:
                     + 0.5e0
                     * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                     + build_variables.vgaptop
-                    + physics_variables.rminor * physics_variables.kappa
+                    + build_variables.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -563,28 +570,28 @@ class Build:
 
                 po.obuild(
                     self.outfile,
-                    "Plasma top",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    build_variables.z_plasma_xpoint_upper,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
                 po.ovarre(
                     self.mfile,
-                    "Plasma half-height (m)",
-                    "(rminor*kappa)",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    "(z_plasma_xpoint_upper)",
+                    build_variables.z_plasma_xpoint_upper,
                 )
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
-                    "Plasma bottom",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma lower X-point height (m)",
+                    build_variables.z_plasma_xpoint_lower,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
 
                 vbuild = vbuild - build_variables.vgap_xpoint_divertor
@@ -725,7 +732,7 @@ class Build:
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
         build_variables.hmax = (
-            physics_variables.rminor * physics_variables.kappa
+            build_variables.z_plasma_xpoint_upper
             + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             + build_variables.shldlth
@@ -752,7 +759,7 @@ class Build:
                 + 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 + build_variables.vgaptop
-                + physics_variables.rminor * physics_variables.kappa
+                + build_variables.z_plasma_xpoint_upper
             )
             build_variables.hpfdif = (
                 build_variables.hpfu
@@ -1966,7 +1973,7 @@ class Build:
 
         #  Half-height of first wall (internal surface)
         hbot = (
-            physics_variables.rminor * physics_variables.kappa
+            build_variables.z_plasma_xpoint_lower
             + build_variables.vgap_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
@@ -1975,10 +1982,7 @@ class Build:
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
         else:
-            htop = (
-                physics_variables.rminor * physics_variables.kappa
-                + build_variables.vgaptop
-            )
+            htop = build_variables.z_plasma_xpoint_upper + build_variables.vgaptop
 
         hfw = 0.5e0 * (htop + hbot)
 
