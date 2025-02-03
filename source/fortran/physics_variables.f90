@@ -419,58 +419,58 @@ module physics_variables
   !! switch for energy confinement time scaling law (see description in `tauscl`)
 
   !! tauscl(ipnlaws) : labels describing energy confinement scaling laws
-  character*24, parameter, dimension(ipnlaws) :: tauscl = (/  &
-    'Input tauee_in          ', &
-    'Neo-Alcator      (ohmic)', &
-    'Mirnov               (H)', &
-    'Merezkhin-Muhkovatov (L)', &
-    'Shimomura            (H)', &
-    'Kaye-Goldston        (L)', &
-    'ITER 89-P            (L)', &
-    'ITER 89-O            (L)', &
-    'Rebut-Lallia         (L)', &
-    'Goldston             (L)', &
-    'T10                  (L)', &
-    'JAERI-88             (L)', &
-    'Kaye-Big Complex     (L)', &
-    'ITER H90-P           (H)', &
-    'ITER Mix             (L)', &
-    'Riedel               (L)', &
-    'Christiansen         (L)', &
-    'Lackner-Gottardi     (L)', &
-    'Neo-Kaye             (L)', &
-    'Riedel               (H)', &
-    'ITER H90-P amended   (H)', &
-    'LHD              (stell)', &
-    'Gyro-reduced Bohm(stell)', &
-    'Lackner-Gottardi (stell)', &
-    'ITER-93H             (H)', &
-    'TITAN RFP OBSOLETE      ', &
-    'ITER H-97P ELM-free  (H)', &
-    'ITER H-97P ELMy      (H)', &
-    'ITER-96P             (L)', &
-    'Valovic modified ELMy(H)', &
-    'Kaye PPPL April 98   (L)', &
-    'ITERH-PB98P(y)       (H)', &
-    'IPB98(y)             (H)', &
-    'IPB98(y,1)           (H)', &
-    'IPB98(y,2)           (H)', &
-    'IPB98(y,3)           (H)', &
-    'IPB98(y,4)           (H)', &
-    'ISS95            (stell)', &
-    'ISS04            (stell)', &
-    'DS03                 (H)', &
-    'Murari et al NPL     (H)', &
-    'Petty 2008           (H)', &
-    'Lang et al. 2012     (H)', &
-    'Hubbard 2017 - nom   (I)', &
-    'Hubbard 2017 - lower (I)', &
-    'Hubbard 2017 - upper (I)', &
-    'NSTX (Spherical)     (H)', &
-    'NSTX-Petty08 Hybrid  (H)', &
-    'NSTX gyro-Bohm Buxton(H)', &
-    'ITPA20               (H)', &
-    'ITPA20-IL            (H)' /)
+  character*30, parameter, dimension(ipnlaws) :: tauscl = (/  &
+    'Input tauee_in                ', &
+    'Neo-Alcator            (Ohmic)', &
+    'Mirnov                     (H)', &
+    'Merezkhin-Muhkovatov       (L)', &
+    'Shimomura                  (H)', &
+    'Kaye-Goldston              (L)', &
+    'ITER 89-P                  (L)', &
+    'ITER 89-O                  (L)', &
+    'Rebut-Lallia               (L)', &
+    'Goldston                   (L)', &
+    'T10                        (L)', &
+    'JAERI-88                   (L)', &
+    'Kaye-Big Complex           (L)', &
+    'ITER H90-P                 (H)', &
+    'ITER Mix                   (L)', &
+    'Riedel                     (L)', &
+    'Christiansen               (L)', &
+    'Lackner-Gottardi           (L)', &
+    'Neo-Kaye                   (L)', &
+    'Riedel                     (H)', &
+    'ITER H90-P amended         (H)', &
+    'LHD                    (Stell)', &
+    'Gyro-reduced Bohm      (Stell)', &
+    'Lackner-Gottardi       (Stell)', &
+    'ITER-93H                   (H)', &
+    'TITAN RFP OBSOLETE            ', &
+    'ITER H-97P ELM-free        (H)', &
+    'ITER H-97P ELMy            (H)', &
+    'ITER-96P                   (L)', &
+    'Valovic modified ELMy      (H)', &
+    'Kaye PPPL April 98         (L)', &
+    'ITERH-PB98P(y)             (H)', &
+    'IPB98(y)                   (H)', &
+    'IPB98(y,1)                 (H)', &
+    'IPB98(y,2)                 (H)', &
+    'IPB98(y,3)                 (H)', &
+    'IPB98(y,4)                 (H)', &
+    'ISS95                  (Stell)', &
+    'ISS04                  (Stell)', &
+    'DS03                       (H)', &
+    'Murari et al NPL           (H)', &
+    'Petty 2008             (ST)(H)', &
+    'Lang et al. 2012           (H)', &
+    'Hubbard 2017 - nom         (I)', &
+    'Hubbard 2017 - lower       (I)', &
+    'Hubbard 2017 - upper       (I)', &
+    'NSTX                   (ST)(H)', &
+    'NSTX-Petty08 Hybrid    (ST)(H)', &
+    'NSTX gyro-Bohm Buxton  (ST)(H)', &
+    'ITPA20                     (H)', &
+    'ITPA20-IL                  (H)' /)
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:

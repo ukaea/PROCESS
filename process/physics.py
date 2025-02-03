@@ -5350,66 +5350,9 @@ class Physics:
             self.outfile,
             "  (= stored energy including fast particles / loss power including radiation",
         )
-        po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
-        po.ocmmnt(
-            self.outfile,
-            f"{'':>5}{'scaling law':<25}{'confinement time (s)':<25}H-factor for",
-        )
-        po.ocmmnt(
-            self.outfile,
-            f"{'':>34}{'for H = 1':<20}power balance",
-        )
 
-        # for iisc in range(32, 48):
-        # Put the ITPA value first
-        for iisc in range(1, 49):
-            if iisc == 25:
-                continue
-            (
-                ptrez,
-                ptriz,
-                taueez,
-                taueiz,
-                taueffz,
-                powerhtz,
-            ) = self.calculate_confinement_time(
-                physics_variables.m_fuel_amu,
-                physics_variables.alpha_power_total,
-                physics_variables.aspect,
-                physics_variables.bt,
-                physics_variables.nd_ions_total,
-                physics_variables.dene,
-                physics_variables.dnla,
-                physics_variables.eps,
-                1.0,
-                iisc,
-                physics_variables.ignite,
-                physics_variables.kappa,
-                physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
-                physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
-                physics_variables.rmajor,
-                physics_variables.rminor,
-                physics_variables.ten,
-                physics_variables.tin,
-                physics_variables.q,
-                physics_variables.qstar,
-                physics_variables.vol_plasma,
-                physics_variables.zeff,
-            )
-
-            physics_variables.hfac[iisc - 1] = self.fhfac(iisc)
-
-            po.ocmmnt(
-                self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc]):<32}"
-                f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
-            )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
+        # Plot table of al the H-factor scalings and coparison values
+        self.output_confinement_comparison()
 
         if stellarator_variables.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
@@ -5800,27 +5743,48 @@ class Physics:
                 reinke_variables.fzactual,
             )
 
-    def igmarcal(self):
-        """Routine to calculate ignition margin
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile   : input integer : Fortran output unit identifier
-        This routine calculates the ignition margin at the final point
-        with different scalings.
+    def output_confinement_comparison(self) -> None:
+        """
+        Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
+
+        This routine calculates the ignition margin at the final point with different scalings and outputs the results to a file.
+
+        The output includes:
+        - Energy confinement times
+        - Required H-factors for power balance
+
+        The routine iterates over a range of confinement times, skipping the first user input and a specific index (25). For each confinement time, it calculates various parameters related to confinement and ignition using the `calculate_confinement_time` method. It then calculates the H-factor for when the plasma is ignited using the `fhfac` method and writes the results to the output file.
+
+        Output format:
+        - Header: "Energy confinement times, and required H-factors :"
+        - Columns: "Scaling law", "Confinement time [s]", "H-factor for power balance"
+
+        Methods used:
+        - `calculate_confinement_time`: Calculates confinement-related parameters.
+        - `fhfac`: Calculates the H-factor for a given confinement time.
+
+        Parameters:
+        - None
+
+        Returns:
+        - None
         """
 
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
         po.ocmmnt(
             self.outfile,
-            f"{'':>5}{'scaling law':<25}{'confinement time (s)':<25}H-factor for",
+            f"{'':>2}{'Scaling law':<35}{'Confinement time [s]':<40}H-factor for",
         )
         po.ocmmnt(
             self.outfile,
-            f"{'':>34}{'for H = 1':<20}power balance",
+            f"{'':>40}{'for H = 1':<26}power balance",
         )
 
-        # for iisc in range(32, 48):
-        # Put the ITPA value first
-        for iisc in [49, 34, 37, 38, 39, 46, 47, 48]:
+        # Plot all of the confinement scalings for comparison when H = 1
+        # Start from range 1 as the first i_confinement_time is a user input
+        for i_confinement_time in range(1, physics_variables.ipnlaws):
+            if i_confinement_time == 25:
+                continue
             (
                 ptrez,
                 ptriz,
@@ -5838,7 +5802,7 @@ class Physics:
                 physics_variables.dnla,
                 physics_variables.eps,
                 1.0,
-                iisc,
+                i_confinement_time,
                 physics_variables.ignite,
                 physics_variables.kappa,
                 physics_variables.kappa95,
@@ -5848,23 +5812,27 @@ class Physics:
                 physics_variables.pcoreradpv,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
-            physics_variables.hfac[iisc - 1] = self.fhfac(iisc)
+            # Calculate the H-factor for when the plasma is ignited
+            physics_variables.hfac[i_confinement_time - 1] = self.fhfac(
+                i_confinement_time
+            )
 
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[iisc]):<32}"
-                f"{taueez:<26.3f}{physics_variables.hfac[iisc - 1]:.3f}",
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[i_confinement_time]):<38}"
+                f"{taueez:<32.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
             )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
 
     @staticmethod
     def bootstrap_fraction_iter89(
