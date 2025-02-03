@@ -6709,24 +6709,6 @@ class Physics:
             - powerht (float): Heating power (MW) assumed in calculation
         """
 
-        eps2 = eps / 2.0e0
-        str5 = 2.0e0 / (1.0e0 + (kappa**2))
-        ck2 = (0.66e0 + (1.88e0 * (np.sqrt(eps2))) - (1.54e0 * eps2)) * (
-            1.0e0 + (1.5e0 * (eps2**2))
-        )
-        chii = (
-            (6.5e-22)
-            * ck2
-            * zeff
-            * (aspect**1.5e0)
-            * dene
-            * (q**2)
-            * str5
-            / ((np.sqrt(tin)) * (bt**2))
-        )
-        str2 = 2.0e0 * (kappa**2) / (1.0e0 + (kappa**2))
-        t_ion_energy_confinement = 0.375e0 * rminor**2 / chii * str2
-
         # ========================================================================
 
         # Calculate heating power (MW)
@@ -7444,10 +7426,11 @@ class Physics:
             error_handling.idiags[0] = i_confinement_time
             error_handling.report_error(81)
 
-        # Ion energy confinement time
-        # N.B. Overwrites earlier calculation above
+        # Apply H-factor correction to chosen scaling
         t_electron_energy_confinement = hfact * t_electron_confinement
 
+        # Ion energy confinement time
+        # N.B. Overwrites earlier calculation above
         t_ion_energy_confinement = t_electron_energy_confinement
 
         # Calculation of the transport power loss terms
