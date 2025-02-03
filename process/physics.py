@@ -5183,7 +5183,9 @@ class Physics:
             po.oblnkl(self.outfile)
 
         tauelaw = f2py_compatible_to_string(
-            physics_variables.tauscl[physics_variables.i_confinement_time]
+            physics_variables.labels_confinement_scalings[
+                physics_variables.i_confinement_time
+            ]
         )
 
         po.ocmmnt(
@@ -5827,7 +5829,7 @@ class Physics:
 
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.tauscl[i_confinement_time]):<38}"
+                f"{'':>2}{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[i_confinement_time]):<38}"
                 f"{taueez:<32.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
             )
 

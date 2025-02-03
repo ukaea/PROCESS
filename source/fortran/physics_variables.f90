@@ -416,10 +416,10 @@ module physics_variables
   !!   allowance for radiation. This is not recommended for power plant models.
 
   integer :: i_confinement_time
-  !! switch for energy confinement time scaling law (see description in `tauscl`)
+  !! switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)
 
-  !! tauscl(n_confinement_scalings) : labels describing energy confinement scaling laws
-  character*30, parameter, dimension(n_confinement_scalings) :: tauscl = (/  &
+  !! labels_confinement_scalings(n_confinement_scalings) : labels describing energy confinement scaling laws
+  character*30, parameter, dimension(n_confinement_scalings) :: labels_confinement_scalings = (/  &
     'Input tauee_in                ', &
     'Neo-Alcator            (Ohmic)', &
     'Mirnov                     (H)', &
