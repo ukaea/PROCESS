@@ -93,7 +93,7 @@ module fwbs_variables
   !!                      'dual-coolant blanket' fractions (provided in this file).
   !!                 -  please use primary_pumping = 0 or 1.
 
-  integer :: iblnkith
+  integer :: i_blkt_inboard
   !! switch for inboard blanket:
   !!
   !! - =0 No inboard blanket (dr_blkt_inboard=0.0)
@@ -689,7 +689,7 @@ module fwbs_variables
     fw_armour_thickness = 0.005D0
     fw_armour_vol = 0.0D0
     iblanket = 1
-    iblnkith = 1
+    i_blkt_inboard = 1
     inuclear = 0
     qnuc = 0.0D0
     li6enrich = 30.0D0

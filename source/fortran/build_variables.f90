@@ -49,7 +49,7 @@ module build_variables
   !! outboard blanket breeding zone thickness (m) (`blktmodel>0`) (`iteration variable 91`)
 
   real(dp) :: dr_blkt_inboard
-  !! inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0.0 if `iblnkith=0`)
+  !! inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0.0 if `i_blkt_inboard=0`)
 
   real(dp) :: dr_blkt_outboard
   !! outboard blanket thickness (m); calculated if `blktmodel>0`

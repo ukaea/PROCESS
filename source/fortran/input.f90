@@ -276,7 +276,7 @@ contains
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
-      denstl, declfw, nphcdout, iblnkith, vfpblkt, fwinlet, wallpf, fblbe, &
+      denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, fwinlet, wallpf, fblbe, &
       fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
@@ -1295,7 +1295,7 @@ contains
 	  ! Inboard blanket does not exist if the thickness is below a certain limit.
             if(dr_blkt_inboard>=0.0D00.and.dr_blkt_inboard<=1.0D-3) then
               dr_blkt_inboard = 0.0D00 ! Inboard blanket thickness is zero
-	      iblnkith = 0     ! Inboard blanket does not exist
+	      i_blkt_inboard = 0     ! Inboard blanket does not exist
             end if
           end if
        case ('dr_blkt_outboard')
@@ -2203,8 +2203,8 @@ contains
               dr_fw_outboard = 0.03D0
               fw_armour_thickness = 0.003D0
           end if
-       case ('iblnkith')
-          call parse_int_variable('iblnkith', iblnkith, 0, 1, 'Switch for inboard blanket')
+       case ('i_blkt_inboard')
+          call parse_int_variable('i_blkt_inboard', i_blkt_inboard, 0, 1, 'Switch for inboard blanket')
 
        case ('inuclear')
          call parse_int_variable('inuclear', inuclear, 0, 1, &

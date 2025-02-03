@@ -1536,7 +1536,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     i_bb_liq: Any = None
     hartmann_liq: Any = None
     b_mag_blkt: Any = None
-    iblnkith: Any = None
+    i_blkt_inboard: Any = None
     icooldual: Any = None
     bt: Any = None
     aspect: Any = None
@@ -1570,7 +1570,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             i_bb_liq=0,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
-            iblnkith=1,
+            i_blkt_inboard=1,
             icooldual=0,
             bt=5.7000000000000002,
             aspect=3,
@@ -1607,7 +1607,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             i_bb_liq=1,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
-            iblnkith=1,
+            i_blkt_inboard=1,
             icooldual=0,
             bt=5.7000000000000002,
             aspect=3,
@@ -1688,7 +1688,7 @@ def test_liquid_breeder_properties(
         fwbs_variables, "b_mag_blkt", liquidbreederpropertiesparam.b_mag_blkt
     )
     monkeypatch.setattr(
-        fwbs_variables, "iblnkith", liquidbreederpropertiesparam.iblnkith
+        fwbs_variables, "i_blkt_inboard", liquidbreederpropertiesparam.i_blkt_inboard
     )
     monkeypatch.setattr(
         fwbs_variables, "icooldual", liquidbreederpropertiesparam.icooldual
