@@ -1576,9 +1576,6 @@ i_density_limit = 7
 * Switch for fast alpha pressure calculation
 i_beta_fast_alpha = 1
 
-* Switch for inverse quadrature in l-mode scaling laws 5 and 9
-iinvqd = 1
-
 * Switch for pedestal profiles
 ipedestal = 1
 
