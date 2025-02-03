@@ -1268,7 +1268,7 @@
     {
       "no": 252,
       "level": 3,
-      "message": "CHECK: No CS precompression structure for bucked and wedged, use iprecomp = 0."
+      "message": "CHECK: No CS precompression structure for bucked and wedged, use i_cs_precomp = 0."
     },
     {
       "no": 253,

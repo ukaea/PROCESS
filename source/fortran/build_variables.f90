@@ -133,7 +133,7 @@ module build_variables
   !! - =0 central solenoid not present
   !! - =1 central solenoid exists
 
-  integer :: iprecomp
+  integer :: i_cs_precomp
   !! Switch for existence of central solenoid pre-compression structure:
   !!
   !! - =0 no pre-compression structure
@@ -338,7 +338,7 @@ module build_variables
     hpfu = 0.0D0
     hr1 = 0.0D0
     iohcl = 1
-    iprecomp = 1
+    i_cs_precomp = 1
     tf_in_cs = 0
     dr_cs = 0.811D0
     dr_cs_precomp = 0.0D0
