@@ -705,7 +705,7 @@ class Build:
         #  Other build quantities
 
         # Output the cryostat geometry
-        _ = self.cryostat_output()
+        _ = self.cryostat_output(output)
 
         # Output the cdivertor geometry
         divht = self.divgeom(output)
@@ -750,49 +750,51 @@ class Build:
                 build_variables.hpfu - (build_variables.hmax + build_variables.tfcth)
             ) / 2.0e0
 
-    def cryostat_output(self) -> None:
+    def cryostat_output(self, output: bool) -> None:
         """
         Outputs the cryostat geometry details to the output file.
 
         Returns:
             None
         """
-        po.oheadr(self.outfile, "Cryostat build")
-        po.ovarrf(
-            self.outfile,
-            "Cryostat thickness (m)",
-            "(dr_cryostat)",
-            build_variables.dr_cryostat,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Cryostat intenral half height (m)",
-            "(z_cryostat_half_inside)",
-            fwbs_variables.z_cryostat_half_inside,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Vertical clearance from highest PF coil to cryostat (m)",
-            "(dz_pf_cryostat)",
-            blanket_library.dz_pf_cryostat,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Cryostat structure volume (m^3)",
-            "(vol_cryostat)",
-            fwbs_variables.vol_cryostat,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Cryostat internal volume (m^3)",
-            "(vol_cryostat_internal)",
-            fwbs_variables.vol_cryostat_internal,
-            "OP ",
-        )
+        if output:
+            po.oheadr(self.outfile, "Cryostat build")
+
+            po.ovarrf(
+                self.outfile,
+                "Cryostat thickness (m)",
+                "(dr_cryostat)",
+                build_variables.dr_cryostat,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Cryostat intenral half height (m)",
+                "(z_cryostat_half_inside)",
+                fwbs_variables.z_cryostat_half_inside,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Vertical clearance from highest PF coil to cryostat (m)",
+                "(dz_pf_cryostat)",
+                blanket_library.dz_pf_cryostat,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Cryostat structure volume (m^3)",
+                "(vol_cryostat)",
+                fwbs_variables.vol_cryostat,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Cryostat internal volume (m^3)",
+                "(vol_cryostat_internal)",
+                fwbs_variables.vol_cryostat_internal,
+                "OP ",
+            )
 
     def divgeom(self, output: bool):
         """
