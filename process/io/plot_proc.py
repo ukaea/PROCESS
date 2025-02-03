@@ -151,7 +151,7 @@ RADIAL_BUILD = [
 ]
 
 vertical_lower = [
-    "rminor*kappa",
+    "z_plasma_xpoint_lower",
     "vgap_xpoint_divertor",
     "divfix",
     "shldlth",
@@ -3540,7 +3540,7 @@ def main(args=None):
     global vertical_upper
     if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
         vertical_upper = [
-            "rminor*kappa",
+            "z_plasma_xpoint_upper",
             "vgaptop",
             "divfix",
             "shldtth",
@@ -3552,7 +3552,7 @@ def main(args=None):
         ]
     else:
         vertical_upper = [
-            "rminor*kappa",
+            "z_plasma_xpoint_upper",
             "vgaptop",
             "fwtth",
             "blnktth",

@@ -97,7 +97,7 @@ class BlanketLibrary:
         # Blanket
         if icomponent == 0:
             hbot = (
-                physics_variables.rminor * physics_variables.kappa
+                build_variables.z_plasma_xpoint_lower
                 + build_variables.vgap_xpoint_divertor
                 + divertor_variables.divfix
                 - build_variables.blnktth
@@ -105,7 +105,7 @@ class BlanketLibrary:
         # Sheild
         elif icomponent == 1:
             hbot = (
-                physics_variables.rminor * physics_variables.kappa
+                build_variables.z_plasma_xpoint_lower
                 + build_variables.vgap_xpoint_divertor
                 + divertor_variables.divfix
             )
@@ -125,7 +125,7 @@ class BlanketLibrary:
             htop = hbot
         else:
             # Blanket
-            htop = physics_variables.rminor * physics_variables.kappa + 0.5 * (
+            htop = build_variables.z_plasma_xpoint_upper + 0.5 * (
                 build_variables.dr_fw_plasma_gap_inboard
                 + build_variables.dr_fw_plasma_gap_outboard
                 + build_variables.dr_fw_inboard
