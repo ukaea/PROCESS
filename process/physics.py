@@ -2502,10 +2502,6 @@ class Physics:
             physics_variables.rad_fraction_sol * physics_variables.pdivt
         )
 
-        physics_module.total_energy_conf_time = (
-            physics_module.e_plasma_beta / physics_module.total_loss_power
-        )
-
         if any(numerics.icc == 78):
             po.write(
                 self.outfile,
@@ -5205,21 +5201,32 @@ class Physics:
         )
         po.ovarrf(
             self.outfile,
-            "Global thermal energy confinement time (s)",
+            "Global thermal energy confinement time, from scaling (s)",
             "(t_energy_confinement)",
             physics_variables.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Ion energy confinement time (s)",
+            "Directly calculated total energy confinement time (s)",
+            "(t_energy_confinement_beta)",
+            physics_module.t_energy_confinement_beta,
+            "OP ",
+        )
+        po.ocmmnt(
+            self.outfile,
+            "(Total thermal energy derived from total plasma beta / loss power)",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ion energy confinement time, from scaling (s)",
             "(t_ion_energy_confinement)",
             physics_variables.t_ion_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Electron energy confinement time (s)",
+            "Electron energy confinement time, from scaling (s)",
             "(t_electron_energy_confinement)",
             physics_variables.t_electron_energy_confinement,
             "OP ",
@@ -5340,17 +5347,6 @@ class Physics:
             "Lower limit on f_alpha_energy_confinement",
             "(f_alpha_energy_confinement_min)",
             constraint_variables.f_alpha_energy_confinement_min,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Total energy confinement time including radiation loss (s)",
-            "(total_energy_conf_time)",
-            physics_module.total_energy_conf_time,
-            "OP ",
-        )
-        po.ocmmnt(
-            self.outfile,
-            "  (= stored energy including fast particles / loss power including radiation",
         )
 
         # Plot table of al the H-factor scalings and coparison values
@@ -7459,6 +7455,12 @@ class Physics:
         t_energy_confinement = (ratio + 1.0e0) / (
             ratio / t_ion_energy_confinement + 1.0e0 / t_electron_energy_confinement
         )
+
+        # For comparison directly calculate the confinement time from the stored energy calculated
+        # from the total plasma beta and the loss power used above.
+        physics_module.t_energy_confinement_beta = (
+            physics_module.e_plasma_beta / 1e6
+        ) / powerht
 
         return (
             ptrepv,

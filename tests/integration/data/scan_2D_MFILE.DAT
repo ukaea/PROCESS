@@ -498,7 +498,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9961E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.3150E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7855E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7855E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.4772E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9629E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.8476E-03 OP 
@@ -1661,7 +1661,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9751E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2760E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7767E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7767E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6299E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0016E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7709E-03 OP 
@@ -2824,7 +2824,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9727E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2781E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7693E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7693E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.7864E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0417E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.6995E-03 OP 
@@ -3987,7 +3987,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9773E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2692E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7816E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7816E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8030E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0515E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.6373E-03 OP 
@@ -5150,7 +5150,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9645E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2382E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7788E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7788E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6562E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0113E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7056E-03 OP 
@@ -6313,7 +6313,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9471E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1873E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7790E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7790E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5083E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9729E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7718E-03 OP 
@@ -7476,7 +7476,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9508E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1836E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7872E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7872E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5242E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9822E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7090E-03 OP 
@@ -8639,7 +8639,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9498E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1813E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7862E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7862E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6667E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0212E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.6394E-03 OP 
@@ -9802,7 +9802,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9521E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1847E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7894E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7894E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8077E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0617E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.5690E-03 OP 
@@ -10965,7 +10965,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9576E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1905E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7946E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7946E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8348E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0713E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.5115E-03 OP 
@@ -12128,7 +12128,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9558E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1851E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7900E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7900E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.6972E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0306E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.5818E-03 OP 
@@ -13291,7 +13291,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9518E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1733E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7896E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7896E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5548E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9915E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.6496E-03 OP 
@@ -14454,7 +14454,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9571E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1764E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7957E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7957E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.5780E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0007E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.5910E-03 OP 
@@ -15617,7 +15617,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9628E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.1990E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7926E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7926E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.7314E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0398E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.5257E-03 OP 
@@ -16780,7 +16780,7 @@
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      1.9687E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.2221E+00    
  Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.7894E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.7894E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.8950E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      2.0806E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.4604E-03 OP 
