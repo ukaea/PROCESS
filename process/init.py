@@ -670,7 +670,7 @@ def check_process():
         fortran.global_variables.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
-        # Disabled iblnkith = 0
+        # Disabled i_blkt_inboard = 0
 
         # Check if the choice of plasma current is addapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
@@ -1158,7 +1158,7 @@ def check_process():
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
-    if fortran.fwbs_variables.iblnkith == 0:
+    if fortran.fwbs_variables.i_blkt_inboard == 0:
         fortran.build_variables.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel

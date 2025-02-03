@@ -501,7 +501,7 @@ class DCLL:
         dcll_module.f_vol_mfbss_pbli = 0.4436
 
         # Calculate Volumes
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             # IB and OB blanket
 
             # BZ
@@ -708,7 +708,7 @@ class DCLL:
         )
 
         # Total mass of IB/OB segment
-        if fwbs_variables.iblnkith == 1:
+        if fwbs_variables.i_blkt_inboard == 1:
             dcll_module.mass_segm_ib = (
                 fwbs_variables.whtblkt
                 * (fwbs_variables.volblkti / fwbs_variables.volblkt)
