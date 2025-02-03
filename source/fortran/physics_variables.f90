@@ -725,7 +725,7 @@ module physics_variables
   real(dp) :: pscalingmw
   !! Total transport power from scaling law (MW)
 
-  real(dp) :: ptripv
+  real(dp) :: pden_ion_transport_loss_mw
   !! ion transport power per volume (MW/m3)
 
   real(dp) :: q
@@ -1068,7 +1068,7 @@ module physics_variables
     ptrepv = 0.0D0
     ptrimw = 0.0D0
     pscalingmw = 0.0D0
-    ptripv = 0.0D0
+    pden_ion_transport_loss_mw = 0.0D0
     q = 3.0D0
     q0 = 1.0D0
     q95 = 0.0D0

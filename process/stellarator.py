@@ -214,7 +214,7 @@ class Stellarator:
         for iisc, i in enumerate(istlaw):
             (
                 physics_variables.ptrepv,
-                physics_variables.ptripv,
+                physics_variables.pden_ion_transport_loss_mw,
                 physics_variables.t_electron_energy_confinement,
                 physics_variables.t_ion_energy_confinement,
                 physics_variables.t_energy_confinement,
@@ -4453,7 +4453,7 @@ class Stellarator:
 
         (
             physics_variables.ptrepv,
-            physics_variables.ptripv,
+            physics_variables.pden_ion_transport_loss_mw,
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_ion_energy_confinement,
             physics_variables.t_energy_confinement,
@@ -4492,7 +4492,7 @@ class Stellarator:
             physics_variables.ptrepv * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
-            physics_variables.ptripv * physics_variables.vol_plasma
+            physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
 
         physics_variables.pscalingmw = (

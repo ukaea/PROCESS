@@ -449,7 +449,7 @@ contains
     !! <LI> = 0 do not assume plasma ignition;
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
     !! ptrepv : input real : electron transport power per volume (MW/m3)
-    !! ptripv : input real :  ion transport power per volume (MW/m3)
+    !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
     !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
     !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: i_rad_loss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
+    use physics_variables, only: i_rad_loss, ignite, ptrepv, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -476,7 +476,7 @@ contains
     ! pscaling : Local real : total transport power per volume (MW/m3)
     real(dp) :: pscaling
     real(dp) :: pnumerator, pdenom
-    pscaling = ptrepv + ptripv
+    pscaling = ptrepv + pden_ion_transport_loss_mw
     ! Total power lost is scaling power plus radiation:
     if (i_rad_loss == 0) then
         pnumerator = pscaling + pden_plasma_rad_mw
@@ -515,13 +515,13 @@ contains
       !! ignite : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! ptripv : input real :  ion transport power per volume (MW/m3)
+      !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
+      use physics_variables, only: ignite, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,14 +532,14 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
          tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * (1.0D0 - tmp_cc)
          tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
       else
-         tmp_cc     = 1.0D0 - (ptripv+piepv) / (f_alpha_plasma*alpha_power_ions_density)
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw+piepv) / (f_alpha_plasma*alpha_power_ions_density)
          tmp_con    = (f_alpha_plasma*alpha_power_ions_density) * (1.0D0 - tmp_cc)
          tmp_err    = (f_alpha_plasma*alpha_power_ions_density) * tmp_cc
          tmp_symbol = '='

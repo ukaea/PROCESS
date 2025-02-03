@@ -2249,7 +2249,7 @@ class Physics:
         # chosen scaling law
         (
             physics_variables.ptrepv,
-            physics_variables.ptripv,
+            physics_variables.pden_ion_transport_loss_mw,
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_energy_confinement,
             physics_variables.t_ion_energy_confinement,
@@ -2286,7 +2286,7 @@ class Physics:
             physics_variables.ptrepv * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
-            physics_variables.ptripv * physics_variables.vol_plasma
+            physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
         # Total transport power from scaling law (MW)
         # pscalingmw = physics_variables.ptremw + physics_variables.ptrimw #KE - why is this commented?
@@ -2341,7 +2341,7 @@ class Physics:
         )
 
         # ptremw = physics_variables.ptrepv*physics_variables.vol_plasma
-        # ptrimw = physics_variables.ptripv*physics_variables.vol_plasma
+        # ptrimw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
             physics_variables.ptremw + physics_variables.ptrimw
@@ -6698,7 +6698,7 @@ class Physics:
 
         :return: Tuple containing:
             - ptrepv (float): Electron transport power (MW/m3)
-            - ptripv (float): Ion transport power (MW/m3)
+            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
@@ -7431,9 +7431,9 @@ class Physics:
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, tin and ten are in keV, and ptrepv and ptripv are in MW/m3)
+        # (here, tin and ten are in keV, and ptrepv and pden_ion_transport_loss_mw are in MW/m3)
 
-        ptripv = (
+        pden_ion_transport_loss_mw = (
             (3 / 2)
             * (constants.electron_charge / 1e3)
             * nd_ions_total
@@ -7448,7 +7448,7 @@ class Physics:
             / t_electron_energy_confinement
         )
 
-        ratio = nd_ions_total / dene * tin / ten
+        ratio = (nd_ions_total / dene) * (tin / ten)
 
         # Global energy confinement time
 
@@ -7464,7 +7464,7 @@ class Physics:
 
         return (
             ptrepv,
-            ptripv,
+            pden_ion_transport_loss_mw,
             t_electron_energy_confinement,
             t_ion_energy_confinement,
             t_energy_confinement,
