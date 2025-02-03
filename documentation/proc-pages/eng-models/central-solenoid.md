@@ -142,7 +142,7 @@ $F$ = `fseppc`    Separation force
 $f$ = `fcspc`     Fraction of space occupied by pre-compression structure
 $\sigma$ = `sigallpc`   allowable stress in pre-compression structure (Pa)  
 
-The central solenoid pre-compression structure is included in the model if and only if `iprecomp` = 1.
+The central solenoid pre-compression structure is included in the model if and only if `i_cs_precomp` = 1.
 
 ## Current density inputs and limits
 

@@ -2008,7 +2008,7 @@ boundu(16) = 0.5
 * DESCRIPTION:   Central Solenoid Thickness (m)
 * JUSTIFICATION: 
 
-iprecomp = 0
+i_cs_precomp = 0
 * DESCRIPTION:   Switch for Existence of CS Pre-Compression Structure (0: No)
 * JUSTIFICATION: Design choice
 

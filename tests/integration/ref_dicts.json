@@ -2651,7 +2651,7 @@
         "ipnscnv": 64.0,
         "ipnvars": 175.0,
         "ipowerflow": 1.0,
-        "iprecomp": 1.0,
+        "i_cs_precomp": 1.0,
         "iprimdiv": 0.0,
         "iprimshld": 1.0,
         "iprofile": 1.0,
@@ -9891,7 +9891,7 @@
         "ipnscnv": "Number of available scan variables",
         "ipnvars": "ipnvars FIX : total number of variables available for iteration",
         "ipowerflow": "switch for power flow model:\n<ul>\n<li>=0 pre-2014 version</li>\n<li>=1 comprehensive 2014 model</li>\n</ul>",
-        "iprecomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
+        "i_cs_precomp": "Switch for existence of central solenoid pre-compression structure:\n<ul>\n<li>=0 no pre-compression structure</li>\n<li>=1 calculated pre-compression structure</li>\n</ul>",
         "iprimdiv": "",
         "iprimshld": "Switch for shield thermal power destiny:\n<ul>\n<li>=0 does not contribute to energy generation cycle</li>\n<li>=1 contributes to energy generation cycle</li>\n</ul>",
         "iprofile": "switch for current profile consistency:\n<ul>\n<li>=0 use input values for alphaj, rli, beta_norm_max (but see gtscale option)</li>\n<li>=1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)</li>\n</ul>",
@@ -13463,7 +13463,7 @@
             "lb": 0,
             "ub": 1
         },
-        "iprecomp": {
+        "i_cs_precomp": {
             "lb": 0,
             "ub": 1
         },
@@ -17044,7 +17044,7 @@
             "hpfu",
             "hr1",
             "iohcl",
-            "iprecomp",
+            "i_cs_precomp",
             "dr_cs",
             "dr_cs_precomp",
             "rbld",
@@ -20494,7 +20494,7 @@
         "ipfres": "int_variable",
         "ipnet": "int_variable",
         "ipowerflow": "int_variable",
-        "iprecomp": "int_variable",
+        "i_cs_precomp": "int_variable",
         "iprimshld": "int_variable",
         "iprofile": "int_variable",
         "i_pfirsch_schluter_current": "int_variable",
