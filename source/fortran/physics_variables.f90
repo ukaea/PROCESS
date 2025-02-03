@@ -470,7 +470,7 @@ module physics_variables
     'NSTX-Petty08 Hybrid  (H)', &
     'NSTX gyro-Bohm Buxton(H)', &
     'ITPA20               (H)', &
-    'ITPA20-IL               (H)' /)
+    'ITPA20-IL            (H)' /)
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:

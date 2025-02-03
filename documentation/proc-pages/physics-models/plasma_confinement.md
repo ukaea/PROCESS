@@ -701,27 +701,26 @@ The value of `f_alpha_energy_confinement_min` can be set to the desired minimum 
 
  The scaling value `ftaulimit` can be varied also.
 
-[^1]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,"ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
-[^2]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+[^1]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
+[^2]: T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
 [^3]: J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992, doi: https://doi.org/10.1088/0029-5515/32/2/i11.
 [^4]: S. Sudo et al., “Scalings of energy confinement and density limit in stellarator/heliotron devices,” Nuclear Fusion, vol. 30, no. 1, pp. 11-21, Jan. 1990, doi: https://doi.org/10.1088/0029-5515/30/1/002.
-[^5]: Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. µ B/B as the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
+[^5]: Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B² vs. µ B/B as the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
 [^6]: K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to plateau scaling,” Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990, doi: https://doi.org/10.1088/0029-5515/30/4/018.
 [^7]: K. Thomsen et al., “ITER H mode confinement database update,” vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
 [^8]: I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,” Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
-[^9]: International Atomic Energy Agency, Vienna (Austria), "Technical basis for the ITER final design report, cost review and safety analysis (FDR)",no.16. Dec. 1998.
+[^9]: International Atomic Energy Agency, Vienna (Austria), "Technical basis for the ITER final design report, cost review and safety analysis (FDR)", no. 16. Dec. 1998.
 [^10]: S. B. Kaye et al., “ITER L mode confinement database,” Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997, doi: https://doi.org/10.1088/0029-5515/37/9/i10.
 [^11]: I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
-[^12]: None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+[^12]: O. Kardaun, N. K. Thomsen, and A. Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 [^13]: U. Stroth et al., “Energy confinement scaling from the international stellarator database,” vol. 36, no. 8, pp. 1063-1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
 [^14]: H. Yamada et al., “Characterization of energy confinement in net-current free plasmas using the extended International Stellarator Database,” vol. 45, no. 12, pp. 1684-1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
 [^15]: T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless parameter scaling techniques to the design and interpretation of magnetic fusion experiments,” Plasma Physics and Controlled Fusion, vol. 50, no. 4, p. 043001, Mar. 2008, doi: https://doi.org/10.1088/0741-3335/50/4/043001.
-[^16]: A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,” Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
+[^16]: A. Murari, E. Peluso, M. Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,” Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 [^17]: C. C. Petty, “Sizing up plasmas using dimensionless parameters,” Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
-[^18]: P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm, “Pellet Induced High Density Phases during ELM Suppression in ASDEX Upgrade,”
-24th IAEA Conference Fusion Energy, 2012, Oct. 2012, Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
+[^18]: P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm, “Pellet Induced High Density Phases during ELM Suppression in ASDEX Upgrade,” 24th IAEA Conference Fusion Energy, 2012, Oct. 2012, Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade.
 [^19]: A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
 [^20]: J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,” Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019, doi: https://doi.org/10.1098/rsta.2017.0440.
-[^21]: P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
-[^22‌]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
-[^23]: T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048–126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
+[^21]: P. F. Buxton, L. Connor, A. E. Costley, M. Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
+[^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
+[^23]: T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
