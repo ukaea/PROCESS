@@ -35,9 +35,9 @@ where $f_{\alpha}$ is the [fraction of alpha power that is coupled to the plasma
 ### Effect of radiation on energy confinement
 
 Published confinement scalings are all based on low radiation pulses. A power
-plant will certainly be a high radiation machine --- both in the core, due to
+plant will certainly be a high radiation machine, both in the core, due to
 bremsstrahlung and synchrotron radiation, and in the edge due to impurity
-seeding. The scaling data do not predict this radiation --- that needs to be
+seeding. The scaling data does not predict this radiation [^24] [^25], that needs to be
 done by the radiation model. However, if the transport is very "stiff", as
 predicted by some models, then the additional radiation causes an almost equal
 drop in power transported by ions and electrons, leaving the confinement
@@ -94,7 +94,7 @@ $$
 
 ------------
 
-### 1: Nec-Alcator (NA) OH scaling
+### 1: Nec-Alcator scaling (Ohmic)
 
 Is selected with `i_confinement_time = 1`[^1]
 
@@ -114,7 +114,7 @@ $$
 
 ------------
 
-### 3: Merezhkin-Mukhovatov  OH/L-mode scaling
+### 3: Merezhkin-Mukhovatov scaling (Ohmic / L-mode)
 
 Is selected with `i_confinement_time = 3`[^1]
 
@@ -125,7 +125,7 @@ $$
 
 ---------------
 
-### 4: Shimomura optimized H-mode scaling
+### 4: Shimomura scaling (H-mode)
 
 Is selected with `i_confinement_time = 4`[^1]
 
@@ -135,7 +135,7 @@ $$
 
 ----------------
 
-### 5: Kaye-Goldston L-mode scaling
+### 5: Kaye-Goldston scaling (L-mode)
 
 Is selected with `i_confinement_time = 5`[^1]
 
@@ -145,7 +145,7 @@ $$
 
 ----------------
 
-### 6: ITER 89-P L-mode scaling
+### 6: ITER 89-P scaling (L-mode)
 
 Is selected with `i_confinement_time = 6`[^1] [^2]
 
@@ -155,7 +155,7 @@ $$
 
 ----------------
 
-### 7: ITER 89-0 L-mode scaling
+### 7: ITER 89-0 scaling (L-mode)
 
 Is selected with `i_confinement_time = 7` [^2]
 
@@ -168,7 +168,7 @@ $$
 
 ----------------
 
-### 8: Rebut-Lallia L-mode scaling
+### 8: Rebut-Lallia scaling (L-mode)
 
 Is selected with `i_confinement_time = 8` [^2]
 
@@ -183,8 +183,7 @@ where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
 
 ----------------
 
-
-### 9: Goldston L-mode scaling
+### 9: Goldston scaling (L-mode)
 
 Is selected with `i_confinement_time = 9` [^1]
 
@@ -194,7 +193,7 @@ $$
 
 ----------------
 
-### 10: T-10 L-mode scaling
+### 10: T-10 scaling (L-mode)
 
 Is selected with `i_confinement_time = 10` [^1]
 
@@ -207,7 +206,7 @@ where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)
 
 ----------------
 
-### 11: JAERI / Odajima-Shimomura L-mode scaling
+### 11: JAERI / Odajima-Shimomura scaling (L-mode)
 
 Is selected with `i_confinement_time = 11` [^1]
 
@@ -221,7 +220,7 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 
 ----------------
 
-### 12: Kaye "big" L-mode scaling
+### 12: Kaye "big" scaling (L-mode)
 
 Is selected with `i_confinement_time = 12` [^1]
 
@@ -231,7 +230,7 @@ $$
 
 -------------------------
 
-### 13: ITER H90-P H-mode scaling
+### 13: ITER H90-P scaling (H-mode)
 
 Is selected with `i_confinement_time = 13` [^2]
 
@@ -249,7 +248,7 @@ Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O]
 
 -------------------------
 
-### 15: Riedel L-mode scaling
+### 15: Riedel scaling (L-mode)
 
 Is selected with `i_confinement_time = 15` [^2]
 
@@ -259,7 +258,7 @@ $$
 
 -------------------------
 
-### 16: Christiansen L-mode scaling 
+### 16: Christiansen scaling (L-mode)
 
 Is selected with `i_confinement_time = 16` [^2]
 
@@ -269,7 +268,7 @@ $$
 
 -------------------------
 
-### 17: Lackner-Gottardi L-mode scaling 
+### 17: Lackner-Gottardi scaling (L-mode)
 
 Is selected with `i_confinement_time = 17` [^2]
 
@@ -281,7 +280,7 @@ where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
 
 -------------------------
 
-### 18: Neo-Kaye L-mode scaling
+### 18: Neo-Kaye scaling (L-mode)
 
 Is selected with `i_confinement_time = 18` [^2]
 
@@ -291,7 +290,7 @@ $$
 
 -------------------------
 
-### 19: Riedel H-mode scaling
+### 19: Riedel scaling (H-mode)
 
 Is selected with `i_confinement_time = 19` [^2]
 
@@ -301,7 +300,7 @@ $$
 
 -------------------------
 
-### 20: Amended ITER H90-P H-mode scaling 
+### 20: Amended ITER H90-P scaling (H-mode)
 
 Is selected with `i_confinement_time = 20` [^3]
 
@@ -311,7 +310,7 @@ $$
 
 -------------------------
 
-### 21: Sudo et al. stellarators/heliotron scaling
+### 21: Sudo et al. scaling (Stellarator)
 
 Is selected with `i_confinement_time = 21` [^4]
 
@@ -321,7 +320,7 @@ $$
 
 -------------------------
 
-### 22: Gyro reduced Bohm scaling
+### 22: Gyro reduced Bohm scaling (Stellarator)
 
 Is selected with `i_confinement_time = 22` [^5]
 
@@ -331,7 +330,7 @@ $$
 
 -------------------------
 
-### 23: Lackner-Gottardi Stellerator scaling
+### 23: Lackner-Gottardi scaling (Stellarator)
 
 Is selected with `i_confinement_time = 23` [^6]
 
@@ -341,7 +340,7 @@ $$
 
 -------------------------
 
-### 24: ITER 93 ELM-free H-mode scaling
+### 24: ITER H93 ELM-free scaling (H-mode)
 
 Is selected with `i_confinement_time = 24` [^7]
 
@@ -360,7 +359,7 @@ Is selected with `i_confinement_time = 25`
 
 -------------------------
 
-### 26: ELM-free: ITERH-97P scaling
+### 26: ITER H-97P ELM-free scaling (H-mode)
 
 Is selected with `i_confinement_time = 26` [^8]
 
@@ -370,7 +369,7 @@ $$
 
 -------------------------
 
-### 27: ELMy ITER H-H97-P(y) scaling
+### 27: ITER H-97P ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 27` [^8] [^9]
 
@@ -380,7 +379,7 @@ $$
 
 -------------------------
 
-### 28: ITER-96P (ITER-97L) L-mode scaling
+### 28: ITER-96P (ITER-97L) scaling (L-mode)
 
 Is selected with `i_confinement_time = 28` [^10]
 
@@ -389,8 +388,8 @@ $$
 $$
 
 -------------------------
- 
-### 29: Valovic modified ELMy-H mode scaling
+
+### 29: Valovic modified ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 29`
 
@@ -403,7 +402,7 @@ $$
 
 -------------------------
 
-### 30: Kaye modified L mode scaling
+### 30: Kaye 98 modified scaling (L-mode)
 
 Is selected with `i_confinement_time = 30`
 
@@ -416,7 +415,7 @@ $$
 
 -------------------------
 
-### 31: ITERH-PB98P(y) H mode scaling
+### 31: ITERH-PB98P(y) scaling (H-mode)
 
 Is selected with `i_confinement_time = 31` 
 
@@ -429,7 +428,7 @@ $$
 
 -------------------------
 
-### 32: IPB98(y) ELMy H-mode scaling
+### 32: IPB98(y) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 32` [^11] [^12]
 
@@ -439,8 +438,7 @@ $$
 
 -------------------------
 
-
-### 33: IPB98(y,1) ELMy H-mode scaling
+### 33: IPB98(y,1) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 33` [^11] [^12]
 
@@ -450,7 +448,7 @@ $$
 
 -------------------------
 
-### 34: IPB98(y,2) ELMy H-mode scaling
+### 34: IPB98(y,2) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 34` [^11] [^12]
 
@@ -460,7 +458,7 @@ $$
 
 -------------------------
 
-### 35: IPB98(y,3) ELMy H-mode scaling
+### 35: IPB98(y,3) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 35` [^11] [^12]
 
@@ -470,7 +468,7 @@ $$
 
 -------------------------
 
-### 36: IPB98(y,4) ELMy H-mode scaling
+### 36: IPB98(y,4) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 36` [^11] [^12]
 
@@ -481,7 +479,7 @@ $$
 -------------------------
 
 
-### 37: ISS95 stellarator scaling
+### 37: ISS95 scaling (Stellarator)
 
 Is selected with `i_confinement_time = 37` [^13]
 
@@ -492,7 +490,7 @@ $$
 -------------------------
 
 
-### 38: ISS04 stellarator scaling
+### 38: ISS04 scaling (Stellarator)
 
 Is selected with `i_confinement_time = 38` [^14]
 
@@ -502,7 +500,7 @@ $$
 
 -------------------------
 
-### 39: DS03 beta-independent H-mode scaling
+### 39: DS03 beta-independent scaling (H-mode)
 
 Is selected with `i_confinement_time = 39` [^15]
 
@@ -512,7 +510,7 @@ $$
 
 -------------------------
 
-### 40: Murari "Non-power law" H-mode scaling
+### 40: Murari "Non-power law" scaling (H-mode)
 
 Is selected with `i_confinement_time = 40` [^16]
 
@@ -523,7 +521,7 @@ $$
 
 -------------------------
 
-### 41: Petty08 H-mode scaling
+### 41: Petty08 scaling (H-mode)
 
 Is selected with `i_confinement_time = 41` [^17]
 
@@ -533,7 +531,7 @@ $$
 
 -------------------------
 
-### 42: Lang high density H-mode scaling
+### 42: Lang high density scaling (H-mode)
 
 Is selected with `i_confinement_time = 42` [^18]
 
@@ -544,7 +542,7 @@ $$
 
 -------------------------
 
-### 43: Hubbard I-mode nominal scaling
+### 43: Hubbard nominal scaling (I-mode)
 
 Is selected with `i_confinement_time = 43` [^19]
 
@@ -554,7 +552,7 @@ $$
 
 -------------------------
 
-### 44: Hubbard I-mode lower scaling
+### 44: Hubbard lower scaling (I-mode)
 
 Is selected with `i_confinement_time = 44` [^19]
 
@@ -564,7 +562,7 @@ $$
 
 -------------------------
 
-### 45: Hubbard I-mode upper scaling
+### 45: Hubbard upper scaling (I-mode)
 
 Is selected with `i_confinement_time = 45` [^19]
 
@@ -575,7 +573,7 @@ $$
 -------------------------
 
 
-### 46: Menard NSTX H-mode scaling
+### 46: Menard NSTX scaling (H-mode)
 
 Is selected with `i_confinement_time = 46` [^20]
 
@@ -600,7 +598,7 @@ $$
 
 -------------------------
 
-### 48: Buxton NSTX Gyro-Bohm H-mode scaling
+### 48: Buxton NSTX Gyro-Bohm scaling (H-mode)
 
 Is selected with `i_confinement_time = 48` [^21]
 
@@ -610,7 +608,7 @@ $$
 
 -------------------------
 
-### 49: ITPA20 H-mode scaling
+### 49: ITPA20 scaling (H-mode)
 
 Is selected with `i_confinement_time = 49` [^22]
 
@@ -620,7 +618,7 @@ $$
 
 -------------------------
 
-### 50: ITPA20-IL H-mode scaling
+### 50: ITPA20-IL scaling (H-mode)
 
 Is selected with `i_confinement_time = 50` [^23]
 
@@ -662,6 +660,7 @@ The value of `f_alpha_energy_confinement_min` can be set to the desired minimum 
 
  The scaling value `falpha_energy_confinement` can be varied also.
 
+
 [^1]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
 [^2]: T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
 [^3]: J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992, doi: https://doi.org/10.1088/0029-5515/32/2/i11.
@@ -685,3 +684,6 @@ The value of `f_alpha_energy_confinement_min` can be set to the desired minimum 
 [^21]: P. F. Buxton, L. Connor, A. E. Costley, M. Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
 [^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
 [^23]: T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
+[^24]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
+[^25]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
+‌

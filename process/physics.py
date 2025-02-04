@@ -5772,11 +5772,11 @@ class Physics:
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
         po.ocmmnt(
             self.outfile,
-            f"{'':>2}{'Scaling law':<35}{'Confinement time [s]':<40}H-factor for",
+            f"{'':>2}{'Scaling law':<33}{'Confinement time [s]':<29}H-factor for",
         )
         po.ocmmnt(
             self.outfile,
-            f"{'':>40}{'for H = 1':<26}power balance",
+            f"{'':>40}{'for H = 1':<24}power balance",
         )
 
         # Plot all of the confinement scalings for comparison when H = 1
@@ -5827,7 +5827,7 @@ class Physics:
             po.ocmmnt(
                 self.outfile,
                 f"{'':>2}{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[i_confinement_time]):<38}"
-                f"{taueez:<32.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
+                f"{taueez:<28.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
             )
 
         po.oblnkl(self.outfile)
