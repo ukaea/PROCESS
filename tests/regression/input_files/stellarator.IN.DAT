@@ -77,7 +77,7 @@ boundl(169) = 4.
 boundu(169) = 35.
 *12
 ixc = 109 * itv_f_nd_alpha_electron
-ftaulimit = 1.
+falpha_energy_confinement = 1.
 boundl(109) = 0.0001
 boundu(109) = 0.4
 

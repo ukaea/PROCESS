@@ -154,7 +154,7 @@ tmargmin_cs = 1.5
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-ixc = 110 * ftaulimit
+ixc = 110 * falpha_energy_confinement
 f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *

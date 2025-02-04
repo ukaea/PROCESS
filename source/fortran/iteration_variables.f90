@@ -2387,26 +2387,26 @@ contains
   !---------------------------------
 
   subroutine init_itv_110
-    !! <LI> (110) ftaulimit: Lower limit on f_alpha_energy_confinement the ratio of alpha
+    !! <LI> (110) falpha_energy_confinement: Lower limit on f_alpha_energy_confinement the ratio of alpha
     use numerics, only: lablxc, boundl, boundu
     implicit none
     !!      particle to energy confinement times (f-value for equation 62)
-    lablxc(110) = 'ftaulimit     '
+    lablxc(110) = 'falpha_energy_confinement     '
     boundl(110) = 0.001D0
     boundu(110) = 1.000D0
   end subroutine init_itv_110
 
   real(kind(1.d0)) function itv_110()
-    use constraint_variables, only: ftaulimit
+    use constraint_variables, only: falpha_energy_confinement
     implicit none
-    itv_110 = ftaulimit
+    itv_110 = falpha_energy_confinement
   end function itv_110
 
   subroutine set_itv_110(ratio)
-    use constraint_variables, only: ftaulimit
+    use constraint_variables, only: falpha_energy_confinement
     implicit none
     real(kind(1.d0)) :: ratio
-    ftaulimit = ratio
+    falpha_energy_confinement = ratio
   end subroutine set_itv_110
 
   !---------------------------------

@@ -283,7 +283,7 @@ module constraint_variables
   !! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
   !! times (`constraint equation 62`)
 
-  real(dp) :: ftaulimit
+  real(dp) :: falpha_energy_confinement
   !! f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy
   !! confinement times (`constraint equation 62`, `iteration variable 110`)
 
@@ -391,7 +391,7 @@ module constraint_variables
     vvhealw = 1.0D0
     walalw = 1.0D0
     f_alpha_energy_confinement_min = 5.0D0
-    ftaulimit = 1.0D0
+    falpha_energy_confinement = 1.0D0
     fniterpump = 1.0D0
     zeffmax = 3.6D0
     fpoloidalpower = 1.0D0

@@ -452,7 +452,7 @@ icc = 62
 * VARIABLES:     t_energy_confinement,t_alpha_confinement calculated in-situ
 
 ixc = 110
-ftaulimit = 1.0
+falpha_energy_confinement = 1.0
 boundl(110) = 0.01
 boundu(110) = 1.0
 * DESCRIPTION:   f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times

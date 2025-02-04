@@ -9069,7 +9069,7 @@ ixc = 106 * ftmargoh
 ixc = 122 * oh_steel_frac
 ixc = 123 * foh_stress
 ixc = 109 * f_nd_alpha_electron
-ixc = 110 * ftaulimit
+ixc = 110 * falpha_energy_confinement
 
 isweep = 9
 nsweep = 60
@@ -9352,4 +9352,4 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      oh_steel_frac  =  5.7875E-01
                      foh_stress     =  1.0000E+00
                      f_nd_alpha_electron         =  6.8940E-02
-                     ftaulimit      =  1.0000E+00
+                     falpha_energy_confinement      =  1.0000E+00

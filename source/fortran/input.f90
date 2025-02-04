@@ -234,7 +234,7 @@ contains
       fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic,fr_conducting_wall, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
-      ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, ftaulimit, nbshinefmax, &
+      ffuspow, fpsepr, ptfnucmax, fvdump, pdivtlim, falpha_energy_confinement, nbshinefmax, &
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ft_current_ramp_up, tcycmn, auxmin, zeffmax, f_fw_rad_max, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
@@ -602,8 +602,8 @@ contains
        case ('fnesep')
           call parse_real_variable('fnesep', fnesep, 0.1D0, 2.0D1, &
                'f-value for Eich critical separatrix density')
-       case ('ftaulimit')
-          call parse_real_variable('ftaulimit', ftaulimit, 0.001D0, 1.0D0, &
+       case ('falpha_energy_confinement')
+          call parse_real_variable('falpha_energy_confinement', falpha_energy_confinement, 0.001D0, 1.0D0, &
                'f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times')
        case ('f_tritium')
           call parse_real_variable('f_tritium', f_tritium, 0.0D0, 1.0D0, &

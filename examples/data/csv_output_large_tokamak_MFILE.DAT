@@ -82,9 +82,9 @@
  ftmargoh________________________________________________________________ (itvar020)____________________      1.0000E+00    
  ftmargoh_(final_value/initial_value)____________________________________ (xcm020)______________________      1.0000E+00    
  ftmargoh_(range_normalised)_____________________________________________ (nitvar020)___________________      1.0000E+00    
- ftaulimit_______________________________________________________________ (itvar021)____________________      7.2549E-01    
- ftaulimit_(final_value/initial_value)___________________________________ (xcm021)______________________      7.2549E-01    
- ftaulimit_(range_normalised)____________________________________________ (nitvar021)___________________      7.2521E-01    
+ falpha_energy_confinement_______________________________________________________________ (itvar021)____________________      7.2549E-01    
+ falpha_energy_confinement_(final_value/initial_value)___________________________________ (xcm021)______________________      7.2549E-01    
+ falpha_energy_confinement_(range_normalised)____________________________________________ (nitvar021)___________________      7.2521E-01    
  ftaucq__________________________________________________________________ (itvar022)____________________      9.1920E-01    
  ftaucq_(final_value/initial_value)______________________________________ (xcm022)______________________      1.0213E+00    
  ftaucq_(range_normalised)_______________________________________________ (nitvar022)___________________      9.1912E-01    
@@ -1349,7 +1349,7 @@ tmargmin_cs = 1.5
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-ixc = 110 * ftaulimit
+ixc = 110 * falpha_energy_confinement
 f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
