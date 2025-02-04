@@ -2282,15 +2282,15 @@ class Physics:
             physics_variables.zeff,
         )
 
-        physics_variables.ptremw = (
+        # Total transport power from scaling law (MW)
+        physics_variables.p_electron_transport_loss_mw = (
             physics_variables.pden_electron_transport_loss_mw
             * physics_variables.vol_plasma
         )
         physics_variables.ptrimw = (
             physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
-        # Total transport power from scaling law (MW)
-        # pscalingmw = physics_variables.ptremw + physics_variables.ptrimw #KE - why is this commented?
+
 
         # Calculate Volt-second requirements
         (
@@ -2341,11 +2341,11 @@ class Physics:
             physics_variables.vol_plasma,
         )
 
-        # ptremw = physics_variables.pden_electron_transport_loss_mw*physics_variables.vol_plasma
+        # p_electron_transport_loss_mw = physics_variables.pden_electron_transport_loss_mw*physics_variables.vol_plasma
         # ptrimw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
-            physics_variables.ptremw + physics_variables.ptrimw
+            physics_variables.p_electron_transport_loss_mw + physics_variables.ptrimw
         )
 
         # Calculate physics_variables.beta limit
@@ -4834,8 +4834,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Electron transport (MW)",
-            "(ptremw)",
-            physics_variables.ptremw,
+            "(p_electron_transport_loss_mw)",
+            physics_variables.p_electron_transport_loss_mw,
             "OP ",
         )
         po.ovarre(

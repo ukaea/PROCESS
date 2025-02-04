@@ -713,7 +713,7 @@ module physics_variables
   !! - =20 Martin 2008 aspect ratio corrected scaling: 95% upper bound
   !! - =21 Martin 2008 aspect ratio corrected scaling: 95% lower bound
 
-  real(dp) :: ptremw
+  real(dp) :: p_electron_transport_loss_mw
   !! electron transport power (MW)
 
   real(dp) :: pden_electron_transport_loss_mw
@@ -1064,7 +1064,7 @@ module physics_variables
     ilhthresh = 19
     plhthresh = 0.0D0
     pthrmw = 0.0D0
-    ptremw = 0.0D0
+    p_electron_transport_loss_mw = 0.0D0
     pden_electron_transport_loss_mw = 0.0D0
     ptrimw = 0.0D0
     pscalingmw = 0.0D0
