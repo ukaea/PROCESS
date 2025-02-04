@@ -1802,8 +1802,8 @@ class Sctfcoil:
         - Sliding joints might have a region of high resistivity.
 
         Notes:
-        - The resisitivty is set to be thet for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
-        - The coeffcieicnt of resistivity is set to be that of pure copper
+        - The copper resisitivty is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
+        - The coefficient of resistivity is set to be that of pure copper
 
         References:
             - https://www.spotweldingconsultants.com/GlidCop_AL_15.pdf
@@ -1814,6 +1814,8 @@ class Sctfcoil:
         # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rho_cp = (
+                # 1.86 is the resitivity at `20°C` for GLIDCOP AL-15
+                # 0.00393 is the coefficient of resistivity for copper
                 tfcoil_variables.frhocp
                 * (1.86e0 + 0.00393e0 * (tfcoil_variables.temp_cp_average - 293.15e0))
                 * 1.0e-8
@@ -5406,6 +5408,7 @@ class Sctfcoil:
                     "Total legs resitive power loss, (W)",
                     "(p_tf_leg_resistive)",
                     tfcoil_variables.p_tf_leg_resistive,
+                    tf_res,
                 )
                 po.ovarre(
                     self.outfile,
