@@ -2241,7 +2241,7 @@ class ConfinementTimeParam(NamedTuple):
 
     expected_kappaa: Any = None
 
-    expected_powerht: Any = None
+    expected_p_plasma_loss_mw: Any = None
 
     expected_pden_electron_transport_loss_mw: Any = None
 
@@ -2297,7 +2297,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=21.17616899712392,
             expected_t_ion_energy_confinement=21.17616899712392,
             expected_t_energy_confinement=21.17616899712392,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2339,7 +2339,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2679051814806361,
             expected_t_ion_energy_confinement=3.2679051814806361,
             expected_t_energy_confinement=3.2679051814806366,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2381,7 +2381,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2731572946627923,
             expected_t_ion_energy_confinement=3.2731572946627923,
             expected_t_energy_confinement=3.2731572946627923,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2423,7 +2423,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=2.2040075681235445,
             expected_t_ion_energy_confinement=2.2040075681235445,
             expected_t_energy_confinement=2.2040075681235445,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2465,7 +2465,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2739047552801135,
             expected_t_ion_energy_confinement=3.2739047552801135,
             expected_t_energy_confinement=3.2739047552801135,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2507,7 +2507,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.269202679985145,
             expected_t_ion_energy_confinement=3.269202679985145,
             expected_t_energy_confinement=3.2692026799851455,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2549,7 +2549,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.6611421391548524,
             expected_t_ion_energy_confinement=3.6611421391548524,
             expected_t_energy_confinement=3.6611421391548529,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2591,7 +2591,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.3898077909969717,
             expected_t_ion_energy_confinement=3.3898077909969717,
             expected_t_energy_confinement=3.3898077909969717,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2633,7 +2633,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.169298972363837,
             expected_t_ion_energy_confinement=3.169298972363837,
             expected_t_energy_confinement=3.169298972363837,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2675,7 +2675,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.203198469625145,
             expected_t_ion_energy_confinement=3.203198469625145,
             expected_t_energy_confinement=3.203198469625145,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2717,7 +2717,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.6416666339340682,
             expected_t_ion_energy_confinement=3.6416666339340682,
             expected_t_energy_confinement=3.6416666339340686,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2759,7 +2759,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2693119926464509,
             expected_t_ion_energy_confinement=3.2693119926464509,
             expected_t_energy_confinement=3.2693119926464513,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2801,7 +2801,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2694535383156871,
             expected_t_ion_energy_confinement=3.2694535383156871,
             expected_t_energy_confinement=3.2694535383156871,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2843,7 +2843,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.2694029195542003,
             expected_t_ion_energy_confinement=3.2694029195542003,
             expected_t_energy_confinement=3.2694029195542003,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2885,7 +2885,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.3442231132583498,
             expected_t_ion_energy_confinement=3.3442231132583498,
             expected_t_energy_confinement=3.3442231132583502,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
         ConfinementTimeParam(
             i_rad_loss=1,
@@ -2927,7 +2927,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_tauee=3.7242785823911264,
             expected_t_ion_energy_confinement=3.7242785823911264,
             expected_t_energy_confinement=3.7242785823911264,
-            expected_powerht=290.18368660937881,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
     ),
 )
@@ -2970,7 +2970,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         t_electron_energy_confinement,
         t_ion_energy_confinement,
         t_energy_confinement,
-        powerht,
+        p_plasma_loss_mw,
     ) = physics.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
         ignite=confinementtimeparam.ignite,
@@ -3003,7 +3003,9 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         confinementtimeparam.expected_kappa_ipb
     )
 
-    assert powerht == pytest.approx(confinementtimeparam.expected_powerht)
+    assert p_plasma_loss_mw == pytest.approx(
+        confinementtimeparam.expected_p_plasma_loss_mw
+    )
 
     assert pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw

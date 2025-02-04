@@ -2253,7 +2253,7 @@ class Physics:
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_energy_confinement,
             physics_variables.t_ion_energy_confinement,
-            physics_variables.powerht,
+            physics_variables.p_plasma_loss_mw,
         ) = self.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
@@ -5249,8 +5249,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Transport loss power assumed in scaling law (MW)",
-            "(powerht)",
-            physics_variables.powerht,
+            "(p_plasma_loss_mw)",
+            physics_variables.p_plasma_loss_mw,
             "OP ",
         )
         po.ovarin(
@@ -5292,9 +5292,9 @@ class Physics:
                 "(hstar)",
                 physics_variables.hfact
                 * (
-                    physics_variables.powerht
+                    physics_variables.p_plasma_loss_mw
                     / (
-                        physics_variables.powerht
+                        physics_variables.p_plasma_loss_mw
                         + physics_variables.pden_plasma_sync_mw
                         + physics_variables.p_plasma_inner_rad_mw
                     )
@@ -5309,9 +5309,9 @@ class Physics:
                 "(hstar)",
                 physics_variables.hfact
                 * (
-                    physics_variables.powerht
+                    physics_variables.p_plasma_loss_mw
                     / (
-                        physics_variables.powerht
+                        physics_variables.p_plasma_loss_mw
                         + physics_variables.pden_plasma_rad_mw
                         * physics_variables.vol_plasma
                     )
@@ -6703,13 +6703,13 @@ class Physics:
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
-            - powerht (float): Heating power (MW) assumed in calculation
+            - p_plasma_loss_mw (float): Heating power (MW) assumed in calculation
         """
 
         # ========================================================================
 
         # Calculate heating power (MW)
-        powerht = (
+        p_plasma_loss_mw = (
             physics_variables.f_alpha_plasma * alpha_power_total
             + non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
@@ -6717,19 +6717,21 @@ class Physics:
 
         # If the device is not ignited, add the injected auxiliary power
         if ignite == 0:
-            powerht = powerht + pinjmw
+            p_plasma_loss_mw = p_plasma_loss_mw + pinjmw
 
         # Include the radiation as a loss term if requested
         if physics_variables.i_rad_loss == 0:
-            powerht = powerht - physics_variables.pden_plasma_rad_mw * vol_plasma
+            p_plasma_loss_mw = (
+                p_plasma_loss_mw - physics_variables.pden_plasma_rad_mw * vol_plasma
+            )
         elif physics_variables.i_rad_loss == 1:
-            powerht = (
-                powerht - pcoreradpv * vol_plasma
+            p_plasma_loss_mw = (
+                p_plasma_loss_mw - pcoreradpv * vol_plasma
             )  # shouldn't this be vol_core instead of vol_plasma?
-        # else do not adjust powerht for radiation
+        # else do not adjust p_plasma_loss_mw for radiation
 
         # Ensure heating power is positive (shouldn't be necessary)
-        powerht = max(powerht, 1.0e-3)
+        p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
 
         # ========================================================================
 
@@ -6800,7 +6802,7 @@ class Physics:
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
             t_electron_confinement = confinement.kaye_goldston_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
             )
 
         # ========================================================================
@@ -6808,7 +6810,7 @@ class Physics:
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
             t_electron_confinement = confinement.iter_89p_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
             )
 
         # ========================================================================
@@ -6816,7 +6818,7 @@ class Physics:
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
             t_electron_confinement = confinement.iter_89_0_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
+                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
             )
         # ========================================================================
 
@@ -6831,7 +6833,7 @@ class Physics:
                 zeff,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6839,7 +6841,7 @@ class Physics:
         # Goldston scaling (L-mode)
         elif i_confinement_time == 9:  # Goldston scaling (L-mode)
             t_electron_confinement = confinement.goldston_confinement_time(
-                pcur, rmajor, rminor, kappa95, m_fuel_amu, powerht
+                pcur, rmajor, rminor, kappa95, m_fuel_amu, p_plasma_loss_mw
             )
 
         # ========================================================================
@@ -6847,7 +6849,7 @@ class Physics:
         # T-10 scaling (L-mode)
         elif i_confinement_time == 10:
             t_electron_confinement = confinement.t10_confinement_time(
-                dnla20, rmajor, qstar, bt, rminor, kappa95, powerht, zeff, pcur
+                dnla20, rmajor, qstar, bt, rminor, kappa95, p_plasma_loss_mw, zeff, pcur
             )
 
         # ========================================================================
@@ -6864,7 +6866,7 @@ class Physics:
                 rmajor,
                 qstar,
                 zeff,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6879,7 +6881,7 @@ class Physics:
                 pcur,
                 n20,
                 m_fuel_amu,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6894,7 +6896,7 @@ class Physics:
                 dnla20,
                 bt,
                 m_fuel_amu,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6903,10 +6905,24 @@ class Physics:
         elif i_confinement_time == 14:
             t_electron_confinement = min(
                 confinement.iter_89p_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
+                    pcur,
+                    rmajor,
+                    rminor,
+                    kappa,
+                    dnla20,
+                    bt,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
                 ),
                 confinement.iter_89_0_confinement_time(
-                    pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, powerht
+                    pcur,
+                    rmajor,
+                    rminor,
+                    kappa,
+                    dnla20,
+                    bt,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
                 ),
             )
 
@@ -6921,7 +6937,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6935,7 +6951,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 m_fuel_amu,
             )
 
@@ -6950,7 +6966,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6964,7 +6980,7 @@ class Physics:
                 kappa95,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ======== ================================================================
@@ -6979,7 +6995,7 @@ class Physics:
                 dnla20,
                 bt,
                 m_fuel_amu,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -6991,7 +7007,7 @@ class Physics:
                 bt,
                 m_fuel_amu,
                 rmajor,
-                powerht,
+                p_plasma_loss_mw,
                 kappa,
             )
 
@@ -7004,7 +7020,7 @@ class Physics:
                 rminor,
                 dnla20,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7014,7 +7030,7 @@ class Physics:
             t_electron_confinement = confinement.gyro_reduced_bohm_confinement_time(
                 bt,
                 dnla20,
-                powerht,
+                p_plasma_loss_mw,
                 rminor,
                 rmajor,
             )
@@ -7029,7 +7045,7 @@ class Physics:
                     rminor,
                     dnla20,
                     bt,
-                    powerht,
+                    p_plasma_loss_mw,
                     q,
                 )
             )
@@ -7041,7 +7057,7 @@ class Physics:
             t_electron_confinement = confinement.iter_93h_confinement_time(
                 pcur,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 m_fuel_amu,
                 rmajor,
                 dnla20,
@@ -7060,7 +7076,7 @@ class Physics:
             t_electron_confinement = confinement.iter_h97p_confinement_time(
                 pcur,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 dnla19,
                 rmajor,
                 aspect,
@@ -7075,7 +7091,7 @@ class Physics:
             t_electron_confinement = confinement.iter_h97p_elmy_confinement_time(
                 pcur,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 dnla19,
                 rmajor,
                 aspect,
@@ -7095,7 +7111,7 @@ class Physics:
                 aspect,
                 dnla19,
                 m_fuel_amu,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7111,7 +7127,7 @@ class Physics:
                 rmajor,
                 rminor,
                 kappa,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7127,7 +7143,7 @@ class Physics:
                 aspect,
                 dnla19,
                 m_fuel_amu,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7139,7 +7155,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7154,7 +7170,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 kappa,
                 aspect,
@@ -7169,7 +7185,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7184,7 +7200,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7199,7 +7215,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7214,7 +7230,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7231,7 +7247,7 @@ class Physics:
                 rmajor,
                 dnla19,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 iotabar,
             )
 
@@ -7245,7 +7261,7 @@ class Physics:
                 rmajor,
                 dnla19,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 iotabar,
             )
 
@@ -7257,7 +7273,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 kappa95,
                 aspect,
@@ -7274,7 +7290,7 @@ class Physics:
                 physics_variables.kappa_ipb,
                 dnla19,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7285,7 +7301,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7299,7 +7315,7 @@ class Physics:
                 plasma_current,
                 bt,
                 dnla,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 rminor,
                 q,
@@ -7317,7 +7333,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla20,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7328,7 +7344,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla20,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7339,7 +7355,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla20,
-                powerht,
+                p_plasma_loss_mw,
             )
 
         # ==========================================================================
@@ -7350,7 +7366,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.kappa_ipb,
                 aspect,
@@ -7366,7 +7382,7 @@ class Physics:
                     pcur,
                     bt,
                     dnla19,
-                    powerht,
+                    p_plasma_loss_mw,
                     rmajor,
                     physics_variables.kappa_ipb,
                     aspect,
@@ -7381,7 +7397,7 @@ class Physics:
             t_electron_confinement = confinement.nstx_gyro_bohm_confinement_time(
                 pcur,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 dnla20,
             )
@@ -7394,7 +7410,7 @@ class Physics:
                 pcur,
                 bt,
                 dnla19,
-                powerht,
+                p_plasma_loss_mw,
                 rmajor,
                 physics_variables.triang,
                 physics_variables.kappa_ipb,
@@ -7409,7 +7425,7 @@ class Physics:
             t_electron_confinement = confinement.itpa20_il_confinement_time(
                 pcur,
                 bt,
-                powerht,
+                p_plasma_loss_mw,
                 dnla19,
                 physics_variables.m_ions_total_amu,
                 rmajor,
@@ -7461,7 +7477,7 @@ class Physics:
         # from the total plasma beta and the loss power used above.
         physics_module.t_energy_confinement_beta = (
             physics_module.e_plasma_beta / 1e6
-        ) / powerht
+        ) / p_plasma_loss_mw
 
         return (
             pden_electron_transport_loss_mw,
@@ -7469,7 +7485,7 @@ class Physics:
             t_electron_energy_confinement,
             t_ion_energy_confinement,
             t_energy_confinement,
-            powerht,
+            p_plasma_loss_mw,
         )
 
 

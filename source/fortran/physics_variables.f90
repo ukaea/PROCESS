@@ -419,58 +419,58 @@ module physics_variables
   !! switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)
 
   !! labels_confinement_scalings(n_confinement_scalings) : labels describing energy confinement scaling laws
-  character*30, parameter, dimension(n_confinement_scalings) :: labels_confinement_scalings = (/  &
-    'Input tauee_in                ', &
-    'Neo-Alcator            (Ohmic)', &
-    'Mirnov                     (H)', &
-    'Merezkhin-Muhkovatov       (L)', &
-    'Shimomura                  (H)', &
-    'Kaye-Goldston              (L)', &
-    'ITER 89-P                  (L)', &
-    'ITER 89-O                  (L)', &
-    'Rebut-Lallia               (L)', &
-    'Goldston                   (L)', &
-    'T10                        (L)', &
-    'JAERI-88                   (L)', &
-    'Kaye-Big Complex           (L)', &
-    'ITER H90-P                 (H)', &
-    'ITER Mix                   (L)', &
-    'Riedel                     (L)', &
-    'Christiansen               (L)', &
-    'Lackner-Gottardi           (L)', &
-    'Neo-Kaye                   (L)', &
-    'Riedel                     (H)', &
-    'ITER H90-P amended         (H)', &
-    'LHD                    (Stell)', &
-    'Gyro-reduced Bohm      (Stell)', &
-    'Lackner-Gottardi       (Stell)', &
-    'ITER-93H                   (H)', &
-    'TITAN RFP OBSOLETE            ', &
-    'ITER H-97P ELM-free        (H)', &
-    'ITER H-97P ELMy            (H)', &
-    'ITER-96P                   (L)', &
-    'Valovic modified ELMy      (H)', &
-    'Kaye PPPL April 98         (L)', &
-    'ITERH-PB98P(y)             (H)', &
-    'IPB98(y)                   (H)', &
-    'IPB98(y,1)                 (H)', &
-    'IPB98(y,2)                 (H)', &
-    'IPB98(y,3)                 (H)', &
-    'IPB98(y,4)                 (H)', &
-    'ISS95                  (Stell)', &
-    'ISS04                  (Stell)', &
-    'DS03                       (H)', &
-    'Murari et al NPL           (H)', &
-    'Petty 2008             (ST)(H)', &
-    'Lang et al. 2012           (H)', &
-    'Hubbard 2017 - nom         (I)', &
-    'Hubbard 2017 - lower       (I)', &
-    'Hubbard 2017 - upper       (I)', &
-    'NSTX                   (ST)(H)', &
-    'NSTX-Petty08 Hybrid    (ST)(H)', &
-    'NSTX gyro-Bohm Buxton  (ST)(H)', &
-    'ITPA20                     (H)', &
-    'ITPA20-IL                  (H)' /)
+  character*34, parameter, dimension(n_confinement_scalings) :: labels_confinement_scalings = (/  &
+    'User input electron confinement   ', &
+    'Neo-Alcator                (Ohmic)', &
+    'Mirnov                         (H)', &
+    'Merezkhin-Muhkovatov    (Ohmic)(L)', &
+    'Shimomura                      (H)', &
+    'Kaye-Goldston                  (L)', &
+    'ITER 89-P                      (L)', &
+    'ITER 89-O                      (L)', &
+    'Rebut-Lallia                   (L)', &
+    'Goldston                       (L)', &
+    'T10                            (L)', &
+    'JAERI / Odajima-Shimomura      (L)', &
+    'Kaye-Big Complex               (L)', &
+    'ITER H90-P                     (H)', &
+    'ITER 89-P & 89-O min           (L)', &
+    'Riedel                         (L)', &
+    'Christiansen                   (L)', &
+    'Lackner-Gottardi               (L)', &
+    'Neo-Kaye                       (L)', &
+    'Riedel                         (H)', &
+    'ITER H90-P amended             (H)', &
+    'LHD                        (Stell)', &
+    'Gyro-reduced Bohm          (Stell)', &
+    'Lackner-Gottardi           (Stell)', &
+    'ITER-93H  ELM-free             (H)', &
+    'TITAN RFP OBSOLETE                ', &
+    'ITER H-97P ELM-free            (H)', &
+    'ITER H-97P ELMy                (H)', &
+    'ITER-96P (ITER-97L)            (L)', &
+    'Valovic modified ELMy          (H)', &
+    'Kaye 98 modified               (L)', &
+    'ITERH-PB98P(y)                 (H)', &
+    'IPB98(y)                       (H)', &
+    'IPB98(y,1)                     (H)', &
+    'IPB98(y,2)                     (H)', &
+    'IPB98(y,3)                     (H)', &
+    'IPB98(y,4)                     (H)', &
+    'ISS95                      (Stell)', &
+    'ISS04                      (Stell)', &
+    'DS03 beta-independent          (H)', &
+    'Murari "Non-power law"         (H)', &
+    'Petty 2008                 (ST)(H)', &
+    'Lang high density              (H)', &
+    'Hubbard 2017 - nomonimal       (I)', &
+    'Hubbard 2017 - lower           (I)', &
+    'Hubbard 2017 - upper           (I)', &
+    'Menard NSTX                (ST)(H)', &
+    'Menard NSTX-Petty08 hybrid (ST)(H)', &
+    'Buxton NSTX gyro-Bohm      (ST)(H)', &
+    'ITPA20                         (H)', &
+    'ITPA20-IL                      (H)' /)
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:
@@ -654,7 +654,7 @@ module physics_variables
   real(dp) :: pden_plasma_ohmic_mw
   !! ohmic heating power per volume (MW/m3)
 
-  real(dp) :: powerht
+  real(dp) :: p_plasma_loss_mw
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
   real(dp) :: fusion_power
@@ -1052,7 +1052,7 @@ module physics_variables
     neutron_power_density_plasma = 0.0D0
     p_plasma_ohmic_mw = 0.0D0
     pden_plasma_ohmic_mw = 0.0D0
-    powerht = 0.0D0
+    p_plasma_loss_mw = 0.0D0
     fusion_power = 0.0D0
     len_plasma_poloidal = 0.0D0
     p_plasma_rad_mw = 0.0D0

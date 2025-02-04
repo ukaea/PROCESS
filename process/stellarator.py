@@ -218,7 +218,7 @@ class Stellarator:
                 physics_variables.t_electron_energy_confinement,
                 physics_variables.t_ion_energy_confinement,
                 physics_variables.t_energy_confinement,
-                physics_variables.powerht,
+                physics_variables.p_plasma_loss_mw,
             ) = self.physics.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
@@ -352,7 +352,7 @@ class Stellarator:
 
         physics_variables.dnelimt = self.stdlim(
             physics_variables.bt,
-            physics_variables.powerht,
+            physics_variables.p_plasma_loss_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
         )
@@ -3549,7 +3549,7 @@ class Stellarator:
         )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
         powerht_out = max(
-            copy(physics_variables.powerht), 0.00001e0
+            copy(physics_variables.p_plasma_loss_mw), 0.00001e0
         )  # the radiation module sometimes returns negative heating power
         pscalingmw_out = copy(physics_variables.pscalingmw)
 
@@ -4457,7 +4457,7 @@ class Stellarator:
             physics_variables.t_electron_energy_confinement,
             physics_variables.t_ion_energy_confinement,
             physics_variables.t_energy_confinement,
-            physics_variables.powerht,
+            physics_variables.p_plasma_loss_mw,
         ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,

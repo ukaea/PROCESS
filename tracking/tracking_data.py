@@ -133,7 +133,7 @@ class ProcessTracker:
         "kappa",
         "fusion_power",
         "teped",
-        "powerht",
+        "p_plasma_loss_mw",
         "kappa95",
         "neped",
         "dene",
