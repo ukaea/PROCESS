@@ -72,6 +72,20 @@ $\mathtt{var = \ <data type>\_<system>\_<description>\_<units>}$
 
 **Having the units at the end of the name is only necessary when the variable is not in SI/standard units.**
 
+For example, a variable can look like:
+
+$$
+\mathtt{var = \ a_\_tf\_wp}
+$$
+
+Which represents:
+
+$$
+\mathtt{var = \ \text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
+$$
+
+So for above; `a` is the data type representing area, `tf` is the system representing the TF coils and `wp` is the secondary description or system. This variable thus represents the cross-sectional area of the TF coil winding pack.
+
 It may also be useful to use several data type prefixes to greater greater clarity.
 
 For example, a variable can look like:
@@ -118,7 +132,11 @@ The data types of different variables can be seen below:
 
 ---------------------
 
-#### Radii and thicknesses
+#### Data types
+
+---------------------
+
+##### Radii and thicknesses
 
 - Radial positions should start with the `r_` prefix
 - Radial thicknesses should start with the `dr_` prefix
@@ -128,7 +146,7 @@ The data types of different variables can be seen below:
 
 ---------------------
 
-#### Integer countable items
+##### Integer countable items
 
 - Integer countable items should start with the `n_` prefix
 
@@ -136,13 +154,13 @@ Example, the total number of TF coils: `n_tf_coils`
 
 ---------------------
 
-#### Number densities
+##### Number densities
 
 - Number density items should start with the `nd_` prefix
 
 ---------------------
 
-#### Areas
+##### Areas
 
 - Areas should start with the `a_` prefix
 
@@ -150,37 +168,37 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
-#### Volumes
+##### Volumes
 
 - Volumes should start with the `vol_` prefix
 
 ---------------------
 
-#### Lengths
+##### Lengths
 
 - Lengths should start with the `len_` prefix
 
 ---------------------
 
-#### Radii
+##### Radii
 
 - Radii should start with the `radius_` prefix
 
 ---------------------
 
-#### Velocities
+##### Velocities
 
 - Velocities should start with the `vel_` prefix
 
 ---------------------
 
-#### Mass
+##### Mass
 
 - Masses should start with the `m_` prefix
 
 ---------------------
 
-#### Mass flow rates
+##### Mass flow rates
 
 - Mass flow rates should start with the `mflow_` prefix
 
@@ -188,7 +206,7 @@ This should be used for units of $\text{kg} \cdot \text{s}^{-1}$
 
 ---------------------
 
-#### Mass fluxes rates
+##### Mass fluxes rates
 
 - Mass fluxes should start with the `mflux_` prefix
 
@@ -196,7 +214,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
-#### Pressures
+##### Pressures
 
 - Pressures should start with the `pres_` prefix
 - Pressure changes or drops should start with the `dpres_` prefix
@@ -204,110 +222,110 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 ---------------------
 
 
-#### Densities
+##### Densities
 
 - Densities should start with the `den_` prefix
 
 ---------------------
 
-#### Voltages
+##### Voltages
 
 - Voltages should start with the `v_` prefix
 
 ---------------------
 
-#### Resistances
+##### Resistances
 
 - Resistances should start with the `res_` prefix
 
 ---------------------
 
-#### Resistivity
+##### Resistivity
 
 - Resistivity variables should start with the `rho_` prefix
 
 ---------------------
 
-#### Currents
+##### Currents
 
 - Currents should start with the `c_` prefix
 
 ---------------------
 
-#### Inductances
+##### Inductances
 
 - Inductances should start with the `h_` prefix
 
 ---------------------
 
-#### Current densities
+##### Current densities
 
 - Current densities should start with the `j_` prefix
 
 ---------------------
 
-#### Powers
+##### Powers
 
 - Powers should start with the `p_` prefix
 
 ---------------------
 
-#### Power densities
+##### Power densities
 
 - Power densities should start with the `pden_` prefix
 
 ---------------------
 
-#### Power fluxes
+##### Power fluxes
 
 - Power fluxes should start with the `pflux_` prefix
 
 ---------------------
 
-#### Energies
+##### Energies
 
 - Energies should start with the `e_` prefix
 
 ---------------------
 
-#### Particle fluence
+##### Particle fluence
 
 - Fluences should start with the `flu_` prefix
 
 ---------------------
 
-#### Temperatures
+##### Temperatures
 
 - Temperatures should start with the `temp_` prefix
 
 ---------------------
 
-#### Times
+##### Times
 
 - Times should start with the `t_` prefix
 - Time intervals should start with the `dt_` prefix
 
 ---------------------
 
-#### Magnetic field strengths
+##### Magnetic field strengths
 
 - Magnetic field strengths should start with the `b_`
 
 ---------------------
 
-#### Frequencies
+##### Frequencies
 
 - Frequencies should start with the `freq_`
 
 ---------------------
 
-#### Angles
+##### Angles
 
 - Angles should start with the `deg_` or `rad_` depending on the units used
 
 ---------------------
 
-#### Variables representing fractions
+##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
 
@@ -317,7 +335,7 @@ If a variable is intended to represent an engineering efficiency then it should 
 
 ---------------------
 
-#### F-values
+##### F-values
 
 Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
 
