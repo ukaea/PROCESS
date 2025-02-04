@@ -463,7 +463,7 @@ module physics_variables
     'Murari "Non-power law"         (H)', &
     'Petty 2008                 (ST)(H)', &
     'Lang high density              (H)', &
-    'Hubbard 2017 - nomonimal       (I)', &
+    'Hubbard 2017 - nominal         (I)', &
     'Hubbard 2017 - lower           (I)', &
     'Hubbard 2017 - upper           (I)', &
     'Menard NSTX                (ST)(H)', &

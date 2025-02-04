@@ -44,7 +44,7 @@ $$
 
 where $V_{\text{p}}$ is the plasma volume, $R$ is the plasma major radius and $a$ is the plasma minor radius.
 
-The loss power $P_{\text{L}}$ [$\mathtt{p_plasma_loss_mw}$] is calculated from above but may have a separate radiation term depending on the condition of `i_rad_loss` switch below.
+The loss power $P_{\text{L}}$ [$\mathtt{p\_plasma\_loss\_mw}$] is calculated from above but may have a separate radiation term depending on the condition of `i_rad_loss` switch below.
 
 
 -------------
