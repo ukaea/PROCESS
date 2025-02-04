@@ -104,7 +104,6 @@ class Scan:
             scan_module.nsweep, scan_module.sweep, scan_module.isweep
         )
         converged_count = 0
-        nsweep_var_name = nsweep_var_name.decode("utf-8")
         # offsets for aligning the converged/unconverged column
         max_sweep_value_length = len(str(np.max(sweep_values)).replace(".", ""))
         offsets = [
