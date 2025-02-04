@@ -70,6 +70,8 @@ The agreed upon style is to name the variables by the following scheme:
 
 $\mathtt{var = \ <data type>\_<system>\_<description>\_<units>}$
 
+**Having the units at the end of the name is only necessary when the variable is not in SI/standard units.**
+
 It may also be useful to use several data type prefixes to greater greater clarity.
 
 For example, a variable can look like:
