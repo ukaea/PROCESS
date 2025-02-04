@@ -630,64 +630,25 @@ $$
 
 -------------------------
 
-
-### Effect of radiation on energy confinement
-
-Published confinement scalings are all based on low radiation pulses. A power
-plant will certainly be a high radiation machine --- both in the core, due to
-bremsstrahlung and synchrotron radiation, and in the edge due to impurity
-seeding. The scaling data do not predict this radiation --- that needs to be
-done by the radiation model. However, if the transport is very "stiff", as
-predicted by some models, then the additional radiation causes an almost equal
-drop in power transported by ions and electrons, leaving the confinement
-nearly unchanged.
-
-To allow for these uncertainties, three options are available, using the switch
-`iradloss`. In each case, the particle transport loss power `pscaling` is
-derived directly from the energy confinement scaling law.
-
-`iradloss = 0` -- Total power lost is scaling power plus radiation:
-
-`pscaling + pden_plasma_rad_mw = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
-
-
-`iradloss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
-  
-`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
-
-`iradloss = 2` -- Total power lost is scaling power only, with no additional 
-allowance for radiation. This is not recommended for power plant models.
-
-`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
-
-
-
-
-------------------
-
 ## Key Constraints
 
 ### Global plasma power balance
 
 This constraint can be activated by stating `icc = 2` in the input file.
 
-To allow for these uncertainties, three options are available, using the switch
-`i_rad_loss`. In each case, the particle transport loss power `pscaling` is
-derived directly from the energy confinement scaling law.
+This constraint ensures self consistency between the the transport loss power used for the confinement scalings and the calculated confinement time in relation to the plasmas total thermal energy.
 
-`i_rad_loss = 0` -- Total power lost is scaling power plus radiation:
+$$
+P_{\text{L}} = \frac{W}{\tau_{\text{E}}}
+$$
 
-`pscaling + pradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
+$$
+\underbrace{\frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}} + \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}}_{\frac{W}{\tau_{\text{E}}}}  = \underbrace{\frac{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}{V_{\text{P}}} - \frac{P_{\text{rad}}}{V_{\text{p}}}}_{P_{\text{L}}}
+$$
 
+The $\frac{3}{2}n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}$ value is simply the volume averaged ion thermal energy density where $\langle T_{\text{i}} \rangle_{\text{n}}$ is the density weighted temperature. The same goes for the $\frac{3}{2}n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{e}}$ electron thermal energy density term. $\tau_{\text{E}}$ is the confinement time calculated from the chosen confinement scaling via `i_confinement_time`. 
 
-`i_rad_loss = 1` -- Total power lost is scaling power plus radiation from a region defined as the "core":
-  
-`pscaling + pcoreradpv = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
-
-`i_rad_loss = 2` -- Total power lost is scaling power only, with no additional 
-allowance for radiation. This is not recommended for power plant models.
-
-`pscaling = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma`
+The constraint is done using the loss power and thermal densities hence the inclusion of the $V_{\text{p}}$ plasma volume term. The constraint is adapted depending on the condition of `i_rad_loss` which governs the radiation contribution to the loss power definition, see the [radiation and energy confinement section](#effect-of-radiation-on-energy-confinement) for more info. The injected heating and current drive contribution $P_{\text{HCD}}$ is also included or excluded depending if the plasma is deemed to be ignited with the `ignite` switch.
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
 
