@@ -5772,12 +5772,13 @@ class Physics:
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
         po.ocmmnt(
             self.outfile,
-            f"{'':>2}{'Scaling law':<33}{'Confinement time [s]':<29}H-factor for",
+            f"{'':>2}{'Scaling law':<27}{'Electron confinement time [s]':<32}Equivalent H-factor for",
         )
         po.ocmmnt(
             self.outfile,
-            f"{'':>40}{'for H = 1':<24}power balance",
+            f"{'':>38}{'for H = 1':<23}same confinement time",
         )
+        po.oblnkl(self.outfile)
 
         # Plot all of the confinement scalings for comparison when H = 1
         # Start from range 1 as the first i_confinement_time is a user input
@@ -5785,12 +5786,12 @@ class Physics:
             if i_confinement_time == 25:
                 continue
             (
-                ptrez,
-                ptriz,
+                _,
+                _,
                 taueez,
-                taueiz,
-                taueffz,
-                powerhtz,
+                _,
+                _,
+                _,
             ) = self.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
@@ -5819,8 +5820,8 @@ class Physics:
                 physics_variables.zeff,
             )
 
-            # Calculate the H-factor for when the plasma is ignited
-            physics_variables.hfac[i_confinement_time - 1] = self.fhfac(
+            # Calculate the H-factor for the same confinement time in other scalings
+            physics_variables.hfac[i_confinement_time - 1] = self.find_other_h_factors(
                 i_confinement_time
             )
 
@@ -6556,88 +6557,85 @@ class Physics:
 
         return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
 
-    def fhfac(self, is_):
-        """Function to find H-factor for power balance
-        author: P J Knight, CCFE, Culham Science Centre
-        is : input integer : confinement time scaling law of interest
-        This function calculates the H-factor required for power balance,
-        using the given energy confinement scaling law.
+    def find_other_h_factors(self, i_confinement_time: int) -> float:
+        """
+        Function to find H-factor for the equivalent confinement time in other scalings.
+
+        Args:
+            i_confinement_time (int): Index of the confinement time scaling to use.
+
+        Returns:
+            float: The calculated H-factor.
         """
 
-        physics_module.iscz = is_
+        def fhz(hfact: float) -> float:
+            """
+            Function used to find power balance.
 
-        return root_scalar(self.fhz, bracket=(0.01, 150), xtol=0.003).root
+            Args:
+                hfact (float): H-factor to be used in the calculation.
 
-    def fhz(self, hhh):
-        """Function used to find power balance
-        author: P J Knight, CCFE, Culham Science Centre
-        hhh : input real : test value for confinement time H-factor
-        This function is used to find power balance.
-        <CODE>FHZ</CODE> is zero at power balance, which is achieved
-        using routine <A HREF="zeroin.html">ZEROIN</A> to adjust the
-        value of <CODE>hhh</CODE>, the confinement time H-factor.
-        """
+            Returns:
+                float: The difference between the calculated power and the required power for balance.
+            """
+            (
+                ptrez,
+                ptriz,
+                _,
+                _,
+                _,
+                _,
+            ) = self.calculate_confinement_time(
+                physics_variables.m_fuel_amu,
+                physics_variables.alpha_power_total,
+                physics_variables.aspect,
+                physics_variables.bt,
+                physics_variables.nd_ions_total,
+                physics_variables.dene,
+                physics_variables.dnla,
+                physics_variables.eps,
+                hfact,
+                i_confinement_time,
+                physics_variables.ignite,
+                physics_variables.kappa,
+                physics_variables.kappa95,
+                physics_variables.non_alpha_charged_power,
+                current_drive_variables.pinjmw,
+                physics_variables.plasma_current,
+                physics_variables.pcoreradpv,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.ten,
+                physics_variables.tin,
+                physics_variables.q,
+                physics_variables.qstar,
+                physics_variables.vol_plasma,
+                physics_variables.zeff,
+            )
 
-        (
-            ptrez,
-            ptriz,
-            taueezz,
-            taueiz,
-            taueffz,
-            powerhtz,
-        ) = self.calculate_confinement_time(
-            physics_variables.m_fuel_amu,
-            physics_variables.alpha_power_total,
-            physics_variables.aspect,
-            physics_variables.bt,
-            physics_variables.nd_ions_total,
-            physics_variables.dene,
-            physics_variables.dnla,
-            physics_variables.eps,
-            hhh,
-            physics_module.iscz,
-            physics_variables.ignite,
-            physics_variables.kappa,
-            physics_variables.kappa95,
-            physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
-            physics_variables.plasma_current,
-            physics_variables.pcoreradpv,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.ten,
-            physics_variables.tin,
-            physics_variables.q,
-            physics_variables.qstar,
-            physics_variables.vol_plasma,
-            physics_variables.zeff,
-        )
+            # At power balance, fhz is zero.
+            fhz_value = (
+                ptrez
+                + ptriz
+                - physics_variables.f_alpha_plasma
+                * physics_variables.alpha_power_density_total
+                - physics_variables.charged_power_density
+                - physics_variables.pden_plasma_ohmic_mw
+            )
 
-        # At power balance, fhz is zero.
+            # Take into account whether injected power is included in tau_e calculation (i.e. whether device is ignited)
+            if physics_variables.ignite == 0:
+                fhz_value -= current_drive_variables.pinjmw / physics_variables.vol_plasma
 
-        fhz = (
-            ptrez
-            + ptriz
-            - physics_variables.f_alpha_plasma
-            * physics_variables.alpha_power_density_total
-            - physics_variables.charged_power_density
-            - physics_variables.pden_plasma_ohmic_mw
-        )
+            # Include the radiation power if requested
+            if physics_variables.i_rad_loss == 0:
+                fhz_value += physics_variables.pden_plasma_rad_mw
+            elif physics_variables.i_rad_loss == 1:
+                fhz_value += physics_variables.pcoreradpv
 
-        # Take into account whether injected power is included in tau_e
-        # calculation (i.e. whether device is ignited)
+            return fhz_value
 
-        if physics_variables.ignite == 0:
-            fhz -= current_drive_variables.pinjmw / physics_variables.vol_plasma
-
-        # Include the radiation power if requested
-
-        if physics_variables.i_rad_loss == 0:
-            fhz += physics_variables.pden_plasma_rad_mw
-        elif physics_variables.i_rad_loss == 1:
-            fhz += physics_variables.pcoreradpv
-
-        return fhz
+        return root_scalar(fhz, bracket=(0.01, 150), xtol=0.00001).root
 
     @staticmethod
     def calculate_confinement_time(

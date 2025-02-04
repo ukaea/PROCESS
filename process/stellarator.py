@@ -249,7 +249,7 @@ class Stellarator:
                 physics_variables.zeff,
             )
 
-            physics_variables.hfac[iisc] = self.physics.fhfac(i)
+            physics_variables.hfac[iisc] = self.physics.find_other_h_factors(i)
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
