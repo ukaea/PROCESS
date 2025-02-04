@@ -4492,12 +4492,13 @@ class Stellarator:
             physics_variables.pden_electron_transport_loss_mw
             * physics_variables.vol_plasma
         )
-        physics_variables.ptrimw = (
+        physics_variables.p_ion_transport_loss_mw = (
             physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
 
         physics_variables.pscalingmw = (
-            physics_variables.p_electron_transport_loss_mw + physics_variables.ptrimw
+            physics_variables.p_electron_transport_loss_mw
+            + physics_variables.p_ion_transport_loss_mw
         )
 
         #  Calculate auxiliary physics related information

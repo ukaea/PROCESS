@@ -2287,10 +2287,9 @@ class Physics:
             physics_variables.pden_electron_transport_loss_mw
             * physics_variables.vol_plasma
         )
-        physics_variables.ptrimw = (
+        physics_variables.p_ion_transport_loss_mw = (
             physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
-
 
         # Calculate Volt-second requirements
         (
@@ -2342,10 +2341,11 @@ class Physics:
         )
 
         # p_electron_transport_loss_mw = physics_variables.pden_electron_transport_loss_mw*physics_variables.vol_plasma
-        # ptrimw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
+        # p_ion_transport_loss_mw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
-            physics_variables.p_electron_transport_loss_mw + physics_variables.ptrimw
+            physics_variables.p_electron_transport_loss_mw
+            + physics_variables.p_ion_transport_loss_mw
         )
 
         # Calculate physics_variables.beta limit
@@ -4827,8 +4827,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Ion transport (MW)",
-            "(ptrimw)",
-            physics_variables.ptrimw,
+            "(p_ion_transport_loss_mw)",
+            physics_variables.p_ion_transport_loss_mw,
             "OP ",
         )
         po.ovarre(
