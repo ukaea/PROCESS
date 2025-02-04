@@ -1,4 +1,4 @@
-# Confinement Time Scaling Laws
+# Plasma confinement time
 
 ## Overview
 
@@ -31,6 +31,23 @@ $$
 where $f_{\alpha}$ is the [fraction of alpha power that is coupled to the plasma](../physics-models/fusion_reactions/plasma_reactions.md#coupled-alpha-particle-power), $P_{\alpha}$ is the alpha power, $P_{\text{c}}$ is the charged particle power, $P_{\text{OH}}$ is the ohmic heating power, $P_{\text{HCD}}$ is the plasma heating done by the external heating & current drive systems.
 
 ----------
+
+## Calculating plasma confinement time | `calculate_confinement_time()`
+
+The correspoding plasma confinement time is calculated by the `calculate_confinement_time()` function in `physics.py` with scalings taken from `confinement_time.py`.
+
+A key definition of elongation is defined here and is used mainly in the ITER physics basis scalings [^12]:
+
+$$
+\kappa_{\text{IPB}} = \frac{V_{\text{p}}}{2\pi R}\frac{1}{\pi a^2}
+$$
+
+where $V_{\text{p}}$ is the plasma volume, $R$ is the plasma major radius and $a$ is the plasma minor radius.
+
+The loss power $P_{\text{L}}$ [$\mathtt{powerht}$] is calculated from above but may have a separate radiation term depending on the condition of `i_rad_loss` switch below.
+
+
+-------------
 
 ### Effect of radiation on energy confinement
 
@@ -69,22 +86,24 @@ $$
 ### Ignition
 
 Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
-without the need for any injected auxiliary power during the burn. If `ignite = 1`, the calculated 
-injected power does not contribute to the plasma power balance, although the cost of the auxiliary 
-power system is taken into account (the system is then assumed to be required to provide heating 
-and/or current drive during the plasma start-up phase only). If `ignite` = 0, the plasma is not 
-ignited, and the auxiliary power is taken into account in the plasma power balance during the burn 
-phase. An ignited plasma will be difficult to control and is unlikely to be practical. This 
+without the need for any injected auxiliary power during the burn. If `ignite = 1`, the heating and current drive power $P_{\text{HCD}}$, does not contribute to the loss power term. 
+
+If `ignite = 0`, the plasma is not ignited, and the heating and current drive power $P_{\text{HCD}}$, does contribute to the loss power term.
+phase. An ignited plasma will be difficult to control and is unlikely to be practical. This
 option is not recommended.
 
 ----------
 
-## Available confinement time scalings
+### Available confinement time scalings
 
-Many energy confinement time scaling laws are available within PROCESS, for conventional aspect ratio tokamaks, spherical tokamaks, and stellarators. These are calculated in routine `calculate_confinement_time()`. 
+Many energy confinement time scaling laws are available within PROCESS, for conventional aspect ratio tokamaks, spherical tokamaks, and stellarators.
 The value of `i_confinement_time` determines which of the scalings is used in the plasma energy balance calculation.
 
-### 0: User input confinement time
+The scaling chosen with `i_confinement_time` is then calculated and multiplied with the $H$-factor [$\mathtt{hfact}$]. $\mathtt{hfact}$ can be set as an interation variable by setting `ixc = 10` in the `IN.DAT` input file.
+
+---------------
+
+#### 0: User input confinement time
 
 Is selected with `i_confinement_time = 0`
 
@@ -94,7 +113,7 @@ $$
 
 ------------
 
-### 1: Nec-Alcator scaling (Ohmic)
+#### 1: Nec-Alcator scaling (Ohmic)
 
 Is selected with `i_confinement_time = 1`[^1]
 
@@ -104,7 +123,7 @@ $$
 
 ------------
 
-### 2: Mirnov scaling (H-mode)
+#### 2: Mirnov scaling (H-mode)
 
 Is selected with `i_confinement_time = 2`[^1]
 
@@ -114,7 +133,7 @@ $$
 
 ------------
 
-### 3: Merezhkin-Mukhovatov scaling (Ohmic / L-mode)
+#### 3: Merezhkin-Mukhovatov scaling (Ohmic / L-mode)
 
 Is selected with `i_confinement_time = 3`[^1]
 
@@ -125,7 +144,7 @@ $$
 
 ---------------
 
-### 4: Shimomura scaling (H-mode)
+#### 4: Shimomura scaling (H-mode)
 
 Is selected with `i_confinement_time = 4`[^1]
 
@@ -135,7 +154,7 @@ $$
 
 ----------------
 
-### 5: Kaye-Goldston scaling (L-mode)
+#### 5: Kaye-Goldston scaling (L-mode)
 
 Is selected with `i_confinement_time = 5`[^1]
 
@@ -145,7 +164,7 @@ $$
 
 ----------------
 
-### 6: ITER 89-P scaling (L-mode)
+#### 6: ITER 89-P scaling (L-mode)
 
 Is selected with `i_confinement_time = 6`[^1] [^2]
 
@@ -155,7 +174,7 @@ $$
 
 ----------------
 
-### 7: ITER 89-0 scaling (L-mode)
+#### 7: ITER 89-0 scaling (L-mode)
 
 Is selected with `i_confinement_time = 7` [^2]
 
@@ -168,7 +187,7 @@ $$
 
 ----------------
 
-### 8: Rebut-Lallia scaling (L-mode)
+#### 8: Rebut-Lallia scaling (L-mode)
 
 Is selected with `i_confinement_time = 8` [^2]
 
@@ -183,7 +202,7 @@ where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
 
 ----------------
 
-### 9: Goldston scaling (L-mode)
+#### 9: Goldston scaling (L-mode)
 
 Is selected with `i_confinement_time = 9` [^1]
 
@@ -193,7 +212,7 @@ $$
 
 ----------------
 
-### 10: T-10 scaling (L-mode)
+#### 10: T-10 scaling (L-mode)
 
 Is selected with `i_confinement_time = 10` [^1]
 
@@ -206,7 +225,7 @@ where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)
 
 ----------------
 
-### 11: JAERI / Odajima-Shimomura scaling (L-mode)
+#### 11: JAERI / Odajima-Shimomura scaling (L-mode)
 
 Is selected with `i_confinement_time = 11` [^1]
 
@@ -220,7 +239,7 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 
 ----------------
 
-### 12: Kaye "big" scaling (L-mode)
+#### 12: Kaye "big" scaling (L-mode)
 
 Is selected with `i_confinement_time = 12` [^1]
 
@@ -230,7 +249,7 @@ $$
 
 -------------------------
 
-### 13: ITER H90-P scaling (H-mode)
+#### 13: ITER H90-P scaling (H-mode)
 
 Is selected with `i_confinement_time = 13` [^2]
 
@@ -240,7 +259,7 @@ $$
 
 -------------------------
 
-### 14: Minimum of ITER 89-P and ITER 89-O
+#### 14: Minimum of ITER 89-P and ITER 89-O
 
 Is selected with `i_confinement_time = 14` [^1] [^2]
 
@@ -248,7 +267,7 @@ Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O]
 
 -------------------------
 
-### 15: Riedel scaling (L-mode)
+#### 15: Riedel scaling (L-mode)
 
 Is selected with `i_confinement_time = 15` [^2]
 
@@ -258,7 +277,7 @@ $$
 
 -------------------------
 
-### 16: Christiansen scaling (L-mode)
+#### 16: Christiansen scaling (L-mode)
 
 Is selected with `i_confinement_time = 16` [^2]
 
@@ -268,7 +287,7 @@ $$
 
 -------------------------
 
-### 17: Lackner-Gottardi scaling (L-mode)
+#### 17: Lackner-Gottardi scaling (L-mode)
 
 Is selected with `i_confinement_time = 17` [^2]
 
@@ -280,7 +299,7 @@ where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
 
 -------------------------
 
-### 18: Neo-Kaye scaling (L-mode)
+#### 18: Neo-Kaye scaling (L-mode)
 
 Is selected with `i_confinement_time = 18` [^2]
 
@@ -290,7 +309,7 @@ $$
 
 -------------------------
 
-### 19: Riedel scaling (H-mode)
+#### 19: Riedel scaling (H-mode)
 
 Is selected with `i_confinement_time = 19` [^2]
 
@@ -300,7 +319,7 @@ $$
 
 -------------------------
 
-### 20: Amended ITER H90-P scaling (H-mode)
+#### 20: Amended ITER H90-P scaling (H-mode)
 
 Is selected with `i_confinement_time = 20` [^3]
 
@@ -310,7 +329,7 @@ $$
 
 -------------------------
 
-### 21: Sudo et al. scaling (Stellarator)
+#### 21: Sudo et al. scaling (Stellarator)
 
 Is selected with `i_confinement_time = 21` [^4]
 
@@ -320,7 +339,7 @@ $$
 
 -------------------------
 
-### 22: Gyro reduced Bohm scaling (Stellarator)
+#### 22: Gyro reduced Bohm scaling (Stellarator)
 
 Is selected with `i_confinement_time = 22` [^5]
 
@@ -330,7 +349,7 @@ $$
 
 -------------------------
 
-### 23: Lackner-Gottardi scaling (Stellarator)
+#### 23: Lackner-Gottardi scaling (Stellarator)
 
 Is selected with `i_confinement_time = 23` [^6]
 
@@ -340,7 +359,7 @@ $$
 
 -------------------------
 
-### 24: ITER H93 ELM-free scaling (H-mode)
+#### 24: ITER H93 ELM-free scaling (H-mode)
 
 Is selected with `i_confinement_time = 24` [^7]
 
@@ -350,7 +369,7 @@ $$
 
 -------------------------
 
-### 25: TITAN Reversed-Field_Pinch scaling
+#### 25: TITAN Reversed-Field_Pinch scaling
 
 Is selected with `i_confinement_time = 25`
 
@@ -359,7 +378,7 @@ Is selected with `i_confinement_time = 25`
 
 -------------------------
 
-### 26: ITER H-97P ELM-free scaling (H-mode)
+#### 26: ITER H-97P ELM-free scaling (H-mode)
 
 Is selected with `i_confinement_time = 26` [^8]
 
@@ -369,7 +388,7 @@ $$
 
 -------------------------
 
-### 27: ITER H-97P ELMy scaling (H-mode)
+#### 27: ITER H-97P ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 27` [^8] [^9]
 
@@ -379,7 +398,7 @@ $$
 
 -------------------------
 
-### 28: ITER-96P (ITER-97L) scaling (L-mode)
+#### 28: ITER-96P (ITER-97L) scaling (L-mode)
 
 Is selected with `i_confinement_time = 28` [^10]
 
@@ -389,7 +408,7 @@ $$
 
 -------------------------
 
-### 29: Valovic modified ELMy scaling (H-mode)
+#### 29: Valovic modified ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 29`
 
@@ -402,7 +421,7 @@ $$
 
 -------------------------
 
-### 30: Kaye 98 modified scaling (L-mode)
+#### 30: Kaye 98 modified scaling (L-mode)
 
 Is selected with `i_confinement_time = 30`
 
@@ -415,7 +434,7 @@ $$
 
 -------------------------
 
-### 31: ITERH-PB98P(y) scaling (H-mode)
+#### 31: ITERH-PB98P(y) scaling (H-mode)
 
 Is selected with `i_confinement_time = 31` 
 
@@ -428,7 +447,7 @@ $$
 
 -------------------------
 
-### 32: IPB98(y) ELMy scaling (H-mode)
+#### 32: IPB98(y) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 32` [^11] [^12]
 
@@ -438,7 +457,7 @@ $$
 
 -------------------------
 
-### 33: IPB98(y,1) ELMy scaling (H-mode)
+#### 33: IPB98(y,1) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 33` [^11] [^12]
 
@@ -448,7 +467,7 @@ $$
 
 -------------------------
 
-### 34: IPB98(y,2) ELMy scaling (H-mode)
+#### 34: IPB98(y,2) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 34` [^11] [^12]
 
@@ -458,7 +477,7 @@ $$
 
 -------------------------
 
-### 35: IPB98(y,3) ELMy scaling (H-mode)
+#### 35: IPB98(y,3) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 35` [^11] [^12]
 
@@ -468,7 +487,7 @@ $$
 
 -------------------------
 
-### 36: IPB98(y,4) ELMy scaling (H-mode)
+#### 36: IPB98(y,4) ELMy scaling (H-mode)
 
 Is selected with `i_confinement_time = 36` [^11] [^12]
 
@@ -479,7 +498,7 @@ $$
 -------------------------
 
 
-### 37: ISS95 scaling (Stellarator)
+#### 37: ISS95 scaling (Stellarator)
 
 Is selected with `i_confinement_time = 37` [^13]
 
@@ -490,7 +509,7 @@ $$
 -------------------------
 
 
-### 38: ISS04 scaling (Stellarator)
+#### 38: ISS04 scaling (Stellarator)
 
 Is selected with `i_confinement_time = 38` [^14]
 
@@ -500,7 +519,7 @@ $$
 
 -------------------------
 
-### 39: DS03 beta-independent scaling (H-mode)
+#### 39: DS03 beta-independent scaling (H-mode)
 
 Is selected with `i_confinement_time = 39` [^15]
 
@@ -510,7 +529,7 @@ $$
 
 -------------------------
 
-### 40: Murari "Non-power law" scaling (H-mode)
+#### 40: Murari "Non-power law" scaling (H-mode)
 
 Is selected with `i_confinement_time = 40` [^16]
 
@@ -521,7 +540,7 @@ $$
 
 -------------------------
 
-### 41: Petty08 scaling (H-mode)
+#### 41: Petty08 scaling (H-mode)
 
 Is selected with `i_confinement_time = 41` [^17]
 
@@ -531,7 +550,7 @@ $$
 
 -------------------------
 
-### 42: Lang high density scaling (H-mode)
+#### 42: Lang high density scaling (H-mode)
 
 Is selected with `i_confinement_time = 42` [^18]
 
@@ -542,7 +561,7 @@ $$
 
 -------------------------
 
-### 43: Hubbard nominal scaling (I-mode)
+#### 43: Hubbard nominal scaling (I-mode)
 
 Is selected with `i_confinement_time = 43` [^19]
 
@@ -552,7 +571,7 @@ $$
 
 -------------------------
 
-### 44: Hubbard lower scaling (I-mode)
+#### 44: Hubbard lower scaling (I-mode)
 
 Is selected with `i_confinement_time = 44` [^19]
 
@@ -562,7 +581,7 @@ $$
 
 -------------------------
 
-### 45: Hubbard upper scaling (I-mode)
+#### 45: Hubbard upper scaling (I-mode)
 
 Is selected with `i_confinement_time = 45` [^19]
 
@@ -573,7 +592,7 @@ $$
 -------------------------
 
 
-### 46: Menard NSTX scaling (H-mode)
+#### 46: Menard NSTX scaling (H-mode)
 
 Is selected with `i_confinement_time = 46` [^20]
 
@@ -583,7 +602,7 @@ $$
 
 -------------------------
 
-### 47: Menard NSTX-Petty08 hybrid scaling
+#### 47: Menard NSTX-Petty08 hybrid scaling
 
 Is selected with `i_confinement_time = 47` [^20]
 
@@ -598,7 +617,7 @@ $$
 
 -------------------------
 
-### 48: Buxton NSTX Gyro-Bohm scaling (H-mode)
+#### 48: Buxton NSTX Gyro-Bohm scaling (H-mode)
 
 Is selected with `i_confinement_time = 48` [^21]
 
@@ -608,7 +627,7 @@ $$
 
 -------------------------
 
-### 49: ITPA20 scaling (H-mode)
+#### 49: ITPA20 scaling (H-mode)
 
 Is selected with `i_confinement_time = 49` [^22]
 
@@ -618,7 +637,7 @@ $$
 
 -------------------------
 
-### 50: ITPA20-IL scaling (H-mode)
+#### 50: ITPA20-IL scaling (H-mode)
 
 Is selected with `i_confinement_time = 50` [^23]
 
@@ -627,6 +646,36 @@ $$
 $$
 
 -------------------------
+
+### Trasnport Powers
+
+After the confinement time scaling with $H$-factor correction have been calculated the ion and electron transport power densities are found. `PROCESS` assumes the scaling confinement time to be equal to the ion and electron energy confinement time.
+
+This is simply the volume averaged thermal energy of the electron and ions divided by the $H$-factor corrected confinement time form the chosen scaling.
+
+$$
+\mathtt{pden\_ion\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+$$
+
+$$
+\mathtt{pden\_electron\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+$$
+
+Here $\langle T_{\text{i}} \rangle$ and $\langle T_{\text{e}} \rangle$ are the ion and electron density weighted temperatures respectively.
+
+Calculate the density and density weighted ratio:
+
+$$
+\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}}
+$$
+
+The density weighted global energy confinement time is then found as thus via this ratio:
+
+$$
+\tau_{\text{E}} = \frac{\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}} + 1}{\left(\frac{\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}}}{\tau_{\text{i}}}+\frac{1}{\tau_{\text{e}}}\right)}
+$$
+
+----------
 
 ## Key Constraints
 

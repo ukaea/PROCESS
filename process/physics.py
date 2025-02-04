@@ -7427,13 +7427,13 @@ class Physics:
         t_electron_energy_confinement = hfact * t_electron_confinement
 
         # Ion energy confinement time
-        # N.B. Overwrites earlier calculation above
         t_ion_energy_confinement = t_electron_energy_confinement
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, tin and ten are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
+        # The transport losses is just the electron and ion thermal energies divided by the confinement time.
         pden_ion_transport_loss_mw = (
             (3 / 2)
             * (constants.electron_charge / 1e3)
