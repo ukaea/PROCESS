@@ -7615,30 +7615,21 @@ def l_h_threshold_power(
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = (
-        1.42
-        * dnla20**0.58
-        * bt**0.82
-        * rmajor
-        * rminor**0.81
-        * (2.0 / m_ions_total_amu)
+
+    # ilhthresh = 9
+    snipes_2000 = transition.calculate_snipes2000_nominal(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
-    snipes_2000_ub = (
-        1.547
-        * dnla20**0.615
-        * bt**0.851
-        * rmajor**1.089
-        * rminor**0.876
-        * (2.0 / m_ions_total_amu)
+
+    # ilhthresh = 10
+    snipes_2000_ub = transition.calculate_snipes2000_upper(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
-    snipes_2000_lb = (
-        1.293
-        * dnla20**0.545
-        * bt**0.789
-        * rmajor**0.911
-        * rminor**0.744
-        * (2.0 / m_ions_total_amu)
+    snipes_2000_lb = transition.calculate_snipes2000_lower(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
+
+    # ========================================================================
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower

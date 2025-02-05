@@ -176,3 +176,114 @@ def calculate_martin08_lower(
         * a_plasma_surface**0.922
         * (2.0 / m_ions_total_amu)
     )
+
+
+def calculate_snipes2000_nominal(
+    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the nominal Snipes 2000 L-H transition power threshold.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param rminor: Plasma minor radius [m]
+        :type rminor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return (
+        1.42
+        * dnla20**0.58
+        * bt**0.82
+        * rmajor
+        * rminor**0.81
+        * (2.0 / m_ions_total_amu)
+    )
+
+
+def calculate_snipes2000_upper(
+    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the upper Snipes 2000 L-H transition power threshold.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param rminor: Plasma minor radius [m]
+        :type rminor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return (
+        1.547
+        * dnla20**0.615
+        * bt**0.851
+        * rmajor**1.089
+        * rminor**0.876
+        * (2.0 / m_ions_total_amu)
+    )
+
+
+def calculate_snipes2000_lower(
+    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the lower Snipes 2000 L-H transition power threshold.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param rminor: Plasma minor radius [m]
+        :type rminor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return (
+        1.293
+        * dnla20**0.545
+        * bt**0.789
+        * rmajor**0.911
+        * rminor**0.744
+        * (2.0 / m_ions_total_amu)
+    )
