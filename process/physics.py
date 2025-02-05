@@ -7654,12 +7654,22 @@ def l_h_threshold_power(
     # ========================================================================
 
     # Hubbard et al. 2012 L-I threshold scaling
-    hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
-    hubbard_2012_lb = 2.11 * (plasma_current / 1e6) ** 0.70 * dnla20**0.47
-    hubbard_2012_ub = 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
+
+    # ilhthresh = 15
+    hubbard_2012 = transition.calculate_hubbard2012_nominal(plasma_current, dnla20)
+
+    # ilhthresh = 16
+    hubbard_2012_lb = transition.calculate_hubbard2012_lower(plasma_current, dnla20)
+
+    # ilhthresh = 17
+    hubbard_2012_ub = transition.calculate_hubbard2012_upper(plasma_current, dnla20)
+
+    # ========================================================================
 
     # Hubbard et al. 2017 L-I threshold scaling
     hubbard_2017 = 0.162 * dnla20 * a_plasma_surface * (bt) ** 0.26
+
+    # ========================================================================
 
     pthrmw = [
         iterdd,

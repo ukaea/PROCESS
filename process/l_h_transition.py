@@ -371,3 +371,69 @@ def calculate_snipes2000_closed_divertor_lower(
     ‌
     """
     return 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+
+
+def calculate_hubbard2012_nominal(plasma_current: float, dnla20: float) -> float:
+    """
+        Calculate the nominal Hubbard 2012 L-I transition power threshold.
+
+        :param plasma_current: Plasma current [A]
+        :type plasma_current: float
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :return: The Hubbard 2012 L-I transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+    ‌
+    """
+    return 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
+
+
+def calculate_hubbard2012_upper(plasma_current: float, dnla20: float) -> float:
+    """
+        Calculate the upper Hubbard 2012 L-I transition power threshold.
+
+        :param plasma_current: Plasma current [A]
+        :type plasma_current: float
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :return: The Hubbard 2012 L-I transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+    ‌
+    """
+    return 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
+
+
+def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
+    """
+        Calculate the lower Hubbard 2012 L-I transition power threshold.
+
+        :param plasma_current: Plasma current [A]
+        :type plasma_current: float
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :return: The Hubbard 2012 L-I transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+    ‌
+    """
+    return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
