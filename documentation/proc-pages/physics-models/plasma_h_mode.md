@@ -21,6 +21,39 @@ the f-value `boundl(103) = 0.001` and `boundu(103) = 1.0`
 to ensure that the power does not exceed the calculated threshold, 
 and therefore the machine remains in L-mode.
 
+--------------------
+
+### ITER-1996 Scalings
+
+The general form is:
+
+$$
+P_{\text{L-H}} = 0.45 (0.6n_{e,20}R^2)^{\alpha} n^{0.75}_{\text{e},20}B_{\text{T}}R^2
+$$
+
+where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$.
+
+------------------
+
+#### ITER-1996 Nominal Scaling
+
+Is selected with `ilhthresh = 1` [^1] [^2]
+
+$$
+P_{\text{L-H}} = 0.45 n^{0.75}_{\text{e},20}B_{\text{T}}R^2
+$$
+
+---------------
+
+#### ITER-1996 Upper Scaling
+
+Is selected with `ilhthresh = 2` [^1] [^2]
+
+$$
+P_{\text{L-H}} = 0.3960502816 n_{\text{e},20}B_{\text{T}}R^2.5
+$$
+
+---------------
 
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
@@ -45,3 +78,7 @@ and therefore the machine remains in L-mode.
 | 19 | Martin 2008 aspect ratio corrected nominal | Martin et al (2008; J Phys Conf, 123, 012033) |
 | 20 | Martin 2008 aspect ratio corrected 95% upper bound | [Takizuka et al. (2004; Plasma Phys. Contol. Fusion, 46, A227)](https://iopscience.iop.org/article/10.1088/0741-3335/46/5A/024)  |
 | 21 | Martin 2008 aspect ratio corrected 95% lower bound |  
+
+
+[^1]: T. Takizuka and International Atomic Energy Agency, Vienna (Austria),"Threshold power and energy confinement for ITER". 1996.
+[^2]: J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics issues, capabilities and physics program plans,” Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997, doi: https://doi.org/10.1063/1.872406.

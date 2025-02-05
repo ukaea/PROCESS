@@ -7560,21 +7560,25 @@ def l_h_threshold_power(
     :param aspect: aspect ratio
     :param plasma_current: plasma current (A)
 
-    :returns: array of power thresholds (18 different scalings)
+    :returns: array of power thresholds
     """
 
     dene20 = 1e-20 * dene
     dnla20 = 1e-20 * dnla
+
+    # ========================================================================
 
     # ITER-1996 H-mode power threshold database
     # Fit to 1996 H-mode power threshold database: nominal
     iterdd = transition.calculate_iter1996_nominal(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
-    iterdd_ub = 0.37 * dene20 * bt * rmajor**2.5
+    iterdd_ub = transition.calculate_iter1996_upper(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
     iterdd_lb = 0.54 * dene20**0.5 * bt * rmajor**1.5
+
+    # ========================================================================
 
     # J. A. Snipes, ITER H-mode Threshold Database Working Group,
     # Controlled Fusion and Plasma Physics, 24th EPS Conference,
