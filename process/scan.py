@@ -108,7 +108,7 @@ class Scan:
             error_handling.idiags[0] = ifail
             error_handling.report_error(132)
 
-            scan_module.verror(ifail)
+            self.verror(ifail)
             process_output.oblnkl(constants.nout)
             process_output.oblnkl(constants.iotty)
         else:
@@ -375,6 +375,159 @@ class Scan:
                     numalign="left",
                 ),
             )
+
+    def verror(self, ifail: int):
+        """Routine to print out relevant messages in the case of an
+        unfeasible result from a VMCON (optimisation) run
+        author: P J Knight, CCFE, Culham Science Centre
+        ifail  : input integer : error flag
+        This routine prints out relevant messages in the case of
+        an unfeasible result from a VMCON (optimisation) run.
+        """
+        if ifail == -1:
+            process_output.ocmmnt(constants.nout, "User-terminated execution of VMCON.")
+            process_output.ocmmnt(
+                constants.iotty, "User-terminated execution of VMCON."
+            )
+        elif ifail == 0:
+            process_output.ocmmnt(
+                constants.nout, "Improper input parameters to the VMCON routine."
+            )
+            process_output.ocmmnt(constants.nout, "PROCESS coding must be checked.")
+
+            process_output.ocmmnt(
+                constants.iotty, "Improper input parameters to the VMCON routine."
+            )
+            process_output.ocmmnt(constants.iotty, "PROCESS coding must be checked.")
+        elif ifail == 2:
+            process_output.ocmmnt(
+                constants.nout,
+                "The maximum number of calls has been reached without solution.",
+            )
+            process_output.ocmmnt(
+                constants.nout,
+                "The code may be stuck in a minimum in the residual space that is significantly above zero.",
+            )
+            process_output.oblnkl(constants.nout)
+            process_output.ocmmnt(
+                constants.nout, "There is either no solution possible, or the code"
+            )
+            process_output.ocmmnt(
+                constants.nout, "is failing to escape from a deep local minimum."
+            )
+            process_output.ocmmnt(
+                constants.nout,
+                "Try changing the variables in IXC, or modify their initial values.",
+            )
+
+            process_output.ocmmnt(
+                constants.iotty,
+                "The maximum number of calls has been reached without solution.",
+            )
+            process_output.ocmmnt(
+                constants.iotty,
+                "The code may be stuck in a minimum in the residual space that is significantly above zero.",
+            )
+            process_output.oblnkl(constants.nout)
+            process_output.oblnkl(constants.iotty)
+            process_output.ocmmnt(
+                constants.iotty, "There is either no solution possible, or the code"
+            )
+            process_output.ocmmnt(
+                constants.iotty, "is failing to escape from a deep local minimum."
+            )
+            process_output.ocmmnt(
+                constants.iotty,
+                "Try changing the variables in IXC, or modify their initial values.",
+            )
+        elif ifail == 3:
+            process_output.ocmmnt(
+                constants.nout, "The line search required the maximum of 10 calls."
+            )
+            process_output.ocmmnt(
+                constants.nout, "A feasible solution may be difficult to achieve."
+            )
+            process_output.ocmmnt(
+                constants.nout, "Try changing or adding variables to IXC."
+            )
+
+            process_output.ocmmnt(
+                constants.iotty, "The line search required the maximum of 10 calls."
+            )
+            process_output.ocmmnt(
+                constants.iotty, "A feasible solution may be difficult to achieve."
+            )
+            process_output.ocmmnt(
+                constants.iotty, "Try changing or adding variables to IXC."
+            )
+        elif ifail == 4:
+            process_output.ocmmnt(
+                constants.nout, "An uphill search direction was found."
+            )
+            process_output.ocmmnt(
+                constants.nout, "Try changing the equations in ICC, or"
+            )
+            process_output.ocmmnt(constants.nout, "adding new variables to IXC.")
+
+            process_output.ocmmnt(
+                constants.iotty, "An uphill search direction was found."
+            )
+            process_output.ocmmnt(
+                constants.iotty, "Try changing the equations in ICC, or"
+            )
+            process_output.ocmmnt(constants.iotty, "adding new variables to IXC.")
+        elif ifail == 5:
+            process_output.ocmmnt(
+                constants.nout, "The quadratic programming technique was unable to"
+            )
+            process_output.ocmmnt(constants.nout, "find a feasible point.")
+            process_output.oblnkl(constants.nout)
+            process_output.ocmmnt(
+                constants.nout, "Try changing or adding variables to IXC, or modify"
+            )
+            process_output.ocmmnt(
+                constants.nout,
+                "their initial values (especially if only 1 optimisation",
+            )
+            process_output.ocmmnt(constants.nout, "iteration was performed).")
+
+            process_output.ocmmnt(
+                constants.iotty, "The quadratic programming technique was unable to"
+            )
+            process_output.ocmmnt(constants.iotty, "find a feasible point.")
+            process_output.oblnkl(constants.iotty)
+            process_output.ocmmnt(
+                constants.iotty, "Try changing or adding variables to IXC, or modify"
+            )
+            process_output.ocmmnt(
+                constants.iotty,
+                "their initial values (especially if only 1 optimisation",
+            )
+            process_output.ocmmnt(constants.iotty, "iteration was performed).")
+        elif ifail == 6:
+            process_output.ocmmnt(
+                constants.nout, "The quadratic programming technique was restricted"
+            )
+            process_output.ocmmnt(
+                constants.nout, "by an artificial bound, or failed due to a singular"
+            )
+            process_output.ocmmnt(constants.nout, "matrix.")
+            process_output.ocmmnt(
+                constants.nout, "Try changing the equations in ICC, or"
+            )
+            process_output.ocmmnt(constants.nout, "adding new variables to IXC.")
+
+            process_output.ocmmnt(
+                constants.iotty, "The quadratic programming technique was restricted"
+            )
+            process_output.ocmmnt(
+                constants.iotty, "by an artificial bound, or failed due to a singular"
+            )
+            process_output.ocmmnt(constants.iotty, "matrix.")
+            process_output.ocmmnt(
+                constants.iotty, "Try changing the equations in ICC, or"
+            )
+            process_output.ocmmnt(constants.iotty, "adding new variables to IXC.")
 
     def scan_1d(self):
         """Run a 1-D scan."""
