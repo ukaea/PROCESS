@@ -7625,6 +7625,8 @@ def l_h_threshold_power(
     snipes_2000_ub = transition.calculate_snipes2000_upper(
         dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
+
+    # ilhthresh = 11
     snipes_2000_lb = transition.calculate_snipes2000_lower(
         dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
@@ -7634,15 +7636,22 @@ def l_h_threshold_power(
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
-    snipes_2000_cd = (
-        0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+    # ilhthresh = 12
+    snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
-    snipes_2000_cd_ub = (
-        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+
+    # ilhthresh = 13
+    snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
-    snipes_2000_cd_lb = (
-        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+
+    # ilhthresh = 14
+    snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
+
+    # ========================================================================
 
     # Hubbard et al. 2012 L-I threshold scaling
     hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65

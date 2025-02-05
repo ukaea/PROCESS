@@ -287,3 +287,87 @@ def calculate_snipes2000_lower(
         * rminor**0.744
         * (2.0 / m_ions_total_amu)
     )
+
+
+def calculate_snipes2000_closed_divertor_nominal(
+    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the nominal Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+
+
+def calculate_snipes2000_closed_divertor_upper(
+    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the upper Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+
+
+def calculate_snipes2000_closed_divertor_lower(
+    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+) -> float:
+    """
+        Calculate the lower Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :param rmajor: Plasma major radius [m]
+        :type rmajor: float
+        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
+        :type m_ions_total_amu: float
+        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+    ‌
+    """
+    return 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
