@@ -215,6 +215,48 @@ $$
 
 ---------------
 
+###  Hubbard 2012 L-I Scalings
+
+The general form is:
+
+$$
+P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.94\pm 0.24}\bar{n}_{\text{e},20}^{0.65\pm 0.18}
+$$
+
+where $I_{\text{p}}$ is the plasma current in $\text{MA}$ and $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20}$.
+
+------------------
+
+#### Hubbard 2012 L-I Nominal Scaling
+
+Is selected with `ilhthresh = 15`
+
+$$
+P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.94}\bar{n}_{\text{e},20}^{0.65}
+$$
+
+---------------
+
+#### Hubbard 2012 L-I Lower Scaling
+
+Is selected with `ilhthresh = 16` 
+
+$$
+P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.7}\bar{n}_{\text{e},20}^{0.47}
+$$
+
+---------------
+
+#### Hubbard 2012 L-I Upper Scaling
+
+Is selected with `ilhthresh = 17` 
+
+$$
+P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{1.18}\bar{n}_{\text{e},20}^{0.83}
+$$
+
+---------------
+
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |
