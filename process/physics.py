@@ -7570,12 +7570,16 @@ def l_h_threshold_power(
 
     # ITER-1996 H-mode power threshold database
     # Fit to 1996 H-mode power threshold database: nominal
+
+    # ilhthresh = 1
     iterdd = transition.calculate_iter1996_nominal(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
+    # ilhthresh = 2
     iterdd_ub = transition.calculate_iter1996_upper(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
+    # ilhthresh = 3
     iterdd_lb = transition.calculate_iter1996_lower(dene20, bt, rmajor)
 
     # ========================================================================
@@ -7587,26 +7591,27 @@ def l_h_threshold_power(
 
     pthrmw5 = 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
 
+    # ========================================================================
+
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = (
-        0.0488
-        * dnla20**0.717
-        * bt**0.803
-        * a_plasma_surface**0.941
-        * (2.0 / m_ions_total_amu)
+
+    # ilhthresh = 6
+    martin_nominal = transition.calculate_martin08_nominal(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
-    martin_error = (
-        np.sqrt(
-            0.057**2
-            + (0.035 * np.log(dnla20)) ** 2
-            + (0.032 * np.log(bt)) ** 2
-            + (0.019 * np.log(a_plasma_surface)) ** 2
-        )
-        * martin
+
+    # ilhthresh = 7
+    martin_ub = transition.calculate_martin08_upper(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
-    martin_ub = martin + 2 * martin_error
-    martin_lb = martin - 2 * martin_error
+
+    # ilhthresh = 8
+    martin_lb = transition.calculate_martin08_lower(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
+    )
+
+    # ========================================================================
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
@@ -7662,7 +7667,7 @@ def l_h_threshold_power(
         iterdd_lb,
         snipes_1997,
         pthrmw5,
-        martin,
+        martin_nominal,
         martin_ub,
         martin_lb,
         snipes_2000,
@@ -7682,11 +7687,11 @@ def l_h_threshold_power(
     if aspect <= 2.7:
         takizuka_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         pthrmw += [
-            martin * takizuka_correction,
+            martin_nominal * takizuka_correction,
             martin_ub * takizuka_correction,
             martin_lb * takizuka_correction,
         ]
         return pthrmw
 
-    pthrmw += [martin, martin_ub, martin_lb]
+    pthrmw += [martin_nominal, martin_ub, martin_lb]
     return pthrmw
