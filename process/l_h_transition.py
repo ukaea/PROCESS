@@ -437,3 +437,28 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
     ‌
     """
     return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
+
+
+def calculate_hubbard2017(dnla20: float, a_plasma_surface: float, bt: float) -> float:
+    """
+        Calculate the Hubbard 2017 L-I transition power threshold.
+
+        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+        :type dnla20: float
+        :param a_plasma_surface: Plasma surface area [m^2]
+        :type a_plasma_surface: float
+        :param bt: Toroidal magnetic field [T]
+        :type bt: float
+        :return: The Hubbard 2017 L-I transition power threshold [MW]
+        :rtype: float
+
+        :notes:
+            - The scaling is given in the cpation of Figure 6 in the reference.
+
+        :references:
+            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
+            Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
+    ‌
+    """
+    return 0.162 * dnla20 * a_plasma_surface * bt**0.26
