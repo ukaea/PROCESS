@@ -107,6 +107,62 @@ $$
 
 ---------------
 
+### Snipes 2000 Scalings
+
+!!! quote "Excerpt fom Snipes et.al"
+    *"A number of regression fits were performed on the full data set of all 10 tokamaks for all
+    L–H transition points that fit the standard SELDB2 criteria in deuterium plasmas ($N$ = 702).
+    A small improvement in the RMSE was obtained by correcting the total ICRF power from
+    Alcator C-Mod with density- and toroidal-field-dependent corrections for the absorbed ICRF
+    power based on experimental measurements. For hydrogen minority heating between 5 and
+    6 $T$, $P_{\text{abs}} = 0.9\bar{n}_{\text{e}}^{-0.6} P_{\text{ICRH}}$ while for He3 minority heating above 6 T, the assumption is made
+    that $P_{\text{abs}} = 0.75 P_{\text{ICRH}}$."*
+
+- This scaling has a RMSE of 26.8%
+
+- $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
+
+
+The general form is:
+
+$$
+P_{\text{L-H}} = 1.42\pm 0.127 \times \bar{n}_{\text{e},20}^{0.58 \pm 0.035} B_{\text{T}}^{0.82 \pm 0.031} R^{1.00 \pm 0.089} a^{0.81 \pm 0.066}
+$$
+
+where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla, $R$ is the plasma major radius in metres and $a$ is the plasma major radius in metres.
+
+------------------
+
+#### Snipes 2000 Nominal Scaling
+
+Is selected with `ilhthresh = 9` 
+
+$$
+P_{\text{L-H}} = 1.42 \times \bar{n}_{\text{e},20}^{0.58} B_{\text{T}}^{0.82} R^{1.00} a^{0.81}
+$$
+
+---------------
+
+#### Snipes 2000 Upper Scaling
+
+Is selected with `ilhthresh = 10` 
+
+$$
+P_{\text{L-H}} = 1.547 \times \bar{n}_{\text{e},20}^{0.615} B_{\text{T}}^{0.851} R^{1.089} a^{0.876}
+$$
+
+---------------
+
+#### Snipes 2000 Lower Scaling
+
+Is selected with `ilhthresh = 11` 
+
+$$
+P_{\text{L-H}} = 1.293 \times \bar{n}_{\text{e},20}^{0.545} B_{\text{T}}^{0.789} R^{0.911} a^{0.744}
+$$
+
+---------------
+
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |
