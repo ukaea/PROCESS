@@ -163,6 +163,58 @@ $$
 
 ---------------
 
+### Snipes 2000 Closed Divertor Scalings
+
+!!! quote "Excerpt fom Snipes et.al"
+    *"Several machines have reported changes in the H-mode threshold due to divertor geometry modifications. ASDEX-Upgrade saw a 15% increase with a more-closed divertor, attributed to higher edge densities. Conversely, JET and JT-60U experienced a 20% decrease after installing more-closed divertors. Alcator C-Mod, with its inherently closed divertor, showed no change in threshold despite further closure of bypass gaps. Preliminary experiments with C-Mod's divertor bypass indicate no threshold change, even with a significant drop in divertor neutral pressure. These variations contribute to the scatter in H-mode threshold regression fits."*
+
+    *"Only four tokamaks have closed-divertor data in the database (Alcator C-Mod, ASDEX-Upgrade, JET, and JT-60U). Although the resulting data set is limited ($N$ = 169)"*
+
+- This scaling has a RMSE of 22.0%
+
+- $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
+
+
+The general form is:
+
+$$
+P_{\text{L-H}} = 0.8\pm 0.067 \times \bar{n}_{\text{e},20}^{0.50 \pm 0.061} B_{\text{T}}^{0.53 \pm 0.058} R^{1.51 \pm 0.077}
+$$
+
+where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla and $R$ is the plasma major radius in metres
+
+------------------
+
+#### Snipes 2000 Closed Divertor Nominal Scaling
+
+Is selected with `ilhthresh = 12` 
+
+$$
+P_{\text{L-H}} = 0.8 \times \bar{n}_{\text{e},20}^{0.50} B_{\text{T}}^{0.53} R^{1.51}
+$$
+
+---------------
+
+#### Snipes 2000 Closed Divertor Upper Scaling
+
+Is selected with `ilhthresh = 13` 
+
+$$
+P_{\text{L-H}} = 0.867 \times \bar{n}_{\text{e},20}^{0.561} B_{\text{T}}^{0.588} R^{1.587}
+$$
+
+---------------
+
+#### Snipes 2000 Closed Divertor Lower Scaling
+
+Is selected with `ilhthresh = 14` 
+
+$$
+P_{\text{L-H}} = 0.733 \times \bar{n}_{\text{e},20}^{0.439} B_{\text{T}}^{0.472} R^{1.433}
+$$
+
+---------------
+
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |
