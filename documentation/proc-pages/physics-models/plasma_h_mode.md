@@ -65,6 +65,48 @@ $$
 
 ---------------
 
+### Martin 2008 Scalings
+
+The general form is:
+
+$$
+P_{\text{L-H}} = 0.0488 e^{\pm0.057} \bar{n}_{\text{e},20}^{0.717 \pm 0.035} B_{\text{T}}^{0.803 \pm 0.032} S_{\text{p}}^{0.941 \pm 0.019}
+$$
+
+where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla and $S_{\text{p}}$ is the plasma surface area in $\text{m}^2$.
+
+------------------
+
+#### Martin 2008 Nominal Scaling
+
+Is selected with `ilhthresh = 6` 
+
+$$
+P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}
+$$
+
+---------------
+
+#### Martin 2008 Upper Scaling
+
+Is selected with `ilhthresh = 7` 
+
+$$
+P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}
+$$
+
+---------------
+
+#### Martin 2008 Lower Scaling
+
+Is selected with `ilhthresh = 8` 
+
+$$
+P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}
+$$
+
+---------------
+
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |
