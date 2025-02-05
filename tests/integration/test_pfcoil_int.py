@@ -281,7 +281,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: MonkeyPatch
     """
     ngrpmx = 10
-    nclsmx = 2
     nptsmx = 32
     nfixmx = 64
     lrow1 = 2 * nptsmx + ngrpmx
@@ -408,14 +407,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
-    rc = np.full(nclsmx, 0.0)
-    zc = np.full(nclsmx, 0.0)
-    cc = np.full(nclsmx, 0.0)
-    xc = np.full(nclsmx, 0.0)
-    umat = np.full([lrow1, lcol1], 0.0, order="F")
-    vmat = np.full([lrow1, lcol1], 0.0, order="F")
-    sigma = np.full(ngrpmx, 0.0)
-    work2 = np.full(ngrpmx, 0.0)
 
     ssq, ccls = pfcoil.efc(
         npts,
@@ -435,22 +426,15 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         bfix,
         gmat,
         bvec,
-        rc,
-        zc,
-        cc,
-        xc,
-        umat,
-        vmat,
-        sigma,
-        work2,
     )
 
     assert pytest.approx(ssq) == 4.208729e-4
-    assert ccls[0:3] == pytest.approx(
+    assert ccls[0:4] == pytest.approx(
         np.array([
             12846165.42893886,
             16377261.02000236,
             579111.6216917,
+            0.0,
         ])
     )
 
