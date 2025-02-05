@@ -8,6 +8,7 @@ from scipy.optimize import root_scalar
 
 import process.confinement_time as confinement
 import process.impurity_radiation as impurity_radiation
+import process.l_h_transition as transition
 import process.physics_functions as physics_funcs
 from process.fortran import (
     build_variables,
@@ -2167,7 +2168,7 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.pthrmw = pthresh(
+        physics_variables.pthrmw = l_h_threshold_power(
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.bt,
@@ -7523,18 +7524,18 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
 
 
-def pthresh(
-    dene,
-    dnla,
-    bt,
-    rmajor,
-    rminor,
-    kappa,
-    a_plasma_surface,
-    m_ions_total_amu,
-    aspect,
-    plasma_current,
-):
+def l_h_threshold_power(
+    dene: float,
+    dnla: float,
+    bt: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    a_plasma_surface: float,
+    m_ions_total_amu: float,
+    aspect: float,
+    plasma_current: float,
+) -> list[float]:
     """L-mode to H-mode power threshold calculation
 
     Author: P J Knight, CCFE, Culham Science Centre
@@ -7565,9 +7566,9 @@ def pthresh(
     dene20 = 1e-20 * dene
     dnla20 = 1e-20 * dnla
 
-    # ITER-DDD, D.Boucher
+    # ITER-1996 H-mode power threshold database
     # Fit to 1996 H-mode power threshold database: nominal
-    iterdd = 0.45 * dene20**0.75 * bt * rmajor**2
+    iterdd = transition.calculate_iter1996_nominal(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
     iterdd_ub = 0.37 * dene20 * bt * rmajor**2.5
