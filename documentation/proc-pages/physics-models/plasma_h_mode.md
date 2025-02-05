@@ -40,7 +40,7 @@ where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$.
 Is selected with `ilhthresh = 1` [^1] [^2]
 
 $$
-P_{\text{L-H}} = 0.45 n^{0.75}_{\text{e},20}B_{\text{T}}R^2
+P_{\text{L-H}} = 0.45 \times n^{0.75}_{\text{e},20}B_{\text{T}}R^2
 $$
 
 ---------------
@@ -50,7 +50,17 @@ $$
 Is selected with `ilhthresh = 2` [^1] [^2]
 
 $$
-P_{\text{L-H}} = 0.3960502816 n_{\text{e},20}B_{\text{T}}R^2.5
+P_{\text{L-H}} = 0.3960502816 \times n_{\text{e},20}B_{\text{T}}R^{2.5}
+$$
+
+---------------
+
+#### ITER-1996 Lower Scaling
+
+Is selected with `ilhthresh = 3` [^1] [^2]
+
+$$
+P_{\text{L-H}} = 0.5112987149 \times n_{\text{e},20}^{0.5}B_{\text{T}}R^{1.5}
 $$
 
 ---------------
