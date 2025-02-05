@@ -7576,7 +7576,7 @@ def l_h_threshold_power(
     iterdd_ub = transition.calculate_iter1996_upper(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
-    iterdd_lb = 0.54 * dene20**0.5 * bt * rmajor**1.5
+    iterdd_lb = transition.calculate_iter1996_lower(dene20, bt, rmajor)
 
     # ========================================================================
 
