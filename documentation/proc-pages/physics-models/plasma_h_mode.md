@@ -257,6 +257,18 @@ $$
 
 ---------------
 
+###  Hubbard 2017 L-I Scaling
+
+Is selected with `ilhthresh = 18` 
+
+$$
+P_{\text{L-H}} = 0.162 \times B_{\text{T}}^{0.26}\bar{n}_{\text{e},20} S_{\text{p}}
+$$
+
+where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20}$ and $S_{\text{p}}$ is the plasma surface area in $\text{m}^2$.
+
+------------------
+
 | `ilhthresh` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |

@@ -7667,7 +7667,9 @@ def l_h_threshold_power(
     # ========================================================================
 
     # Hubbard et al. 2017 L-I threshold scaling
-    hubbard_2017 = 0.162 * dnla20 * a_plasma_surface * (bt) ** 0.26
+
+    # ilhthresh = 18
+    hubbard_2017 = transition.calculate_hubbard2017(dnla20, a_plasma_surface, bt)
 
     # ========================================================================
 
