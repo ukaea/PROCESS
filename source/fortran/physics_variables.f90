@@ -681,11 +681,11 @@ module physics_variables
   real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
 
-  integer :: ilhthresh
+  integer :: i_l_h_threshold
   !! switch for L-H mode power threshold scaling to use (see pthrmw for list)
 
   real(dp) :: plhthresh
-  !! L-H mode power threshold (MW) (chosen via ilhthresh, and enforced if
+  !! L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if
   !! constraint equation 15 is on)
 
   real(dp), dimension(21) :: pthrmw
@@ -1061,7 +1061,7 @@ module physics_variables
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     pden_plasma_sync_mw = 0.0D0
-    ilhthresh = 19
+    i_l_h_threshold = 19
     plhthresh = 0.0D0
     pthrmw = 0.0D0
     p_electron_transport_loss_mw = 0.0D0
