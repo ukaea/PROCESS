@@ -3,13 +3,13 @@
 from tabulate import tabulate
 
 from process import output as op
+from process import (
+    process_output as po,
+)
 from process.fortran import (
     constants,
     constraints,
     numerics,
-)
-from process.fortran import (
-    process_output as po,
 )
 from process.objectives import objective_function
 from process.utilities.f2py_string_patch import f2py_compatible_to_string

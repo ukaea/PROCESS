@@ -1,6 +1,6 @@
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-module process_output
+module process_output_fortran
 
   !! Module containing routines to produce a uniform output style
   !! author: P J Knight, CCFE, Culham Science Centre
@@ -864,4 +864,4 @@ contains
 
   end function int_to_string3
 
-end module process_output
+end module process_output_fortran

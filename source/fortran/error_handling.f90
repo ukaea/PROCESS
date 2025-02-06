@@ -271,7 +271,7 @@ contains
     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use constants, only: iotty, nout
-    use process_output, only: oblnkl, oheadr, ocmmnt, ovarin, ostars
+    use process_output_fortran, only: oblnkl, oheadr, ocmmnt, ovarin, ostars
     implicit none
 
     !  Arguments
