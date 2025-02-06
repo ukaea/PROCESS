@@ -588,7 +588,9 @@ class Costs2015:
         self.s_label[5] = "Magnet power supplies and related buildings"
         self.s_cref[5] = 110000.0e0 * cost_variables.light_build_cost_per_vol
         # Scale with TF current per coil (MA)
-        self.s_k[5] = (tfcoil_variables.ritfc / tfcoil_variables.n_tf) / 1.0e6
+        self.s_k[5] = (
+            tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
+        ) / 1.0e6
         self.s_kref[5] = 9.1e0
         self.s_cost[5] = (
             self.s_cost_factor[5] * self.s_cref[5] * (self.s_k[5] / self.s_kref[5])
@@ -711,7 +713,7 @@ class Costs2015:
         # ITER coil insertion and welding cost (2014 $)
         self.s_cref[13] = 258.0e6
         # Scale with total TF coil length (m)
-        self.s_k[13] = tfcoil_variables.n_tf * tfcoil_variables.tfleng
+        self.s_k[13] = tfcoil_variables.n_tf_coils * tfcoil_variables.len_tf_coil
         self.s_kref[13] = 18.0e0 * 34.1e0
         self.s_cost[13] = (
             self.s_cost_factor[13]
@@ -725,7 +727,9 @@ class Costs2015:
         self.s_cref[15] = 414.0e6
         # Scale with the total turn length (m)
         self.s_k[15] = (
-            tfcoil_variables.n_tf * tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn
+            tfcoil_variables.n_tf_coils
+            * tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_turn
         )
         self.s_kref[15] = 82249.0e0
         self.s_cost[15] = (
@@ -739,7 +743,7 @@ class Costs2015:
         # ITER Chromium plated Cu strand for TF SC cost (2014 $)
         self.s_cref[16] = 21.0e6
         # Scale with total copper mass (kg)
-        self.s_k[16] = tfcoil_variables.whtconcu * tfcoil_variables.n_tf
+        self.s_k[16] = tfcoil_variables.whtconcu * tfcoil_variables.n_tf_coils
         self.s_kref[16] = 244.0e3
         self.s_cost[16] = (
             self.s_cost_factor[16]
@@ -752,7 +756,7 @@ class Costs2015:
         # ITER Nb3Sn SC strands cost (2014 $)
         self.s_cref[17] = 526.0e6
         # Scale with the total mass of Nb3Sn (kg)
-        self.s_k[17] = tfcoil_variables.whtconsc * tfcoil_variables.n_tf
+        self.s_k[17] = tfcoil_variables.whtconsc * tfcoil_variables.n_tf_coils
         self.s_kref[17] = 210.0e3
         self.s_cost[17] = (
             self.s_cost_factor[17]
@@ -772,7 +776,9 @@ class Costs2015:
         self.s_cref[19] = 81.0e6
         # Scale with total turn length.
         self.s_k[19] = (
-            tfcoil_variables.n_tf * tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn
+            tfcoil_variables.n_tf_coils
+            * tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_turn
         )
         self.s_kref[19] = 82249.0e0
         self.s_cost[19] = (

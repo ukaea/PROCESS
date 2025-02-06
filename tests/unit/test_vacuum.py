@@ -31,7 +31,7 @@ class TestVacuum:
         """
         monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
-        monkeypatch.setattr(tfv, "n_tf", 18)
+        monkeypatch.setattr(tfv, "n_tf_coils", 18)
         monkeypatch.setattr(tv, "t_between_pulse", 500)
         monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacv, "outgasindex", 1)
@@ -71,7 +71,7 @@ class TestVacuum:
         thshldi = 0.12000000000000001
         thtf = 0.63812000000000002
         ritf = 3.6371848450794664
-        n_tf = 18
+        n_tf_coils = 18
         t_between_pulse = 1800
         nplasma = 7.2834e19
         qtorus = 0
@@ -93,7 +93,7 @@ class TestVacuum:
             thshldi,
             thtf,
             ritf,
-            n_tf,
+            n_tf_coils,
             t_between_pulse,
             nplasma,
             ndiv,

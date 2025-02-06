@@ -704,11 +704,11 @@ def check_process():
 
             # Temperature of the TF legs cannot be cooled down
             if (
-                fortran.tfcoil_variables.tlegav > 0
-                and fortran.tfcoil_variables.tlegav < 273.15
+                fortran.tfcoil_variables.temp_tf_legs_outboard > 0
+                and fortran.tfcoil_variables.temp_tf_legs_outboard < 273.15
             ):
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
@@ -716,7 +716,7 @@ def check_process():
                 fortran.numerics.ixc[: fortran.numerics.nvar] == 20
             ).any() and fortran.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
-                    "Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+                    "Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
@@ -737,9 +737,9 @@ def check_process():
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
-            if fortran.tfcoil_variables.tlegav > 50.0:
+            if fortran.tfcoil_variables.temp_tf_legs_outboard > 50.0:
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
@@ -747,11 +747,11 @@ def check_process():
                 fortran.numerics.ixc[: fortran.numerics.nvar] == 20
             ).any() and fortran.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
-                    "Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+                    "Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
                 )
 
             # Otherwise intitialise the average conductor temperature at
-            fortran.tfcoil_variables.tcpav = fortran.tfcoil_variables.tcoolin
+            fortran.tfcoil_variables.temp_cp_average = fortran.tfcoil_variables.tcoolin
 
         # Check if the boostrap current selection is addapted to ST
         if fortran.physics_variables.i_bootstrap_current == 1:
