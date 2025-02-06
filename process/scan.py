@@ -2,12 +2,12 @@ import numpy as np
 from tabulate import tabulate
 
 from process.caller import write_output_files
+from process.constraint_equations import constraint_eqns
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
     constraint_variables,
-    constraints,
     cost_variables,
     cs_fatigue_variables,
     current_drive_variables,
@@ -304,7 +304,7 @@ class Scan:
             "The following equality constraint residues should be close to zero :",
         )
 
-        con1, con2, err, sym, lab = constraints.constraint_eqns(
+        con1, con2, err, sym, lab = constraint_eqns(
             numerics.neqns + numerics.nineqns, -1
         )
 
@@ -315,8 +315,8 @@ class Scan:
             equality_constraint_table.append([
                 name,
                 sym[i],
-                f"{con2[i]} {f2py_compatible_to_string(lab[i])}",
-                f"{err[i]} {f2py_compatible_to_string(lab[i])}",
+                f"{con2[i]} {lab[i]}",
+                f"{err[i]} {lab[i]}",
                 con1[i],
             ])
             process_output.ovarre(
