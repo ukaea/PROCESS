@@ -436,7 +436,7 @@ boundu(21) = 10.0
 * DESCRIPTION:   Input electron energy confinement time (sec) (i_confinement_time=49 only)'
 * JUSTIFICATION: Not set, not ussing i_confinement_time = 49.
 
-*ilhthresh = 
+*i_l_h_threshold = 
 * DESCRIPTION:   Switch for L-H power threshold to enforce
 * JUSTIFICATION: Not set yet, default = 19. 
 

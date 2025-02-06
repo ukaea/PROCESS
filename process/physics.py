@@ -2183,7 +2183,7 @@ class Physics:
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
         physics_variables.plhthresh = physics_variables.pthrmw[
-            physics_variables.ilhthresh - 1
+            physics_variables.i_l_h_threshold - 1
         ]
 
         # Power transported to the divertor by charged particles,
@@ -5088,7 +5088,7 @@ class Physics:
                 "OP ",
             )
             po.oblnkl(self.outfile)
-            if physics_variables.ilhthresh in [9, 10, 11]:
+            if physics_variables.i_l_h_threshold in [9, 10, 11]:
                 if (physics_variables.bt < 0.78e0) or (physics_variables.bt > 7.94e0):
                     po.ocmmnt(
                         self.outfile,
@@ -5137,7 +5137,7 @@ class Physics:
 
             po.oblnkl(self.outfile)
 
-            if physics_variables.ilhthresh in [12, 13, 14]:
+            if physics_variables.i_l_h_threshold in [12, 13, 14]:
                 po.ocmmnt(
                     self.outfile,
                     "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",
@@ -7571,25 +7571,25 @@ def l_h_threshold_power(
     # ITER-1996 H-mode power threshold database
     # Fit to 1996 H-mode power threshold database: nominal
 
-    # ilhthresh = 1
+    # i_l_h_threshold = 1
     iterdd = transition.calculate_iter1996_nominal(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
-    # ilhthresh = 2
+    # i_l_h_threshold = 2
     iterdd_ub = transition.calculate_iter1996_upper(dene20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
-    # ilhthresh = 3
+    # i_l_h_threshold = 3
     iterdd_lb = transition.calculate_iter1996_lower(dene20, bt, rmajor)
 
     # ========================================================================
 
     # Snipes 1997 ITER H-mode power threshold
 
-    # ilhthresh = 4
+    # i_l_h_threshold = 4
     snipes_1997 = transition.calculate_snipes1997_iter(dnla20, bt, rmajor)
 
-    # ilhthresh = 5
+    # i_l_h_threshold = 5
     snipes_1997_kappa = transition.calculate_snipes1997_kappa(dnla20, bt, rmajor, kappa)
 
     # ========================================================================
@@ -7597,17 +7597,17 @@ def l_h_threshold_power(
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
 
-    # ilhthresh = 6
+    # i_l_h_threshold = 6
     martin_nominal = transition.calculate_martin08_nominal(
         dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
 
-    # ilhthresh = 7
+    # i_l_h_threshold = 7
     martin_ub = transition.calculate_martin08_upper(
         dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
 
-    # ilhthresh = 8
+    # i_l_h_threshold = 8
     martin_lb = transition.calculate_martin08_lower(
         dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
@@ -7617,17 +7617,17 @@ def l_h_threshold_power(
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
 
-    # ilhthresh = 9
+    # i_l_h_threshold = 9
     snipes_2000 = transition.calculate_snipes2000_nominal(
         dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
 
-    # ilhthresh = 10
+    # i_l_h_threshold = 10
     snipes_2000_ub = transition.calculate_snipes2000_upper(
         dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
 
-    # ilhthresh = 11
+    # i_l_h_threshold = 11
     snipes_2000_lb = transition.calculate_snipes2000_lower(
         dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
@@ -7637,17 +7637,17 @@ def l_h_threshold_power(
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
-    # ilhthresh = 12
+    # i_l_h_threshold = 12
     snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
         dnla20, bt, rmajor, m_ions_total_amu
     )
 
-    # ilhthresh = 13
+    # i_l_h_threshold = 13
     snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
         dnla20, bt, rmajor, m_ions_total_amu
     )
 
-    # ilhthresh = 14
+    # i_l_h_threshold = 14
     snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
         dnla20, bt, rmajor, m_ions_total_amu
     )
@@ -7656,20 +7656,20 @@ def l_h_threshold_power(
 
     # Hubbard et al. 2012 L-I threshold scaling
 
-    # ilhthresh = 15
+    # i_l_h_threshold = 15
     hubbard_2012 = transition.calculate_hubbard2012_nominal(plasma_current, dnla20)
 
-    # ilhthresh = 16
+    # i_l_h_threshold = 16
     hubbard_2012_lb = transition.calculate_hubbard2012_lower(plasma_current, dnla20)
 
-    # ilhthresh = 17
+    # i_l_h_threshold = 17
     hubbard_2012_ub = transition.calculate_hubbard2012_upper(plasma_current, dnla20)
 
     # ========================================================================
 
     # Hubbard et al. 2017 L-I threshold scaling
 
-    # ilhthresh = 18
+    # i_l_h_threshold = 18
     hubbard_2017 = transition.calculate_hubbard2017(dnla20, a_plasma_surface, bt)
 
     # ========================================================================

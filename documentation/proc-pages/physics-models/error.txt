@@ -1180,7 +1180,7 @@ via extrapolations from present-day devices. PROCESS calculates these
 power threshold values for the scaling laws listed in the table below,
 in routine \texttt{pthresh}.
 
-To enforce one of these scalings, use input parameter \texttt{ilhthresh}
+To enforce one of these scalings, use input parameter \texttt{i_l_h_threshold}
 to select the scaling to use, and turn on constraint equation no. 15
 with iteration variable no. 103 (\texttt{flhthresh}). By default, this
 will ensure that the power reaching the divertor is at least equal to
@@ -1193,7 +1193,7 @@ calculated value, and therefore the machine cannot reach H-mode.
 \begin{longtable}[]{@{}cll@{}}
 \toprule
 \begin{minipage}[b]{0.05\columnwidth}\centering\strut
-\texttt{ilhthresh}\strut
+\texttt{i_l_h_threshold}\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
 Name\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
@@ -2906,7 +2906,7 @@ Overfull \hbox (8.80188pt too wide) in paragraph at lines 1138--1141
 \T1/lmr/m/n/10 (-20) ratio.|
 [21]
 Overfull \hbox (23.76068pt too wide) in paragraph at lines 1172--1174
- []|\T1/lmtt/m/n/10 ilhthresh|
+ []|\T1/lmtt/m/n/10 i_l_h_threshold|
 
 Overfull \hbox (10.67989pt too wide) in paragraph at lines 1174--1176
 []|\T1/lmr/m/n/10 (-20) Name|
@@ -5031,7 +5031,7 @@ Overfull \hbox (8.80188pt too wide) in paragraph at lines 1138--1141
 \T1/lmr/m/n/10 (-20) ratio.|
 [21]
 Overfull \hbox (23.76068pt too wide) in paragraph at lines 1172--1174
- []|\T1/lmtt/m/n/10 ilhthresh|
+ []|\T1/lmtt/m/n/10 i_l_h_threshold|
 
 Overfull \hbox (10.67989pt too wide) in paragraph at lines 1174--1176
 []|\T1/lmr/m/n/10 (-20) Name|
@@ -7143,7 +7143,7 @@ Overfull \hbox (8.80188pt too wide) in paragraph at lines 1138--1141
 \T1/lmr/m/n/10 (-20) ratio.|
 [21]
 Overfull \hbox (23.76068pt too wide) in paragraph at lines 1172--1174
- []|\T1/lmtt/m/n/10 ilhthresh|
+ []|\T1/lmtt/m/n/10 i_l_h_threshold|
 
 Overfull \hbox (10.67989pt too wide) in paragraph at lines 1174--1176
 []|\T1/lmr/m/n/10 (-20) Name|

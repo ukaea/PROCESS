@@ -2459,7 +2459,7 @@
         "ifueltyp": 0.0,
         "ignite": 0.0,
         "ikind": "int_def",
-        "ilhthresh": 19.0,
+        "i_l_h_threshold": 19.0,
         "ilower": null,
         "ilw_smelter_h": 30.0,
         "ilw_smelter_l": 50.0,
@@ -9835,7 +9835,7 @@
         "igeom": "switch for plasma geometry calculation:\n<ul>\n<li>=0 original method (possibly based on Peng ST modelling)</li>\n<li>=1 improved (and traceable) method</li>\n</ul>",
         "ignite": "switch for ignition assumption. Obviously, ignite must be zero if current drive\n is required. If ignite is 1, any auxiliary power is assumed to be used only during\n plasma start-up, and is excluded from all steady-state power balance calculations.\n<ul>\n<li>=0 do not assume plasma ignition</li>\n<li>=1 assume ignited (but include auxiliary power in costs)</UL</li>\n</ul>",
         "ikind": "",
-        "ilhthresh": "switch for L-H mode power threshold scaling to use (see pthrmw for list)",
+        "i_l_h_threshold": "switch for L-H mode power threshold scaling to use (see pthrmw for list)",
         "ilower": "",
         "ilw_smelter_h": "radioactive waste smelting facility length, width, height (m)",
         "ilw_smelter_l": "radioactive waste smelting facility length, width, height (m)",
@@ -10304,7 +10304,7 @@
         "plasma_current": "plasma current (A)",
         "plasipf": "plasma driven current fraction (Bootstrap + Diamagnetic + PS)",
         "plasma_res_factor": "plasma resistivity pre-factor",
-        "plhthresh": "L-H mode power threshold (MW) (chosen via ilhthresh, and enforced if\n constraint equation 15 is on)",
+        "plhthresh": "L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if\n constraint equation 15 is on)",
         "plhybd": "lower hybrid injection power (MW)",
         "plinepv": "line radiation power per volume (MW/m3)",
         "plleni": "length of inboard divertor plate (m)",
@@ -13383,7 +13383,7 @@
             "lb": 0,
             "ub": 1
         },
-        "ilhthresh": {
+        "i_l_h_threshold": {
             "lb": 1,
             "ub": 21
         },
@@ -19209,7 +19209,7 @@
             "proton_rate_density",
             "psolradmw",
             "pden_plasma_sync_mw",
-            "ilhthresh",
+            "i_l_h_threshold",
             "plhthresh",
             "pthrmw",
             "p_electron_transport_loss_mw",
@@ -20464,7 +20464,7 @@
         "ifueltyp": "int_variable",
         "igeom": "int_variable",
         "ignite": "int_variable",
-        "ilhthresh": "int_variable",
+        "i_l_h_threshold": "int_variable",
         "ilw_smelter_h": "real_variable",
         "ilw_smelter_l": "real_variable",
         "ilw_smelter_w": "real_variable",

@@ -7,14 +7,14 @@ heating power required to initiate these transitions, via extrapolations
 from present-day devices. PROCESS calculates these power threshold values
 for the scaling laws listed in the table below, in routine `pthresh`.
 
-For an H-mode plasma, use input parameter `ilhthresh` to
+For an H-mode plasma, use input parameter `i_l_h_threshold` to
 select the scaling to use, and turn on constraint equation no. 15 with
 iteration variable no. 103 (`flhthresh`). By default, this will ensure
 that the power reaching the divertor is at least equal to the threshold power
 calculated for the chosen scaling, which is a necessary condition for
 H-mode. 
 
-For an L-mode plasma, use input parameter `ilhthresh` to
+For an L-mode plasma, use input parameter `i_l_h_threshold` to
 select the scaling to use, and turn on constraint equation no. 15 with 
 iteration variable no. 103 (`flhthresh`). Set lower and upper bounds for 
 the f-value `boundl(103) = 0.001` and `boundu(103) = 1.0` 
@@ -37,7 +37,7 @@ where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$.
 
 #### ITER-1996 Nominal Scaling
 
-Is selected with `ilhthresh = 1` [^1] [^2]
+Is selected with `i_l_h_threshold = 1` [^1] [^2]
 
 $$
 P_{\text{L-H}} = 0.45 \times n^{0.75}_{\text{e},20}B_{\text{T}}R^2
@@ -47,7 +47,7 @@ $$
 
 #### ITER-1996 Upper Scaling
 
-Is selected with `ilhthresh = 2` [^1] [^2]
+Is selected with `i_l_h_threshold = 2` [^1] [^2]
 
 $$
 P_{\text{L-H}} = 0.3960502816 \times n_{\text{e},20}B_{\text{T}}R^{2.5}
@@ -57,7 +57,7 @@ $$
 
 #### ITER-1996 Lower Scaling
 
-Is selected with `ilhthresh = 3` [^1] [^2]
+Is selected with `i_l_h_threshold = 3` [^1] [^2]
 
 $$
 P_{\text{L-H}} = 0.5112987149 \times n_{\text{e},20}^{0.5}B_{\text{T}}R^{1.5}
@@ -68,7 +68,7 @@ $$
 
 ### Snipes 1997 ITER Scaling I
 
-Is selected with `ilhthresh = 4` [^3]
+Is selected with `i_l_h_threshold = 4` [^3]
 
 - $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
 
@@ -80,7 +80,7 @@ $$
 
 ###  Snipes 1997 ITER Scaling II
 
-Is selected with `ilhthresh = 5` [^3]
+Is selected with `i_l_h_threshold = 5` [^3]
 
 - $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
 
@@ -105,7 +105,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Martin 2008 Nominal Scaling
 
-Is selected with `ilhthresh = 6` [^4]
+Is selected with `i_l_h_threshold = 6` [^4]
 
 $$
 P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}
@@ -115,7 +115,7 @@ $$
 
 #### Martin 2008 Upper Scaling
 
-Is selected with `ilhthresh = 7` [^4]
+Is selected with `i_l_h_threshold = 7` [^4]
 
 $$
 P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}
@@ -125,7 +125,7 @@ $$
 
 #### Martin 2008 Lower Scaling
 
-Is selected with `ilhthresh = 8` [^4]
+Is selected with `i_l_h_threshold = 8` [^4]
 
 $$
 P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}
@@ -161,7 +161,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Snipes 2000 Nominal Scaling
 
-Is selected with `ilhthresh = 9` [^5]
+Is selected with `i_l_h_threshold = 9` [^5]
 
 $$
 P_{\text{L-H}} = 1.42 \times \bar{n}_{\text{e},20}^{0.58} B_{\text{T}}^{0.82} R^{1.00} a^{0.81}
@@ -171,7 +171,7 @@ $$
 
 #### Snipes 2000 Upper Scaling
 
-Is selected with `ilhthresh = 10`  [^5]
+Is selected with `i_l_h_threshold = 10`  [^5]
 
 $$
 P_{\text{L-H}} = 1.547 \times \bar{n}_{\text{e},20}^{0.615} B_{\text{T}}^{0.851} R^{1.089} a^{0.876}
@@ -181,7 +181,7 @@ $$
 
 #### Snipes 2000 Lower Scaling
 
-Is selected with `ilhthresh = 11`  [^5]
+Is selected with `i_l_h_threshold = 11`  [^5]
 
 $$
 P_{\text{L-H}} = 1.293 \times \bar{n}_{\text{e},20}^{0.545} B_{\text{T}}^{0.789} R^{0.911} a^{0.744}
@@ -213,7 +213,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Snipes 2000 Closed Divertor Nominal Scaling
 
-Is selected with `ilhthresh = 12`  [^5]
+Is selected with `i_l_h_threshold = 12`  [^5]
 
 $$
 P_{\text{L-H}} = 0.8 \times \bar{n}_{\text{e},20}^{0.50} B_{\text{T}}^{0.53} R^{1.51}
@@ -223,7 +223,7 @@ $$
 
 #### Snipes 2000 Closed Divertor Upper Scaling
 
-Is selected with `ilhthresh = 13`  [^5]
+Is selected with `i_l_h_threshold = 13`  [^5]
 
 $$
 P_{\text{L-H}} = 0.867 \times \bar{n}_{\text{e},20}^{0.561} B_{\text{T}}^{0.588} R^{1.587}
@@ -233,7 +233,7 @@ $$
 
 #### Snipes 2000 Closed Divertor Lower Scaling
 
-Is selected with `ilhthresh = 14`  [^5]
+Is selected with `i_l_h_threshold = 14`  [^5]
 
 $$
 P_{\text{L-H}} = 0.733 \times \bar{n}_{\text{e},20}^{0.439} B_{\text{T}}^{0.472} R^{1.433}
@@ -255,7 +255,7 @@ where $I_{\text{p}}$ is the plasma current in $\text{MA}$ and $\bar{n}_{\text{e}
 
 #### Hubbard 2012 L-I Nominal Scaling
 
-Is selected with `ilhthresh = 15` [^6]
+Is selected with `i_l_h_threshold = 15` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.94}\bar{n}_{\text{e},20}^{0.65}
@@ -265,7 +265,7 @@ $$
 
 #### Hubbard 2012 L-I Lower Scaling
 
-Is selected with `ilhthresh = 16` [^6]
+Is selected with `i_l_h_threshold = 16` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.7}\bar{n}_{\text{e},20}^{0.47}
@@ -275,7 +275,7 @@ $$
 
 #### Hubbard 2012 L-I Upper Scaling
 
-Is selected with `ilhthresh = 17` [^6]
+Is selected with `i_l_h_threshold = 17` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{1.18}\bar{n}_{\text{e},20}^{0.83}
@@ -285,7 +285,7 @@ $$
 
 ###  Hubbard 2017 L-I Scaling
 
-Is selected with `ilhthresh = 18` [^7]
+Is selected with `i_l_h_threshold = 18` [^7]
 
 $$
 P_{\text{L-H}} = 0.162 \times B_{\text{T}}^{0.26}\bar{n}_{\text{e},20} S_{\text{p}}
@@ -295,7 +295,7 @@ where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\te
 
 ------------------
 
-| `ilhthresh` | Name | Reference |
+| `i_l_h_threshold` | Name | Reference |
 | :-: | - | - |
 | 1 | ITER 1996 nominal | ITER Physics Design Description Document |
 | 2 | ITER 1996 upper bound | D. Boucher, p.2-2 |
