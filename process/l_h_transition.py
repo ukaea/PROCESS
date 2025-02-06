@@ -76,6 +76,60 @@ def calculate_iter1996_lower(dene20: float, bt: float, rmajor: float) -> float:
     return 0.5112987149 * dene20**0.5 * bt * rmajor**1.5
 
 
+def calculate_snipes1997_iter(dnla20: float, bt: float, rmajor: float) -> float:
+    """
+    Calculate the Snipes 1997 ITER L-H transition power threshold.
+
+    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+    :type dnla20: float
+    :param bt: Toroidal magnetic field [T]
+    :type bt: float
+    :param rmajor: Plasma major radius [m]
+    :type rmajor: float
+    :return: The Snipes 1997 L-H transition power threshold [MW]
+    :rtype: float
+
+    :notes:
+
+    :references:
+        - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
+        Controlled Fusion and Plasma Physics, 24th EPS Conference,
+        Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
+        url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
+        *This is a conference poster*
+    """
+    return 0.65 * dnla20**0.93 * bt**0.86 * rmajor**2.15
+
+
+def calculate_snipes1997_kappa(
+    dnla20: float, bt: float, rmajor: float, kappa: float
+) -> float:
+    """
+    Calculate the Snipes 1997 ITER L-H transition power threshold with kappa factor.
+
+    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
+    :type dnla20: float
+    :param bt: Toroidal magnetic field [T]
+    :type bt: float
+    :param rmajor: Plasma major radius [m]
+    :type rmajor: float
+    :param kappa: Plasma elongation
+    :type kappa: float
+    :return: The Snipes 1997 L-H transition power threshold with kappa factor [MW]
+    :rtype: float
+
+    :notes:
+
+    :references:
+        - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
+        Controlled Fusion and Plasma Physics, 24th EPS Conference,
+        Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
+        url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
+        *This is a conference poster*
+    """
+    return 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
+
+
 def calculate_martin08_nominal(
     dnla20: float, bt: float, a_plasma_surface: float, m_ions_total_amu: float
 ) -> float:
@@ -453,7 +507,7 @@ def calculate_hubbard2017(dnla20: float, a_plasma_surface: float, bt: float) -> 
         :rtype: float
 
         :notes:
-            - The scaling is given in the cpation of Figure 6 in the reference.
+            - The scaling is given in the caption of Figure 6 in the reference.
 
         :references:
             - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”

@@ -7584,12 +7584,13 @@ def l_h_threshold_power(
 
     # ========================================================================
 
-    # J. A. Snipes, ITER H-mode Threshold Database Working Group,
-    # Controlled Fusion and Plasma Physics, 24th EPS Conference,
-    # Berchtesgaden, June 1997, vol.21A, part III, p.961
-    snipes_1997 = 0.65 * dnla20**0.93 * bt**0.86 * rmajor**2.15
+    # Snipes 1997 ITER H-mode power threshold
 
-    pthrmw5 = 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
+    # ilhthresh = 4
+    snipes_1997 = transition.calculate_snipes1997_iter(dnla20, bt, rmajor)
+
+    # ilhthresh = 5
+    snipes_1997_kappa = transition.calculate_snipes1997_kappa(dnla20, bt, rmajor, kappa)
 
     # ========================================================================
 
@@ -7678,7 +7679,7 @@ def l_h_threshold_power(
         iterdd_ub,
         iterdd_lb,
         snipes_1997,
-        pthrmw5,
+        snipes_1997_kappa,
         martin_nominal,
         martin_ub,
         martin_lb,

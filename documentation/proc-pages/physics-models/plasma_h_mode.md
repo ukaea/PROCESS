@@ -65,6 +65,32 @@ $$
 
 ---------------
 
+
+### Snipes 1997 ITER Scaling I
+
+Is selected with `ilhthresh = 4` [^3]
+
+- $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
+
+$$
+P_{\text{L-H}} = 0.65 \bar{n}_{\text{e},20}^{0.93} B_{\text{T}}^{0.86} R^{2.15}
+$$
+
+---------------
+
+###  Snipes 1997 ITER Scaling II
+
+Is selected with `ilhthresh = 5` [^3]
+
+- $P_{\text{L-H}}$ is defined as $\left(P_{\text{in}} - \frac{dW}{dt}\right)$
+
+
+$$
+P_{\text{L-H}} = 0.42 \bar{n}_{\text{e},20}^{0.8} B_{\text{T}}^{0.9} R^{1.99} \kappa^{0.76}
+$$
+
+---------------
+
 ### Martin 2008 Scalings
 
 The general form is:
@@ -79,7 +105,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Martin 2008 Nominal Scaling
 
-Is selected with `ilhthresh = 6` 
+Is selected with `ilhthresh = 6` [^4]
 
 $$
 P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}
@@ -89,7 +115,7 @@ $$
 
 #### Martin 2008 Upper Scaling
 
-Is selected with `ilhthresh = 7` 
+Is selected with `ilhthresh = 7` [^4]
 
 $$
 P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}
@@ -99,7 +125,7 @@ $$
 
 #### Martin 2008 Lower Scaling
 
-Is selected with `ilhthresh = 8` 
+Is selected with `ilhthresh = 8` [^4]
 
 $$
 P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}
@@ -135,7 +161,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Snipes 2000 Nominal Scaling
 
-Is selected with `ilhthresh = 9` 
+Is selected with `ilhthresh = 9` [^5]
 
 $$
 P_{\text{L-H}} = 1.42 \times \bar{n}_{\text{e},20}^{0.58} B_{\text{T}}^{0.82} R^{1.00} a^{0.81}
@@ -145,7 +171,7 @@ $$
 
 #### Snipes 2000 Upper Scaling
 
-Is selected with `ilhthresh = 10` 
+Is selected with `ilhthresh = 10`  [^5]
 
 $$
 P_{\text{L-H}} = 1.547 \times \bar{n}_{\text{e},20}^{0.615} B_{\text{T}}^{0.851} R^{1.089} a^{0.876}
@@ -155,7 +181,7 @@ $$
 
 #### Snipes 2000 Lower Scaling
 
-Is selected with `ilhthresh = 11` 
+Is selected with `ilhthresh = 11`  [^5]
 
 $$
 P_{\text{L-H}} = 1.293 \times \bar{n}_{\text{e},20}^{0.545} B_{\text{T}}^{0.789} R^{0.911} a^{0.744}
@@ -187,7 +213,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 
 #### Snipes 2000 Closed Divertor Nominal Scaling
 
-Is selected with `ilhthresh = 12` 
+Is selected with `ilhthresh = 12`  [^5]
 
 $$
 P_{\text{L-H}} = 0.8 \times \bar{n}_{\text{e},20}^{0.50} B_{\text{T}}^{0.53} R^{1.51}
@@ -197,7 +223,7 @@ $$
 
 #### Snipes 2000 Closed Divertor Upper Scaling
 
-Is selected with `ilhthresh = 13` 
+Is selected with `ilhthresh = 13`  [^5]
 
 $$
 P_{\text{L-H}} = 0.867 \times \bar{n}_{\text{e},20}^{0.561} B_{\text{T}}^{0.588} R^{1.587}
@@ -207,7 +233,7 @@ $$
 
 #### Snipes 2000 Closed Divertor Lower Scaling
 
-Is selected with `ilhthresh = 14` 
+Is selected with `ilhthresh = 14`  [^5]
 
 $$
 P_{\text{L-H}} = 0.733 \times \bar{n}_{\text{e},20}^{0.439} B_{\text{T}}^{0.472} R^{1.433}
@@ -229,7 +255,7 @@ where $I_{\text{p}}$ is the plasma current in $\text{MA}$ and $\bar{n}_{\text{e}
 
 #### Hubbard 2012 L-I Nominal Scaling
 
-Is selected with `ilhthresh = 15`
+Is selected with `ilhthresh = 15` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.94}\bar{n}_{\text{e},20}^{0.65}
@@ -239,7 +265,7 @@ $$
 
 #### Hubbard 2012 L-I Lower Scaling
 
-Is selected with `ilhthresh = 16` 
+Is selected with `ilhthresh = 16` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{0.7}\bar{n}_{\text{e},20}^{0.47}
@@ -249,7 +275,7 @@ $$
 
 #### Hubbard 2012 L-I Upper Scaling
 
-Is selected with `ilhthresh = 17` 
+Is selected with `ilhthresh = 17` [^6]
 
 $$
 P_{\text{L-H}} = 2.11 \times I_{\text{p}}^{1.18}\bar{n}_{\text{e},20}^{0.83}
@@ -259,7 +285,7 @@ $$
 
 ###  Hubbard 2017 L-I Scaling
 
-Is selected with `ilhthresh = 18` 
+Is selected with `ilhthresh = 18` [^7]
 
 $$
 P_{\text{L-H}} = 0.162 \times B_{\text{T}}^{0.26}\bar{n}_{\text{e},20} S_{\text{p}}
@@ -296,3 +322,8 @@ where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\te
 
 [^1]: T. Takizuka and International Atomic Energy Agency, Vienna (Austria),"Threshold power and energy confinement for ITER". 1996.
 [^2]: J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics issues, capabilities and physics program plans,” Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997, doi: https://doi.org/10.1063/1.872406.
+[^3]: J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER," Controlled Fusion and Plasma Physics, 24th EPS Conference, Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961. url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
+[^4]: Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,” Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008, doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+[^5]: J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,” Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+[^6]: A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012, doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+[^7]: A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
