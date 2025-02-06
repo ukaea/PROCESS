@@ -971,7 +971,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (tfcoil_variables.tmpcry & tfcoil_variables.tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (tmpcry & tcoolin) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,

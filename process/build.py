@@ -973,7 +973,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma geometric centre, radial (m)",
-                    "(physics_variables.rmajor.)",
+                    "(rmajor.)",
                     physics_variables.rmajor,
                     "OP ",
                 )
@@ -986,7 +986,7 @@ class Build:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma lower physics_variables.triangularity",
+                    "Plasma lower triangularity",
                     "(tril)",
                     tril,
                     "OP ",
@@ -994,7 +994,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma elongation",
-                    "(physics_variables.kappa.)",
+                    "(kappa.)",
                     kap,
                     "OP ",
                 )
