@@ -81,7 +81,7 @@ contains
 
       use process_input, only: nin
       use constants, only: iotty, mfile, nout, nplot, opt_file, vfile
-      use process_output, only: oheadr
+      use process_output_fortran, only: oheadr
       use global_variables, only: verbose
       implicit none
 

@@ -9,6 +9,9 @@ from scipy.optimize import root_scalar
 import process.confinement_time as confinement
 import process.impurity_radiation as impurity_radiation
 import process.physics_functions as physics_funcs
+from process import (
+    process_output as po,
+)
 from process.fortran import (
     build_variables,
     constants,
@@ -26,9 +29,6 @@ from process.fortran import (
     reinke_variables,
     stellarator_variables,
     times_variables,
-)
-from process.fortran import (
-    process_output as po,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 

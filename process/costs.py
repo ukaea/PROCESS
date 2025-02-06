@@ -1,5 +1,6 @@
 import numpy as np
 
+from process import process_output as po
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -20,7 +21,6 @@ from process.fortran import (
     times_variables,
     vacuum_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 

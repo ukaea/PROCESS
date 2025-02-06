@@ -1,11 +1,11 @@
 import math
 
+from process import process_output as po
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import divertor_variables as dv
 from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
-from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
 
 

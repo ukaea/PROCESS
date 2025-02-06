@@ -6,6 +6,9 @@ import numpy as np
 
 import process.physics_functions as physics_funcs
 import process.superconductors as superconductors
+from process import (
+    process_output as po,
+)
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
     build_variables,
@@ -29,9 +32,6 @@ from process.fortran import (
     stellarator_variables,
     structure_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    process_output as po,
 )
 from process.fortran import (
     stellarator_module as st,

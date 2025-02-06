@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
     blanket_library,
@@ -17,7 +18,6 @@ from process.fortran import (
     physics_variables,
     tfcoil_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
