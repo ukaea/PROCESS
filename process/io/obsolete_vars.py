@@ -159,6 +159,10 @@ OBS_VARS = {
     "rnbeam": "f_nd_beam_electron",
     "ralpne": "f_nd_alpha_electron",
     "protium": "f_nd_protium_electrons",
+    "clhsf": "f_z_cryostat",
+    "ddwex": "dr_cryostat",
+    "clh1": "dz_tf_cryostat",
+    "rpf2dewar": "dr_pf_cryostat",
 }
 
 OBS_VARS_HELP = {

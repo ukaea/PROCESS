@@ -769,6 +769,13 @@ class Build:
             )
             po.ovarrf(
                 self.outfile,
+                "Cryostat internal radius (m)",
+                "(r_cryostat_inboard)",
+                fwbs_variables.r_cryostat_inboard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
                 "Cryostat intenral half height (m)",
                 "(z_cryostat_half_inside)",
                 fwbs_variables.z_cryostat_half_inside,
