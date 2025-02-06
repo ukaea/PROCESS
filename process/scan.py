@@ -90,7 +90,7 @@ class Scan:
         author: P J Knight, CCFE, Culham Science Centre
         ifail   : input integer : error flag
         """
-        numerics.sqsumsq = (numerics.rcm**2).sum() ** 0.5
+        numerics.sqsumsq = (numerics.rcm[: numerics.neqns] ** 2).sum() ** 0.5
 
         error_handling.errors_on = True
 
@@ -265,11 +265,13 @@ class Scan:
             if numerics.boundu[i] == numerics.boundl[i]:
                 xnorm = 1.0
             else:
-                xnorm = np.clip(
-                    (numerics.xcm[i] - numerics.boundl[i])
-                    / (numerics.boundu[i] - numerics.boundl[i]),
-                    0,
-                    1,
+                xnorm = min(
+                    max(
+                        (numerics.xcm[i] - numerics.bondl[i])
+                        / (numerics.bondu[i] - numerics.bondl[i]),
+                        0.0,
+                    ),
+                    1.0,
                 )
 
             process_output.ovarre(
@@ -319,7 +321,7 @@ class Scan:
             ])
             process_output.ovarre(
                 constants.mfile,
-                f"{name} normalised residue",
+                f"{name:<33} normalised residue",
                 f"(eq_con{numerics.icc[i]:03d})",
                 con1[i],
             )
