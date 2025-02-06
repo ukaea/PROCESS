@@ -2527,7 +2527,7 @@ def plot_physics_info(axis, mfile_data, scan):
     if "plhthresh" in mfile_data.data:
         pthresh = mfile_data.data["plhthresh"].get_scan(scan)
     else:
-        pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
+        pthresh = mfile_data.data["p_l_h_threshold_mw(6)"].get_scan(scan)
 
     data = [
         ("fusion_power", "Fusion power", "MW"),
@@ -2868,7 +2868,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if "plhthresh" in mfile_data.data:
         pthresh = mfile_data.data["plhthresh"].get_scan(scan)
     else:
-        pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
+        pthresh = mfile_data.data["p_l_h_threshold_mw(6)"].get_scan(scan)
     flh = pdivt / pthresh
 
     hstar = mfile_data.data["hstar"].get_scan(scan)
@@ -3122,27 +3122,27 @@ def plot_h_threshold_comparison(
         mfile_data (mf.MFile): MFILE data object.
         scan (int): Scan number to use.
     """
-    iter_nominal = mfile_data.data["pthrmw(1)"].get_scan(scan)
-    iter_upper = mfile_data.data["pthrmw(2)"].get_scan(scan)
-    iter_lower = mfile_data.data["pthrmw(3)"].get_scan(scan)
-    iter_1997_1 = mfile_data.data["pthrmw(4)"].get_scan(scan)
-    iter_1997_2 = mfile_data.data["pthrmw(5)"].get_scan(scan)
-    martin_nominal = mfile_data.data["pthrmw(6)"].get_scan(scan)
-    martin_upper = mfile_data.data["pthrmw(7)"].get_scan(scan)
-    martin_lower = mfile_data.data["pthrmw(8)"].get_scan(scan)
-    snipes_nominal = mfile_data.data["pthrmw(9)"].get_scan(scan)
-    snipes_upper = mfile_data.data["pthrmw(10)"].get_scan(scan)
-    snipes_lower = mfile_data.data["pthrmw(11)"].get_scan(scan)
-    snipes_closed_nominal = mfile_data.data["pthrmw(12)"].get_scan(scan)
-    snipes_closed_upper = mfile_data.data["pthrmw(13)"].get_scan(scan)
-    snipes_closed_lower = mfile_data.data["pthrmw(14)"].get_scan(scan)
-    hubbard_nominal = mfile_data.data["pthrmw(15)"].get_scan(scan)
-    hubbard_lower = mfile_data.data["pthrmw(16)"].get_scan(scan)
-    hubbard_upper = mfile_data.data["pthrmw(17)"].get_scan(scan)
-    hubbard_2017 = mfile_data.data["pthrmw(18)"].get_scan(scan)
-    martin_aspect_nominal = mfile_data.data["pthrmw(19)"].get_scan(scan)
-    martin_aspect_upper = mfile_data.data["pthrmw(20)"].get_scan(scan)
-    martin_aspect_lower = mfile_data.data["pthrmw(21)"].get_scan(scan)
+    iter_nominal = mfile_data.data["p_l_h_threshold_mw(1)"].get_scan(scan)
+    iter_upper = mfile_data.data["p_l_h_threshold_mw(2)"].get_scan(scan)
+    iter_lower = mfile_data.data["p_l_h_threshold_mw(3)"].get_scan(scan)
+    iter_1997_1 = mfile_data.data["p_l_h_threshold_mw(4)"].get_scan(scan)
+    iter_1997_2 = mfile_data.data["p_l_h_threshold_mw(5)"].get_scan(scan)
+    martin_nominal = mfile_data.data["p_l_h_threshold_mw(6)"].get_scan(scan)
+    martin_upper = mfile_data.data["p_l_h_threshold_mw(7)"].get_scan(scan)
+    martin_lower = mfile_data.data["p_l_h_threshold_mw(8)"].get_scan(scan)
+    snipes_nominal = mfile_data.data["p_l_h_threshold_mw(9)"].get_scan(scan)
+    snipes_upper = mfile_data.data["p_l_h_threshold_mw(10)"].get_scan(scan)
+    snipes_lower = mfile_data.data["p_l_h_threshold_mw(11)"].get_scan(scan)
+    snipes_closed_nominal = mfile_data.data["p_l_h_threshold_mw(12)"].get_scan(scan)
+    snipes_closed_upper = mfile_data.data["p_l_h_threshold_mw(13)"].get_scan(scan)
+    snipes_closed_lower = mfile_data.data["p_l_h_threshold_mw(14)"].get_scan(scan)
+    hubbard_nominal = mfile_data.data["p_l_h_threshold_mw(15)"].get_scan(scan)
+    hubbard_lower = mfile_data.data["p_l_h_threshold_mw(16)"].get_scan(scan)
+    hubbard_upper = mfile_data.data["p_l_h_threshold_mw(17)"].get_scan(scan)
+    hubbard_2017 = mfile_data.data["p_l_h_threshold_mw(18)"].get_scan(scan)
+    martin_aspect_nominal = mfile_data.data["p_l_h_threshold_mw(19)"].get_scan(scan)
+    martin_aspect_upper = mfile_data.data["p_l_h_threshold_mw(20)"].get_scan(scan)
+    martin_aspect_lower = mfile_data.data["p_l_h_threshold_mw(21)"].get_scan(scan)
 
     # Data for the box plot
     data = {

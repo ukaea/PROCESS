@@ -2168,7 +2168,7 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.pthrmw = l_h_threshold_power(
+        physics_variables.p_l_h_threshold_mw = l_h_threshold_power(
             physics_variables.dene,
             physics_variables.dnla,
             physics_variables.bt,
@@ -2182,7 +2182,7 @@ class Physics:
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
-        physics_variables.plhthresh = physics_variables.pthrmw[
+        physics_variables.plhthresh = physics_variables.p_l_h_threshold_mw[
             physics_variables.i_l_h_threshold - 1
         ]
 
@@ -4943,148 +4943,148 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: nominal (MW)",
-                "(pthrmw(1))",
-                physics_variables.pthrmw[0],
+                "(p_l_h_threshold_mw(1))",
+                physics_variables.p_l_h_threshold_mw[0],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: upper bound (MW)",
-                "(pthrmw(2))",
-                physics_variables.pthrmw[1],
+                "(p_l_h_threshold_mw(2))",
+                physics_variables.p_l_h_threshold_mw[1],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: lower bound (MW)",
-                "(pthrmw(3))",
-                physics_variables.pthrmw[2],
+                "(p_l_h_threshold_mw(3))",
+                physics_variables.p_l_h_threshold_mw[2],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1997 scaling (1) (MW)",
-                "(pthrmw(4))",
-                physics_variables.pthrmw[3],
+                "(p_l_h_threshold_mw(4))",
+                physics_variables.p_l_h_threshold_mw[3],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1997 scaling (2) (MW)",
-                "(pthrmw(5))",
-                physics_variables.pthrmw[4],
+                "(p_l_h_threshold_mw(5))",
+                physics_variables.p_l_h_threshold_mw[4],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: nominal (MW)",
-                "(pthrmw(6))",
-                physics_variables.pthrmw[5],
+                "(p_l_h_threshold_mw(6))",
+                physics_variables.p_l_h_threshold_mw[5],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: 95% upper bound (MW)",
-                "(pthrmw(7))",
-                physics_variables.pthrmw[6],
+                "(p_l_h_threshold_mw(7))",
+                physics_variables.p_l_h_threshold_mw[6],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: 95% lower bound (MW)",
-                "(pthrmw(8))",
-                physics_variables.pthrmw[7],
+                "(p_l_h_threshold_mw(8))",
+                physics_variables.p_l_h_threshold_mw[7],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: nominal (MW)",
-                "(pthrmw(9))",
-                physics_variables.pthrmw[8],
+                "(p_l_h_threshold_mw(9))",
+                physics_variables.p_l_h_threshold_mw[8],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: upper bound (MW)",
-                "(pthrmw(10))",
-                physics_variables.pthrmw[9],
+                "(p_l_h_threshold_mw(10))",
+                physics_variables.p_l_h_threshold_mw[9],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: lower bound (MW)",
-                "(pthrmw(11))",
-                physics_variables.pthrmw[10],
+                "(p_l_h_threshold_mw(11))",
+                physics_variables.p_l_h_threshold_mw[10],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): nominal (MW)",
-                "(pthrmw(12))",
-                physics_variables.pthrmw[11],
+                "(p_l_h_threshold_mw(12))",
+                physics_variables.p_l_h_threshold_mw[11],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): upper bound (MW)",
-                "(pthrmw(13))",
-                physics_variables.pthrmw[12],
+                "(p_l_h_threshold_mw(13))",
+                physics_variables.p_l_h_threshold_mw[12],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): lower bound (MW)",
-                "(pthrmw(14))",
-                physics_variables.pthrmw[13],
+                "(p_l_h_threshold_mw(14))",
+                physics_variables.p_l_h_threshold_mw[13],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - nominal (MW)",
-                "(pthrmw(15))",
-                physics_variables.pthrmw[14],
+                "(p_l_h_threshold_mw(15))",
+                physics_variables.p_l_h_threshold_mw[14],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - lower bound (MW)",
-                "(pthrmw(16))",
-                physics_variables.pthrmw[15],
+                "(p_l_h_threshold_mw(16))",
+                physics_variables.p_l_h_threshold_mw[15],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - upper bound (MW)",
-                "(pthrmw(17))",
-                physics_variables.pthrmw[16],
+                "(p_l_h_threshold_mw(17))",
+                physics_variables.p_l_h_threshold_mw[16],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2017 L-I threshold",
-                "(pthrmw(18))",
-                physics_variables.pthrmw[17],
+                "(p_l_h_threshold_mw(18))",
+                physics_variables.p_l_h_threshold_mw[17],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: nominal (MW)",
-                "(pthrmw(19))",
-                physics_variables.pthrmw[18],
+                "(p_l_h_threshold_mw(19))",
+                physics_variables.p_l_h_threshold_mw[18],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)",
-                "(pthrmw(20))",
-                physics_variables.pthrmw[19],
+                "(p_l_h_threshold_mw(20))",
+                physics_variables.p_l_h_threshold_mw[19],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)",
-                "(pthrmw(21))",
-                physics_variables.pthrmw[20],
+                "(p_l_h_threshold_mw(21))",
+                physics_variables.p_l_h_threshold_mw[20],
                 "OP ",
             )
             po.oblnkl(self.outfile)
@@ -7674,7 +7674,7 @@ def l_h_threshold_power(
 
     # ========================================================================
 
-    pthrmw = [
+    p_l_h_threshold_mw = [
         iterdd,
         iterdd_ub,
         iterdd_lb,
@@ -7699,12 +7699,12 @@ def l_h_threshold_power(
     # Correction: Takizuka 2004, Plasma Phys. Control Fusion 46 A227
     if aspect <= 2.7:
         takizuka_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
-        pthrmw += [
+        p_l_h_threshold_mw += [
             martin_nominal * takizuka_correction,
             martin_ub * takizuka_correction,
             martin_lb * takizuka_correction,
         ]
-        return pthrmw
+        return p_l_h_threshold_mw
 
-    pthrmw += [martin_nominal, martin_ub, martin_lb]
-    return pthrmw
+    p_l_h_threshold_mw += [martin_nominal, martin_ub, martin_lb]
+    return p_l_h_threshold_mw
