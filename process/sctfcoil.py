@@ -5394,7 +5394,6 @@ class Sctfcoil:
                     "Total legs resitive power loss, (W)",
                     "(p_tf_leg_resistive)",
                     tfcoil_variables.p_tf_leg_resistive,
-                    tf_res,
                 )
                 po.ovarre(
                     self.outfile,
