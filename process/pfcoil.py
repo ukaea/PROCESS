@@ -2068,7 +2068,7 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Residual manufacturing strain in CS superconductor material",
-                    "(tfcoil_variables.str_cs_con_res)",
+                    "(str_cs_con_res)",
                     tfv.str_cs_con_res,
                 )
                 op.ovarre(
