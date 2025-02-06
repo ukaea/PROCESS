@@ -6625,7 +6625,9 @@ class Physics:
 
             # Take into account whether injected power is included in tau_e calculation (i.e. whether device is ignited)
             if physics_variables.ignite == 0:
-                fhz_value -= current_drive_variables.pinjmw / physics_variables.vol_plasma
+                fhz_value -= (
+                    current_drive_variables.pinjmw / physics_variables.vol_plasma
+                )
 
             # Include the radiation power if requested
             if physics_variables.i_rad_loss == 0:
