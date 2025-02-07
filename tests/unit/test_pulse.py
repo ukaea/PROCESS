@@ -66,7 +66,7 @@ class TohswgParam(NamedTuple):
 class BurnParam(NamedTuple):
     res_plasma: Any = None
 
-    vsres: Any = None
+    vs_plasma_res_ramp: Any = None
 
     vsind: Any = None
 
@@ -1269,7 +1269,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     (
         BurnParam(
             res_plasma=3.2347283861249307e-09,
-            vsres=59.392760827339345,
+            vs_plasma_res_ramp=59.392760827339345,
             vsind=284.23601098215397,
             vsbn=0,
             vstot=-718.91787876294552,
@@ -1285,7 +1285,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         ),
         BurnParam(
             res_plasma=3.2347283861249307e-09,
-            vsres=59.392760827339345,
+            vs_plasma_res_ramp=59.392760827339345,
             vsind=284.23601098215397,
             vstot=-718.9849676846776,
             vsbn=-354.76231817639609,
@@ -1316,7 +1316,9 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "res_plasma", burnparam.res_plasma)
 
-    monkeypatch.setattr(physics_variables, "vsres", burnparam.vsres)
+    monkeypatch.setattr(
+        physics_variables, "vs_plasma_res_ramp", burnparam.vs_plasma_res_ramp
+    )
 
     monkeypatch.setattr(physics_variables, "vsind", burnparam.vsind)
 

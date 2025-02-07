@@ -1743,7 +1743,7 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vsind: Any = None
 
-    expected_vsres: Any = None
+    expected_vs_plasma_res_ramp: Any = None
 
     expected_vs_total_required: Any = None
 
@@ -1767,7 +1767,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_rlp=1.4075705307248088e-05,
             expected_vs_burn_required=42.109179697761263,
             expected_vsind=258.97124024420435,
-            expected_vsres=55.488435095110333,
+            expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_total_required=356.56885503707593,
         ),
         VoltSecondReqParam(
@@ -1786,7 +1786,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_rlp=1.4075705307248088e-05,
             expected_vs_burn_required=0.41692257126496302,
             expected_vsind=258.97124024420435,
-            expected_vsres=55.488435095110333,
+            expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_total_required=314.87659791057968,
         ),
     ),
@@ -1801,20 +1801,25 @@ def test_vscalc(voltsecondreqparam):
     :type voltsecondreqparam: voltsecondreqparam
     """
 
-    vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vs_total_required = (
-        calculate_volt_second_requirements(
-            csawth=voltsecondreqparam.csawth,
-            eps=voltsecondreqparam.eps,
-            inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
-            ejima_coeff=voltsecondreqparam.ejima_coeff,
-            kappa=voltsecondreqparam.kappa,
-            plasma_current=voltsecondreqparam.plasma_current,
-            rli=voltsecondreqparam.rli,
-            rmajor=voltsecondreqparam.rmajor,
-            res_plasma=voltsecondreqparam.res_plasma,
-            t_burn=voltsecondreqparam.t_burn,
+    (
+        vs_plasma_internal,
+        rlp,
+        vs_burn_required,
+        vsind,
+        vs_plasma_res_ramp,
+        vs_total_required,
+    ) = calculate_volt_second_requirements(
+        csawth=voltsecondreqparam.csawth,
+        eps=voltsecondreqparam.eps,
+        inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
+        ejima_coeff=voltsecondreqparam.ejima_coeff,
+        kappa=voltsecondreqparam.kappa,
+        plasma_current=voltsecondreqparam.plasma_current,
+        rli=voltsecondreqparam.rli,
+        rmajor=voltsecondreqparam.rmajor,
+        res_plasma=voltsecondreqparam.res_plasma,
+        t_burn=voltsecondreqparam.t_burn,
             t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
-        )
     )
 
     assert vs_plasma_internal == pytest.approx(
@@ -1829,7 +1834,9 @@ def test_vscalc(voltsecondreqparam):
 
     assert vsind == pytest.approx(voltsecondreqparam.expected_vsind)
 
-    assert vsres == pytest.approx(voltsecondreqparam.expected_vsres)
+    assert vs_plasma_res_ramp == pytest.approx(
+        voltsecondreqparam.expected_vs_plasma_res_ramp
+    )
 
     assert vs_total_required == pytest.approx(
         voltsecondreqparam.expected_vs_total_required

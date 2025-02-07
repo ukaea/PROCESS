@@ -1719,7 +1719,7 @@ ipfres = 0
 *icc = 51
 * DESCRIPTION:   Constraint equation to enforce startup flux = able startup flux
 * JUSTIFICATION: Turned off, do not care about startup flux.
-* VARIABLES:     vssu,vsind,vsres calculated in situ
+* VARIABLES:     vssu,vsind,vs_plasma_res_ramp calculated in situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

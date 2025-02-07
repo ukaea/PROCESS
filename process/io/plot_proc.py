@@ -2629,7 +2629,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
     else:
         tftype = "Resistive Copper"
 
-    vssoft = mfile_data.data["vsres"].get_scan(scan) + mfile_data.data[
+    vssoft = mfile_data.data["vs_plasma_res_ramp"].get_scan(scan) + mfile_data.data[
         "vsind"
     ].get_scan(scan)
 

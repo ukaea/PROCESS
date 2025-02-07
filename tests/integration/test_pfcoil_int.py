@@ -118,7 +118,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pv, "kappa", 1.727)
     monkeypatch.setattr(pv, "rli", 1.693)
     monkeypatch.setattr(pv, "itartpf", 0)
-    monkeypatch.setattr(pv, "vsres", 6.151e1)
+    monkeypatch.setattr(pv, "vs_plasma_res_ramp", 6.151e1)
     monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
     monkeypatch.setattr(pv, "triang", 0.413)
     monkeypatch.setattr(pv, "rminor", 2.883)

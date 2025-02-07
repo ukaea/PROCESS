@@ -2340,7 +2340,7 @@ class Physics:
             physics_variables.rlp,
             physics_variables.vs_burn_required,
             physics_variables.vsind,
-            physics_variables.vsres,
+            physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_total_required,
         ) = calculate_volt_second_requirements(
             physics_variables.csawth,
@@ -5467,9 +5467,9 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "Start-up resistive (Wb)",
-                "(vsres)",
-                physics_variables.vsres,
+                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_res_ramp)",
+                physics_variables.vs_plasma_res_ramp,
                 "OP ",
             )
             po.ovarre(
