@@ -123,7 +123,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pv, "triang", 0.413)
     monkeypatch.setattr(pv, "rminor", 2.883)
     monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "vsind", 3.497e2)
+    monkeypatch.setattr(pv, "vs_plasma_ind_ramp", 3.497e2)
     monkeypatch.setattr(pv, "aspect", 3.1)
     monkeypatch.setattr(pv, "itart", 0)
     monkeypatch.setattr(pv, "beta_poloidal", 6.313e-1)

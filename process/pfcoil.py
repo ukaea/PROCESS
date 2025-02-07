@@ -445,7 +445,7 @@ class PFCoil:
                 nocoil = nocoil + 1
 
         # Flux swing required from CS coil
-        csflux = -(pv.vs_plasma_res_ramp + pv.vsind) - pfflux
+        csflux = -(pv.vs_plasma_res_ramp + pv.vs_plasma_ind_ramp) - pfflux
 
         if bv.iohcl == 1:
             # Required current change in CS coil

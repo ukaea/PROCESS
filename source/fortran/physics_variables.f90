@@ -867,8 +867,8 @@ module physics_variables
   real(dp) :: vshift
   !! plasma/device midplane vertical shift - single null
 
-  real(dp) :: vsind
-  !! internal and external plasma inductance V-s (Wb)
+  real(dp) :: vs_plasma_ind_ramp
+  !! Total plasma inductive flux consumption for plasma current ramp-up (Vs)(Wb)
 
   real(dp) :: vs_plasma_res_ramp
   !! Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)
@@ -1114,7 +1114,7 @@ module physics_variables
     vol_plasma = 0.0D0
     vs_burn_required = 0.0D0
     vshift = 0.0D0
-    vsind = 0.0D0
+    vs_plasma_ind_ramp = 0.0D0
     vs_plasma_res_ramp = 0.0D0
     vs_total_required = 0.0D0
     wallmw = 0.0D0

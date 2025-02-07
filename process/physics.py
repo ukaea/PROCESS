@@ -2339,7 +2339,7 @@ class Physics:
             physics_variables.vs_plasma_internal,
             physics_variables.rlp,
             physics_variables.vs_burn_required,
-            physics_variables.vsind,
+            physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_total_required,
         ) = calculate_volt_second_requirements(
@@ -5448,9 +5448,9 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "Inductive volt-seconds (Wb)",
-                "(vsind)",
-                physics_variables.vsind,
+                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_ind_ramp)",
+                physics_variables.vs_plasma_ind_ramp,
                 "OP ",
             )
             po.ovarrf(
