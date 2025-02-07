@@ -128,7 +128,7 @@ $$
 Is selected with `i_confinement_time = 2`[^1]
 
 $$
-\tau_{\text{E}} = 0.2 a \sqrt{\kappa_{95}}I
+\tau_{\text{E}} = 0.2 a \sqrt{\kappa_{95}}I_{\text{p}}
 $$
 
 ------------
@@ -159,7 +159,7 @@ $$
 Is selected with `i_confinement_time = 5`[^1]
 
 $$
-\tau_{\text{E}} = 0.055 I^{1.24}P^{-0.58}R^{1.65}a^{-0.49}\kappa_{95}^{0.28}n_{20}^{0.26}B_{\text{T}}^{-0.09}\left(\frac{M_{\text{i}}}{1.5}\right)^{0.5}
+\tau_{\text{E}} = 0.055 I_{\text{p}}^{1.24}P_{\text{L}}^{-0.58}R^{1.65}a^{-0.49}\kappa_{95}^{0.28}n_{20}^{0.26}B_{\text{T}}^{-0.09}\left(\frac{M_{\text{i}}}{1.5}\right)^{0.5}
 $$
 
 ----------------
@@ -169,7 +169,7 @@ $$
 Is selected with `i_confinement_time = 6`[^1] [^2]
 
 $$
-\tau_{\text{E}} = 0.048 I^{0.85}R^{1.2}a^{0.3}\kappa^{0.5}\overline{n}_{20}^{0.1}B_{\text{T}}^{0.2}M_{\text{i}}^{0.5} P^{-0.5}
+\tau_{\text{E}} = 0.048 I_{\text{p}}^{0.85}R^{1.2}a^{0.3}\kappa^{0.5}\overline{n}_{20}^{0.1}B_{\text{T}}^{0.2}M_{\text{i}}^{0.5} P_{\text{L}}^{-0.5}
 $$
 
 ----------------
@@ -180,8 +180,8 @@ Is selected with `i_confinement_time = 7` [^2]
 
 $$
 \begin{aligned}
-\tau_E= & 0.04 I^{0.5} R^{0.3} a^{0.8} \kappa^{0.6} M_i^{0.5} \\
-& +0.064 I^{0.8} R^{1.6} a^{0.6} \kappa^{0.2} \bar{n}_{20}^{0.6} B_0^{0.35} M_i^{0.2} / P
+\tau_E= & 0.04 I_{\text{p}}^{0.5} R^{0.3} a^{0.8} \kappa^{0.6} M_i^{0.5} \\
+& +0.064 I_{\text{p}}^{0.8} R^{1.6} a^{0.6} \kappa^{0.2} \bar{n}_{20}^{0.6} B_0^{0.35} M_i^{0.2} / P_{\text{L}}
 \end{aligned}
 $$
 
@@ -193,8 +193,8 @@ Is selected with `i_confinement_time = 8` [^2]
 
 $$
 \begin{aligned}
-\tau_E= & 1.65\left[1.2 \times 10^{-5} I \ell^{1.5} Z_{e f f}^{-0.5}\right. \\
-& \left.+0.146 \bar{n}_{20}^{0.75} I^{0.5} B_0^{0.5} \ell^{2.75} Z_{e f f}^{0.25} / P\right]\left(A_i / 2\right)^{0.5}
+\tau_E= & 1.65\left[1.2 \times 10^{-5} I_{\text{p}} \ell^{1.5} Z_{e f f}^{-0.5}\right. \\
+& \left.+0.146 \bar{n}_{20}^{0.75} I_{\text{p}}^{0.5} B_0^{0.5} \ell^{2.75} Z_{e f f}^{0.25} / P_{\text{L}}\right]\left(A_i / 2\right)^{0.5}
 \end{aligned}
 $$
 
@@ -207,7 +207,7 @@ where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
 Is selected with `i_confinement_time = 9` [^1]
 
 $$
-\tau_{\text{E}} = 0.037 I P^{-0.5} R^{1.75}a^{-0.37}\kappa_{95}^{0.5} \left(\frac{M_i}{1.5}\right)^{0.5}
+\tau_{\text{E}} = 0.037 I_{\text{p}} P_{\text{L}}^{-0.5} R^{1.75}a^{-0.37}\kappa_{95}^{0.5} \left(\frac{M_i}{1.5}\right)^{0.5}
 $$
 
 ----------------
@@ -218,7 +218,7 @@ Is selected with `i_confinement_time = 10` [^1]
 
 
 $$
-\tau_{\text{E}} =  0.095 a R B_{\text{T}} \kappa_{95}^{0.5} \frac{\overline{n}_{20}}{\overline{n}_{20*}}P^{-0.4} \left[\frac{Z_{\text{eff}}^2 I^4}{aRq_{\text{cyl}}^3\kappa_{95}^{1.5}}  \right]^{0.08}
+\tau_{\text{E}} =  0.095 a R B_{\text{T}} \kappa_{95}^{0.5} \frac{\overline{n}_{20}}{\overline{n}_{20*}}P_{\text{L}}^{-0.4} \left[\frac{Z_{\text{eff}}^2 I_{\text{p}}^4}{aRq_{\text{cyl}}^3\kappa_{95}^{1.5}}  \right]^{0.08}
 $$
 
 where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)$ and $\frac{\overline{n}_{20}}{\overline{n}_{20*}} \le 1$
@@ -231,7 +231,7 @@ Is selected with `i_confinement_time = 11` [^1]
 
 
 $$
-\tau_{\text{E}} =  \left[\frac{0.085\kappa_{95}a^2+0.069In_{20}^{0.6}B_{\text{T}}^{0.2}R^{1.6} a^{0.4} \kappa_{95}^{0.2} G\left(q_{\text{cyl}},Z_{\text{eff}}\right)}{P}\right]M_{\text{i}}^{0.5}
+\tau_{\text{E}} =  \left[\frac{0.085\kappa_{95}a^2+0.069In_{20}^{0.6}B_{\text{T}}^{0.2}R^{1.6} a^{0.4} \kappa_{95}^{0.2} G\left(q_{\text{cyl}},Z_{\text{eff}}\right)}{P_{\text{L}}}\right]M_{\text{i}}^{0.5}
 $$
 
 where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\frac{\left(15 - Z_{\text{eff}}\right)}{20}\right]^{0.6}\left[3q_{\text{cyl}}\frac{q_{\text{cyl}}+5}{(q_{\text{cyl}}+2)(q_{\text{cyl}}+7)}\right]^{0.6}$
@@ -244,7 +244,7 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 Is selected with `i_confinement_time = 12` [^1]
 
 $$
-\tau_{\text{E}} =  0.1051 I^{0.85} P^{-0.5} R^{0.5} a^{0.3} \kappa^{0.25} n_{20}^{0.1}B_{\text{T}}^{0.3}M_{\text{i}}^{0.5}
+\tau_{\text{E}} =  0.1051 I_{\text{p}}^{0.85} P_{\text{L}}^{-0.5} R^{0.5} a^{0.3} \kappa^{0.25} n_{20}^{0.1}B_{\text{T}}^{0.3}M_{\text{i}}^{0.5}
 $$
 
 -------------------------
@@ -254,7 +254,7 @@ $$
 Is selected with `i_confinement_time = 13` [^2]
 
 $$
-\tau_{\text{E}} =  0.064 I^{0.87} R^{1.82} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P^{-0.5}
+\tau_{\text{E}} =  0.064 I_{\text{p}}^{0.87} R^{1.82} a^{-0.12} \kappa_{95}^{0.35} \overline{n}_{20}^{0.09} B_{\text{T}}^{0.15} M_{\text{i}}^{0.5} P_{\text{L}}^{-0.5}
 $$
 
 -------------------------
@@ -272,7 +272,7 @@ Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O]
 Is selected with `i_confinement_time = 15` [^2]
 
 $$
-\tau_{\text{E}} =  0.044 I^{0.93} R^{1.37} a^{-0.049} \kappa_{95}^{0.588} \overline{n}_{20}^{0.078} B_{\text{T}}^{0.152} P^{-0.537}
+\tau_{\text{E}} =  0.044 I_{\text{p}}^{0.93} R^{1.37} a^{-0.049} \kappa_{95}^{0.588} \overline{n}_{20}^{0.078} B_{\text{T}}^{0.152} P_{\text{L}}^{-0.537}
 $$
 
 -------------------------
@@ -282,7 +282,7 @@ $$
 Is selected with `i_confinement_time = 16` [^2]
 
 $$
-\tau_{\text{E}} =  0.24 I^{0.79} R^{0.56} a^{1.46} \kappa_{95}^{0.73} \overline{n}_{20}^{0.41} B_{\text{T}}^{0.29} P^{-0.79} M_{\text{i}}^{-0.02}
+\tau_{\text{E}} =  0.24 I_{\text{p}}^{0.79} R^{0.56} a^{1.46} \kappa_{95}^{0.73} \overline{n}_{20}^{0.41} B_{\text{T}}^{0.29} P_{\text{L}}^{-0.79} M_{\text{i}}^{-0.02}
 $$
 
 -------------------------
@@ -292,10 +292,10 @@ $$
 Is selected with `i_confinement_time = 17` [^2]
 
 $$
-\tau_{\text{E}} =  0.12 I^{0.8} R^{1.8} a^{0.4} \left(\frac{\kappa_{95}}{\left(1+\kappa_{95}\right)^{0.8}}\right) \overline{n}_{20}^{0.6} \hat{q}^{0.4} P^{-0.6}
+\tau_{\text{E}} =  0.12 I_{\text{p}}^{0.8} R^{1.8} a^{0.4} \left(\frac{\kappa_{95}}{\left(1+\kappa_{95}\right)^{0.8}}\right) \overline{n}_{20}^{0.6} \hat{q}^{0.4} P_{\text{L}}^{-0.6}
 $$
 
-where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
+where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I_{\text{p}} R}$
 
 -------------------------
 
@@ -304,7 +304,7 @@ where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I R}$
 Is selected with `i_confinement_time = 18` [^2]
 
 $$
-\tau_{\text{E}} =  0.063 I^{1.12} R^{1.3} a^{-0.04} \kappa_{95}^{0.28} \overline{n}_{20}^{0.14} B_{\text{T}}^{0.04} P^{-0.59}
+\tau_{\text{E}} =  0.063 I_{\text{p}}^{1.12} R^{1.3} a^{-0.04} \kappa_{95}^{0.28} \overline{n}_{20}^{0.14} B_{\text{T}}^{0.04} P_{\text{L}}^{-0.59}
 $$
 
 -------------------------
@@ -314,7 +314,7 @@ $$
 Is selected with `i_confinement_time = 19` [^2]
 
 $$
-\tau_{\text{E}} =  0.1 M_{\text{i}}^{0.5} I^{0.884} R^{1.24} a^{-0.23} \kappa_{95}^{0.317} \overline{n}_{20}^{0.105} B_{\text{T}}^{0.207} P^{-0.486}
+\tau_{\text{E}} =  0.1 M_{\text{i}}^{0.5} I_{\text{p}}^{0.884} R^{1.24} a^{-0.23} \kappa_{95}^{0.317} \overline{n}_{20}^{0.105} B_{\text{T}}^{0.207} P_{\text{L}}^{-0.486}
 $$
 
 -------------------------
@@ -324,7 +324,7 @@ $$
 Is selected with `i_confinement_time = 20` [^3]
 
 $$
-\tau_{\text{E}} =  0.082 M_{\text{i}}^{0.5} I^{1.02} R^{1.6}  \kappa_{95}^{-0.19}  B_{\text{T}}^{0.15} P^{-0.47}
+\tau_{\text{E}} =  0.082 M_{\text{i}}^{0.5} I_{\text{p}}^{1.02} R^{1.6}  \kappa_{95}^{-0.19}  B_{\text{T}}^{0.15} P_{\text{L}}^{-0.47}
 $$
 
 -------------------------
@@ -334,7 +334,7 @@ $$
 Is selected with `i_confinement_time = 21` [^4]
 
 $$
-\tau_{\text{E}} =  0.17 P^{-0.58} \overline{n}_{20}^{0.69} B^{0.84} a^{2.0} R^{0.75}
+\tau_{\text{E}} =  0.17 P_{\text{L}}^{-0.58} \overline{n}_{20}^{0.69} B^{0.84} a^{2.0} R^{0.75}
 $$
 
 -------------------------
@@ -344,7 +344,7 @@ $$
 Is selected with `i_confinement_time = 22` [^5]
 
 $$
-\tau_{\text{E}} =  0.25 P^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.4} R^{0.6}
+\tau_{\text{E}} =  0.25 P_{\text{L}}^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.4} R^{0.6}
 $$
 
 -------------------------
@@ -354,7 +354,7 @@ $$
 Is selected with `i_confinement_time = 23` [^6]
 
 $$
-\tau_{\text{E}} =  0.17 P^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.0} R q_{95}^{0.4}
+\tau_{\text{E}} =  0.17 P_{\text{L}}^{-0.6} \overline{n}_{20}^{0.6} B_{\text{T}}^{0.8} a^{2.0} R q_{95}^{0.4}
 $$
 
 -------------------------
@@ -364,7 +364,7 @@ $$
 Is selected with `i_confinement_time = 24` [^7]
 
 $$
-\tau_{\text{E}} =  0.036  I^{1.06} B_{\text{T}}^{0.32} P^{-0.67} R^{1.79} \epsilon^{-0.11} \kappa^{0.66} \overline{n}_{20}^{0.17} M_{\text{i}}^{0.41}
+\tau_{\text{E}} =  0.036  I_{\text{p}}^{1.06} B_{\text{T}}^{0.32} P_{\text{L}}^{-0.67} R^{1.79} \epsilon^{-0.11} \kappa^{0.66} \overline{n}_{20}^{0.17} M_{\text{i}}^{0.41}
 $$
 
 -------------------------
@@ -383,7 +383,7 @@ Is selected with `i_confinement_time = 25`
 Is selected with `i_confinement_time = 26` [^8]
 
 $$
-\tau_{\text{E}} =  0.031 M_{\text{i}}^{0.42} I^{0.95} R^{1.92} \epsilon^{0.08} \kappa_{95}^{0.63} \overline{n}_{19}^{0.35} B_{\text{T}}^{0.25} P^{-0.67}
+\tau_{\text{E}} =  0.031 M_{\text{i}}^{0.42} I_{\text{p}}^{0.95} R^{1.92} \epsilon^{0.08} \kappa_{95}^{0.63} \overline{n}_{19}^{0.35} B_{\text{T}}^{0.25} P_{\text{L}}^{-0.67}
 $$
 
 -------------------------
@@ -393,7 +393,7 @@ $$
 Is selected with `i_confinement_time = 27` [^8] [^9]
 
 $$
-\tau_{\text{E}} =  0.029 M_{\text{i}}^{0.2} I^{0.9} R^{2.03} \epsilon^{-0.19} \kappa_{95}^{0.92} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.20} P^{-0.66}
+\tau_{\text{E}} =  0.029 M_{\text{i}}^{0.2} I_{\text{p}}^{0.9} R^{2.03} \epsilon^{-0.19} \kappa_{95}^{0.92} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.20} P_{\text{L}}^{-0.66}
 $$
 
 -------------------------
@@ -403,7 +403,7 @@ $$
 Is selected with `i_confinement_time = 28` [^10]
 
 $$
-\tau_{\text{E}} =  0.023 M_{\text{i}}^{0.2} I^{0.96} R^{1.83} \epsilon^{-0.06} \kappa_{95}^{0.64} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.03} P^{-0.73}
+\tau_{\text{E}} =  0.023 M_{\text{i}}^{0.2} I_{\text{p}}^{0.96} R^{1.83} \epsilon^{-0.06} \kappa_{95}^{0.64} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.03} P_{\text{L}}^{-0.73}
 $$
 
 -------------------------
@@ -413,7 +413,7 @@ $$
 Is selected with `i_confinement_time = 29`
 
 $$
-\tau_{\text{E}} =  0.067 M_{\text{i}}^{0.05} I^{0.9} R^{1.31} \kappa^{0.56} \overline{n}_{19}^{0.45} B_{\text{T}}^{0.17} P^{-0.68} a^{0.79}
+\tau_{\text{E}} =  0.067 M_{\text{i}}^{0.05} I_{\text{p}}^{0.9} R^{1.31} \kappa^{0.56} \overline{n}_{19}^{0.45} B_{\text{T}}^{0.17} P_{\text{L}}^{-0.68} a^{0.79}
 $$
 
 !!! warning
@@ -426,7 +426,7 @@ $$
 Is selected with `i_confinement_time = 30`
 
 $$
-\tau_{\text{E}} =  0.021 M_{\text{i}}^{0.25} I^{0.81} R^{2.01} \kappa^{0.7} \overline{n}_{19}^{0.47} B_{\text{T}}^{0.14} P^{-0.73} \epsilon^{0.18}
+\tau_{\text{E}} =  0.021 M_{\text{i}}^{0.25} I_{\text{p}}^{0.81} R^{2.01} \kappa^{0.7} \overline{n}_{19}^{0.47} B_{\text{T}}^{0.14} P_{\text{L}}^{-0.73} \epsilon^{0.18}
 $$
 
 !!! warning
@@ -439,7 +439,7 @@ $$
 Is selected with `i_confinement_time = 31` 
 
 $$
-\tau_{\text{E}} =  0.0615 M^{0.2} I^{0.9} R^{2.0} \kappa_{\text{IPB}}^{0.75} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.1} P^{-0.66} \epsilon^{0.66}
+\tau_{\text{E}} =  0.0615 M^{0.2} I_{\text{p}}^{0.9} R^{2.0} \kappa_{\text{IPB}}^{0.75} \overline{n}_{19}^{0.4} B_{\text{T}}^{0.1} P_{\text{L}}^{-0.66} \epsilon^{0.66}
 $$
 
 !!! warning
@@ -452,7 +452,7 @@ $$
 Is selected with `i_confinement_time = 32` [^11] [^12]
 
 $$
-\tau_{\text{E}} =  0.0365 I^{0.97} B_{\text{T}}^{0.08} \overline{n}_{19}^{0.41} P^{-0.63} R^{1.93} \kappa^{0.67} \epsilon^{0.23} M^{0.2}
+\tau_{\text{E}} =  0.0365 I_{\text{p}}^{0.97} B_{\text{T}}^{0.08} \overline{n}_{19}^{0.41} P_{\text{L}}^{-0.63} R^{1.93} \kappa^{0.67} \epsilon^{0.23} M^{0.2}
 $$
 
 -------------------------
@@ -462,7 +462,7 @@ $$
 Is selected with `i_confinement_time = 33` [^11] [^12]
 
 $$
-\tau_{\text{E}} =  0.0503 I^{0.91} B_{\text{T}}^{0.15} \overline{n}_{19}^{0.44} P^{-0.65} R^{2.05} \kappa_{\text{IPB}}^{0.72} \epsilon^{0.57} M^{0.13}
+\tau_{\text{E}} =  0.0503 I_{\text{p}}^{0.91} B_{\text{T}}^{0.15} \overline{n}_{19}^{0.44} P_{\text{L}}^{-0.65} R^{2.05} \kappa_{\text{IPB}}^{0.72} \epsilon^{0.57} M^{0.13}
 $$
 
 -------------------------
@@ -472,7 +472,7 @@ $$
 Is selected with `i_confinement_time = 34` [^11] [^12]
 
 $$
-\tau_{\text{E}} =  0.0562 I^{0.93} B_{\text{T}}^{0.15} \overline{n}_{19}^{0.41} P^{-0.69} R^{1.97} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.58} M^{0.19}
+\tau_{\text{E}} =  0.0562 I_{\text{p}}^{0.93} B_{\text{T}}^{0.15} \overline{n}_{19}^{0.41} P_{\text{L}}^{-0.69} R^{1.97} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.58} M^{0.19}
 $$
 
 -------------------------
@@ -482,7 +482,7 @@ $$
 Is selected with `i_confinement_time = 35` [^11] [^12]
 
 $$
-\tau_{\text{E}} =  0.0564 I^{0.88} B_{\text{T}}^{0.07} \overline{n}_{19}^{0.4} P^{-0.69} R^{2.15} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.64} M^{0.2}
+\tau_{\text{E}} =  0.0564 I_{\text{p}}^{0.88} B_{\text{T}}^{0.07} \overline{n}_{19}^{0.4} P_{\text{L}}^{-0.69} R^{2.15} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.64} M^{0.2}
 $$
 
 -------------------------
@@ -492,7 +492,7 @@ $$
 Is selected with `i_confinement_time = 36` [^11] [^12]
 
 $$
-\tau_{\text{E}} =  0.0587 I^{0.85} B_{\text{T}}^{0.29} \overline{n}_{19}^{0.39} P^{-0.7} R^{2.08} \kappa_{\text{IPB}}^{0.76} \epsilon^{0.69} M^{0.17}
+\tau_{\text{E}} =  0.0587 I_{\text{p}}^{0.85} B_{\text{T}}^{0.29} \overline{n}_{19}^{0.39} P_{\text{L}}^{-0.7} R^{2.08} \kappa_{\text{IPB}}^{0.76} \epsilon^{0.69} M^{0.17}
 $$
 
 -------------------------
@@ -503,7 +503,7 @@ $$
 Is selected with `i_confinement_time = 37` [^13]
 
 $$
-\tau_{\text{E}} =  0.079 a^{2.21} R^{0.65} P^{-0.59} \overline{n}_{19}^{0.51} B_{\text{T}}^{0.83} \iota_{2/3}^{0.4}
+\tau_{\text{E}} =  0.079 a^{2.21} R^{0.65} P_{\text{L}}^{-0.59} \overline{n}_{19}^{0.51} B_{\text{T}}^{0.83} \iota_{2/3}^{0.4}
 $$
 
 -------------------------
@@ -514,7 +514,7 @@ $$
 Is selected with `i_confinement_time = 38` [^14]
 
 $$
-\tau_{\text{E}} =  0.134 a^{2.28} R^{0.64} P^{-0.61} \overline{n}_{19}^{0.54} B_{\text{T}}^{0.84} \iota_{2/3}^{0.41}
+\tau_{\text{E}} =  0.134 a^{2.28} R^{0.64} P_{\text{L}}^{-0.61} \overline{n}_{19}^{0.54} B_{\text{T}}^{0.84} \iota_{2/3}^{0.41}
 $$
 
 -------------------------
@@ -524,7 +524,7 @@ $$
 Is selected with `i_confinement_time = 39` [^15]
 
 $$
-\tau_{\text{E}} =  0.028 I^{0.83} B_{\text{T}}^{0.07} \overline{n}_{19}^{0.49} P^{-0.55} R^{2.11} \kappa_{95}^{0.75} \epsilon^{0.3} M^{0.14}
+\tau_{\text{E}} =  0.028 I_{\text{p}}^{0.83} B_{\text{T}}^{0.07} \overline{n}_{19}^{0.49} P_{\text{L}}^{-0.55} R^{2.11} \kappa_{95}^{0.75} \epsilon^{0.3} M^{0.14}
 $$
 
 -------------------------
@@ -534,7 +534,7 @@ $$
 Is selected with `i_confinement_time = 40` [^16]
 
 $$
-\tau_{\text{E}} =  0.0367 I^{1.006} R^{1.731} \kappa_{\text{IPB}}^{1.45} P^{-0.735} \\
+\tau_{\text{E}} =  0.0367 I_{\text{p}}^{1.006} R^{1.731} \kappa_{\text{IPB}}^{1.45} P_{\text{L}}^{-0.735} \\
 \times \frac{\overline{n}_{19}^{0.49}}{1+e^\left({-9.403\left(\frac{\overline{n}_{19}^{0.49}}{B_{\text{T}}}\right)^{-1.365}}\right)}
 $$
 
@@ -545,7 +545,7 @@ $$
 Is selected with `i_confinement_time = 41` [^17]
 
 $$
-\tau_{\text{E}} =  0.052 I^{0.75} B_{\text{T}}^{0.3} \overline{n}_{19}^{0.32} P^{-0.47} R^{2.09} \kappa_{\text{IPB}}^{0.88} \epsilon^{0.84}
+\tau_{\text{E}} =  0.052 I_{\text{p}}^{0.75} B_{\text{T}}^{0.3} \overline{n}_{19}^{0.32} P_{\text{L}}^{-0.47} R^{2.09} \kappa_{\text{IPB}}^{0.88} \epsilon^{0.84}
 $$
 
 -------------------------
@@ -556,7 +556,7 @@ Is selected with `i_confinement_time = 42` [^18]
 
 $$
 \tau_{\text{E}} =  6.94\times 10^{-7} M^{0.2} \kappa_{\text{IPB}}^{0.37} \left(\frac{q_{95}}{q_{\text{cyl}}}\right)^{0.77} \\
-\times A^{2.48205} \frac{I^{1.3678} B_{\text{T}}^{0.12} R^{1.2345} \overline{n}^{0.032236}}{A^{0.9\ln{A}}P^{0.74}} \left(\frac{\overline{n}_{e}}{n_{\text{GW}}}\right)^{-0.22 \ln{\left(\frac{\overline{n}_e}{n_{\text{GW}}}\right)}}
+\times A^{2.48205} \frac{I_{\text{p}}^{1.3678} B_{\text{T}}^{0.12} R^{1.2345} \overline{n}^{0.032236}}{A^{0.9\ln{A}}P_{\text{L}}^{0.74}} \left(\frac{\overline{n}_{e}}{n_{\text{GW}}}\right)^{-0.22 \ln{\left(\frac{\overline{n}_e}{n_{\text{GW}}}\right)}}
 $$
 
 -------------------------
@@ -566,7 +566,7 @@ $$
 Is selected with `i_confinement_time = 43` [^19]
 
 $$
-\tau_{\text{E}} =  0.014 I^{0.68} B_{\text{T}}^{0.77} \overline{n}_{20}^{0.02} P^{-0.29}
+\tau_{\text{E}} =  0.014 I_{\text{p}}^{0.68} B_{\text{T}}^{0.77} \overline{n}_{20}^{0.02} P_{\text{L}}^{-0.29}
 $$
 
 -------------------------
@@ -576,7 +576,7 @@ $$
 Is selected with `i_confinement_time = 44` [^19]
 
 $$
-\tau_{\text{E}} =  0.014 I^{0.6} B_{\text{T}}^{0.7} \overline{n}_{20}^{-0.03} P^{-0.33}
+\tau_{\text{E}} =  0.014 I_{\text{p}}^{0.6} B_{\text{T}}^{0.7} \overline{n}_{20}^{-0.03} P_{\text{L}}^{-0.33}
 $$
 
 -------------------------
@@ -586,7 +586,7 @@ $$
 Is selected with `i_confinement_time = 45` [^19]
 
 $$
-\tau_{\text{E}} =  0.014 I^{0.76} B_{\text{T}}^{0.84} \overline{n}_{20}^{-0.07} P^{-0.25}
+\tau_{\text{E}} =  0.014 I_{\text{p}}^{0.76} B_{\text{T}}^{0.84} \overline{n}_{20}^{-0.07} P_{\text{L}}^{-0.25}
 $$
 
 -------------------------
@@ -597,7 +597,7 @@ $$
 Is selected with `i_confinement_time = 46` [^20]
 
 $$
-\tau_{\text{E}} =  0.095 I^{0.75} B_{\text{T}}^{1.08} \overline{n}_{19}^{0.44} P^{-0.73} R^{1.97} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.58} M^{0.19}
+\tau_{\text{E}} =  0.095 I_{\text{p}}^{0.75} B_{\text{T}}^{1.08} \overline{n}_{19}^{0.44} P_{\text{L}}^{-0.73} R^{1.97} \kappa_{\text{IPB}}^{0.78} \epsilon^{0.58} M^{0.19}
 $$
 
 -------------------------
@@ -622,7 +622,7 @@ $$
 Is selected with `i_confinement_time = 48` [^21]
 
 $$
-\tau_{\text{E}} =  0.21 I^{0.54} B_{\text{T}}^{0.91} \overline{n}_{20}^{-0.05} P^{-0.38} R^{2.14}
+\tau_{\text{E}} =  0.21 I_{\text{p}}^{0.54} B_{\text{T}}^{0.91} \overline{n}_{20}^{-0.05} P_{\text{L}}^{-0.38} R^{2.14}
 $$
 
 -------------------------
@@ -632,7 +632,7 @@ $$
 Is selected with `i_confinement_time = 49` [^22]
 
 $$
-\tau_{\text{E}} =  0.053 I^{0.98} B_{\text{T}}^{0.22} \overline{n}_{19}^{0.24} P^{-0.669} R^{1.71} \left(1+\delta \right)^{0.36}  \kappa_{\text{IPB}}^{0.8} \epsilon^{0.35} M^{0.2}
+\tau_{\text{E}} =  0.053 I_{\text{p}}^{0.98} B_{\text{T}}^{0.22} \overline{n}_{19}^{0.24} P_{\text{L}}^{-0.669} R^{1.71} \left(1+\delta \right)^{0.36}  \kappa_{\text{IPB}}^{0.8} \epsilon^{0.35} M^{0.2}
 $$
 
 -------------------------
@@ -642,7 +642,7 @@ $$
 Is selected with `i_confinement_time = 50` [^23]
 
 $$
-\tau_{\text{E}} =  0.067 I^{1.29} B_{\text{T}}^{-0.13} P^{-0.644} \overline{n}_{19}^{0.15} M^{0.3} R^{1.19} \left(1+\delta \right)^{0.56} \kappa_{\text{IPB}}^{0.67} 
+\tau_{\text{E}} =  0.067 I_{\text{p}}^{1.29} B_{\text{T}}^{-0.13} P_{\text{L}}^{-0.644} \overline{n}_{19}^{0.15} M^{0.3} R^{1.19} \left(1+\delta \right)^{0.56} \kappa_{\text{IPB}}^{0.67} 
 $$
 
 -------------------------
