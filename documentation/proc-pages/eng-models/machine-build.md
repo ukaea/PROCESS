@@ -72,9 +72,9 @@ case the machine is not symmetric about the midplane.
  Top blanket                                  0.869           7.516   (blnktth)           
  Top first wall                               0.018           6.647   (fwtth)             
  Top scrape-off                               0.600           6.629   (vgaptop)           
- Plasma top                                   6.029           6.029   (rminor*kappa)      
+ Plasma top                                   6.029           6.029   (z_plasma_xpoint_upper)      
  Midplane                                     0.000          -0.000                       
- Plasma bottom                                6.029          -6.029   (rminor*kappa)      
+ Plasma bottom                                6.029          -6.029   (z_plasma_xpoint_upper)      
  Lower scrape-off                             2.002          -8.031   (vgap)              
  Divertor structure                           0.621          -8.652   (divfix)            
  Vacuum vessel (and shielding)                1.000          -9.652   (d_vv_bot+shldlth)  
