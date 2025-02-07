@@ -70,7 +70,7 @@ def calculate_volt_second_requirements(
     plasma_current: float,
     t_fusion_ramp: float,
     t_burn: float,
-    rli: float,
+    ind_plasma_internal_norm: float,
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
 
@@ -94,8 +94,8 @@ def calculate_volt_second_requirements(
             :type t_fusion_ramp: float
             :param t_burn: Burn time (s)
             :type t_burn: float
-            :param rli: Plasma normalized inductivity
-            :type rli: float
+            :param ind_plasma_internal_norm: Plasma normalized internal inductance
+            :type ind_plasma_internal_norm: float
 
             :return: A tuple containing:
                 - vs_plasma_internal: Internal plasma volt-seconds (Wb)
@@ -126,7 +126,7 @@ def calculate_volt_second_requirements(
     """
     # Plasma internal inductance
 
-    ind_plasma_internal = constants.rmu0 * rmajor * rli / 2.0
+    ind_plasma_internal = constants.rmu0 * rmajor * ind_plasma_internal_norm / 2.0
 
     # Internal plasma flux (V-s) component
     vs_plasma_internal = ind_plasma_internal * plasma_current
@@ -1564,7 +1564,7 @@ class Physics:
         # Calculate plasma current
         (
             physics_variables.alphaj,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plasma_current,
@@ -1581,7 +1581,7 @@ class Physics:
             physics_variables.len_plasma_poloidal,
             physics_variables.q0,
             physics_variables.q,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.triang,
@@ -1851,7 +1851,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 eps=physics_variables.eps,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
             )
         )
 
@@ -1859,7 +1859,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.ne0,
                 average_density=physics_variables.dene,
                 inverse_aspect=physics_variables.eps,
@@ -2352,7 +2352,7 @@ class Physics:
             physics_variables.res_plasma,
             physics_variables.plasma_current,
             times_variables.t_burn,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
         )
 
         # Calculate auxiliary physics related information
@@ -2393,7 +2393,9 @@ class Physics:
             # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
             # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 
-            physics_variables.beta_norm_max = 4.0e0 * physics_variables.rli
+            physics_variables.beta_norm_max = (
+                4.0e0 * physics_variables.ind_plasma_internal_norm
+            )
 
         if physics_variables.iprofile == 2:
             # Original scaling law
@@ -3178,7 +3180,7 @@ class Physics:
         len_plasma_poloidal: float,
         q0: float,
         q95: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         rmajor: float,
         rminor: float,
         triang: float,
@@ -3202,26 +3204,26 @@ class Physics:
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, rli, beta_norm_max.
+                0: Use input values for alphaj, ind_plasma_internal_norm, beta_norm_max.
                 1: Make these consistent with input q, q_0 values.
-                2: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling).
-                3: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling).
-                5: Use input value for alphaj. Set rli and beta_norm_max from Menard scaling.
+                2: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling).
+                3: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling).
+                5: Use input value for alphaj. Set ind_plasma_internal_norm and beta_norm_max from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            rli (float): Plasma normalised internal inductance.
+            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, rli.
+            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, ind_plasma_internal_norm.
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3344,14 +3346,14 @@ class Physics:
 
             # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)
+            ind_plasma_internal_norm = np.log(1.65 + 0.89 * alphaj)
 
         if iprofile in [4, 5, 6]:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            rli = 3.4 - kappa
+            ind_plasma_internal_norm = 3.4 - kappa
 
-        return alphaj, rli, bp, qstar, plasma_current
+        return alphaj, ind_plasma_internal_norm, bp, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -3667,12 +3669,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is enforced",
+                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is not enforced",
+                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3715,9 +3717,9 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma internal inductance, li",
-                    "(rli)",
-                    physics_variables.rli,
+                    "Plasma normalised internal inductance",
+                    "(ind_plasma_internal_norm)",
+                    physics_variables.ind_plasma_internal_norm,
                     "OP ",
                 )
                 po.ovarrf(
@@ -6305,7 +6307,7 @@ class Physics:
         alphan: float,
         alphat: float,
         eps: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
     ) -> float:
         """
         Calculate the bootstrap fraction using the Sakai formula.
@@ -6317,7 +6319,7 @@ class Physics:
         alphan (float): Density profile index
         alphat (float): Temperature profile index
         eps (float): Inverse aspect ratio.
-        rli (float): Internal Inductance
+        ind_plasma_internal_norm (float): Plasma normalised internal inductance
 
         Returns:
         float: The calculated bootstrap fraction.
@@ -6341,7 +6343,7 @@ class Physics:
         return (
             10 ** (0.951 * eps - 0.948)
             * beta_poloidal ** (1.226 * eps + 1.584)
-            * rli ** (-0.184 * eps - 0.282)
+            * ind_plasma_internal_norm ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
             * alphat ** (0.502 * eps - 0.273)
@@ -6350,7 +6352,7 @@ class Physics:
     @staticmethod
     def bootstrap_fraction_aries(
         beta_poloidal: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         core_density: float,
         average_density: float,
         inverse_aspect: float,
@@ -6360,7 +6362,7 @@ class Physics:
 
         Parameters:
         beta_poloidal (float): Plasma poloidal beta.
-        rli (float): Plasma normalized internal inductance.
+        ind_plasma_internal_norm (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6378,8 +6380,14 @@ class Physics:
 
         """
         # Using the standard variable naming from the ARIES paper
-        a_1 = 1.10 - 1.165 * rli + 0.47 * rli**2
-        b_1 = 0.806 - 0.885 * rli + 0.297 * rli**2
+        a_1 = (
+            1.10 - 1.165 * ind_plasma_internal_norm + 0.47 * ind_plasma_internal_norm**2
+        )
+        b_1 = (
+            0.806
+            - 0.885 * ind_plasma_internal_norm
+            + 0.297 * ind_plasma_internal_norm**2
+        )
 
         c_bs = a_1 + b_1 * (core_density / average_density)
 

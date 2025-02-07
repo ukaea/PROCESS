@@ -281,8 +281,8 @@ var_dicts = {
         description="Maximum TF winding pack stress",
         units="",
     ),
-    "rli": VariableMetadata(
-        latex=r"$l_i$", description="Normalized internal inductance", units=""
+    "ind_plasma_internal_norm": VariableMetadata(
+        latex=r"$l_i$", description="Plasma normalised internal inductance", units=""
     ),
     "n_cycle_min": VariableMetadata(
         latex=r"$MinCycles_{\mathrm{Stress.min}}^{\mathrm{CS}}$",

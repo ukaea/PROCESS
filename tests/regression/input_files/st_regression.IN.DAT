@@ -2971,13 +2971,13 @@ i_pfirsch_schluter_current = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 iprofile = 0
-* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli beta_norm_max)
-* =0 use input values for alphaj, rli, beta_norm_max (but see gtscale option)
+* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj ind_plasma_internal_norm beta_norm_max)
+* =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max (but see gtscale option)
 * =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     
 
-rli = 0.3
+ind_plasma_internal_norm = 0.3
 * DESCRIPTION:   Plasma Normalised Internal Inductance
 * JUSTIFICATION: Matched to JETTO li(3).
 

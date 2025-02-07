@@ -399,13 +399,13 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, beta_norm_max
+  !! - =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max
   !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
+  !! - =2 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set ind_plasma_internal_norm and beta_norm_max from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set ind_plasma_internal_norm from Menard and beta_norm_max from Tholerus
 
   integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -762,8 +762,8 @@ module physics_variables
   real(dp) :: f_nd_protium_electrons
   !! Seeded f_nd_protium_electrons density / electron density.
 
-  real(dp) :: rli
-  !! plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+  real(dp) :: ind_plasma_internal_norm
+  !! Plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
 
   real(dp) :: ind_plasma
   !! plasma inductance (H)
@@ -1080,7 +1080,7 @@ module physics_variables
     rad_fraction_total = 0.0D0
     f_nd_alpha_electron = 0.10D0
     f_nd_protium_electrons = 0.0D0
-    rli = 0.9D0
+    ind_plasma_internal_norm = 0.9D0
     ind_plasma = 0.0D0
     rmajor = 8.14D0
     rminor = 0.0D0
