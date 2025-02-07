@@ -2479,7 +2479,7 @@ class Costs:
         #  Thermal storage options for a pulsed reactor
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008 and 0014
 
-        if pulse_variables.lpulse == 1:
+        if pulse_variables.i_pulsed_plant == 1:
             if pulse_variables.istore == 1:
                 #  Option 1 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
@@ -2756,7 +2756,7 @@ class Costs:
         #  Additional cost due to pulsed reactor thermal storage
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008
         #
-        #      if (lpulse.eq.1) :
+        #      if (i_pulsed_plant.eq.1) :
         #         if (istore.eq.1) :
         #            annoam1 = 51.0e0
         #         elif  (istore.eq.2) :
