@@ -4512,6 +4512,7 @@ class Stellarator:
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
+            physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
