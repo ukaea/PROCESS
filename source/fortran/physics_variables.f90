@@ -870,8 +870,8 @@ module physics_variables
   real(dp) :: vsind
   !! internal and external plasma inductance V-s (Wb)
 
-  real(dp) :: vsres
-  !! resistive losses in startup V-s (Wb)
+  real(dp) :: vs_plasma_res_ramp
+  !! Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)
 
   real(dp) :: vs_total_required
   !! total V-s needed (Wb)
@@ -1115,7 +1115,7 @@ module physics_variables
     vs_burn_required = 0.0D0
     vshift = 0.0D0
     vsind = 0.0D0
-    vsres = 0.0D0
+    vs_plasma_res_ramp = 0.0D0
     vs_total_required = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
