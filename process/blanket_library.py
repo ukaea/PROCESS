@@ -15,7 +15,6 @@ from process.fortran import (
     error_handling,
     fwbs_variables,
     heat_transport_variables,
-    maths_library,
     pfcoil_variables,
     physics_variables,
     primary_pumping_variables,
@@ -180,13 +179,13 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = maths_library.dshellarea(r1, r2, blanket_library.hblnkt)
+            ) = dshellarea(r1, r2, blanket_library.hblnkt)
         if icomponent == 1:
             (
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = maths_library.dshellarea(r1, r2, blanket_library.hshld)
+            ) = dshellarea(r1, r2, blanket_library.hshld)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -194,7 +193,7 @@ class BlanketLibrary:
                 fwbs_variables.volblkti,
                 fwbs_variables.volblkto,
                 fwbs_variables.volblkt,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hblnkt,
@@ -207,7 +206,7 @@ class BlanketLibrary:
                 blanket_library.volshldi,
                 blanket_library.volshldo,
                 fwbs_variables.volshld,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hshld,
@@ -220,7 +219,7 @@ class BlanketLibrary:
                 blanket_library.volvvi,
                 blanket_library.volvvo,
                 fwbs_variables.vdewin,
-            ) = maths_library.dshellvol(
+            ) = dshellvol(
                 r1,
                 r2,
                 blanket_library.hvv,
@@ -270,13 +269,13 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = maths_library.eshellarea(r1, r2, r3, blanket_library.hblnkt)
+            ) = eshellarea(r1, r2, r3, blanket_library.hblnkt)
         if icomponent == 1:
             (
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = maths_library.eshellarea(r1, r2, r3, blanket_library.hshld)
+            ) = eshellarea(r1, r2, r3, blanket_library.hshld)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -284,7 +283,7 @@ class BlanketLibrary:
                 fwbs_variables.volblkti,
                 fwbs_variables.volblkto,
                 fwbs_variables.volblkt,
-            ) = maths_library.eshellvol(
+            ) = eshellvol(
                 r1,
                 r2,
                 r3,
@@ -298,7 +297,7 @@ class BlanketLibrary:
                 blanket_library.volshldi,
                 blanket_library.volshldo,
                 fwbs_variables.volshld,
-            ) = maths_library.eshellvol(
+            ) = eshellvol(
                 r1,
                 r2,
                 r3,
@@ -312,7 +311,7 @@ class BlanketLibrary:
                 blanket_library.volvvi,
                 blanket_library.volvvo,
                 fwbs_variables.vdewin,
-            ) = maths_library.eshellvol(
+            ) = eshellvol(
                 r1,
                 r2,
                 r3,
@@ -2710,3 +2709,167 @@ class BlanketLibrary:
             po.ovarre(self.outfile, "Mass flow rate in (kg/s) = ", "(mf)", mf, "OP ")
 
         return pumppower
+
+
+def eshellarea(rshell, rmini, rmino, zminor):
+    """Routine to calculate the inboard, outboard and total surface areas
+    of a toroidal shell comprising two elliptical sections
+    author: P J Knight, CCFE, Culham Science Centre
+    rshell : input real : major radius of centre of both ellipses (m)
+    rmini  : input real : horizontal distance from rshell to
+    inboard elliptical shell (m)
+    rmino  : input real : horizontal distance from rshell to
+    outboard elliptical shell (m)
+    zminor : input real : vertical internal half-height of shell (m)
+    ain    : output real : surface area of inboard section (m3)
+    aout   : output real : surface area of outboard section (m3)
+    atot   : output real : total surface area of shell (m3)
+    This routine calculates the surface area of the inboard and outboard
+    sections of a toroidal shell defined by two co-centred semi-ellipses.
+    """
+
+    # Inboard section
+    elong = zminor / rmini
+    ain = 2.0 * np.pi * elong * (np.pi * rshell * rmini - 2.0 * rmini * rmini)
+
+    # Outboard section
+    elong = zminor / rmino
+    aout = 2.0 * np.pi * elong * (np.pi * rshell * rmino + 2.0 * rmino * rmino)
+
+    return ain, aout, ain + aout
+
+
+def dshellarea(rmajor, rminor, zminor):
+    """Routine to calculate the inboard, outboard and total surface areas
+    of a D-shaped toroidal shell
+    author: P J Knight, CCFE, Culham Science Centre
+    rmajor : input real : major radius of inboard straight section (m)
+    rminor : input real : horizontal width of shell (m)
+    zminor : input real : vertical half-height of shell (m)
+    ain    : output real : surface area of inboard straight section (m3)
+    aout   : output real : surface area of outboard curved section (m3)
+    atot   : output real : total surface area of shell (m3)
+    This routine calculates the surface area of the inboard and outboard
+    sections of a D-shaped toroidal shell defined by the above input
+    parameters.
+    The inboard section is assumed to be a cylinder.
+    The outboard section is defined by a semi-ellipse, centred on the
+    major radius of the inboard section.
+    """
+    # Area of inboard cylindrical shell
+    ain = 4.0 * zminor * np.pi * rmajor
+
+    # Area of elliptical outboard section
+    elong = zminor / rminor
+    aout = 2.0 * np.pi * elong * (np.pi * rmajor * rminor + 2.0 * rminor * rminor)
+
+    return ain, aout, ain + aout
+
+
+def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
+    """Routine to calculate the inboard, outboard and total volumes
+    of a toroidal shell comprising two elliptical sections
+    author: P J Knight, CCFE, Culham Science Centre
+    rshell : input real : major radius of centre of both ellipses (m)
+    rmini  : input real : horizontal distance from rshell to outer edge
+    of inboard elliptical shell (m)
+    rmino  : input real : horizontal distance from rshell to inner edge
+    of outboard elliptical shell (m)
+    zminor : input real : vertical internal half-height of shell (m)
+    drin   : input real : horiz. thickness of inboard shell at midplane (m)
+    drout  : input real : horiz. thickness of outboard shell at midplane (m)
+    dz     : input real : vertical thickness of shell at top/bottom (m)
+    vin    : output real : volume of inboard section (m3)
+    vout   : output real : volume of outboard section (m3)
+    vtot   : output real : total volume of shell (m3)
+    This routine calculates the volume of the inboard and outboard sections
+    of a toroidal shell defined by two co-centred semi-ellipses.
+    Each section's internal and external surfaces are in turn defined
+    by two semi-ellipses. The volumes of each section are calculated as
+    the difference in those of the volumes of revolution enclosed by their
+    inner and outer surfaces.
+    """
+    # Inboard section
+
+    # Volume enclosed by outer (higher R) surface of elliptical section
+    # and the vertical straight line joining its ends
+    a = rmini
+    b = zminor
+    elong = b / a
+    v1 = 2.0 * np.pi * elong * (0.5 * np.pi * rshell * a**2 - (2.0 / 3.0) * a**3)
+
+    # Volume enclosed by inner (lower R) surface of elliptical section
+    # and the vertical straight line joining its ends
+    a = rmini + drin
+    b = zminor + dz
+    elong = b / a
+    v2 = 2.0 * np.pi * elong * (0.5 * np.pi * rshell * a**2 - (2.0 / 3.0) * a**3)
+
+    # Volume of inboard section of shell
+    vin = v2 - v1
+
+    # Outboard section
+
+    # Volume enclosed by inner (lower R) surface of elliptical section
+    # and the vertical straight line joining its ends
+    a = rmino
+    b = zminor
+    elong = b / a
+    v1 = 2.0 * np.pi * elong * (0.5 * np.pi * rshell * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume enclosed by outer (higher R) surface of elliptical section
+    # and the vertical straight line joining its ends
+    a = rmino + drout
+    b = zminor + dz
+    elong = b / a
+    v2 = 2.0 * np.pi * elong * (0.5 * np.pi * rshell * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume of outboard section of shell
+    vout = v2 - v1
+
+    return vin, vout, vin + vout
+
+
+def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
+    """Routine to calculate the inboard, outboard and total volumes
+    of a D-shaped toroidal shell
+    author: P J Knight, CCFE, Culham Science Centre
+    rmajor : input real : major radius to outer point of inboard
+    straight section of shell (m)
+    rminor : input real : horizontal internal width of shell (m)
+    zminor : input real : vertical internal half-height of shell (m)
+    drin   : input real : horiz. thickness of inboard shell at midplane (m)
+    drout  : input real : horiz. thickness of outboard shell at midplane (m)
+    dz     : input real : vertical thickness of shell at top/bottom (m)
+    vin    : output real : volume of inboard straight section (m3)
+    vout   : output real : volume of outboard curved section (m3)
+    vtot   : output real : total volume of shell (m3)
+    This routine calculates the volume of the inboard and outboard sections
+    of a D-shaped toroidal shell defined by the above input parameters.
+    The inboard section is assumed to be a cylinder of uniform thickness.
+    The outboard section's internal and external surfaces are defined
+    by two semi-ellipses, centred on the outer edge of the inboard section;
+    its volume is calculated as the difference in those of the volumes of
+    revolution enclosed by the two surfaces.
+    """
+    # Volume of inboard cylindrical shell
+    vin = 2.0 * (zminor + dz) * np.pi * (rmajor**2 - (rmajor - drin) ** 2)
+
+    # Volume enclosed by inner surface of elliptical outboard section
+    # and the vertical straight line joining its ends
+    a = rminor
+    b = zminor
+    elong = b / a
+    v1 = 2.0 * np.pi * elong * (0.5 * np.pi * rmajor * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume enclosed by outer surface of elliptical outboard section
+    # and the vertical straight line joining its ends
+    a = rminor + drout
+    b = zminor + dz
+    elong = b / a
+    v2 = 2.0 * np.pi * elong * (0.5 * np.pi * rmajor * a**2 + (2.0 / 3.0) * a**3)
+
+    # Volume of elliptical outboard shell
+    vout = v2 - v1
+
+    return vin, vout, vin + vout
