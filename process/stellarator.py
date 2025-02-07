@@ -239,13 +239,11 @@ class Stellarator:
                 physics_variables.pcoreradpv,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -4478,13 +4476,11 @@ class Stellarator:
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.te,
             physics_variables.ten,
             physics_variables.tin,
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
