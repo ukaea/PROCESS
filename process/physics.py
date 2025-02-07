@@ -67,7 +67,6 @@ def calculate_volt_second_requirements(
     rmajor: float,
     res_plasma: float,
     plasma_current: float,
-    t_fusion_ramp: float,
     t_burn: float,
     rli: float,
 ) -> tuple[float, float, float, float, float, float]:
@@ -89,8 +88,6 @@ def calculate_volt_second_requirements(
             :type res_plasma: float
             :param plasma_current: Plasma current (A)
             :type plasma_current: float
-            :param t_fusion_ramp: Heating time (s)
-            :type t_fusion_ramp: float
             :param t_burn: Burn time (s)
             :type t_burn: float
             :param rli: Plasma normalized inductivity
@@ -167,7 +164,7 @@ def calculate_volt_second_requirements(
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vs_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_burn_required = v_burn_resistive * (t_burn)
     vs_total_required = vs_ramp_required + vs_burn_required
 
     return (

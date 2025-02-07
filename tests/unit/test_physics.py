@@ -1762,13 +1762,12 @@ class VoltSecondReqParam(NamedTuple):
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_burn=1000,
-            t_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
-            expected_vs_burn_required=42.109179697761263,
+            expected_vs_burn_required=41.6922571264963,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
-            expected_vs_total_required=356.56885503707593,
+            expected_vs_total_required=356.151932465811,
         ),
         VoltSecondReqParam(
             csawth=1,
@@ -1781,17 +1780,16 @@ class VoltSecondReqParam(NamedTuple):
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_burn=0,
-            t_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_rlp=1.4075705307248088e-05,
-            expected_vs_burn_required=0.41692257126496302,
+            expected_vs_burn_required=0.0,
             expected_vsind=258.97124024420435,
             expected_vsres=55.488435095110333,
-            expected_vs_total_required=314.87659791057968,
+            expected_vs_total_required=314.4596753393147,
         ),
     ),
 )
-def test_vscalc(voltsecondreqparam):
+def test_calculate_volt_second_requirements(voltsecondreqparam):
     """
     Automatically generated Regression Unit Test for calculate_volt_second_requirements().
 
@@ -1813,7 +1811,6 @@ def test_vscalc(voltsecondreqparam):
             rmajor=voltsecondreqparam.rmajor,
             res_plasma=voltsecondreqparam.res_plasma,
             t_burn=voltsecondreqparam.t_burn,
-            t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
         )
     )
 
