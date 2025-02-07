@@ -5481,8 +5481,8 @@ class Physics:
 
             po.ovarre(
                 self.outfile,
-                "Loop voltage during burn (V)",
-                "(vburn)",
+                "Plasma loop voltage during burn (V)",
+                "(v_plasma_loop_burn)",
                 physics_variables.plasma_current
                 * physics_variables.res_plasma
                 * physics_variables.inductive_current_fraction,

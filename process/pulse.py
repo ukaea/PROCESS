@@ -151,7 +151,7 @@ class Pulse:
 
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
-        vburn = (
+        v_plasma_loop_burn = (
             physics_variables.plasma_current
             * physics_variables.res_plasma
             * physics_variables.inductive_current_fraction
@@ -160,11 +160,11 @@ class Pulse:
 
         #  Burn time (s)
 
-        tb = vsmax / vburn - times_variables.t_fusion_ramp
+        tb = vsmax / v_plasma_loop_burn - times_variables.t_fusion_ramp
         if tb < 0.0e0:
             error_handling.fdiags[0] = tb
             error_handling.fdiags[1] = vsmax
-            error_handling.fdiags[2] = vburn
+            error_handling.fdiags[2] = v_plasma_loop_burn
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
