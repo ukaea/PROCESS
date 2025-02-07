@@ -1,0 +1,392 @@
+* Once-through run for a design point for a 5 field HELIAS machine
+* creating using Stellarator models developed by 
+* Lion, J., et al. "A general stellarator version of the systems code PROCESS." Nuclear Fusion 61.12 (2021): 126021.
+
+*--------------------------------------------------*
+
+
+*---------------Constraint Equations---------------*
+
+icc = 2 * Global power balance
+icc = 16 * Net electric power lower limit
+icc = 11 * Radial build
+icc = 34 * Dump voltage upper limit
+icc = 65 * Dump time set by VV loads
+icc = 35 * J_winding pack
+icc = 82 * toroidalgap
+icc = 84 * Lower limit for beta
+icc = 24 * Beta upper limit
+icc = 83 * Radial build consistency for stellarators
+icc = 32 * TF coil conduit stress upper limit
+icc = 18 * Divertor heat load upper limit
+icc = 17 * Radiation fraction upper limit
+icc = 91 * Checking if the design point is ECRH ignitable
+icc = 8 * Neutron wall load upper limit
+icc = 62 * taup
+icc = 67 * Simple Radiation Wall load limit
+
+*---------------Iteration Variables----------------*
+
+ixc = 2 * bt
+boundl(2) = 1.8
+boundu(2) = 18.9
+ixc = 3 * rmajor
+boundl(3) = 2.
+boundu(3) = 25.
+ixc = 4 * te
+boundl(4) = 2.
+boundu(4) = 19.5
+ixc = 6 * dene
+boundl(6) = 1.35d19
+boundu(6) = 8.35d21
+ixc = 10 * hfact
+boundl(10) = 0.1
+boundu(10) = 1.3
+ixc = 25 * fpnetel
+boundl(25) = 0.2
+boundu(25) = 1.0
+ixc = 50 * fiooic
+boundl(50) = 0.01
+boundu(50) = 0.9
+ixc = 56 * tdmptf
+boundl(56) = 0.001
+boundu(56) = 200.
+ixc = 59 * fcutfsu
+boundl(59) = 0.086
+boundu(59) = 0.98
+ixc = 109 * f_nd_alpha_electron
+boundl(109) = 0.0001
+boundu(109) = 0.4
+ixc = 169 * te0_ecrh_achievable
+boundl(169) = 4.
+boundu(169) = 35.
+
+*---------------Cs Fatigue Variables---------------*
+
+
+*------------------- Costs 1990--------------------*
+
+
+*------------------- Costs 2015--------------------*
+
+
+*-----------------Blanket Library------------------*
+
+
+*----------------------Build-----------------------*
+
+
+*-----------------Build Variables------------------*
+
+dr_blkt_inboard  = 0.6 * inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0;0 if `iblnkith=0`)
+dr_blkt_outboard  = 0.6 * outboard blanket thickness (m); calculated if `blktmodel>0`
+dr_cryostat = 0.15 * cryostat thickness (m)
+dr_vv_inboard  = 0.5 * vacuum vessel inboard thickness (TF coil / shield) (m)
+dr_vv_outboard = 0.5 * vacuum vessel outboard thickness (TF coil / shield) (m)
+f_avspace = 1. * F-value for stellarator radial space check (`constraint equation 83`)
+dr_shld_vv_gap_inboard    = 0.1 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
+gapomin  = 0.025 * minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)
+dr_fw_plasma_gap_inboard  = 0.15 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
+dr_fw_plasma_gap_outboard  = 0.2 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
+dr_shld_inboard  = 0.2 * inboard shield thickness (m) (`iteration variable 93`)
+dr_shld_outboard  = 0.2 * outboard shield thickness (m) (`iteration variable 94`)
+shldtth  = 0.2 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)
+vgap_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0; it is calculated)
+
+*---------------Buildings Variables----------------*
+
+
+*-----------------Ccfe Hcpb Module-----------------*
+
+
+*--------------------Constants---------------------*
+
+
+*---------------Constraint Variables---------------*
+
+bigqmin  = 1 * minimum fusion gain Q (`constraint equation 28`)
+fbeta_max = 1. * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
+fecrh_ignition = 1.0 * f-value for ecrh ignition constraint
+fflutf   = 1 * f-value for neutron fluence on TF coil (`constraint equation 53`; `iteration variable 92`)
+ffuspow  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
+fhldiv   = 0.8 * f-value for divertor heat load (`constraint equation 18`; `iteration variable 27`)
+fiooic   = 0.9 * f-value for TF coil operating current / critical current ratio
+fjprot   = 0.95 * f-value for TF coil winding pack current density
+fpnetel  = 1.0 * f-value for net electric power (`constraint equation 16`; `iteration variable 25`)
+fptfnuc  = 1 * f-value for maximum TF coil nuclear heating (`constraint equation 54`; `iteration variable 95`)
+fradpwr  = 1 * f-value for core radiation power limit (`constraint equation 17`; `iteration variable 28`)
+fradwall = 1.0 * f-value for upper limit on radiation wall load (`constr; equ; 67`; `iteration variable 116`)
+maxradwallload = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
+pnetelin = 1000 * required net electric power (MW) (`constraint equation 16`)
+powfmax  = 500. * maximum fusion power (MW) (`constraint equation 9`)
+walalw   = 1.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
+f_alpha_energy_confinement_min = 6 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
+falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
+
+*-------------------Constraints--------------------*
+
+
+*------------------Cost Variables------------------*
+
+abktflnc = 5. * allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)
+adivflnc = 7. * allowable divertor heat fluence (MW-yr/m2)
+cfactr   = 0.75 * Total plant availability fraction; input if `iavail=0`
+cost_model = 0 * Switch for cost model;
+dintrt   = 0. * diff between borrowing and saving interest rates
+fcap0    = 1.15 * average cost of money for construction of plant assuming design/construction time of six years
+fcap0cp  = 1.06 * average cost of money for replaceable components assuming lead time for these of two years
+fcontng  = 0.15 * project contingency factor
+fcr0     = 0.065 * fixed charge rate during construction
+fkind    = 1. * multiplier for Nth of a kind costs
+iavail   = 0 * Switch for plant availability model;
+ifueltyp = 0 * Switch for fuel type;
+ireactor = 1 * Switch for net electric power and cost of electricity calculations;
+lsa      = 2 * Level of safety assurance switch (generally; use 3 or 4);
+discount_rate = 0.06 * effective cost of money in constant dollars
+tlife    = 40. * Full power year plant lifetime (years)
+ucblvd   = 280. * unit cost for blanket vanadium ($/kg)
+ucdiv    = 500000. * cost of divertor blade ($)
+ucme     = 3.e8 * cost of maintenance equipment ($)
+
+*----------------------Costs-----------------------*
+
+
+*-------------Current Drive Variables--------------*
+
+etaech   = 0.7 * ECH wall plug to injector efficiency
+pheat    = 0. * heating power not used for current drive (MW) (`iteration variable 11`)
+
+*-------------------Dcll Module--------------------*
+
+
+*------------Define Iteration Variables------------*
+
+
+*----------------Divertor Variables----------------*
+
+anginc   = 0.035 * angle of incidence of field line on plate (rad)
+divdum   = 1 * switch for divertor Zeff model;
+hldivlim = 15 * heat load limit (MW/m2)
+tdiv     = 3. * temperature at divertor (eV) (input for stellarator only; calculated for tokamaks)
+xpertin  = 1.5 * perpendicular heat transport coefficient (m2/s)
+zeffdiv  = 3. * Zeff in the divertor region (if `divdum/=0`)
+
+*------------------Error Handling------------------*
+
+
+*-------------------Fson Library-------------------*
+
+
+*-------------------Fson Path M--------------------*
+
+
+*------------------Fson String M-------------------*
+
+
+*-------------------Fson Value M-------------------*
+
+
+*------------------Fwbs Variables------------------*
+
+denstl   = 7800. * density of steel [kg m^-3]
+emult    = 1.3 * energy multiplication in blanket and shield
+fblss    = 0.13 * KIT blanket model; steel fraction of breeding zone
+fhole    = 0. * area fraction taken up by other holes (IFE)
+fblbe    = 0.47 * beryllium fraction of blanket by volume (if `iblanket=2`; is Be fraction of breeding zone)
+primary_pumping = 0 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
+secondary_cycle = 2 * Switch for power conversion cycle;
+fwclfr   = 0.1 * first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
+vfshld   = 0.6 * coolant void fraction in shield
+fblli2o  = 0.07 * lithium oxide fraction of blanket by volume (stellarator only)
+fbllipb  = 0. * lithium lead fraction of blanket by volume (stellarator only)
+fblvd    = 0. * vanadium fraction of blanket by volume (stellarator only)
+vfblkt   = 0.1 * coolant void fraction in blanket;
+blktmodel = 0 * switch for blanket/tritium breeding model (see iblanket);
+declblkt = 0.075 * neutron power deposition decay length of blanket structural material [m] (stellarators only)
+declfw   = 0.075 * neutron power deposition decay length of first wall structural material [m] (stellarators only)
+declshld = 0.075 * neutron power deposition decay length of shield structural material [m] (stellarators only)
+etahtp   = 1. * electrical efficiency of primary coolant pumps
+
+*-----------------Global Variables-----------------*
+
+runtitle = helias_demo_6 * short descriptive title for the run
+maxcal   = 200 * maximum number of VMCON iterations
+
+*-------------Heat Transport Variables-------------*
+
+etath    = 0.4 * thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated;
+htpmw_blkt = 120. * blanket primary coolant mechanical pumping power (MW)
+htpmw_div = 24. * divertor coolant mechanical pumping power (MW)
+htpmw_fw = 56. * first wall coolant mechanical pumping power (MW)
+ipowerflow = 1 * switch for power flow model;
+
+*------------------Ife Variables-------------------*
+
+
+*------------Impurity Radiation Module-------------*
+
+coreradius = 0.6 * coreradius /0;6/ ; normalised radius defining the 'core' region
+coreradiationfraction = 1. * coreradiationfraction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
+fimp(1) = 1.0
+fimp(2) = 0.1
+fimp(3) = 0.0
+fimp(4) = 0.0
+fimp(5) = 0.0
+fimp(6) = 0.0
+fimp(7) = 0.0
+fimp(8) = 0.0
+fimp(9) = 0.0
+fimp(10) = 0.0
+fimp(11) = 0.0
+fimp(12) = 0.0
+fimp(13) = 0.0
+fimp(14) = 0.0
+
+*-------------------Init Module--------------------*
+
+
+*------------------Maths Library-------------------*
+
+
+*--------------Neoclassics Constants---------------*
+
+
+*----------------Neoclassics Module----------------*
+
+
+*---------------------Numerics---------------------*
+
+ioptimz  = -2 * once through, no optimisation
+minmax   = 7 * 
+neqns    = 3 * neqns /0/ ; number of equality constraints to be satisfied
+epsfcn   = 0.0001 * epsfcn /1;0e-3/ ; finite difference step length for HYBRD/VMCON derivatives
+
+*----------------Pf Power Variables----------------*
+
+
+*------------------Pfcoil Module-------------------*
+
+
+*-----------------Pfcoil Variables-----------------*
+
+zref(1) = 3.6
+zref(2) = 1.2
+zref(3) = 2.5
+zref(4) = 1.0
+zref(5) = 1.0
+zref(6) = 1.0
+zref(7) = 1.0
+zref(8) = 1.0
+zref(9) = 1.0
+zref(10) = 1.0
+
+*------------------Physics Module------------------*
+
+
+*----------------Physics Variables-----------------*
+
+alphan   = 0.35 * density profile index
+alphat   = 1.2 * temperature profile index
+aspect   = 10.1 * aspect ratio (`iteration variable 1`)
+beta_max = 0.06 * Max allowable beta
+beta_min = 0.01 * allowable lower beta
+bt       = 4.734563638052739 * toroidal field on axis (T) (`iteration variable 2`)
+dene     = 1.631669195728548e+20 * electron density (/m3) (`iteration variable 6`)
+f_alpha_plasma = 0.95 * Fraction of alpha power deposited in plasma; Default of 0;95 taken from https;//doi;org/10;1088/0029-5515/39/12/305;
+hfact    = 1.3 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
+ignite   = 1 * switch for ignition assumption; Obviously; ignite must be zero if current drive
+ipedestal = 0 * switch for pedestal profiles;
+i_rad_loss = 1 * switch for radiation loss term usage in power balance (see User Guide);
+i_confinement_time      = 38 * switch for energy confinement time scaling law (see description in `tauscl`)
+iwalld   = 1 * switch for neutron wall load calculation;
+kappa    = 1.001 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
+f_nd_alpha_electron = 0.048598535626890565 * thermal alpha density/electron density (`iteration variable 109`)
+rmajor   = 22.541131410425415 * plasma major radius (m) (`iteration variable 3`)
+f_sync_reflect = 0.6 * synchrotron wall reflectivity factor
+te       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
+tratio   = 0.95 * ion temperature / electron temperature(used to calculate ti if `tratio > 0;0`
+
+*----------------------Power-----------------------*
+
+
+*------------Primary Pumping Variables-------------*
+
+
+*------------------Process Input-------------------*
+
+
+*------------------Process Output------------------*
+
+
+*-----------------Pulse Variables------------------*
+
+
+*-----------------Rebco Variables------------------*
+
+
+*------------------Reinke Module-------------------*
+
+
+*-----------------Reinke Variables-----------------*
+
+
+*---------------Resistive Materials----------------*
+
+
+*-------------------Scan Module--------------------*
+
+
+*-----------------Sctfcoil Module------------------*
+
+
+*------------Stellarator Configuration-------------*
+
+
+*----------------Stellarator Module----------------*
+
+
+*--------------Stellarator Variables---------------*
+
+istell   = 6 * Switch for stellarator option (set via `device;dat`);
+bmn      = 0.0099999 * relative radial field perturbation
+f_asym   = 1.1 * divertor heat load peaking factor
+f_rad    = 0.85 * radiated power fraction in SOL
+f_w      = 0.6 * island size fraction factor
+flpitch  = 0.001 * field line pitch (rad)
+iotabar  = 0.9 * rotational transform (reciprocal of tokamak q) for stellarator confinement time scaling laws
+isthtr   = 1 * Switch for stellarator auxiliary heating method;
+max_gyrotron_frequency = 4.e11 * Maximal available gyrotron frequency (input parameter) (Hz)
+shear    = 0.5 * magnetic shear; derivative of iotabar (1)
+te0_ecrh_achievable = 14.880956269519242 * maximal central electron temperature as achievable by the ECRH; input; (keV)
+
+*---------------Structure Variables----------------*
+
+
+*-----------------Tfcoil Variables-----------------*
+
+sig_tf_wp_max = 4.e8 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
+t_turn_tf = 0.037 * TF coil turn edge length including turn insulation [m]
+fcutfsu  = 0.7630096974258808 * copper fraction of cable conductor (TF coils)
+i_tf_sc_mat = 8 * Switch for superconductor material in TF coils;
+ftoroidalgap = 1. * F-value for minimum tftort (`constraint equation 82`)
+tdmptf   = 7.400147540321247 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
+tftmp    = 4.5 * peak helium coolant temperature in TF coils and PF coils (K)
+thicndut = 0.001 * conduit insulation thickness (m)
+thkcas   = 0.05 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
+thwcndut = 0.006 * TF coil conduit case thickness (m) (`iteration variable 58`)
+tinstf   = 0.01 * Thickness of the ground insulation layer surrounding (m)
+tmpcry   = 4.5 * coil temperature for cryogenic plant power calculation (K)
+vdalw    = 12.5 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
+vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+
+*-----------------Times Variables------------------*
+
+
+*--------------------Utilities---------------------*
+
+
+*-----------------Vacuum Variables-----------------*
+
+
+*--------------Water Usage Variables---------------*
+
