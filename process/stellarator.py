@@ -4504,11 +4504,13 @@ class Stellarator:
         (
             physics_variables.burnup,
             physics_variables.ntau,
+            physics_variables.nTtau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
