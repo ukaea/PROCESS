@@ -5514,6 +5514,13 @@ class Physics:
             )
             po.ovarrf(
                 self.outfile,
+                "Plasma normalised internal inductance",
+                "(ind_plasma_internal_norm)",
+                physics_variables.ind_plasma_internal_norm,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
                 "Coefficient for sawtooth effects on burn V-s requirement",
                 "(csawth)",
                 physics_variables.csawth,
