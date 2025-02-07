@@ -271,7 +271,7 @@ var_dicts = {
     "t_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
-    "vburn": VariableMetadata(
+    "v_plasma_loop_burn": VariableMetadata(
         latex=r"$V_{\mathrm{loop}}$ [$V$]",
         description="Loop voltage during burn",
         units="V",
