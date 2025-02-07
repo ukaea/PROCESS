@@ -254,7 +254,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Inductances
 
-- Inductances should start with the `h_` prefix
+- Inductances should start with the `ind_` prefix
 
 ---------------------
 
