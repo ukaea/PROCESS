@@ -1751,6 +1751,8 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vs_total_required: Any = None
 
+    expected_v_plasma_loop_burn: Any = None
+
 
 @pytest.mark.parametrize(
     "voltsecondreqparam",
@@ -1773,6 +1775,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_total_required=356.56885503707593,
+            expected_v_plasma_loop_burn=0.0416922571264963,
         ),
         VoltSecondReqParam(
             csawth=1,
@@ -1792,6 +1795,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_total_required=314.87659791057968,
+            expected_v_plasma_loop_burn=0.0416922571264963,
         ),
     ),
 )
@@ -1812,6 +1816,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_ind_ramp,
         vs_plasma_res_ramp,
         vs_total_required,
+        v_plasma_loop_burn,
     ) = calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
@@ -1846,6 +1851,10 @@ def test_vscalc(voltsecondreqparam):
 
     assert vs_total_required == pytest.approx(
         voltsecondreqparam.expected_vs_total_required
+    )
+
+    assert v_plasma_loop_burn == pytest.approx(
+        voltsecondreqparam.expected_v_plasma_loop_burn
     )
 
 
