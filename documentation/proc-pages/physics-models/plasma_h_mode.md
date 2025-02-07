@@ -295,29 +295,53 @@ where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\te
 
 ------------------
 
-| `i_l_h_threshold` | Name | Reference |
-| :-: | - | - |
-| 1 | ITER 1996 nominal | ITER Physics Design Description Document |
-| 2 | ITER 1996 upper bound | D. Boucher, p.2-2 |
-| 3 | ITER 1996 lower bound | 
-| 4 | ITER 1997 excluding elongation | J. A. Snipes, ITER H-mode Threshold Database |
-| 5 | ITER 1997 including elongation |  Working Group, Controlled Fusion and Plasma Physics, 24th EPS conference, Berchtesgaden, June 1997, vol.21A, part III, p.961 |
-| 6 | Martin 2008 nominal | Martin et al, 11th IAEA Tech. Meeting |
-| 7 | Martin 2008 95% upper bound |  H-mode Physics and Transport Barriers, Journal |
-| 8 | Martin 2008 95% lower bound |  of Physics: Conference Series **123**, 2008 |
-| 9 | Snipes 2000 nominal | J. A. Snipes and the International H-mode |
-| 10| Snipes 2000 upper bound | Threshold Database Working Group |
-| 11| Snipes 2000 lower bound |  2000, Plasma Phys. Control. Fusion, 42, A299 |
-| 12| Snipes 2000 (closed divertor): nominal | 
-| 13| Snipes 2000 (closed divertor): upper bound | 
-| 14| Snipes 2000 (closed divertor): lower bound | 
-| 15| Hubbard 2012 L-I threshold scaling: nominal | [Hubbard et al. (2012; Nucl. Fusion 52 114009)](https://iopscience.iop.org/article/10.1088/0029-5515/52/11/114009) |
-| 16| Hubbard 2012 L-I threshold scaling: lower bound | [Hubbard et al. (2012; Nucl. Fusion 52 114009)](https://iopscience.iop.org/article/10.1088/0029-5515/52/11/114009 |
-| 17| Hubbard 2012 L-I threshold scaling: upper bound | [Hubbard et al. (2012; Nucl. Fusion 52 114009)](https://iopscience.iop.org/article/10.1088/0029-5515/52/11/114009 |
-| 18| Hubbard 2017 L-I threshold scaling | [Hubbard et al. (2017; Nucl. Fusion 57 126039)](https://iopscience.iop.org/article/10.1088/1741-4326/aa8570) |
-| 19 | Martin 2008 aspect ratio corrected nominal | Martin et al (2008; J Phys Conf, 123, 012033) |
-| 20 | Martin 2008 aspect ratio corrected 95% upper bound | [Takizuka et al. (2004; Plasma Phys. Contol. Fusion, 46, A227)](https://iopscience.iop.org/article/10.1088/0741-3335/46/5A/024)  |
-| 21 | Martin 2008 aspect ratio corrected 95% lower bound |  
+### Martin 2008 Aspect ratio corrected scalings
+
+The general form is the same as the original [Martin 2008](#martin-2008-aspect-ratio-corrected-scalings) scaling with a aspect ratio correction factor from T. Takizuka et.al [^8]:
+
+$$
+P_{\text{L-H}} = 0.0488 e^{\pm0.057} \bar{n}_{\text{e},20}^{0.717 \pm 0.035} B_{\text{T}}^{0.803 \pm 0.032} S_{\text{p}}^{0.941 \pm 0.019} \\ 
+\times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
+$$
+
+
+
+where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla, $S_{\text{p}}$ is the plasma surface area in $\text{m}^2$ and $A$ is the plasma aspect ratio
+
+
+
+------------------
+
+#### Martin 2008 Aspect Corrected Nominal Scaling
+
+Is selected with `i_l_h_threshold = 19` [^4] [^8]
+
+$$
+P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941} \\ 
+\times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
+$$
+
+---------------
+
+#### Martin 2008 Aspect Corrected Upper Scaling
+
+Is selected with `i_l_h_threshold = 20` [^4] [^8]
+
+$$
+P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96} \\ 
+\times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
+$$
+
+---------------
+
+#### Martin 2008 Aspect Corrected Lower Scaling
+
+Is selected with `i_l_h_threshold = 21` [^4] [^8]
+
+$$
+P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922} \\ 
+\times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
+$$
 
 
 [^1]: T. Takizuka and International Atomic Energy Agency, Vienna (Austria),"Threshold power and energy confinement for ITER". 1996.
@@ -327,3 +351,4 @@ where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\te
 [^5]: J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,” Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 [^6]: A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012, doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 [^7]: A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
+[^8]: T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,” Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.

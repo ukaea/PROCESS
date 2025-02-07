@@ -7536,31 +7536,32 @@ def l_h_threshold_power(
     aspect: float,
     plasma_current: float,
 ) -> list[float]:
-    """L-mode to H-mode power threshold calculation
+    """
+    L-mode to H-mode power threshold calculation.
 
-    Author: P J Knight, CCFE, Culham Science Centre
+    :param dene: Volume-averaged electron density (/m3)
+    :type dene: float
+    :param dnla: Line-averaged electron density (/m3)
+    :type dnla: float
+    :param bt: Toroidal field on axis (T)
+    :type bt: float
+    :param rmajor: Plasma major radius (m)
+    :type rmajor: float
+    :param rminor: Plasma minor radius (m)
+    :type rminor: float
+    :param kappa: Plasma elongation
+    :type kappa: float
+    :param a_plasma_surface: Plasma surface area (m2)
+    :type a_plasma_surface: float
+    :param m_ions_total_amu: Average mass of all ions (amu)
+    :type m_ions_total_amu: float
+    :param aspect: Aspect ratio
+    :type aspect: float
+    :param plasma_current: Plasma current (A)
+    :type plasma_current: float
 
-    - ITER Physics Design Description Document, p.2-2
-    - ITER-FDR Plasma Performance Assessments, p.III-9
-    - Snipes, 24th EPS Conference, Berchtesgaden 1997, p.961
-    - Martin et al, 11th IAEA Tech. Meeting on H-mode Physics and
-      Transport Barriers, Journal of Physics: Conference Series
-      123 (2008) 012033
-    - J A Snipes and the International H-mode Threshold Database
-      Working Group, 2000, Plasma Phys. Control. Fusion, 42, A299
-
-    :param dene: volume-averaged electron density (/m3)
-    :param dnla: line-averaged electron density (/m3)
-    :param bt:  toroidal field on axis (T)
-    :param rmajor: plasma major radius (m)
-    :param rminor: plasma minor radius (m)
-    :param kappa: plasma elongation
-    :param a_plasma_surface: plasma surface area (m2)
-    :param m_ions_total_amu: average mass of all ions (amu)
-    :param aspect: aspect ratio
-    :param plasma_current: plasma current (A)
-
-    :returns: array of power thresholds
+    :returns: Array of power thresholds
+    :rtype: list[float]
     """
 
     dene20 = 1e-20 * dene
@@ -7674,7 +7675,26 @@ def l_h_threshold_power(
 
     # ========================================================================
 
-    p_l_h_threshold_mw = [
+    # Aspect ratio corrected Martin et al (2008)
+
+    # i_l_h_threshold = 19
+    martin_nominal_aspect = transition.calculate_martin08_aspect_nominal(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # i_l_h_threshold = 20
+    martin_ub_aspect = transition.calculate_martin08_aspect_upper(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # i_l_h_threshold = 21
+    martin_lb_aspect = transition.calculate_martin08_aspect_lower(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # ========================================================================
+
+    return [
         iterdd,
         iterdd_ub,
         iterdd_lb,
@@ -7693,18 +7713,7 @@ def l_h_threshold_power(
         hubbard_2012_lb,
         hubbard_2012_ub,
         hubbard_2017,
+        martin_nominal_aspect,
+        martin_ub_aspect,
+        martin_lb_aspect,
     ]
-
-    # Aspect ratio corrected Martin et al (2008)
-    # Correction: Takizuka 2004, Plasma Phys. Control Fusion 46 A227
-    if aspect <= 2.7:
-        takizuka_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
-        p_l_h_threshold_mw += [
-            martin_nominal * takizuka_correction,
-            martin_ub * takizuka_correction,
-            martin_lb * takizuka_correction,
-        ]
-        return p_l_h_threshold_mw
-
-    p_l_h_threshold_mw += [martin_nominal, martin_ub, martin_lb]
-    return p_l_h_threshold_mw
