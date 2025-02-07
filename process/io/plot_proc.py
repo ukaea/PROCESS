@@ -373,8 +373,6 @@ def plot_current_profiles_over_time(
     t_burn = mfile_data.data["t_burn"].get_scan(scan)
     t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
 
-    # t_between_pulse = mfile_data.data["t_between_pulse"].get_scan(scan)
-
     # Define a cumulative sum list for each point in the pulse
     t_steps = np.cumsum([
         0,
@@ -429,20 +427,20 @@ def plot_current_profiles_over_time(
 
     # Annotate key points
     # Create a secondary x-axis for annotations
-    # Annotate key points
-    # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
     secax.set_xticks(t_steps)
-    secax.set_xticklabels([
-        "Precharge",
-        r"$I_{\text{P}}$ Ramp-Up",
-        "Fusion Ramp",
-        "Burn",
-        "Ramp Down",
-        "Between Pulse",
-    ], rotation=60)
+    secax.set_xticklabels(
+        [
+            "Precharge",
+            r"$I_{\text{P}}$ Ramp-Up",
+            "Fusion Ramp",
+            "Burn",
+            "Ramp Down",
+            "Between Pulse",
+        ],
+        rotation=60,
+    )
     secax.tick_params(axis="x", which="major")
-    secax.set_xlabel("Pulse Phases", fontsize=12)
 
     # Add axis labels
     axis.set_xlabel("Time [s]", fontsize=12)
@@ -755,7 +753,7 @@ def plot_nprofile(prof, demo_ranges):
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n_{e} $ $[10^{19} \mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
@@ -777,7 +775,7 @@ def plot_nprofile(prof, demo_ranges):
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
-    prof.plot(rho, ni, label="$n_{i}$", color="red")
+    prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
     prof.plot(rho, ne, label="$n_{e}$", color="blue")
     prof.legend()
 
@@ -816,12 +814,12 @@ def plot_nprofile(prof, demo_ranges):
         # Add text box with density profile parameters
         textstr_density = "\n".join((
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
-            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
             f"{nd_fuel_ions / dene:.3f}",
             rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -890,7 +888,7 @@ def plot_tprofile(prof, demo_ranges):
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel("$T_{e}$ [keV]")
+    prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
 
     if ipedestal == 1:
@@ -941,12 +939,12 @@ def plot_tprofile(prof, demo_ranges):
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
-        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}\n",
+        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}\n",
-        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV\n",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}",
+        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -3365,18 +3363,16 @@ def main_plot(
 
     # Plot poloidal cross-section
     plot_1 = fig3.add_subplot(121, aspect="equal")
-    plot_1.set_position([0.0, 0.1, 0.5, 0.8])
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
     plot_2 = fig3.add_subplot(122, aspect="equal")
-    plot_2.set_position([0.425, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
     # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
     plot_3 = fig3.add_subplot(222)
-    plot_3.set_position([0.45, 0.5, 0.5, 0.5])
+    plot_3.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
