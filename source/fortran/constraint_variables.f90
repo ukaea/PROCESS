@@ -287,12 +287,12 @@ module constraint_variables
   real(dp) :: walalw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 
-  real(dp) :: taulimit
-  !! Lower limit on taup/taueff the ratio of alpha particle to energy confinement
+  real(dp) :: f_alpha_energy_confinement_min
+  !! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
   !! times (`constraint equation 62`)
 
-  real(dp) :: ftaulimit
-  !! f-value for lower limit on taup/taueff the ratio of alpha particle to energy
+  real(dp) :: falpha_energy_confinement
+  !! f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy
   !! confinement times (`constraint equation 62`, `iteration variable 110`)
 
   real(dp) :: fniterpump
@@ -400,8 +400,8 @@ module constraint_variables
     t_current_ramp_up_min = 1.0D0
     vvhealw = 1.0D0
     walalw = 1.0D0
-    taulimit = 5.0D0
-    ftaulimit = 1.0D0
+    f_alpha_energy_confinement_min = 5.0D0
+    falpha_energy_confinement = 1.0D0
     fniterpump = 1.0D0
     zeffmax = 3.6D0
     fpoloidalpower = 1.0D0

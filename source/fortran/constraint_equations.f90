@@ -227,7 +227,7 @@ contains
         case (60); call constraint_eqn_060(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Equation for availability limit
         case (61); call constraint_eqn_061(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-	      ! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+	      ! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
         case (62); call constraint_eqn_062(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Upper limit on niterpump (vacuum_model = simple)
         case (63); call constraint_eqn_063(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
@@ -440,7 +440,7 @@ contains
     !! \begin{equation} c_i =
     !! \end{equation}
     !!
-    !! iradloss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
+    !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
     !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
     !! <LI> = 1 total power lost is scaling power plus core radiation only
     !! <LI> = 2 total power lost is scaling power only, with no additional
@@ -448,8 +448,8 @@ contains
     !! ignite : input integer : switch for ignition assumption:<UL>
     !! <LI> = 0 do not assume plasma ignition;
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-    !! ptrepv : input real : electron transport power per volume (MW/m3)
-    !! ptripv : input real :  ion transport power per volume (MW/m3)
+    !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
+    !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
     !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
     !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
     !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
@@ -459,7 +459,7 @@ contains
     !! pinjmw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
-    use physics_variables, only: iradloss, ignite, ptrepv, ptripv, pden_plasma_rad_mw, &
+    use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
                                   pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
@@ -476,11 +476,11 @@ contains
     ! pscaling : Local real : total transport power per volume (MW/m3)
     real(dp) :: pscaling
     real(dp) :: pnumerator, pdenom
-    pscaling = ptrepv + ptripv
+    pscaling = pden_electron_transport_loss_mw + pden_ion_transport_loss_mw
     ! Total power lost is scaling power plus radiation:
-    if (iradloss == 0) then
+    if (i_rad_loss == 0) then
         pnumerator = pscaling + pden_plasma_rad_mw
-    else if (iradloss == 1) then
+    else if (i_rad_loss == 1) then
         pnumerator = pscaling + pcoreradpv
     else
         pnumerator = pscaling
@@ -515,13 +515,13 @@ contains
       !! ignite : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! ptripv : input real :  ion transport power per volume (MW/m3)
+      !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
       !! pinjimw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: ignite, ptripv, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
+      use physics_variables, only: ignite, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
       use current_drive_variables, only: pinjimw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -532,14 +532,14 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (ptripv + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
          tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * (1.0D0 - tmp_cc)
          tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
       else
-         tmp_cc     = 1.0D0 - (ptripv+piepv) / (f_alpha_plasma*alpha_power_ions_density)
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw+piepv) / (f_alpha_plasma*alpha_power_ions_density)
          tmp_con    = (f_alpha_plasma*alpha_power_ions_density) * (1.0D0 - tmp_cc)
          tmp_err    = (f_alpha_plasma*alpha_power_ions_density) * tmp_cc
          tmp_symbol = '='
@@ -560,7 +560,7 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! iradloss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
+      !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
       !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
       !! <LI> = 1 total power lost is scaling power plus core radiation only
       !! <LI> = 2 total power lost is scaling power only, with no additional
@@ -568,7 +568,7 @@ contains
       !! ignite : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! ptrepv : input real : electron transport power per volume (MW/m3)
+      !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
       !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
       !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
@@ -576,7 +576,7 @@ contains
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: iradloss, ignite, ptrepv, pcoreradpv, f_alpha_plasma, &
+      use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pcoreradpv, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
@@ -589,11 +589,11 @@ contains
       ! pscaling : Local real : total transport power per volume (MW/m3)
       real(dp) :: pscaling
       real(dp) :: pnumerator, pdenom
-      pscaling = ptrepv
+      pscaling = pden_electron_transport_loss_mw
 	   ! Total power lost is scaling power plus radiation:
-      if (iradloss == 0) then
+      if (i_rad_loss == 0) then
          pnumerator = pscaling + pden_plasma_rad_mw
-      else if (iradloss == 1) then
+      else if (i_rad_loss == 1) then
          pnumerator = pscaling + pcoreradpv
       else
          pnumerator = pscaling
@@ -2446,21 +2446,21 @@ contains
    end subroutine constraint_eqn_061
 
    subroutine constraint_eqn_062(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+      !! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
       !! author: P B Lloyd, CCFE, Culham Science Centre
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
+      !! Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
       !! #=# physics
-      !! #=#=# ftaulimit, taulimit
+      !! #=#=# falpha_energy_confinement, f_alpha_energy_confinement_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftaulimit : input real : f-value for lower limit on taup/taueff the ratio of alpha particle to energy confinement
-      !! taup : input real : alpha particle confinement time (s)
-      !! taueff : input real : global thermal energy confinement time (sec)
-      !! taulimit : input real : Lower limit on taup/taueff the ratio of alpha particle to energy confinement times
-      use constraint_variables, only: ftaulimit, taulimit
-      use physics_variables, only: taup, taueff
+      !! falpha_energy_confinement : input real : f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
+      !! t_alpha_confinement : input real : alpha particle confinement time (s)
+      !! t_energy_confinement : input real : global thermal energy confinement time (sec)
+      !! f_alpha_energy_confinement_min : input real : Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+      use constraint_variables, only: falpha_energy_confinement, f_alpha_energy_confinement_min
+      use physics_variables, only: t_alpha_confinement, t_energy_confinement
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2468,9 +2468,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - ftaulimit * (taup / taueff) / taulimit
-      tmp_con = taulimit
-      tmp_err = (taup / taueff) * tmp_cc
+      tmp_cc = 1.0D0 - falpha_energy_confinement * (t_alpha_confinement / t_energy_confinement) / f_alpha_energy_confinement_min
+      tmp_con = f_alpha_energy_confinement_min
+      tmp_err = (t_alpha_confinement / t_energy_confinement) * tmp_cc
       tmp_symbol = '>'
       tmp_units = ''
 

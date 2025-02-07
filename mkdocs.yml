@@ -67,6 +67,7 @@ nav:
                       - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
                       - Plasma Resistive Heating: physics-models/plasma_current/plasma_resistive_heating.md
               - Confinement time: physics-models/plasma_confinement.md
+              - H-mode: physics-models/plasma_h_mode.md
               - Plasma Core Power Balance: physics-models/plasma_power_balance.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:

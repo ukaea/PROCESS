@@ -14,7 +14,7 @@ module physics_variables
 
   public
 
-  integer, parameter :: ipnlaws = 50
+  integer, parameter :: n_confinement_scalings = 51
   !! number of energy confinement time scaling laws
 
   real(dp) :: m_beam_amu
@@ -171,8 +171,11 @@ module physics_variables
   real(dp) :: nd_protons
   !! proton ash density (/m3)
 
-  real(dp) :: dntau
-  !! plasma average "n-tau" (seconds/m3)
+  real(dp) :: ntau
+  !! Fusion double product (s/m3)
+
+  real(dp) :: nTtau
+  !! Lawson triple product [keV s / m3]
 
   real(dp) :: nd_impurities
   !! high Z ion density (/m3)
@@ -263,7 +266,7 @@ module physics_variables
   real(dp) :: f_beta_alpha_beam_thermal
   !! ratio of (fast alpha + neutral beam beta) to thermal beta
 
-  real(dp), dimension(ipnlaws) :: hfac
+  real(dp), dimension(n_confinement_scalings) :: hfac
   !! H factors for an ignited plasma for each energy confinement time scaling law
 
   real(dp) :: hfact
@@ -344,12 +347,6 @@ module physics_variables
   !! - =0 do not assume plasma ignition
   !! - =1 assume ignited (but include auxiliary power in costs)</UL
 
-  integer :: iinvqd
-  !! switch for inverse quadrature in L-mode scaling laws 5 and 9:
-  !!
-  !! - =0 inverse quadrature not used
-  !! - =1 inverse quadrature with Neo-Alcator tau-E used
-
   integer :: ipedestal
   !! switch for pedestal profiles:
   !!
@@ -410,7 +407,7 @@ module physics_variables
   !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
   !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
 
-  integer :: iradloss
+  integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
   !!
   !! - =0 total power lost is scaling power plus radiation
@@ -418,110 +415,62 @@ module physics_variables
   !! - =2 total power lost is scaling power only, with no additional
   !!   allowance for radiation. This is not recommended for power plant models.
 
-  integer :: isc
-  !! switch for energy confinement time scaling law (see description in `tauscl`)
+  integer :: i_confinement_time
+  !! switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)
 
-  character*24, parameter, dimension(ipnlaws) :: tauscl = (/ &
-    'Neo-Alcator      (ohmic)', &
-    'Mirnov               (H)', &
-    'Merezkhin-Muhkovatov (L)', &
-    'Shimomura            (H)', &
-    'Kaye-Goldston        (L)', &
-    'ITER 89-P            (L)', &
-    'ITER 89-O            (L)', &
-    'Rebut-Lallia         (L)', &
-    'Goldston             (L)', &
-    'T10                  (L)', &
-    'JAERI-88             (L)', &
-    'Kaye-Big Complex     (L)', &
-    'ITER H90-P           (H)', &
-    'ITER Mix             (L)', &
-    'Riedel               (L)', &
-    'Christiansen         (L)', &
-    'Lackner-Gottardi     (L)', &
-    'Neo-Kaye             (L)', &
-    'Riedel               (H)', &
-    'ITER H90-P amended   (H)', &
-    'LHD              (stell)', &
-    'Gyro-reduced Bohm(stell)', &
-    'Lackner-Gottardi (stell)', &
-    'ITER-93H             (H)', &
-    'TITAN RFP OBSOLETE      ', &
-    'ITER H-97P ELM-free  (H)', &
-    'ITER H-97P ELMy      (H)', &
-    'ITER-96P             (L)', &
-    'Valovic modified ELMy(H)', &
-    'Kaye PPPL April 98   (L)', &
-    'ITERH-PB98P(y)       (H)', &
-    'IPB98(y)             (H)', &
-    'IPB98(y,1)           (H)', &
-    'IPB98(y,2)           (H)', &
-    'IPB98(y,3)           (H)', &
-    'IPB98(y,4)           (H)', &
-    'ISS95            (stell)', &
-    'ISS04            (stell)', &
-    'DS03                 (H)', &
-    'Murari et al NPL     (H)', &
-    'Petty 2008           (H)', &
-    'Lang et al. 2012     (H)', &
-    'Hubbard 2017 - nom   (I)', &
-    'Hubbard 2017 - lower (I)', &
-    'Hubbard 2017 - upper (I)', &
-    'NSTX (Spherical)     (H)', &
-    'NSTX-Petty08 Hybrid  (H)', &
-    'NSTX gyro-Bohm Buxton(H)', &
-    'Input tauee_in          ', &
-    'ITPA20               (H)' /)
-  !! tauscl(ipnlaws) : labels describing energy confinement scaling laws:<UL>
-  !! <LI> ( 1)  Neo-Alcator (ohmic)
-  !! <LI> ( 2)  Mirnov (H-mode)
-  !! <LI> ( 3)  Merezkhin-Muhkovatov (L-mode)
-  !! <LI> ( 4)  Shimomura (H-mode)
-  !! <LI> ( 5)  Kaye-Goldston (L-mode)
-  !! <LI> ( 6)  ITER 89-P (L-mode)
-  !! <LI> ( 7)  ITER 89-O (L-mode)
-  !! <LI> ( 8)  Rebut-Lallia (L-mode)
-  !! <LI> ( 9)  Goldston (L-mode)
-  !! <LI> (10)  T10 (L-mode)
-  !! <LI> (11)  JAERI-88 (L-mode)
-  !! <LI> (12)  Kaye-Big Complex (L-mode)
-  !! <LI> (13)  ITER H90-P (H-mode)
-  !! <LI> (14)  ITER Mix (L-mode)
-  !! <LI> (15)  Riedel (L-mode)
-  !! <LI> (16)  Christiansen (L-mode)
-  !! <LI> (17)  Lackner-Gottardi (L-mode)
-  !! <LI> (18)  Neo-Kaye (L-mode)
-  !! <LI> (19)  Riedel (H-mode)
-  !! <LI> (20)  ITER H90-P amended (H-mode)
-  !! <LI> (21)  LHD (stellarator)
-  !! <LI> (22)  Gyro-reduced Bohm (stellarator)
-  !! <LI> (23)  Lackner-Gottardi (stellarator)
-  !! <LI> (24)  ITER-93H (H-mode)
-  !! <LI> (25) OBSOLETE
-  !! <LI> (26)  ITER H-97P ELM-free (H-mode)
-  !! <LI> (27)  ITER H-97P ELMy (H-mode)
-  !! <LI> (28)  ITER-96P (=ITER-97L) (L-mode)
-  !! <LI> (29)  Valovic modified ELMy (H-mode)
-  !! <LI> (30)  Kaye PPPL April 98 (L-mode)
-  !! <LI> (31)  ITERH-PB98P(y) (H-mode)
-  !! <LI> (32)  IPB98(y) (H-mode)
-  !! <LI> (33)  IPB98(y,1) (H-mode)
-  !! <LI> (34)  IPB98(y,2) (H-mode)
-  !! <LI> (35)  IPB98(y,3) (H-mode)
-  !! <LI> (36)  IPB98(y,4) (H-mode)
-  !! <LI> (37)  ISS95 (stellarator)
-  !! <LI> (38)  ISS04 (stellarator)
-  !! <LI> (39)  DS03 (H-mode)
-  !! <LI> (40)  Murari et al non-power law (H-mode)
-  !! <LI> (41)  Petty 2008 (H-mode)
-  !! <LI> (42)  Lang et al. 2012 (H-mode)
-  !! <LI> (43)  Hubbard 2017 (I-mode) - nominal
-  !! <LI> (44)  Hubbard 2017 (I-mode) - lower bound
-  !! <LI> (45)  Hubbard 2017 (I-mode) - upper bound
-  !! <LI> (46)  NSTX (H-mode; Spherical tokamak)
-  !! <LI> (47)  NSTX-Petty08 Hybrid (H-mode)
-  !! <LI> (48)  NSTX gyro-Bohm (Buxton) (H-mode; Spherical tokamak)
-  !! <LI> (49)  Use input tauee_in </UL>
+  !! labels_confinement_scalings(n_confinement_scalings) : labels describing energy confinement scaling laws
+  character*34, parameter, dimension(n_confinement_scalings) :: labels_confinement_scalings = (/  &
+    'User input electron confinement   ', &
+    'Neo-Alcator                (Ohmic)', &
+    'Mirnov                         (H)', &
+    'Merezkhin-Muhkovatov    (Ohmic)(L)', &
+    'Shimomura                      (H)', &
+    'Kaye-Goldston                  (L)', &
+    'ITER 89-P                      (L)', &
+    'ITER 89-O                      (L)', &
+    'Rebut-Lallia                   (L)', &
+    'Goldston                       (L)', &
+    'T10                            (L)', &
+    'JAERI / Odajima-Shimomura      (L)', &
+    'Kaye-Big Complex               (L)', &
+    'ITER H90-P                     (H)', &
+    'ITER 89-P & 89-O min           (L)', &
+    'Riedel                         (L)', &
+    'Christiansen                   (L)', &
+    'Lackner-Gottardi               (L)', &
+    'Neo-Kaye                       (L)', &
+    'Riedel                         (H)', &
+    'ITER H90-P amended             (H)', &
+    'LHD                        (Stell)', &
+    'Gyro-reduced Bohm          (Stell)', &
+    'Lackner-Gottardi           (Stell)', &
+    'ITER-93H  ELM-free             (H)', &
+    'TITAN RFP OBSOLETE                ', &
+    'ITER H-97P ELM-free            (H)', &
+    'ITER H-97P ELMy                (H)', &
+    'ITER-96P (ITER-97L)            (L)', &
+    'Valovic modified ELMy          (H)', &
+    'Kaye 98 modified               (L)', &
+    'ITERH-PB98P(y)                 (H)', &
+    'IPB98(y)                       (H)', &
+    'IPB98(y,1)                     (H)', &
+    'IPB98(y,2)                     (H)', &
+    'IPB98(y,3)                     (H)', &
+    'IPB98(y,4)                     (H)', &
+    'ISS95                      (Stell)', &
+    'ISS04                      (Stell)', &
+    'DS03 beta-independent          (H)', &
+    'Murari "Non-power law"         (H)', &
+    'Petty 2008                 (ST)(H)', &
+    'Lang high density              (H)', &
+    'Hubbard 2017 - nominal         (I)', &
+    'Hubbard 2017 - lower           (I)', &
+    'Hubbard 2017 - upper           (I)', &
+    'Menard NSTX                (ST)(H)', &
+    'Menard NSTX-Petty08 hybrid (ST)(H)', &
+    'Buxton NSTX gyro-Bohm      (ST)(H)', &
+    'ITPA20                         (H)', &
+    'ITPA20-IL                      (H)' /)
 
   integer :: i_plasma_wall_gap
   !! Switch for plasma-first wall clearances at the mid-plane:
@@ -578,11 +527,9 @@ module physics_variables
   real(dp) :: kappa95
   !! plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)
 
-  real(dp) :: kappaa
-  !! plasma elongation calculated as a_plasma_poloidal/(pi.a^2)
 
-  real(dp) :: kappaa_IPB
-  !! Volume measure of plasma elongation
+  real(dp) :: kappa_ipb
+  !! Separatrix elongation calculated for IPB scalings
 
   real(dp) :: ne0
   !! central electron density (/m3)
@@ -707,7 +654,7 @@ module physics_variables
   real(dp) :: pden_plasma_ohmic_mw
   !! ohmic heating power per volume (MW/m3)
 
-  real(dp) :: powerht
+  real(dp) :: p_plasma_loss_mw
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
   real(dp) :: fusion_power
@@ -766,19 +713,19 @@ module physics_variables
   !! - =20 Martin 2008 aspect ratio corrected scaling: 95% upper bound
   !! - =21 Martin 2008 aspect ratio corrected scaling: 95% lower bound
 
-  real(dp) :: ptremw
+  real(dp) :: p_electron_transport_loss_mw
   !! electron transport power (MW)
 
-  real(dp) :: ptrepv
+  real(dp) :: pden_electron_transport_loss_mw
   !! electron transport power per volume (MW/m3)
 
-  real(dp) :: ptrimw
+  real(dp) :: p_ion_transport_loss_mw
   !! ion transport power (MW)
 
   real(dp) :: pscalingmw
   !! Total transport power from scaling law (MW)
 
-  real(dp) :: ptripv
+  real(dp) :: pden_ion_transport_loss_mw
   !! ion transport power per volume (MW/m3)
 
   real(dp) :: q
@@ -866,20 +813,23 @@ module physics_variables
   real(dp) :: f_sync_reflect
   !! synchrotron wall reflectivity factor
 
-  real(dp) :: tauee
+  real(dp) :: t_electron_energy_confinement
   !! electron energy confinement time (sec)
 
   real(dp) :: tauee_in
-  !! Input electron energy confinement time (sec) (`isc=48 only`)
+  !! Input electron energy confinement time (sec) (`i_confinement_time=48 only`)
 
-  real(dp) :: taueff
+  real(dp) :: t_energy_confinement
   !! global thermal energy confinement time (sec)
 
-  real(dp) :: tauei
+  real(dp) :: t_ion_energy_confinement
   !! ion energy confinement time (sec)
 
-  real(dp) :: taup
+  real(dp) :: t_alpha_confinement
   !! alpha particle confinement time (sec)
+
+  real(dp) :: f_alpha_energy_confinement
+  !! alpha particle to energy confinement time ratio
 
   real(dp) :: te
   !! volume averaged electron temperature (keV) (`iteration variable 4`)
@@ -998,7 +948,8 @@ module physics_variables
     nd_ions_total = 0.0D0
     dnla = 0.0D0
     nd_protons = 0.0D0
-    dntau = 0.0D0
+    ntau = 0.0D0
+    nTtau = 0.0D0
     nd_impurities = 0.0D0
     beta_poloidal_eps_max = 1.38D0
     eps = 0.34399724802D0
@@ -1035,7 +986,6 @@ module physics_variables
     idivrt = 2
     i_beta_fast_alpha = 1
     ignite = 0
-    iinvqd = 1
     ipedestal = 1
     i_pfirsch_schluter_current = 0
     neped = 4.0D19
@@ -1049,8 +999,8 @@ module physics_variables
     teped = 1.0D0
     tesep = 0.1D0
     iprofile = 1
-    iradloss = 1
-    isc = 34
+    i_rad_loss = 1
+    i_confinement_time = 34
     i_plasma_wall_gap = 1
     i_plasma_geometry = 0
     i_plasma_shape = 0
@@ -1060,8 +1010,8 @@ module physics_variables
     plasma_square = 0.0D0
     kappa = 1.792D0
     kappa95 = 1.6D0
-    kappaa = 0.0D0
-    kappaa_IPB = 0.d0
+
+    kappa_ipb = 0.d0
     ne0 = 0.0D0
     ni0 = 0.0D0
     m_s_limit = 0.3D0
@@ -1102,7 +1052,7 @@ module physics_variables
     neutron_power_density_plasma = 0.0D0
     p_plasma_ohmic_mw = 0.0D0
     pden_plasma_ohmic_mw = 0.0D0
-    powerht = 0.0D0
+    p_plasma_loss_mw = 0.0D0
     fusion_power = 0.0D0
     len_plasma_poloidal = 0.0D0
     p_plasma_rad_mw = 0.0D0
@@ -1114,11 +1064,11 @@ module physics_variables
     ilhthresh = 19
     plhthresh = 0.0D0
     pthrmw = 0.0D0
-    ptremw = 0.0D0
-    ptrepv = 0.0D0
-    ptrimw = 0.0D0
+    p_electron_transport_loss_mw = 0.0D0
+    pden_electron_transport_loss_mw = 0.0D0
+    p_ion_transport_loss_mw = 0.0D0
     pscalingmw = 0.0D0
-    ptripv = 0.0D0
+    pden_ion_transport_loss_mw = 0.0D0
     q = 3.0D0
     q0 = 1.0D0
     q95 = 0.0D0
@@ -1146,11 +1096,12 @@ module physics_variables
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
     f_sync_reflect = 0.6D0
-    tauee = 0.0D0
+    t_electron_energy_confinement = 0.0D0
     tauee_in = 0.0D0
-    taueff = 0.0D0
-    tauei = 0.0D0
-    taup = 0.0D0
+    t_energy_confinement = 0.0D0
+    t_ion_energy_confinement = 0.0D0
+    t_alpha_confinement = 0.0D0
+    f_alpha_energy_confinement = 0.0D0
     te = 12.9D0
     te0 = 0.0D0
     ten = 0.0D0

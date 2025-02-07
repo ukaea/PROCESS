@@ -162,7 +162,7 @@ module numerics
   !!  <LI> (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )
   !!  <LI> (60) Central solenoid temperature margin lower limit (SCTF) (itv 106)
   !!  <LI> (61) Minimum availability value (itv 107)
-  !!  <LI> (62) taup/taueff the ratio of particle to energy confinement times (itv 110)
+  !!  <LI> (62) f_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
   !!  <LI> (63) The number of ITER-like vacuum pumps niterpump < tfno (itv 111)
   !!  <LI> (64) Zeff less than or equal to zeffmax (itv 112)
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
@@ -311,7 +311,7 @@ module numerics
   !! <LI> (107) favail (f-value for equation 61)
   !! <LI> (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
   !! <LI> (109) f_nd_alpha_electron: thermal alpha density / electron density
-  !! <LI> (110) ftaulimit: Lower limit on taup/taueff the ratio of alpha
+  !! <LI> (110) falpha_energy_confinement: Lower limit on f_alpha_energy_confinement the ratio of alpha
   !! <LI> (111) fniterpump: f-value for constraint that number
   !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
@@ -516,7 +516,7 @@ contains
       'NB shine-through frac upper limit', &
       'CS temperature margin lower limit', &
       'Minimum availability value       ', &
-      'taup/taueff                      ', &
+      'f_alpha_energy_confinement       ', &
       'number of ITER-like vacuum pumps ', &
       'Zeff limit                       ', &
       'Dump time set by VV stress       ', &

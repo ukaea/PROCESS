@@ -2442,7 +2442,7 @@ def plot_physics_info(axis, mfile_data, scan):
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
         (nd_impurities, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
-        ("taueff", r"$\tau_e$", "s"),
+        ("t_energy_confinement", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
         ("tauelaw", "Scaling law", ""),
@@ -2771,7 +2771,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("bootstrap_current_fraction", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
-            ("powerht", "Plasma heating used for H factor", "MW"),
+            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
                 "effcd",
                 "Current drive efficiency",
@@ -2803,7 +2803,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
             ("beam_energy", "NB energy", "keV"),
-            ("powerht", "Plasma heating used for H factor", "MW"),
+            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
                 pdivnr,
@@ -2827,7 +2827,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("bootstrap_current_fraction", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
-            ("powerht", "Plasma heating used for H factor", "MW"),
+            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
                 "Normalised current drive efficiency",
@@ -2856,7 +2856,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("bootstrap_current_fraction", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
-            ("powerht", "Plasma heating used for H factor", "MW"),
+            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
                 "Normalised current drive efficiency",
@@ -2885,7 +2885,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("bootstrap_current_fraction", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
-            ("powerht", "Plasma heating used for H factor", "MW"),
+            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
                 "Normalised current drive efficiency",

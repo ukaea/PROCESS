@@ -151,11 +151,11 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on taup/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-ixc = 110 * ftaulimit
-taulimit = 5.0
+ixc = 110 * falpha_energy_confinement
+f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -386,8 +386,6 @@ i_density_limit = 7
 * Switch for fast alpha pressure calculation
 i_beta_fast_alpha = 1
 
-* Switch for inverse quadrature in l-mode scaling laws 5 and 9
-iinvqd = 1
 
 * Switch for pedestal profiles
 ipedestal = 1
@@ -420,7 +418,7 @@ tesep = 0.1
 iprofile = 1
 
 * Switch for energy confinement time scaling law
-isc = 34
+i_confinement_time = 34
 
 * Safety factor on axis
 q0 = 1.0

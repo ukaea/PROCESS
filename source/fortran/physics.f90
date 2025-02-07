@@ -21,7 +21,7 @@ module physics_module
   real(dp) :: rad_fraction_LCFS
   real(dp) :: e_plasma_beta  ! [J]
   real(dp) :: total_loss_power        ! [W]
-  real(dp) :: total_energy_conf_time  ! [s]
+  real(dp) :: t_energy_confinement_beta  ! [s]
   real(dp) :: ptarmw, lambdaio, drsep
   real(dp) :: fio, fLI, fLO, fUI, fUO, pLImw, pLOmw, pUImw, pUOmw
   real(dp) :: rho_star
@@ -46,7 +46,7 @@ module physics_module
     rad_fraction_LCFS = 0.0D0
     e_plasma_beta = 0.0D0
     total_loss_power = 0.0D0
-    total_energy_conf_time = 0.0D0
+    t_energy_confinement_beta = 0.0D0
     ptarmw = 0.0D0
     lambdaio = 0.0D0
     drsep = 0.0D0

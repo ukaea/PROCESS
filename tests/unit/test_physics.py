@@ -1838,6 +1838,8 @@ class PhyauxParam(NamedTuple):
 
     dene: Any = None
 
+    te: Any = None
+
     nd_fuel_ions: Any = None
 
     nd_alphas: Any = None
@@ -1850,13 +1852,15 @@ class PhyauxParam(NamedTuple):
 
     sbar: Any = None
 
-    taueff: Any = None
+    t_energy_confinement: Any = None
 
     vol_plasma: Any = None
 
     expected_burnup: Any = None
 
-    expected_dntau: Any = None
+    expected_ntau: Any = None
+
+    expected_nTtau: Any = None
 
     expected_figmer: Any = None
 
@@ -1866,7 +1870,7 @@ class PhyauxParam(NamedTuple):
 
     expected_rndfuel: Any = None
 
-    expected_taup: Any = None
+    expected_t_alpha_confinement: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1877,42 +1881,46 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
+            te=12.569,
             nd_fuel_ions=5.8589175702454272e19,
             nd_alphas=7.5e18,
             fusion_rate_density_total=1.9852091609123786e17,
             alpha_rate_density_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
-            taueff=3.401323521525641,
+            t_energy_confinement=3.401323521525641,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20383432558954095,
-            expected_dntau=2.5509926411442307e20,
+            expected_ntau=2.5509926411442307e20,
+            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
             expected_qfuel=1.8389516394951276e21,
             expected_rndfuel=3.7484146722826997e20,
-            expected_taup=37.993985551650177,
+            expected_t_alpha_confinement=37.993985551650177,
         ),
         PhyauxParam(
             tauratio=1,
             burnup_in=0,
             aspect=3,
             dene=7.5e19,
+            te=12.569,
             nd_fuel_ions=5.8576156204039725e19,
             nd_alphas=7.5e18,
             fusion_rate_density_total=1.9843269653375773e17,
             alpha_rate_density_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
-            taueff=3.402116961408892,
+            t_energy_confinement=3.402116961408892,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20387039462081086,
-            expected_dntau=2.5515877210566689e20,
+            expected_ntau=2.5515877210566689e20,
+            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
             expected_qfuel=1.8378092331723546e21,
             expected_rndfuel=3.7467489360461772e20,
-            expected_taup=38.010876984618747,
+            expected_t_alpha_confinement=38.010876984618747,
         ),
     ),
 )
@@ -1933,22 +1941,25 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, dntau, figmer, fusrat, qfuel, rndfuel, taup = physics.phyaux(
-        aspect=phyauxparam.aspect,
-        dene=phyauxparam.dene,
-        nd_fuel_ions=phyauxparam.nd_fuel_ions,
-        nd_alphas=phyauxparam.nd_alphas,
-        fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
-        alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
-        plasma_current=phyauxparam.plasma_current,
-        sbar=phyauxparam.sbar,
-        taueff=phyauxparam.taueff,
-        vol_plasma=phyauxparam.vol_plasma,
+    burnup, ntau, nTtau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
+        physics.phyaux(
+            aspect=phyauxparam.aspect,
+            dene=phyauxparam.dene,
+            te=phyauxparam.te,
+            nd_fuel_ions=phyauxparam.nd_fuel_ions,
+            nd_alphas=phyauxparam.nd_alphas,
+            fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
+            alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
+            plasma_current=phyauxparam.plasma_current,
+            sbar=phyauxparam.sbar,
+            t_energy_confinement=phyauxparam.t_energy_confinement,
+            vol_plasma=phyauxparam.vol_plasma,
+        )
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
 
-    assert dntau == pytest.approx(phyauxparam.expected_dntau)
+    assert ntau == pytest.approx(phyauxparam.expected_ntau)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 
@@ -1958,7 +1969,9 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
 
-    assert taup == pytest.approx(phyauxparam.expected_taup)
+    assert t_alpha_confinement == pytest.approx(
+        phyauxparam.expected_t_alpha_confinement
+    )
 
 
 def test_rether():
@@ -2157,22 +2170,20 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     assert dlimit == pytest.approx(calculatedensitylimitparam.expected_dlimit)
 
 
-class PcondParam(NamedTuple):
-    iradloss: Any = None
+class ConfinementTimeParam(NamedTuple):
+    i_rad_loss: Any = None
 
     tauee_in: Any = None
 
     pden_plasma_rad_mw: Any = None
 
-    kappaa_ipb: Any = None
+    kappa_ipb: Any = None
 
     p_plasma_ohmic_mw: Any = None
 
     f_alpha_plasma: Any = None
 
-    iinvqd: Any = None
-
-    isc: Any = None
+    i_confinement_time: Any = None
 
     ignite: Any = None
 
@@ -2226,35 +2237,34 @@ class PcondParam(NamedTuple):
 
     zeff: Any = None
 
-    expected_kappaa_ipb: Any = None
+    expected_kappa_ipb: Any = None
 
     expected_kappaa: Any = None
 
-    expected_powerht: Any = None
+    expected_p_plasma_loss_mw: Any = None
 
-    expected_ptrepv: Any = None
+    expected_pden_electron_transport_loss_mw: Any = None
 
-    expected_ptripv: Any = None
+    expected_pden_ion_transport_loss_mw: Any = None
 
     expected_tauee: Any = None
 
-    expected_taueff: Any = None
+    expected_t_energy_confinement: Any = None
 
-    expected_tauei: Any = None
+    expected_t_ion_energy_confinement: Any = None
 
 
 @pytest.mark.parametrize(
-    "pcondparam",
+    "confinementtimeparam",
     (
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=32,
+            i_confinement_time=32,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2281,24 +2291,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.012570664670798823,
-            expected_ptripv=0.011156836223364355,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.012572050692511346,
+            expected_pden_ion_transport_loss_mw=0.011158066358576262,
             expected_tauee=21.17616899712392,
-            expected_tauei=21.17616899712392,
-            expected_taueff=21.17616899712392,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=21.17616899712392,
+            expected_t_energy_confinement=21.17616899712392,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=33,
+            i_confinement_time=33,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2325,24 +2333,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081458458765440875,
-            expected_ptripv=0.072296788376262536,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08146744024696746,
+            expected_pden_ion_transport_loss_mw=0.07230475970642361,
             expected_tauee=3.2679051814806361,
-            expected_tauei=3.2679051814806361,
-            expected_taueff=3.2679051814806366,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2679051814806361,
+            expected_t_energy_confinement=3.2679051814806366,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=34,
+            i_confinement_time=34,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2369,24 +2375,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081327750398391824,
-            expected_ptripv=0.072180780839479111,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.0813367174682195,
+            expected_pden_ion_transport_loss_mw=0.07218873937883169,
             expected_tauee=3.2731572946627923,
-            expected_tauei=3.2731572946627923,
-            expected_taueff=3.2731572946627923,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2731572946627923,
+            expected_t_energy_confinement=3.2731572946627923,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=35,
+            i_confinement_time=35,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2413,24 +2417,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.12077931279593926,
-            expected_ptripv=0.10719520783694242,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.12079262973297819,
+            expected_pden_ion_transport_loss_mw=0.10720702701193681,
             expected_tauee=2.2040075681235445,
-            expected_tauei=2.2040075681235445,
-            expected_taueff=2.2040075681235445,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=2.2040075681235445,
+            expected_t_energy_confinement=2.2040075681235445,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=36,
+            i_confinement_time=36,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2457,24 +2459,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081309182573405442,
-            expected_ptripv=0.072164301346324039,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08131814759597392,
+            expected_pden_ion_transport_loss_mw=0.07217225806867361,
             expected_tauee=3.2739047552801135,
-            expected_tauei=3.2739047552801135,
-            expected_taueff=3.2739047552801135,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2739047552801135,
+            expected_t_energy_confinement=3.2739047552801135,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=37,
+            i_confinement_time=37,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2501,24 +2501,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.08142612910014517,
-            expected_ptripv=0.072268094843318462,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08143510701705373,
+            expected_pden_ion_transport_loss_mw=0.07227606300977574,
             expected_tauee=3.269202679985145,
-            expected_tauei=3.269202679985145,
-            expected_taueff=3.2692026799851455,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.269202679985145,
+            expected_t_energy_confinement=3.2692026799851455,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=38,
+            i_confinement_time=38,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2545,24 +2543,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.072709146314778414,
-            expected_ptripv=0.064531515128155068,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.07271716311087716,
+            expected_pden_ion_transport_loss_mw=0.06453863027150285,
             expected_tauee=3.6611421391548524,
-            expected_tauei=3.6611421391548524,
-            expected_taueff=3.6611421391548529,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.6611421391548524,
+            expected_t_energy_confinement=3.6611421391548529,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=39,
+            i_confinement_time=39,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2589,24 +2585,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.078529089520063822,
-            expected_ptripv=0.069696886639614319,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.07853774801394538,
+            expected_pden_ion_transport_loss_mw=0.06970457130869961,
             expected_tauee=3.3898077909969717,
-            expected_tauei=3.3898077909969717,
-            expected_taueff=3.3898077909969717,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.3898077909969717,
+            expected_t_energy_confinement=3.3898077909969717,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=40,
+            i_confinement_time=40,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2633,24 +2627,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081359821043062386,
-            expected_ptripv=0.072209244483967094,
-            expected_tauee=3.2718670722507683,
-            expected_tauei=3.2718670722507683,
-            expected_taueff=3.2718670722507692,
-            expected_powerht=290.18368660937881,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.0840021318362596,
+            expected_pden_ion_transport_loss_mw=0.07455437336481374,
+            expected_tauee=3.169298972363837,
+            expected_t_ion_energy_confinement=3.169298972363837,
+            expected_t_energy_confinement=3.169298972363837,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=41,
+            i_confinement_time=41,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2677,24 +2669,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081513009259203975,
-            expected_ptripv=0.072345203550858064,
-            expected_tauee=3.2657182196344126,
-            expected_tauei=3.2657182196344126,
-            expected_taueff=3.2657182196344126,
-            expected_powerht=290.18368660937881,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08311313602000579,
+            expected_pden_ion_transport_loss_mw=0.07376536331761714,
+            expected_tauee=3.203198469625145,
+            expected_t_ion_energy_confinement=3.203198469625145,
+            expected_t_energy_confinement=3.203198469625145,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=42,
+            i_confinement_time=42,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2721,24 +2711,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.073097992274882811,
-            expected_ptripv=0.064876627403966491,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.07310605194452542,
+            expected_pden_ion_transport_loss_mw=0.0648837805988509,
             expected_tauee=3.6416666339340682,
-            expected_tauei=3.6416666339340682,
-            expected_taueff=3.6416666339340686,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.6416666339340682,
+            expected_t_energy_confinement=3.6416666339340686,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=43,
+            i_confinement_time=43,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2765,24 +2753,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081423406537449478,
-            expected_ptripv=0.072265678488503571,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08143238415417252,
+            expected_pden_ion_transport_loss_mw=0.07227364638853734,
             expected_tauee=3.2693119926464509,
-            expected_tauei=3.2693119926464509,
-            expected_taueff=3.2693119926464513,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2693119926464509,
+            expected_t_energy_confinement=3.2693119926464513,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=44,
+            i_confinement_time=44,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2809,24 +2795,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081419881443596701,
-            expected_ptripv=0.072262549863580605,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08142885867164847,
+            expected_pden_ion_transport_loss_mw=0.07227051741865713,
             expected_tauee=3.2694535383156871,
-            expected_tauei=3.2694535383156871,
-            expected_taueff=3.2694535383156871,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2694535383156871,
+            expected_t_energy_confinement=3.2694535383156871,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=45,
+            i_confinement_time=45,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2853,24 +2837,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.081421142032658531,
-            expected_ptripv=0.072263668673609824,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.08143011939694184,
+            expected_pden_ion_transport_loss_mw=0.07227163634959588,
             expected_tauee=3.2694029195542003,
-            expected_tauei=3.2694029195542003,
-            expected_taueff=3.2694029195542003,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.2694029195542003,
+            expected_t_energy_confinement=3.2694029195542003,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=46,
+            i_confinement_time=46,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2897,24 +2879,22 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.079599509500323962,
-            expected_ptripv=0.070646915991500636,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.07960828601702878,
+            expected_pden_ion_transport_loss_mw=0.07065470540932789,
             expected_tauee=3.3442231132583498,
-            expected_tauei=3.3442231132583498,
-            expected_taueff=3.3442231132583502,
-            expected_powerht=290.18368660937881,
+            expected_t_ion_energy_confinement=3.3442231132583498,
+            expected_t_energy_confinement=3.3442231132583502,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
-        PcondParam(
-            iradloss=1,
+        ConfinementTimeParam(
+            i_rad_loss=1,
             tauee_in=0,
             pden_plasma_rad_mw=0.11824275660100725,
-            kappaa_ipb=1.68145080681586,
+            kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_alpha_plasma=0.94999999999999996,
-            iinvqd=1,
-            isc=47,
+            i_confinement_time=47,
             ignite=0,
             m_fuel_amu=2.5,
             alpha_power_total=319.03020327154269,
@@ -2941,89 +2921,108 @@ class PcondParam(NamedTuple):
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
-            expected_kappaa_ipb=1.68145080681586,
-            expected_kappaa=1.7187938085542791,
-            expected_ptrepv=0.070108167457759038,
-            expected_ptripv=0.062223069561580698,
-            expected_tauee=3.7969687288631331,
-            expected_tauei=3.7969687288631331,
-            expected_taueff=3.7969687288631335,
-            expected_powerht=290.18368660937881,
+            expected_kappa_ipb=1.68145080681586,
+            expected_pden_electron_transport_loss_mw=0.07148441348179191,
+            expected_pden_ion_transport_loss_mw=0.06344452856118785,
+            expected_tauee=3.7242785823911264,
+            expected_t_ion_energy_confinement=3.7242785823911264,
+            expected_t_energy_confinement=3.7242785823911264,
+            expected_p_plasma_loss_mw=290.18368660937881,
         ),
     ),
 )
-def test_pcond(pcondparam, monkeypatch, physics):
+def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for pcond.
+    Automatically generated Regression Unit Test for calculate_confinement_time().
 
     This test was generated using data from tests/regression/scenarios/large-tokamak/IN.DAT.
 
-    :param pcondparam: the data used to mock and assert in this test.
-    :type pcondparam: pcondparam
+    :param confinementtimeparam: the data used to mock and assert in this test.
+    :type confinementtimeparam: confinementtimeparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "iradloss", pcondparam.iradloss)
+    monkeypatch.setattr(
+        physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss
+    )
 
-    monkeypatch.setattr(physics_variables, "tauee_in", pcondparam.tauee_in)
+    monkeypatch.setattr(physics_variables, "tauee_in", confinementtimeparam.tauee_in)
 
     monkeypatch.setattr(
-        physics_variables, "pden_plasma_rad_mw", pcondparam.pden_plasma_rad_mw
+        physics_variables, "pden_plasma_rad_mw", confinementtimeparam.pden_plasma_rad_mw
     )
 
-    monkeypatch.setattr(physics_variables, "kappaa_ipb", pcondparam.kappaa_ipb)
+    monkeypatch.setattr(physics_variables, "kappa_ipb", confinementtimeparam.kappa_ipb)
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_ohmic_mw", pcondparam.p_plasma_ohmic_mw
+        physics_variables, "p_plasma_ohmic_mw", confinementtimeparam.p_plasma_ohmic_mw
     )
 
-    monkeypatch.setattr(physics_variables, "f_alpha_plasma", pcondparam.f_alpha_plasma)
-
-    kappaa, ptrepv, ptripv, tauee, tauei, taueff, powerht = physics.pcond(
-        iinvqd=pcondparam.iinvqd,
-        isc=pcondparam.isc,
-        ignite=pcondparam.ignite,
-        m_fuel_amu=pcondparam.m_fuel_amu,
-        alpha_power_total=pcondparam.alpha_power_total,
-        aspect=pcondparam.aspect,
-        bt=pcondparam.bt,
-        dene=pcondparam.dene,
-        nd_ions_total=pcondparam.nd_ions_total,
-        dnla=pcondparam.dnla,
-        eps=pcondparam.eps,
-        hfact=pcondparam.hfact,
-        kappa=pcondparam.kappa,
-        kappa95=pcondparam.kappa95,
-        non_alpha_charged_power=pcondparam.non_alpha_charged_power,
-        pinjmw=pcondparam.pinjmw,
-        plasma_current=pcondparam.plasma_current,
-        pcoreradpv=pcondparam.pcoreradpv,
-        q=pcondparam.q,
-        qstar=pcondparam.qstar,
-        rmajor=pcondparam.rmajor,
-        rminor=pcondparam.rminor,
-        _te=pcondparam.te,
-        ten=pcondparam.ten,
-        tin=pcondparam.tin,
-        vol_plasma=pcondparam.vol_plasma,
-        a_plasma_poloidal=pcondparam.a_plasma_poloidal,
-        zeff=pcondparam.zeff,
+    monkeypatch.setattr(
+        physics_variables, "f_alpha_plasma", confinementtimeparam.f_alpha_plasma
     )
 
-    assert physics_variables.kappaa_ipb == pytest.approx(pcondparam.expected_kappaa_ipb)
+    (
+        pden_electron_transport_loss_mw,
+        pden_ion_transport_loss_mw,
+        t_electron_energy_confinement,
+        t_ion_energy_confinement,
+        t_energy_confinement,
+        p_plasma_loss_mw,
+    ) = physics.calculate_confinement_time(
+        i_confinement_time=confinementtimeparam.i_confinement_time,
+        ignite=confinementtimeparam.ignite,
+        m_fuel_amu=confinementtimeparam.m_fuel_amu,
+        alpha_power_total=confinementtimeparam.alpha_power_total,
+        aspect=confinementtimeparam.aspect,
+        bt=confinementtimeparam.bt,
+        dene=confinementtimeparam.dene,
+        nd_ions_total=confinementtimeparam.nd_ions_total,
+        dnla=confinementtimeparam.dnla,
+        eps=confinementtimeparam.eps,
+        hfact=confinementtimeparam.hfact,
+        kappa=confinementtimeparam.kappa,
+        kappa95=confinementtimeparam.kappa95,
+        non_alpha_charged_power=confinementtimeparam.non_alpha_charged_power,
+        pinjmw=confinementtimeparam.pinjmw,
+        plasma_current=confinementtimeparam.plasma_current,
+        pcoreradpv=confinementtimeparam.pcoreradpv,
+        q=confinementtimeparam.q,
+        qstar=confinementtimeparam.qstar,
+        rmajor=confinementtimeparam.rmajor,
+        rminor=confinementtimeparam.rminor,
+        ten=confinementtimeparam.ten,
+        tin=confinementtimeparam.tin,
+        vol_plasma=confinementtimeparam.vol_plasma,
+        zeff=confinementtimeparam.zeff,
+    )
 
-    assert kappaa == pytest.approx(pcondparam.expected_kappaa)
+    assert physics_variables.kappa_ipb == pytest.approx(
+        confinementtimeparam.expected_kappa_ipb
+    )
 
-    assert powerht == pytest.approx(pcondparam.expected_powerht)
+    assert p_plasma_loss_mw == pytest.approx(
+        confinementtimeparam.expected_p_plasma_loss_mw
+    )
 
-    assert ptrepv == pytest.approx(pcondparam.expected_ptrepv)
+    assert pden_electron_transport_loss_mw == pytest.approx(
+        confinementtimeparam.expected_pden_electron_transport_loss_mw
+    )
 
-    assert ptripv == pytest.approx(pcondparam.expected_ptripv)
+    assert pden_ion_transport_loss_mw == pytest.approx(
+        confinementtimeparam.expected_pden_ion_transport_loss_mw
+    )
 
-    assert tauee == pytest.approx(pcondparam.expected_tauee)
+    assert t_electron_energy_confinement == pytest.approx(
+        confinementtimeparam.expected_tauee
+    )
 
-    assert taueff == pytest.approx(pcondparam.expected_taueff)
+    assert t_energy_confinement == pytest.approx(
+        confinementtimeparam.expected_t_energy_confinement
+    )
 
-    assert tauei == pytest.approx(pcondparam.expected_tauei)
+    assert t_ion_energy_confinement == pytest.approx(
+        confinementtimeparam.expected_t_ion_energy_confinement
+    )

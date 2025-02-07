@@ -1554,10 +1554,10 @@ class Power:
         po.ocmmnt(self.outfile, "-------------------------------")
         po.ocmmnt(self.outfile, "Only energy deposited in the plasma is included here.")
 
-        if physics_variables.iradloss == 0:
+        if physics_variables.i_rad_loss == 0:
             po.ocmmnt(
                 self.outfile,
-                "Total power loss is scaling power plus radiation (physics_variables.iradloss = 0)",
+                "Total power loss is scaling power plus radiation (physics_variables.i_rad_loss = 0)",
             )
             po.ovarrf(
                 self.outfile,
@@ -1575,10 +1575,10 @@ class Power:
             )
             total = physics_variables.pscalingmw + physics_variables.p_plasma_rad_mw
             po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
-        elif physics_variables.iradloss == 1:
+        elif physics_variables.i_rad_loss == 1:
             po.ocmmnt(
                 self.outfile,
-                "Total power loss is scaling power plus core radiation only (physics_variables.iradloss = 1)",
+                "Total power loss is scaling power plus core radiation only (physics_variables.i_rad_loss = 1)",
             )
             po.ovarrf(
                 self.outfile,
@@ -1604,10 +1604,10 @@ class Power:
             total = (
                 physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw
             )
-        elif physics_variables.iradloss == 2:
+        elif physics_variables.i_rad_loss == 2:
             po.ocmmnt(
                 self.outfile,
-                "Total power loss is scaling power only (physics_variables.iradloss = 2).",
+                "Total power loss is scaling power only (physics_variables.i_rad_loss = 2).",
             )
             po.ocmmnt(self.outfile, "This is not recommended for power plant models.")
             po.ovarrf(
@@ -1623,11 +1623,11 @@ class Power:
             total = physics_variables.pscalingmw
         else:
             logger.error(
-                f"{'The value of physics_variables.iradloss appears to be invalid.'}"
+                f"{'The value of physics_variables.i_rad_loss appears to be invalid.'}"
             )
             po.ocmmnt(
                 self.outfile,
-                "ERROR: The value of physics_variables.iradloss appears to be invalid.",
+                "ERROR: The value of physics_variables.i_rad_loss appears to be invalid.",
             )
 
         po.oblnkl(self.outfile)

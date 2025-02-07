@@ -596,7 +596,7 @@ energy confinement times \(\tau_E\) are equal.
 
 Many energy confinement time scaling laws are present within PROCESS,
 for tokamaks, RFPs or stellarators. These are calculated in routine
-\texttt{pcond}. The value of \texttt{isc} determines which of the
+\texttt{pcond}. The value of \texttt{i_confinement_time} determines which of the
 scalings is used in the plasma energy balance calculation. The table
 below summarises the available scaling laws. The most commonly used is
 the so-called IPB98(y,2) scaling.
@@ -604,7 +604,7 @@ the so-called IPB98(y,2) scaling.
 \begin{longtable}[]{@{}cll@{}}
 \toprule
 \begin{minipage}[b]{0.05\columnwidth}\centering\strut
-\texttt{isc}\strut
+\texttt{i_confinement_time}\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
 scaling law\strut
 \end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedright\strut
@@ -967,7 +967,7 @@ J. Menard 2019, Phil. Trans. R. Soc. A 377:201704401\strut
 \begin{minipage}[t]{0.05\columnwidth}\centering\strut
 48\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
-Use input \texttt{tauee\_in}\strut
+Use input \texttt{t_electron_energy_confinement\_in}\strut
 \end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedright\strut
 \strut
 \end{minipage}\tabularnewline
@@ -987,21 +987,21 @@ additional radiation causes an almost equal drop in power transported by
 ions and electrons, leaving the confinement nearly unchanged.
 
 To allow for these uncertainties, three options are available, using the
-switch \texttt{iradloss}. In each case, the particle transport loss
+switch \texttt{i_rad_loss}. In each case, the particle transport loss
 power \(P_{\mbox{loss}}\), referred to in the code as \texttt{pscaling},
 is derived directly from the energy confinement scaling law.
 
-\texttt{iradloss\ =\ 0} -- Total power lost is scaling power plus
+\texttt{i_rad_loss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
 \texttt{pscaling\ +\ pden_plasma_rad_mw\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
-\texttt{iradloss\ =\ 1} -- Total power lost is scaling power plus core
+\texttt{i_rad_loss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
 \texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
-\texttt{iradloss\ =\ 2} -- Total power lost is scaling power only, with
+\texttt{i_rad_loss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power
 plant models.
 
@@ -1376,9 +1376,9 @@ too high.
 Laws}{Inverse Quadrature in \textbackslash{}tau\_E Scaling Laws}}\label{inverse-quadrature-in-tau_e-scaling-laws}
 
 Switch \texttt{iinvqd} determines whether the energy confinement time
-scaling laws due to Kaye-Goldston (\texttt{isc\ =\ 5}) and Goldston
-(\texttt{isc\ =\ 9}) should include an inverse quadrature scaling with
-the Neo-Alcator result (\texttt{isc\ =\ 1}). A value
+scaling laws due to Kaye-Goldston (\texttt{i_confinement_time\ =\ 5}) and Goldston
+(\texttt{i_confinement_time\ =\ 9}) should include an inverse quadrature scaling with
+the Neo-Alcator result (\texttt{i_confinement_time\ =\ 1}). A value
 \texttt{iinvqd\ =\ 1}includes this scaling.
 
 \subsubsection{Plasma / First Wall Gap}\label{plasma-first-wall-gap}

@@ -77,7 +77,7 @@ boundl(169) = 4.
 boundu(169) = 35.
 *12
 ixc = 109 * itv_f_nd_alpha_electron
-ftaulimit = 1.
+falpha_energy_confinement = 1.
 boundl(109) = 0.0001
 boundu(109) = 0.4
 
@@ -93,7 +93,7 @@ f_alpha_plasma = 0.95    * fast particle fraction
 f_nd_alpha_electron = 0.144    * thermal alpha density / electron density
 fradpwr = 1      * needed to control radiation power
 epsfcn = 0.0001  * convergence important to start with 10^-4, 10^-3 is NOT sufficient to match the constraint resonably well!!
-taulimit = 6     * tau_He/tau_E
+f_alpha_energy_confinement_min = 6     * tau_He/tau_E
 fhldiv = 0.8     * f value for divertor heat load
 fradwall = 1.0   * f value for radiation wall load
 te0_ecrh_achievable = 15.6203 * keV
@@ -126,10 +126,10 @@ rmajor = 22.16 *Plasma major radius (m)
 aspect = 10.1 *Aspect ratio
 
 ignite = 1     *Switch for ignition assumption (1: Ignited)
-iinvqd = 1     *Switch for inverse quadrature in L-mode scaling laws 5 and 9 (1: Inverse quadrature with Neo-Alcator tau-E used)
+
 ipedestal = 0  *Switch for pedestal profiles (0: Parabolic Profiles)
-iradloss = 1   *Switch for radiation loss term usage in power balance (1: Total power lost is scaling power plus core radiation only)
-isc = 38       *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
+i_rad_loss = 1   *Switch for radiation loss term usage in power balance (1: Total power lost is scaling power plus core radiation only)
+i_confinement_time = 38       *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
 kappa = 1.001  *Plasma separatrix elongation
 f_sync_reflect = 0.6    *Synchrotron wall reflectivity factor
 te = 6.019 *Volume averaged electron temperature (keV)

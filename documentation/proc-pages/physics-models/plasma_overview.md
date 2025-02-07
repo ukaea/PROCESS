@@ -16,23 +16,5 @@ domain.
 More detail is given in [^1], but this webpage is more up to date.
 
 
-## Other Plasma Physics Options
-
-### Neo-Classical Correction Effects
-
-Neo-classical trapped particle effects are 
-included in the calculation of the plasma resistance and ohmic heating power in 
-subroutine `plasma_ohmic_heating()`, which is called by routine `physics`.  The scaling used is only valid for aspect 
-ratios between 2.5 and 4, and it is possible for the plasma resistance to be 
-incorrect or even negative if the aspect ratio is outside this range.  An error is reported if the 
-calculated plasma resistance is negative.
-
-### Inverse Quadrature in $\tau_E$ Scaling Laws
-
-Switch `iinvqd` determines whether the energy confinement time scaling
-laws due to Kaye-Goldston (`isc = 5`) and Goldston (`isc = 9`) should include 
-an inverse quadrature scaling with the Neo-Alcator result (`isc = 1`). A value 
-`iinvqd = 1`includes this scaling.
-
 [^1]: M. Kovari, R. Kemp, H. Lux, P. Knight, J. Morris, D.J. Ward, '“PROCESS”: A systems code for fusion power plants—Part 1: Physics' Fusion Engineering and Design 89 (2014) 3054–3069
 

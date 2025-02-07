@@ -55,7 +55,7 @@ contains
     use current_drive_variables, only: irfcd
     use pfcoil_variables, only: ohhghf
     use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q, rmajor, &
-      triang, hfac, tauscl
+      triang, hfac, labels_confinement_scalings
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
     use tfcoil_variables, only: n_tf

@@ -213,14 +213,13 @@ class Stellarator:
 
         for iisc, i in enumerate(istlaw):
             (
-                physics_variables.kappaa,
-                physics_variables.ptrepv,
-                physics_variables.ptripv,
-                physics_variables.tauee,
-                physics_variables.tauei,
-                physics_variables.taueff,
-                physics_variables.powerht,
-            ) = self.physics.pcond(
+                physics_variables.pden_electron_transport_loss_mw,
+                physics_variables.pden_ion_transport_loss_mw,
+                physics_variables.t_electron_energy_confinement,
+                physics_variables.t_ion_energy_confinement,
+                physics_variables.t_energy_confinement,
+                physics_variables.p_plasma_loss_mw,
+            ) = self.physics.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.alpha_power_total,
                 physics_variables.aspect,
@@ -230,8 +229,7 @@ class Stellarator:
                 physics_variables.dnla,
                 physics_variables.eps,
                 2.0,
-                physics_variables.iinvqd,
-                physics_variables.isc,
+                physics_variables.i_confinement_time,
                 physics_variables.ignite,
                 physics_variables.kappa,
                 physics_variables.kappa95,
@@ -251,7 +249,7 @@ class Stellarator:
                 physics_variables.zeff,
             )
 
-            physics_variables.hfac[iisc] = self.physics.fhfac(i)
+            physics_variables.hfac[iisc] = self.physics.find_other_h_factors(i)
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
@@ -354,7 +352,7 @@ class Stellarator:
 
         physics_variables.dnelimt = self.stdlim(
             physics_variables.bt,
-            physics_variables.powerht,
+            physics_variables.p_plasma_loss_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
         )
@@ -3551,7 +3549,7 @@ class Stellarator:
         )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
         powerht_out = max(
-            copy(physics_variables.powerht), 0.00001e0
+            copy(physics_variables.p_plasma_loss_mw), 0.00001e0
         )  # the radiation module sometimes returns negative heating power
         pscalingmw_out = copy(physics_variables.pscalingmw)
 
@@ -4454,14 +4452,13 @@ class Stellarator:
         #  N.B. stellarator_variables.iotabar replaces tokamak physics_variables.q95 in argument list
 
         (
-            physics_variables.kappaa,
-            physics_variables.ptrepv,
-            physics_variables.ptripv,
-            physics_variables.tauee,
-            physics_variables.tauei,
-            physics_variables.taueff,
-            physics_variables.powerht,
-        ) = self.physics.pcond(
+            physics_variables.pden_electron_transport_loss_mw,
+            physics_variables.pden_ion_transport_loss_mw,
+            physics_variables.t_electron_energy_confinement,
+            physics_variables.t_ion_energy_confinement,
+            physics_variables.t_energy_confinement,
+            physics_variables.p_plasma_loss_mw,
+        ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.alpha_power_total,
             physics_variables.aspect,
@@ -4471,8 +4468,7 @@ class Stellarator:
             physics_variables.dnla,
             physics_variables.eps,
             physics_variables.hfact,
-            physics_variables.iinvqd,
-            physics_variables.isc,
+            physics_variables.i_confinement_time,
             physics_variables.ignite,
             physics_variables.kappa,
             physics_variables.kappa95,
@@ -4492,15 +4488,17 @@ class Stellarator:
             physics_variables.zeff,
         )
 
-        physics_variables.ptremw = (
-            physics_variables.ptrepv * physics_variables.vol_plasma
+        physics_variables.p_electron_transport_loss_mw = (
+            physics_variables.pden_electron_transport_loss_mw
+            * physics_variables.vol_plasma
         )
-        physics_variables.ptrimw = (
-            physics_variables.ptripv * physics_variables.vol_plasma
+        physics_variables.p_ion_transport_loss_mw = (
+            physics_variables.pden_ion_transport_loss_mw * physics_variables.vol_plasma
         )
 
         physics_variables.pscalingmw = (
-            physics_variables.ptremw + physics_variables.ptrimw
+            physics_variables.p_electron_transport_loss_mw
+            + physics_variables.p_ion_transport_loss_mw
         )
 
         #  Calculate auxiliary physics related information
@@ -4509,12 +4507,12 @@ class Stellarator:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.dntau,
+            physics_variables.ntau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
-            physics_variables.taup,
+            physics_variables.t_alpha_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
@@ -4524,7 +4522,7 @@ class Stellarator:
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,
-            physics_variables.taueff,
+            physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
         )
 

@@ -74,7 +74,7 @@ ixc = 10 * "ISS04 Renormalization Factor" (can also be fixed)
 ixc = 50 * Coil current density, aka winding pack thickness (required!) 
 ixc = 59 * Winding Pack copper fraction
 ixc = 56 * Exponential Quench Dumping Time
-ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `taulimit`)
+ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_alpha_energy_confinement_min`)
 ixc = 169 * Achievable Temperature of the ECRH at the ignition point
 ```
 
@@ -142,13 +142,13 @@ The constraint equation `icc=91` together with `ixc = 169` enforces that the fou
 
 ### $\tau_E$ scaling laws
 
-Five confinement time scaling laws relevant to stellarators are present within `PROCESS`. The value of switch isc` determines which of these in the plasma energy balance calculation.
+Five confinement time scaling laws relevant to stellarators are present within `PROCESS`. The value of switch i_confinement_time` determines which of these in the plasma energy balance calculation.
 
-$\tau_E$ (Large Helical Device[^8]: `isc=21`) = $0.17 \, R^{0.75}_0 \, a^2_p \, \bar{n}^{0.69}_{20} \, B^{0.84}_0 \, P^{-0.58}$  
-$\tau_E$ (Gyro-reduced Bohm[^9]: `isc=22`) = $0.25 \, R^{0.6}_0 \, a^{2.4}_p \, \bar{n}^{0.6}_{20} \, B^{0.8}_0 \, P^{-0.6}$  
-$\tau_E$ (Lackner-Gottardi[^10]: `isc=23`) = $0.17 \, R_0 \, a^2_p \, \bar{n}^{0.6}_{20} \, B^{0.8}_0 \, P^{-0.6} \, \iota^{0.4}$  
-$\tau_E$ (ISS95[^11]: `isc=37`) = $0.079 \, R^{0.65}_0 \, a^{2.21}_p \, \bar{n}^{0.51}_{20} \, B^{0.83}_0 \, P^{-0.59} \, \bar{\iota}^{0.4}$  
-$\tau_E$ (ISS04[^12]: `isc=38`) = $0.134 \, R^{0.64}_0 \, a^{2.28}_p \, \bar{n}^{0.54}_{20} \, B^{0.84}_0 \, P^{-0.61} \, \bar{\iota}^{0.41}$
+$\tau_E$ (Large Helical Device[^8]: `i_confinement_time=21`) = $0.17 \, R^{0.75}_0 \, a^2_p \, \bar{n}^{0.69}_{20} \, B^{0.84}_0 \, P^{-0.58}$  
+$\tau_E$ (Gyro-reduced Bohm[^9]: `i_confinement_time=22`) = $0.25 \, R^{0.6}_0 \, a^{2.4}_p \, \bar{n}^{0.6}_{20} \, B^{0.8}_0 \, P^{-0.6}$  
+$\tau_E$ (Lackner-Gottardi[^10]: `i_confinement_time=23`) = $0.17 \, R_0 \, a^2_p \, \bar{n}^{0.6}_{20} \, B^{0.8}_0 \, P^{-0.6} \, \iota^{0.4}$  
+$\tau_E$ (ISS95[^11]: `i_confinement_time=37`) = $0.079 \, R^{0.65}_0 \, a^{2.21}_p \, \bar{n}^{0.51}_{20} \, B^{0.83}_0 \, P^{-0.59} \, \bar{\iota}^{0.4}$  
+$\tau_E$ (ISS04[^12]: `i_confinement_time=38`) = $0.134 \, R^{0.64}_0 \, a^{2.28}_p \, \bar{n}^{0.54}_{20} \, B^{0.84}_0 \, P^{-0.61} \, \bar{\iota}^{0.41}$
 
 Here $\bar{\iota}$ is the rotational transform, which is equivalent to the reciprocal of the tokamak safety factor $q$.
 

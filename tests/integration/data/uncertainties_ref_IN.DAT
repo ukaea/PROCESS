@@ -23,7 +23,7 @@ icc = 65 * dumpt time by VV stresses
 icc = 60 * OH coil temp margin
 icc = 72 * OH stress limit
 icc = 25 * Max TF field
-icc = 62 * taulimit
+icc = 62 * f_alpha_energy_confinement_min
 
 *---------------Iteration Variables----------------*
 
@@ -90,7 +90,7 @@ ixc = 106 * ftmargoh
 ixc = 122 * oh_steel_frac
 ixc = 123 * foh_stress
 ixc = 109 * f_nd_alpha_electron
-ixc = 110 * ftaulimit
+ixc = 110 * falpha_energy_confinement
 
 *isweep = 3
 *nsweep = 17
@@ -265,7 +265,6 @@ i_plasma_current    = 4 * Switch for plasma current scaling to use;
 i_density_limit   = 7 * Switch for density limit to enforce (constraint equation 5);
 i_beta_fast_alpha = 1 * Switch for fast alpha pressure calculation;
 ifispact = 0 * Switch for neutronics calculations;
-iinvqd   = 1 * Switch for inverse quadrature in l-mode scaling laws 5 and 9;
 ipedestal = 1 * Switch for pedestal profiles;
 fgwped = 0.85 * fraction of Greenwald density to set as pedestal-top density
 neped    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
@@ -276,7 +275,7 @@ tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)
 teped    = 5.5 * Electron temperature of pedestal (kev) (ipedestal=1)
 tesep    = 0.1 * Electron temperature at separatrix (kev) (ipedestal=1)
 iprofile = 1 * Switch for current profile consistency;
-isc      = 34 * Switch for energy confinement time scaling law
+i_confinement_time      = 34 * Switch for energy confinement time scaling law
 i_plasma_geometry   = 0 * Switch for plasma cross-sectional shape calculation: use input kappa & triang
 *kappa = 1.7808
 kappa = 1.848
@@ -373,4 +372,4 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
                      oh_steel_frac  =  5.7875E-01
                      foh_stress     =  1.0000E+00
                      f_nd_alpha_electron         =  6.8940E-02
-                     ftaulimit      =  1.0000E+00
+                     falpha_energy_confinement      =  1.0000E+00
