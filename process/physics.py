@@ -2351,7 +2351,6 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
-            times_variables.t_fusion_ramp,
             times_variables.t_burn,
             physics_variables.rli,
         )
@@ -5480,6 +5479,48 @@ class Physics:
                 "OP ",
             )
 
+            po.ovarre(
+                self.outfile,
+                "Loop voltage during burn (V)",
+                "(vburn)",
+                physics_variables.plasma_current
+                * physics_variables.res_plasma
+                * physics_variables.inductive_current_fraction,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma resistance (ohm)",
+                "(res_plasma)",
+                physics_variables.res_plasma,
+                "OP ",
+            )
+
+            po.ovarre(
+                self.outfile,
+                "Resistive diffusion time (s)",
+                "(res_time)",
+                physics_variables.res_time,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma inductance (H)",
+                "(rlp)",
+                physics_variables.rlp,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Coefficient for sawtooth effects on burn V-s requirement",
+                "(csawth)",
+                physics_variables.csawth,
+            )
+
+            po.oblnkl(self.outfile)
+            po.ostars(self.outfile, 110)
+            po.oblnkl(self.outfile)
+
             po.ovarrf(
                 self.outfile,
                 "Bootstrap current fraction multiplier",
@@ -5700,44 +5741,6 @@ class Physics:
                 "(ps_current_fraction.)",
                 current_drive_variables.ps_current_fraction,
                 "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Loop voltage during burn (V)",
-                "(vburn)",
-                physics_variables.plasma_current
-                * physics_variables.res_plasma
-                * physics_variables.inductive_current_fraction,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Resistive diffusion time (s)",
-                "(res_time)",
-                physics_variables.res_time,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(rlp)",
-                physics_variables.rlp,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
             )
 
         po.osubhd(self.outfile, "Fuelling :")
