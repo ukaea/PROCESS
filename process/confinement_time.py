@@ -2129,7 +2129,3 @@ def itpa20_il_confinement_time(
         * (1 + triang) ** 0.56
         * kappa_ipb**0.67
     )
-
-
-if __name__ == "__main__":
-    pass

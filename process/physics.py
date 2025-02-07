@@ -2340,8 +2340,6 @@ class Physics:
             physics_variables.vol_plasma,
         )
 
-        # p_electron_transport_loss_mw = physics_variables.pden_electron_transport_loss_mw*physics_variables.vol_plasma
-        # p_ion_transport_loss_mw = physics_variables.pden_ion_transport_loss_mw*physics_variables.vol_plasma
         # Total transport power from scaling law (MW)
         physics_variables.pscalingmw = (
             physics_variables.p_electron_transport_loss_mw
