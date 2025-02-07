@@ -273,7 +273,7 @@ var_dicts = {
     ),
     "v_plasma_loop_burn": VariableMetadata(
         latex=r"$V_{\mathrm{loop}}$ [$V$]",
-        description="Loop voltage during burn",
+        description="Plasma loop voltage during burn",
         units="V",
     ),
     "sig_tf_wp_max": VariableMetadata(
