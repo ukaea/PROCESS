@@ -765,7 +765,7 @@ module physics_variables
   real(dp) :: rli
   !! plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
 
-  real(dp) :: rlp
+  real(dp) :: ind_plasma
   !! plasma inductance (H)
 
   real(dp) :: rmajor
@@ -1081,7 +1081,7 @@ module physics_variables
     f_nd_alpha_electron = 0.10D0
     f_nd_protium_electrons = 0.0D0
     rli = 0.9D0
-    rlp = 0.0D0
+    ind_plasma = 0.0D0
     rmajor = 8.14D0
     rminor = 0.0D0
     f_nd_beam_electron = 0.005D0

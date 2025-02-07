@@ -522,7 +522,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      4.1078E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0689E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9916E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4126E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4126E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7176E+21 OP 
@@ -1685,7 +1685,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      4.0431E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0820E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9820E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4036E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4036E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7709E+21 OP 
@@ -2848,7 +2848,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      4.0227E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.1144E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9585E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.3947E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3947E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7853E+21 OP 
@@ -4011,7 +4011,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9960E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0884E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9773E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.3964E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3964E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7588E+21 OP 
@@ -5174,7 +5174,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9998E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0680E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9923E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4042E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4042E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7831E+21 OP 
@@ -6337,7 +6337,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9635E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0504E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0053E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4131E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4131E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.8047E+21 OP 
@@ -7500,7 +7500,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9388E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0293E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0210E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4147E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4147E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7806E+21 OP 
@@ -8663,7 +8663,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9711E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0529E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0034E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4067E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7852E+21 OP 
@@ -9826,7 +9826,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      4.0073E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0706E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      2.9903E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.3998E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3998E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7734E+21 OP 
@@ -10989,7 +10989,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9907E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0501E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0054E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4003E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4003E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7567E+21 OP 
@@ -12152,7 +12152,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9599E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0408E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0124E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4067E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7723E+21 OP 
@@ -13315,7 +13315,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9340E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0207E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0274E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4146E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4146E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7780E+21 OP 
@@ -14478,7 +14478,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9155E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      3.9990E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0439E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4153E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4153E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7598E+21 OP 
@@ -15641,7 +15641,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.9658E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0183E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0292E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4063E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4063E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7620E+21 OP 
@@ -16804,7 +16804,7 @@
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      4.0161E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      4.0375E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0148E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.3971E-05 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3971E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7644E+21 OP 

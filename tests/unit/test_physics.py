@@ -1737,7 +1737,7 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vs_plasma_internal: Any = None
 
-    expected_rlp: Any = None
+    expected_ind_plasma: Any = None
 
     expected_vs_burn_required: Any = None
 
@@ -1763,7 +1763,7 @@ class VoltSecondReqParam(NamedTuple):
             res_plasma=3.7767895536275952e-09,
             t_burn=1000,
             expected_vs_plasma_internal=111.57651734747576,
-            expected_rlp=1.4075705307248088e-05,
+            expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_burn_required=41.6922571264963,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
@@ -1781,7 +1781,7 @@ class VoltSecondReqParam(NamedTuple):
             res_plasma=3.7767895536275952e-09,
             t_burn=0,
             expected_vs_plasma_internal=111.57651734747576,
-            expected_rlp=1.4075705307248088e-05,
+            expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_burn_required=0.0,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
@@ -1801,7 +1801,7 @@ def test_calculate_volt_second_requirements(voltsecondreqparam):
 
     (
         vs_plasma_internal,
-        rlp,
+        ind_plasma,
         vs_burn_required,
         vs_plasma_ind_ramp,
         vs_plasma_res_ramp,
@@ -1823,7 +1823,7 @@ def test_calculate_volt_second_requirements(voltsecondreqparam):
         voltsecondreqparam.expected_vs_plasma_internal
     )
 
-    assert rlp == pytest.approx(voltsecondreqparam.expected_rlp)
+    assert ind_plasma == pytest.approx(voltsecondreqparam.expected_ind_plasma)
 
     assert vs_burn_required == pytest.approx(
         voltsecondreqparam.expected_vs_burn_required
