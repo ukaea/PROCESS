@@ -138,7 +138,9 @@ class Pulse:
         #  Volt-seconds required to produce plasma current during start-up
         #  (i.e. up to start of flat top)
 
-        vssoft = physics_variables.vs_plasma_res_ramp + physics_variables.vsind
+        vssoft = (
+            physics_variables.vs_plasma_res_ramp + physics_variables.vs_plasma_ind_ramp
+        )
 
         #  Total volt-seconds available during flat-top (heat + burn)
         #  (Previously calculated as (abs(pfcoil_variables.vstot) - vssoft) )
