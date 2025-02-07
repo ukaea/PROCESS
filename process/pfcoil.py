@@ -1712,7 +1712,7 @@ class PFCoil:
             ]
 
         # Plasma self inductance
-        pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 1] = pv.rlp
+        pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 1] = pv.ind_plasma
 
         # PF coil / plasma mutual inductances
         ncoils = 0

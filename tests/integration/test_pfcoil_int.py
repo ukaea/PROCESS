@@ -2969,7 +2969,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ]),
     )
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "rlp", 1.6039223939491056e-05)
+    monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
 
     sxlg_exp = np.array([
         [
