@@ -99,10 +99,10 @@ def calculate_volt_second_requirements(
 
             :return: A tuple containing:
                 - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-                - rlp: Plasma inductance (H)
+                - ind_plasma_internal: Plasma inductance (H)
                 - vs_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
-                - vsind: Internal and external plasma inductance V-s (Wb)
-                - vsres: Resistive losses in start-up volt-seconds (Wb)
+                - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+                - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
                 - vs_total_required: Total volt-seconds needed (Wb)
             :rtype: tuple[float, float, float, float, float, float]
 
@@ -124,15 +124,19 @@ def calculate_volt_second_requirements(
                 doi: https://doi.org/10.1063/1.865934.
         ‌
     """
-    # Internal inductance
+    # Plasma internal inductance
 
-    rlpint = constants.rmu0 * rmajor * rli / 2.0
-    vs_plasma_internal = rlpint * plasma_current
+    ind_plasma_internal = constants.rmu0 * rmajor * rli / 2.0
+
+    # Internal plasma flux (V-s) component
+    vs_plasma_internal = ind_plasma_internal * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = ejima_coeff * constants.rmu0 * plasma_current * rmajor
+    vs_res_ramp = ejima_coeff * constants.rmu0 * plasma_current * rmajor
+
+    # ======================================================================
 
     # Hirshman and Neilson fit for external inductance
 
@@ -140,29 +144,41 @@ def calculate_volt_second_requirements(
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    rlpext = rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
-    rlp = rlpext + rlpint
+    ind_plasma_external = (
+        rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+    )
+
+    # ======================================================================
+
+    ind_plasma_total = ind_plasma_external + ind_plasma_internal
 
     # Inductive V-s component
 
-    vsind = rlp * plasma_current
-    vs_total_required = vsres + vsind
+    vs_self_ind_ramp = ind_plasma_total * plasma_current
+    vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
     # Loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plasma_current * res_plasma * inductive_current_fraction * csawth
+    v_burn_resistive = plasma_current * res_plasma * inductive_current_fraction * csawth
 
     # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vs_burn_required = vburn * (t_fusion_ramp + t_burn)
-    vs_total_required = vs_total_required + vs_burn_required
+    vs_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_total_required = vs_ramp_required + vs_burn_required
 
-    return vs_plasma_internal, rlp, vs_burn_required, vsind, vsres, vs_total_required
+    return (
+        vs_plasma_internal,
+        ind_plasma_total,
+        vs_burn_required,
+        vs_self_ind_ramp,
+        vs_res_ramp,
+        vs_total_required,
+    )
 
 
 @nb.jit(nopython=True, cache=True)
