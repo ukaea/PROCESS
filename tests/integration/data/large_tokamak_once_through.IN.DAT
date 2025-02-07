@@ -368,7 +368,7 @@ triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geomet
 
 *-----------------Pulse Variables------------------*
 
-lpulse   = 1 * Switch for reactor model;
+i_pulsed_plant   = 1 * Switch for reactor model;
 
 *-----------------Rebco Variables------------------*
 
@@ -428,7 +428,7 @@ vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (
 
 *-----------------Times Variables------------------*
 
-pulsetimings = 0 * Switch for pulse timings (if lpulse=1);
+pulsetimings = 0 * Switch for pulse timings (if i_pulsed_plant=1);
 t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 t_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_current_ramp_up
 

@@ -902,7 +902,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ft_burn : input real : f-value for minimum burn time
-      !! t_burn : input real : burn time (s) (calculated if lpulse=1)
+      !! t_burn : input real : burn time (s) (calculated if i_pulsed_plant=1)
       !! t_burn_min : input real :  minimum burn time (s)
       use constraint_variables, only: ft_burn,t_burn_min
       use times_variables, only: t_burn

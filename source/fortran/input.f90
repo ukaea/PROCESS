@@ -315,7 +315,7 @@ contains
       tauratio, i_density_limit, bt, i_plasma_wall_gap, n_confinement_scalings, beta_max, beta_min, &
       i_diamagnetic_current, i_pfirsch_schluter_current, m_s_limit, burnup_in
     use pf_power_variables, only: iscenr, maxpoloidalpower
-    use pulse_variables, only: lpulse, dtstor, itcycl, istore, bctmp
+    use pulse_variables, only: i_pulsed_plant, dtstor, itcycl, istore, bctmp
 
     use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
       dp_fw_blkt, dp_fw, dp_blkt, dp_liq
@@ -1139,7 +1139,7 @@ contains
                'Initial charge time for PF coils (s)')
        case ('pulsetimings')
           call parse_real_variable('pulsetimings', pulsetimings, 0.0D0, 1.0D0, &
-               'Pulse timings switch for lpulse=1')
+               'Pulse timings switch for i_pulsed_plant=1')
 
        ! Divertor settings: 2016 Kallenbach model (2016/07/04)
 
@@ -1991,8 +1991,8 @@ contains
        case ('itcycl')
           call parse_int_variable('itcycl', itcycl, 1, 3, &
                'Switch for 1st wall axial stress model')
-       case ('lpulse')
-          call parse_int_variable('lpulse', lpulse, 0, 1, &
+       case ('i_pulsed_plant')
+          call parse_int_variable('i_pulsed_plant', i_pulsed_plant, 0, 1, &
                'Switch for pulsed reactor model')
 
        case ('copperaoh_m2')

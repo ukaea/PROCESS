@@ -436,7 +436,7 @@ plasma_res_factor = 0.7
 ***********
 
 * Switch for reactor model - pulsed
-lpulse = 1
+i_pulsed_plant = 1
 
 * dwell time [s]
 t_between_pulse = 1800.0

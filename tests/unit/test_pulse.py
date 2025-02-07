@@ -54,7 +54,7 @@ class TohswgParam(NamedTuple):
 
     active_constraints: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     outfile: Any = None
 
@@ -80,7 +80,7 @@ class BurnParam(NamedTuple):
 
     csawth: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     t_burn: Any = None
 
@@ -648,7 +648,7 @@ class BurnParam(NamedTuple):
                 False,
                 False,
             ),
-            lpulse=1,
+            i_pulsed_plant=1,
             outfile=11,
             iprint=0,
             expected_tohsmn=-526.67247746645455,
@@ -1205,7 +1205,7 @@ class BurnParam(NamedTuple):
                 False,
                 False,
             ),
-            lpulse=1,
+            i_pulsed_plant=1,
             outfile=11,
             iprint=0,
             expected_tohsmn=51.251726699574235,
@@ -1255,7 +1255,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", tohswgparam.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
 
     pulse.tohswg(output=False)
 
@@ -1276,7 +1276,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
-            lpulse=1,
+            i_pulsed_plant=1,
             t_burn=0,
             t_fusion_ramp=10,
             outfile=11,
@@ -1292,7 +1292,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
-            lpulse=1,
+            i_pulsed_plant=1,
             t_burn=10234.092022756307,
             t_fusion_ramp=10,
             outfile=11,
@@ -1334,7 +1334,7 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", burnparam.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", burnparam.i_pulsed_plant)
 
     monkeypatch.setattr(times_variables, "t_burn", burnparam.t_burn)
 

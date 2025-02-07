@@ -46,7 +46,7 @@ class Pulse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             return
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
@@ -132,7 +132,7 @@ class Pulse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             return
 
         #  Volt-seconds required to produce plasma current during start-up

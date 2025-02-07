@@ -3240,7 +3240,7 @@
         "logical_def": "kind(.true.)",
         "loss": null,
         "lowest_valid_fom": null,
-        "lpulse": 0.0,
+        "i_pulsed_plant": 0.0,
         "lsa": 4.0,
         "lwa": null,
         "m": null,
@@ -9415,7 +9415,7 @@
         "error_tail": "",
         "error_type": "",
         "errors_on": "",
-        "esbldgm3": "volume of energy storage equipment building (m3) (not used if `lpulse=0`)",
+        "esbldgm3": "volume of energy storage equipment building (m3) (not used if `i_pulsed_plant=0`)",
         "estotft": "",
         "estotftgj": "total stored energy in the toroidal field (GJ)",
         "eta": "",
@@ -9674,7 +9674,7 @@
         "fwbs_prob_fail": "Fwbs probability of failure (per op day)",
         "fwbs_umain_time": "Fwbs unplanned maintenance time (years)",
         "fwbsshape": "switch for first wall, blanket, shield and vacuum vessel shape:\n<ul>\n<li>=1 D-shaped (cylinder inboard + ellipse outboard)</li>\n<li>=2 defined by two ellipses</li>\n</ul>",
-        "fwclfr": "first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)",
+        "fwclfr": "first wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)",
         "fwcoolant": "switch for first wall coolant (can be different from blanket coolant):\n<ul>\n<li>'helium'</li>\n<li>'water'</li>\n</ul>",
         "fwdr": "radial thickness of IFE first wall (m)",
         "fwdzl": "vertical thickness of IFE first wall below chamber (m)",
@@ -10015,7 +10015,7 @@
         "logT_z": "",
         "logical_def": "",
         "lowest_valid_fom": "",
-        "lpulse": "Switch for reactor model:\n<ul>\n<li>=0 continuous operation</li>\n<li>=1 pulsed operation</li>\n</ul>",
+        "i_pulsed_plant": "Switch for reactor model:\n<ul>\n<li>=0 continuous operation</li>\n<li>=1 pulsed operation</li>\n</ul>",
         "lsa": "Level of safety assurance switch (generally, use 3 or 4):\n<ul>\n<li>=1 truly passively safe plant</li>\n<li>=2,3 in-between</li>\n<li>=4 like current fission plant</li>\n</ul>",
         "lwa": "",
         "m": "",
@@ -10413,7 +10413,7 @@
         "pden_electron_transport_loss_mw": "electron transport power per volume (MW/m3)",
         "p_ion_transport_loss_mw": "ion transport power (MW)",
         "pden_ion_transport_loss_mw": "ion transport power per volume (MW/m3)",
-        "pulsetimings": "Switch for pulse timings (if lpulse=1):\n<ul>\n<li>=0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input</li>\n<li>=1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up</li>\n</ul>",
+        "pulsetimings": "Switch for pulse timings (if i_pulsed_plant=1):\n<ul>\n<li>=0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input</li>\n<li>=1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up</li>\n</ul>",
         "pumpareafraction": "area of one pumping port as a fraction of plasma surface area",
         "pumpspeedfactor": "effective pumping speed reduction factor due to duct impedance",
         "pumpspeedmax": "maximum pumping speed per unit area for deuterium &amp; tritium, molecular flow",
@@ -10744,7 +10744,7 @@
         "tbratio": "Tritium breeding ratio [--]",
         "tbrmin": "minimum tritium breeding ratio (`constraint equation 52`)",
         "t_burn_min": "minimum burn time (s) (KE - no longer itv., see issue #706)",
-        "t_burn": "burn time (s) (calculated if `lpulse=1`)",
+        "t_burn": "burn time (s) (calculated if `i_pulsed_plant=1`)",
         "t_burn_0": "burn time (s) - used for internal consistency",
         "tcomrepl": "time taken to replace both blanket and divertor (y) (`iavail=1`)",
         "tconl": "main plasma connection length (m)",
@@ -10848,8 +10848,8 @@
         "tmaxpro": "maximum temp rise during a quench for protection (K)",
         "tmpcry": "coil temperature for cryogenic plant power calculation (K)",
         "tn": "neutral gas temperature in chamber (K)",
-        "t_current_ramp_up": "plasma current ramp-up time for current initiation (s) (calculated if `lpulse=0`)\n (`iteration variable 65`)",
-        "tohsin": "Switch for plasma current ramp-up time (if lpulse=0):\n<ul>\n<li>= 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5</li>\n<li><>0, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input</li>\n</ul>",
+        "t_current_ramp_up": "plasma current ramp-up time for current initiation (s) (calculated if `i_pulsed_plant=0`)\n (`iteration variable 65`)",
+        "tohsin": "Switch for plasma current ramp-up time (if i_pulsed_plant=0):\n<ul>\n<li>= 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5</li>\n<li><>0, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input</li>\n</ul>",
         "t_current_ramp_up_min": "minimum plasma current ramp-up time (s) (`constraint equation 41`)",
         "tok_build_cost_per_vol": "Unit cost for tokamak complex buildings, including building and site services ($/m3)",
         "tol": "",
@@ -13619,7 +13619,7 @@
             "lb": 10.0,
             "ub": 1000.0
         },
-        "lpulse": {
+        "i_pulsed_plant": {
             "lb": 0,
             "ub": 1
         },
@@ -19330,7 +19330,7 @@
             "dtstor",
             "istore",
             "itcycl",
-            "lpulse"
+            "i_pulsed_plant"
         ],
         "read_and_get_atomic_data": [
             "FirstCall"
@@ -20529,7 +20529,7 @@
         "llw_storage_h": "real_variable",
         "llw_storage_l": "real_variable",
         "llw_storage_w": "real_variable",
-        "lpulse": "int_variable",
+        "i_pulsed_plant": "int_variable",
         "lsa": "int_variable",
         "m_res": "int_variable",
         "m_s_limit": "real_variable",
