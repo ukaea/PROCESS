@@ -158,11 +158,13 @@ def calculate_volt_second_requirements(
     vs_self_ind_ramp = ind_plasma_total * plasma_current
     vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
-    # Loop voltage during flat-top
+    # Plasma loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    v_burn_resistive = plasma_current * res_plasma * inductive_current_fraction * csawth
+    v_plasma_loop_burn = plasma_current * res_plasma * inductive_current_fraction
+
+    v_burn_resistive = v_plasma_loop_burn * csawth
 
     # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
@@ -178,6 +180,7 @@ def calculate_volt_second_requirements(
         vs_self_ind_ramp,
         vs_res_ramp,
         vs_total_required,
+        v_plasma_loop_burn,
     )
 
 
@@ -2342,6 +2345,7 @@ class Physics:
             physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_total_required,
+            physics_variables.v_plasma_loop_burn,
         ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
@@ -5485,9 +5489,7 @@ class Physics:
                 self.outfile,
                 "Plasma loop voltage during burn (V)",
                 "(v_plasma_loop_burn)",
-                physics_variables.plasma_current
-                * physics_variables.res_plasma
-                * physics_variables.inductive_current_fraction,
+                physics_variables.v_plasma_loop_burn,
                 "OP ",
             )
             po.ovarre(
