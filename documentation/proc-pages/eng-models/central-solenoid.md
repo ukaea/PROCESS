@@ -78,7 +78,7 @@ in the case of the CS coils).
     7.  The stress is monotonic (since the hoop stress is always positive), and its minimum value 
         is the residual stress (input).  Default: 240 MPa.  
     8.  The mean stress is taken into account using the [Walker](https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation) 
-        modification of the Paris equation, with coefficient $\gamma$=0.436  
+        modification of the Paris equation, with coefficient $\ejima_coeff$=0.436  
     9.  Failure occurs when the crack dimension a equals the conduit thickness, or dimension c reaches 
         the conductor width.  
     10. No safety factor is used for the number of cycles.  

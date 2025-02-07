@@ -396,7 +396,7 @@ module fwbs_variables
   !! area coverage factor for outboard shield volume
 
   real(dp) :: fwclfr
-  !! first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
+  !! first wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)
 
   real(dp) :: praddiv
   !! Radiation power incident on the divertor (MW)
