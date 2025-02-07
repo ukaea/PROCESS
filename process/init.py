@@ -642,7 +642,7 @@ def check_process():
 
         # If Reinke criterion is used need to enforce LH-threshold
         # using Martin scaling for consistency
-        if (fortran.physics_variables.ilhthresh != 6) or (
+        if (fortran.physics_variables.i_l_h_threshold != 6) or (
             not (
                 fortran.numerics.icc[
                     : fortran.numerics.neqns + fortran.numerics.nineqns
