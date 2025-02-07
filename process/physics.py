@@ -2337,7 +2337,7 @@ class Physics:
         # Calculate Volt-second requirements
         (
             physics_variables.vs_plasma_internal,
-            physics_variables.rlp,
+            physics_variables.ind_plasma,
             physics_variables.vs_burn_required,
             physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
@@ -5506,8 +5506,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Plasma inductance (H)",
-                "(rlp)",
-                physics_variables.rlp,
+                "(ind_plasma)",
+                physics_variables.ind_plasma,
                 "OP ",
             )
             po.ovarrf(
