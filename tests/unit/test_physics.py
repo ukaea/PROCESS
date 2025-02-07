@@ -503,7 +503,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
 
     eps: Any = None
 
-    rli: Any = None
+    ind_plasma_internal_norm: Any = None
 
     expected_bfs: Any = None
 
@@ -518,7 +518,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphan=1.0,
             alphat=1.45,
             eps=1 / 3,
-            rli=1.2098126022585098,
+            ind_plasma_internal_norm=1.2098126022585098,
             expected_bfs=0.3501274900057279,
         ),
         BootstrapFractionSakaiParam(
@@ -528,7 +528,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             alphan=0.9,
             alphat=1.3999999999999999,
             eps=1 / 1.8,
-            rli=0.3,
+            ind_plasma_internal_norm=0.3,
             expected_bfs=0.81877746774625,
         ),
     ),
@@ -561,7 +561,11 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
 
     monkeypatch.setattr(physics_variables, "eps", bootstrapfractionsakaiparam.eps)
 
-    monkeypatch.setattr(physics_variables, "rli", bootstrapfractionsakaiparam.rli)
+    monkeypatch.setattr(
+        physics_variables,
+        "ind_plasma_internal_norm",
+        bootstrapfractionsakaiparam.ind_plasma_internal_norm,
+    )
 
     bfs = physics.bootstrap_fraction_sakai(
         beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
@@ -570,7 +574,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
         alphan=bootstrapfractionsakaiparam.alphan,
         alphat=bootstrapfractionsakaiparam.alphat,
         eps=bootstrapfractionsakaiparam.eps,
-        rli=bootstrapfractionsakaiparam.rli,
+        ind_plasma_internal_norm=bootstrapfractionsakaiparam.ind_plasma_internal_norm,
     )
 
     assert bfs == pytest.approx(bootstrapfractionsakaiparam.expected_bfs)
@@ -579,7 +583,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
 class BootstrapFractionAriesParam(NamedTuple):
     beta_poloidal: Any = None
 
-    rli: Any = None
+    ind_plasma_internal_norm: Any = None
 
     core_density: Any = None
 
@@ -595,7 +599,7 @@ class BootstrapFractionAriesParam(NamedTuple):
     (
         BootstrapFractionAriesParam(
             beta_poloidal=1.2708883332338736,
-            rli=1.4279108047138775,
+            ind_plasma_internal_norm=1.4279108047138775,
             core_density=1.0695994460047332e20,
             average_density=8.1317358967210131e19,
             inverse_aspect=1 / 3,
@@ -615,7 +619,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
 
     bfs = physics.bootstrap_fraction_aries(
         beta_poloidal=bootstrapfractionariesparam.beta_poloidal,
-        rli=bootstrapfractionariesparam.rli,
+        ind_plasma_internal_norm=bootstrapfractionariesparam.ind_plasma_internal_norm,
         core_density=bootstrapfractionariesparam.core_density,
         average_density=bootstrapfractionariesparam.average_density,
         inverse_aspect=bootstrapfractionariesparam.inverse_aspect,
@@ -875,7 +879,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     alphaj: Any = None
 
-    rli: Any = None
+    ind_plasma_internal_norm: Any = None
 
     alphap: Any = None
 
@@ -907,7 +911,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     expected_alphaj: Any = None
 
-    expected_rli: Any = None
+    expected_ind_plasma_internal_norm: Any = None
 
     expected_bp: Any = None
 
@@ -925,7 +929,7 @@ class PlasmaCurrentParam(NamedTuple):
             i_plasma_current=4,
             iprofile=1,
             alphaj=1,
-            rli=0.90000000000000002,
+            ind_plasma_internal_norm=0.90000000000000002,
             alphap=0,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -941,7 +945,7 @@ class PlasmaCurrentParam(NamedTuple):
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
             expected_alphaj=1.9008029008029004,
-            expected_rli=1.2064840230894305,
+            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
             expected_qstar=3.869423496255382,
             expected_plasma_current=18398455.678867526,
@@ -952,7 +956,7 @@ class PlasmaCurrentParam(NamedTuple):
             i_plasma_current=4,
             iprofile=1,
             alphaj=1.9008029008029004,
-            rli=1.2064840230894305,
+            ind_plasma_internal_norm=1.2064840230894305,
             alphap=2.4500000000000002,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -968,7 +972,7 @@ class PlasmaCurrentParam(NamedTuple):
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
             expected_alphaj=1.9008029008029004,
-            expected_rli=1.2064840230894305,
+            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
             expected_qstar=3.869423496255382,
             expected_plasma_current=18398455.678867526,
@@ -1000,7 +1004,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         i_plasma_current=plasmacurrentparam.i_plasma_current,
         iprofile=plasmacurrentparam.iprofile,
         alphaj=plasmacurrentparam.alphaj,
-        rli=plasmacurrentparam.rli,
+        ind_plasma_internal_norm=plasmacurrentparam.ind_plasma_internal_norm,
         alphap=plasmacurrentparam.alphap,
         bt=plasmacurrentparam.bt,
         eps=plasmacurrentparam.eps,
@@ -1725,7 +1729,7 @@ class VoltSecondReqParam(NamedTuple):
 
     plasma_current: Any = None
 
-    rli: Any = None
+    ind_plasma_internal_norm: Any = None
 
     rmajor: Any = None
 
@@ -1758,7 +1762,7 @@ class VoltSecondReqParam(NamedTuple):
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
-            rli=1.2064840230894305,
+            ind_plasma_internal_norm=1.2064840230894305,
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_burn=1000,
@@ -1777,7 +1781,7 @@ class VoltSecondReqParam(NamedTuple):
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
-            rli=1.2064840230894305,
+            ind_plasma_internal_norm=1.2064840230894305,
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_burn=0,
@@ -1815,7 +1819,7 @@ def test_vscalc(voltsecondreqparam):
         ejima_coeff=voltsecondreqparam.ejima_coeff,
         kappa=voltsecondreqparam.kappa,
         plasma_current=voltsecondreqparam.plasma_current,
-        rli=voltsecondreqparam.rli,
+        ind_plasma_internal_norm=voltsecondreqparam.ind_plasma_internal_norm,
         rmajor=voltsecondreqparam.rmajor,
         res_plasma=voltsecondreqparam.res_plasma,
         t_burn=voltsecondreqparam.t_burn,
