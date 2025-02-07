@@ -7,6 +7,7 @@ parameters of an Inertial Fusion Energy power plant.
 
 import numpy as np
 
+from process import process_output
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -17,7 +18,6 @@ from process.fortran import (
     heat_transport_variables,
     ife_variables,
     physics_variables,
-    process_output,
     structure_variables,
     vacuum_variables,
 )

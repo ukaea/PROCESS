@@ -1,5 +1,8 @@
 import numpy as np
 
+from process import (
+    process_output as po,
+)
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
     build_variables,
@@ -17,9 +20,6 @@ from process.fortran import (
 )
 from process.fortran import (
     error_handling as eh,
-)
-from process.fortran import (
-    process_output as po,
 )
 
 

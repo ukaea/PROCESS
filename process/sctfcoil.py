@@ -7,6 +7,7 @@ import numpy as np
 from scipy import optimize
 
 import process.superconductors as superconductors
+from process import process_output as po
 from process.fortran import (
     build_variables,
     constants,
@@ -21,7 +22,6 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.fortran import process_output as po
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
