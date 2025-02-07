@@ -857,7 +857,7 @@ def check_process():
             )
 
     #  Pulsed power plant model
-    if fortran.pulse_variables.lpulse == 1:
+    if fortran.pulse_variables.i_pulsed_plant == 1:
         fortran.global_variables.icase = "Pulsed tokamak model"
     else:
         fortran.buildings_variables.esbldgm3 = 0.0
