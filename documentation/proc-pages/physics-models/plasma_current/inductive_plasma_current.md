@@ -35,7 +35,7 @@ The flux requirements are defined by the sum of the pulse ramp up and flat top /
 
 #### Resistive Component
 
-In the ramp up phase we need to take the plasma current from 0 Amps to the plasma current value, which is normally ten's of Mega Amps. Since the plasma has a non zero resistance, the current induced in the plasma will be dissipated due to resistive losses. This can be tricky to calculate as the plasma resistance decreases as the plasma temperature increases towards our flat-top full plasma scenario state. The inductance of the plasma also varies during this ramp phase and so the amount of current driven for the same change in flux will vary too.
+In the ramp up phase we need to take the plasma current from 0 Amps to the plasma current value, which is normally ten's of Mega Amps. Since the plasma has a non zero resistance, the current induced in the plasma will be dissipated due to resistive losses. This can be tricky to calculate as the plasma resistance decreases as the plasma temperature increases towards our flat-top full plasma scenario state. The inductance of the plasma also varies during this ramp phase and so the amount of current driven for the same change in flux will vary too. 
 
 Thankfully a formulation of the resistive flux consumption during ramp phase is given by Ejima et.al [^1].
 
@@ -50,6 +50,9 @@ ranging from circular to doublet produced in the Doublet III machine. The plasma
 slightly elongated, with $\kappa=1.2$. The toroidal field is 2.4 $\text{T}$. The current swing of the Ohmic-heating transformer is nominally from $-25 \text{kA}$ to $+80 \text{kA}$, corresponding to a flux swing of $\approx 2.6 \ \text{Vs}$.
 
 The initial one-turn loop voltage is around $50 \ \text{V}$, causing the plasma current to rise to $300 \ \text{kA}$ in about $80 \  \text{ms}$. The plasma current is then increased to higher flat-top currents at a steady rate of $2 \text{MA} \text{s}^{-1}$.
+
+The calculation of $\Phi_{\text{res,ramp}}$ is based on the fact that the ramp up takes of the order of the resistive current penetration time $\frac{\mu_0 a^2}{\rho_{\text{p}}}$, where $\rho_{\text{p}}$ is the resistivity of the plasma. The
+flux consumption is therefore independent of the resistivity and the minor radius.
 
 -------------
 
