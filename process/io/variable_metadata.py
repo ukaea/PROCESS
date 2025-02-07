@@ -39,7 +39,7 @@ var_dicts = {
         description="Net electrical power",
         units="MW",
     ),
-    "taueff": VariableMetadata(
+    "t_energy_confinement": VariableMetadata(
         latex=r"$\tau_\mathrm{E}$ [s]",
         description="Effective energy confinement time",
         units="s",
@@ -54,7 +54,7 @@ var_dicts = {
         description="Average electron temperature",
         units="keV",
     ),
-    "taulimit": VariableMetadata(
+    "f_alpha_energy_confinement_min": VariableMetadata(
         latex=r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$",
         description="Ratio of alpha heating time to energy confinement time",
         units="",
@@ -388,7 +388,7 @@ var_dicts = {
         description="Efficiency of electron cyclotron heating",
         units="",
     ),
-    "tauee": VariableMetadata(
+    "t_electron_energy_confinement": VariableMetadata(
         latex=r"$\tau_E$",
         description="Electron energy confinement time (sec)",
         units="s",

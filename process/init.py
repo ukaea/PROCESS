@@ -1207,19 +1207,22 @@ def check_process():
 
     if (
         fortran.physics_variables.tauee_in > 1e-10
-        and fortran.physics_variables.isc != 48
+        and fortran.physics_variables.i_confinement_time != 48
     ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
-        warn("tauee_in is for use with isc=48 only", stacklevel=2)
+        warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
 
-    if fortran.physics_variables.aspect > 1.7 and fortran.physics_variables.isc == 46:
+    if (
+        fortran.physics_variables.aspect > 1.7
+        and fortran.physics_variables.i_confinement_time == 46
+    ):
         # NSTX scaling is for A<1.7
         warn("NSTX scaling is for A<1.7", stacklevel=2)
 
     if (
         fortran.physics_variables.i_plasma_current == 2
-        and fortran.physics_variables.isc == 42
+        and fortran.physics_variables.i_confinement_time == 42
     ):
         raise ProcessValidationError(
             "Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"

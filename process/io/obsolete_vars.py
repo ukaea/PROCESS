@@ -184,6 +184,11 @@ OBS_VARS = {
     "d_vv_in": "dr_vv_inboard",
     "d_vv_out": "dr_vv_outboard",
     "iblnkith": "i_blkt_inboard",
+    "taulimit": "f_alpha_energy_confinement_min",
+    "ftaulimit": "falpha_energy_confinement",
+    "isc": "i_confinement_time",
+    "iradloss": "i_rad_loss",
+    "ipnlaws": "n_confinement_scalings",
 }
 
 OBS_VARS_HELP = {

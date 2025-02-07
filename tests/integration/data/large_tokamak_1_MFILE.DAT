@@ -176,7 +176,7 @@
  J_winding_pack/J_protection_limit_normalised_residue____________________ (normres017)__________________     -2.9894E-07    
  TF_coil_temp._margin_lower_limit__normalised_residue____________________ (normres018)__________________     -1.0631E-06    
  CS_temperature_margin_lower_limit_normalised_residue____________________ (normres019)__________________      8.0251E-08    
- taup/taueff_______________________normalised_residue____________________ (normres020)__________________     -1.8772E-08    
+ t_alpha_confinement/taueff_______________________normalised_residue____________________ (normres020)__________________     -1.8772E-08    
  Dump_time_set_by_VV_stress________normalised_residue____________________ (normres021)__________________     -1.0026E-07    
  CS_Tresca_yield_criterion_________normalised_residue____________________ (normres022)__________________     -1.6044E-07    
  ne0_>_neped_______________________normalised_residue____________________ (normres023)__________________     -1.9637E-08    
@@ -452,8 +452,8 @@
  Fraction_of_alpha_power_deposited_in_plasma_____________________________ (falpha)______________________      9.5000E-01    
  Fraction_of_alpha_power_to_electrons____________________________________ (falpe)_______________________      7.1828E-01    
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8172E-01    
- Ion_transport_(MW)______________________________________________________ (ptrimw)______________________      1.4013E+02 OP 
- Electron_transport_(MW)_________________________________________________ (ptremw)______________________      1.5772E+02 OP 
+ Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.4013E+02 OP 
+ Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.5772E+02 OP 
  Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (pinjemw)_____________________      8.0143E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
@@ -484,22 +484,22 @@
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      9.7416E+01 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.7416E+01 OP 
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1886E+00 ITV
- Global_thermal_energy_confinement_time_(s)______________________________ (taueff)______________________      3.2037E+00    
- Ion_energy_confinement_time_(s)_________________________________________ (tauei)_______________________      3.2037E+00    
- Electron_energy_confinement_time_(s)____________________________________ (tauee)_______________________      3.2037E+00    
- n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (dntau)_______________________      2.5843E+20 OP 
- Triple_product__(keV_s/m3)______________________________________________ (dntau*te)____________________      3.2275E+21 OP 
- Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (powerht)_____________________      2.9785E+02 OP 
- Switch_for_radiation_loss_term_usage_in_power_balance___________________ (iradloss)____________________              1    
+ Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.2037E+00    
+ Ion_energy_confinement_time_(s)_________________________________________ (t_ion_energy_confinement)_______________________      3.2037E+00    
+ Electron_energy_confinement_time_(s)____________________________________ (t_electron_energy_confinement)_______________________      3.2037E+00    
+ n.tau_=_Volume-average_electron_density_x_Energy_confinement_time_(s/m3) (ntau)_______________________      2.5843E+20 OP 
+ Triple_product__(keV_s/m3)______________________________________________ (nTtau)____________________      3.2275E+21 OP 
+ Transport_loss_power_assumed_in_scaling_law_(MW)________________________ (p_plasma_loss_mw)_____________________      2.9785E+02 OP 
+ Switch_for_radiation_loss_term_usage_in_power_balance___________________ (i_rad_loss)____________________              1    
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1650E+01 OP 
- Alpha_particle_confinement_time_(s)_____________________________________ (taup)________________________      2.2270E+01    
- Alpha_particle/energy_confinement_time_ratio____________________________ (taup/taueff)_________________      6.9512E+00    
- Lower_limit_on_taup/taueff______________________________________________ (taulimit)____________________      5.0000E+00    
- Total_energy_confinement_time_including_radiation_loss_(s)______________ (total_energy_conf_time)______      2.8018E+00    
+ Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      2.2270E+01    
+ Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.9512E+00    
+ Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
+ Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.8018E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.4553E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9603E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7266E-03 OP 
- Volume_measure_of_elongation____________________________________________ (kappaa_IPB)__________________      1.6815E+00 OP 
+ Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6815E+00 OP 
  Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.5616E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.3585E+02 OP 
  Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
@@ -1340,11 +1340,11 @@ icc = 60
 ixc = 106 * ftmargoh
 tmargmin_cs = 1.5
 
-* Lower limit on taup/taueff (ratio alpha particle/energy confinement times) *
+* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-ixc = 110 * ftaulimit
-taulimit = 5.0
+ixc = 110 * falpha_energy_confinement
+f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -1575,9 +1575,6 @@ i_density_limit = 7
 * Switch for fast alpha pressure calculation
 i_beta_fast_alpha = 1
 
-* Switch for inverse quadrature in l-mode scaling laws 5 and 9
-iinvqd = 1
-
 * Switch for pedestal profiles
 ipedestal = 1
 
@@ -1609,7 +1606,7 @@ tesep = 0.1
 iprofile = 1
 
 * Switch for energy confinement time scaling law
-isc = 34
+i_confinement_time = 34
 
 * Safety factor on axis
 q0 = 1.0
