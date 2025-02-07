@@ -239,13 +239,11 @@ class Stellarator:
                 physics_variables.pcoreradpv,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.q,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.a_plasma_poloidal,
                 physics_variables.zeff,
             )
 
@@ -4478,13 +4476,11 @@ class Stellarator:
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.te,
             physics_variables.ten,
             physics_variables.tin,
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -4508,14 +4504,17 @@ class Stellarator:
         (
             physics_variables.burnup,
             physics_variables.ntau,
+            physics_variables.nTtau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
+            physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,
