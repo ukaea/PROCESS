@@ -317,27 +317,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -1312,27 +1312,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -2307,27 +2307,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -3302,27 +3302,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -4297,27 +4297,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -5292,27 +5292,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -6287,27 +6287,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -7282,27 +7282,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
@@ -8277,27 +8277,27 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (p_l_h_threshold_mw(1))___________________      1.5461E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (p_l_h_threshold_mw(2))___________________      3.5370E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (p_l_h_threshold_mw(3))___________________      6.6686E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (p_l_h_threshold_mw(4))___________________      2.5524E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (p_l_h_threshold_mw(5))___________________      2.0336E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(6))___________________      1.1353E+02 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (p_l_h_threshold_mw(7))___________________      1.4975E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (p_l_h_threshold_mw(8))___________________      7.7318E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (p_l_h_threshold_mw(9))___________________      7.9892E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (p_l_h_threshold_mw(10))__________________      1.1892E+02 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (p_l_h_threshold_mw(11))__________________      5.3245E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (p_l_h_threshold_mw(12))__________________      3.6437E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (p_l_h_threshold_mw(13))__________________      5.0831E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (p_l_h_threshold_mw(14))__________________      2.5936E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (p_l_h_threshold_mw(15))__________________      2.7458E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (p_l_h_threshold_mw(16))__________________      1.4309E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (p_l_h_threshold_mw(17))__________________      5.2692E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (p_l_h_threshold_mw(18))__________________      2.9399E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (p_l_h_threshold_mw(19))__________________      1.1353E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (p_l_h_threshold_mw(20))__________________      1.4975E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (p_l_h_threshold_mw(21))__________________      7.7318E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      6.6686E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.5524E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      2.0336E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      1.1353E+02 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.4975E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      7.7318E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      7.9892E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      1.1892E+02 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      5.3245E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.6437E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      5.0831E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.5936E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7458E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4309E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2692E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.9399E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      1.1353E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.4975E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      7.7318E+01 OP 
  L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      1.1353E+02 OP 
  L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      1.1353E+02 OP 
  Confinement_scaling_law_________________________________________________ (tauelaw)_____________________     "IPB98(y,2)"
