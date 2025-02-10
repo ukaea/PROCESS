@@ -2169,7 +2169,6 @@ class Physics:
 
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = l_h_threshold_power(
-            physics_variables.dene,
             physics_variables.dnla,
             physics_variables.bt,
             physics_variables.rmajor,
