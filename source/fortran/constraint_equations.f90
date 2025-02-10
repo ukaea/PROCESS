@@ -957,13 +957,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for L-H power threshold limit
       !! #=# physics
-      !! #=#=# flhthresh, plhthresh
+      !! #=#=# fl_h_threshold, plhthresh
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! flhthresh : input real : f-value for L-H power threshold
+      !! fl_h_threshold : input real : f-value for L-H power threshold
       !! plhthresh : input real : L-H mode power threshold (MW)
       !! pdivt : input real : power to conducted to the divertor region (MW)
-      use constraint_variables, only: flhthresh
+      use constraint_variables, only: fl_h_threshold
       use physics_variables, only: plhthresh, pdivt
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -972,10 +972,10 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  -(1.0D0 - flhthresh * plhthresh / pdivt)
+      tmp_cc =  -(1.0D0 - fl_h_threshold * plhthresh / pdivt)
       tmp_con = plhthresh
-      tmp_err = plhthresh - pdivt / flhthresh
-      if (flhthresh > 1.0D0) then
+      tmp_err = plhthresh - pdivt / fl_h_threshold
+      if (fl_h_threshold > 1.0D0) then
          tmp_symbol = '>'
       else
          tmp_symbol = '<'

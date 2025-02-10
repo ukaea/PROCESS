@@ -11,7 +11,7 @@ for the scaling laws listed in the table below, in routine `l_h_threshold_power(
 
 This constraint can be activated by stating `icc = 15` in the input file.
 
-The value of `i_l_h_threshold` can be set to apply the relevant H-mode threshold. The scaling value `flhthresh (ixc=103)` can be varied also.
+The value of `i_l_h_threshold` can be set to apply the relevant H-mode threshold. The scaling value `fl_h_threshold (ixc=103)` can be varied also.
 
 We define the net power across the seperatrix for the scaling as `pdivt` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
 
@@ -20,12 +20,12 @@ $$
 $$
 
 
-For an H-mode plasma, `icc = 15` and `flhthresh (ixc=103)` by default will ensure
+For an H-mode plasma, `icc = 15` and `fl_h_threshold (ixc=103)` by default will ensure
 that the power reaching the divertor is at least equal to the threshold power
 calculated for the chosen scaling, which is a necessary condition for
 H-mode. 
 
-For an L-mode plasma, `icc = 15` should be turned on but the bounds for `flhthresh (ixc=103)` should be set to `boundl(103) = 0.001` and `boundu(103) = 1.0` to ensure that the power does not exceed the calculated threshold, 
+For an L-mode plasma, `icc = 15` should be turned on but the bounds for `fl_h_threshold (ixc=103)` should be set to `boundl(103) = 0.001` and `boundu(103) = 1.0` to ensure that the power does not exceed the calculated threshold, 
 and therefore the machine remains in L-mode.
 
 **Therefore it is recommended to always use `icc = 15` if trying to simulate a plasma scenario specifically in L or H-mode**

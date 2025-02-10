@@ -9,7 +9,7 @@
     },
     "uncertainties": [
         {
-            "Varname": "flhthresh",
+            "Varname": "fl_h_threshold",
             "Errortype": "Gaussian",
             "Mean": 1.0,
             "Std": 0.05

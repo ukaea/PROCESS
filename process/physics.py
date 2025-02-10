@@ -2514,7 +2514,7 @@ class Physics:
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.tesep = reinke_module.reinke_tsep(
                 physics_variables.bt,
-                constraint_variables.flhthresh,
+                constraint_variables.fl_h_threshold,
                 physics_variables.q95,
                 physics_variables.rmajor,
                 physics_variables.eps,

@@ -228,7 +228,7 @@ contains
       tw_storage_l, tw_storage_w, tw_storage_h, warm_shop_l, warm_shop_w, &
       warm_shop_h, water_buildings_l, water_buildings_w, water_buildings_h, &
       workshop_l, workshop_w, workshop_h
-    use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
+    use constraint_variables, only: fl_h_threshold, fpeakb, fpsep, fdivcol, ftcycl, &
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
@@ -853,8 +853,8 @@ contains
        case ('fjprot')
           call parse_real_variable('fjprot', fjprot, 0.001D0, 10.0D0, &
                'F-value for SCTF winding pack J')
-       case ('flhthresh')
-          call parse_real_variable('flhthresh', flhthresh, 0.001D0, 1.0D6, &
+       case ('fl_h_threshold')
+          call parse_real_variable('fl_h_threshold', fl_h_threshold, 0.001D0, 1.0D6, &
                'F-value for L-H power threshold')
        case ('fmva')
           call parse_real_variable('fmva', fmva, 0.001D0, 10.0D0, &
