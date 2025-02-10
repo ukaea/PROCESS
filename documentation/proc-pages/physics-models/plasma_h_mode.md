@@ -7,7 +7,7 @@ tokamaks.
 A range of scaling laws are available that provide estimates of the
 power terms required to initiate these transitions, via extrapolations
 from present-day devices. PROCESS calculates these power threshold values
-for the scaling laws listed in the [below](#l-h-scaling-options), in routine `l_h_threshold_power()`.
+for the scaling laws listed [below](#l-h-scaling-options), in routine `l_h_threshold_power()`.
 
 Depending on the value of the chosen scaling by setting `i_l_h_threshold`, a different L-H threshold power is set to the `p_l_h_threshold_mw` variable.
 
@@ -359,7 +359,7 @@ where $B_{\text{T}}$ is the toroidal magnetic filed in $\text{T}$, $\bar{n}_{\te
 
 ### Martin 2008 Aspect ratio corrected scalings
 
-The general form is the same as the original [Martin 2008](#martin-2008-aspect-ratio-corrected-scalings) scaling with a aspect ratio correction factor from T. Takizuka et.al [^8]:
+The general form is the same as the original [Martin 2008](#martin-2008-aspect-ratio-corrected-scalings) scaling with an aspect ratio correction factor from T. Takizuka et.al [^8]:
 
 $$
 P_{\text{L-H}} = 0.0488 e^{\pm0.057} \bar{n}_{\text{e},20}^{0.717 \pm 0.035} B_{\text{T}}^{0.803 \pm 0.032} S_{\text{p}}^{0.941 \pm 0.019} \\ 
