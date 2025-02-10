@@ -1182,7 +1182,7 @@ in routine \texttt{pthresh}.
 
 To enforce one of these scalings, use input parameter \texttt{i_l_h_threshold}
 to select the scaling to use, and turn on constraint equation no. 15
-with iteration variable no. 103 (\texttt{flhthresh}). By default, this
+with iteration variable no. 103 (\texttt{fl_h_threshold}). By default, this
 will ensure that the power reaching the divertor is at least equal to
 the threshold power calculated for the chosen scaling, which is a
 necessary condition for H-mode. However, for L-mode it might be

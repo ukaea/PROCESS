@@ -98,7 +98,7 @@ module constraint_variables
   !! f-value for TF coil winding pack current density
   !! (`constraint equation 35`, `iteration variable 53`)
 
-  real(dp) :: flhthresh
+  real(dp) :: fl_h_threshold
   !! f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)
 
   real(dp) :: fmva
@@ -335,7 +335,7 @@ module constraint_variables
     fjohc = 1.0D0
     fjohc0 = 1.0D0
     fjprot = 1.0D0
-    flhthresh = 1.0D0
+    fl_h_threshold = 1.0D0
     fmva = 1.0D0
     fnbshinef = 1.0D0
     fncycle = 1.0D0

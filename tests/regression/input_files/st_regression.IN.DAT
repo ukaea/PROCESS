@@ -420,7 +420,7 @@ icc = 15
 * VARIABLES:     plhthresh,pdivt calculated in-situ
 
 ixc = 103 
-flhthresh = 1.0
+fl_h_threshold = 1.0
 *boundl(21) = 0.01
 boundu(21) = 10.0
 * DESCRIPTION:   f-value for L-H Power Threshold

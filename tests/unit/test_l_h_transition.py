@@ -138,11 +138,13 @@ def test_calculate_snipes2000_lower(a, b, c, d, e, expected):
 @pytest.mark.parametrize(
     "a, b, c, d, expected",
     [
-        (1.0, 5.0, 6.2, 2.0, 29.515866708312462 ),
+        (1.0, 5.0, 6.2, 2.0, 29.515866708312462),
     ],
 )
 def test_calculate_snipes2000_closed_divertor_nominal(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_nominal(a, b, c, d) == pytest.approx(expected)
+    assert calculate_snipes2000_closed_divertor_nominal(a, b, c, d) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -152,7 +154,9 @@ def test_calculate_snipes2000_closed_divertor_nominal(a, b, c, d, expected):
     ],
 )
 def test_calculate_snipes2000_closed_divertor_upper(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_upper(a, b, c, d) == pytest.approx(expected)
+    assert calculate_snipes2000_closed_divertor_upper(a, b, c, d) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -162,7 +166,9 @@ def test_calculate_snipes2000_closed_divertor_upper(a, b, c, d, expected):
     ],
 )
 def test_calculate_snipes2000_closed_divertor_lower(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_lower(a, b, c, d) == pytest.approx(expected)
+    assert calculate_snipes2000_closed_divertor_lower(a, b, c, d) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -233,6 +239,3 @@ def test_calculate_martin08_aspect_upper(a, b, c, d, e, expected):
 )
 def test_calculate_martin08_aspect_lower(a, b, c, d, e, expected):
     assert calculate_martin08_aspect_lower(a, b, c, d, e) == pytest.approx(expected)
-
-
-

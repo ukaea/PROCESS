@@ -1263,7 +1263,7 @@ t_burn_min = 7200.0
 * L-H threshold scaling *
 *-----------------------*
 icc = 15
-ixc = 103 * flhthresh
+ixc = 103 * fl_h_threshold
 boundu(103) = 10.0
 
 * Injection power upper limit *
