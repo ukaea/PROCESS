@@ -2034,7 +2034,7 @@ class PohmParam(NamedTuple):
 
     expected_p_plasma_ohmic_mw: Any = None
 
-    expected_rpfac: Any = None
+    expected_f_res_plasma_neo: Any = None
 
     expected_res_plasma: Any = None
 
@@ -2055,7 +2055,7 @@ class PohmParam(NamedTuple):
             zeff=2.0909945616489103,
             expected_pden_plasma_ohmic_mw=0.0004062519138005805,
             expected_p_plasma_ohmic_mw=0.7670731448937912,
-            expected_rpfac=2.5,
+            expected_f_res_plasma_neo=2.5,
             expected_res_plasma=3.7767895536275952e-09,
         ),
     ),
@@ -2082,7 +2082,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
     (
         pden_plasma_ohmic_mw,
         p_plasma_ohmic_mw,
-        rpfac,
+        f_res_plasma_neo,
         res_plasma,
     ) = physics.plasma_ohmic_heating(
         inductive_current_fraction=pohmparam.inductive_current_fraction,
@@ -2101,7 +2101,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
 
     assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
-    assert rpfac == pytest.approx(pohmparam.expected_rpfac)
+    assert f_res_plasma_neo == pytest.approx(pohmparam.expected_f_res_plasma_neo)
 
     assert res_plasma == pytest.approx(pohmparam.expected_res_plasma)
 
