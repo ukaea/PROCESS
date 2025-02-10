@@ -37,10 +37,12 @@ and therefore the machine remains in L-mode.
 The general form is:
 
 $$
-P_{\text{L-H}} = 0.45 (0.6n_{e,20}R^2)^{\alpha} n^{0.75}_{\text{e},20}B_{\text{T}}R^2
+P_{\text{L-H}} = 0.45 (0.6\bar{n}_{e,20}R^2)^{\alpha} \bar{n}^{0.75}_{\text{e},20}B_{\text{T}}R^2
 $$
 
-where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$.
+where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$,  $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla and $R$ is the plasma major radius in metres.
+
+
 
 ------------------
 
@@ -49,7 +51,7 @@ where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$.
 Is selected with `i_l_h_threshold = 1` [^1] [^2]
 
 $$
-P_{\text{L-H}} = 0.45 \times n^{0.75}_{\text{e},20}B_{\text{T}}R^2
+P_{\text{L-H}} = 0.45 \times \bar{n}^{0.75}_{\text{e},20}B_{\text{T}}R^2
 $$
 
 ---------------
@@ -59,7 +61,7 @@ $$
 Is selected with `i_l_h_threshold = 2` [^1] [^2]
 
 $$
-P_{\text{L-H}} = 0.3960502816 \times n_{\text{e},20}B_{\text{T}}R^{2.5}
+P_{\text{L-H}} = 0.3960502816 \times \bar{n}_{\text{e},20}B_{\text{T}}R^{2.5}
 $$
 
 ---------------
@@ -69,7 +71,7 @@ $$
 Is selected with `i_l_h_threshold = 3` [^1] [^2]
 
 $$
-P_{\text{L-H}} = 0.5112987149 \times n_{\text{e},20}^{0.5}B_{\text{T}}R^{1.5}
+P_{\text{L-H}} = 0.5112987149 \times \bar{n}_{\text{e},20}^{0.5}B_{\text{T}}R^{1.5}
 $$
 
 ---------------

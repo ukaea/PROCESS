@@ -7525,7 +7525,6 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 
 def l_h_threshold_power(
-    dene: float,
     dnla: float,
     bt: float,
     rmajor: float,
@@ -7539,8 +7538,6 @@ def l_h_threshold_power(
     """
     L-mode to H-mode power threshold calculation.
 
-    :param dene: Volume-averaged electron density (/m3)
-    :type dene: float
     :param dnla: Line-averaged electron density (/m3)
     :type dnla: float
     :param bt: Toroidal field on axis (T)
@@ -7564,7 +7561,6 @@ def l_h_threshold_power(
     :rtype: list[float]
     """
 
-    dene20 = 1e-20 * dene
     dnla20 = 1e-20 * dnla
 
     # ========================================================================
@@ -7573,15 +7569,15 @@ def l_h_threshold_power(
     # Fit to 1996 H-mode power threshold database: nominal
 
     # i_l_h_threshold = 1
-    iterdd = transition.calculate_iter1996_nominal(dene20, bt, rmajor)
+    iterdd = transition.calculate_iter1996_nominal(dnla20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
     # i_l_h_threshold = 2
-    iterdd_ub = transition.calculate_iter1996_upper(dene20, bt, rmajor)
+    iterdd_ub = transition.calculate_iter1996_upper(dnla20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
     # i_l_h_threshold = 3
-    iterdd_lb = transition.calculate_iter1996_lower(dene20, bt, rmajor)
+    iterdd_lb = transition.calculate_iter1996_lower(dnla20, bt, rmajor)
 
     # ========================================================================
 
