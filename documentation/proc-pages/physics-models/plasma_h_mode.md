@@ -2,22 +2,35 @@
 
 Transitions from a standard confinement mode (L-mode) to an improved
 confinement regime (H-mode), called L-H transitions, are observed in most
-tokamaks. 
+tokamaks.
 
 A range of scaling laws are available that provide estimates of the
 power terms required to initiate these transitions, via extrapolations
 from present-day devices. PROCESS calculates these power threshold values
-for the scaling laws listed in the table below, in routine `l_h_threshold_power()`.
+for the scaling laws listed in the [below](#l-h-scaling-options), in routine `l_h_threshold_power()`.
 
-This constraint can be activated by stating `icc = 15` in the input file.
-
-The value of `i_l_h_threshold` can be set to apply the relevant H-mode threshold. The scaling value `fl_h_threshold (ixc=103)` can be varied also.
+Depending on the value of the chosen scaling by setting `i_l_h_threshold`, a different L-H threshold power is set to the `p_l_h_threshold_mw` variable.
 
 We define the net power across the seperatrix for the scaling as `pdivt` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
 
 $$
 \mathtt{pdivt} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
 $$
+
+There are two separate constraint equations for enforcing the L-H threshold.
+
+----------------
+
+### Use the full divertor power
+
+This constraint can be activated by stating `icc = 15` in the input file.
+
+The scaling value `fl_h_threshold (ixc=103)` can be varied to set the required margin around the threshold.
+
+$$
+1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{pdivt}}
+$$
+
 
 
 For an H-mode plasma, `icc = 15` and `fl_h_threshold (ixc=103)` by default will ensure
@@ -30,7 +43,25 @@ and therefore the machine remains in L-mode.
 
 **Therefore it is recommended to always use `icc = 15` if trying to simulate a plasma scenario specifically in L or H-mode**
 
+-------
+
+### Use the injected power reduced divertor power.
+
+This constraint can be activated by stating `icc = 73` in the input file.
+
+$$
+1.0 - \mathtt{fplhsep} \times \frac{\mathtt{pdivt}}{
+\underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
+$$
+
+The scaling value `fplhsep (ixc=137)` can be varied to set the required margin around the threshold.
+
+
 --------------------
+
+## L-H scaling options
+
+----------------
 
 ### ITER-1996 Scalings
 
