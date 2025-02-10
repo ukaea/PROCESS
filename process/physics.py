@@ -2200,7 +2200,7 @@ class Physics:
         (
             physics_variables.pden_plasma_ohmic_mw,
             physics_variables.p_plasma_ohmic_mw,
-            physics_variables.rpfac,
+            physics_variables.f_res_plasma_neo,
             physics_variables.res_plasma,
         ) = self.plasma_ohmic_heating(
             physics_variables.inductive_current_fraction,
@@ -3121,7 +3121,7 @@ class Physics:
             Tuple[float, float, float, float]: Tuple containing:
                 - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
                 - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
-                - rpfac (float): Neo-classical resistivity enhancement factor.
+                - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
                 - res_plasma (float): Plasma resistance (ohm).
 
         Notes:
@@ -3145,8 +3145,8 @@ class Physics:
         # Neo-classical resistivity enhancement factor
         # Taken from ITER Physics Design Guidelines: 1989
         # The expression is valid for aspect ratios in the range 2.5 to 4.0
-        rpfac = 4.3 - 0.6 * rmajor / rminor
-        res_plasma = res_plasma * rpfac
+        f_res_plasma_neo = 4.3 - 0.6 * rmajor / rminor
+        res_plasma = res_plasma * f_res_plasma_neo
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
@@ -3168,7 +3168,7 @@ class Physics:
         # Total ohmic heating power
         p_plasma_ohmic_mw = pden_plasma_ohmic_mw * vol_plasma
 
-        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, res_plasma
+        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, f_res_plasma_neo, res_plasma
 
     @staticmethod
     def calculate_plasma_current(

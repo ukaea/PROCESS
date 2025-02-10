@@ -789,7 +789,7 @@ module physics_variables
   real(dp) :: rnone
   !! n_oxygen / n_e
 
-  real(dp) :: rpfac
+  real(dp) :: f_res_plasma_neo
   !! neo-classical correction factor to res_plasma
 
   real(dp) :: res_plasma
@@ -1092,7 +1092,7 @@ module physics_variables
     rndfuel = 0.0D0
     rnfene = 0.0D0
     rnone = 0.0D0
-    rpfac = 0.0D0
+    f_res_plasma_neo = 0.0D0
     res_plasma = 0.0D0
     res_time = 0.0D0
     a_plasma_surface = 0.0D0
