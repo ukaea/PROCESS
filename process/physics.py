@@ -3145,7 +3145,9 @@ class Physics:
         # Neo-classical resistivity enhancement factor
         # Taken from ITER Physics Design Guidelines: 1989
         # The expression is valid for aspect ratios in the range 2.5 to 4.0
-        f_res_plasma_neo = 4.3 - 0.6 * rmajor / rminor
+
+        f_res_plasma_neo = 1.0 if rmajor / rminor < 2.5 else 4.3 - 0.6 * rmajor / rminor
+
         res_plasma = res_plasma * f_res_plasma_neo
 
         # Check to see if plasma resistance is negative
@@ -3157,6 +3159,7 @@ class Physics:
 
         # Ohmic heating power per unit volume
         # Corrected from: pden_plasma_ohmic_mw = (inductive_current_fraction*plasma_current)**2 * ...
+
         pden_plasma_ohmic_mw = (
             inductive_current_fraction
             * plasma_current**2
