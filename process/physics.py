@@ -6635,7 +6635,7 @@ class Physics:
 
             return fhz_value
 
-        return root_scalar(fhz, bracket=(0.01, 150), xtol=0.00001).root
+        return root_scalar(fhz, bracket=(0.01, 150), xtol=0.001).root
 
     @staticmethod
     def calculate_confinement_time(

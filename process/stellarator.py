@@ -224,7 +224,7 @@ class Stellarator:
                 physics_variables.dene,
                 physics_variables.dnla,
                 physics_variables.eps,
-                2.0,
+                1.0,
                 i_confinement_time,
                 physics_variables.ignite,
                 physics_variables.kappa,
