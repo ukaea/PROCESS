@@ -148,6 +148,10 @@ def calculate_martin08_nominal(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
 
         :references:
             - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -182,7 +186,9 @@ def calculate_martin08_upper(
         :rtype: float
 
         :notes:
-
+            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
         :references:
             - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
@@ -216,6 +222,9 @@ def calculate_martin08_lower(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -252,6 +261,9 @@ def calculate_snipes2000_nominal(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -289,6 +301,9 @@ def calculate_snipes2000_upper(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -326,6 +341,9 @@ def calculate_snipes2000_lower(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -361,6 +379,9 @@ def calculate_snipes2000_closed_divertor_nominal(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -389,6 +410,9 @@ def calculate_snipes2000_closed_divertor_upper(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -417,6 +441,9 @@ def calculate_snipes2000_closed_divertor_lower(
         :rtype: float
 
         :notes:
+            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         :references:
             - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
@@ -543,7 +570,11 @@ def calculate_martin08_aspect_nominal(
 
             :notes:
                 - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned
+                if not the usual Martin 2008 scaling will be returned.
+
+                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
             :references:
                 - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -596,7 +627,11 @@ def calculate_martin08_aspect_upper(
 
             :notes:
                 - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned
+                if not the usual Martin 2008 scaling will be returned.
+
+                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
             :references:
                 - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -649,7 +684,11 @@ def calculate_martin08_aspect_lower(
 
             :notes:
                 - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned
+                if not the usual Martin 2008 scaling will be returned.
+
+                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
             :references:
                 - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”

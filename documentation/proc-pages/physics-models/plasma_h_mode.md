@@ -112,6 +112,18 @@ $$
 
 where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla and $S_{\text{p}}$ is the plasma surface area in $\text{m}^2$.
 
+We apply a mass-correction term to the scaling, stated by Martin et.al [^4] as per:
+
+!!! quote "Mass dependence on threshold"
+
+    "*It is also found in JET that the 
+    threshold power in tritium discharges becomes further lower. The dependence of the threshold power 
+    on the ion mass number M was roughly given by $P_{\text{L-H}} \propto \frac{1}{M}$ [^9]. When this mass dependence is 
+    applied to the deuterium-tritium discharges for ITER, the above predicted values of PThresh can be 
+    reduced by ~ 20%.*[^4]"
+
+We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of the scalings, where $M_{\text{i}}$ is the average atomic mass of all ions. Therefore for a pure 50:50 D-T plasma giving a $M_{\text{i}} = 2.5$ the value of $P_{\text{L-H}}$ is dropped by 20%.
+
 ------------------
 
 #### Martin 2008 Nominal Scaling
@@ -119,7 +131,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 Is selected with `i_l_h_threshold = 6` [^4]
 
 $$
-P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}
+P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}\left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -129,7 +141,7 @@ $$
 Is selected with `i_l_h_threshold = 7` [^4]
 
 $$
-P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}
+P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}\left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -139,7 +151,7 @@ $$
 Is selected with `i_l_h_threshold = 8` [^4]
 
 $$
-P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}
+P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}\left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -168,6 +180,10 @@ $$
 
 where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla, $R$ is the plasma major radius in metres and $a$ is the plasma major radius in metres.
 
+We apply the same mass-correction factor given in the [Martin 2008 scalings above](#martin-2008-scalings).[^4] [^9] Snipes et.al provides the same justification [^9].
+
+We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of the scalings, where $M_{\text{i}}$ is the average atomic mass of all ions. Therefore for a pure 50:50 D-T plasma giving a $M_{\text{i}} = 2.5$ the value of $P_{\text{L-H}}$ is dropped by 20%.
+
 ------------------
 
 #### Snipes 2000 Nominal Scaling
@@ -175,7 +191,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 Is selected with `i_l_h_threshold = 9` [^5]
 
 $$
-P_{\text{L-H}} = 1.42 \times \bar{n}_{\text{e},20}^{0.58} B_{\text{T}}^{0.82} R^{1.00} a^{0.81}
+P_{\text{L-H}} = 1.42 \times \bar{n}_{\text{e},20}^{0.58} B_{\text{T}}^{0.82} R^{1.00} a^{0.81} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -185,7 +201,7 @@ $$
 Is selected with `i_l_h_threshold = 10`  [^5]
 
 $$
-P_{\text{L-H}} = 1.547 \times \bar{n}_{\text{e},20}^{0.615} B_{\text{T}}^{0.851} R^{1.089} a^{0.876}
+P_{\text{L-H}} = 1.547 \times \bar{n}_{\text{e},20}^{0.615} B_{\text{T}}^{0.851} R^{1.089} a^{0.876} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -195,7 +211,7 @@ $$
 Is selected with `i_l_h_threshold = 11`  [^5]
 
 $$
-P_{\text{L-H}} = 1.293 \times \bar{n}_{\text{e},20}^{0.545} B_{\text{T}}^{0.789} R^{0.911} a^{0.744}
+P_{\text{L-H}} = 1.293 \times \bar{n}_{\text{e},20}^{0.545} B_{\text{T}}^{0.789} R^{0.911} a^{0.744} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -220,6 +236,10 @@ $$
 
 where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla and $R$ is the plasma major radius in metres
 
+We apply the same mass-correction factor given in the [Martin 2008 scalings above](#martin-2008-scalings).[^4] [^9] Snipes et.al provides the same justification [^9].
+
+We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of the scalings, where $M_{\text{i}}$ is the average atomic mass of all ions. Therefore for a pure 50:50 D-T plasma giving a $M_{\text{i}} = 2.5$ the value of $P_{\text{L-H}}$ is dropped by 20%.
+
 ------------------
 
 #### Snipes 2000 Closed Divertor Nominal Scaling
@@ -227,7 +247,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 Is selected with `i_l_h_threshold = 12`  [^5]
 
 $$
-P_{\text{L-H}} = 0.8 \times \bar{n}_{\text{e},20}^{0.50} B_{\text{T}}^{0.53} R^{1.51}
+P_{\text{L-H}} = 0.8 \times \bar{n}_{\text{e},20}^{0.50} B_{\text{T}}^{0.53} R^{1.51} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -237,7 +257,7 @@ $$
 Is selected with `i_l_h_threshold = 13`  [^5]
 
 $$
-P_{\text{L-H}} = 0.867 \times \bar{n}_{\text{e},20}^{0.561} B_{\text{T}}^{0.588} R^{1.587}
+P_{\text{L-H}} = 0.867 \times \bar{n}_{\text{e},20}^{0.561} B_{\text{T}}^{0.588} R^{1.587} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -247,7 +267,7 @@ $$
 Is selected with `i_l_h_threshold = 14`  [^5]
 
 $$
-P_{\text{L-H}} = 0.733 \times \bar{n}_{\text{e},20}^{0.439} B_{\text{T}}^{0.472} R^{1.433}
+P_{\text{L-H}} = 0.733 \times \bar{n}_{\text{e},20}^{0.439} B_{\text{T}}^{0.472} R^{1.433} \left(\frac{2}{M_{\text{i}}}\right)
 $$
 
 ---------------
@@ -319,7 +339,7 @@ $$
 
 where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of $10^{20} \text{m}^{-3}$, $B_{\text{T}}$ is the toroidal magnetic field in Tesla, $S_{\text{p}}$ is the plasma surface area in $\text{m}^2$ and $A$ is the plasma aspect ratio
 
-
+We apply the same mass-correction done for the original scaling [discussed above](#martin-2008-scalings).
 
 ------------------
 
@@ -328,7 +348,7 @@ where $\bar{n}_{\text{e},20}$ is the line-averaged electron density in units of 
 Is selected with `i_l_h_threshold = 19` [^4] [^8]
 
 $$
-P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941} \\ 
+P_{\text{L-H}} = 0.0488 \bar{n}_{\text{e},20}^{0.717} B_{\text{T}}^{0.803} S_{\text{p}}^{0.941}\left(\frac{2}{M_{\text{i}}}\right) \\ 
 \times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
 $$
 
@@ -339,7 +359,7 @@ $$
 Is selected with `i_l_h_threshold = 20` [^4] [^8]
 
 $$
-P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96} \\ 
+P_{\text{L-H}} = 0.05166240355 \times \bar{n}_{\text{e},20}^{0.752} B_{\text{T}}^{0.835} S_{\text{p}}^{0.96}\left(\frac{2}{M_{\text{i}}}\right) \\ 
 \times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
 $$
 
@@ -350,7 +370,7 @@ $$
 Is selected with `i_l_h_threshold = 21` [^4] [^8]
 
 $$
-P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922} \\ 
+P_{\text{L-H}} = 0.04609619059 \times \bar{n}_{\text{e},20}^{0.682} B_{\text{T}}^{0.771} S_{\text{p}}^{0.922}\left(\frac{2}{M_{\text{i}}}\right) \\ 
 \times  \left[0.098 \times \frac{A}{1.0 - \left(\frac{2.0}{(1.0 + A)}\right)^{0.5}}\right] \text{for} \  A \le 2.7
 $$
 
@@ -363,3 +383,5 @@ $$
 [^6]: A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012, doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 [^7]: A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
 [^8]: T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,” Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+[^9]: E. Righi et al., “Isotope scaling of the H mode power threshold on JET,” Nuclear Fusion, vol. 39, no. 3, pp. 309–319, Mar. 1999, doi: https://doi.org/10.1088/0029-5515/39/3/302.
+‌
