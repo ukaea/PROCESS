@@ -189,6 +189,8 @@ OBS_VARS = {
     "isc": "i_confinement_time",
     "iradloss": "i_rad_loss",
     "ipnlaws": "n_confinement_scalings",
+    "flhthresh": "fl_h_threshold",
+    "ilhthresh": "i_l_h_threshold",
 }
 
 OBS_VARS_HELP = {
