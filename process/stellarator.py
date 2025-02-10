@@ -129,7 +129,7 @@ class Stellarator:
             self.costs.output()
             self.availability.run(output=True)
             self.physics.outplas()
-            self.stigma()
+            self.output_confinement_comparison_stell()
             self.stheat(True)
             self.stphys(True)
             self.stopt(True)
@@ -188,7 +188,7 @@ class Stellarator:
 
         st.first_call = False
 
-    def stigma(self):
+    def output_confinement_comparison_stell(self):
         """Routine to calculate ignition margin at the final point
         with different stellarator confinement time scaling laws
         author: P J Knight, CCFE, Culham Science Centre
@@ -204,14 +204,10 @@ class Stellarator:
         )
         po.write(self.outfile, f"{' ' * 34}for H = 2{' ' * 54}power balance")
 
-        #  Label stellarator scaling laws (update if more are added)
-
-        istlaw = [21, 22, 23, 37, 38]
-
         #  Calculate power balances for all stellarator scaling laws
         #  assuming H = 2
 
-        for iisc, i in enumerate(istlaw):
+        for i_confinement_time in [21, 22, 23, 37, 38]:
             (
                 physics_variables.pden_electron_transport_loss_mw,
                 physics_variables.pden_ion_transport_loss_mw,
@@ -229,7 +225,7 @@ class Stellarator:
                 physics_variables.dnla,
                 physics_variables.eps,
                 2.0,
-                physics_variables.i_confinement_time,
+                i_confinement_time,
                 physics_variables.ignite,
                 physics_variables.kappa,
                 physics_variables.kappa95,
@@ -247,7 +243,9 @@ class Stellarator:
                 physics_variables.zeff,
             )
 
-            physics_variables.hfac[iisc] = self.physics.find_other_h_factors(i)
+            physics_variables.hfac[i_confinement_time - 1] = (
+                self.physics.find_other_h_factors(i_confinement_time)
+            )
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
