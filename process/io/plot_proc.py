@@ -2524,8 +2524,8 @@ def plot_physics_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data:
-        pthresh = mfile_data.data["plhthresh"].get_scan(scan)
+    if "p_l_h_threshold_mw" in mfile_data.data:
+        pthresh = mfile_data.data["p_l_h_threshold_mw"].get_scan(scan)
     else:
         pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
 
@@ -2865,8 +2865,8 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data:
-        pthresh = mfile_data.data["plhthresh"].get_scan(scan)
+    if "p_l_h_threshold_mw" in mfile_data.data:
+        pthresh = mfile_data.data["p_l_h_threshold_mw"].get_scan(scan)
     else:
         pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
     flh = pdivt / pthresh

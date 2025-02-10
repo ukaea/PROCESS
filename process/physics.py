@@ -2182,7 +2182,7 @@ class Physics:
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
-        physics_variables.plhthresh = physics_variables.l_h_threshold_powers[
+        physics_variables.p_l_h_threshold_mw = physics_variables.l_h_threshold_powers[
             physics_variables.i_l_h_threshold - 1
         ]
 
@@ -5149,23 +5149,23 @@ class Physics:
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (enforced) (MW)",
-                    "(boundl(103)*plhthresh)",
-                    numerics.boundl[102] * physics_variables.plhthresh,
+                    "(boundl(103)*p_l_h_threshold_mw)",
+                    numerics.boundl[102] * physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (MW)",
-                    "(plhthresh)",
-                    physics_variables.plhthresh,
+                    "(p_l_h_threshold_mw)",
+                    physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (NOT enforced) (MW)",
-                    "(plhthresh)",
-                    physics_variables.plhthresh,
+                    "(p_l_h_threshold_mw)",
+                    physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
 
