@@ -77,7 +77,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "i_pf_location", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "powpfres", 0.0)
-    monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "routr", 1.5)
     monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "fcohbof", 2.654e-1)
@@ -250,7 +250,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(
         pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     )
-    monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpfs", np.full(22, -175.84911993600002))
     monkeypatch.setattr(pv, "rmajor", 8.938)
@@ -2428,7 +2428,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpfb",
+        "c_pf_cs_coil_pulse_start_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
