@@ -594,7 +594,7 @@
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
- Top_scrape-off_vertical_thickness_(m)___________________________________ (vgaptop)_____________________      6.0000E-01    
+ Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      4.9333E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0019E+00    
  Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2000E-01    

@@ -71,7 +71,7 @@ case the machine is not symmetric about the midplane.
  Gap                                          0.020           7.536   (dr_shld_blkt_gap)           
  Top blanket                                  0.869           7.516   (blnktth)           
  Top first wall                               0.018           6.647   (fwtth)             
- Top scrape-off                               0.600           6.629   (vgaptop)           
+ Top scrape-off                               0.600           6.629   (dz_fw_plasma_gap)           
  Plasma top                                   6.029           6.029   (z_plasma_xpoint_upper)      
  Midplane                                     0.000          -0.000                       
  Plasma bottom                                6.029          -6.029   (z_plasma_xpoint_upper)      
