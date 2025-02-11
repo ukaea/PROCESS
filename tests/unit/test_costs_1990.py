@@ -2036,7 +2036,7 @@ class Acc2222Param(NamedTuple):
 
     i_pf_superconductor: Any = None
 
-    whtpfs: Any = None
+    m_pf_coil_structure_total: Any = None
 
     ric: Any = None
 
@@ -2163,7 +2163,7 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             i_pf_superconductor=3,
-            whtpfs=2695737.563343476,
+            m_pf_coil_structure_total=2695737.563343476,
             ric=np.array(
                 np.array(
                     (
@@ -2359,7 +2359,7 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             i_pf_superconductor=3,
-            whtpfs=2510424.9065680322,
+            m_pf_coil_structure_total=2510424.9065680322,
             ric=np.array(
                 np.array(
                     (
@@ -2555,7 +2555,7 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             i_pf_superconductor=3,
-            whtpfs=2510424.9065680322,
+            m_pf_coil_structure_total=2510424.9065680322,
             ric=np.array(
                 np.array(
                     (
@@ -2727,7 +2727,11 @@ def test_acc2222(acc2222param, monkeypatch, costs):
         pfcoil_variables, "i_pf_superconductor", acc2222param.i_pf_superconductor
     )
 
-    monkeypatch.setattr(pfcoil_variables, "whtpfs", acc2222param.whtpfs)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "m_pf_coil_structure_total",
+        acc2222param.m_pf_coil_structure_total,
+    )
 
     monkeypatch.setattr(pfcoil_variables, "ric", acc2222param.ric)
 
