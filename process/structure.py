@@ -39,7 +39,7 @@ class Structure:
         """
 
         # Total weight of the PF coil conductor and its structure
-        total_weight_pf = pfv.whtpf + pfv.whtpfs
+        total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.whtpfs
 
         (
             stv.fncmass,

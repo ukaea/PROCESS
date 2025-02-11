@@ -746,12 +746,14 @@ class PFCoil:
             self.ohcalc()
 
         # Summation of weights and current
-        pfv.whtpf = 0.0e0
+        pfv.m_pf_coil_conductor_total = 0.0e0
         pfv.whtpfs = 0.0e0
         pf.ricpf = 0.0e0
 
         for i in range(pfv.nohc):
-            pfv.whtpf = pfv.whtpf + pfv.m_pf_coil_conductor[i]
+            pfv.m_pf_coil_conductor_total = (
+                pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_conductor[i]
+            )
             pfv.whtpfs = pfv.whtpfs + pfv.wts[i]
             pf.ricpf = pf.ricpf + abs(pfv.ric[i])
 
@@ -2510,7 +2512,7 @@ class PFCoil:
             "\t" * 1
             + f"{pf.ricpf:.2e}"
             + "\t" * 7
-            + f"{pfv.whtpf:.2e}\t{pfv.whtpfs:.2e}",
+            + f"{pfv.m_pf_coil_conductor_total:.2e}\t{pfv.whtpfs:.2e}",
         )
 
         op.osubhd(self.outfile, "PF coil current scaling information :")
