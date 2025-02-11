@@ -2030,7 +2030,7 @@ class Acc2222Param(NamedTuple):
 
     vfohc: Any = None
 
-    nohc: Any = None
+    n_cs_pf_coils: Any = None
 
     n_pf_coil_turns: Any = None
 
@@ -2131,7 +2131,7 @@ class Acc2222Param(NamedTuple):
             j_crit_str_pf=200.0,
             i_pf_conductor=0,
             vfohc=0.29999999999999999,
-            nohc=7,
+            n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
                 np.array(
                     (
@@ -2327,7 +2327,7 @@ class Acc2222Param(NamedTuple):
             j_crit_str_pf=200.0,
             i_pf_conductor=0,
             vfohc=0.29999999999999999,
-            nohc=7,
+            n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
                 np.array(
                     (
@@ -2523,7 +2523,7 @@ class Acc2222Param(NamedTuple):
             j_crit_str_pf=200.0,
             i_pf_conductor=0,
             vfohc=0.29999999999999999,
-            nohc=7,
+            n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
                 np.array(
                     (
@@ -2719,7 +2719,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "vfohc", acc2222param.vfohc)
 
-    monkeypatch.setattr(pfcoil_variables, "nohc", acc2222param.nohc)
+    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", acc2222param.n_cs_pf_coils)
 
     monkeypatch.setattr(
         pfcoil_variables, "n_pf_coil_turns", acc2222param.n_pf_coil_turns

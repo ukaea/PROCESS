@@ -211,7 +211,7 @@ module pfcoil_variables
   integer :: n_pf_coil_groups
   !! number of groups of PF coils. Symmetric coil pairs should all be in the same group
 
-  integer :: nohc
+  integer :: n_cs_pf_coils
   !! number of PF coils (excluding the central solenoid) + 1
 
   real(dp) :: ohhghf
@@ -460,7 +460,7 @@ module pfcoil_variables
     n_pf_coils_in_group = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7
     n_pf_coil_groups = 3
-    nohc = 0
+    n_cs_pf_coils = 0
     ohhghf = 0.71D0
     oh_steel_frac = 0.5D0
     pf_current_safety_factor = 1.0D0

@@ -1553,7 +1553,7 @@ class Costs:
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(pfcoil_variables.nohc):
+        for i in range(pfcoil_variables.n_cs_pf_coils):
             pfwndl = (
                 pfwndl
                 + constants.twopi
@@ -1574,9 +1574,9 @@ class Costs:
         #  Non-Central Solenoid coils
 
         if build_variables.iohcl == 1:
-            npf = pfcoil_variables.nohc - 1
+            npf = pfcoil_variables.n_cs_pf_coils - 1
         else:
-            npf = pfcoil_variables.nohc
+            npf = pfcoil_variables.n_cs_pf_coils
 
         self.c22221 = 0.0e0
 
@@ -1665,7 +1665,9 @@ class Costs:
                         * pfcoil_variables.awpoh
                         * (1 - pfcoil_variables.vfohc)
                         * (1 - pfcoil_variables.fcuohsu)
-                        / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                        / pfcoil_variables.n_pf_coil_turns[
+                            pfcoil_variables.n_cs_pf_coils - 1
+                        ]
                         * tfcoil_variables.dcond[
                             pfcoil_variables.i_cs_superconductor - 1
                         ]
@@ -1694,7 +1696,9 @@ class Costs:
                     * pfcoil_variables.awpoh
                     * (1 - pfcoil_variables.vfohc)
                     * pfcoil_variables.fcuohsu
-                    / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                    / pfcoil_variables.n_pf_coil_turns[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
                     * constants.dcopper
                 )
             else:
@@ -1703,7 +1707,9 @@ class Costs:
                     cost_variables.uccu
                     * pfcoil_variables.awpoh
                     * (1 - pfcoil_variables.vfohc)
-                    / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                    / pfcoil_variables.n_pf_coil_turns[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
                     * constants.dcopper
                 )
 
@@ -1720,8 +1726,8 @@ class Costs:
             self.c22221 = self.c22221 + (
                 1.0e-6
                 * constants.twopi
-                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.nohc - 1]
-                * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
+                * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
                 * cpfconpm
             )
 
