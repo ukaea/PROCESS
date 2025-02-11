@@ -99,7 +99,7 @@ class BlanketLibrary:
             hbot = (
                 build_variables.z_plasma_xpoint_lower
                 + build_variables.dz_xpoint_divertor
-                + divertor_variables.divfix
+                + divertor_variables.dz_divertor
                 - build_variables.blnktth
             )
         # Sheild
@@ -107,7 +107,7 @@ class BlanketLibrary:
             hbot = (
                 build_variables.z_plasma_xpoint_lower
                 + build_variables.dz_xpoint_divertor
-                + divertor_variables.divfix
+                + divertor_variables.dz_divertor
             )
         # Vacuum vessel
         elif icomponent == 2:

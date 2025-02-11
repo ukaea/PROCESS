@@ -2296,7 +2296,7 @@ class Sctfcoil:
         H_vv = (
             build_variables.z_plasma_xpoint_upper
             + build_variables.dz_xpoint_divertor
-            + divertor_variables.divfix
+            + divertor_variables.dz_divertor
             + build_variables.shldtth
             + (build_variables.d_vv_top / 2)
         )
