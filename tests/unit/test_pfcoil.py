@@ -1063,7 +1063,7 @@ def test_waveform(monkeypatch, pfcoil):
     """
     ngc2 = 22
     monkeypatch.setattr(pfv, "ric", np.zeros(ngc2, dtype=int))
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "waves", np.zeros((ngc2, 6), order="F"))
     monkeypatch.setattr(
         pfv,
@@ -1223,7 +1223,7 @@ def test_vsec(pfcoil, monkeypatch):
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfv, "vsefsu", 0)
     monkeypatch.setattr(pfv, "vsbn", 0)
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "vsohbn", 0)
     monkeypatch.setattr(
         pfv,
@@ -1979,7 +1979,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
     monkeypatch.setattr(pfv, "bmaxoh0", 13.522197474024983)
     monkeypatch.setattr(pfv, "cohbop", 19311657.760000002)
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
         "r_pf_coil_outer",

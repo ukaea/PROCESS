@@ -51,11 +51,11 @@ class Pulse:
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
 
-        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.nohc - 1, 1]
+        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 1]
 
         #  Current/turn in Central Solenoid at start of flat-top (A/turn)
 
-        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.nohc - 1, 2]
+        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 2]
 
         #  Central Solenoid resistance (ohms)
 
@@ -64,14 +64,17 @@ class Pulse:
         else:
             r = (
                 pfcoil_variables.powohres
-                / (1.0e6 * pfcoil_variables.ric[pfcoil_variables.nohc - 1]) ** 2
+                / (1.0e6 * pfcoil_variables.ric[pfcoil_variables.n_cs_pf_coils - 1])
+                ** 2
             )
 
         #  Central Solenoid bus resistance (ohms) (assumed to include power supply)
         #  Bus parameters taken from routine PFPWR.
 
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
-        albusa = abs(pfcoil_variables.cptdin[pfcoil_variables.nohc - 1]) / 100.0e0
+        albusa = (
+            abs(pfcoil_variables.cptdin[pfcoil_variables.n_cs_pf_coils - 1]) / 100.0e0
+        )
 
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
         #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
@@ -84,13 +87,14 @@ class Pulse:
         #  Mutual inductance between Central Solenoid and plasma (H)
 
         m = pfcoil_variables.sxlg[
-            pfcoil_variables.nohc - 1, pfcoil_variables.n_pf_cs_plasma_circuits - 1
+            pfcoil_variables.n_cs_pf_coils - 1,
+            pfcoil_variables.n_pf_cs_plasma_circuits - 1,
         ]
 
         #  Self inductance of Central Solenoid (H)
 
         loh = pfcoil_variables.sxlg[
-            pfcoil_variables.nohc - 1, pfcoil_variables.nohc - 1
+            pfcoil_variables.n_cs_pf_coils - 1, pfcoil_variables.n_cs_pf_coils - 1
         ]
 
         #  Maximum rate of change of plasma current (A/s)
@@ -107,7 +111,10 @@ class Pulse:
             / (
                 ioht2
                 * (
-                    r * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                    r
+                    * pfcoil_variables.n_pf_coil_turns[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
                     + rho
                 )
                 - v

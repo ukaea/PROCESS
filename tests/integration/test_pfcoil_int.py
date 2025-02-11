@@ -59,7 +59,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "rpf1", 0.0)
     monkeypatch.setattr(pfv, "m_pf_coil_structure_total", 0.0)
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "nohc", 0)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 0)
     monkeypatch.setattr(pfv, "pfrmax", 0.0)
     monkeypatch.setattr(pfv, "fcohbop", 1.0)
     monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
@@ -191,7 +191,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(eh, "idiags", np.full(8, 0))
-    monkeypatch.setattr(pfv, "nohc", 5)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 5)
     monkeypatch.setattr(pfv, "bmaxoh", 1.4e1)
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
     monkeypatch.setattr(pfv, "coheof", 1.693e7)
@@ -2247,7 +2247,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
         "ric",
@@ -2618,7 +2618,7 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
     monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
         "r_pf_coil_outer",
@@ -2782,7 +2782,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             -999999,
         ]),
     )
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
         "n_pf_coil_turns",
