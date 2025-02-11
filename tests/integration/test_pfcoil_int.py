@@ -63,7 +63,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "pfrmax", 0.0)
     monkeypatch.setattr(pfv, "fcohbop", 1.0)
     monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
-    monkeypatch.setattr(pfv, "ngrp", 4)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
@@ -244,7 +244,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     # Mocks for peakb()
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfv, "ngrp", 4)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
@@ -345,7 +345,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     ]
     cfix = np.full(nfixmx, 0.0)
     cfix[0:14] = 12547065.315963898
-    ngrp = 4
+    n_pf_coil_groups = 4
     ncls = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     # This 2D array argument discovered via gdb prints as a 1D array, therefore
@@ -426,7 +426,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         rfix,
         zfix,
         cfix,
-        ngrp,
+        n_pf_coil_groups,
         ncls,
         rcls,
         zcls,
@@ -498,7 +498,7 @@ def test_mtrx(pfcoil: PFCoil):
     zpts = np.zeros(nptsmx)
     brin = np.zeros(nptsmx)
     bzin = np.zeros(nptsmx)
-    ngrp = 4
+    n_pf_coil_groups = 4
     ncls = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
     rcls = np.reshape(
         [
@@ -638,7 +638,7 @@ def test_mtrx(pfcoil: PFCoil):
         zpts,
         brin,
         bzin,
-        ngrp,
+        n_pf_coil_groups,
         ncls,
         rcls,
         zcls,
@@ -1630,13 +1630,13 @@ def test_solv(pfcoil: PFCoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
     n_pf_groups_max = 3
-    ngrp = 3
+    n_pf_coil_groups = 3
     nrws = 3
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
     ccls = pfcoil.solv(
-        n_pf_groups_max, ngrp, nrws, gmat, bvec
+        n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec
     )
 
     assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
@@ -2361,7 +2361,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
         ),
     )
     monkeypatch.setattr(pfv, "coheof", 20726000)
-    monkeypatch.setattr(pfv, "ngrp", 4)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "bpf", np.zeros(22, dtype=int))  # maybe
     monkeypatch.setattr(
         pfv,
@@ -2863,7 +2863,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(pfv, "sxlg", np.ones((22, 22), dtype=int))
     monkeypatch.setattr(pfv, "r_cs_middle", 2.6084100000000001)
-    monkeypatch.setattr(pfv, "ngrp", 4)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(
         pfv,

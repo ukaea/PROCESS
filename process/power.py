@@ -92,7 +92,7 @@ class Power:
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
-        ngrpt = pfcoil_variables.ngrp
+        ngrpt = pfcoil_variables.n_pf_coil_groups
         if build_variables.iohcl != 0:
             ngrpt = ngrpt + 1
 
