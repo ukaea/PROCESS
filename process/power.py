@@ -127,7 +127,7 @@ class Power:
                         * pfcoil_variables.ric[ic]
                     )
                 )
-                * pfcoil_variables.turns[ic] ** 2
+                * pfcoil_variables.n_pf_coil_turns[ic] ** 2
                 * pfcoil_variables.ncls[ig]
             )
 
@@ -224,14 +224,14 @@ class Power:
                 #  Resistive power in circuits at times times_variables.tim(3) and times_variables.tim(5) respectively (MW)
                 powpfr = (
                     powpfr
-                    + pfcoil_variables.turns[jpf]
+                    + pfcoil_variables.n_pf_coil_turns[jpf]
                     * pfcoil_variables.c_pf_coil_turn[jpf, 2]
                     * cktr[jjpf]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
-                    + pfcoil_variables.turns[jpf]
+                    + pfcoil_variables.n_pf_coil_turns[jpf]
                     * pfcoil_variables.c_pf_coil_turn[jpf, 4]
                     * cktr[jjpf]
                     / 1.0e6
