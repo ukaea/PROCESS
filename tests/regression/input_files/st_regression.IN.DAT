@@ -1887,7 +1887,7 @@ i_pf_superconductor = 9
 
 *i_pf_current = 
 * DESCRIPTION:   Switch for controlling the current of the PF coils:  (default = 1)
-*  =0 Input via the variables curpfb, curpff, curpfs
+*  =0 Input via the variables c_pf_cs_coil_pulse_start_ma, curpff, curpfs
 *  =1 SVD targets zero field across midplane (flux swing
 *  coils) and the correct vertical field at the plasma
 *  center (equilibrium coils)

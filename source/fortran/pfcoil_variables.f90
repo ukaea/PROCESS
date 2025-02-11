@@ -83,7 +83,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: cptdin
   !! peak current per turn input for PF coil i (A)
 
-  real(dp), dimension(ngc2) :: curpfb
+  real(dp), dimension(ngc2) :: c_pf_cs_coil_pulse_start_ma
   !! PF coil current array, at beginning of pulse (MA)
   !! Indexed by coil number, not group number
 
@@ -172,7 +172,7 @@ module pfcoil_variables
   integer :: i_pf_current
   !! Switch for controlling the current of the PF coils:
   !!
-  !! - =0 Input via the variables curpfb, curpff, curpfs
+  !! - =0 Input via the variables c_pf_cs_coil_pulse_start_ma, curpff, curpfs
   !! - =1 SVD targets zero field across midplane (flux swing
   !!   coils) and the correct vertical field at the plasma
   !!   center (equilibrium coils)
@@ -434,7 +434,7 @@ module pfcoil_variables
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4/)
-    curpfb = 0.0D0
+    c_pf_cs_coil_pulse_start_ma = 0.0D0
     curpff = 0.0D0
     curpfs = 0.0D0
     etapsu = 0.9D0
