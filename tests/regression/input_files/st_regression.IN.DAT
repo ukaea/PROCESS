@@ -1839,7 +1839,7 @@ i_pf_superconductor = 9
 *  =9 Hazelton experimental data + Zhai conceptual model for REBCO
 * JUSTIFICATION: Design choice, superconducting PF coils
 
-*pfclres =  
+*rho_pf_coil =  
 * DESCRIPTION:  PF coil resistivity (if i_pf_conductor=1) (Ohm-m) 
 * JUSTIFICATION: Not used, superconducting PF coil
 
