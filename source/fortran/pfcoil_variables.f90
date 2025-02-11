@@ -311,7 +311,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2,ngc2) :: sxlg
   !! mutual inductance matrix (H)
 
-  real(dp) :: tmargoh
+  real(dp) :: temp_cs_margin
   !! Central solenoid temperature margin (K)
 
   real(dp), dimension(ngc2) :: n_pf_coil_turns
@@ -493,7 +493,7 @@ module pfcoil_variables
     sigpfcalw = 500.0D0
     sigpfcf = 1.0D0
     sxlg = 0.0D0
-    tmargoh = 0.0D0
+    temp_cs_margin = 0.0D0
     n_pf_coil_turns = 0.0D0
     vf = 0.3D0
     vfohc = 0.3D0
