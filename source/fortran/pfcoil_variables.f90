@@ -387,7 +387,7 @@ module pfcoil_variables
   !! - for groups j with i_pf_location(j) = 4; zref(j) = ratio of
   !!   height of coil group j to plasma minor radius</UL>
 
-  real(dp) :: bmaxcs_lim
+  real(dp) :: b_cs_limit_max
   !! Central solenoid max field limit [T]
 
   real(dp) :: fbmaxcs
@@ -516,7 +516,7 @@ module pfcoil_variables
     z_pf_coil_middle = 0.0D0
     zref = (/3.6D0, 1.2D0, 2.5D0, &
       1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0/)
-    bmaxcs_lim = 13.0
+    b_cs_limit_max = 13.0
     fbmaxcs = 1.0
     ld_ratio_cst = 70/22
     l_cond_cst = 0.0D0

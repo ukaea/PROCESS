@@ -2987,15 +2987,15 @@ contains
       !! args : output structure : residual error; constraint value; residual error in physical units; output string; units string
       !! Equation for maximum CS field
       !! #=# pfcoil
-      !! #=#=# fbmaxcs, bmaxoh, bmaxoh0, bmaxcs_lim
+      !! #=#=# fbmaxcs, bmaxoh, bmaxoh0, b_cs_limit_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fbmaxcs : input : F-value for CS mmax field (cons. 79, itvar 149)
-      !! bmaxcs_lim : input : Central solenoid max field limit [T]
+      !! b_cs_limit_max : input : Central solenoid max field limit [T]
       !! bmaxoh0 : input : maximum field in central solenoid at beginning of pulse (T)
       !! bmaxoh : input real : maximum field in central solenoid at end of flat-top (EoF) (T)
       !! (Note: original code has "bmaxoh/bmaxoh0 |  peak CS field [T]".)
-      use pfcoil_variables, only: fbmaxcs, bmaxcs_lim, bmaxoh0, bmaxoh
+      use pfcoil_variables, only: fbmaxcs, b_cs_limit_max, bmaxoh0, bmaxoh
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3003,8 +3003,8 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc     = 1.0D0 - fbmaxcs * bmaxcs_lim/max(bmaxoh, bmaxoh0)
-      tmp_con    = bmaxcs_lim
+      tmp_cc     = 1.0D0 - fbmaxcs * b_cs_limit_max/max(bmaxoh, bmaxoh0)
+      tmp_con    = b_cs_limit_max
       tmp_err    = max(bmaxoh, bmaxoh0) * tmp_cc
       tmp_symbol = '<'
       tmp_units  = 'A/turn'

@@ -298,7 +298,7 @@ contains
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
-      n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
+      n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
       n_pf_coils_in_group, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
@@ -1816,8 +1816,8 @@ contains
        case ('rhopfbus')
           call parse_real_variable('rhopfbus', rhopfbus, 0.0D0, 1.0D-5, &
                'CS and PF coil bus (feeders) resistivity (ohm-m)')
-       case ('bmaxcs_lim')
-         call parse_real_variable('bmaxcs_lim', bmaxcs_lim, 0.01D0, 100.0D0, &
+       case ('b_cs_limit_max')
+         call parse_real_variable('b_cs_limit_max', b_cs_limit_max, 0.01D0, 100.0D0, &
                'Maximum allowed peak field on central solenoid')
        case ('fbmaxcs')
          call parse_real_variable('fbmaxcs', fbmaxcs, 0.01D0, 1.0D0, &
