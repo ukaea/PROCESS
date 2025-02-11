@@ -157,7 +157,7 @@ vertical_lower = [
     "shldlth",
     "d_vv_bot",
     "vgap_vv_thermalshield",
-    "thshield_vb",
+    "dz_shld_thermal",
     "dr_tf_shld_gap",
     "dr_tf_inboard",
 ]
@@ -3546,7 +3546,7 @@ def main(args=None):
             "shldtth",
             "d_vv_top",
             "vgap_vv_thermalshield",
-            "thshield_vb",
+            "dz_shld_thermal",
             "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]
@@ -3560,7 +3560,7 @@ def main(args=None):
             "shldtth",
             "d_vv_top",
             "vgap_vv_thermalshield",
-            "thshield_vb",
+            "dz_shld_thermal",
             "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]
