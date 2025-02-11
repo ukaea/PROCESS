@@ -751,17 +751,17 @@ class PFCoil:
         # user-provided waveforms etc. (cptdin, fcohbop, fcohbof)
         for k in range(6):  # time points
             for i in range(pfv.ncirt - 1):
-                pfv.cpt[i, k] = pfv.waves[i, k] * math.copysign(
+                pfv.c_pf_coil_turn[i, k] = pfv.waves[i, k] * math.copysign(
                     pfv.cptdin[i], pfv.ric[i]
                 )
 
         # Plasma wave form
-        pfv.cpt[pfv.ncirt - 1, 0] = 0.0e0
-        pfv.cpt[pfv.ncirt - 1, 1] = 0.0e0
-        pfv.cpt[pfv.ncirt - 1, 2] = pv.plasma_current
-        pfv.cpt[pfv.ncirt - 1, 3] = pv.plasma_current
-        pfv.cpt[pfv.ncirt - 1, 4] = pv.plasma_current
-        pfv.cpt[pfv.ncirt - 1, 5] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 0] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 1] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 2] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 3] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 4] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.ncirt - 1, 5] = 0.0e0
 
     def efc(
         self,
@@ -1442,17 +1442,19 @@ class PFCoil:
         pfv.vsefsu = 0.0e0
 
         for i in range(pf.nef):
-            pf.vsdum[i, 0] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.cpt[i, 1]
-            pf.vsdum[i, 1] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.cpt[i, 2]
+            pf.vsdum[i, 0] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 1]
+            pf.vsdum[i, 1] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 2]
             pfv.vsefsu = pfv.vsefsu + (pf.vsdum[i, 1] - pf.vsdum[i, 0])
 
         # Central Solenoid startup volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.nohc - 1, 0] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2] * pfv.cpt[pfv.ncirt - 2, 1]
+                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
+                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 1]
             )
             pf.vsdum[pfv.nohc - 1, 1] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2] * pfv.cpt[pfv.ncirt - 2, 2]
+                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
+                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 2]
             )
             pfv.vsohsu = pf.vsdum[pfv.nohc - 1, 1] - pf.vsdum[pfv.nohc - 1, 0]
 
@@ -1462,14 +1464,15 @@ class PFCoil:
         # Burn volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.nohc - 1, 2] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2] * pfv.cpt[pfv.ncirt - 2, 4]
+                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
+                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 4]
             )
             pfv.vsohbn = pf.vsdum[pfv.nohc - 1, 2] - pf.vsdum[pfv.nohc - 1, 1]
 
         # PF volt-seconds during burn
         pfv.vsefbn = 0.0e0
         for i in range(pf.nef):
-            pf.vsdum[i, 2] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.cpt[i, 4]
+            pf.vsdum[i, 2] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 4]
             pfv.vsefbn = pfv.vsefbn + (pf.vsdum[i, 2] - pf.vsdum[i, 1])
 
         pfv.vsbn = pfv.vsohbn + pfv.vsefbn
@@ -2559,12 +2562,12 @@ class PFCoil:
         for k in range(pfv.ncirt - 1):
             line = f"\t{k}\t\t"
             for jj in range(6):
-                line += f"\t{pfv.cpt[k, jj] * pfv.turns[k]:.3e}"
+                line += f"\t{pfv.c_pf_coil_turn[k, jj] * pfv.turns[k]:.3e}"
             op.write(self.outfile, line)
 
         line = "Plasma (A)\t\t"
         for jj in range(6):
-            line += f"\t{pfv.cpt[pfv.ncirt - 1, jj]:.3e}"
+            line += f"\t{pfv.c_pf_coil_turn[pfv.ncirt - 1, jj]:.3e}"
 
         op.write(self.outfile, line)
 
@@ -2574,12 +2577,12 @@ class PFCoil:
             op.write(
                 self.outfile,
                 (
-                    f"{k}\t\t\t{pfv.cpt[k, 0] * pfv.turns[k]:.3e}\t"
-                    f"{pfv.cpt[k, 1] * pfv.turns[k]:.3e}\t"
-                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
-                    f"{-pfv.cpt[k, 1] * pfv.turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
-                    f"{pfv.cpt[k, 5] * pfv.turns[k]:.3e}"
+                    f"{k}\t\t\t{pfv.c_pf_coil_turn[k, 0] * pfv.turns[k]:.3e}\t"
+                    f"{pfv.c_pf_coil_turn[k, 1] * pfv.turns[k]:.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
+                    f"{pfv.c_pf_coil_turn[k, 5] * pfv.turns[k]:.3e}"
                 ),
             )
 
@@ -2590,9 +2593,9 @@ class PFCoil:
                 self.outfile,
                 (
                     f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfv.cpt[k, 2] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k, 3] + pfv.cpt[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
-                    f"{(pfv.cpt[k, 4] + pfv.cpt[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 2] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 3] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 4] + pfv.c_pf_coil_turn[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
                     "0.0e0"
                 ),
             )
@@ -2635,7 +2638,7 @@ class PFCoil:
                     self.outfile,
                     circuit_name,
                     circuit_var_name,
-                    pfv.cpt[k, jjj] * pfv.turns[k],
+                    pfv.c_pf_coil_turn[k, jjj] * pfv.turns[k],
                 )
 
     def selfinductance(self, a, b, c, n):

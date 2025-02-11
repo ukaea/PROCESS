@@ -77,7 +77,7 @@ module pfcoil_variables
   real(dp) :: coheof
   !! Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)
 
-  real(dp), dimension(ngc2,6) :: cpt
+  real(dp), dimension(ngc2,6) :: c_pf_coil_turn
   !! current per turn in coil i at time j (A)
 
   real(dp), dimension(ngc2) :: cptdin
@@ -429,7 +429,7 @@ module pfcoil_variables
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
     cohbop = 0.0D0
     coheof = 1.85D7
-    cpt = 0.0D0
+    c_pf_coil_turn = 0.0D0
     cptdin = (/4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &

@@ -193,7 +193,7 @@ class PfpwrParam(NamedTuple):
 
     ngrp: Any = None
 
-    cpt: Any = None
+    c_pf_coil_turn: Any = None
 
     pfwpmw: Any = None
 
@@ -281,7 +281,7 @@ class PfpwrParam(NamedTuple):
             acptmax=0,
             srcktpm=0,
             ngrp=4,
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1024,7 +1024,7 @@ class PfpwrParam(NamedTuple):
             acptmax=24.816666666666666,
             srcktpm=1071.1112934857531,
             ngrp=4,
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1798,7 +1798,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "ngrp", pfpwrparam.ngrp)
 
-    monkeypatch.setattr(pfcoil_variables, "cpt", pfpwrparam.cpt)
+    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", pfpwrparam.pfwpmw)
 

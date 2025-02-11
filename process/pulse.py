@@ -51,11 +51,11 @@ class Pulse:
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
 
-        ioht1 = pfcoil_variables.cpt[pfcoil_variables.nohc - 1, 1]
+        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.nohc - 1, 1]
 
         #  Current/turn in Central Solenoid at start of flat-top (A/turn)
 
-        ioht2 = pfcoil_variables.cpt[pfcoil_variables.nohc - 1, 2]
+        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.nohc - 1, 2]
 
         #  Central Solenoid resistance (ohms)
 

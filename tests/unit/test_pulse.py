@@ -40,7 +40,7 @@ class TohswgParam(NamedTuple):
 
     sxlg: Any = None
 
-    cpt: Any = None
+    c_pf_coil_turn: Any = None
 
     ric: Any = None
 
@@ -314,7 +314,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -872,7 +872,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1243,7 +1243,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pfcoil_variables, "sxlg", tohswgparam.sxlg)
 
-    monkeypatch.setattr(pfcoil_variables, "cpt", tohswgparam.cpt)
+    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
 
     monkeypatch.setattr(pfcoil_variables, "ric", tohswgparam.ric)
 

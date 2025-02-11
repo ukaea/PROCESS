@@ -1227,7 +1227,7 @@ def test_vsec(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "vsohbn", 0)
     monkeypatch.setattr(
         pfv,
-        "cpt",
+        "c_pf_coil_turn",
         np.array(
             [
                 [

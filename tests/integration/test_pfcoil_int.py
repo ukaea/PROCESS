@@ -94,7 +94,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "alfapf", 5.0e-10)
     monkeypatch.setattr(pfv, "ncirt", 8)
     monkeypatch.setattr(pfv, "pfclres", 2.5e-8)
-    monkeypatch.setattr(pfv, "cpt", np.full([22, 6], 0.0))
+    monkeypatch.setattr(pfv, "c_pf_coil_turn", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "sxlg", np.full([22, 22], 0.0))
     monkeypatch.setattr(pfv, "sigpfcalw", 5.0e2)
