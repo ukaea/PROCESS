@@ -152,7 +152,7 @@ RADIAL_BUILD = [
 
 vertical_lower = [
     "z_plasma_xpoint_lower",
-    "vgap_xpoint_divertor",
+    "dz_xpoint_divertor",
     "divfix",
     "shldlth",
     "d_vv_bot",

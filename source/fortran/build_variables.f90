@@ -270,11 +270,11 @@ module build_variables
   real(dp) :: vgap_vv_thermalshield
   !! vertical gap between vacuum vessel and thermal shields (m)
 
-  real(dp) :: vgap_xpoint_divertor
+  real(dp) :: dz_xpoint_divertor
   !! vertical gap between x-point and divertor (m) (if = 0, it is calculated)
 
   real(dp) :: vgaptop
-  !! vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)
+  !! vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)
 
   real(dp) :: dr_shld_blkt_gap
   !! gap between vacuum vessel and blanket (m)
@@ -383,7 +383,7 @@ module build_variables
     dr_shld_thermal_outboard = 0.05D0
     dz_shld_thermal = 0.05D0
     vgap_vv_thermalshield = 0.163D0
-    vgap_xpoint_divertor= 0.0D0
+    dz_xpoint_divertor= 0.0D0
     vgaptop = 0.60D0
     dr_shld_blkt_gap = 0.05D0
     plleni = 1.0D0

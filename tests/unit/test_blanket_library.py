@@ -358,7 +358,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
 
 class ComponentHalfHeightParam(NamedTuple):
     hmax: Any = None
-    vgap_xpoint_divertor: Any = None
+    dz_xpoint_divertor: Any = None
     vgap_vv_thermalshield: Any = None
     blnktth: Any = None
     shldtth: Any = None
@@ -382,7 +382,7 @@ class ComponentHalfHeightParam(NamedTuple):
     (
         ComponentHalfHeightParam(
             hmax=8.8182171641274945,
-            vgap_xpoint_divertor=2.0018838307941582,
+            dz_xpoint_divertor=2.0018838307941582,
             vgap_vv_thermalshield=0.16300000000000001,
             blnktth=0.85000000000000009,
             shldtth=0.59999999999999998,
@@ -419,8 +419,8 @@ def test_component_half_height(
     monkeypatch.setattr(build_variables, "hmax", componenthalfheightparam.hmax)
     monkeypatch.setattr(
         build_variables,
-        "vgap_xpoint_divertor",
-        componenthalfheightparam.vgap_xpoint_divertor,
+        "dz_xpoint_divertor",
+        componenthalfheightparam.dz_xpoint_divertor,
     )
     monkeypatch.setattr(
         build_variables,

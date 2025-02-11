@@ -197,7 +197,7 @@ contains
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
       dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, dr_fw_plasma_gap_outboard, vgaptop, &
-      blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
+      blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, dz_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, dr_vv_outboard, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
@@ -1425,8 +1425,8 @@ contains
        case ('dz_shld_thermal')
           call parse_real_variable('dz_shld_thermal', dz_shld_thermal, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, vertical build (m)')
-       case ('vgap_xpoint_divertor')
-          call parse_real_variable('vgap_xpoint_divertor', vgap_xpoint_divertor, 0.0D0, 10.0D0, &
+       case ('dz_xpoint_divertor')
+          call parse_real_variable('dz_xpoint_divertor', dz_xpoint_divertor, 0.0D0, 10.0D0, &
                'Vert gap between x-pnt and divertor (m)')
        case ('vgap_vv_thermalshield')
           call parse_real_variable('vgap_vv_thermalshield', vgap_vv_thermalshield, 0.0D0, 10.0D0, &
