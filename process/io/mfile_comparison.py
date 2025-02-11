@@ -151,7 +151,7 @@ BASELINE_LIST = [
     "deltf",
     "dr_shld_thermal_inboard",
     "dr_shld_thermal_outboard",
-    "thshield_vb",
+    "dz_shld_thermal",
     "dr_shld_vv_gap_inboard",
     "dr_vv_inboard",
     "dr_vv_outboard",
@@ -244,7 +244,7 @@ GENERIC_LIST = [
     "dr_tf_shld_gap",
     "dr_shld_thermal_inboard",
     "dr_shld_thermal_outboard",
-    "thshield_vb",
+    "dz_shld_thermal",
     "dr_shld_vv_gap_inboard",
     "dr_vv_inboard",
     "dr_shld_inboard",
@@ -260,11 +260,11 @@ GENERIC_LIST = [
     "dr_shld_vv_gap_outboard",
     "dr_tf_shld_gap",
     "dr_tf_outboard",
-    "vgap_xpoint_divertor",
-    "divfix",
+    "dz_xpoint_divertor",
+    "dz_divertor",
     "d_vv_bot",
     "shldlth",
-    "vgap_vv_thermalshield",
+    "dz_shld_vv_gap",
 ]
 
 

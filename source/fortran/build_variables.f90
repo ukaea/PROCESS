@@ -54,7 +54,7 @@ module build_variables
   real(dp) :: dr_blkt_outboard
   !! outboard blanket thickness (m); calculated if `blktmodel>0`
 
-  real(dp) :: blnktth
+  real(dp) :: dz_blkt_top
   !! top blanket thickness (m), = mean of inboard and outboard blanket thicknesses
 
   real(dp) :: dr_bore
@@ -264,17 +264,17 @@ module build_variables
   real(dp) :: dr_shld_thermal_outboard
   !! TF-VV thermal shield thickness, outboard (m)
 
-  real(dp) :: thshield_vb
+  real(dp) :: dz_shld_thermal
   !! TF-VV thermal shield thickness, vertical build (m)
 
-  real(dp) :: vgap_vv_thermalshield
+  real(dp) :: dz_shld_vv_gap
   !! vertical gap between vacuum vessel and thermal shields (m)
 
-  real(dp) :: vgap_xpoint_divertor
+  real(dp) :: dz_xpoint_divertor
   !! vertical gap between x-point and divertor (m) (if = 0, it is calculated)
 
-  real(dp) :: vgaptop
-  !! vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)
+  real(dp) :: dz_fw_plasma_gap
+  !! vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)
 
   real(dp) :: dr_shld_blkt_gap
   !! gap between vacuum vessel and blanket (m)
@@ -293,6 +293,12 @@ module build_variables
 
   real(dp) :: rspo
   !! outboard strike point radius (m)
+
+  real(dp) :: z_plasma_xpoint_upper
+  !! Vertical height of the upper plasma x-point (m)
+
+  real(dp) :: z_plasma_xpoint_lower
+  !! Vertical height of the lower plasma x-point (m)
 
   contains
 
@@ -313,7 +319,7 @@ module build_variables
     blbuoth = 0.465D0
     dr_blkt_inboard = 0.115D0
     dr_blkt_outboard = 0.235D0
-    blnktth = 0.0D0
+    dz_blkt_top = 0.0D0
     dr_bore = 1.42D0
     f_z_cryostat = 4.268D0
     dr_cryostat = 0.07D0
@@ -375,10 +381,10 @@ module build_variables
     dr_tf_shld_gap = 0.05D0
     dr_shld_thermal_inboard = 0.05D0
     dr_shld_thermal_outboard = 0.05D0
-    thshield_vb = 0.05D0
-    vgap_vv_thermalshield = 0.163D0
-    vgap_xpoint_divertor= 0.0D0
-    vgaptop = 0.60D0
+    dz_shld_thermal = 0.05D0
+    dz_shld_vv_gap = 0.163D0
+    dz_xpoint_divertor= 0.0D0
+    dz_fw_plasma_gap = 0.60D0
     dr_shld_blkt_gap = 0.05D0
     plleni = 1.0D0
     plleno = 1.0D0
@@ -386,5 +392,7 @@ module build_variables
     plsepo = 1.5D0
     rspo = 0.0D0
     r_sh_inboard_in = 0.0D0
+    z_plasma_xpoint_upper = 0.0D0
+    z_plasma_xpoint_lower = 0.0D0
   end subroutine init_build_variables
 end module build_variables

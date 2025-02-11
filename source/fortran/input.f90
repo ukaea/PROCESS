@@ -193,13 +193,13 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
-      shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
-      dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, i_cs_precomp, &
+      shldtth, shldlth, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
+      dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
-      dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, dr_fw_plasma_gap_outboard, vgaptop, &
-      blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, vgap_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
+      dr_cs, plsepi, blbmith, dr_cs_tf_gap, fcspc, dr_fw_plasma_gap_outboard, dz_fw_plasma_gap, &
+      blbpoth, dr_shld_vv_gap_inboard, dr_fw_inboard, dz_xpoint_divertor, dr_shld_inboard, sigallpc, tfootfi, f_avspace,&
       r_cp_top, dr_vv_inboard, dr_vv_outboard, d_vv_top, d_vv_bot, f_r_cp, i_r_cp_top
     use buildings_variables, only: hcwt, conv, wgt, trcl, rbwt, &
       esbldgm3, fndt, row, wgt2, pibv, dz_tf_cryostat, stcl, clh2, &
@@ -264,7 +264,7 @@ contains
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
-      zeffdiv, hldivlim, rlenmax, divfix, c3div, &
+      zeffdiv, hldivlim, rlenmax, dz_divertor, c3div, &
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
       pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
@@ -1195,8 +1195,8 @@ contains
        case ('divdum')
           call parse_int_variable('divdum', divdum, 0, 1, &
                'Switch for divertor Zeff value')
-       case ('divfix')
-          call parse_real_variable('divfix', divfix, 0.1D0, 5.0D0, &
+       case ('dz_divertor')
+          call parse_real_variable('dz_divertor', dz_divertor, 0.1D0, 5.0D0, &
                'Divertor structure vertical extent (m)')
        case ('divplt')
           call parse_real_variable('divplt', divplt, 0.01D0, 1.0D0, &
@@ -1423,17 +1423,17 @@ contains
        case ('dr_shld_thermal_outboard')
           call parse_real_variable('dr_shld_thermal_outboard', dr_shld_thermal_outboard, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, outboard (m)')
-       case ('thshield_vb')
-          call parse_real_variable('thshield_vb', thshield_vb, 0.0D0, 10.0D0, &
+       case ('dz_shld_thermal')
+          call parse_real_variable('dz_shld_thermal', dz_shld_thermal, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, vertical build (m)')
-       case ('vgap_xpoint_divertor')
-          call parse_real_variable('vgap_xpoint_divertor', vgap_xpoint_divertor, 0.0D0, 10.0D0, &
+       case ('dz_xpoint_divertor')
+          call parse_real_variable('dz_xpoint_divertor', dz_xpoint_divertor, 0.0D0, 10.0D0, &
                'Vert gap between x-pnt and divertor (m)')
-       case ('vgap_vv_thermalshield')
-          call parse_real_variable('vgap_vv_thermalshield', vgap_vv_thermalshield, 0.0D0, 10.0D0, &
+       case ('dz_shld_vv_gap')
+          call parse_real_variable('dz_shld_vv_gap', dz_shld_vv_gap, 0.0D0, 10.0D0, &
                'Vert gap between TF coil and shield (m)')
-       case ('vgaptop')
-          call parse_real_variable('vgaptop', vgaptop, 0.0D0, 10.0D0, &
+       case ('dz_fw_plasma_gap')
+          call parse_real_variable('dz_fw_plasma_gap', dz_fw_plasma_gap, 0.0D0, 10.0D0, &
                'Top vert gap between plasma and first wall (m)')
        case ('dr_shld_blkt_gap')
           call parse_real_variable('dr_shld_blkt_gap', dr_shld_blkt_gap, 0.0D0, 5.0D0, &

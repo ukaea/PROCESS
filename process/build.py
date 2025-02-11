@@ -104,18 +104,25 @@ class Build:
 
     def calculate_vertical_build(self, output: bool) -> None:
         """
-        This method determines the vertical build of the machine.
-        It calculates various parameters related to the build of the machine,
-        such as thicknesses, radii, and areas.
-        Results can be outputted with the `output` flag.
+        Determines the vertical build of the machine.
 
-        Args:
-            output (bool): Flag indicating whether to output results
+        This method calculates various parameters related to the vertical build of the machine,
+        such as thicknesses, radii, and areas. Results can be outputted with the `output` flag.
 
-        Returns:
-            None
-
+        :param output: Flag indicating whether to output results
+        :type output: bool
+        :returns: None
         """
+
+        # Set the X-point heights for the top and bottom of the plasma
+        # Assumes top-down plasma symmetry
+        build_variables.z_plasma_xpoint_upper = (
+            physics_variables.rminor * physics_variables.kappa
+        )
+        build_variables.z_plasma_xpoint_lower = (
+            physics_variables.rminor * physics_variables.kappa
+        )
+
         if output:
             po.oheadr(self.outfile, "Vertical Build")
 
@@ -135,13 +142,13 @@ class Build:
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                     + build_variables.d_vv_top
                     + build_variables.shldtth
-                    + divertor_variables.divfix
-                    + build_variables.vgaptop
-                    + physics_variables.rminor * physics_variables.kappa
+                    + divertor_variables.dz_divertor
+                    + build_variables.dz_fw_plasma_gap
+                    + build_variables.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -186,33 +193,33 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 po.ovarre(
                     self.mfile,
                     "Thermal shield, vertical (m)",
-                    "(thshield_vb)",
-                    build_variables.thshield_vb,
+                    "(dz_shld_thermal)",
+                    build_variables.dz_shld_thermal,
                 )
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap_vv_thermalshield)",
-                    build_variables.vgap_vv_thermalshield,
+                    "(dz_shld_vv_gap)",
+                    build_variables.dz_shld_vv_gap,
                 )
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
@@ -238,87 +245,87 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
 
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.vgaptop,
+                    build_variables.dz_fw_plasma_gap,
                     vbuild,
-                    "(vgaptop)",
+                    "(dz_fw_plasma_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
-                    "(vgaptop)",
-                    build_variables.vgaptop,
+                    "(dz_fw_plasma_gap)",
+                    build_variables.dz_fw_plasma_gap,
                 )
-                vbuild = vbuild - build_variables.vgaptop
+                vbuild = vbuild - build_variables.dz_fw_plasma_gap
 
                 po.obuild(
                     self.outfile,
-                    "Plasma top",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    build_variables.z_plasma_xpoint_upper,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
                 po.ovarre(
                     self.mfile,
-                    "Plasma half-height (m)",
-                    "(rminor*kappa)",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    "(z_plasma_xpoint_upper)",
+                    build_variables.z_plasma_xpoint_upper,
                 )
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
-                    "Plasma bottom",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma lower X-point height (m)",
+                    build_variables.z_plasma_xpoint_lower,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_lower)",
                 )
 
-                vbuild = vbuild - build_variables.vgap_xpoint_divertor
+                vbuild = vbuild - build_variables.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap_xpoint_divertor,
+                    build_variables.dz_xpoint_divertor,
                     vbuild,
-                    "(vgap_xpoint_divertor)",
+                    "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap_xpoint_divertor)",
-                    build_variables.vgap_xpoint_divertor,
+                    "(dz_xpoint_divertor)",
+                    build_variables.dz_xpoint_divertor,
                 )
 
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -344,22 +351,22 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
 
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_shld_gap
@@ -408,16 +415,16 @@ class Build:
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
                     + build_variables.dr_shld_blkt_gap
                     + build_variables.shldtth
-                    + build_variables.blnktth
+                    + build_variables.dz_blkt_top
                     + 0.5e0
                     * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-                    + build_variables.vgaptop
-                    + physics_variables.rminor * physics_variables.kappa
+                    + build_variables.dz_fw_plasma_gap
+                    + build_variables.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -462,32 +469,32 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Thermal shield, vertical (m)",
-                    "(thshield_vb)",
-                    build_variables.thshield_vb,
+                    "(dz_shld_thermal)",
+                    build_variables.dz_shld_thermal,
                 )
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap_vv_thermalshield)",
-                    build_variables.vgap_vv_thermalshield,
+                    "(dz_shld_vv_gap)",
+                    build_variables.dz_shld_vv_gap,
                 )
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
@@ -522,17 +529,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top blanket",
-                    build_variables.blnktth,
+                    build_variables.dz_blkt_top,
                     vbuild,
-                    "(blnktth)",
+                    "(dz_blkt_top)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top blanket vertical thickness (m)",
-                    "(blnktth)",
-                    build_variables.blnktth,
+                    "(dz_blkt_top)",
+                    build_variables.dz_blkt_top,
                 )
-                vbuild = vbuild - build_variables.blnktth
+                vbuild = vbuild - build_variables.dz_blkt_top
 
                 fwtth = 0.5e0 * (
                     build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
@@ -549,72 +556,72 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.vgaptop,
+                    build_variables.dz_fw_plasma_gap,
                     vbuild,
-                    "(vgaptop)",
+                    "(dz_fw_plasma_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
-                    "(vgaptop)",
-                    build_variables.vgaptop,
+                    "(dz_fw_plasma_gap)",
+                    build_variables.dz_fw_plasma_gap,
                 )
-                vbuild = vbuild - build_variables.vgaptop
+                vbuild = vbuild - build_variables.dz_fw_plasma_gap
 
                 po.obuild(
                     self.outfile,
-                    "Plasma top",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    build_variables.z_plasma_xpoint_upper,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
                 po.ovarre(
                     self.mfile,
-                    "Plasma half-height (m)",
-                    "(rminor*kappa)",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma upper X-point height (m)",
+                    "(z_plasma_xpoint_upper)",
+                    build_variables.z_plasma_xpoint_upper,
                 )
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
-                vbuild = vbuild - physics_variables.rminor * physics_variables.kappa
+                vbuild = vbuild - build_variables.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
-                    "Plasma bottom",
-                    physics_variables.rminor * physics_variables.kappa,
+                    "Plasma lower X-point height (m)",
+                    build_variables.z_plasma_xpoint_lower,
                     vbuild,
-                    "(rminor*kappa)",
+                    "(z_plasma_xpoint_upper)",
                 )
 
-                vbuild = vbuild - build_variables.vgap_xpoint_divertor
+                vbuild = vbuild - build_variables.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap_xpoint_divertor,
+                    build_variables.dz_xpoint_divertor,
                     vbuild,
-                    "(vgap_xpoint_divertor)",
+                    "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap_xpoint_divertor)",
-                    build_variables.vgap_xpoint_divertor,
+                    "(dz_xpoint_divertor)",
+                    build_variables.dz_xpoint_divertor,
                 )
 
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -640,22 +647,22 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
 
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_shld_gap
@@ -717,21 +724,21 @@ class Build:
         # Output the cdivertor geometry
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
-        if build_variables.vgap_xpoint_divertor < 0.00001e0:
-            build_variables.vgap_xpoint_divertor = divht
+        if build_variables.dz_xpoint_divertor < 0.00001e0:
+            build_variables.dz_xpoint_divertor = divht
 
-        # If build_variables.vgap_xpoint_divertor /= 0 use the value set by the user.
+        # If build_variables.dz_xpoint_divertor /= 0 use the value set by the user.
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
         build_variables.hmax = (
-            physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap_xpoint_divertor
-            + divertor_variables.divfix
+            build_variables.z_plasma_xpoint_upper
+            + build_variables.dz_xpoint_divertor
+            + divertor_variables.dz_divertor
             + build_variables.shldlth
             + build_variables.d_vv_bot
-            + build_variables.vgap_vv_thermalshield
-            + build_variables.thshield_vb
+            + build_variables.dz_shld_vv_gap
+            + build_variables.dz_shld_thermal
             + build_variables.dr_tf_shld_gap
         )
 
@@ -743,16 +750,16 @@ class Build:
             build_variables.hpfu = (
                 build_variables.dr_tf_inboard
                 + build_variables.dr_tf_shld_gap
-                + build_variables.thshield_vb
-                + build_variables.vgap_vv_thermalshield
+                + build_variables.dz_shld_thermal
+                + build_variables.dz_shld_vv_gap
                 + build_variables.d_vv_top
                 + build_variables.shldtth
                 + build_variables.dr_shld_blkt_gap
-                + build_variables.blnktth
+                + build_variables.dz_blkt_top
                 + 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-                + build_variables.vgaptop
-                + physics_variables.rminor * physics_variables.kappa
+                + build_variables.dz_fw_plasma_gap
+                + build_variables.z_plasma_xpoint_upper
             )
             build_variables.hpfdif = (
                 build_variables.hpfu
@@ -1663,19 +1670,19 @@ class Build:
             )
 
         #  Top/bottom blanket thickness
-        build_variables.blnktth = 0.5e0 * (
+        build_variables.dz_blkt_top = 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
         if physics_variables.i_single_null == 1:
-            #  Check if build_variables.vgaptop has been set too small
-            build_variables.vgaptop = max(
+            #  Check if build_variables.dz_fw_plasma_gap has been set too small
+            build_variables.dz_fw_plasma_gap = max(
                 0.5e0
                 * (
                     build_variables.dr_fw_plasma_gap_inboard
                     + build_variables.dr_fw_plasma_gap_outboard
                 ),
-                build_variables.vgaptop,
+                build_variables.dz_fw_plasma_gap,
             )
 
         # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
@@ -1966,18 +1973,17 @@ class Build:
 
         #  Half-height of first wall (internal surface)
         hbot = (
-            physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap_xpoint_divertor
-            + divertor_variables.divfix
-            - build_variables.blnktth
+            build_variables.z_plasma_xpoint_lower
+            + build_variables.dz_xpoint_divertor
+            + divertor_variables.dz_divertor
+            - build_variables.dz_blkt_top
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
         else:
             htop = (
-                physics_variables.rminor * physics_variables.kappa
-                + build_variables.vgaptop
+                build_variables.z_plasma_xpoint_upper + build_variables.dz_fw_plasma_gap
             )
 
         hfw = 0.5e0 * (htop + hbot)

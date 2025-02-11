@@ -354,9 +354,9 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
 
 class ComponentHalfHeightParam(NamedTuple):
     hmax: Any = None
-    vgap_xpoint_divertor: Any = None
-    vgap_vv_thermalshield: Any = None
-    blnktth: Any = None
+    dz_xpoint_divertor: Any = None
+    dz_shld_vv_gap: Any = None
+    dz_blkt_top: Any = None
     shldtth: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
@@ -364,10 +364,10 @@ class ComponentHalfHeightParam(NamedTuple):
     dr_fw_outboard: Any = None
     d_vv_bot: Any = None
     d_vv_top: Any = None
-    rminor: Any = None
-    kappa: Any = None
+    z_plasma_xpoint_lower: Any = None
+    z_plasma_xpoint_upper: Any = None
     idivrt: Any = None
-    divfix: Any = None
+    dz_divertor: Any = None
     icomponent: Any = None
     expected_icomponent: Any = None
     expected_half_height: Any = None
@@ -378,9 +378,9 @@ class ComponentHalfHeightParam(NamedTuple):
     (
         ComponentHalfHeightParam(
             hmax=8.8182171641274945,
-            vgap_xpoint_divertor=2.0018838307941582,
-            vgap_vv_thermalshield=0.16300000000000001,
-            blnktth=0.85000000000000009,
+            dz_xpoint_divertor=2.0018838307941582,
+            dz_shld_vv_gap=0.16300000000000001,
+            dz_blkt_top=0.85000000000000009,
             shldtth=0.59999999999999998,
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
@@ -388,10 +388,10 @@ class ComponentHalfHeightParam(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             d_vv_bot=0.30000000000000004,
             d_vv_top=0.30000000000000004,
-            rminor=2.6666666666666665,
-            kappa=1.8500000000000001,
+            z_plasma_xpoint_lower=4.93333333333333333,
+            z_plasma_xpoint_upper=4.93333333333333333,
             idivrt=1,
-            divfix=0.62000000000000011,
+            dz_divertor=0.62000000000000011,
             icomponent=0,
             expected_icomponent=0,
             expected_half_height=5.9532752487304119,
@@ -415,15 +415,17 @@ def test_component_half_height(
     monkeypatch.setattr(build_variables, "hmax", componenthalfheightparam.hmax)
     monkeypatch.setattr(
         build_variables,
-        "vgap_xpoint_divertor",
-        componenthalfheightparam.vgap_xpoint_divertor,
+        "dz_xpoint_divertor",
+        componenthalfheightparam.dz_xpoint_divertor,
     )
     monkeypatch.setattr(
         build_variables,
-        "vgap_vv_thermalshield",
-        componenthalfheightparam.vgap_vv_thermalshield,
+        "dz_shld_vv_gap",
+        componenthalfheightparam.dz_shld_vv_gap,
     )
-    monkeypatch.setattr(build_variables, "blnktth", componenthalfheightparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", componenthalfheightparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
     monkeypatch.setattr(
         build_variables,
@@ -443,10 +445,20 @@ def test_component_half_height(
     )
     monkeypatch.setattr(build_variables, "d_vv_bot", componenthalfheightparam.d_vv_bot)
     monkeypatch.setattr(build_variables, "d_vv_top", componenthalfheightparam.d_vv_top)
-    monkeypatch.setattr(physics_variables, "rminor", componenthalfheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "kappa", componenthalfheightparam.kappa)
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_lower",
+        componenthalfheightparam.z_plasma_xpoint_lower,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_upper",
+        componenthalfheightparam.z_plasma_xpoint_upper,
+    )
     monkeypatch.setattr(physics_variables, "idivrt", componenthalfheightparam.idivrt)
-    monkeypatch.setattr(divertor_variables, "divfix", componenthalfheightparam.divfix)
+    monkeypatch.setattr(
+        divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
+    )
 
     half_height = blanket_library_fixture.component_half_height(
         componenthalfheightparam.icomponent
@@ -467,7 +479,7 @@ class DshapedComponentParam(NamedTuple):
     blareaob: Any = None
     blarea: Any = None
     dr_blkt_outboard: Any = None
-    blnktth: Any = None
+    dz_blkt_top: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
@@ -524,7 +536,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=0,
             blarea=0,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -577,7 +589,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -630,7 +642,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=208.91591146372122,
             shareaob=1013.8483589087293,
             sharea=1222.7642703724505,
@@ -714,7 +726,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
     )
-    monkeypatch.setattr(build_variables, "blnktth", dshapedcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", dshapedcomponentparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shareaib", dshapedcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", dshapedcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", dshapedcomponentparam.sharea)
@@ -774,7 +788,7 @@ class EllipticalComponentParam(NamedTuple):
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
-    blnktth: Any = None
+    dz_blkt_top: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
@@ -830,7 +844,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=0,
             blareaob=0,
             blarea=0,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -882,7 +896,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -934,7 +948,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=700.06731267447844,
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
@@ -1009,7 +1023,9 @@ def test_elliptical_component(
     monkeypatch.setattr(build_variables, "blareaib", ellipticalcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", ellipticalcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", ellipticalcomponentparam.blarea)
-    monkeypatch.setattr(build_variables, "blnktth", ellipticalcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", ellipticalcomponentparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shareaib", ellipticalcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", ellipticalcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)

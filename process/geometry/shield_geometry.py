@@ -114,7 +114,7 @@ def shield_geometry_lower(
     )
 
     # Side nearest to plasma
-    kapx = (cumulative_lower["divfix"]) / rminx_near
+    kapx = (cumulative_lower["dz_divertor"]) / rminx_near
     rs_lower_inboard, zs_lower_inboard = dh_vertices(
         radx_near, rminx_near, triang, kapx
     )

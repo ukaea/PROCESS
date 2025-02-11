@@ -151,13 +151,13 @@ RADIAL_BUILD = [
 ]
 
 vertical_lower = [
-    "rminor*kappa",
-    "vgap_xpoint_divertor",
-    "divfix",
+    "z_plasma_xpoint_lower",
+    "dz_xpoint_divertor",
+    "dz_divertor",
     "shldlth",
     "d_vv_bot",
-    "vgap_vv_thermalshield",
-    "thshield_vb",
+    "dz_shld_vv_gap",
+    "dz_shld_thermal",
     "dr_tf_shld_gap",
     "dr_tf_inboard",
 ]
@@ -1271,9 +1271,9 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
-        blnktth = mfile_data.data["blnktth"].get_scan(scan)
+        dz_blkt_top = mfile_data.data["dz_blkt_top"].get_scan(scan)
     else:
-        blnktth = 0.0
+        dz_blkt_top = 0.0
 
     c_shldith = cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
     c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
@@ -1306,7 +1306,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             cumulative_upper=cumulative_upper,
             triang=triang_95,
             cumulative_lower=cumulative_lower,
-            blnktth=blnktth,
+            dz_blkt_top=dz_blkt_top,
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
@@ -1332,7 +1332,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
         bg_double_null = blanket_geometry_double_null(
             cumulative_lower=cumulative_lower,
             triang=triang_95,
-            blnktth=blnktth,
+            dz_blkt_top=dz_blkt_top,
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
@@ -1373,10 +1373,10 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
-        blnktth = mfile_data.data["blnktth"].get_scan(scan)
+        dz_blkt_top = mfile_data.data["dz_blkt_top"].get_scan(scan)
         tfwvt = mfile_data.data["fwtth"].get_scan(scan)
     else:
-        blnktth = tfwvt = 0.0
+        dz_blkt_top = tfwvt = 0.0
 
     c_blnkith = cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
     c_fwoth = cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
@@ -1410,7 +1410,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             cumulative_upper=cumulative_upper,
             triang=triang_95,
             cumulative_lower=cumulative_lower,
-            blnktth=blnktth,
+            dz_blkt_top=dz_blkt_top,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
             dr_fw_inboard=dr_fw_inboard,
@@ -1431,7 +1431,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         fwg_double_null = first_wall_geometry_double_null(
             cumulative_lower=cumulative_lower,
             triang=triang_95,
-            blnktth=blnktth,
+            dz_blkt_top=dz_blkt_top,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
             dr_fw_inboard=dr_fw_inboard,
@@ -3540,27 +3540,27 @@ def main(args=None):
     global vertical_upper
     if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
         vertical_upper = [
-            "rminor*kappa",
-            "vgaptop",
-            "divfix",
+            "z_plasma_xpoint_upper",
+            "dz_fw_plasma_gap",
+            "dz_divertor",
             "shldtth",
             "d_vv_top",
-            "vgap_vv_thermalshield",
-            "thshield_vb",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
             "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]
     else:
         vertical_upper = [
-            "rminor*kappa",
-            "vgaptop",
+            "z_plasma_xpoint_upper",
+            "dz_fw_plasma_gap",
             "fwtth",
-            "blnktth",
+            "dz_blkt_top",
             "dr_shld_blkt_gap",
             "shldtth",
             "d_vv_top",
-            "vgap_vv_thermalshield",
-            "thshield_vb",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
             "dr_tf_shld_gap",
             "dr_tf_inboard",
         ]

@@ -2148,15 +2148,15 @@ tfootfi = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vertical Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-vgap_xpoint_divertor = 0.75
+dz_xpoint_divertor = 0.75
 * DESCRIPTION:   Vertical Gap Between x-point and Divertor (m)
 * JUSTIFICATION: 
 
-*vgaptop = 
+*dz_fw_plasma_gap = 
 * DESCRIPTION:   Top vert gap between plasma and first wall (m)
 * JUSTIFICATION: Not yet set
 
-divfix = 1.0
+dz_divertor = 1.0
 * DESCRIPTION:   Divertor Structure Vertical Thickness (m)
 * JUSTIFICATION: 
 
@@ -2168,15 +2168,15 @@ shldlth = 0.6
 * DESCRIPTION:   Lower (under divertor) Shield Thickness (m)
 * JUSTIFICATION: 
 
-*blnktth = 
+*dz_blkt_top = 
 * DESCRIPTION:   top blanket thickness (m)
 * JUSTIFICATION: No longer an input variable
 
-thshield_vb = 0.075    
+dz_shld_thermal = 0.075    
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-vgap_vv_thermalshield = 2.0
+dz_shld_vv_gap = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 

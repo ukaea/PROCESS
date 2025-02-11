@@ -118,7 +118,7 @@
     {
       "no": 22,
       "level": 3,
-      "message": "DIVCALL: Non-positive vgap_xpoint_divertor"
+      "message": "DIVCALL: Non-positive dz_xpoint_divertor"
     },
     {
       "no": 23,

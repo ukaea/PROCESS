@@ -446,12 +446,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -1441,12 +1441,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -2436,12 +2436,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -3431,12 +3431,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -4426,12 +4426,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -5421,12 +5421,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -6416,12 +6416,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -7411,12 +7411,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -8406,12 +8406,12 @@
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
  Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
@@ -9154,7 +9154,7 @@ pheat = 50.0
 *----------------Divertor Variables----------------*
 
 divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
-divfix   = 0.621 * Divertor structure vertical thickness (m)
+dz_divertor   = 0.621 * Divertor structure vertical thickness (m)
 hldivlim = 10 * Heat load limit (mw/m2)
 ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma
 prn1     = 0.4 * N-scrape-off / n-average plasma;
