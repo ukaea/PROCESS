@@ -1081,10 +1081,10 @@ class PFCoil:
         )
 
         # Turn vertical cross-sectionnal area
-        pfv.a_oh_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
+        pfv.a_cs_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
 
         # Depth/width of cs turn conduit
-        pfv.d_cond_cst = (pfv.a_oh_turn / pfv.ld_ratio_cst) ** 0.5
+        pfv.d_cond_cst = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
         # length of cs turn conduit
         pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.d_cond_cst
         # Radius of turn space = pfv.r_in_cst
@@ -1094,7 +1094,7 @@ class PFCoil:
         p2_cst = (
             (pfv.l_cond_cst * pfv.d_cond_cst)
             - (4 - constants.pi) * (pfv.r_out_cst**2)
-            - (pfv.a_oh_turn * pfv.oh_steel_frac)
+            - (pfv.a_cs_turn * pfv.oh_steel_frac)
         ) / constants.pi
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
@@ -2289,8 +2289,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS turn area (m)",
-                        "(a_oh_turn)",
-                        pfv.a_oh_turn,
+                        "(a_cs_turn)",
+                        pfv.a_cs_turn,
                     )
                     op.ovarre(
                         self.outfile,

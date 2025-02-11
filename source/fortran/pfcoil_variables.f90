@@ -48,7 +48,7 @@ module pfcoil_variables
   real(dp) :: a_cs_poloidal
   !! Central solenoid vertical cross-sectional area (m2)
 
-  real(dp) :: a_oh_turn
+  real(dp) :: a_cs_turn
   !! Central solenoid (OH) trun cross-sectional area (m2)
 
   real(dp) :: awpoh
@@ -418,7 +418,7 @@ module pfcoil_variables
     alstroh = 4.0D8
     i_cs_stress = 0
     a_cs_poloidal = 0.0D0
-    a_oh_turn = 0.0D0
+    a_cs_turn = 0.0D0
     awpoh = 0.0D0
     b_cs_peak_flat_top_end = 0.0D0
     b_cs_peak_pulse_start = 0.0D0

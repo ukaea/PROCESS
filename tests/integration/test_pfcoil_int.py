@@ -232,7 +232,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "n_pf_coil_turns", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "a_oh_turn", 0.0)
+    monkeypatch.setattr(pfv, "a_cs_turn", 0.0)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
     monkeypatch.setattr(tfv, "tftmp", 4.750)
     monkeypatch.setattr(tfv, "tcritsc", 1.6e1)
