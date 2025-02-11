@@ -496,7 +496,7 @@ class PFCoil:
         for nng in range(pfv.ngrp):
             for ng2 in range(pfv.ncls[nng]):
                 pfv.r_pf_coil_middle[ncl] = pf.rcls[nng, ng2]
-                pfv.zpf[ncl] = pf.zcls[nng, ng2]
+                pfv.z_pf_coil_middle[ncl] = pf.zcls[nng, ng2]
 
                 # Currents at different times:
 
@@ -568,14 +568,14 @@ class PFCoil:
                     pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
                     pfv.r_pf_coil_outer[i] = pfv.r_pf_coil_middle[i] + dx
 
-                    pfv.z_pf_coil_lower[i] = pfv.zpf[i] - dz
-                    if pfv.zpf[i] < 0.0e0:
-                        pfv.z_pf_coil_lower[i] = pfv.zpf[i] + dz
+                    pfv.z_pf_coil_lower[i] = pfv.z_pf_coil_middle[i] - dz
+                    if pfv.z_pf_coil_middle[i] < 0.0e0:
+                        pfv.z_pf_coil_lower[i] = pfv.z_pf_coil_middle[i] + dz
 
-                    pfv.z_pf_coil_upper[i] = pfv.zpf[i] + dz
+                    pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] + dz
 
-                    if pfv.zpf[i] < 0.0e0:
-                        pfv.z_pf_coil_upper[i] = pfv.zpf[i] - dz
+                    if pfv.z_pf_coil_middle[i] < 0.0e0:
+                        pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] - dz
 
                 else:
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
@@ -593,13 +593,13 @@ class PFCoil:
                     pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
                     pfv.r_pf_coil_outer[i] = pfv.r_pf_coil_middle[i] + dx
 
-                    pfv.z_pf_coil_lower[i] = pfv.zpf[i] - dx
-                    if pfv.zpf[i] < 0.0e0:
-                        pfv.z_pf_coil_lower[i] = pfv.zpf[i] + dx
+                    pfv.z_pf_coil_lower[i] = pfv.z_pf_coil_middle[i] - dx
+                    if pfv.z_pf_coil_middle[i] < 0.0e0:
+                        pfv.z_pf_coil_lower[i] = pfv.z_pf_coil_middle[i] + dx
 
-                    pfv.z_pf_coil_upper[i] = pfv.zpf[i] + dx
-                    if pfv.zpf[i] < 0.0e0:
-                        pfv.z_pf_coil_upper[i] = pfv.zpf[i] - dx
+                    pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] + dx
+                    if pfv.z_pf_coil_middle[i] < 0.0e0:
+                        pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] - dx
 
                 # Outside radius of largest PF coil (m)
                 pfv.pfrmax = max(pfv.pfrmax, pfv.r_pf_coil_outer[i])
@@ -1031,7 +1031,7 @@ class PFCoil:
 
         # (R,Z) coordinates of coil centre
         pfv.r_pf_coil_middle[pfv.nohc - 1] = pfv.r_cs_middle
-        pfv.zpf[pfv.nohc - 1] = 0.0e0
+        pfv.z_pf_coil_middle[pfv.nohc - 1] = 0.0e0
 
         # Radius of outer edge
         pfv.r_pf_coil_outer[pfv.nohc - 1] = pfv.r_cs_middle + 0.5e0 * bv.dr_cs
@@ -1341,25 +1341,25 @@ class PFCoil:
 
                     dzpf = pfv.z_pf_coil_upper[jj - 1] - pfv.z_pf_coil_lower[jj - 1]
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.zpf[jj - 1] + dzpf * 0.125e0
+                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.zpf[jj - 1] + dzpf * 0.375e0
+                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.zpf[jj - 1] - dzpf * 0.125e0
+                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.zpf[jj - 1] - dzpf * 0.375e0
+                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
@@ -1368,7 +1368,7 @@ class PFCoil:
                     # Field from different coil
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.zpf[jj - 1]
+                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1]
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 1.0e6
                     )
@@ -1387,14 +1387,14 @@ class PFCoil:
             pf.zfxf[:kk],
             pf.cfxf[:kk],
             pfv.r_pf_coil_inner[i - 1],
-            pfv.zpf[i - 1],
+            pfv.z_pf_coil_middle[i - 1],
         )
         pf.xind[:kk], bro, bzo, psi = bfield(
             pf.rfxf[:kk],
             pf.zfxf[:kk],
             pf.cfxf[:kk],
             pfv.r_pf_coil_outer[i - 1],
-            pfv.zpf[i - 1],
+            pfv.z_pf_coil_middle[i - 1],
         )
 
         # bpf and bpf2 for the Central Solenoid are calculated in OHCALC
@@ -1778,7 +1778,7 @@ class PFCoil:
             xpfpl = 0.0
             ncoils = ncoils + pfv.ncls[i]
             rp = pfv.r_pf_coil_middle[ncoils - 1]
-            zp = pfv.zpf[ncoils - 1]
+            zp = pfv.z_pf_coil_middle[ncoils - 1]
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for ii in range(nplas):
                 xpfpl = xpfpl + xc[ii]
@@ -1813,7 +1813,7 @@ class PFCoil:
                 xohpf = 0.0
                 ncoils = ncoils + pfv.ncls[i]
                 rp = pfv.r_pf_coil_middle[ncoils - 1]
-                zp = pfv.zpf[ncoils - 1]
+                zp = pfv.z_pf_coil_middle[ncoils - 1]
                 xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
                 for ii in range(noh):
                     xohpf = xohpf + xc[ii]
@@ -1837,11 +1837,11 @@ class PFCoil:
             for j in range(pf.nef - 1):
                 jj = j + 1 + 1 if j >= i else j + 1
 
-                zc[j] = pfv.zpf[jj - 1]
+                zc[j] = pfv.z_pf_coil_middle[jj - 1]
                 rc[j] = pfv.r_pf_coil_middle[jj - 1]
 
             rp = pfv.r_pf_coil_middle[i]
-            zp = pfv.zpf[i]
+            zp = pfv.z_pf_coil_middle[i]
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for k in range(pf.nef):
                 if k < i:
@@ -2379,7 +2379,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.z_pf_coil_middle[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2392,8 +2392,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} vertical position (m)",
-                f"(zpf[{k}])",
-                pfv.zpf[k],
+                f"(z_pf_coil_middle[{k}])",
+                pfv.z_pf_coil_middle[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2431,7 +2431,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
+                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.z_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2442,8 +2442,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 "Central solenoid vertical position (m)",
-                "(zpf[nohc-1])",
-                pfv.zpf[pfv.nohc - 1],
+                "(z_pf_coil_middle[nohc-1])",
+                pfv.z_pf_coil_middle[pfv.nohc - 1],
             )
             op.ovarre(
                 self.mfile,

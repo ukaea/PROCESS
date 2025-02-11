@@ -371,7 +371,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: z_pf_coil_lower
   !! lower point of PF coil i (m)
 
-  real(dp), dimension(ngc2) :: zpf
+  real(dp), dimension(ngc2) :: z_pf_coil_middle
   !! z (height) location of PF coil i (m)
 
   real(dp), dimension(n_pf_groups_max) :: zref
@@ -513,7 +513,7 @@ module pfcoil_variables
     wts = 0.0D0
     z_pf_coil_upper = 0.0D0
     z_pf_coil_lower = 0.0D0
-    zpf = 0.0D0
+    z_pf_coil_middle = 0.0D0
     zref = (/3.6D0, 1.2D0, 2.5D0, &
       1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0/)
     bmaxcs_lim = 13.0
