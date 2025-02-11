@@ -215,7 +215,7 @@ var_dicts = {
         description="Copper fraction of strand in central solenoid",
         units="",
     ),
-    "coheof": VariableMetadata(
+    "j_cs_flat_top_end": VariableMetadata(
         latex=r"$J [A m^{-2}]$",
         description="central solenoid overall current density at end of flat-top",
         units="A m^{-2}",

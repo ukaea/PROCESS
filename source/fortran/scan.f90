@@ -97,7 +97,7 @@ module scan_module
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
-  !!         <LI> 62 coheof : CS coil current density at EOF
+  !!         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF
   !!         <LI> 63 dr_cs : CS thickness (m)
   !!         <LI> 64 f_z_cs_tf_internal : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90
@@ -610,7 +610,7 @@ contains
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
     use heat_transport_variables, only: crypmw_max, etath
     use rebco_variables, only: copperaoh_m2_max
-    use pfcoil_variables, only: coheof, f_z_cs_tf_internal, oh_steel_frac
+    use pfcoil_variables, only: j_cs_flat_top_end, f_z_cs_tf_internal, oh_steel_frac
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
     implicit none
 
@@ -796,8 +796,8 @@ contains
             copperaoh_m2_max = swp(iscn)
             vlab = 'copperaoh_m2_max' ; xlab = 'Max CS coil current / copper area'
         case (62)
-            coheof = swp(iscn)
-            vlab = 'coheof' ; xlab = 'CS coil current density at EOF (A/m2)'
+            j_cs_flat_top_end = swp(iscn)
+            vlab = 'j_cs_flat_top_end' ; xlab = 'CS coil current density at EOF (A/m2)'
         case (63)
             dr_cs = swp(iscn)
             vlab = 'dr_cs' ; xlab = 'CS coil thickness (m)'
