@@ -260,7 +260,7 @@ GENERIC_LIST = [
     "dr_shld_vv_gap_outboard",
     "dr_tf_shld_gap",
     "dr_tf_outboard",
-    "vgap_xpoint_divertor",
+    "dz_xpoint_divertor",
     "divfix",
     "d_vv_bot",
     "shldlth",

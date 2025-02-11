@@ -298,19 +298,19 @@ class Build:
                     "(z_plasma_xpoint_lower)",
                 )
 
-                vbuild = vbuild - build_variables.vgap_xpoint_divertor
+                vbuild = vbuild - build_variables.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap_xpoint_divertor,
+                    build_variables.dz_xpoint_divertor,
                     vbuild,
-                    "(vgap_xpoint_divertor)",
+                    "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap_xpoint_divertor)",
-                    build_variables.vgap_xpoint_divertor,
+                    "(dz_xpoint_divertor)",
+                    build_variables.dz_xpoint_divertor,
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -594,19 +594,19 @@ class Build:
                     "(z_plasma_xpoint_upper)",
                 )
 
-                vbuild = vbuild - build_variables.vgap_xpoint_divertor
+                vbuild = vbuild - build_variables.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.vgap_xpoint_divertor,
+                    build_variables.dz_xpoint_divertor,
                     vbuild,
-                    "(vgap_xpoint_divertor)",
+                    "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
-                    "(vgap_xpoint_divertor)",
-                    build_variables.vgap_xpoint_divertor,
+                    "(dz_xpoint_divertor)",
+                    build_variables.dz_xpoint_divertor,
                 )
 
                 vbuild = vbuild - divertor_variables.divfix
@@ -724,16 +724,16 @@ class Build:
         # Output the cdivertor geometry
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
-        if build_variables.vgap_xpoint_divertor < 0.00001e0:
-            build_variables.vgap_xpoint_divertor = divht
+        if build_variables.dz_xpoint_divertor < 0.00001e0:
+            build_variables.dz_xpoint_divertor = divht
 
-        # If build_variables.vgap_xpoint_divertor /= 0 use the value set by the user.
+        # If build_variables.dz_xpoint_divertor /= 0 use the value set by the user.
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
         build_variables.hmax = (
             build_variables.z_plasma_xpoint_upper
-            + build_variables.vgap_xpoint_divertor
+            + build_variables.dz_xpoint_divertor
             + divertor_variables.divfix
             + build_variables.shldlth
             + build_variables.d_vv_bot
@@ -1974,7 +1974,7 @@ class Build:
         #  Half-height of first wall (internal surface)
         hbot = (
             build_variables.z_plasma_xpoint_lower
-            + build_variables.vgap_xpoint_divertor
+            + build_variables.dz_xpoint_divertor
             + divertor_variables.divfix
             - build_variables.blnktth
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)

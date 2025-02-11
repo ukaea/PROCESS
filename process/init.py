@@ -658,7 +658,7 @@ def check_process():
 
     if fortran.physics_variables.i_single_null == 0:
         fortran.physics_variables.idivrt = 2
-        fortran.build_variables.vgaptop = fortran.build_variables.vgap_xpoint_divertor
+        fortran.build_variables.vgaptop = fortran.build_variables.dz_xpoint_divertor
         fortran.build_variables.shldtth = fortran.build_variables.shldlth
         fortran.build_variables.d_vv_top = fortran.build_variables.d_vv_bot
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)

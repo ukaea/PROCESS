@@ -14108,7 +14108,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.47)
     monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.47)
 
-    monkeypatch.setattr(build_variables, "vgap_xpoint_divertor", 0.05)  # Baseline 2018
+    monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "shldtth", 0.3)  # Baseline 2018
     monkeypatch.setattr(
         divertor_variables, "divfix", 2.05

@@ -97,7 +97,7 @@ class BlanketLibrary:
         if icomponent == 0:
             hbot = (
                 build_variables.z_plasma_xpoint_lower
-                + build_variables.vgap_xpoint_divertor
+                + build_variables.dz_xpoint_divertor
                 + divertor_variables.divfix
                 - build_variables.blnktth
             )
@@ -105,7 +105,7 @@ class BlanketLibrary:
         elif icomponent == 1:
             hbot = (
                 build_variables.z_plasma_xpoint_lower
-                + build_variables.vgap_xpoint_divertor
+                + build_variables.dz_xpoint_divertor
                 + divertor_variables.divfix
             )
         # Vacuum vessel
