@@ -128,7 +128,7 @@ class PFCoil:
         # First break up Central Solenoid solenoid into 'filaments'
 
         # Central Solenoid mean radius
-        pfv.rohc = bv.dr_bore + 0.5e0 * bv.dr_cs
+        pfv.r_cs_middle = bv.dr_bore + 0.5e0 * bv.dr_cs
 
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
@@ -149,7 +149,7 @@ class PFCoil:
             # Symmetric up/down Central Solenoid : Find (R,Z) and current of each filament at BOP
 
             for nng in range(pfv.nfxfh):
-                pf.rfxf[nng] = pfv.rohc
+                pf.rfxf[nng] = pfv.r_cs_middle
                 pf.rfxf[nng + pfv.nfxfh] = pf.rfxf[nng]
                 pf.zfxf[nng] = bv.hmax * pfv.ohhghf / pfv.nfxfh * ((nng + 1) - 0.5e0)
                 pf.zfxf[nng + pfv.nfxfh] = -pf.zfxf[nng]
@@ -168,7 +168,7 @@ class PFCoil:
             if pfv.i_pf_location[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
                 for k in range(pfv.ncls[j]):
-                    pf.rcls[j, k] = pfv.rohc + pfv.rpf1
+                    pf.rcls[j, k] = pfv.r_cs_middle + pfv.rpf1
 
                     # Z coordinate of coil enforced so as not
                     # to occupy the same space as the Central Solenoid
@@ -988,11 +988,11 @@ class PFCoil:
         pfv.zl[pfv.nohc - 1] = -pfv.zh[pfv.nohc - 1]
 
         # (R,Z) coordinates of coil centre
-        pfv.rpf[pfv.nohc - 1] = pfv.rohc
+        pfv.rpf[pfv.nohc - 1] = pfv.r_cs_middle
         pfv.zpf[pfv.nohc - 1] = 0.0e0
 
         # Radius of outer edge
-        pfv.rb[pfv.nohc - 1] = pfv.rohc + 0.5e0 * bv.dr_cs
+        pfv.rb[pfv.nohc - 1] = pfv.r_cs_middle + 0.5e0 * bv.dr_cs
 
         # Radius of inner edge
         pfv.ra[pfv.nohc - 1] = pfv.rb[pfv.nohc - 1] - bv.dr_cs
@@ -1222,7 +1222,7 @@ class PFCoil:
             pfv.powohres = (
                 2.0e0
                 * constants.pi
-                * pfv.rohc
+                * pfv.r_cs_middle
                 * pfv.pfclres
                 / (pfv.areaoh * (1.0e0 - pfv.vfohc))
                 * (1.0e6 * pfv.ric[pfv.nohc - 1]) ** 2
@@ -1661,7 +1661,7 @@ class PFCoil:
         zoh = np.zeros(noh)
 
         if bv.iohcl != 0:
-            roh[:] = pfv.rohc
+            roh[:] = pfv.r_cs_middle
 
             delzoh = (
                 2.0e0 * pfv.zh[pfv.nohc - 1] / noh
@@ -1744,7 +1744,7 @@ class PFCoil:
 
         if bv.iohcl != 0:
             # Central Solenoid self inductance
-            a = pfv.rohc  # mean radius of coil
+            a = pfv.r_cs_middle  # mean radius of coil
             b = 2.0e0 * pfv.zh[pfv.nohc - 1]  # length of coil
             c = pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]  # radial winding thickness
             pfv.sxlg[pfv.nohc - 1, pfv.nohc - 1] = self.selfinductance(

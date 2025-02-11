@@ -28,7 +28,7 @@ The three possible values of `i_pf_location(j)` correspond to the following PF c
 into account `i_single_null` and other recent changes e.g. rclsnorm)
 
 `i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
-*R* = `rohc` + `rpf1`<br>
+*R* = `r_cs_middle` + `rpf1`<br>
 *Z* = $\pm$(`hmax` * `ohhghf` + 0.1 + 0.5 * (`hmax` * (1 - `ohhghf`) + `dr_tf_inboard` + 0.1))
 
 `i_pf_location(j)` = 2: PF coils are placed above the TF coils (one group only);<br>

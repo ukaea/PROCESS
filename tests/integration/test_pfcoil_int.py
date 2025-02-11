@@ -64,7 +64,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "fcohbop", 1.0)
     monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
     monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "rohc", 3.0)
+    monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
@@ -193,7 +193,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "bmaxoh", 1.4e1)
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
     monkeypatch.setattr(pfv, "coheof", 1.693e7)
-    monkeypatch.setattr(pfv, "rohc", 3.0)
+    monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
     monkeypatch.setattr(pfv, "vfohc", 3.0e-1)
     monkeypatch.setattr(pfv, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
@@ -2862,7 +2862,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ]),
     )
     monkeypatch.setattr(pfv, "sxlg", np.ones((22, 22), dtype=int))
-    monkeypatch.setattr(pfv, "rohc", 2.6084100000000001)
+    monkeypatch.setattr(pfv, "r_cs_middle", 2.6084100000000001)
     monkeypatch.setattr(pfv, "ngrp", 4)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(
