@@ -57,7 +57,7 @@ module pfcoil_variables
   real(dp) :: bmaxoh
   !! maximum field in central solenoid at end of flat-top (EoF) (T)
 
-  real(dp) :: bmaxoh0
+  real(dp) :: b_cs_peak_pulse_start
   !! maximum field in central solenoid at beginning of pulse (T)
 
   real(dp), dimension(ngc2) :: b_pf_coil_peak
@@ -421,7 +421,7 @@ module pfcoil_variables
     a_oh_turn = 0.0D0
     awpoh = 0.0D0
     bmaxoh = 0.0D0
-    bmaxoh0 = 0.0D0
+    b_cs_peak_pulse_start = 0.0D0
     b_pf_coil_peak = 0.0D0
     ccl0_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)

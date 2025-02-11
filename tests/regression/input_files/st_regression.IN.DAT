@@ -1733,7 +1733,7 @@ i_pf_conductor = 0
 *icc = 79
 * DESCRIPTION:   Constraint equation for maximum CS field
 * JUSTIFICATION: Turned off, dont care about maximum CS field
-* VARIABLES:     b_cs_limit_max (Central solenoid max field limit [T]). bmaxoh0,bmaxoh calculated in-situ
+* VARIABLES:     b_cs_limit_max (Central solenoid max field limit [T]). b_cs_peak_pulse_start,bmaxoh calculated in-situ
 
 *b_cs_limit_max = 
 * DESCRIPTION:   Maximum allowed peak field on central solenoid (icc = 79)

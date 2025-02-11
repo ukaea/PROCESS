@@ -770,7 +770,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2414E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4070E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4070E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.4743E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0423E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.6946E+07 OP 
@@ -1933,7 +1933,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2925E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4035E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4035E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5050E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0515E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7013E+07 OP 
@@ -3096,7 +3096,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3450E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4029E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4029E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5107E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0532E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.6963E+07 OP 
@@ -4259,7 +4259,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3452E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4028E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4028E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5119E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0536E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.6955E+07 OP 
@@ -5422,7 +5422,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2904E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4026E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4026E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5139E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0542E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7157E+07 OP 
@@ -6585,7 +6585,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2344E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3979E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3979E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5564E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0669E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7694E+07 OP 
@@ -7748,7 +7748,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2345E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3965E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3965E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5690E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0707E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7792E+07 OP 
@@ -8911,7 +8911,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2870E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3964E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3964E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5698E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0709E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7701E+07 OP 
@@ -10074,7 +10074,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3353E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3954E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3954E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5786E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0736E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7684E+07 OP 
@@ -11237,7 +11237,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3353E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3952E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3952E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5809E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0743E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7698E+07 OP 
@@ -12400,7 +12400,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2788E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3979E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3979E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5563E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0669E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7541E+07 OP 
@@ -13563,7 +13563,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2215E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3997E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3997E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5397E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0619E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7385E+07 OP 
@@ -14726,7 +14726,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2217E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3996E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3996E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5406E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0622E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7380E+07 OP 
@@ -15889,7 +15889,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.2711E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3991E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3991E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5452E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0636E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7355E+07 OP 
@@ -17052,7 +17052,7 @@
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3194E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3986E+01 OP 
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.3986E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5494E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0648E+08 OP 
  Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.7312E+07 OP 
