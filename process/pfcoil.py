@@ -548,14 +548,14 @@ class PFCoil:
 
                     # Location of edges of each coil:
                     # r_pf_coil_inner = inner radius, r_pf_coil_outer = outer radius
-                    # zl = 'lower' edge z (i.e. edge nearer to midplane)
+                    # z_pf_coil_lower = 'lower' edge z (i.e. edge nearer to midplane)
                     # z_pf_coil_upper = 'upper' edge z (i.e. edge further from midplane)
                     pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
                     pfv.r_pf_coil_outer[i] = pfv.r_pf_coil_middle[i] + dx
 
-                    pfv.zl[i] = pfv.zpf[i] - dz
+                    pfv.z_pf_coil_lower[i] = pfv.zpf[i] - dz
                     if pfv.zpf[i] < 0.0e0:
-                        pfv.zl[i] = pfv.zpf[i] + dz
+                        pfv.z_pf_coil_lower[i] = pfv.zpf[i] + dz
 
                     pfv.z_pf_coil_upper[i] = pfv.zpf[i] + dz
 
@@ -578,9 +578,9 @@ class PFCoil:
                     pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
                     pfv.r_pf_coil_outer[i] = pfv.r_pf_coil_middle[i] + dx
 
-                    pfv.zl[i] = pfv.zpf[i] - dx
+                    pfv.z_pf_coil_lower[i] = pfv.zpf[i] - dx
                     if pfv.zpf[i] < 0.0e0:
-                        pfv.zl[i] = pfv.zpf[i] + dx
+                        pfv.z_pf_coil_lower[i] = pfv.zpf[i] + dx
 
                     pfv.z_pf_coil_upper[i] = pfv.zpf[i] + dx
                     if pfv.zpf[i] < 0.0e0:
@@ -695,7 +695,7 @@ class PFCoil:
                     drpdz = (
                         pfv.r_pf_coil_outer[i]
                         - pfv.r_pf_coil_inner[i]
-                        + abs(pfv.z_pf_coil_upper[i] - pfv.zl[i])
+                        + abs(pfv.z_pf_coil_upper[i] - pfv.z_pf_coil_lower[i])
                     )  # dr + dz
                     pfv.pfcaseth[i] = 0.25e0 * (
                         -drpdz + math.sqrt(drpdz * drpdz + 4.0e0 * areaspf)
@@ -755,7 +755,7 @@ class PFCoil:
 
         # Plasma size and shape
         pfv.z_pf_coil_upper[pfv.nohc] = pv.rminor * pv.kappa
-        pfv.zl[pfv.nohc] = -pv.rminor * pv.kappa
+        pfv.z_pf_coil_lower[pfv.nohc] = -pv.rminor * pv.kappa
         pfv.r_pf_coil_inner[pfv.nohc] = pv.rmajor - pv.rminor
         pfv.r_pf_coil_outer[pfv.nohc] = pv.rmajor + pv.rminor
         pfv.turns[pfv.nohc] = 1.0e0
@@ -1000,7 +1000,7 @@ class PFCoil:
 
         # Z coordinates of coil edges
         pfv.z_pf_coil_upper[pfv.nohc - 1] = hohc
-        pfv.zl[pfv.nohc - 1] = -pfv.z_pf_coil_upper[pfv.nohc - 1]
+        pfv.z_pf_coil_lower[pfv.nohc - 1] = -pfv.z_pf_coil_upper[pfv.nohc - 1]
 
         # (R,Z) coordinates of coil centre
         pfv.r_pf_coil_middle[pfv.nohc - 1] = pfv.r_cs_middle
@@ -1312,7 +1312,7 @@ class PFCoil:
                     # Self field from coil (Lyle's Method)
                     kk = kk + 1
 
-                    dzpf = pfv.z_pf_coil_upper[jj - 1] - pfv.zl[jj - 1]
+                    dzpf = pfv.z_pf_coil_upper[jj - 1] - pfv.z_pf_coil_lower[jj - 1]
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1] + dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
@@ -1822,9 +1822,9 @@ class PFCoil:
                 if k < i:
                     pfv.sxlg[i, k] = xc[k] * pfv.turns[k] * pfv.turns[i]
                 elif k == i:
-                    rl = abs(pfv.z_pf_coil_upper[k] - pfv.zl[k]) / math.sqrt(
-                        constants.pi
-                    )
+                    rl = abs(
+                        pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]
+                    ) / math.sqrt(constants.pi)
                     pfv.sxlg[k, k] = (
                         constants.rmu0
                         * pfv.turns[k] ** 2
@@ -2354,7 +2354,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2380,7 +2380,7 @@ class PFCoil:
                 self.mfile,
                 f"PF coil {k} vertical thickness (m)",
                 f"(pfdz({k}))",
-                pfv.z_pf_coil_upper[k] - pfv.zl[k],
+                pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2406,7 +2406,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
+                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2430,7 +2430,7 @@ class PFCoil:
                 self.mfile,
                 "Central solenoid vertical thickness (m)",
                 "(ohdz)",
-                (pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]),
+                (pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]),
             )
             op.ovarre(
                 self.mfile,
