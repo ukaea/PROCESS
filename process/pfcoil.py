@@ -87,7 +87,7 @@ class PFCoil:
         top_bottom = 1
 
         # Set up the number of PF coils including the Central Solenoid (nohc),
-        # and the number of PF circuits including the plasma (ncirt)
+        # and the number of PF circuits including the plasma (n_pf_cs_plasma_circuits)
         if pfv.n_pf_coil_groups > pfv.n_pf_groups_max:
             eh.idiags[0] = pfv.n_pf_coil_groups
             eh.idiags[1] = pfv.n_pf_groups_max
@@ -111,7 +111,7 @@ class PFCoil:
             pfv.ncls[pfv.n_pf_coil_groups] = 1
 
         # Add one for the plasma
-        pfv.ncirt = pfv.nohc + 1
+        pfv.n_pf_cs_plasma_circuits = pfv.nohc + 1
 
         # Overall current density in the Central Solenoid at beginning of pulse
         pfv.cohbop = pfv.coheof * pfv.fcohbop
@@ -439,7 +439,7 @@ class PFCoil:
             for _i in range(pfv.ncls[ccount]):
                 pfflux = pfflux + (
                     pf.ccls[ccount]
-                    * pfv.sxlg[nocoil, pfv.ncirt - 1]
+                    * pfv.sxlg[nocoil, pfv.n_pf_cs_plasma_circuits - 1]
                     / pfv.n_pf_coil_turns[nocoil]
                 )
                 nocoil = nocoil + 1
@@ -451,8 +451,8 @@ class PFCoil:
             # Required current change in CS coil
 
             # Proposed new calculation...
-            # dics = csflux / sxlg(nohc,ncirt)
-            # BUT... sxlg(nohc,ncirt) is around 2000 times ddics below...
+            # dics = csflux / sxlg(nohc,n_pf_cs_plasma_circuits)
+            # BUT... sxlg(nohc,n_pf_cs_plasma_circuits) is around 2000 times ddics below...
 
             ddics = (
                 4.0e-7
@@ -777,18 +777,18 @@ class PFCoil:
         # Generate coil currents as a function of time using
         # user-provided waveforms etc. (cptdin, fcohbop, fcohbof)
         for k in range(6):  # time points
-            for i in range(pfv.ncirt - 1):
+            for i in range(pfv.n_pf_cs_plasma_circuits - 1):
                 pfv.c_pf_coil_turn[i, k] = pfv.waves[i, k] * math.copysign(
                     pfv.cptdin[i], pfv.ric[i]
                 )
 
         # Plasma wave form
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 0] = 0.0e0
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 1] = 0.0e0
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 2] = pv.plasma_current
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 3] = pv.plasma_current
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 4] = pv.plasma_current
-        pfv.c_pf_coil_turn[pfv.ncirt - 1, 5] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 0] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 1] = 0.0e0
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 2] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 3] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 4] = pv.plasma_current
+        pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, 5] = 0.0e0
 
     def efc(
         self,
@@ -1468,26 +1468,34 @@ class PFCoil:
         """
         if bv.iohcl == 0:
             # No Central Solenoid
-            pf.nef = pfv.ncirt - 1
+            pf.nef = pfv.n_pf_cs_plasma_circuits - 1
         else:
-            pf.nef = pfv.ncirt - 2
+            pf.nef = pfv.n_pf_cs_plasma_circuits - 2
 
         pfv.vsefsu = 0.0e0
 
         for i in range(pf.nef):
-            pf.vsdum[i, 0] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 1]
-            pf.vsdum[i, 1] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 2]
+            pf.vsdum[i, 0] = (
+                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 1]
+            )
+            pf.vsdum[i, 1] = (
+                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 2]
+            )
             pfv.vsefsu = pfv.vsefsu + (pf.vsdum[i, 1] - pf.vsdum[i, 0])
 
         # Central Solenoid startup volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.nohc - 1, 0] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
-                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 1]
+                pfv.sxlg[
+                    pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
+                ]
+                * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 1]
             )
             pf.vsdum[pfv.nohc - 1, 1] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
-                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 2]
+                pfv.sxlg[
+                    pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
+                ]
+                * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 2]
             )
             pfv.vsohsu = pf.vsdum[pfv.nohc - 1, 1] - pf.vsdum[pfv.nohc - 1, 0]
 
@@ -1497,15 +1505,19 @@ class PFCoil:
         # Burn volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.nohc - 1, 2] = (
-                pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 2]
-                * pfv.c_pf_coil_turn[pfv.ncirt - 2, 4]
+                pfv.sxlg[
+                    pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
+                ]
+                * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 4]
             )
             pfv.vsohbn = pf.vsdum[pfv.nohc - 1, 2] - pf.vsdum[pfv.nohc - 1, 1]
 
         # PF volt-seconds during burn
         pfv.vsefbn = 0.0e0
         for i in range(pf.nef):
-            pf.vsdum[i, 2] = pfv.sxlg[pfv.ncirt - 1, i] * pfv.c_pf_coil_turn[i, 4]
+            pf.vsdum[i, 2] = (
+                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 4]
+            )
             pfv.vsefbn = pfv.vsefbn + (pf.vsdum[i, 2] - pf.vsdum[i, 1])
 
         pfv.vsbn = pfv.vsohbn + pfv.vsefbn
@@ -1750,15 +1762,17 @@ class PFCoil:
                     xc[ii] = 0.5e0 * (xcin[ii] + xcout[ii])
                     xohpl = xohpl + xc[ii]
 
-            pfv.sxlg[pfv.ncirt - 1, pfv.nohc - 1] = (
+            pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, pfv.nohc - 1] = (
                 xohpl / (nplas * noh) * pfv.n_pf_coil_turns[pfv.nohc - 1]
             )
-            pfv.sxlg[pfv.nohc - 1, pfv.ncirt - 1] = pfv.sxlg[
-                pfv.ncirt - 1, pfv.nohc - 1
+            pfv.sxlg[pfv.nohc - 1, pfv.n_pf_cs_plasma_circuits - 1] = pfv.sxlg[
+                pfv.n_pf_cs_plasma_circuits - 1, pfv.nohc - 1
             ]
 
         # Plasma self inductance
-        pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 1] = pv.ind_plasma
+        pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 1] = (
+            pv.ind_plasma
+        )
 
         # PF coil / plasma mutual inductances
         ncoils = 0
@@ -1774,11 +1788,11 @@ class PFCoil:
 
             for j in range(pfv.ncls[i]):
                 ncoilj = ncoils + 1 - (j + 1)
-                pfv.sxlg[ncoilj - 1, pfv.ncirt - 1] = (
+                pfv.sxlg[ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1] = (
                     xpfpl / nplas * pfv.n_pf_coil_turns[ncoilj - 1]
                 )
-                pfv.sxlg[pfv.ncirt - 1, ncoilj - 1] = pfv.sxlg[
-                    ncoilj - 1, pfv.ncirt - 1
+                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, ncoilj - 1] = pfv.sxlg[
+                    ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1
                 ]
 
         if bv.iohcl != 0:
@@ -1867,18 +1881,18 @@ class PFCoil:
             for ig in range(pf.nef):
                 op.write(
                     self.outfile,
-                    f"{ig}\t{pfv.sxlg[: pfv.ncirt, ig]}",
+                    f"{ig}\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, ig]}",
                 )
 
             if bv.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 2]}",
+                    f"CS\t\t\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 2]}",
                 )
 
             op.write(
                 self.outfile,
-                f"Plasma\t{pfv.sxlg[: pfv.ncirt, pfv.ncirt - 1]}",
+                f"Plasma\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 1]}",
             )
 
     def outpf(self):
@@ -2609,7 +2623,7 @@ class PFCoil:
 
         op.ocmmnt(self.outfile, "circuit")
 
-        for k in range(pfv.ncirt - 1):
+        for k in range(pfv.n_pf_cs_plasma_circuits - 1):
             line = f"\t{k}\t\t"
             for jj in range(6):
                 line += f"\t{pfv.c_pf_coil_turn[k, jj] * pfv.n_pf_coil_turns[k]:.3e}"
@@ -2617,13 +2631,13 @@ class PFCoil:
 
         line = "Plasma (A)\t\t"
         for jj in range(6):
-            line += f"\t{pfv.c_pf_coil_turn[pfv.ncirt - 1, jj]:.3e}"
+            line += f"\t{pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 1, jj]:.3e}"
 
         op.write(self.outfile, line)
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
-        for k in range(pfv.ncirt - 1):
+        for k in range(pfv.n_pf_cs_plasma_circuits - 1):
             op.write(
                 self.outfile,
                 (
@@ -2638,7 +2652,7 @@ class PFCoil:
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "And: equilibrium field:")
-        for k in range(pfv.ncirt - 1):
+        for k in range(pfv.n_pf_cs_plasma_circuits - 1):
             op.write(
                 self.outfile,
                 (
@@ -2669,15 +2683,15 @@ class PFCoil:
         op.ovarin(
             self.outfile,
             "Number of PF circuits including CS and plasma",
-            "(ncirt)",
-            pfv.ncirt,
+            "(n_pf_cs_plasma_circuits)",
+            pfv.n_pf_cs_plasma_circuits,
         )
-        for k in range(pfv.ncirt):
+        for k in range(pfv.n_pf_cs_plasma_circuits):
             for jjj in range(6):
-                if k == pfv.ncirt - 1:
+                if k == pfv.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif k == pfv.ncirt - 2:
+                elif k == pfv.n_pf_cs_plasma_circuits - 2:
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:

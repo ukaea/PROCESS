@@ -85,14 +85,14 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "m_pf_coil_conductor", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "vf", np.full(22, 3.0e-1))
-    monkeypatch.setattr(pfv, "turns", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "n_pf_coil_turns", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpfs", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "zref", [3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     monkeypatch.setattr(pfv, "pfmmax", 0.0)
     monkeypatch.setattr(pfv, "i_pf_conductor", 0)
     monkeypatch.setattr(pfv, "alfapf", 5.0e-10)
-    monkeypatch.setattr(pfv, "ncirt", 8)
+    monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(pfv, "rho_pf_coil", 2.5e-8)
     monkeypatch.setattr(pfv, "c_pf_coil_turn", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
@@ -228,7 +228,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "z_pf_coil_upper", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "m_pf_coil_conductor", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "turns", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "n_pf_coil_turns", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "a_oh_turn", 0.0)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
@@ -2779,7 +2779,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(pfv, "nohc", 7)
     monkeypatch.setattr(
         pfv,
-        "turns",
+        "n_pf_coil_turns",
         np.array([
             349.33800535811901,
             474.70809561378354,
@@ -2893,7 +2893,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ncirt", 8)
+    monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(
         pfv,
         "r_pf_coil_inner",

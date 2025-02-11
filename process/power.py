@@ -153,10 +153,10 @@ class Power:
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
-        #  pfcoil_variables.ncirt : total number of PF coils (including Central Solenoid and plasma)
-        #          plasma is #ncirt, and Central Solenoid is #(pfcoil_variables.ncirt-1)
+        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
+        #          plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
         #  pfcoil_variables.sxlg(i,j) : mutual inductance between coil i and j
-        for i in range(pfcoil_variables.ncirt):
+        for i in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[i] = 0.0e0
             vpfi[i] = 0.0e0
 
@@ -168,7 +168,7 @@ class Power:
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
-                for ipf in range(pfcoil_variables.ncirt):
+                for ipf in range(pfcoil_variables.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
                         pfcoil_variables.sxlg[jpf, ipf]
@@ -284,12 +284,14 @@ class Power:
         heat_transport_variables.peakmva = max((powpfr + powpfi), powpfr2)
 
         pf_power_variables.vpfskv = 20.0e0
-        pf_power_variables.pfckts = (pfcoil_variables.ncirt - 2) + 6.0e0
+        pf_power_variables.pfckts = (
+            pfcoil_variables.n_pf_cs_plasma_circuits - 2
+        ) + 6.0e0
         pf_power_variables.spfbusl = pfbusl * pf_power_variables.pfckts
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for jpf in range(pfcoil_variables.ncirt - 1):
+        for jpf in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
             psmva[jpf] = 1.0e-6 * abs(vpfi[jpf] * pfcoil_variables.cptdin[jpf])
 
