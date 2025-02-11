@@ -8660,7 +8660,7 @@
         "zl5": 0.0,
         "zl6": 0.0,
         "zl7": 0.0,
-        "zpf": 0.0,
+        "z_pf_coil_middle": 0.0,
         "zref": [
             3.6,
             1.2,
@@ -11241,7 +11241,7 @@
         "zl5": "IFE vertical build below centre (m)",
         "zl6": "IFE vertical build below centre (m)",
         "zl7": "IFE vertical build below centre (m)",
-        "zpf": "z (height) location of PF coil i (m)",
+        "z_pf_coil_middle": "z (height) location of PF coil i (m)",
         "zref": "PF coil vertical positioning adjuster:\n<ul>\n<li>for groups j with i_pf_location(j) = 1; zref(j) is ignored</li>\n<li>for groups j with i_pf_location(j) = 2 AND itart=1 (only);\n   zref(j) is distance of centre of PF coil from inside\n   edge of TF coil (remember that PF coils for STs lie\n   within the TF coil)</li>\n<li>for groups j with i_pf_location(j) = 3; zref(j) = ratio of\n   height of coil group j to plasma minor radius</UL></li>\n<li>for groups j with i_pf_location(j) = 4; zref(j) = ratio of\n   height of coil group j to plasma minor radius</UL></li>\n</ul>",
         "zsearch": "",
         "zu1": "IFE vertical build above centre (m)",
@@ -19010,7 +19010,7 @@
             "wts",
             "z_pf_coil_upper",
             "z_pf_coil_lower",
-            "zpf",
+            "z_pf_coil_middle",
             "zref",
             "bmaxcs_lim",
             "fbmaxcs"
