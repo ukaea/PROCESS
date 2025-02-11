@@ -148,7 +148,7 @@ class Power:
         delktim = times_variables.t_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
-        #  pfcoil_variables.cpt(i,j) : current per turn of coil i at (end) time period j (A)
+        #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end) time period j (A)
         powpfi = 0.0e0
         powpfr = 0.0e0
         powpfr2 = 0.0e0
@@ -172,7 +172,10 @@ class Power:
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
                         pfcoil_variables.sxlg[jpf, ipf]
-                        * (pfcoil_variables.cpt[ipf, 2] - pfcoil_variables.cpt[ipf, 1])
+                        * (
+                            pfcoil_variables.c_pf_coil_turn[ipf, 2]
+                            - pfcoil_variables.c_pf_coil_turn[ipf, 1]
+                        )
                         / delktim
                     )
 
@@ -181,7 +184,8 @@ class Power:
 
                     #  MVA in circuit jpf at time, times_variables.tim(3) due to changes in current
                     powpfii[jpf] = (
-                        powpfii[jpf] + vpfij * pfcoil_variables.cpt[jpf, 2] / 1.0e6
+                        powpfii[jpf]
+                        + vpfij * pfcoil_variables.c_pf_coil_turn[jpf, 2] / 1.0e6
                     )
 
                     # Term used for calculating stored energy at each time
@@ -189,17 +193,19 @@ class Power:
                         inductxcurrent[time] = (
                             inductxcurrent[time]
                             + pfcoil_variables.sxlg[jpf, ipf]
-                            * pfcoil_variables.cpt[ipf, time]
+                            * pfcoil_variables.c_pf_coil_turn[ipf, time]
                         )
 
-                    # engx = engx + pfcoil_variables.sxlg(jpf,ipf)*pfcoil_variables.cpt(ipf,5)
+                    # engx = engx + pfcoil_variables.sxlg(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # 'time' is the time INDEX.  'tim' is the time.
                 for time in range(6):
                     poloidalenergy[time] = (
                         poloidalenergy[time]
-                        + 0.5e0 * inductxcurrent[time] * pfcoil_variables.cpt[jpf, time]
+                        + 0.5e0
+                        * inductxcurrent[time]
+                        * pfcoil_variables.c_pf_coil_turn[jpf, time]
                     )
 
                 #   do time = 1,5
@@ -212,21 +218,21 @@ class Power:
                 #
 
                 #   end do
-                #   #engxpc = 0.5e0 * engx * pfcoil_variables.cpt(jpf,5)
+                #   #engxpc = 0.5e0 * engx * pfcoil_variables.c_pf_coil_turn(jpf,5)
                 #   #ensxpf = ensxpf + engxpc
 
                 #  Resistive power in circuits at times times_variables.tim(3) and times_variables.tim(5) respectively (MW)
                 powpfr = (
                     powpfr
                     + pfcoil_variables.turns[jpf]
-                    * pfcoil_variables.cpt[jpf, 2]
+                    * pfcoil_variables.c_pf_coil_turn[jpf, 2]
                     * cktr[jjpf]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
                     + pfcoil_variables.turns[jpf]
-                    * pfcoil_variables.cpt[jpf, 4]
+                    * pfcoil_variables.c_pf_coil_turn[jpf, 4]
                     * cktr[jjpf]
                     / 1.0e6
                 )
