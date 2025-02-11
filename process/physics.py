@@ -103,7 +103,7 @@ def calculate_volt_second_requirements(
                 - vs_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
                 - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
                 - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
-                - vs_total_required: Total volt-seconds needed (Wb)
+                - vs_plasma_total_required: Total volt-seconds needed (Wb)
             :rtype: tuple[float, float, float, float, float, float]
 
             :notes:
@@ -171,7 +171,7 @@ def calculate_volt_second_requirements(
     # will be correct on subsequent calls.
 
     vs_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
-    vs_total_required = vs_ramp_required + vs_burn_required
+    vs_plasma_total_required = vs_ramp_required + vs_burn_required
 
     return (
         vs_plasma_internal,
@@ -179,7 +179,7 @@ def calculate_volt_second_requirements(
         vs_burn_required,
         vs_self_ind_ramp,
         vs_res_ramp,
-        vs_total_required,
+        vs_plasma_total_required,
         v_plasma_loop_burn,
     )
 
@@ -2344,7 +2344,7 @@ class Physics:
             physics_variables.vs_burn_required,
             physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
-            physics_variables.vs_total_required,
+            physics_variables.vs_plasma_total_required,
             physics_variables.v_plasma_loop_burn,
         ) = calculate_volt_second_requirements(
             physics_variables.csawth,
@@ -5449,9 +5449,9 @@ class Physics:
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
                 self.outfile,
-                "Total volt-seconds required for pulse (Wb)",
-                "(vs_total_required)",
-                physics_variables.vs_total_required,
+                "Total plasma volt-seconds required for pulse (Wb)",
+                "(vs_plasma_total_required)",
+                physics_variables.vs_plasma_total_required,
                 "OP ",
             )
             po.ovarre(

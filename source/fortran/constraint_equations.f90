@@ -866,14 +866,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for volt-second capability lower limit
       !! #=# pfcoil
-      !! #=#=# fvs, vs_total_required
+      !! #=#=# fvs, vs_plasma_total_required
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vs_total_required : input real : total V-s needed (Wb)
-      !! vs_total_required (lower limit) is positive; vstot (available) is negative
+      !! vs_plasma_total_required : input real : total V-s needed (Wb)
+      !! vs_plasma_total_required (lower limit) is positive; vstot (available) is negative
       !! fvs : input real : f-value for flux-swing (V-s) requirement (STEADY STATE)
       !! vstot : input real :   total flux swing for pulse (Wb)
-      use physics_variables, only: vs_total_required
+      use physics_variables, only: vs_plasma_total_required
       use constraint_variables, only: fvs
       use pfcoil_variables, only: vstot
       implicit none
@@ -883,9 +883,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 + fvs * vstot/vs_total_required
-      tmp_con = vs_total_required * (1.0D0 - tmp_cc)
-      tmp_err = vs_total_required * tmp_cc
+      tmp_cc =  1.0D0 + fvs * vstot/vs_plasma_total_required
+      tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
+      tmp_err = vs_plasma_total_required * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'V.sec'
 

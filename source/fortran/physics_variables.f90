@@ -876,7 +876,7 @@ module physics_variables
   real(dp) :: vs_plasma_res_ramp
   !! Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)
 
-  real(dp) :: vs_total_required
+  real(dp) :: vs_plasma_total_required
   !! total V-s needed (Wb)
 
   real(dp) :: wallmw
@@ -1120,7 +1120,7 @@ module physics_variables
     vshift = 0.0D0
     vs_plasma_ind_ramp = 0.0D0
     vs_plasma_res_ramp = 0.0D0
-    vs_total_required = 0.0D0
+    vs_plasma_total_required = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
     a_plasma_poloidal = 0.0D0

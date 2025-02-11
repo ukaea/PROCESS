@@ -498,7 +498,7 @@
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9482E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7112E-03 OP 
  Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6815E+00 OP 
- Total_volt-second_requirement_(Wb)______________________________________ (vs_total_required)_______________________      5.5011E+02 OP 
+ Total_volt-second_requirement_(Wb)______________________________________ (vs_plasma_total_required)_______________________      5.5011E+02 OP 
  Inductive_volt-seconds_(Wb)_____________________________________________ (vs_plasma_ind_ramp)_______________________      2.3534E+02 OP 
  Ejima_coefficient_______________________________________________________ (ejima_coeff)_______________________      3.0000E-01    
  Start-up_resistive_(Wb)_________________________________________________ (vs_plasma_res_ramp)_______________________      4.9825E+01 OP 
