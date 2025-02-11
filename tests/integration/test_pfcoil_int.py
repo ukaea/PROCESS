@@ -103,7 +103,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "fcohbof", 2.654e-1)
     monkeypatch.setattr(pfv, "ra", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "rb", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "isumatpf", 3)
+    monkeypatch.setattr(pfv, "i_pf_superconductor", 3)
     monkeypatch.setattr(pfv, "i_cs_superconductor", 1)
     monkeypatch.setattr(pfv, "whtpf", 0.0)
     monkeypatch.setattr(pfv, "fcupfsu", 6.900e-1)
