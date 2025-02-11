@@ -17,7 +17,7 @@ module pfcoil_variables
   integer, parameter :: n_pf_groups_max = 10
   !! maximum number of groups of PF coils
 
-  integer, parameter :: nclsmx = 2
+  integer, parameter :: n_pf_coils_in_group_max = 2
   !! maximum number of PF coils in a given group
 
   integer, parameter :: nptsmx = 32
@@ -27,7 +27,7 @@ module pfcoil_variables
   integer, parameter :: nfixmx = 64
   !! maximum number of fixed current PF coils
 
-  integer, parameter :: ngc = n_pf_groups_max*nclsmx
+  integer, parameter :: ngc = n_pf_groups_max*n_pf_coils_in_group_max
   !! maximum total number of coils across all groups
 
   integer, parameter :: ngc2 = ngc+2

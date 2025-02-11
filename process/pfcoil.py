@@ -73,10 +73,12 @@ class PFCoil:
         pcls0 = np.zeros(pfv.n_pf_groups_max, dtype=int)
         ncls0 = np.zeros(pfv.n_pf_groups_max + 2, dtype=int)
 
-        pf.rcls0, pf.zcls0 = np.zeros((2, pfv.n_pf_groups_max, pfv.nclsmx), order="F")
+        pf.rcls0, pf.zcls0 = np.zeros(
+            (2, pfv.n_pf_groups_max, pfv.n_pf_coils_in_group_max), order="F"
+        )
         pf.ccls0 = np.zeros(int(pfv.n_pf_groups_max / 2))
         sigma, work2 = np.zeros((2, pfv.n_pf_groups_max))
-        rc, zc, cc, xc = np.zeros((4, pfv.nclsmx))
+        rc, zc, cc, xc = np.zeros((4, pfv.n_pf_coils_in_group_max))
         brin, bzin, rpts, zpts = np.zeros((4, pfv.nptsmx))
         bfix, bvec = np.zeros((2, lrow1))
         gmat, umat, vmat = np.zeros((3, lrow1, lcol1), order="F")
@@ -97,10 +99,10 @@ class PFCoil:
         # exceeds the limit
         pfv.n_cs_pf_coils = 0
         for i in range(pfv.n_pf_coil_groups):
-            if pfv.n_pf_coils_in_group[i] > pfv.nclsmx:
+            if pfv.n_pf_coils_in_group[i] > pfv.n_pf_coils_in_group_max:
                 eh.idiags[0] = i
                 eh.idiags[1] = pfv.n_pf_coils_in_group[i]
-                eh.idiags[2] = pfv.nclsmx
+                eh.idiags[2] = pfv.n_pf_coils_in_group_max
                 eh.report_error(65)
 
             pfv.n_cs_pf_coils = pfv.n_cs_pf_coils + pfv.n_pf_coils_in_group[i]
@@ -871,7 +873,7 @@ class PFCoil:
         :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
         same current, <= n_pf_groups_max
         :type n_pf_coil_groups: int
-        :param n_pf_coils_in_group: number of coils in each group, each value <= nclsmx
+        :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
         :type n_pf_coils_in_group: np.ndarray
         :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
         :type rcls: np.ndarray
@@ -925,7 +927,7 @@ class PFCoil:
             zcls,
             alfa,
             bfix,
-            int(pfv.nclsmx),
+            int(pfv.n_pf_coils_in_group_max),
         )
 
         # Solve matrix equation
@@ -3358,7 +3360,7 @@ def mtrx(
     zcls,
     alfa,
     bfix,
-    nclsmx,
+    n_pf_coils_in_group_max,
 ):
     """Calculate the currents in a group of ring coils.
 
@@ -3388,7 +3390,7 @@ def mtrx(
     :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
     same current, <= n_pf_groups_max
     :type n_pf_coil_groups: int
-    :param n_pf_coils_in_group: number of coils in each group, each value <= nclsmx
+    :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
     :type n_pf_coils_in_group: numpy.ndarray
     :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
     :type rcls: numpy.ndarray
@@ -3407,7 +3409,7 @@ def mtrx(
     """
     bvec = np.zeros(lrow1)
     gmat = np.zeros((lrow1, lcol1))
-    cc = np.ones(nclsmx)
+    cc = np.ones(n_pf_coils_in_group_max)
 
     for i in range(npts):
         bvec[i] = brin[i] - bfix[i]
