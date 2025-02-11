@@ -103,8 +103,8 @@ class Power:
             ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
 
             #  Section area of aluminium bussing for circuit (cm**2)
-            #  pfcoil_variables.cptdin : max current per turn of coil (A)
-            albusa[ig] = abs(pfcoil_variables.cptdin[ic]) / 100.0e0
+            #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of coil (A)
+            albusa[ig] = abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
 
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
@@ -133,7 +133,7 @@ class Power:
 
             cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
             cptburn = (
-                pfcoil_variables.cptdin[ic]
+                pfcoil_variables.c_pf_coil_turn_peak_input[ic]
                 * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
@@ -293,7 +293,9 @@ class Power:
 
         for jpf in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
-            psmva[jpf] = 1.0e-6 * abs(vpfi[jpf] * pfcoil_variables.cptdin[jpf])
+            psmva[jpf] = 1.0e-6 * abs(
+                vpfi[jpf] * pfcoil_variables.c_pf_coil_turn_peak_input[jpf]
+            )
 
             #  Sum of the power supply MVA of the PF circuits
             pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[jpf]
@@ -301,7 +303,9 @@ class Power:
             #  Average of the maximum currents in the PF circuits, kA
             pf_power_variables.acptmax = (
                 pf_power_variables.acptmax
-                + 1.0e-3 * abs(pfcoil_variables.cptdin[jpf]) / pf_power_variables.pfckts
+                + 1.0e-3
+                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[jpf])
+                / pf_power_variables.pfckts
             )
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)

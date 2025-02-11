@@ -1274,7 +1274,7 @@ class Sctfcoil:
                 pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,
-                pfcoil_variables.cptdin,
+                pfcoil_variables.c_pf_coil_turn_peak_input,
                 pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.ld_ratio_cst,
                 pfcoil_variables.r_out_cst,
@@ -3589,7 +3589,7 @@ class Sctfcoil:
         i_pf_conductor,
         j_cs_flat_top_end,
         j_cs_pulse_start,
-        cptdin,
+        c_pf_coil_turn_peak_input,
         n_pf_coils_in_group,
         ld_ratio_cst,
         r_out_cst,
@@ -3790,7 +3790,11 @@ class Sctfcoil:
                 )
 
                 #  Number of turns
-                n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(n_pf_coils_in_group)]
+                n_oh_turns = (
+                    1.0e6
+                    * curr_oh_max
+                    / c_pf_coil_turn_peak_input[sum(n_pf_coils_in_group)]
+                )
 
                 # CS Turn vertical cross-sectionnal area
                 a_cs_turn = a_oh / n_oh_turns
