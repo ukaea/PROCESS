@@ -1236,7 +1236,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     denstl: Any = None
     dewmkg: Any = None
     r_pf_coil_outer: Any = None
-    zh: Any = None
+    z_pf_coil_upper: Any = None
     dz_tf_cryostat: Any = None
     dz_pf_cryostat: Any = None
     expected_r_cryostat_inboard: Any = None
@@ -1294,7 +1294,7 @@ class ExternalCryoGeometryParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            zh=np.array(
+            z_pf_coil_upper=np.array(
                 np.array(
                     (
                         9.9154920004377978,
@@ -1383,7 +1383,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer
     )
-    monkeypatch.setattr(pfcoil_variables, "zh", externalcryogeometryparam.zh)
+    monkeypatch.setattr(
+        pfcoil_variables, "z_pf_coil_upper", externalcryogeometryparam.z_pf_coil_upper
+    )
     monkeypatch.setattr(
         buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
     )
