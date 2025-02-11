@@ -287,6 +287,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: MonkeyPatch
     """
     n_pf_groups_max = 10
+    n_pf_coils_in_group_max = 2
     nptsmx = 32
     nfixmx = 64
     lrow1 = 2 * nptsmx + n_pf_groups_max
@@ -413,10 +414,10 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
-    rc = np.full(nclsmx, 0.0)
-    zc = np.full(nclsmx, 0.0)
-    cc = np.full(nclsmx, 0.0)
-    xc = np.full(nclsmx, 0.0)
+    rc = np.full(n_pf_coils_in_group_max, 0.0)
+    zc = np.full(n_pf_coils_in_group_max, 0.0)
+    cc = np.full(n_pf_coils_in_group_max, 0.0)
+    xc = np.full(n_pf_coils_in_group_max, 0.0)
     umat = np.full([lrow1, lcol1], 0.0, order="F")
     vmat = np.full([lrow1, lcol1], 0.0, order="F")
     sigma = np.full(n_pf_groups_max, 0.0)
@@ -650,7 +651,7 @@ def test_mtrx(pfcoil: PFCoil):
         zcls,
         alfa,
         bfix,
-        int(pfv.nclsmx),
+        int(pfv.n_pf_coils_in_group_max),
     )
 
     gmat_exp = np.array([
