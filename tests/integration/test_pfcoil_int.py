@@ -83,7 +83,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "fcohbof", 2.654e-1)
     monkeypatch.setattr(pfv, "rpf2", -1.825)
     monkeypatch.setattr(pfv, "nfxfh", 7)
-    monkeypatch.setattr(pfv, "bpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "m_pf_coil_conductor", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "vf", np.full(22, 3.0e-1))
@@ -217,7 +217,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "rho_pf_coil", 2.8e-8)
     monkeypatch.setattr(pfv, "vf", np.full(22, 0.3))
     monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "bpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "jscoh_eof", 4.758e8)
     monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
@@ -270,7 +270,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
 
     pfcoil.ohcalc()
 
-    assert pytest.approx(pfv.bpf[4]) == 13.073958753751993
+    assert pytest.approx(pfv.b_pf_coil_peak[4]) == 13.073958753751993
     assert pytest.approx(pfv.rjohc) == 54101481.7685945
 
 
@@ -2368,7 +2368,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(pfv, "j_cs_flat_top_end", 20726000)
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
-    monkeypatch.setattr(pfv, "bpf", np.zeros(22, dtype=int))  # maybe
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.zeros(22, dtype=int))  # maybe
     monkeypatch.setattr(
         pfv,
         "z_pf_coil_middle",

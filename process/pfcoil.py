@@ -629,12 +629,12 @@ class PFCoil:
                     # Index args +1ed
                     bri, bro, bzi, bzo = self.peakb(
                         i + 1, iii + 1, it
-                    )  # returns bpf, bpf2
+                    )  # returns b_pf_coil_peak, bpf2
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
                 if pfv.i_pf_conductor == 0:
-                    bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
+                    bmax = max(abs(pfv.b_pf_coil_peak[i]), abs(pf.bpf2[i]))
 
                     pfv.j_pf_wp_critical[i], jstrand, jsc, tmarg = self.superconpf(
                         bmax,
@@ -706,7 +706,7 @@ class PFCoil:
 
                 forcepf = (
                     0.5e6
-                    * (pfv.bpf[i] + pf.bpf2[i])
+                    * (pfv.b_pf_coil_peak[i] + pf.bpf2[i])
                     * abs(pfv.c_pf_cs_coils_peak_ma[i])
                     * pfv.r_pf_coil_middle[i]
                 )
@@ -1147,7 +1147,7 @@ class PFCoil:
         pfv.bmaxoh0 = abs(pfv.bmaxoh0 + bzi)
 
         # Maximum field values
-        pfv.bpf[pfv.n_cs_pf_coils - 1] = max(pfv.bmaxoh, abs(pfv.bmaxoh0))
+        pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(pfv.bmaxoh, abs(pfv.bmaxoh0))
         pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
 
         # Stress ==> cross-sectional area of supporting steel to use
@@ -1454,14 +1454,14 @@ class PFCoil:
             pfv.z_pf_coil_middle[i - 1],
         )
 
-        # bpf and bpf2 for the Central Solenoid are calculated in OHCALC
+        # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
         if (bv.iohcl != 0) and (i == pfv.n_cs_pf_coils):
             return bri, bro, bzi, bzo
 
         bpfin = math.sqrt(bri**2 + bzi**2)
         bpfout = math.sqrt(bro**2 + bzo**2)
         for n in range(pfv.n_pf_coils_in_group[ii - 1]):
-            pfv.bpf[i - 1 + n] = bpfin
+            pfv.b_pf_coil_peak[i - 1 + n] = bpfin
             pf.bpf2[i - 1 + n] = bpfout
 
         return bri, bro, bzi, bzo
@@ -2520,8 +2520,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} field (T)",
-                f"(bpf[{k}])",
-                pfv.bpf[k],
+                f"(b_pf_coil_peak[{k}])",
+                pfv.b_pf_coil_peak[k],
             )
         self.tf_pf_collision_detector()
 
@@ -2576,8 +2576,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 "Central solenoid field (T)",
-                "(bpf[n_cs_pf_coils-1])",
-                pfv.bpf[pfv.n_cs_pf_coils - 1],
+                "(b_pf_coil_peak[n_cs_pf_coils-1])",
+                pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1],
             )
 
         # Plasma
@@ -2604,12 +2604,12 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
@@ -2618,12 +2618,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals

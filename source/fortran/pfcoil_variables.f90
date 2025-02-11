@@ -60,7 +60,7 @@ module pfcoil_variables
   real(dp) :: bmaxoh0
   !! maximum field in central solenoid at beginning of pulse (T)
 
-  real(dp), dimension(ngc2) :: bpf
+  real(dp), dimension(ngc2) :: b_pf_coil_peak
   !! peak field at coil i (T)
 
   real(dp), dimension(n_pf_groups_max) :: ccl0_ma
@@ -422,7 +422,7 @@ module pfcoil_variables
     awpoh = 0.0D0
     bmaxoh = 0.0D0
     bmaxoh0 = 0.0D0
-    bpf = 0.0D0
+    b_pf_coil_peak = 0.0D0
     ccl0_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
     ccls_ma = (/0.0D0, 0.0D0, 0.0D0, &
