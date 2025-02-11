@@ -114,7 +114,7 @@ class PFCoil:
         pfv.n_pf_cs_plasma_circuits = pfv.n_cs_pf_coils + 1
 
         # Overall current density in the Central Solenoid at beginning of pulse
-        pfv.j_cs_pulse_start = pfv.coheof * pfv.fcohbop
+        pfv.j_cs_pulse_start = pfv.j_cs_flat_top_end * pfv.fcohbop
 
         # Set up array of times
         tv.tim[0] = 0.0e0
@@ -139,7 +139,13 @@ class PFCoil:
             pf.nfxf = 2 * pfv.nfxfh
 
             # total Central Solenoid current at EOF
-            ioheof = -bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0e0 * pfv.coheof
+            ioheof = (
+                -bv.hmax
+                * pfv.f_z_cs_tf_internal
+                * bv.dr_cs
+                * 2.0e0
+                * pfv.j_cs_flat_top_end
+            )
 
             if pf.nfxf > pfv.nfixmx:
                 eh.idiags[0] = pf.nfxf
@@ -1044,7 +1050,7 @@ class PFCoil:
         pfv.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
-        if pfv.j_cs_pulse_start > pfv.coheof:
+        if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
             sgn = 1.0e0
             pfv.ric[pfv.n_cs_pf_coils - 1] = (
                 sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.a_cs_poloidal
@@ -1052,7 +1058,7 @@ class PFCoil:
         else:
             sgn = -1.0e0
             pfv.ric[pfv.n_cs_pf_coils - 1] = (
-                sgn * 1.0e-6 * pfv.coheof * pfv.a_cs_poloidal
+                sgn * 1.0e-6 * pfv.j_cs_flat_top_end * pfv.a_cs_poloidal
             )
 
         # Number of turns
@@ -1099,7 +1105,7 @@ class PFCoil:
 
         # Peak field due to central Solenoid itself
         bmaxoh2 = self.bfmax(
-            pfv.coheof,
+            pfv.j_cs_flat_top_end,
             pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
             hohc,
@@ -1319,13 +1325,13 @@ class PFCoil:
                 # No Central Solenoid
                 kk = 0
             else:
-                sgn = 1.0 if pfv.j_cs_pulse_start > pfv.coheof else -1.0
+                sgn = 1.0 if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end else -1.0
 
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pf.nfxf):
                     pf.cfxf[iohc] = (
                         pfv.waves[pfv.n_cs_pf_coils - 1, it - 1]
-                        * pfv.coheof
+                        * pfv.j_cs_flat_top_end
                         * sgn
                         * bv.dr_cs
                         * pfv.f_z_cs_tf_internal
@@ -2046,8 +2052,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Actual overall current density at EOF (A/m2)",
-                    "(coheof)",
-                    pfv.coheof,
+                    "(j_cs_flat_top_end)",
+                    pfv.j_cs_flat_top_end,
                 )
                 op.oblnkl(self.outfile)
                 # MDK add bv.dr_cs, bv.dr_bore and bv.dr_cs_tf_gap as they can be iteration variables
@@ -2281,7 +2287,8 @@ class PFCoil:
                 # iteration variable (39) fjohc0
                 # iteration variable(38) fjohc
                 if (
-                    abs(pfv.coheof) > 0.99e0 * abs(numerics.boundu[37] * pfv.rjohc)
+                    abs(pfv.j_cs_flat_top_end)
+                    > 0.99e0 * abs(numerics.boundu[37] * pfv.rjohc)
                 ) or (
                     abs(pfv.j_cs_pulse_start)
                     > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)
@@ -2560,12 +2567,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.coheof)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.coheof)) / pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals
@@ -2923,7 +2930,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # Copper area = (area of coil - area of steel)*(1- void fraction)*
             # (fraction of copper in strands)
@@ -2940,7 +2947,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
@@ -2954,7 +2961,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
@@ -2970,7 +2977,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.coheof
+            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
 
@@ -2983,7 +2990,13 @@ class PFCoil:
             # and only calculated if the CS properties are needed.
             if bv.iohcl != 0:
                 # CS coil current at EOF
-                ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.coheof
+                ioheof = (
+                    bv.hmax
+                    * pfv.f_z_cs_tf_internal
+                    * bv.dr_cs
+                    * 2.0
+                    * pfv.j_cs_flat_top_end
+                )
                 # CS coil current/copper area calculation for quench protection
                 rcv.copperaoh_m2 = ioheof / (
                     pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu

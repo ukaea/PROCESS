@@ -3577,7 +3577,7 @@ class StressclParam(NamedTuple):
 
     f_z_cs_tf_internal: Any = None
 
-    coheof: Any = None
+    j_cs_flat_top_end: Any = None
 
     j_cs_pulse_start: Any = None
 
@@ -3700,7 +3700,7 @@ class StressclParam(NamedTuple):
             i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
-            coheof=20726000,
+            j_cs_flat_top_end=20726000,
             j_cs_pulse_start=0,
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
@@ -3823,7 +3823,7 @@ class StressclParam(NamedTuple):
             i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
-            coheof=20726000,
+            j_cs_flat_top_end=20726000,
             j_cs_pulse_start=19311657.760000002,
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
@@ -3947,7 +3947,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.dr_tf_inboard,
         stressclparam.dr_cs_tf_gap,
         stressclparam.i_pf_conductor,
-        stressclparam.coheof,
+        stressclparam.j_cs_flat_top_end,
         stressclparam.j_cs_pulse_start,
         stressclparam.cptdin,
         stressclparam.n_pf_coils_in_group,

@@ -47,7 +47,7 @@ boundl(18) = 3.5
 ixc = 29 * dr_bore
 boundl(29) = 0.1
 ixc = 36 * fbeta_max
-ixc = 37 * coheof
+ixc = 37 * j_cs_flat_top_end
 ixc = 38 * fjohc
 boundu(38) = 1.0
 ixc = 39 * fjohc0
@@ -223,7 +223,7 @@ epsvmc   = 1.0e-8 * Error tolerance for vmcon
 
 *-----------------Pfcoil Variables-----------------*
 
-coheof   = 13540000.0 * Central solenoid overall current density at end of flat-top (a/m2)
+j_cs_flat_top_end   = 13540000.0 * Central solenoid overall current density at end of flat-top (a/m2)
 cptdin   = 4.22d4, 4.22d4, 4.22d4, 4.22d4, 4.3d4, 4.3d4,  4.3d4, 4.3d4, * Peak current per turn input for pf coil i (a)
 fcohbop  = 0.9362 * Ratio of central solenoid overall current density at
 i_pf_location   = 2,2,3,3 * Switch for locating scheme of pf coil group i;
@@ -346,7 +346,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      q95              =  3.5000E+00
                      dr_bore           =  2.3322E+00
                      fbeta_max       =  4.8251E-01
-                     coheof         =  2.0726E+07
+                     j_cs_flat_top_end         =  2.0726E+07
                      fjohc          =  5.7941E-01
                      fjohc0         =  5.3923E-01
                      fcohbop        =  9.3176E-01

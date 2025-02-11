@@ -1272,7 +1272,7 @@ class Sctfcoil:
                 build_variables.dr_tf_inboard,
                 build_variables.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
-                pfcoil_variables.coheof,
+                pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,
                 pfcoil_variables.cptdin,
                 pfcoil_variables.n_pf_coils_in_group,
@@ -3587,7 +3587,7 @@ class Sctfcoil:
         dr_tf_inboard,
         dr_cs_tf_gap,
         i_pf_conductor,
-        coheof,
+        j_cs_flat_top_end,
         j_cs_pulse_start,
         cptdin,
         n_pf_coils_in_group,
@@ -3785,7 +3785,9 @@ class Sctfcoil:
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
-                curr_oh_max = 1.0e-6 * np.maximum(coheof, j_cs_pulse_start) * a_oh
+                curr_oh_max = (
+                    1.0e-6 * np.maximum(j_cs_flat_top_end, j_cs_pulse_start) * a_oh
+                )
 
                 #  Number of turns
                 n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(n_pf_coils_in_group)]
