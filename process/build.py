@@ -147,7 +147,7 @@ class Build:
                     + build_variables.d_vv_top
                     + build_variables.shldtth
                     + divertor_variables.dz_divertor
-                    + build_variables.vgaptop
+                    + build_variables.dz_fw_plasma_gap
                     + build_variables.z_plasma_xpoint_upper
                 )
 
@@ -260,17 +260,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.vgaptop,
+                    build_variables.dz_fw_plasma_gap,
                     vbuild,
-                    "(vgaptop)",
+                    "(dz_fw_plasma_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
-                    "(vgaptop)",
-                    build_variables.vgaptop,
+                    "(dz_fw_plasma_gap)",
+                    build_variables.dz_fw_plasma_gap,
                 )
-                vbuild = vbuild - build_variables.vgaptop
+                vbuild = vbuild - build_variables.dz_fw_plasma_gap
 
                 po.obuild(
                     self.outfile,
@@ -423,7 +423,7 @@ class Build:
                     + build_variables.blnktth
                     + 0.5e0
                     * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-                    + build_variables.vgaptop
+                    + build_variables.dz_fw_plasma_gap
                     + build_variables.z_plasma_xpoint_upper
                 )
 
@@ -556,17 +556,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.vgaptop,
+                    build_variables.dz_fw_plasma_gap,
                     vbuild,
-                    "(vgaptop)",
+                    "(dz_fw_plasma_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
-                    "(vgaptop)",
-                    build_variables.vgaptop,
+                    "(dz_fw_plasma_gap)",
+                    build_variables.dz_fw_plasma_gap,
                 )
-                vbuild = vbuild - build_variables.vgaptop
+                vbuild = vbuild - build_variables.dz_fw_plasma_gap
 
                 po.obuild(
                     self.outfile,
@@ -758,7 +758,7 @@ class Build:
                 + build_variables.blnktth
                 + 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-                + build_variables.vgaptop
+                + build_variables.dz_fw_plasma_gap
                 + build_variables.z_plasma_xpoint_upper
             )
             build_variables.hpfdif = (
@@ -1675,14 +1675,14 @@ class Build:
         )
 
         if physics_variables.i_single_null == 1:
-            #  Check if build_variables.vgaptop has been set too small
-            build_variables.vgaptop = max(
+            #  Check if build_variables.dz_fw_plasma_gap has been set too small
+            build_variables.dz_fw_plasma_gap = max(
                 0.5e0
                 * (
                     build_variables.dr_fw_plasma_gap_inboard
                     + build_variables.dr_fw_plasma_gap_outboard
                 ),
-                build_variables.vgaptop,
+                build_variables.dz_fw_plasma_gap,
             )
 
         # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
@@ -1982,7 +1982,9 @@ class Build:
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
         else:
-            htop = build_variables.z_plasma_xpoint_upper + build_variables.vgaptop
+            htop = (
+                build_variables.z_plasma_xpoint_upper + build_variables.dz_fw_plasma_gap
+            )
 
         hfw = 0.5e0 * (htop + hbot)
 

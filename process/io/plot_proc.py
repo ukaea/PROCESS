@@ -3644,7 +3644,7 @@ def main(args=None):
     if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
         vertical_upper = [
             "z_plasma_xpoint_upper",
-            "vgaptop",
+            "dz_fw_plasma_gap",
             "dz_divertor",
             "shldtth",
             "d_vv_top",
@@ -3656,7 +3656,7 @@ def main(args=None):
     else:
         vertical_upper = [
             "z_plasma_xpoint_upper",
-            "vgaptop",
+            "dz_fw_plasma_gap",
             "fwtth",
             "blnktth",
             "dr_shld_blkt_gap",

@@ -2152,7 +2152,7 @@ dz_xpoint_divertor = 0.75
 * DESCRIPTION:   Vertical Gap Between x-point and Divertor (m)
 * JUSTIFICATION: 
 
-*vgaptop = 
+*dz_fw_plasma_gap = 
 * DESCRIPTION:   Top vert gap between plasma and first wall (m)
 * JUSTIFICATION: Not yet set
 

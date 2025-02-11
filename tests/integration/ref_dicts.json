@@ -7926,7 +7926,7 @@
         "vftf": 0.4,
         "dz_xpoint_divertor": 0.0,
         "dz_shld_vv_gap": 0.163,
-        "vgaptop": 0.6,
+        "dz_fw_plasma_gap": 0.6,
         "vlabel": "",
         "vlabel_2": "",
         "vlam": 0.0,
@@ -11035,7 +11035,7 @@
         "vftf": "coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)",
         "dz_xpoint_divertor": "vertical gap between x-point and divertor (m) (if = 0, it is calculated)",
         "dz_shld_vv_gap": "vertical gap between vacuum vessel and thermal shields (m)",
-        "vgaptop": "vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)",
+        "dz_fw_plasma_gap": "vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)",
         "vlabel": "scan value name label",
         "vlabel_2": "scan value name label (2nd dimension)",
         "vlam": "",
@@ -14973,7 +14973,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "vgaptop": {
+        "dz_fw_plasma_gap": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17068,7 +17068,7 @@
             "thshield",
             "dz_shld_vv_gap",
             "dz_xpoint_divertor",
-            "vgaptop",
+            "dz_fw_plasma_gap",
             "dr_shld_blkt_gap",
             "plleni",
             "plleno",
@@ -20882,7 +20882,7 @@
         "vftf": "real_variable",
         "dz_xpoint_divertor": "real_variable",
         "dz_shld_vv_gap": "real_variable",
-        "vgaptop": "real_variable",
+        "dz_fw_plasma_gap": "real_variable",
         "dr_shld_blkt_gap": "real_variable",
         "vvhealw": "real_variable",
         "walalw": "real_variable",
