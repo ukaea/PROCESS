@@ -49,8 +49,8 @@ def test_calculate_poloidal_beta():
 
 def test_res_diff_time():
     """Test res_diff_time()"""
-    res_time = res_diff_time(9.137, 2.909e-9, 1.65)
-    assert res_time == pytest.approx(4784.3, abs=0.1)
+    t_plasma_res_diffusion = res_diff_time(9.137, 2.909e-9, 1.65)
+    assert t_plasma_res_diffusion == pytest.approx(4784.3, abs=0.1)
 
 
 def test_diamagnetic_fraction_hender():

@@ -795,7 +795,7 @@ module physics_variables
   real(dp) :: res_plasma
   !! plasma resistance (ohm)
 
-  real(dp) :: res_time
+  real(dp) :: t_plasma_res_diffusion
   !! plasma current resistive diffusion time (s)
 
   real(dp) :: a_plasma_surface
@@ -1094,7 +1094,7 @@ module physics_variables
     rnone = 0.0D0
     f_res_plasma_neo = 0.0D0
     res_plasma = 0.0D0
-    res_time = 0.0D0
+    t_plasma_res_diffusion = 0.0D0
     a_plasma_surface = 0.0D0
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
