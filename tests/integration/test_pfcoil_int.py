@@ -98,7 +98,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "rho_pf_coil", 2.5e-8)
     monkeypatch.setattr(pfv, "c_pf_coil_turn", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfv, "sxlg", np.full([22, 22], 0.0))
+    monkeypatch.setattr(pfv, "ind_pf_cs_plasma_mutual", np.full([22, 22], 0.0))
     monkeypatch.setattr(pfv, "sigpfcalw", 5.0e2)
     monkeypatch.setattr(pfv, "j_cs_flat_top_end", 1.6932e7)
     monkeypatch.setattr(pfv, "z_pf_coil_upper", np.full(22, 0.0))
@@ -2867,7 +2867,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "sxlg", np.ones((22, 22), dtype=int))
+    monkeypatch.setattr(pfv, "ind_pf_cs_plasma_mutual", np.ones((22, 22), dtype=int))
     monkeypatch.setattr(pfv, "r_cs_middle", 2.6084100000000001)
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(
@@ -2989,7 +2989,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
     monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
 
-    sxlg_exp = np.array([
+    ind_pf_cs_plasma_mutual_exp = np.array([
         [
             2.49332453e00,
             4.46286166e-02,
@@ -3520,4 +3520,4 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ],
     ])
     pfcoil.induct(False)
-    assert_array_almost_equal(pfv.sxlg, sxlg_exp)
+    assert_array_almost_equal(pfv.ind_pf_cs_plasma_mutual, ind_pf_cs_plasma_mutual_exp)
