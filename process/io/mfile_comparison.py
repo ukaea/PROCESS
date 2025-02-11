@@ -264,7 +264,7 @@ GENERIC_LIST = [
     "dz_divertor",
     "d_vv_bot",
     "shldlth",
-    "vgap_vv_thermalshield",
+    "dz_shld_vv_gap",
 ]
 
 

@@ -83,7 +83,7 @@ class Buildings:
                 tfcoil_variables.n_tf,
                 build_variables.rsldo,
                 build_variables.rsldi,
-                2.0e0 * (build_variables.hmax - build_variables.vgap_vv_thermalshield)
+                2.0e0 * (build_variables.hmax - build_variables.dz_shld_vv_gap)
                 - build_variables.d_vv_top
                 - build_variables.d_vv_bot,
                 fwbs_variables.whtshld,
@@ -541,7 +541,7 @@ class Buildings:
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
@@ -585,7 +585,7 @@ class Buildings:
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
