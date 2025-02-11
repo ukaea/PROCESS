@@ -2673,25 +2673,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_122
-    !! <LI> (122) oh_steel_frac : streel fraction of Central Solenoid
+    !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(122) = 'oh_steel_frac '
+    lablxc(122) = 'f_a_cs_steel '
     boundl(122) = 0.001D0
     boundu(122) = 0.950D0
   end subroutine init_itv_122
 
   real(kind(1.d0)) function itv_122()
-    use pfcoil_variables, only: oh_steel_frac
+    use pfcoil_variables, only: f_a_cs_steel
     implicit none
-    itv_122 = oh_steel_frac
+    itv_122 = f_a_cs_steel
   end function itv_122
 
   subroutine set_itv_122(ratio)
-    use pfcoil_variables, only: oh_steel_frac
+    use pfcoil_variables, only: f_a_cs_steel
     implicit none
     real(kind(1.d0)) :: ratio
-    oh_steel_frac = ratio
+    f_a_cs_steel = ratio
   end subroutine set_itv_122
 
   !---------------------------------

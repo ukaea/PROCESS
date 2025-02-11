@@ -1278,7 +1278,7 @@ class Sctfcoil:
                 pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.ld_ratio_cst,
                 pfcoil_variables.r_out_cst,
-                pfcoil_variables.oh_steel_frac,
+                pfcoil_variables.f_a_cs_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,
                 tfcoil_variables.eyoung_cond_axial,
@@ -3593,7 +3593,7 @@ class Sctfcoil:
         n_pf_coils_in_group,
         ld_ratio_cst,
         r_out_cst,
-        oh_steel_frac,
+        f_a_cs_steel,
         eyoung_steel,
         poisson_steel,
         eyoung_cond_axial,
@@ -3808,7 +3808,7 @@ class Sctfcoil:
                 p2 = (
                     (l_cond_cst * d_cond_cst)
                     - (4 - np.pi) * (r_out_cst**2)
-                    - (a_cs_turn * oh_steel_frac)
+                    - (a_cs_turn * f_a_cs_steel)
                 ) / np.pi
                 r_in_cst = -((l_cond_cst - d_cond_cst) / np.pi) + np.sqrt(p1 + p2)
                 t_cond_oh = (
@@ -3833,10 +3833,10 @@ class Sctfcoil:
                 # Get transverse properties
                 (eyoung_trans[0], a_working, poisson_trans[0]) = eyoung_parallel(
                     eyoung_steel,
-                    oh_steel_frac,
+                    f_a_cs_steel,
                     poisson_steel,
                     eyoung_cond_axial,
-                    1e0 - oh_steel_frac,
+                    1e0 - f_a_cs_steel,
                     poisson_cond_axial,
                 )
 

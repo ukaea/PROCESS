@@ -1976,7 +1976,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
+    monkeypatch.setattr(pfv, "f_a_cs_steel", 0.57874999999999999)
     monkeypatch.setattr(pfv, "b_cs_peak_pulse_start", 13.522197474024983)
     monkeypatch.setattr(pfv, "j_cs_pulse_start", 19311657.760000002)
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)

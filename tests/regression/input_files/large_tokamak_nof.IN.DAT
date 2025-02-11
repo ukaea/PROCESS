@@ -251,9 +251,9 @@ cpttf = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, oh_steel_frac
+* CS steel fraction, f_a_cs_steel
 ixc = 122
-oh_steel_frac = 0.8
+f_a_cs_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

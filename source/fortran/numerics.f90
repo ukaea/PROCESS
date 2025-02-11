@@ -325,7 +325,7 @@ module numerics
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
   !! <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
   !! <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
-  !! <LI> (122) oh_steel_frac : streel fraction of Central Solenoid
+  !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
   !! <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
   !! <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]
   !! <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density

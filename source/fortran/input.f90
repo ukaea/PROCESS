@@ -295,7 +295,7 @@ contains
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
-    use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
+    use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, f_a_cs_steel, vf, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
@@ -1332,8 +1332,8 @@ contains
        case ('fseppc')
           call parse_real_variable('fseppc', fseppc, 1.0D6, 1.0D9, &
                'CS separation force held by CS pre-comp structure')
-       case ('oh_steel_frac')
-          call parse_real_variable('oh_steel_frac', oh_steel_frac, 1.0D-3, 0.999D0, &
+       case ('f_a_cs_steel')
+          call parse_real_variable('f_a_cs_steel', f_a_cs_steel, 1.0D-3, 0.999D0, &
                'Central solenoid steel fraction')
        case ('foh_stress')
           call parse_real_variable('foh_stress', foh_stress, 1.0D-3, 1.0D0, &

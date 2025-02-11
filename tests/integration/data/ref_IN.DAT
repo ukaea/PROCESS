@@ -87,7 +87,7 @@ boundl(59) = 0.50
 boundu(59) = 0.94
 ixc = 54 * ftmargtf
 ixc = 106 * ftmargoh
-ixc = 122 * oh_steel_frac
+ixc = 122 * f_a_cs_steel
 ixc = 123 * foh_stress
 ixc = 109 * f_nd_alpha_electron
 ixc = 110 * falpha_energy_confinement
@@ -246,7 +246,7 @@ zref(8) = 1.0
 alstroh = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
 fcuohsu = 0.70 * copper fraction of strand in central solenoid cable
 i_cs_superconductor = 5 * WST Nb3Sn parameterisation
-oh_steel_frac = 0.8
+f_a_cs_steel = 0.8
 
 *----------------Physics Variables-----------------*
 
@@ -369,7 +369,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fcutfsu        =  8.0884E-01
                      ftmargtf       =  1.0000E+00
                      ftmargoh       =  1.0000E+00
-                     oh_steel_frac  =  5.7875E-01
+                     f_a_cs_steel  =  5.7875E-01
                      foh_stress     =  1.0000E+00
                      f_nd_alpha_electron         =  6.8940E-02
                      falpha_energy_confinement      =  1.0000E+00
