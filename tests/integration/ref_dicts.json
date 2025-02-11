@@ -3507,7 +3507,7 @@
         "pfbldgm3": 20000.0,
         "pfcaseth": 0.0,
         "pfckts": 0.0,
-        "pfclres": 2.5e-08,
+        "rho_pf_coil": 2.5e-08,
         "pfmmax": 0.0,
         "pfrmax": 0.0,
         "charged_particle_power": 0.0,
@@ -10265,7 +10265,7 @@
         "pfbldgm3": "volume of PF coil power supply building (m3)",
         "pfcaseth": "steel case thickness for PF coil i (m)",
         "pfckts": "number of PF coil circuits",
-        "pfclres": "PF coil resistivity (if i_pf_conductor=1) (Ohm-m)",
+        "rho_pf_coil": "PF coil resistivity (if i_pf_conductor=1) (Ohm-m)",
         "pfmmax": "mass of heaviest PF coil (tonnes)",
         "pfrmax": "radius of largest PF coil (m)",
         "charged_particle_power": "charged particle fusion power (MW)",
@@ -13877,7 +13877,7 @@
             "lb": 10000.0,
             "ub": 1000000.0
         },
-        "pfclres": {
+        "rho_pf_coil": {
             "lb": 0.0,
             "ub": 0.0001
         },
@@ -18967,7 +18967,7 @@
             "ohhghf",
             "oh_steel_frac",
             "pfcaseth",
-            "pfclres",
+            "rho_pf_coil",
             "pfmmax",
             "pfrmax",
             "pfwpmw",
@@ -20596,7 +20596,7 @@
         "f_fw_rad_max": "real_variable",
         "f_fw_peak": "real_variable",
         "pfbldgm3": "real_variable",
-        "pfclres": "real_variable",
+        "rho_pf_coil": "real_variable",
         "pfusife": "real_variable",
         "pheat": "real_variable",
         "pheatfix": "real_variable",

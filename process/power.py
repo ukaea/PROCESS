@@ -115,7 +115,7 @@ class Power:
             #  Total PF coil resistance (during burn)
             #  pfcoil_variables.ric : maximum current in coil (A)
             pfcr[ig] = (
-                pfcoil_variables.pfclres
+                pfcoil_variables.rho_pf_coil
                 * 2.0e0
                 * np.pi
                 * pfcoil_variables.r_pf_coil_middle[ic]
