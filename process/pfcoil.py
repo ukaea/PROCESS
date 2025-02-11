@@ -619,7 +619,7 @@ class PFCoil:
                         pfv.vf[i],
                         pfv.fcupfsu,
                         pfv.rjconpf[i],
-                        pfv.isumatpf,
+                        pfv.i_pf_superconductor,
                         tfv.fhts,
                         tfv.str_pf_con_res,
                         tfv.tftmp,
@@ -660,7 +660,9 @@ class PFCoil:
 
                 if pfv.ipfres == 0:
                     pfv.wtc[i] = (
-                        volpf * tfv.dcond[pfv.isumatpf - 1] * (1.0e0 - pfv.vf[i])
+                        volpf
+                        * tfv.dcond[pfv.i_pf_superconductor - 1]
+                        * (1.0e0 - pfv.vf[i])
                     )
                 else:
                     pfv.wtc[i] = volpf * constants.dcopper * (1.0e0 - pfv.vf[i])
@@ -2208,7 +2210,9 @@ class PFCoil:
                     eh.report_error(262)
 
                 if (
-                    pfv.isumatpf == 6 or pfv.isumatpf == 8 or pfv.isumatpf == 9
+                    pfv.i_pf_superconductor == 6
+                    or pfv.i_pf_superconductor == 8
+                    or pfv.i_pf_superconductor == 9
                 ) and abs(tfv.str_pf_con_res) > 0.7e-2:
                     eh.report_error(263)
 
@@ -2222,39 +2226,39 @@ class PFCoil:
             op.ovarin(
                 self.outfile,
                 "PF coil superconductor material",
-                "(isumatpf)",
-                pfv.isumatpf,
+                "(i_pf_superconductor)",
+                pfv.i_pf_superconductor,
             )
 
-            if pfv.isumatpf == 1:
+            if pfv.i_pf_superconductor == 1:
                 op.ocmmnt(self.outfile, "  (ITER Nb3Sn critical surface model)")
-            elif pfv.isumatpf == 2:
+            elif pfv.i_pf_superconductor == 2:
                 op.ocmmnt(self.outfile, "  (Bi-2212 high temperature superconductor)")
-            elif pfv.isumatpf == 3:
+            elif pfv.i_pf_superconductor == 3:
                 op.ocmmnt(self.outfile, "  (NbTi)")
-            elif pfv.isumatpf == 4:
+            elif pfv.i_pf_superconductor == 4:
                 op.ocmmnt(
                     self.outfile,
                     "  (ITER Nb3Sn critical surface model, user-defined parameters)",
                 )
-            elif pfv.isumatpf == 5:
+            elif pfv.i_pf_superconductor == 5:
                 op.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
-            elif pfv.isumatpf == 6:
+            elif pfv.i_pf_superconductor == 6:
                 op.ocmmnt(
                     self.outfile,
                     " (REBCO 2nd generation HTS superconductor in CrCo strand)",
                 )
-            elif pfv.isumatpf == 7:
+            elif pfv.i_pf_superconductor == 7:
                 op.ocmmnt(
                     self.outfile,
                     " (Durham Ginzburg-Landau critical surface model for Nb-Ti)",
                 )
-            elif pfv.isumatpf == 8:
+            elif pfv.i_pf_superconductor == 8:
                 op.ocmmnt(
                     self.outfile,
                     " (Durham Ginzburg-Landau critical surface model for REBCO)",
                 )
-            elif pfv.isumatpf == 9:
+            elif pfv.i_pf_superconductor == 9:
                 op.ocmmnt(
                     self.outfile,
                     " (Hazelton experimental data + Zhai conceptual model for REBCO)",

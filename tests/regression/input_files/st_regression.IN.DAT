@@ -950,7 +950,7 @@ i_tf_sc_mat = 9
 * JUSTIFICATION: Not used as not i_tf_sc_mat=4
 
 *dcond = 
-* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/isumatpf (kg/m3)
+* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 
 *quench_model =  
@@ -1824,7 +1824,7 @@ ipfres = 0
 * Conductor Type *
 *----------------*
 
-isumatpf = 9 
+i_pf_superconductor = 9 
 * DESCRIPTION:   Switch for Superconductor Material in PF Coils (9: REBCO)
 *  =1 ITER Nb3Sn critical surface model with standard
 *     ITER parameters

@@ -526,7 +526,7 @@ cptdin = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
 ipfloc = 2,2,3,3
 
 * Switch for superconductor material in pf coils
-isumatpf = 3
+i_pf_superconductor = 3
 
 * Number of pf coils in group j
 ncls = 1,1,2,2
