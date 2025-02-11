@@ -155,7 +155,7 @@ class Power:
 
         #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
         #          plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
-        #  pfcoil_variables.sxlg(i,j) : mutual inductance between coil i and j
+        #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
         for i in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[i] = 0.0e0
             vpfi[i] = 0.0e0
@@ -171,7 +171,7 @@ class Power:
                 for ipf in range(pfcoil_variables.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
-                        pfcoil_variables.sxlg[jpf, ipf]
+                        pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
                         * (
                             pfcoil_variables.c_pf_coil_turn[ipf, 2]
                             - pfcoil_variables.c_pf_coil_turn[ipf, 1]
@@ -192,11 +192,11 @@ class Power:
                     for time in range(6):
                         inductxcurrent[time] = (
                             inductxcurrent[time]
-                            + pfcoil_variables.sxlg[jpf, ipf]
+                            + pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
                             * pfcoil_variables.c_pf_coil_turn[ipf, time]
                         )
 
-                    # engx = engx + pfcoil_variables.sxlg(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
+                    # engx = engx + pfcoil_variables.ind_pf_cs_plasma_mutual(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # 'time' is the time INDEX.  'tim' is the time.

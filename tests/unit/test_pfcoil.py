@@ -1419,7 +1419,7 @@ def test_vsec(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(
         pfv,
-        "sxlg",
+        "ind_pf_cs_plasma_mutual",
         np.array(
             [
                 [
