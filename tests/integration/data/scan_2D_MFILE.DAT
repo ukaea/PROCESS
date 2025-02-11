@@ -783,11 +783,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0486E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.5540E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.8157E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.8157E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4641E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.1249E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3392E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3516E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3516E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9362E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -1946,11 +1946,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0684E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.5277E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.7740E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7740E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4122E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0885E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3236E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3618E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3618E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9713E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -3109,11 +3109,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0815E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.5352E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.7859E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7859E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4050E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0835E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3215E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3809E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3809E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9863E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -4272,11 +4272,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0802E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.5349E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.7854E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7854E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4021E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0815E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3206E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3832E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3832E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9892E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -5435,11 +5435,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0685E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.5266E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.7723E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7723E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4171E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0920E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3251E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3552E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3552E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9647E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -6598,11 +6598,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0572E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4639E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6728E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6728E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3772E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0641E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3132E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.2955E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2955E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9529E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -7761,11 +7761,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0569E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4494E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6497E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6497E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3615E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0530E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3084E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.2882E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2882E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9576E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -8924,11 +8924,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0708E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4622E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6700E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6700E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3602E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0522E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3081E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3098E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3098E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9709E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -10087,11 +10087,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0841E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4724E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6862E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6862E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3557E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0490E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3067E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3305E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3305E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9855E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -11250,11 +11250,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0834E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4720E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6857E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6857E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3543E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0480E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3063E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3314E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3314E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -12413,11 +12413,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0691E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4697E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6819E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6819E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3642E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0549E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3092E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3178E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3178E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9733E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -13576,11 +13576,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0559E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4537E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6566E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6566E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3537E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0476E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3061E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3029E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3029E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9706E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -14739,11 +14739,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0549E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4535E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6562E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6562E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3519E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0463E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3056E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3043E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3043E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9725E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -15902,11 +15902,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0688E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4673E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6782E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6782E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3542E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0480E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3063E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3239E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3239E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9826E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
@@ -17065,11 +17065,11 @@
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      2.0828E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.4798E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      8.6980E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6980E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3540E+00 OP 
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0478E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3062E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.3439E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3439E+00 OP 
  CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      4.9942E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    

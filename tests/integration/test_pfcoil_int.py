@@ -201,7 +201,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
     monkeypatch.setattr(pfv, "i_cs_superconductor", 5)
     monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 0.9)
-    monkeypatch.setattr(pfv, "areaoh", 1.039e1)
+    monkeypatch.setattr(pfv, "a_cs_poloidal", 1.039e1)
     monkeypatch.setattr(pfv, "powpfres", 0.0)
     monkeypatch.setattr(pfv, "jcableoh_eof", 1.427e8)
     monkeypatch.setattr(pfv, "powohres", 0.0)
