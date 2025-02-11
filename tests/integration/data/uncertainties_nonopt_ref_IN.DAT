@@ -245,7 +245,7 @@ zref(8) = 1.0
 
 alstroh = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
 fcuohsu = 0.70 * copper fraction of strand in central solenoid cable
-isumatoh = 5 * WST Nb3Sn parameterisation
+i_cs_superconductor = 5 * WST Nb3Sn parameterisation
 oh_steel_frac = 0.8
 
 *----------------Physics Variables-----------------*

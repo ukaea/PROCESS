@@ -575,7 +575,7 @@ zref(8) = 1.0
 fcuohsu = 0.70
 
 * ITER Nb3Sn parameterisation
-isumatoh = 1
+i_cs_superconductor = 1
 
 * TF Coil *
 ***********

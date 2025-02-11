@@ -131,7 +131,7 @@ module pfcoil_variables
   real(dp) :: itr_sum
   !! total sum of I x turns x radius for all PF coils and CS (Am)
 
-  integer :: isumatoh
+  integer :: i_cs_superconductor
   !! switch for superconductor material in central solenoid:
   !!
   !! - =1 ITER Nb3Sn critical surface model with standard
@@ -446,7 +446,7 @@ module pfcoil_variables
     ipfloc = (/2,2,3,0,0,0,0,0,0,0/)
     ipfres = 0
     itr_sum = 0.0D0
-    isumatoh = 1
+    i_cs_superconductor = 1
     isumatpf = 1
     j_crit_str_cs = 0.0D0
     j_crit_str_pf = 0.0D0

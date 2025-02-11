@@ -2672,7 +2672,7 @@
         "istell": 0.0,
         "isthtr": 3.0,
         "istore": 1.0,
-        "isumatoh": 1.0,
+        "i_cs_superconductor": 1.0,
         "isumatpf": 1.0,
         "isweep": 0.0,
         "isweep_2": 0.0,
@@ -9258,7 +9258,7 @@
         "dcdrv0": "IFE generic/laser driver cost gradient (M$/MJ)",
         "dcdrv1": "HIB driver cost gradient at low energy (M$/MJ)",
         "dcdrv2": "HIB driver cost gradient at high energy (M$/MJ)",
-        "dcond": "density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)",
+        "dcond": "density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/isumatpf (kg/m3)",
         "dcondins": "density of conduit + ground-wall insulation (kg/m3)",
         "dcopper": "density of copper (kg/m3)",
         "dr_cryostat": "cryostat thickness (m)",
@@ -9909,7 +9909,7 @@
         "istell": "Switch for stellarator option (set via `device.dat`):\n<ul>\n<li>=0 use tokamak model</li>\n<li>=1 use stellarator model: Helias5-b</li>\n<li>=2 use stellarator model: Helias4-b</li>\n<li>=3 use stellarator model: Helias3-b</li>\n</ul>",
         "isthtr": "Switch for stellarator auxiliary heating method:\n<ul>\n<li>= 1electron cyclotron resonance heating</li>\n<li>= 2lower hybrid heating</li>\n<li>= 3neutral beam injection</li>\n</ul>",
         "istore": "Switch for thermal storage method:\n<ul>\n<li>=1 option 1 of Electrowatt report, AEA FUS 205</li>\n<li>=2 option 2 of Electrowatt report, AEA FUS 205</li>\n<li>=3 stainless steel block</li>\n</ul>",
-        "isumatoh": "switch for superconductor material in central solenoid:\n<ul>\n<li>=1 ITER Nb3Sn critical surface model with standard\n   ITER parameters</li>\n<li>=2 Bi-2212 high temperature superconductor (range of\n   validity T < 20K, adjusted field b < 104 T, B > 6 T)</li>\n<li>=3 NbTi</li>\n<li>=4 ITER Nb3Sn model with user-specified parameters</li>\n<li>=5 WST Nb3Sn parameterisation</li>\n<li>=6 REBCO HTS parameterisation</li>\n</ul>",
+        "i_cs_superconductor": "switch for superconductor material in central solenoid:\n<ul>\n<li>=1 ITER Nb3Sn critical surface model with standard\n   ITER parameters</li>\n<li>=2 Bi-2212 high temperature superconductor (range of\n   validity T < 20K, adjusted field b < 104 T, B > 6 T)</li>\n<li>=3 NbTi</li>\n<li>=4 ITER Nb3Sn model with user-specified parameters</li>\n<li>=5 WST Nb3Sn parameterisation</li>\n<li>=6 REBCO HTS parameterisation</li>\n</ul>",
         "isumatpf": "switch for superconductor material in PF coils:\n<ul>\n<li>=1 ITER Nb3Sn critical surface model with standard\n   ITER parameters</li>\n<li>=2 Bi-2212 high temperature superconductor (range of\n   validity T < 20K, adjusted field b < 104 T, B > 6 T)</li>\n<li>=3 NbTi</li>\n<li>=4 ITER Nb3Sn model with user-specified parameters</li>\n<li>=5 WST Nb3Sn parameterisation</li>\n</ul>",
         "isweep": "Number of scan points to calculate",
         "isweep_2": "Number of 2D scan points to calculate",
@@ -13505,7 +13505,7 @@
             "lb": 1,
             "ub": 3
         },
-        "isumatoh": {
+        "i_cs_superconductor": {
             "lb": 1,
             "ub": 8
         },
@@ -18951,7 +18951,7 @@
             "ipfloc",
             "ipfres",
             "itr_sum",
-            "isumatoh",
+            "i_cs_superconductor",
             "isumatpf",
             "i_pf_current",
             "i_sup_pf_shape",
@@ -20491,7 +20491,7 @@
         "istell": "int_variable",
         "isthtr": "int_variable",
         "istore": "int_variable",
-        "isumatoh": "int_variable",
+        "i_cs_superconductor": "int_variable",
         "isumatpf": "int_variable",
         "isweep": "int_variable",
         "isweep_2": "int_variable",

@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, n_pf_groups_max, ngc2, rpf1, &
+      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       ngrp, isumatpf, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1855,8 +1855,8 @@ contains
        case ('ipfres')
           call parse_int_variable('ipfres', ipfres, 0, 1, &
                'Switch for supercond / resist PF coils')
-       case ('isumatoh')
-          call parse_int_variable('isumatoh', isumatoh, 1, 9, &
+       case ('i_cs_superconductor')
+          call parse_int_variable('i_cs_superconductor', i_cs_superconductor, 1, 9, &
                'Central Solenoid superconductor material')
        case ('isumatpf')
           call parse_int_variable('isumatpf', isumatpf, 1, 9, &

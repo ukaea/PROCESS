@@ -1648,20 +1648,26 @@ class Costs:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
                 if pfcoil_variables.ipfres == 0:
                     costpfsc = (
-                        cost_variables.ucsc[pfcoil_variables.isumatoh - 1]
+                        cost_variables.ucsc[pfcoil_variables.i_cs_superconductor - 1]
                         * pfcoil_variables.awpoh
                         * (1 - pfcoil_variables.vfohc)
                         * (1 - pfcoil_variables.fcuohsu)
                         / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
-                        * tfcoil_variables.dcond[pfcoil_variables.isumatoh - 1]
+                        * tfcoil_variables.dcond[
+                            pfcoil_variables.i_cs_superconductor - 1
+                        ]
                     )
                 else:
                     costpfsc = 0.0e0
             else:
                 if pfcoil_variables.ipfres == 0:
                     costpfsc = (
-                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatoh - 1]
-                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatoh - 1]
+                        cost_variables.sc_mat_cost_0[
+                            pfcoil_variables.i_cs_superconductor - 1
+                        ]
+                        * tfcoil_variables.j_crit_str_0[
+                            pfcoil_variables.i_cs_superconductor - 1
+                        ]
                         / pfcoil_variables.j_crit_str_cs
                     )
                 else:

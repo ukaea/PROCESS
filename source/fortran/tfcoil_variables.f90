@@ -151,7 +151,7 @@ module tfcoil_variables
   !! density of coil case (kg/m3)
 
   real(dp), dimension(9) :: dcond
-  !! density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)
+  !! density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/isumatpf (kg/m3)
 
   real(dp) :: dcondins
   !! density of conduit + ground-wall insulation (kg/m3)

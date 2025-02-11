@@ -773,7 +773,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      8.0573E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3084E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              1    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.3997E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.5395E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0618E+08 OP 
@@ -1770,7 +1770,7 @@ zref(8) = 1.0
 fcuohsu = 0.70
 
 * ITER Nb3Sn parameterisation
-isumatoh = 1
+i_cs_superconductor = 1
 
 * TF Coil *
 ***********
