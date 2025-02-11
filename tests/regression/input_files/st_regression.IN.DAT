@@ -2172,7 +2172,7 @@ shldlth = 0.6
 * DESCRIPTION:   top blanket thickness (m)
 * JUSTIFICATION: No longer an input variable
 
-thshield_vb = 0.075    
+dz_shld_thermal = 0.075    
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
