@@ -1649,7 +1649,7 @@ i_pf_conductor = 0
 * DESCRIPTION:   Copper fraction of strand in central solenoid
 * JUSTIFICATION: Not yet set.
 
-*oh_steel_frac =  
+*f_a_cs_steel =  
 * DESCRIPTION:   Central solenoid steel fraction
 * JUSTIFICATION: Not used. Using default
 

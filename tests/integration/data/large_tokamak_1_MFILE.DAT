@@ -786,7 +786,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0797E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3199E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.7411E+00 OP 
- CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      5.1868E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      5.1868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.7569E+08 OP 
@@ -1458,9 +1458,9 @@ cpttf = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, oh_steel_frac
+* CS steel fraction, f_a_cs_steel
 ixc = 122
-oh_steel_frac = 0.8
+f_a_cs_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

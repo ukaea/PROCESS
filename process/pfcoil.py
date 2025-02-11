@@ -1121,7 +1121,7 @@ class PFCoil:
         p2_cst = (
             (pfv.l_cond_cst * pfv.d_cond_cst)
             - (4 - constants.pi) * (pfv.r_out_cst**2)
-            - (pfv.a_cs_turn * pfv.oh_steel_frac)
+            - (pfv.a_cs_turn * pfv.f_a_cs_steel)
         ) / constants.pi
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
@@ -1208,7 +1208,7 @@ class PFCoil:
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfv.oh_steel_frac * pfv.a_cs_poloidal
+            areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
 
             if pfv.i_cs_stress == 1:
                 pfv.s_tresca_oh = max(
@@ -1698,7 +1698,7 @@ class PFCoil:
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / pfv.oh_steel_frac
+        return s_hoop_nom / pfv.f_a_cs_steel
 
     def axial_stress(self):
         """Calculation of axial stress of central solenoid.
@@ -1751,7 +1751,7 @@ class PFCoil:
         )
 
         # calculate unsmeared axial stress [MPa]
-        s_axial = axial_force / (pfv.oh_steel_frac * 0.5 * area_ax)
+        s_axial = axial_force / (pfv.f_a_cs_steel * 0.5 * area_ax)
 
         return s_axial, axial_force
 
@@ -2181,8 +2181,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS steel area fraction",
-                    "(oh_steel_frac)",
-                    pfv.oh_steel_frac,
+                    "(f_a_cs_steel)",
+                    pfv.f_a_cs_steel,
                 )
                 if pfv.i_cs_stress == 1:
                     op.ocmmnt(self.outfile, "Hoop + axial stress considered")
