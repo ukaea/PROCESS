@@ -2588,7 +2588,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
 
     pf_info = [
         (
-            mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
+            mfile_data.data[f"c_pf_cs_coils_peak_ma[{i:01}]"].get_scan(scan),
             f"PF {i}",
         )
         for i in range(1, number_of_coils)

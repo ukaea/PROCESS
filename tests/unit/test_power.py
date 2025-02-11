@@ -203,7 +203,7 @@ class PfpwrParam(NamedTuple):
 
     n_pf_coils_in_group: Any = None
 
-    ric: Any = None
+    c_pf_cs_coils_peak_ma: Any = None
 
     etapsu: Any = None
 
@@ -436,7 +436,7 @@ class PfpwrParam(NamedTuple):
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         14.742063826112622,
@@ -1179,7 +1179,7 @@ class PfpwrParam(NamedTuple):
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.579095475129442,
@@ -1814,7 +1814,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
         pfcoil_variables, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
     )
 
-    monkeypatch.setattr(pfcoil_variables, "ric", pfpwrparam.ric)
+    monkeypatch.setattr(
+        pfcoil_variables, "c_pf_cs_coils_peak_ma", pfpwrparam.c_pf_cs_coils_peak_ma
+    )
 
     monkeypatch.setattr(pfcoil_variables, "etapsu", pfpwrparam.etapsu)
 

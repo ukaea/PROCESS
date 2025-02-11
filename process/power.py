@@ -113,7 +113,7 @@ class Power:
             pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
 
             #  Total PF coil resistance (during burn)
-            #  pfcoil_variables.ric : maximum current in coil (A)
+            #  pfcoil_variables.c_pf_cs_coils_peak_ma : maximum current in coil (A)
             pfcr[ig] = (
                 pfcoil_variables.rho_pf_coil
                 * 2.0e0
@@ -124,7 +124,7 @@ class Power:
                     / (
                         (1.0e0 - pfcoil_variables.vf[ic])
                         * 1.0e6
-                        * pfcoil_variables.ric[ic]
+                        * pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
                     )
                 )
                 * pfcoil_variables.n_pf_coil_turns[ic] ** 2
@@ -135,7 +135,7 @@ class Power:
             cptburn = (
                 pfcoil_variables.cptdin[ic]
                 * pfcoil_variables.curpfs[ic]
-                / pfcoil_variables.ric[ic]
+                / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
             rcktvm[ig] = abs(cptburn) * cktr[ig]  # peak resistive voltage (V)
             rcktpm[ig] = 1.0e-6 * rcktvm[ig] * abs(cptburn)  # peak resistive power (MW)
