@@ -353,7 +353,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2,6) :: waves
   !! used in current waveform of PF coils/central solenoid
 
-  real(dp) :: whtpf
+  real(dp) :: m_pf_coil_conductor_total
   !! total mass of the PF coil conductor (kg)
 
   real(dp) :: whtpfs
@@ -507,7 +507,7 @@ module pfcoil_variables
     vssu = 0.0D0
     vstot = 0.0D0
     waves = 0.0D0
-    whtpf = 0.0D0
+    m_pf_coil_conductor_total = 0.0D0
     whtpfs = 0.0D0
     m_pf_coil_conductor = 0.0D0
     wts = 0.0D0
