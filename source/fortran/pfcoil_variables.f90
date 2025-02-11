@@ -277,7 +277,7 @@ module pfcoil_variables
   real(dp) :: routr
   !! radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils
 
-  real(dp), dimension(ngc2) :: rpf
+  real(dp), dimension(ngc2) :: r_pf_coil_middle
   !! radius of PF coil i (m)
 
   real(dp) :: rpf1
@@ -484,7 +484,7 @@ module pfcoil_variables
     rjpfalw = 0.0D0
     r_cs_middle = 0.0D0
     routr = 1.5D0
-    rpf = 0.0D0
+    r_pf_coil_middle = 0.0D0
     rpf1 = 0.0D0
     rpf2 = -1.63D0
     rref = (/7.0D0, 7.0D0, 7.0D0, &
