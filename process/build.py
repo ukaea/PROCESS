@@ -143,7 +143,7 @@ class Build:
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_vv_gap
                     + build_variables.d_vv_top
                     + build_variables.shldtth
                     + divertor_variables.dz_divertor
@@ -209,17 +209,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap_vv_thermalshield)",
-                    build_variables.vgap_vv_thermalshield,
+                    "(dz_shld_vv_gap)",
+                    build_variables.dz_shld_vv_gap,
                 )
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
@@ -351,13 +351,13 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
 
                 vbuild = vbuild - build_variables.dz_shld_thermal
@@ -416,7 +416,7 @@ class Build:
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_vv_gap
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
                     + build_variables.dr_shld_blkt_gap
                     + build_variables.shldtth
@@ -484,17 +484,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
-                    "(vgap_vv_thermalshield)",
-                    build_variables.vgap_vv_thermalshield,
+                    "(dz_shld_vv_gap)",
+                    build_variables.dz_shld_vv_gap,
                 )
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
@@ -647,13 +647,13 @@ class Build:
                     build_variables.d_vv_bot,
                 )
 
-                vbuild = vbuild - build_variables.vgap_vv_thermalshield
+                vbuild = vbuild - build_variables.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.vgap_vv_thermalshield,
+                    build_variables.dz_shld_vv_gap,
                     vbuild,
-                    "(vgap_vv_thermalshield)",
+                    "(dz_shld_vv_gap)",
                 )
 
                 vbuild = vbuild - build_variables.dz_shld_thermal
@@ -737,7 +737,7 @@ class Build:
             + divertor_variables.dz_divertor
             + build_variables.shldlth
             + build_variables.d_vv_bot
-            + build_variables.vgap_vv_thermalshield
+            + build_variables.dz_shld_vv_gap
             + build_variables.dz_shld_thermal
             + build_variables.dr_tf_shld_gap
         )
@@ -751,7 +751,7 @@ class Build:
                 build_variables.dr_tf_inboard
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dz_shld_thermal
-                + build_variables.vgap_vv_thermalshield
+                + build_variables.dz_shld_vv_gap
                 + build_variables.d_vv_top
                 + build_variables.shldtth
                 + build_variables.dr_shld_blkt_gap

@@ -2176,7 +2176,7 @@ dz_shld_thermal = 0.075
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-vgap_vv_thermalshield = 2.0
+dz_shld_vv_gap = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 

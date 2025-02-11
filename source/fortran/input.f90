@@ -191,7 +191,7 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
-      shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
+      shldtth, shldlth, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
@@ -1428,8 +1428,8 @@ contains
        case ('dz_xpoint_divertor')
           call parse_real_variable('dz_xpoint_divertor', dz_xpoint_divertor, 0.0D0, 10.0D0, &
                'Vert gap between x-pnt and divertor (m)')
-       case ('vgap_vv_thermalshield')
-          call parse_real_variable('vgap_vv_thermalshield', vgap_vv_thermalshield, 0.0D0, 10.0D0, &
+       case ('dz_shld_vv_gap')
+          call parse_real_variable('dz_shld_vv_gap', dz_shld_vv_gap, 0.0D0, 10.0D0, &
                'Vert gap between TF coil and shield (m)')
        case ('vgaptop')
           call parse_real_variable('vgaptop', vgaptop, 0.0D0, 10.0D0, &
