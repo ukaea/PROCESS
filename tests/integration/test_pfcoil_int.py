@@ -72,7 +72,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "itr_sum", 0.0)
     monkeypatch.setattr(pfv, "sigpfcf", 6.66e-1)
     monkeypatch.setattr(pfv, "ohhghf", 9.0e-1)
-    monkeypatch.setattr(pfv, "ipfloc", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(pfv, "i_pf_location", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "wts", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "powpfres", 0.0)
     monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))

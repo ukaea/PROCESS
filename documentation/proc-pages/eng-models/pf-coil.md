@@ -9,10 +9,10 @@ position and shape during the flat-top period.
 The positions and sizes of te PF coils are partly input, and partly calculated after consideration 
 of the required currents and allowable current density.
 
-The PF coil locations are controlled using a set of switched stored in array `ipfloc` (see 
+The PF coil locations are controlled using a set of switched stored in array `i_pf_location` (see 
 Figure 1), and are calculated in routine `PFCOIL`. The coils are (usually) organised into groups 
 containing two PF coils placed symmetrically above and below the midplane, and each group `j` has 
-an element `ipfloc(j)` assigned to it. Input parameter `ngrp` should be set to the number of groups, 
+an element `i_pf_location(j)` assigned to it. Input parameter `ngrp` should be set to the number of groups, 
 and `ncls(j)` should be assigned the number of coils in each group - which should be 2 in each case.
 
 <figure markdown>
@@ -24,18 +24,18 @@ In the following, all variables are defined in the variable descriptor file `var
 values for `rpf1`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user to locate the PF 
 coils accurately.
 
-The three possible values of `ipfloc(j)` correspond to the following PF coil positions: (Redo taking 
+The three possible values of `i_pf_location(j)` correspond to the following PF coil positions: (Redo taking 
 into account `i_single_null` and other recent changes e.g. rclsnorm)
 
-`ipfloc(j)` = 1: PF coils are placed above the central solenoid (one group only);
+`i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
 *R* = `rohc` + `rpf1`<br>
 *Z* = $\pm$(`hmax` * `ohhghf` + 0.1 + 0.5 * (`hmax` * (1 - `ohhghf`) + `dr_tf_inboard` + 0.1))
 
-`ipfloc(j)` = 2: PF coils are placed above the TF coils (one group only);<br>
+`i_pf_location(j)` = 2: PF coils are placed above the TF coils (one group only);<br>
 *R* = `rmajor` + `rpf2`<br>
 *Z* = $\pm$(`hmax` * `dr_tf_inboard` + 0.86)
 
-`ipfloc(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
+`i_pf_location(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
 *R* = `rtot` + `dr_tf_outboard`/2 + `routr`<br>
 *Z* = $\pm$(`rminor` * `zref(j)`
 
