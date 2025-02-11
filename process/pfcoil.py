@@ -1127,7 +1127,7 @@ class PFCoil:
         timepoint = 5
         bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
 
-        pfv.bmaxoh = abs(bzi - bmaxoh2)
+        pfv.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
@@ -1148,7 +1148,7 @@ class PFCoil:
 
         # Maximum field values
         pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(
-            pfv.bmaxoh, abs(pfv.b_cs_peak_pulse_start)
+            pfv.b_cs_peak_flat_top_end, abs(pfv.b_cs_peak_pulse_start)
         )
         pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
 
@@ -1249,7 +1249,7 @@ class PFCoil:
             # (superconducting coils only)
 
             jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1 = self.superconpf(
-                pfv.bmaxoh,
+                pfv.b_cs_peak_flat_top_end,
                 pfv.vfohc,
                 pfv.fcuohsu,
                 (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
@@ -2077,8 +2077,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Maximum field at End Of Flattop (T)",
-                    "(bmaxoh)",
-                    pfv.bmaxoh,
+                    "(b_cs_peak_flat_top_end)",
+                    pfv.b_cs_peak_flat_top_end,
                     "OP ",
                 )
                 op.ovarre(

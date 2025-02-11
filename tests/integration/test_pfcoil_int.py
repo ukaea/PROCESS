@@ -192,7 +192,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(eh, "idiags", np.full(8, 0))
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 5)
-    monkeypatch.setattr(pfv, "bmaxoh", 1.4e1)
+    monkeypatch.setattr(pfv, "b_cs_peak_flat_top_end", 1.4e1)
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
     monkeypatch.setattr(pfv, "j_cs_flat_top_end", 1.693e7)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
