@@ -812,7 +812,7 @@
  CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      5.3514E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      1.3378E+02 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -1735,7 +1735,7 @@ cptdin = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
 ipfloc = 2,2,3,3
 
 * Switch for superconductor material in pf coils
-isumatpf = 3
+i_pf_superconductor = 3
 
 * Number of pf coils in group j
 ncls = 1,1,2,2

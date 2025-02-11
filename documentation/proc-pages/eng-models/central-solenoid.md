@@ -12,8 +12,8 @@ that no central solenoid is present, in which case the thickness `dr_cs` should 
 coils should be located at positions defined by `ipfloc(j)` = 1 if no central solenoid is present.
 
 The central solenoid can be either resistive or superconducting (controlled via switch `ipfres` as 
-for the other PF coils), and if superconducting, switch `isumatpf` determines the superconducting 
-material to use -  its value is used like `isumattf` and `isumatpf`. The copper fraction (by volume) 
+for the other PF coils), and if superconducting, switch `i_pf_superconductor` determines the superconducting 
+material to use -  its value is used like `isumattf` and `i_pf_superconductor`. The copper fraction (by volume) 
 of the superconducting strands is `fcuohsu`.
 
 The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 

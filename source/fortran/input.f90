@@ -298,7 +298,7 @@ contains
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
-      ngrp, isumatpf, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
+      ngrp, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
@@ -1858,8 +1858,8 @@ contains
        case ('i_cs_superconductor')
           call parse_int_variable('i_cs_superconductor', i_cs_superconductor, 1, 9, &
                'Central Solenoid superconductor material')
-       case ('isumatpf')
-          call parse_int_variable('isumatpf', isumatpf, 1, 9, &
+       case ('i_pf_superconductor')
+          call parse_int_variable('i_pf_superconductor', i_pf_superconductor, 1, 9, &
                'PF coil superconductor material')
        case ('supercond_cost_model')
           call parse_int_variable('supercond_cost_model', supercond_cost_model, 0, 1, &

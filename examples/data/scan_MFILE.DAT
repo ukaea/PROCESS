@@ -648,7 +648,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -1643,7 +1643,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -2638,7 +2638,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -3633,7 +3633,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -4628,7 +4628,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -5623,7 +5623,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -6618,7 +6618,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -7613,7 +7613,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -8608,7 +8608,7 @@
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
@@ -9206,7 +9206,7 @@ coheof   = 13540000.0 * Central solenoid overall current density at end of flat-
 cptdin   = 4.22d4, 4.22d4, 4.22d4, 4.22d4, 4.3d4, 4.3d4,  4.3d4, 4.3d4, * Peak current per turn input for pf coil i (a)
 fcohbop  = 0.9362 * Ratio of central solenoid overall current density at
 ipfloc   = 2,2,3,3 * Switch for locating scheme of pf coil group i;
-isumatpf = 3 * Switch for superconductor material in pf coils;
+i_pf_superconductor = 3 * Switch for superconductor material in pf coils;
 ncls     = 1,1,2,2, * Number of pf coils in group j
 ngrp     = 4 * Number of groups of pf coils;
 ohhghf   = 0.9 * Central solenoid height / tf coil internal height

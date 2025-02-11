@@ -146,7 +146,7 @@ module pfcoil_variables
   !! - =8 Durham Ginzburg-Landau critical surface model for REBCO
   !! - =9 Hazelton experimental data + Zhai conceptual model for REBCO
 
-  integer :: isumatpf
+  integer :: i_pf_superconductor
   !! switch for superconductor material in PF coils:
   !!
   !! - =1 ITER Nb3Sn critical surface model with standard
@@ -447,7 +447,7 @@ module pfcoil_variables
     ipfres = 0
     itr_sum = 0.0D0
     i_cs_superconductor = 1
-    isumatpf = 1
+    i_pf_superconductor = 1
     j_crit_str_cs = 0.0D0
     j_crit_str_pf = 0.0D0
     i_pf_current = 1

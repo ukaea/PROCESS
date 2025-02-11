@@ -1581,21 +1581,27 @@ class Costs:
             if cost_variables.supercond_cost_model == 0:
                 if pfcoil_variables.ipfres == 0:
                     costpfsc = (
-                        cost_variables.ucsc[pfcoil_variables.isumatpf - 1]
+                        cost_variables.ucsc[pfcoil_variables.i_pf_superconductor - 1]
                         * (1.0e0 - pfcoil_variables.fcupfsu)
                         * (1.0e0 - pfcoil_variables.vf[i])
                         * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
                         * 1.0e6
                         / pfcoil_variables.rjconpf[i]
-                        * tfcoil_variables.dcond[pfcoil_variables.isumatpf - 1]
+                        * tfcoil_variables.dcond[
+                            pfcoil_variables.i_pf_superconductor - 1
+                        ]
                     )
                 else:
                     costpfsc = 0.0e0
             else:
                 if pfcoil_variables.ipfres == 0:
                     costpfsc = (
-                        cost_variables.sc_mat_cost_0[pfcoil_variables.isumatpf - 1]
-                        * tfcoil_variables.j_crit_str_0[pfcoil_variables.isumatpf - 1]
+                        cost_variables.sc_mat_cost_0[
+                            pfcoil_variables.i_pf_superconductor - 1
+                        ]
+                        * tfcoil_variables.j_crit_str_0[
+                            pfcoil_variables.i_pf_superconductor - 1
+                        ]
                         / pfcoil_variables.j_crit_str_pf
                     )
                 else:

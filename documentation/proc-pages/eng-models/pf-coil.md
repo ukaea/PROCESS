@@ -61,8 +61,8 @@ The PF coils can be either resistive or superconducting. This is determined from
 `ipfres`. If `ipfres` = 0, the PF coils and the central solenoid are assumed to be superconducting. 
 If `ipfres` = 1, they are assumed to be resistive, with their resistivity given by the value of variable `pfclres`.
 
-If `ipfres` = 0, switch `isumatpf` specifies which superconducting material is to be used for the 
-PF coils. The values of `isumatpf` are used in the same way as switch `isumattf` is for the TF coils.
+If `ipfres` = 0, switch `i_pf_superconductor` specifies which superconducting material is to be used for the 
+PF coils. The values of `i_pf_superconductor` are used in the same way as switch `isumattf` is for the TF coils.
 
 The fraction of copper present in the superconducting filaments if given by the value of 
 variable `fcupfsu`.
