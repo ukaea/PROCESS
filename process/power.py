@@ -134,7 +134,7 @@ class Power:
             cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
             cptburn = (
                 pfcoil_variables.cptdin[ic]
-                * pfcoil_variables.curpfs[ic]
+                * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
             rcktvm[ig] = abs(cptburn) * cktr[ig]  # peak resistive voltage (V)

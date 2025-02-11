@@ -1123,7 +1123,7 @@ def test_waveform(monkeypatch, pfcoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpfs",
+        "c_pf_cs_coil_pulse_end_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
