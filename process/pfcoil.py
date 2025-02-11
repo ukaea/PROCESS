@@ -97,18 +97,18 @@ class PFCoil:
         # exceeds the limit
         pfv.nohc = 0
         for i in range(pfv.n_pf_coil_groups):
-            if pfv.ncls[i] > pfv.nclsmx:
+            if pfv.n_pf_coils_in_group[i] > pfv.nclsmx:
                 eh.idiags[0] = i
-                eh.idiags[1] = pfv.ncls[i]
+                eh.idiags[1] = pfv.n_pf_coils_in_group[i]
                 eh.idiags[2] = pfv.nclsmx
                 eh.report_error(65)
 
-            pfv.nohc = pfv.nohc + pfv.ncls[i]
+            pfv.nohc = pfv.nohc + pfv.n_pf_coils_in_group[i]
 
         # Add one if an Central Solenoid is present, and make an extra group
         if bv.iohcl != 0:
             pfv.nohc = pfv.nohc + 1
-            pfv.ncls[pfv.n_pf_coil_groups] = 1
+            pfv.n_pf_coils_in_group[pfv.n_pf_coil_groups] = 1
 
         # Add one for the plasma
         pfv.n_pf_cs_plasma_circuits = pfv.nohc + 1
@@ -163,11 +163,11 @@ class PFCoil:
 
         # Place the PF coils:
 
-        # N.B. Problems here if k=ncls(group) is greater than 2.
+        # N.B. Problems here if k=n_pf_coils_in_group(group) is greater than 2.
         for j in range(pfv.n_pf_coil_groups):
             if pfv.i_pf_location[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                for k in range(pfv.ncls[j]):
+                for k in range(pfv.n_pf_coils_in_group[j]):
                     pf.rcls[j, k] = pfv.r_cs_middle + pfv.rpf1
 
                     # Z coordinate of coil enforced so as not
@@ -181,7 +181,7 @@ class PFCoil:
 
             elif pfv.i_pf_location[j] == 2:
                 # PF coil is on top of the TF coil
-                for k in range(pfv.ncls[j]):
+                for k in range(pfv.n_pf_coils_in_group[j]):
                     pf.rcls[j, k] = pv.rmajor + pfv.rpf2 * pv.triang * pv.rminor
                     if pv.itart == 1 and pv.itartpf == 0:
                         pf.zcls[j, k] = (bv.hmax - pfv.zref[j]) * signn[k]
@@ -198,7 +198,7 @@ class PFCoil:
 
             elif pfv.i_pf_location[j] == 3:
                 # PF coil is radially outside the TF coil
-                for k in range(pfv.ncls[j]):
+                for k in range(pfv.n_pf_coils_in_group[j]):
                     pf.zcls[j, k] = pv.rminor * pfv.zref[j] * signn[k]
                     # Coil radius follows TF coil curve for SC TF (D-shape)
                     # otherwise stacked for resistive TF (rectangle-shape)
@@ -218,7 +218,7 @@ class PFCoil:
                 # PF coil is in general location
                 # See issue 1418
                 # https://git.ccfe.ac.uk/process/process/-/issues/1418
-                for k in range(pfv.ncls[j]):
+                for k in range(pfv.n_pf_coils_in_group[j]):
                     pf.zcls[j, k] = pv.rminor * pfv.zref[j] * signn[k]
                     pf.rcls[j, k] = pv.rminor * pfv.rref[j] + pv.rmajor
 
@@ -267,7 +267,7 @@ class PFCoil:
                 pf.zfxf,
                 pf.cfxf,
                 pfv.n_pf_coil_groups,
-                pfv.ncls,
+                pfv.n_pf_coils_in_group,
                 pf.rcls,
                 pf.zcls,
                 pfv.alfapf,
@@ -328,8 +328,8 @@ class PFCoil:
                         # This coil is to balance Central Solenoid flux and should not be involved
                         # in equilibrium calculation -- RK 07/12
                         pf.ccls[i] = 0.0e0
-                        nfxf0 = nfxf0 + pfv.ncls[i]
-                        for ccount in range(pfv.ncls[i]):
+                        nfxf0 = nfxf0 + pfv.n_pf_coils_in_group[i]
+                        for ccount in range(pfv.n_pf_coils_in_group[i]):
                             pf.rfxf[nocoil] = pf.rcls[i, ccount]
                             pf.zfxf[nocoil] = pf.zcls[i, ccount]
                             pf.cfxf[nocoil] = pf.ccls[i]
@@ -344,8 +344,8 @@ class PFCoil:
                             * 2.0e0
                             * (1.0e0 - (pv.kappa * pv.rminor) / abs(pf.zcls[i, 0]))
                         )
-                        nfxf0 = nfxf0 + pfv.ncls[i]
-                        for ccount in range(pfv.ncls[i]):
+                        nfxf0 = nfxf0 + pfv.n_pf_coils_in_group[i]
+                        for ccount in range(pfv.n_pf_coils_in_group[i]):
                             pf.rfxf[nocoil] = pf.rcls[i, ccount]
                             pf.zfxf[nocoil] = pf.zcls[i, ccount]
                             pf.cfxf[nocoil] = pf.ccls[i]
@@ -436,7 +436,7 @@ class PFCoil:
         pfflux = 0.0e0
         nocoil = 0
         for ccount in range(pfv.n_pf_coil_groups):
-            for _i in range(pfv.ncls[ccount]):
+            for _i in range(pfv.n_pf_coils_in_group[ccount]):
                 pfflux = pfflux + (
                     pf.ccls[ccount]
                     * pfv.sxlg[nocoil, pfv.n_pf_cs_plasma_circuits - 1]
@@ -479,7 +479,7 @@ class PFCoil:
         # Split groups of coils into one set containing ncl coils
         ncl = 0
         for nng in range(pfv.n_pf_coil_groups):
-            for ng2 in range(pfv.ncls[nng]):
+            for ng2 in range(pfv.n_pf_coils_in_group[nng]):
                 pfv.r_pf_coil_middle[ncl] = pf.rcls[nng, ng2]
                 pfv.z_pf_coil_middle[ncl] = pf.zcls[nng, ng2]
 
@@ -529,7 +529,7 @@ class PFCoil:
         dz = 0
 
         for ii in range(pfv.n_pf_coil_groups):
-            for _ij in range(pfv.ncls[ii]):
+            for _ij in range(pfv.n_pf_coils_in_group[ii]):
                 if pfv.i_pf_location[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.dr_cs
@@ -600,7 +600,7 @@ class PFCoil:
 
         for ii in range(pfv.n_pf_coil_groups):
             iii = ii
-            for ij in range(pfv.ncls[ii]):
+            for ij in range(pfv.n_pf_coils_in_group[ii]):
                 # Peak field
 
                 if ij == 0:
@@ -737,7 +737,7 @@ class PFCoil:
         c = 0
         pfv.itr_sum = 0.0e0
         for m in range(pfv.n_pf_coil_groups):
-            for _n in range(pfv.ncls[m]):
+            for _n in range(pfv.n_pf_coils_in_group[m]):
                 pfv.itr_sum = pfv.itr_sum + (
                     pfv.r_pf_coil_middle[c] * pfv.n_pf_coil_turns[c] * pfv.cptdin[c]
                 )
@@ -802,7 +802,7 @@ class PFCoil:
         zfix,
         cfix,
         n_pf_coil_groups,
-        ncls,
+        n_pf_coils_in_group,
         rcls,
         zcls,
         alfa,
@@ -843,8 +843,8 @@ class PFCoil:
         :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
         same current, <= n_pf_groups_max
         :type n_pf_coil_groups: int
-        :param ncls: number of coils in each group, each value <= nclsmx
-        :type ncls: np.ndarray
+        :param n_pf_coils_in_group: number of coils in each group, each value <= nclsmx
+        :type n_pf_coils_in_group: np.ndarray
         :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
         :type rcls: np.ndarray
         :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
@@ -892,7 +892,7 @@ class PFCoil:
             brin,
             bzin,
             int(n_pf_coil_groups),
-            ncls,
+            n_pf_coils_in_group,
             rcls,
             zcls,
             alfa,
@@ -922,7 +922,7 @@ class PFCoil:
 
             for i in range(pfv.n_pf_coil_groups):
                 for ii in range(pfv.n_pf_coil_groups):
-                    for ij in range(pfv.ncls[ii]):
+                    for ij in range(pfv.n_pf_coils_in_group[ii]):
                         if pf.rcls[ii, ij] <= (  # Outboard TF coil collision
                             pf.rclsnorm - pfv.routr + pfv.r_pf_coil_middle[i]
                         ) and pf.rcls[ii, ij] >= (
@@ -1319,7 +1319,7 @@ class PFCoil:
         # Non-Central Solenoid coils' contributions
         jj = 0
         for iii in range(pfv.n_pf_coil_groups):
-            for _jjj in range(pfv.ncls[iii]):
+            for _jjj in range(pfv.n_pf_coils_in_group[iii]):
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
                 if iii == ii - 1:
@@ -1390,7 +1390,7 @@ class PFCoil:
 
         bpfin = math.sqrt(bri**2 + bzi**2)
         bpfout = math.sqrt(bro**2 + bzo**2)
-        for n in range(pfv.ncls[ii - 1]):
+        for n in range(pfv.n_pf_coils_in_group[ii - 1]):
             pfv.bpf[i - 1 + n] = bpfin
             pf.bpf2[i - 1 + n] = bpfout
 
@@ -1779,14 +1779,14 @@ class PFCoil:
 
         for i in range(pfv.n_pf_coil_groups):
             xpfpl = 0.0
-            ncoils = ncoils + pfv.ncls[i]
+            ncoils = ncoils + pfv.n_pf_coils_in_group[i]
             rp = pfv.r_pf_coil_middle[ncoils - 1]
             zp = pfv.z_pf_coil_middle[ncoils - 1]
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for ii in range(nplas):
                 xpfpl = xpfpl + xc[ii]
 
-            for j in range(pfv.ncls[i]):
+            for j in range(pfv.n_pf_coils_in_group[i]):
                 ncoilj = ncoils + 1 - (j + 1)
                 pfv.sxlg[ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1] = (
                     xpfpl / nplas * pfv.n_pf_coil_turns[ncoilj - 1]
@@ -1814,14 +1814,14 @@ class PFCoil:
             ncoils = 0
             for i in range(pfv.n_pf_coil_groups):
                 xohpf = 0.0
-                ncoils = ncoils + pfv.ncls[i]
+                ncoils = ncoils + pfv.n_pf_coils_in_group[i]
                 rp = pfv.r_pf_coil_middle[ncoils - 1]
                 zp = pfv.z_pf_coil_middle[ncoils - 1]
                 xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
                 for ii in range(noh):
                     xohpf = xohpf + xc[ii]
 
-                for j in range(pfv.ncls[i]):
+                for j in range(pfv.n_pf_coils_in_group[i]):
                     ncoilj = ncoils + 1 - (j + 1)
                     pfv.sxlg[ncoilj - 1, pfv.nohc - 1] = (
                         xohpf
@@ -3231,7 +3231,7 @@ def mtrx(
     brin,
     bzin,
     n_pf_coil_groups,
-    ncls,
+    n_pf_coils_in_group,
     rcls,
     zcls,
     alfa,
@@ -3266,8 +3266,8 @@ def mtrx(
     :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
     same current, <= n_pf_groups_max
     :type n_pf_coil_groups: int
-    :param ncls: number of coils in each group, each value <= nclsmx
-    :type ncls: numpy.ndarray
+    :param n_pf_coils_in_group: number of coils in each group, each value <= nclsmx
+    :type n_pf_coils_in_group: numpy.ndarray
     :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
     :type rcls: numpy.ndarray
     :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
@@ -3292,7 +3292,7 @@ def mtrx(
         bvec[i + npts] = bzin[i] - bfix[i + npts]
 
         for j in range(n_pf_coil_groups):
-            nc = ncls[j]
+            nc = n_pf_coils_in_group[j]
 
             _, gmat[i, j], gmat[i + npts, j], _ = bfield(
                 rcls[j, :nc], zcls[j, :nc], cc[:nc], rpts[i], zpts[i]
@@ -3304,7 +3304,7 @@ def mtrx(
     bvec[nrws : nrws + n_pf_coil_groups] = 0.0
     np.fill_diagonal(
         gmat[nrws : nrws + n_pf_coil_groups, :n_pf_coil_groups],
-        ncls[:n_pf_coil_groups] * alfa,
+        n_pf_coils_in_group[:n_pf_coil_groups] * alfa,
     )
 
     nrws = 2 * npts + n_pf_coil_groups

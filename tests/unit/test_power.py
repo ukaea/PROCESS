@@ -201,7 +201,7 @@ class PfpwrParam(NamedTuple):
 
     n_pf_cs_plasma_circuits: Any = None
 
-    ncls: Any = None
+    n_pf_coils_in_group: Any = None
 
     ric: Any = None
 
@@ -433,7 +433,7 @@ class PfpwrParam(NamedTuple):
             pfwpmw=0,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
-            ncls=np.array(
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             ric=np.array(
@@ -1176,7 +1176,7 @@ class PfpwrParam(NamedTuple):
             pfwpmw=0.89998039031509891,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
-            ncls=np.array(
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             ric=np.array(
@@ -1810,7 +1810,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
         pfcoil_variables, "n_pf_cs_plasma_circuits", pfpwrparam.n_pf_cs_plasma_circuits
     )
 
-    monkeypatch.setattr(pfcoil_variables, "ncls", pfpwrparam.ncls)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
+    )
 
     monkeypatch.setattr(pfcoil_variables, "ric", pfpwrparam.ric)
 

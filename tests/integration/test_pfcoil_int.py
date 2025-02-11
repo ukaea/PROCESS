@@ -65,7 +65,9 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
@@ -245,7 +247,9 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpfs", np.full(22, -175.84911993600002))
@@ -346,7 +350,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     cfix = np.full(nfixmx, 0.0)
     cfix[0:14] = 12547065.315963898
     n_pf_coil_groups = 4
-    ncls = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    n_pf_coils_in_group = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     # This 2D array argument discovered via gdb prints as a 1D array, therefore
     # needs to be reshaped into its original 2D. Fortran ordering is essential
@@ -427,7 +431,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         zfix,
         cfix,
         n_pf_coil_groups,
-        ncls,
+        n_pf_coils_in_group,
         rcls,
         zcls,
         alfa,
@@ -499,7 +503,7 @@ def test_mtrx(pfcoil: PFCoil):
     brin = np.zeros(nptsmx)
     bzin = np.zeros(nptsmx)
     n_pf_coil_groups = 4
-    ncls = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    n_pf_coils_in_group = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
     rcls = np.reshape(
         [
             0,
@@ -639,7 +643,7 @@ def test_mtrx(pfcoil: PFCoil):
         brin,
         bzin,
         n_pf_coil_groups,
-        ncls,
+        n_pf_coils_in_group,
         rcls,
         zcls,
         alfa,
@@ -2391,7 +2395,9 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(
         pfv,
         "z_pf_coil_lower",
@@ -2864,7 +2870,9 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(pfv, "sxlg", np.ones((22, 22), dtype=int))
     monkeypatch.setattr(pfv, "r_cs_middle", 2.6084100000000001)
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(
         pfv,
         "z_pf_coil_lower",

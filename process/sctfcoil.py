@@ -1275,7 +1275,7 @@ class Sctfcoil:
                 pfcoil_variables.coheof,
                 pfcoil_variables.cohbop,
                 pfcoil_variables.cptdin,
-                pfcoil_variables.ncls,
+                pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.ld_ratio_cst,
                 pfcoil_variables.r_out_cst,
                 pfcoil_variables.oh_steel_frac,
@@ -3590,7 +3590,7 @@ class Sctfcoil:
         coheof,
         cohbop,
         cptdin,
-        ncls,
+        n_pf_coils_in_group,
         ld_ratio_cst,
         r_out_cst,
         oh_steel_frac,
@@ -3788,7 +3788,7 @@ class Sctfcoil:
                 curr_oh_max = 1.0e-6 * np.maximum(coheof, cohbop) * a_oh
 
                 #  Number of turns
-                n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(ncls)]
+                n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(n_pf_coils_in_group)]
 
                 # CS Turn vertical cross-sectionnal area
                 a_oh_turn = a_oh / n_oh_turns

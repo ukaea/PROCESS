@@ -824,15 +824,15 @@ def check_process():
         for i in range(fortran.pfcoil_variables.n_pf_coil_groups):
             if (
                 fortran.pfcoil_variables.i_pf_location[i] != 2
-                and fortran.pfcoil_variables.ncls[i] != 2
+                and fortran.pfcoil_variables.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
-                    "ncls(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
+                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
             if fortran.pfcoil_variables.i_pf_location[i] == 2:
                 j = j + 1
-                k = k + fortran.pfcoil_variables.ncls[i]
+                k = k + fortran.pfcoil_variables.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -844,7 +844,7 @@ def check_process():
             )
         if fortran.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
-                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; ncls = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints

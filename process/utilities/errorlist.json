@@ -213,7 +213,7 @@
     {
       "no": 41,
       "level": 3,
-      "message": "CHECK: ncls(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
+      "message": "CHECK: n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
     },
     {
       "no": 42,
@@ -228,7 +228,7 @@
     {
       "no": 44,
       "level": 3,
-      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; ncls = 1, 1)"
+      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
     },
     {
       "no": 45,

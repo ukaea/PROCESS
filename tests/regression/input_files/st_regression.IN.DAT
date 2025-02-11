@@ -1942,7 +1942,7 @@ i_sup_pf_shape = 1
 *rmajor (offset = rpf2*triang*rminor)
 * JUSTIFICATION: Not used, no i_pf_location = 2 coils
 
-ncls = 2,2,2,2
+n_pf_coils_in_group = 2,2,2,2
 * DESCRIPTION:   Number of PF Coils in Group j
 * JUSTIFICATION: Design choice, symmetric top and bottom
 

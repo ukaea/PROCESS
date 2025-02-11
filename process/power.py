@@ -100,7 +100,7 @@ class Power:
         pfbuspwr = 0.0e0
 
         for ig in range(ngrpt):
-            ic = ic + pfcoil_variables.ncls[ig]
+            ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
 
             #  Section area of aluminium bussing for circuit (cm**2)
             #  pfcoil_variables.cptdin : max current per turn of coil (A)
@@ -128,7 +128,7 @@ class Power:
                     )
                 )
                 * pfcoil_variables.n_pf_coil_turns[ic] ** 2
-                * pfcoil_variables.ncls[ig]
+                * pfcoil_variables.n_pf_coils_in_group[ig]
             )
 
             cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
@@ -164,7 +164,7 @@ class Power:
         poloidalenergy[:] = 0.0e0
         for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
             for _jjpf2 in range(
-                pfcoil_variables.ncls[jjpf]
+                pfcoil_variables.n_pf_coils_in_group[jjpf]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0

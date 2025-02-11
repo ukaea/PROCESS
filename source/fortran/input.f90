@@ -299,7 +299,7 @@ contains
       coheof, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
-      ncls, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
+      n_pf_coils_in_group, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, i_l_h_threshold, &
@@ -1870,8 +1870,8 @@ contains
        case ('i_sup_pf_shape')
           call parse_int_variable('i_sup_pf_shape', i_sup_pf_shape, 0, 1, &
                'Switch to place outboard PF coils when TF superconducting')
-       case ('ncls')
-          call parse_int_array('ncls', ncls, isub1, n_pf_groups_max+2, &
+       case ('n_pf_coils_in_group')
+          call parse_int_array('n_pf_coils_in_group', n_pf_coils_in_group, isub1, n_pf_groups_max+2, &
                'No of coils in PF group', icode)
        case ('nfxfh')
           call parse_int_variable('nfxfh', nfxfh, 1, nfixmx/2, &
