@@ -3541,7 +3541,7 @@ class StressclParam(NamedTuple):
 
     cohbop: Any = None
 
-    ncls: Any = None
+    n_pf_coils_in_group: Any = None
 
     cptdin: Any = None
 
@@ -3662,7 +3662,7 @@ class StressclParam(NamedTuple):
             ohhghf=0.90000000000000002,
             coheof=20726000,
             cohbop=0,
-            ncls=np.array(
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             cptdin=np.array(
@@ -3785,7 +3785,7 @@ class StressclParam(NamedTuple):
             ohhghf=0.90000000000000002,
             coheof=20726000,
             cohbop=19311657.760000002,
-            ncls=np.array(
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
             cptdin=np.array(
@@ -3910,7 +3910,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.coheof,
         stressclparam.cohbop,
         stressclparam.cptdin,
-        stressclparam.ncls,
+        stressclparam.n_pf_coils_in_group,
         70 / 22,
         3e-3,
         stressclparam.oh_steel_frac,

@@ -547,7 +547,7 @@ i_pf_location = 2,2,3,3
 i_pf_superconductor = 3
 
 * Number of pf coils in group j
-ncls = 1,1,2,2
+n_pf_coils_in_group = 1,1,2,2
 
 * Number of groups of PF coils
 n_pf_coil_groups = 4

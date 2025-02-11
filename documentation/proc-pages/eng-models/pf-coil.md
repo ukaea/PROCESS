@@ -13,7 +13,7 @@ The PF coil locations are controlled using a set of switched stored in array `i_
 Figure 1), and are calculated in routine `PFCOIL`. The coils are (usually) organised into groups 
 containing two PF coils placed symmetrically above and below the midplane, and each group `j` has 
 an element `i_pf_location(j)` assigned to it. Input parameter `n_pf_coil_groups` should be set to the number of groups, 
-and `ncls(j)` should be assigned the number of coils in each group - which should be 2 in each case.
+and `n_pf_coils_in_group(j)` should be assigned the number of coils in each group - which should be 2 in each case.
 
 <figure markdown>
 ![Machine build](../images/vertical-build.png){ width="100%"}
