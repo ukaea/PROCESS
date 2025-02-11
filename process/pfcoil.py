@@ -1041,17 +1041,19 @@ class PFCoil:
         )
 
         # Total cross-sectional area
-        pfv.areaoh = 2.0e0 * hohc * bv.dr_cs
+        pfv.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if pfv.j_cs_pulse_start > pfv.coheof:
             sgn = 1.0e0
             pfv.ric[pfv.n_cs_pf_coils - 1] = (
-                sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.areaoh
+                sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.a_cs_poloidal
             )
         else:
             sgn = -1.0e0
-            pfv.ric[pfv.n_cs_pf_coils - 1] = sgn * 1.0e-6 * pfv.coheof * pfv.areaoh
+            pfv.ric[pfv.n_cs_pf_coils - 1] = (
+                sgn * 1.0e-6 * pfv.coheof * pfv.a_cs_poloidal
+            )
 
         # Number of turns
         pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1] = (
@@ -1061,7 +1063,7 @@ class PFCoil:
         )
 
         # Turn vertical cross-sectionnal area
-        pfv.a_oh_turn = pfv.areaoh / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
+        pfv.a_oh_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
 
         # Depth/width of cs turn conduit
         pfv.d_cond_cst = (pfv.a_oh_turn / pfv.ld_ratio_cst) ** 0.5
@@ -1159,7 +1161,7 @@ class PFCoil:
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfv.oh_steel_frac * pfv.areaoh
+            areaspf = pfv.oh_steel_frac * pfv.a_cs_poloidal
 
             if pfv.i_cs_stress == 1:
                 pfv.s_tresca_oh = max(
@@ -1193,7 +1195,7 @@ class PFCoil:
         )
 
         # Non-steel cross-sectional area
-        pfv.awpoh = pfv.areaoh - areaspf
+        pfv.awpoh = pfv.a_cs_poloidal - areaspf
 
         # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
         # monotonically decreases
@@ -1245,7 +1247,7 @@ class PFCoil:
             else:
                 pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
 
-            pfv.rjohc = jcritwp * pfv.awpoh / pfv.areaoh
+            pfv.rjohc = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
 
             # Allowable coil overall current density at BOP
 
@@ -1262,7 +1264,7 @@ class PFCoil:
                 tfv.tcritsc,
             )
 
-            pfv.rjpfalw[pfv.n_cs_pf_coils - 1] = jcritwp * pfv.awpoh / pfv.areaoh
+            pfv.rjpfalw[pfv.n_cs_pf_coils - 1] = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
             pfv.rjohc0 = pfv.rjpfalw[pfv.n_cs_pf_coils - 1]
 
             pfv.temp_cs_margin = min(tmarg1, tmarg2)
@@ -1275,7 +1277,7 @@ class PFCoil:
                 * constants.pi
                 * pfv.r_cs_middle
                 * pfv.rho_pf_coil
-                / (pfv.areaoh * (1.0e0 - pfv.vfohc))
+                / (pfv.a_cs_poloidal * (1.0e0 - pfv.vfohc))
                 * (1.0e6 * pfv.ric[pfv.n_cs_pf_coils - 1]) ** 2
             )
             pfv.powpfres = pfv.powpfres + pfv.powohres
@@ -2060,8 +2062,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS overall cross-sectional area (m2)",
-                    "(areaoh)",
-                    pfv.areaoh,
+                    "(a_cs_poloidal)",
+                    pfv.a_cs_poloidal,
                     "OP ",
                 )
                 op.ovarre(
@@ -2088,8 +2090,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS steel cross-sectional area (m2)",
-                    "(areaoh-awpoh)",
-                    pfv.areaoh - pfv.awpoh,
+                    "(a_cs_poloidal-awpoh)",
+                    pfv.a_cs_poloidal - pfv.awpoh,
                     "OP ",
                 )
                 op.ovarre(
