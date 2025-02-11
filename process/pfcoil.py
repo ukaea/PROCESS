@@ -611,7 +611,7 @@ class PFCoil:
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
-                if pfv.ipfres == 0:
+                if pfv.i_pf_conductor == 0:
                     bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
 
                     pfv.rjpfalw[i], jstrand, jsc, tmarg = self.superconpf(
@@ -640,7 +640,7 @@ class PFCoil:
 
                 # Resistive coils
 
-                if pfv.ipfres == 1:
+                if pfv.i_pf_conductor == 1:
                     # Coil resistance (vf is the void fraction)
 
                     respf = pfv.pfclres * rll / (aturn[i] * (1.0e0 - pfv.vf[i]))
@@ -658,7 +658,7 @@ class PFCoil:
 
                 # Conductor weight (vf is the void fraction)
 
-                if pfv.ipfres == 0:
+                if pfv.i_pf_conductor == 0:
                     pfv.wtc[i] = (
                         volpf
                         * tfv.dcond[pfv.i_pf_superconductor - 1]
@@ -675,7 +675,7 @@ class PFCoil:
 
                 # Stress ==> cross-sectional area of supporting steel to use
 
-                if pfv.ipfres == 0:
+                if pfv.i_pf_conductor == 0:
                     # Superconducting coil
                     # Updated assumptions: 500 MPa stress limit with all of the force
                     # supported in the conduit (steel) case.
@@ -1084,7 +1084,7 @@ class PFCoil:
         pf.bpf2[pfv.nohc - 1] = max(bohco, abs(bzo))
 
         # Stress ==> cross-sectional area of supporting steel to use
-        if pfv.ipfres == 0:
+        if pfv.i_pf_conductor == 0:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
@@ -1152,7 +1152,7 @@ class PFCoil:
             pfv.awpoh = da * da / (2.0e0 * da - pfv.awpoh)
 
         # Weight of conductor in central Solenoid
-        if pfv.ipfres == 0:
+        if pfv.i_pf_conductor == 0:
             pfv.wtc[pfv.nohc - 1] = (
                 pfv.awpoh
                 * (1.0e0 - pfv.vfohc)
@@ -1171,7 +1171,7 @@ class PFCoil:
                 * constants.dcopper
             )
 
-        if pfv.ipfres == 0:
+        if pfv.i_pf_conductor == 0:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
@@ -1844,7 +1844,7 @@ class PFCoil:
             op.oblnkl(self.outfile)
             op.ovarin(self.mfile, "Existence_of_central_solenoid", "(iohcl)", bv.iohcl)
         else:
-            if pfv.ipfres == 0:
+            if pfv.i_pf_conductor == 0:
                 op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
                 op.ovarin(
@@ -2222,7 +2222,7 @@ class PFCoil:
             else:
                 op.ocmmnt(self.outfile, "Resistive central solenoid")
 
-        if pfv.ipfres == 0:
+        if pfv.i_pf_conductor == 0:
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
 
@@ -2443,7 +2443,7 @@ class PFCoil:
 
         # PF coils
         for k in range(pf.nef):
-            if pfv.ipfres == 0:
+            if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
                     f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
@@ -2456,7 +2456,7 @@ class PFCoil:
 
         # Central Solenoid, if present
         if bv.iohcl != 0:
-            if pfv.ipfres == 0:
+            if pfv.i_pf_conductor == 0:
                 # Issue #328
                 op.write(
                     self.outfile,

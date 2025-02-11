@@ -11,7 +11,7 @@ is present, and should be assigned a non-zero thickness `dr_cs`. A value of `ioh
 that no central solenoid is present, in which case the thickness `dr_cs` should be zero. No PF 
 coils should be located at positions defined by `i_pf_location(j)` = 1 if no central solenoid is present.
 
-The central solenoid can be either resistive or superconducting (controlled via switch `ipfres` as 
+The central solenoid can be either resistive or superconducting (controlled via switch `i_pf_conductor` as 
 for the other PF coils), and if superconducting, switch `i_pf_superconductor` determines the superconducting 
 material to use -  its value is used like `isumattf` and `i_pf_superconductor`. The copper fraction (by volume) 
 of the superconducting strands is `fcuohsu`.

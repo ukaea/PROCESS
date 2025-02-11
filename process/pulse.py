@@ -59,7 +59,7 @@ class Pulse:
 
         #  Central Solenoid resistance (ohms)
 
-        if pfcoil_variables.ipfres == 0:
+        if pfcoil_variables.i_pf_conductor == 0:
             r = 0.0e0
         else:
             r = (

@@ -1627,7 +1627,7 @@ itartpf  = 1
 * DESCRIPTION:   Switch for Spherical Tokamak PF models (1: Use regular model)
 * JUSTIFICATION: Use the regular model instead rather than Peng & Strickler (1986)
 
-ipfres = 0 
+i_pf_conductor = 0 
 * DESCRIPTION:   Switch for PF coil type  (default = 0)
 * =0 superconducting PF coils                              DOES THIS SET THE PF AND CS?
 * =1 resistive PF coils
@@ -1840,7 +1840,7 @@ i_pf_superconductor = 9
 * JUSTIFICATION: Design choice, superconducting PF coils
 
 *pfclres =  
-* DESCRIPTION:  PF coil resistivity (if ipfres=1) (Ohm-m) 
+* DESCRIPTION:  PF coil resistivity (if i_pf_conductor=1) (Ohm-m) 
 * JUSTIFICATION: Not used, superconducting PF coil
 
 *vf =  
@@ -1862,12 +1862,12 @@ i_pf_superconductor = 9
 
 *sigpfcalw =  
 * DESCRIPTION: maximum permissible tensile stress (MPa) in steel coil cases for superconducting
-* PF coils (ipfres=0) (default = 500)
+* PF coils (i_pf_conductor=0) (default = 500)
 * JUSTIFICATION: Not yet set
 
 *sigpfcf =  
 * DESCRIPTION: fraction of JxB hoop force supported by steel case for superconducting PF 
-*coils (`ipfres=0`) (default = 0.66)
+*coils (`i_pf_conductor=0`) (default = 0.66)
 * JUSTIFICATION: Not yet set
 
 

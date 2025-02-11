@@ -2026,7 +2026,7 @@ class Acc2222Param(NamedTuple):
 
     j_crit_str_pf: Any = None
 
-    ipfres: Any = None
+    i_pf_conductor: Any = None
 
     vfohc: Any = None
 
@@ -2129,7 +2129,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
+            i_pf_conductor=0,
             vfohc=0.29999999999999999,
             nohc=7,
             turns=np.array(
@@ -2325,7 +2325,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
+            i_pf_conductor=0,
             vfohc=0.29999999999999999,
             nohc=7,
             turns=np.array(
@@ -2521,7 +2521,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=1,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
+            i_pf_conductor=0,
             vfohc=0.29999999999999999,
             nohc=7,
             turns=np.array(
@@ -2715,7 +2715,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "j_crit_str_pf", acc2222param.j_crit_str_pf)
 
-    monkeypatch.setattr(pfcoil_variables, "ipfres", acc2222param.ipfres)
+    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", acc2222param.i_pf_conductor)
 
     monkeypatch.setattr(pfcoil_variables, "vfohc", acc2222param.vfohc)
 

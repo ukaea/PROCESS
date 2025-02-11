@@ -430,8 +430,8 @@ module tfcoil_variables
   ! real(dp) :: strtf0
   !! Maximum shear stress (Tresca criterion) in CS structures at CS flux swing [Pa]:
   !!
-  !!  - If superconducting CS (ipfres = 0): turn steel conduits stress
-  !!  - If resistive       CS (ipfres = 1): copper conductor stress
+  !!  - If superconducting CS (i_pf_conductor = 0): turn steel conduits stress
+  !!  - If resistive       CS (i_pf_conductor = 1): copper conductor stress
   !!
   !! Quantity only computed for bucked and wedged design (`i_tf_bucking >= 2`)
   !! Def : CS Flux swing, instant when the current changes sign in CS (null current)

@@ -1565,7 +1565,9 @@ class Costs:
         #  costpfsh is the cost per metre of the steel conduit/sheath around
         #  each superconducting cable (so is zero for resistive coils)
 
-        costpfsh = 0.0 if pfcoil_variables.ipfres == 1 else cost_variables.cconshpf
+        costpfsh = (
+            0.0 if pfcoil_variables.i_pf_conductor == 1 else cost_variables.cconshpf
+        )
 
         #  Non-Central Solenoid coils
 
@@ -1579,7 +1581,7 @@ class Costs:
         for i in range(npf):
             #  Superconductor ($/m)
             if cost_variables.supercond_cost_model == 0:
-                if pfcoil_variables.ipfres == 0:
+                if pfcoil_variables.i_pf_conductor == 0:
                     costpfsc = (
                         cost_variables.ucsc[pfcoil_variables.i_pf_superconductor - 1]
                         * (1.0e0 - pfcoil_variables.fcupfsu)
@@ -1594,7 +1596,7 @@ class Costs:
                 else:
                     costpfsc = 0.0e0
             else:
-                if pfcoil_variables.ipfres == 0:
+                if pfcoil_variables.i_pf_conductor == 0:
                     costpfsc = (
                         cost_variables.sc_mat_cost_0[
                             pfcoil_variables.i_pf_superconductor - 1
@@ -1608,7 +1610,7 @@ class Costs:
                     costpfsc = 0.0
 
             #  Copper ($/m)
-            if pfcoil_variables.ipfres == 0:
+            if pfcoil_variables.i_pf_conductor == 0:
                 costpfcu = (
                     cost_variables.uccu
                     * pfcoil_variables.fcupfsu
@@ -1652,7 +1654,7 @@ class Costs:
             #  Superconductor ($/m)
             if cost_variables.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
-                if pfcoil_variables.ipfres == 0:
+                if pfcoil_variables.i_pf_conductor == 0:
                     costpfsc = (
                         cost_variables.ucsc[pfcoil_variables.i_cs_superconductor - 1]
                         * pfcoil_variables.awpoh
@@ -1666,7 +1668,7 @@ class Costs:
                 else:
                     costpfsc = 0.0e0
             else:
-                if pfcoil_variables.ipfres == 0:
+                if pfcoil_variables.i_pf_conductor == 0:
                     costpfsc = (
                         cost_variables.sc_mat_cost_0[
                             pfcoil_variables.i_cs_superconductor - 1
@@ -1681,7 +1683,7 @@ class Costs:
 
             #  Copper ($/m)
 
-            if pfcoil_variables.ipfres == 0:
+            if pfcoil_variables.i_pf_conductor == 0:
                 costpfcu = (
                     cost_variables.uccu
                     * pfcoil_variables.awpoh

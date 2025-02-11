@@ -122,7 +122,7 @@ module pfcoil_variables
   !! - =3 PF coil outside of TF coil (equilibrium coil)
   !! - =4 PF coil, general location (equilibrium coil)
 
-  integer :: ipfres
+  integer :: i_pf_conductor
   !! switch for PF & CS coil conductor type:
   !!
   !! - =0 superconducting PF coils
@@ -228,7 +228,7 @@ module pfcoil_variables
   !! steel case thickness for PF coil i (m)
 
   real(dp) :: pfclres
-  !! PF coil resistivity (if ipfres=1) (Ohm-m)
+  !! PF coil resistivity (if i_pf_conductor=1) (Ohm-m)
 
   real(dp) :: rhopfbus
   !! Resistivity of CS and PF coil bus bars (irrespective of
@@ -303,10 +303,10 @@ module pfcoil_variables
 
   real(dp) :: sigpfcalw
   !! maximum permissible tensile stress (MPa) in steel coil cases for superconducting
-  !! PF coils (`ipfres=0`)
+  !! PF coils (`i_pf_conductor=0`)
 
   real(dp) :: sigpfcf
-  !! fraction of JxB hoop force supported by steel case for superconducting PF coils (`ipfres=0`)
+  !! fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)
 
   real(dp), dimension(ngc2,ngc2) :: sxlg
   !! mutual inductance matrix (H)
@@ -444,7 +444,7 @@ module pfcoil_variables
     fcupfsu = 0.69D0
     fvssu = 1.0
     i_pf_location = (/2,2,3,0,0,0,0,0,0,0/)
-    ipfres = 0
+    i_pf_conductor = 0
     itr_sum = 0.0D0
     i_cs_superconductor = 1
     i_pf_superconductor = 1
