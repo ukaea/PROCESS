@@ -632,7 +632,7 @@ class PFCoil:
                 if pfv.i_pf_conductor == 0:
                     bmax = max(abs(pfv.bpf[i]), abs(pf.bpf2[i]))
 
-                    pfv.rjpfalw[i], jstrand, jsc, tmarg = self.superconpf(
+                    pfv.j_pf_wp_critical[i], jstrand, jsc, tmarg = self.superconpf(
                         bmax,
                         pfv.vf[i],
                         pfv.fcupfsu,
@@ -1272,8 +1272,10 @@ class PFCoil:
                 tfv.tcritsc,
             )
 
-            pfv.rjpfalw[pfv.n_cs_pf_coils - 1] = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
-            pfv.rjohc0 = pfv.rjpfalw[pfv.n_cs_pf_coils - 1]
+            pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1] = (
+                jcritwp * pfv.awpoh / pfv.a_cs_poloidal
+            )
+            pfv.rjohc0 = pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]
 
             pfv.temp_cs_margin = min(tmarg1, tmarg2)
 
@@ -2562,7 +2564,7 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
@@ -2576,7 +2578,7 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
                 op.write(
