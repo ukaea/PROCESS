@@ -64,7 +64,12 @@ class Pulse:
         else:
             r = (
                 pfcoil_variables.powohres
-                / (1.0e6 * pfcoil_variables.ric[pfcoil_variables.n_cs_pf_coils - 1])
+                / (
+                    1.0e6
+                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                )
                 ** 2
             )
 
