@@ -328,7 +328,7 @@
     {
       "no": 64,
       "level": 3,
-      "message": "PFCOIL: ngrp is larger than n_pf_groups_max"
+      "message": "PFCOIL: n_pf_coil_groups is larger than n_pf_groups_max"
     },
     {
       "no": 65,

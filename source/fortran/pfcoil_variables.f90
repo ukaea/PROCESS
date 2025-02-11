@@ -208,7 +208,7 @@ module pfcoil_variables
   !! number of filaments the top and bottom of the central solenoid should be broken
   !! into during scaling (5 - 10 is good)
 
-  integer :: ngrp
+  integer :: n_pf_coil_groups
   !! number of groups of PF coils. Symmetric coil pairs should all be in the same group
 
   integer :: nohc
@@ -459,7 +459,7 @@ module pfcoil_variables
     ncirt = 0
     ncls = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7
-    ngrp = 3
+    n_pf_coil_groups = 3
     nohc = 0
     ohhghf = 0.71D0
     oh_steel_frac = 0.5D0

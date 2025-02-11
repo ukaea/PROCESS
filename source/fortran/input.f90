@@ -298,7 +298,7 @@ contains
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
-      ngrp, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
+      n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
       ncls, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
@@ -1876,8 +1876,8 @@ contains
        case ('nfxfh')
           call parse_int_variable('nfxfh', nfxfh, 1, nfixmx/2, &
                'Central Solenoid splitting parameter')
-       case ('ngrp')
-          call parse_int_variable('ngrp', ngrp, 0, n_pf_groups_max, &
+       case ('n_pf_coil_groups')
+          call parse_int_variable('n_pf_coil_groups', n_pf_coil_groups, 0, n_pf_groups_max, &
                'No of groups of PF coils')
        case ('ohhghf')
           call parse_real_variable('ohhghf', ohhghf, 0.0D0, 2.0D0, &
