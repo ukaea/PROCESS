@@ -407,7 +407,7 @@
         ],
         "blwidti": 0.0,
         "blwidto": 0.0,
-        "bmaxcs_lim": 13.0,
+        "b_cs_limit_max": 13.0,
         "bmaxoh": 0.0,
         "bmaxoh0": 0.0,
         "bmaxtf": 0.0,
@@ -8921,7 +8921,7 @@
         "blvol": "IFE blanket volume (m3)",
         "blwidti": "Inboard/outboard blanket mid-plan toroidal circumference for segment (m)",
         "blwidto": "Inboard/outboard blanket mid-plan toroidal circumference for segment (m)",
-        "bmaxcs_lim": "Central solenoid max field limit [T]",
+        "b_cs_limit_max": "Central solenoid max field limit [T]",
         "bmaxoh": "maximum field in central solenoid at end of flat-top (EoF) (T)",
         "bmaxoh0": "maximum field in central solenoid at beginning of pulse (T)",
         "bmaxtf": "mean peak field at TF coil (T)",
@@ -11761,7 +11761,7 @@
             "lb": 100000.0,
             "ub": 100000000.0
         },
-        "bmaxcs_lim": {
+        "b_cs_limit_max": {
             "lb": 0.01,
             "ub": 100.0
         },
@@ -19012,7 +19012,7 @@
             "z_pf_coil_lower",
             "z_pf_coil_middle",
             "zref",
-            "bmaxcs_lim",
+            "b_cs_limit_max",
             "fbmaxcs"
         ],
         "physics_functions_module": [
@@ -20040,7 +20040,7 @@
         "dr_blkt_inboard": "real_variable",
         "dr_blkt_outboard": "real_variable",
         "blpressure": "real_variable",
-        "bmaxcs_lim": "real_variable",
+        "b_cs_limit_max": "real_variable",
         "bmn": "real_variable",
         "bmxlim": "real_variable",
         "dr_bore": "real_variable",
