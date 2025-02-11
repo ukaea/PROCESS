@@ -146,9 +146,9 @@ The central solenoid pre-compression structure is included in the model if and o
 
 ## Current density inputs and limits
 
-The absolute value of the central solenoid current density at the end-of-flat-top ('EOF'), `coheof`, 
+The absolute value of the central solenoid current density at the end-of-flat-top ('EOF'), `j_cs_flat_top_end`, 
 is specified by the user, and can be used as an iteration variable (no. 37). The current density at 
-the beginning-of-pulse ('BOP' - See Figure 1) is specified as a (positive) fraction of `coheof` 
+the beginning-of-pulse ('BOP' - See Figure 1) is specified as a (positive) fraction of `j_cs_flat_top_end` 
 using `fcohbop` (iteration variable no. 41). The current density in the CS at all other times is 
 calculated by taking into account the flux swing necessary to initiate and maintain plasma current.
 

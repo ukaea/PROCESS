@@ -97,7 +97,7 @@ module scan_module
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
-  !!         <LI> 62 coheof : CS coil current density at EOF
+  !!         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF
   !!         <LI> 63 dr_cs : CS thickness (m)
   !!         <LI> 64 f_z_cs_tf_internal : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90

@@ -76,8 +76,8 @@ bmxlim = 14.0
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * coheof [A/m2]
-coheof = 1.5E7
+ixc = 37 * j_cs_flat_top_end [A/m2]
+j_cs_flat_top_end = 1.5E7
 fjohc = 1.0
 
 * Central solenoid BOP current density upper limit *

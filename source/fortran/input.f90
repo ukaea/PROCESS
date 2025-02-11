@@ -296,7 +296,7 @@ contains
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
-      coheof, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
+      j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
       n_pf_coils_in_group, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
@@ -1831,8 +1831,8 @@ contains
        case ('alfapf')
           call parse_real_variable('alfapf', alfapf, 1.0D-12, 1.0D0, &
                'PF coil current smoothing parameter')
-       case ('coheof')
-          call parse_real_variable('coheof', coheof, 1.0D4, 5.0D8, &
+       case ('j_cs_flat_top_end')
+          call parse_real_variable('j_cs_flat_top_end', j_cs_flat_top_end, 1.0D4, 5.0D8, &
                'Central Solenoid current density at EOF')
        case ('cptdin')
           call parse_real_array('cptdin', cptdin, isub1, ngc2, &

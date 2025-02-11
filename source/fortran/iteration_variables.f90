@@ -861,25 +861,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_37
-    !! <LI> (37) coheof
+    !! <LI> (37) j_cs_flat_top_end
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(37) = 'coheof        '
+    lablxc(37) = 'j_cs_flat_top_end        '
     boundl(37) = 1.000D5
     boundu(37) = 1.000D8
   end subroutine init_itv_37
 
   real(kind(1.d0)) function itv_37()
-    use pfcoil_variables, only: coheof
+    use pfcoil_variables, only: j_cs_flat_top_end
     implicit none
-    itv_37 = coheof
+    itv_37 = j_cs_flat_top_end
   end function itv_37
 
   subroutine set_itv_37(ratio)
-    use pfcoil_variables, only: coheof
+    use pfcoil_variables, only: j_cs_flat_top_end
     implicit none
     real(kind(1.d0)) :: ratio
-    coheof = ratio
+    j_cs_flat_top_end = ratio
   end subroutine set_itv_37
 
   !---------------------------------

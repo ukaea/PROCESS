@@ -257,7 +257,7 @@ def main(args=None):
         59: "dr_fw_plasma_gap_outboard",
         60: "sig_tf_wp_max",
         61: "copperaoh_m2_max",
-        62: "coheof",
+        62: "j_cs_flat_top_end",
         63: "dr_cs",
         64: "f_z_cs_tf_internal",
         65: "csfv.n_cycle_min",

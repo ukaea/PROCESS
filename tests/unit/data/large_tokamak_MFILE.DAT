@@ -781,7 +781,7 @@
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      3.6220E+08 OP 
  Critical_cable_current_density_at_EOF_(A/m2)___________________________ (jcableoh_eof)_______________      1.0866E+08 OP 
  Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (rjohc)_______________________      3.6495E+07 OP 
- Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      2.0188E+07 ITV
+ Actual_overall_current_density_at_EOF_(A/m2)____________________________ (j_cs_flat_top_end)______________________      2.0188E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      1.9704E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.7696E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
@@ -1294,10 +1294,10 @@ bmxlim = 14.0
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * coheof [A/m2]
+ixc = 37 * j_cs_flat_top_end [A/m2]
 ixc = 38 * fjohc
 boundu(38) = 1.0
-coheof = 1.5E7
+j_cs_flat_top_end = 1.5E7
 fjohc = 0.6
 
 * Central solenoid BOP current density upper limit *

@@ -74,7 +74,7 @@ module pfcoil_variables
   real(dp) :: j_cs_pulse_start
   !! Central solenoid overall current density at beginning of pulse (A/m2)
 
-  real(dp) :: coheof
+  real(dp) :: j_cs_flat_top_end
   !! Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)
 
   real(dp), dimension(ngc2,6) :: c_pf_coil_turn
@@ -428,7 +428,7 @@ module pfcoil_variables
     ccls_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
     j_cs_pulse_start = 0.0D0
-    coheof = 1.85D7
+    j_cs_flat_top_end = 1.85D7
     c_pf_coil_turn = 0.0D0
     cptdin = (/4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &

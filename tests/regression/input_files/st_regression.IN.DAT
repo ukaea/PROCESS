@@ -1751,10 +1751,10 @@ i_pf_conductor = 0
 *icc = 26
 * DESCRIPTION:   Constraint equation for CS current density upper limit at EOF 
 * JUSTIFICATION: Turned off, dont care about CS current density limit 
-* VARIABLES:     coheof calculated in-situ
+* VARIABLES:     j_cs_flat_top_end calculated in-situ
 
 *ixc = 37
-*coheof = 
+*j_cs_flat_top_end = 
 *boundl(37) = 
 *boundu(37) = 
 * DESCRIPTION:   Central solenoid overall current density at end of flat-top (A/m2) (icc = 26)
