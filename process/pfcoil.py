@@ -644,7 +644,7 @@ class PFCoil:
 
                     # Strand critical current calculation for costing in $/kAm
                     # = superconducting filaments jc * (1 - strand copper fraction)
-                    if pfv.isumatoh.item() in {2, 6, 8}:
+                    if pfv.i_cs_superconductor.item() in {2, 6, 8}:
                         pfv.j_crit_str_pf = jsc
                     else:
                         pfv.j_crit_str_pf = jsc * (1 - pfv.fcupfsu)
@@ -1184,7 +1184,7 @@ class PFCoil:
                 * 2.0e0
                 * constants.pi
                 * pfv.rpf[pfv.nohc - 1]
-                * tfv.dcond[pfv.isumatoh - 1]
+                * tfv.dcond[pfv.i_cs_superconductor - 1]
             )
         else:
             pfv.wtc[pfv.nohc - 1] = (
@@ -1205,7 +1205,7 @@ class PFCoil:
                 pfv.vfohc,
                 pfv.fcuohsu,
                 (abs(pfv.ric[pfv.nohc - 1]) / pfv.awpoh) * 1.0e6,
-                pfv.isumatoh,
+                pfv.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
                 tfv.tftmp,
@@ -1214,7 +1214,7 @@ class PFCoil:
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
-            if pfv.isumatoh.item() in {2, 6, 8}:
+            if pfv.i_cs_superconductor.item() in {2, 6, 8}:
                 pfv.j_crit_str_cs = pfv.jscoh_eof
             else:
                 pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
@@ -1228,7 +1228,7 @@ class PFCoil:
                 pfv.vfohc,
                 pfv.fcuohsu,
                 (abs(pfv.ric[pfv.nohc - 1]) / pfv.awpoh) * 1.0e6,
-                pfv.isumatoh,
+                pfv.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
                 tfv.tftmp,
@@ -1870,38 +1870,38 @@ class PFCoil:
                 op.ovarin(
                     self.outfile,
                     "Central solenoid superconductor material",
-                    "(isumatoh)",
-                    pfv.isumatoh,
+                    "(i_cs_superconductor)",
+                    pfv.i_cs_superconductor,
                 )
 
-                if pfv.isumatoh == 1:
+                if pfv.i_cs_superconductor == 1:
                     op.ocmmnt(self.outfile, "  (ITER Nb3Sn critical surface model)")
-                elif pfv.isumatoh == 2:
+                elif pfv.i_cs_superconductor == 2:
                     op.ocmmnt(
                         self.outfile, "  (Bi-2212 high temperature superconductor)"
                     )
-                elif pfv.isumatoh == 3:
+                elif pfv.i_cs_superconductor == 3:
                     op.ocmmnt(self.outfile, "  (NbTi)")
-                elif pfv.isumatoh == 4:
+                elif pfv.i_cs_superconductor == 4:
                     op.ocmmnt(
                         self.outfile,
                         "  (ITER Nb3Sn critical surface model, user-defined parameters)",
                     )
-                elif pfv.isumatoh == 5:
+                elif pfv.i_cs_superconductor == 5:
                     op.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
-                elif pfv.isumatoh == 6:
+                elif pfv.i_cs_superconductor == 6:
                     op.ocmmnt(self.outfile, " (REBCO HTS)")
-                elif pfv.isumatoh == 7:
+                elif pfv.i_cs_superconductor == 7:
                     op.ocmmnt(
                         self.outfile,
                         " (Durham Ginzburg-Landau critical surface model for Nb-Ti)",
                     )
-                elif pfv.isumatoh == 8:
+                elif pfv.i_cs_superconductor == 8:
                     op.ocmmnt(
                         self.outfile,
                         " (Durham Ginzburg-Landau critical surface model for REBCO)",
                     )
-                elif pfv.isumatoh == 9:
+                elif pfv.i_cs_superconductor == 9:
                     op.ocmmnt(
                         self.outfile,
                         " (Hazelton experimental data + Zhai conceptual model for REBCO)",
@@ -2087,7 +2087,11 @@ class PFCoil:
                     pfv.fcuohsu,
                 )
                 # If REBCO material is used, print copperaoh_m2
-                if pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9:
+                if (
+                    pfv.i_cs_superconductor == 6
+                    or pfv.i_cs_superconductor == 8
+                    or pfv.i_cs_superconductor == 9
+                ):
                     op.ovarre(
                         self.outfile,
                         "CS current/copper area (A/m2)",
@@ -2222,7 +2226,9 @@ class PFCoil:
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
-                    pfv.isumatoh == 6 or pfv.isumatoh == 8 or pfv.isumatoh == 9
+                    pfv.i_cs_superconductor == 6
+                    or pfv.i_cs_superconductor == 8
+                    or pfv.i_cs_superconductor == 9
                 ) and abs(tfv.str_cs_con_res) > 0.7e-2:
                     eh.report_error(262)
 

@@ -950,7 +950,7 @@ i_tf_sc_mat = 9
 * JUSTIFICATION: Not used as not i_tf_sc_mat=4
 
 *dcond = 
-* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)
+* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/isumatpf (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 
 *quench_model =  
@@ -1641,7 +1641,7 @@ ipfres = 0
 * Conductor Type *
 *----------------*
 
-*isumatoh =  
+*i_cs_superconductor =  
 * DESCRIPTION:   Central Solenoid superconductor material
 * JUSTIFICATION: Not set, resistive CS
 
