@@ -289,7 +289,7 @@ var_dicts = {
         description="Minimum cycles for stress",
         units="",
     ),
-    "a_oh_turn": VariableMetadata(
+    "a_cs_turn": VariableMetadata(
         latex=r"$Turn_{\mathrm{area}}^{\mathrm{CS}}[$m$^{2}]$",
         description="Cross-sectional area of CS coil turns",
         units="m^2",
