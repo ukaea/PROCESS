@@ -187,7 +187,7 @@ contains
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
     use impurity_radiation_module, only: fimp
-    use pfcoil_variables, only: whtpf
+    use pfcoil_variables, only: m_pf_coil_conductor_total
     use pf_power_variables, only: srcktpm
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
@@ -257,7 +257,7 @@ contains
     outvar(43,iscan) = vcool
     outvar(44,iscan) = ppump/1.0D6
     outvar(45,iscan) = 1.0D-3 * srcktpm
-    outvar(46,iscan) = whtpf
+    outvar(46,iscan) = m_pf_coil_conductor_total
     outvar(47,iscan) = pgrossmw
     outvar(48,iscan) = pnetelmw
     if (ireactor == 1) then
