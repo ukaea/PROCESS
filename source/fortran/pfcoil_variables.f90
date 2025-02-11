@@ -45,7 +45,7 @@ module pfcoil_variables
   !! - =0 Hoop stress only
   !! - =1 Hoop + Axial stress
 
-  real(dp) :: areaoh
+  real(dp) :: a_cs_poloidal
   !! Central solenoid vertical cross-sectional area (m2)
 
   real(dp) :: a_oh_turn
@@ -417,7 +417,7 @@ module pfcoil_variables
     alfapf = 5.0D-10
     alstroh = 4.0D8
     i_cs_stress = 0
-    areaoh = 0.0D0
+    a_cs_poloidal = 0.0D0
     a_oh_turn = 0.0D0
     awpoh = 0.0D0
     bmaxoh = 0.0D0
