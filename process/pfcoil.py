@@ -66,15 +66,15 @@ class PFCoil:
         Central Solenoid coils, to determine their size, location, current waveforms,
         stresses etc.
         """
-        lrow1 = 2 * pfv.nptsmx + pfv.ngrpmx
-        lcol1 = pfv.ngrpmx
+        lrow1 = 2 * pfv.nptsmx + pfv.n_pf_groups_max
+        lcol1 = pfv.n_pf_groups_max
 
-        pcls0 = np.zeros(pfv.ngrpmx, dtype=int)
-        ncls0 = np.zeros(pfv.ngrpmx + 2, dtype=int)
+        pcls0 = np.zeros(pfv.n_pf_groups_max, dtype=int)
+        ncls0 = np.zeros(pfv.n_pf_groups_max + 2, dtype=int)
 
-        pf.rcls0, pf.zcls0 = np.zeros((2, pfv.ngrpmx, pfv.nclsmx), order="F")
-        pf.ccls0 = np.zeros(int(pfv.ngrpmx / 2))
-        sigma, work2 = np.zeros((2, pfv.ngrpmx))
+        pf.rcls0, pf.zcls0 = np.zeros((2, pfv.n_pf_groups_max, pfv.nclsmx), order="F")
+        pf.ccls0 = np.zeros(int(pfv.n_pf_groups_max / 2))
+        sigma, work2 = np.zeros((2, pfv.n_pf_groups_max))
         rc, zc, cc, xc = np.zeros((4, pfv.nclsmx))
         brin, bzin, rpts, zpts = np.zeros((4, pfv.nptsmx))
         bfix, bvec = np.zeros((2, lrow1))
@@ -87,9 +87,9 @@ class PFCoil:
 
         # Set up the number of PF coils including the Central Solenoid (nohc),
         # and the number of PF circuits including the plasma (ncirt)
-        if pfv.ngrp > pfv.ngrpmx:
+        if pfv.ngrp > pfv.n_pf_groups_max:
             eh.idiags[0] = pfv.ngrp
-            eh.idiags[1] = pfv.ngrpmx
+            eh.idiags[1] = pfv.n_pf_groups_max
             eh.report_error(64)
 
         # Total the number of PF coils in all groups, and check that none
@@ -835,7 +835,7 @@ class PFCoil:
         :param cfix: Fixed currents (A)
         :type cfix: np.ndarray
         :param ngrp: number of coil groups, where all coils in a group have the
-        same current, <= ngrpmx
+        same current, <= n_pf_groups_max
         :type ngrp: int
         :param ncls: number of coils in each group, each value <= nclsmx
         :type ncls: np.ndarray
@@ -895,7 +895,9 @@ class PFCoil:
         )
 
         # Solve matrix equation
-        ccls, umat, vmat, sigma, work2 = self.solv(pfv.ngrpmx, ngrp, nrws, gmat, bvec)
+        ccls, umat, vmat, sigma, work2 = self.solv(
+            pfv.n_pf_groups_max, ngrp, nrws, gmat, bvec
+        )
 
         # Calculate the norm of the residual vectors
         brssq, brnrm, bzssq, bznrm, ssq = rsid(
@@ -948,7 +950,7 @@ class PFCoil:
                         if pf_tf_collision >= 1:
                             eh.report_error(277)
 
-    def solv(self, ngrpmx, ngrp, nrws, gmat, bvec):
+    def solv(self, n_pf_groups_max, ngrp, nrws, gmat, bvec):
         """Solve a matrix using singular value decomposition.
 
         This routine solves the matrix equation for calculating the
@@ -958,10 +960,10 @@ class PFCoil:
         author: J Galambos, ORNL
         author: P C Shipe, ORNL
 
-        :param ngrpmx: maximum number of PF coil groups
-        :type ngrpmx: int
+        :param n_pf_groups_max: maximum number of PF coil groups
+        :type n_pf_groups_max: int
         :param ngrp: number of coil groups, where all coils in a group have the
-        same current, <= ngrpmx
+        same current, <= n_pf_groups_max
         :type ngrp: int
         :param nrws: actual number of rows to use
         :type nrws: int
@@ -976,7 +978,7 @@ class PFCoil:
         """
         truth = True
         eps = 1.0e-10
-        ccls = np.zeros(ngrpmx)
+        ccls = np.zeros(n_pf_groups_max)
 
         sigma, umat, vmat, ierr, work2 = ml.svd(
             nrws, np.asfortranarray(gmat), truth, truth
@@ -3074,7 +3076,7 @@ def rsid(npts, brin, bzin, nfix, ngrp, ccls, bfix, gmat):
     :param nfix: number of coils with fixed currents, <= nfixmx
     :type nfix: int
     :param ngrp: number of coil groups, where all coils in a group have the
-    same current, <= ngrpmx
+    same current, <= n_pf_groups_max
     :type ngrp: int
     :param ccls: coil currents in each group (A)
     :type ccls: numpy.ndarray
@@ -3193,10 +3195,10 @@ def mtrx(
     author: J Galambos, ORNL
 
     :param lrow1: row length of arrays bfix, bvec, gmat, umat, vmat; should
-    be >= (2*nptsmx + ngrpmx)
+    be >= (2*nptsmx + n_pf_groups_max)
     :type lrow1: int
     :param lcol1: column length of arrays gmat, umat, vmat; should be >=
-    ngrpmx
+    n_pf_groups_max
     :type lcol1: int
     :param npts: number of data points at which field is to be fixed; should
     be <= nptsmx
@@ -3210,7 +3212,7 @@ def mtrx(
     :param bzin: field components at data points (T)
     :type bzin: numpy.ndarray
     :param ngrp: number of coil groups, where all coils in a group have the
-    same current, <= ngrpmx
+    same current, <= n_pf_groups_max
     :type ngrp: int
     :param ncls: number of coils in each group, each value <= nclsmx
     :type ncls: numpy.ndarray
