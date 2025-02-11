@@ -659,13 +659,15 @@ class PFCoil:
                 # Conductor weight (vf is the void fraction)
 
                 if pfv.i_pf_conductor == 0:
-                    pfv.wtc[i] = (
+                    pfv.m_pf_coil_conductor[i] = (
                         volpf
                         * tfv.dcond[pfv.i_pf_superconductor - 1]
                         * (1.0e0 - pfv.vf[i])
                     )
                 else:
-                    pfv.wtc[i] = volpf * constants.dcopper * (1.0e0 - pfv.vf[i])
+                    pfv.m_pf_coil_conductor[i] = (
+                        volpf * constants.dcopper * (1.0e0 - pfv.vf[i])
+                    )
 
                 # (J x B) force on coil
 
@@ -719,7 +721,7 @@ class PFCoil:
 
                 pfv.pfmmax = max(
                     pfv.pfmmax,
-                    (1.0e-3 * (pfv.wtc[i] + pfv.wts[i])),
+                    (1.0e-3 * (pfv.m_pf_coil_conductor[i] + pfv.wts[i])),
                 )
                 i = i + 1
 
@@ -749,7 +751,7 @@ class PFCoil:
         pf.ricpf = 0.0e0
 
         for i in range(pfv.nohc):
-            pfv.whtpf = pfv.whtpf + pfv.wtc[i]
+            pfv.whtpf = pfv.whtpf + pfv.m_pf_coil_conductor[i]
             pfv.whtpfs = pfv.whtpfs + pfv.wts[i]
             pf.ricpf = pf.ricpf + abs(pfv.ric[i])
 
@@ -1172,7 +1174,7 @@ class PFCoil:
 
         # Weight of conductor in central Solenoid
         if pfv.i_pf_conductor == 0:
-            pfv.wtc[pfv.nohc - 1] = (
+            pfv.m_pf_coil_conductor[pfv.nohc - 1] = (
                 pfv.awpoh
                 * (1.0e0 - pfv.vfohc)
                 * 2.0e0
@@ -1181,7 +1183,7 @@ class PFCoil:
                 * tfv.dcond[pfv.i_cs_superconductor - 1]
             )
         else:
-            pfv.wtc[pfv.nohc - 1] = (
+            pfv.m_pf_coil_conductor[pfv.nohc - 1] = (
                 pfv.awpoh
                 * (1.0e0 - pfv.vfohc)
                 * 2.0e0
@@ -2475,12 +2477,12 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.wtc[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
@@ -2489,12 +2491,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.wtc[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
 
         # Miscellaneous totals
