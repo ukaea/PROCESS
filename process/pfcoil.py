@@ -524,7 +524,7 @@ class PFCoil:
         # Dimensions are those of the winding pack, and exclude
         # the steel supporting case
         i = 0
-        pfv.pfrmax = 0.0e0
+        pfv.r_pf_coil_outer_max = 0.0e0
 
         dz = 0
 
@@ -587,7 +587,9 @@ class PFCoil:
                         pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] - dx
 
                 # Outside radius of largest PF coil (m)
-                pfv.pfrmax = max(pfv.pfrmax, pfv.r_pf_coil_outer[i])
+                pfv.r_pf_coil_outer_max = max(
+                    pfv.r_pf_coil_outer_max, pfv.r_pf_coil_outer[i]
+                )
 
                 i = i + 1
 
