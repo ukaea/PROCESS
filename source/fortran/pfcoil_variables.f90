@@ -308,7 +308,7 @@ module pfcoil_variables
   real(dp) :: sigpfcf
   !! fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)
 
-  real(dp), dimension(ngc2,ngc2) :: sxlg
+  real(dp), dimension(ngc2,ngc2) :: ind_pf_cs_plasma_mutual
   !! mutual inductance matrix (H)
 
   real(dp) :: temp_cs_margin
@@ -492,7 +492,7 @@ module pfcoil_variables
     s_tresca_oh = 0.0D0
     sigpfcalw = 500.0D0
     sigpfcf = 1.0D0
-    sxlg = 0.0D0
+    ind_pf_cs_plasma_mutual = 0.0D0
     temp_cs_margin = 0.0D0
     n_pf_coil_turns = 0.0D0
     vf = 0.3D0

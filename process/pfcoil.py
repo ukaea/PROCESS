@@ -453,10 +453,10 @@ class PFCoil:
         # Flux swing from vertical field
 
         # If this is the first visit to the routine the inductance matrix
-        # sxlg and the turns array have not yet been calculated, so we set
+        # ind_pf_cs_plasma_mutual and the turns array have not yet been calculated, so we set
         # them to (very) approximate values to avoid strange behaviour...
         if pf.first_call:
-            pfv.sxlg[:, :] = 1.0e0
+            pfv.ind_pf_cs_plasma_mutual[:, :] = 1.0e0
             pfv.n_pf_coil_turns[:] = 100.0e0
             pf.first_call = False
 
@@ -466,7 +466,9 @@ class PFCoil:
             for _i in range(pfv.n_pf_coils_in_group[ccount]):
                 pfflux = pfflux + (
                     pf.ccls[ccount]
-                    * pfv.sxlg[nocoil, pfv.n_pf_cs_plasma_circuits - 1]
+                    * pfv.ind_pf_cs_plasma_mutual[
+                        nocoil, pfv.n_pf_cs_plasma_circuits - 1
+                    ]
                     / pfv.n_pf_coil_turns[nocoil]
                 )
                 nocoil = nocoil + 1
@@ -478,8 +480,8 @@ class PFCoil:
             # Required current change in CS coil
 
             # Proposed new calculation...
-            # dics = csflux / sxlg(n_cs_pf_coils,n_pf_cs_plasma_circuits)
-            # BUT... sxlg(n_cs_pf_coils,n_pf_cs_plasma_circuits) is around 2000 times ddics below...
+            # dics = csflux / ind_pf_cs_plasma_mutual(n_cs_pf_coils,n_pf_cs_plasma_circuits)
+            # BUT... ind_pf_cs_plasma_mutual(n_cs_pf_coils,n_pf_cs_plasma_circuits) is around 2000 times ddics below...
 
             ddics = (
                 4.0e-7
@@ -1529,23 +1531,25 @@ class PFCoil:
 
         for i in range(pf.nef):
             pf.vsdum[i, 0] = (
-                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 1]
+                pfv.ind_pf_cs_plasma_mutual[pfv.n_pf_cs_plasma_circuits - 1, i]
+                * pfv.c_pf_coil_turn[i, 1]
             )
             pf.vsdum[i, 1] = (
-                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 2]
+                pfv.ind_pf_cs_plasma_mutual[pfv.n_pf_cs_plasma_circuits - 1, i]
+                * pfv.c_pf_coil_turn[i, 2]
             )
             pfv.vsefsu = pfv.vsefsu + (pf.vsdum[i, 1] - pf.vsdum[i, 0])
 
         # Central Solenoid startup volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.n_cs_pf_coils - 1, 0] = (
-                pfv.sxlg[
+                pfv.ind_pf_cs_plasma_mutual[
                     pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
                 ]
                 * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 1]
             )
             pf.vsdum[pfv.n_cs_pf_coils - 1, 1] = (
-                pfv.sxlg[
+                pfv.ind_pf_cs_plasma_mutual[
                     pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
                 ]
                 * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 2]
@@ -1560,7 +1564,7 @@ class PFCoil:
         # Burn volt-seconds
         if bv.iohcl != 0:
             pf.vsdum[pfv.n_cs_pf_coils - 1, 2] = (
-                pfv.sxlg[
+                pfv.ind_pf_cs_plasma_mutual[
                     pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 2
                 ]
                 * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 4]
@@ -1573,7 +1577,8 @@ class PFCoil:
         pfv.vsefbn = 0.0e0
         for i in range(pf.nef):
             pf.vsdum[i, 2] = (
-                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, i] * pfv.c_pf_coil_turn[i, 4]
+                pfv.ind_pf_cs_plasma_mutual[pfv.n_pf_cs_plasma_circuits - 1, i]
+                * pfv.c_pf_coil_turn[i, 4]
             )
             pfv.vsefbn = pfv.vsefbn + (pf.vsdum[i, 2] - pf.vsdum[i, 1])
 
@@ -1731,7 +1736,7 @@ class PFCoil:
         rplasma = np.zeros(nplas)
         zplasma = np.zeros(nplas)
 
-        pfv.sxlg[:, :] = 0.0
+        pfv.ind_pf_cs_plasma_mutual[:, :] = 0.0
 
         # Break Central Solenoid into noh segments
         #
@@ -1819,17 +1824,19 @@ class PFCoil:
                     xc[ii] = 0.5e0 * (xcin[ii] + xcout[ii])
                     xohpl = xohpl + xc[ii]
 
-            pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, pfv.n_cs_pf_coils - 1] = (
-                xohpl / (nplas * noh) * pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
-            )
-            pfv.sxlg[pfv.n_cs_pf_coils - 1, pfv.n_pf_cs_plasma_circuits - 1] = pfv.sxlg[
+            pfv.ind_pf_cs_plasma_mutual[
+                pfv.n_pf_cs_plasma_circuits - 1, pfv.n_cs_pf_coils - 1
+            ] = xohpl / (nplas * noh) * pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
+            pfv.ind_pf_cs_plasma_mutual[
+                pfv.n_cs_pf_coils - 1, pfv.n_pf_cs_plasma_circuits - 1
+            ] = pfv.ind_pf_cs_plasma_mutual[
                 pfv.n_pf_cs_plasma_circuits - 1, pfv.n_cs_pf_coils - 1
             ]
 
         # Plasma self inductance
-        pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 1] = (
-            pv.rlp
-        )
+        pfv.ind_pf_cs_plasma_mutual[
+            pfv.n_pf_cs_plasma_circuits - 1, pfv.n_pf_cs_plasma_circuits - 1
+        ] = pv.rlp
 
         # PF coil / plasma mutual inductances
         ncoils = 0
@@ -1845,10 +1852,12 @@ class PFCoil:
 
             for j in range(pfv.n_pf_coils_in_group[i]):
                 ncoilj = ncoils + 1 - (j + 1)
-                pfv.sxlg[ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1] = (
-                    xpfpl / nplas * pfv.n_pf_coil_turns[ncoilj - 1]
-                )
-                pfv.sxlg[pfv.n_pf_cs_plasma_circuits - 1, ncoilj - 1] = pfv.sxlg[
+                pfv.ind_pf_cs_plasma_mutual[
+                    ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1
+                ] = xpfpl / nplas * pfv.n_pf_coil_turns[ncoilj - 1]
+                pfv.ind_pf_cs_plasma_mutual[
+                    pfv.n_pf_cs_plasma_circuits - 1, ncoilj - 1
+                ] = pfv.ind_pf_cs_plasma_mutual[
                     ncoilj - 1, pfv.n_pf_cs_plasma_circuits - 1
                 ]
 
@@ -1860,9 +1869,9 @@ class PFCoil:
                 pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
                 - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
             )  # radial winding thickness
-            pfv.sxlg[pfv.n_cs_pf_coils - 1, pfv.n_cs_pf_coils - 1] = (
-                self.selfinductance(a, b, c, pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1])
-            )
+            pfv.ind_pf_cs_plasma_mutual[
+                pfv.n_cs_pf_coils - 1, pfv.n_cs_pf_coils - 1
+            ] = self.selfinductance(a, b, c, pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1])
 
             # Central Solenoid / PF coil mutual inductances
             for i in range(noh):
@@ -1881,15 +1890,15 @@ class PFCoil:
 
                 for j in range(pfv.n_pf_coils_in_group[i]):
                     ncoilj = ncoils + 1 - (j + 1)
-                    pfv.sxlg[ncoilj - 1, pfv.n_cs_pf_coils - 1] = (
+                    pfv.ind_pf_cs_plasma_mutual[ncoilj - 1, pfv.n_cs_pf_coils - 1] = (
                         xohpf
                         * pfv.n_pf_coil_turns[ncoilj - 1]
                         * pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
                         / noh
                     )
-                    pfv.sxlg[pfv.n_cs_pf_coils - 1, ncoilj - 1] = pfv.sxlg[
-                        ncoilj - 1, pfv.n_cs_pf_coils - 1
-                    ]
+                    pfv.ind_pf_cs_plasma_mutual[pfv.n_cs_pf_coils - 1, ncoilj - 1] = (
+                        pfv.ind_pf_cs_plasma_mutual[ncoilj - 1, pfv.n_cs_pf_coils - 1]
+                    )
 
         # PF coil - PF coil inductances
         if bv.iohcl == 0:
@@ -1909,21 +1918,21 @@ class PFCoil:
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for k in range(pf.nef):
                 if k < i:
-                    pfv.sxlg[i, k] = (
+                    pfv.ind_pf_cs_plasma_mutual[i, k] = (
                         xc[k] * pfv.n_pf_coil_turns[k] * pfv.n_pf_coil_turns[i]
                     )
                 elif k == i:
                     rl = abs(
                         pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]
                     ) / math.sqrt(constants.pi)
-                    pfv.sxlg[k, k] = (
+                    pfv.ind_pf_cs_plasma_mutual[k, k] = (
                         constants.rmu0
                         * pfv.n_pf_coil_turns[k] ** 2
                         * pfv.r_pf_coil_middle[k]
                         * (math.log(8.0e0 * pfv.r_pf_coil_middle[k] / rl) - 1.75e0)
                     )
                 else:
-                    pfv.sxlg[i, k] = (
+                    pfv.ind_pf_cs_plasma_mutual[i, k] = (
                         xc[k - 1] * pfv.n_pf_coil_turns[k] * pfv.n_pf_coil_turns[i]
                     )
 
@@ -1939,18 +1948,18 @@ class PFCoil:
             for ig in range(pf.nef):
                 op.write(
                     self.outfile,
-                    f"{ig}\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, ig]}",
+                    f"{ig}\t{pfv.ind_pf_cs_plasma_mutual[: pfv.n_pf_cs_plasma_circuits, ig]}",
                 )
 
             if bv.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 2]}",
+                    f"CS\t\t\t{pfv.ind_pf_cs_plasma_mutual[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 2]}",
                 )
 
             op.write(
                 self.outfile,
-                f"Plasma\t{pfv.sxlg[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 1]}",
+                f"Plasma\t{pfv.ind_pf_cs_plasma_mutual[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 1]}",
             )
 
     def outpf(self):

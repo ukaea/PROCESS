@@ -86,14 +86,14 @@ class Pulse:
 
         #  Mutual inductance between Central Solenoid and plasma (H)
 
-        m = pfcoil_variables.sxlg[
+        m = pfcoil_variables.ind_pf_cs_plasma_mutual[
             pfcoil_variables.n_cs_pf_coils - 1,
             pfcoil_variables.n_pf_cs_plasma_circuits - 1,
         ]
 
         #  Self inductance of Central Solenoid (H)
 
-        loh = pfcoil_variables.sxlg[
+        loh = pfcoil_variables.ind_pf_cs_plasma_mutual[
             pfcoil_variables.n_cs_pf_coils - 1, pfcoil_variables.n_cs_pf_coils - 1
         ]
 
