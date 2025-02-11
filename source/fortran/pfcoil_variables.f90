@@ -255,7 +255,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: r_pf_coil_outer
   !! outer radius of coil i (m)
 
-  real(dp), dimension(ngc2) :: ric
+  real(dp), dimension(ngc2) :: c_pf_cs_coils_peak_ma
   !! peak current in coil i (MA-turns)
 
   real(dp), dimension(ngc2) :: rjconpf
@@ -474,7 +474,7 @@ module pfcoil_variables
     powpfres = 0.0D0
     r_pf_coil_inner = 0.0D0
     r_pf_coil_outer = 0.0D0
-    ric = 0.0D0
+    c_pf_cs_coils_peak_ma = 0.0D0
     rjconpf = (/3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &

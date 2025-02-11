@@ -1054,7 +1054,7 @@ def test_waveform(monkeypatch, pfcoil):
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    waveform() alters both ric and waves in the pfcoil_variables module, so
+    waveform() alters both c_pf_cs_coils_peak_ma and waves in the pfcoil_variables module, so
     these are asserted on.
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
@@ -1062,7 +1062,7 @@ def test_waveform(monkeypatch, pfcoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
     ngc2 = 22
-    monkeypatch.setattr(pfv, "ric", np.zeros(ngc2, dtype=int))
+    monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.zeros(ngc2, dtype=int))
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "waves", np.zeros((ngc2, 6), order="F"))
     monkeypatch.setattr(
@@ -1203,7 +1203,7 @@ def test_waveform(monkeypatch, pfcoil):
 
     pfcoil.waveform()
 
-    assert_array_almost_equal(pfv.ric, ric_exp)
+    assert_array_almost_equal(pfv.c_pf_cs_coils_peak_ma, ric_exp)
     assert_array_almost_equal(pfv.waves, waves_exp)
 
 

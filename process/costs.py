@@ -1589,7 +1589,7 @@ class Costs:
                         * (1.0e0 - pfcoil_variables.fcupfsu)
                         * (1.0e0 - pfcoil_variables.vf[i])
                         * abs(
-                            pfcoil_variables.ric[i]
+                            pfcoil_variables.c_pf_cs_coils_peak_ma[i]
                             / pfcoil_variables.n_pf_coil_turns[i]
                         )
                         * 1.0e6
@@ -1620,7 +1620,10 @@ class Costs:
                     cost_variables.uccu
                     * pfcoil_variables.fcupfsu
                     * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.n_pf_coil_turns[i])
+                    * abs(
+                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
+                        / pfcoil_variables.n_pf_coil_turns[i]
+                    )
                     * 1.0e6
                     / pfcoil_variables.rjconpf[i]
                     * constants.dcopper
@@ -1629,7 +1632,10 @@ class Costs:
                 costpfcu = (
                     cost_variables.uccu
                     * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.n_pf_coil_turns[i])
+                    * abs(
+                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
+                        / pfcoil_variables.n_pf_coil_turns[i]
+                    )
                     * 1.0e6
                     / pfcoil_variables.rjconpf[i]
                     * constants.dcopper

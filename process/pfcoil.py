@@ -532,7 +532,7 @@ class PFCoil:
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
-        self.waveform()  # sets ric(), waves()
+        self.waveform()  # sets c_pf_cs_coils_peak_ma(), waves()
 
         # Calculate PF coil geometry, current and number of turns
         # Dimensions are those of the winding pack, and exclude
@@ -556,11 +556,13 @@ class PFCoil:
 
                     # Number of turns
                     # CPTDIN[i] is the current per turn (input)
-                    pfv.n_pf_coil_turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
+                    pfv.n_pf_coil_turns[i] = abs(
+                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6) / pfv.cptdin[i]
+                    )
                     aturn[i] = area / pfv.n_pf_coil_turns[i]
 
                     # Actual winding pack current density
-                    pfv.rjconpf[i] = 1.0e6 * abs(pfv.ric[i]) / area
+                    pfv.rjconpf[i] = 1.0e6 * abs(pfv.c_pf_cs_coils_peak_ma[i]) / area
 
                     # Location of edges of each coil:
                     # r_pf_coil_inner = inner radius, r_pf_coil_outer = outer radius
@@ -582,11 +584,13 @@ class PFCoil:
                     # Other coils. N.B. Current density RJCONPF[i] is defined in
                     # routine INITIAL for these coils.
                     area = (
-                        abs(pfv.ric[i] * 1.0e6 / pfv.rjconpf[i])
+                        abs(pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6 / pfv.rjconpf[i])
                         * pfv.pf_current_safety_factor
                     )
 
-                    pfv.n_pf_coil_turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
+                    pfv.n_pf_coil_turns[i] = abs(
+                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6) / pfv.cptdin[i]
+                    )
                     aturn[i] = area / pfv.n_pf_coil_turns[i]
 
                     dx = 0.5e0 * math.sqrt(area)  # square cross-section
@@ -697,7 +701,7 @@ class PFCoil:
                 forcepf = (
                     0.5e6
                     * (pfv.bpf[i] + pf.bpf2[i])
-                    * abs(pfv.ric[i])
+                    * abs(pfv.c_pf_cs_coils_peak_ma[i])
                     * pfv.r_pf_coil_middle[i]
                 )
 
@@ -783,7 +787,7 @@ class PFCoil:
             pfv.m_pf_coil_structure_total = (
                 pfv.m_pf_coil_structure_total + pfv.m_pf_coil_structure[i]
             )
-            pf.ricpf = pf.ricpf + abs(pfv.ric[i])
+            pf.ricpf = pf.ricpf + abs(pfv.c_pf_cs_coils_peak_ma[i])
 
         # Plasma size and shape
         pfv.z_pf_coil_upper[pfv.n_cs_pf_coils] = pv.rminor * pv.kappa
@@ -797,7 +801,7 @@ class PFCoil:
         for k in range(6):  # time points
             for i in range(pfv.n_pf_cs_plasma_circuits - 1):
                 pfv.c_pf_coil_turn[i, k] = pfv.waves[i, k] * math.copysign(
-                    pfv.cptdin[i], pfv.ric[i]
+                    pfv.cptdin[i], pfv.c_pf_cs_coils_peak_ma[i]
                 )
 
         # Plasma wave form
@@ -1054,19 +1058,19 @@ class PFCoil:
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
             sgn = 1.0e0
-            pfv.ric[pfv.n_cs_pf_coils - 1] = (
+            pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
                 sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.a_cs_poloidal
             )
         else:
             sgn = -1.0e0
-            pfv.ric[pfv.n_cs_pf_coils - 1] = (
+            pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
                 sgn * 1.0e-6 * pfv.j_cs_flat_top_end * pfv.a_cs_poloidal
             )
 
         # Number of turns
         pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1] = (
             1.0e6
-            * abs(pfv.ric[pfv.n_cs_pf_coils - 1])
+            * abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1])
             / pfv.cptdin[pfv.n_cs_pf_coils - 1]
         )
 
@@ -1240,7 +1244,8 @@ class PFCoil:
                 pfv.bmaxoh,
                 pfv.vfohc,
                 pfv.fcuohsu,
-                (abs(pfv.ric[pfv.n_cs_pf_coils - 1]) / pfv.awpoh) * 1.0e6,
+                (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
+                * 1.0e6,
                 pfv.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
@@ -1263,7 +1268,8 @@ class PFCoil:
                 pfv.bmaxoh0,
                 pfv.vfohc,
                 pfv.fcuohsu,
-                (abs(pfv.ric[pfv.n_cs_pf_coils - 1]) / pfv.awpoh) * 1.0e6,
+                (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
+                * 1.0e6,
                 pfv.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
@@ -1288,7 +1294,7 @@ class PFCoil:
                 * pfv.r_cs_middle
                 * pfv.rho_pf_coil
                 / (pfv.a_cs_poloidal * (1.0e0 - pfv.vfohc))
-                * (1.0e6 * pfv.ric[pfv.n_cs_pf_coils - 1]) ** 2
+                * (1.0e6 * pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) ** 2
             )
             pfv.powpfres = pfv.powpfres + pfv.powohres
 
@@ -1315,11 +1321,11 @@ class PFCoil:
             kk = 0
         else:
             # Check different times for maximum current
-            if abs(pfv.curpfb[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            if abs(pfv.curpfb[i - 1] - pfv.c_pf_cs_coils_peak_ma[i - 1]) < 1.0e-12:
                 it = 2
-            elif abs(pfv.curpff[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            elif abs(pfv.curpff[i - 1] - pfv.c_pf_cs_coils_peak_ma[i - 1]) < 1.0e-12:
                 it = 4
-            elif abs(pfv.curpfs[i - 1] - pfv.ric[i - 1]) < 1.0e-12:
+            elif abs(pfv.curpfs[i - 1] - pfv.c_pf_cs_coils_peak_ma[i - 1]) < 1.0e-12:
                 it = 5
             else:
                 eh.idiags[0] = it
@@ -1360,25 +1366,33 @@ class PFCoil:
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
-                        pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
+                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
+                        * pfv.waves[jj - 1, it - 1]
+                        * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
-                        pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
+                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
+                        * pfv.waves[jj - 1, it - 1]
+                        * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
-                        pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
+                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
+                        * pfv.waves[jj - 1, it - 1]
+                        * 0.25e6
                     )
                     kk = kk + 1
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
-                        pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
+                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
+                        * pfv.waves[jj - 1, it - 1]
+                        * 0.25e6
                     )
 
                 else:
@@ -1387,7 +1401,9 @@ class PFCoil:
                     pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1]
                     pf.cfxf[kk - 1] = (
-                        pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 1.0e6
+                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
+                        * pfv.waves[jj - 1, it - 1]
+                        * 1.0e6
                     )
 
         # Plasma contribution
@@ -1647,7 +1663,7 @@ class PFCoil:
         hl = pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
 
         # Central Solenoid current [A]
-        ni = pfv.ric[pfv.n_cs_pf_coils - 1] * 1.0e6
+        ni = pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] * 1.0e6
 
         # kb term for elliptical integrals
         # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
@@ -2474,8 +2490,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} current (MA)",
-                f"(ric[{k}])",
-                pfv.ric[k],
+                f"(c_pf_cs_coils_peak_ma[{k}])",
+                pfv.c_pf_cs_coils_peak_ma[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2530,8 +2546,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 "Central solenoid current (MA)",
-                "(ric[n_cs_pf_coils-1])",
-                pfv.ric[pfv.n_cs_pf_coils - 1],
+                "(c_pf_cs_coils_peak_ma[n_cs_pf_coils-1])",
+                pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1],
             )
             op.ovarre(
                 self.mfile,
@@ -2564,12 +2580,12 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
@@ -2578,12 +2594,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals
@@ -2802,26 +2818,26 @@ class PFCoil:
             if (abs(pfv.curpfb[ic]) >= abs(pfv.curpfs[ic])) and (
                 abs(pfv.curpfb[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfb[ic]
+                pfv.c_pf_cs_coils_peak_ma[ic] = pfv.curpfb[ic]
 
             # Beginning of flat-top, t = t_precharge + t_current_ramp_up
             if (abs(pfv.curpff[ic]) >= abs(pfv.curpfb[ic])) and (
                 abs(pfv.curpff[ic]) >= abs(pfv.curpfs[ic])
             ):
-                pfv.ric[ic] = pfv.curpff[ic]
+                pfv.c_pf_cs_coils_peak_ma[ic] = pfv.curpff[ic]
 
             # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
             if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfs[ic])) and (
                 abs(pfv.curpfs[ic]) >= abs(pfv.curpff[ic])
             ):
-                pfv.ric[ic] = pfv.curpfs[ic]
+                pfv.c_pf_cs_coils_peak_ma[ic] = pfv.curpfs[ic]
 
             # Set normalized current waveforms
             pfv.waves[ic, 0] = 0.0e0
-            pfv.waves[ic, 1] = pfv.curpfb[ic] / pfv.ric[ic]
-            pfv.waves[ic, 2] = pfv.curpff[ic] / pfv.ric[ic]
-            pfv.waves[ic, 3] = pfv.curpff[ic] / pfv.ric[ic]
-            pfv.waves[ic, 4] = pfv.curpfs[ic] / pfv.ric[ic]
+            pfv.waves[ic, 1] = pfv.curpfb[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
+            pfv.waves[ic, 2] = pfv.curpff[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
+            pfv.waves[ic, 3] = pfv.curpff[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
+            pfv.waves[ic, 4] = pfv.curpfs[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
             pfv.waves[ic, 5] = 0.0e0
 
     def superconpf(
