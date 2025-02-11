@@ -292,7 +292,7 @@ class Buildings:
         cryv = 55.0e0 * helpow**0.5
         # Other building volumes
         # pibv : power injection building volume, m3
-        # esbldgm3 is forced to be zero if no energy storage is required (lpulse=0)
+        # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
         elev = (
             buildings_variables.tfcbv
             + buildings_variables.pfbldgm3

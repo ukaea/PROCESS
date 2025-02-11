@@ -254,7 +254,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Inductances
 
-- Inductances should start with the `h_` prefix
+- Inductances should start with the `ind_` prefix
 
 ---------------------
 
@@ -310,6 +310,15 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 ##### Magnetic field strengths
 
 - Magnetic field strengths should start with the `b_`
+
+---------------------
+
+##### Magnetic flux
+
+- Magnetic fluxes can start with the `web_` prefix representing Webers.
+
+- Since magnetic flux units are more commonly used in inductive current drive it may be more appropriate
+    to use the `vs_` prefix instead representing a $\text{Vs}$.
 
 ---------------------
 

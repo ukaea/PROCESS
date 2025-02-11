@@ -335,7 +335,7 @@
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6631E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9805E+00    
- Plasma_internal_inductance,_li__________________________________________ (rli)_________________________      1.2275E+00    
+ Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2275E+00    
  Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4373E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (bt)__________________________      5.2940E+00 ITV
  Average_poloidal_field_(T)______________________________________________ (bp)__________________________      8.6787E-01    
@@ -501,11 +501,11 @@
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9603E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7266E-03 OP 
  Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6815E+00 OP 
- Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.5616E+02 OP 
- Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.3585E+02 OP 
- Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
- Start-up_resistive_(Wb)_________________________________________________ (vsres)_______________________      5.0159E+01 OP 
- Flat-top_resistive_(Wb)_________________________________________________ (vsbrn)_______________________      2.7015E+02 OP 
+ Total_volt-second_requirement_(Wb)______________________________________ (vs_plasma_total_required)_______________________      5.5616E+02 OP 
+ Inductive_volt-seconds_(Wb)_____________________________________________ (vs_plasma_ind_ramp)_______________________      2.3585E+02 OP 
+ Ejima_coefficient_______________________________________________________ (ejima_coeff)_______________________      3.0000E-01    
+ Start-up_resistive_(Wb)_________________________________________________ (vs_plasma_res_ramp)_______________________      5.0159E+01 OP 
+ Flat-top_resistive_(Wb)_________________________________________________ (vs_plasma_burn_required)_______________________      2.7015E+02 OP 
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (bscf_iter89)_________________      3.7098E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      4.1920E-01    
@@ -517,10 +517,10 @@
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1920E-01    
  Diamagnetic_fraction_(enforced)_________________________________________ (diaipf.)_____________________      0.0000E+00    
  Pfirsch-Schlueter_fraction_(enforced)___________________________________ (ps_current_fraction.)______________________      0.0000E+00    
- Loop_voltage_during_burn_(V)____________________________________________ (vburn)_______________________      3.7450E-02 OP 
+ Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.7450E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      3.9755E-09 OP 
- Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0619E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4181E-05 OP 
+ Resistive_diffusion_time_(s)____________________________________________ (t_plasma_res_diffusion)____________________      3.0619E+03 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4181E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.3420E+21 OP 
@@ -1559,7 +1559,7 @@ beta_norm_max = 3.0
 fkzohm = 1.02
 
 * Ejima coefficient for resistive startup V-s formula
-gamma = 0.3
+ejima_coeff = 0.3
 
 * Switch for bootstrap current scaling
 i_bootstrap_current = 4
@@ -1625,7 +1625,7 @@ plasma_res_factor = 0.7
 ***********
 
 * Switch for reactor model - pulsed
-lpulse = 1
+i_pulsed_plant = 1
 
 * dwell time [s]
 t_between_pulse = 1800.0
