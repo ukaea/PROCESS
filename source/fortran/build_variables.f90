@@ -273,7 +273,7 @@ module build_variables
   real(dp) :: dz_xpoint_divertor
   !! vertical gap between x-point and divertor (m) (if = 0, it is calculated)
 
-  real(dp) :: vgaptop
+  real(dp) :: dz_fw_plasma_gap
   !! vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)
 
   real(dp) :: dr_shld_blkt_gap
@@ -384,7 +384,7 @@ module build_variables
     dz_shld_thermal = 0.05D0
     dz_shld_vv_gap = 0.163D0
     dz_xpoint_divertor= 0.0D0
-    vgaptop = 0.60D0
+    dz_fw_plasma_gap = 0.60D0
     dr_shld_blkt_gap = 0.05D0
     plleni = 1.0D0
     plleno = 1.0D0
