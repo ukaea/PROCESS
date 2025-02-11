@@ -518,7 +518,7 @@ class PFCoil:
                 )
 
                 # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
-                pfv.curpfs[ncl] = 1.0e-6 * (
+                pfv.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * (
                     pf.ccls[nng] - (pf.ccl0[nng] * (1.0e0 / pfv.fcohbop))
                 )
 
@@ -528,7 +528,7 @@ class PFCoil:
         # N.B. If the Central Solenoid is not present then ioheof is zero.
         pfv.c_pf_cs_coil_pulse_start_ma[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
         pfv.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * ioheof * pfv.fcohbof
-        pfv.curpfs[ncl] = 1.0e-6 * ioheof
+        pfv.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * ioheof
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
@@ -1343,7 +1343,13 @@ class PFCoil:
                 < 1.0e-12
             ):
                 it = 4
-            elif abs(pfv.curpfs[i - 1] - pfv.c_pf_cs_coils_peak_ma[i - 1]) < 1.0e-12:
+            elif (
+                abs(
+                    pfv.c_pf_cs_coil_pulse_end_ma[i - 1]
+                    - pfv.c_pf_cs_coils_peak_ma[i - 1]
+                )
+                < 1.0e-12
+            ):
                 it = 5
             else:
                 eh.idiags[0] = it
@@ -2833,7 +2839,10 @@ class PFCoil:
         for ic in range(pfv.n_cs_pf_coils):
             # Find where the peak current occurs
             # Beginning of pulse, t = t_precharge
-            if (abs(pfv.c_pf_cs_coil_pulse_start_ma[ic]) >= abs(pfv.curpfs[ic])) and (
+            if (
+                abs(pfv.c_pf_cs_coil_pulse_start_ma[ic])
+                >= abs(pfv.c_pf_cs_coil_pulse_end_ma[ic])
+            ) and (
                 abs(pfv.c_pf_cs_coil_pulse_start_ma[ic])
                 >= abs(pfv.c_pf_cs_coil_flat_top_ma[ic])
             ):
@@ -2843,14 +2852,21 @@ class PFCoil:
             if (
                 abs(pfv.c_pf_cs_coil_flat_top_ma[ic])
                 >= abs(pfv.c_pf_cs_coil_pulse_start_ma[ic])
-            ) and (abs(pfv.c_pf_cs_coil_flat_top_ma[ic]) >= abs(pfv.curpfs[ic])):
+            ) and (
+                abs(pfv.c_pf_cs_coil_flat_top_ma[ic])
+                >= abs(pfv.c_pf_cs_coil_pulse_end_ma[ic])
+            ):
                 pfv.c_pf_cs_coils_peak_ma[ic] = pfv.c_pf_cs_coil_flat_top_ma[ic]
 
             # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
-            if (abs(pfv.curpfs[ic]) >= abs(pfv.curpfs[ic])) and (
-                abs(pfv.curpfs[ic]) >= abs(pfv.c_pf_cs_coil_flat_top_ma[ic])
+            if (
+                abs(pfv.c_pf_cs_coil_pulse_end_ma[ic])
+                >= abs(pfv.c_pf_cs_coil_pulse_end_ma[ic])
+            ) and (
+                abs(pfv.c_pf_cs_coil_pulse_end_ma[ic])
+                >= abs(pfv.c_pf_cs_coil_flat_top_ma[ic])
             ):
-                pfv.c_pf_cs_coils_peak_ma[ic] = pfv.curpfs[ic]
+                pfv.c_pf_cs_coils_peak_ma[ic] = pfv.c_pf_cs_coil_pulse_end_ma[ic]
 
             # Set normalized current waveforms
             pfv.waves[ic, 0] = 0.0e0
@@ -2863,7 +2879,9 @@ class PFCoil:
             pfv.waves[ic, 3] = (
                 pfv.c_pf_cs_coil_flat_top_ma[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
             )
-            pfv.waves[ic, 4] = pfv.curpfs[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
+            pfv.waves[ic, 4] = (
+                pfv.c_pf_cs_coil_pulse_end_ma[ic] / pfv.c_pf_cs_coils_peak_ma[ic]
+            )
             pfv.waves[ic, 5] = 0.0e0
 
     def superconpf(

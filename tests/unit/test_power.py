@@ -209,7 +209,7 @@ class PfpwrParam(NamedTuple):
 
     cptdin: Any = None
 
-    curpfs: Any = None
+    c_pf_cs_coil_pulse_end_ma: Any = None
 
     ind_pf_cs_plasma_mutual: Any = None
 
@@ -497,7 +497,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=np.array(
+            c_pf_cs_coil_pulse_end_ma=np.array(
                 np.array(
                     (
                         0.067422231232391661,
@@ -1240,7 +1240,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=np.array(
+            c_pf_cs_coil_pulse_end_ma=np.array(
                 np.array(
                     (
                         0.019288882290113718,
@@ -1822,7 +1822,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "cptdin", pfpwrparam.cptdin)
 
-    monkeypatch.setattr(pfcoil_variables, "curpfs", pfpwrparam.curpfs)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_cs_coil_pulse_end_ma",
+        pfpwrparam.c_pf_cs_coil_pulse_end_ma,
+    )
 
     monkeypatch.setattr(
         pfcoil_variables, "ind_pf_cs_plasma_mutual", pfpwrparam.ind_pf_cs_plasma_mutual
