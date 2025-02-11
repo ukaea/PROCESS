@@ -3793,12 +3793,12 @@ class Sctfcoil:
                 n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(n_pf_coils_in_group)]
 
                 # CS Turn vertical cross-sectionnal area
-                a_oh_turn = a_oh / n_oh_turns
+                a_cs_turn = a_oh / n_oh_turns
 
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
                 d_cond_cst = (
-                    a_oh_turn / ld_ratio_cst
+                    a_cs_turn / ld_ratio_cst
                 ) ** 0.5  # width of cs turn conduit
                 l_cond_cst = ld_ratio_cst * d_cond_cst  # length of cs turn conduit
                 # Radius of turn space = r_in_cst
@@ -3808,7 +3808,7 @@ class Sctfcoil:
                 p2 = (
                     (l_cond_cst * d_cond_cst)
                     - (4 - np.pi) * (r_out_cst**2)
-                    - (a_oh_turn * oh_steel_frac)
+                    - (a_cs_turn * oh_steel_frac)
                 ) / np.pi
                 r_in_cst = -((l_cond_cst - d_cond_cst) / np.pi) + np.sqrt(p1 + p2)
                 t_cond_oh = (
