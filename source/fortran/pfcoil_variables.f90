@@ -14,7 +14,7 @@ module pfcoil_variables
 
   public
 
-  integer, parameter :: ngrpmx = 10
+  integer, parameter :: n_pf_groups_max = 10
   !! maximum number of groups of PF coils
 
   integer, parameter :: nclsmx = 2
@@ -27,7 +27,7 @@ module pfcoil_variables
   integer, parameter :: nfixmx = 64
   !! maximum number of fixed current PF coils
 
-  integer, parameter :: ngc = ngrpmx*nclsmx
+  integer, parameter :: ngc = n_pf_groups_max*nclsmx
   !! maximum total number of coils across all groups
 
   integer, parameter :: ngc2 = ngc+2
@@ -63,11 +63,11 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: bpf
   !! peak field at coil i (T)
 
-  real(dp), dimension(ngrpmx) :: ccl0_ma
+  real(dp), dimension(n_pf_groups_max) :: ccl0_ma
   !! PF group current array, flux-swing cancellation current (MA)
   !! Input if i_pf_current=0, computed otherwise
 
-  real(dp), dimension(ngrpmx) :: ccls_ma
+  real(dp), dimension(n_pf_groups_max) :: ccls_ma
   !! PF group current array, equilibrium current (MA)
   !! Input if i_pf_current=0, computed otherwise
 
@@ -114,7 +114,7 @@ module pfcoil_variables
   real(dp) :: fvssu
   !! F-value for `constraint equation 51`
 
-  integer, dimension(ngrpmx) :: ipfloc
+  integer, dimension(n_pf_groups_max) :: ipfloc
   !! Switch for location of PF coil group i:
   !!
   !! - =1 PF coil on top of central solenoid (flux ramp only)
@@ -201,7 +201,7 @@ module pfcoil_variables
   integer :: ncirt
   !! number of PF circuits (including central solenoid and plasma)
 
-  integer, dimension(ngrpmx+2) :: ncls
+  integer, dimension(n_pf_groups_max+2) :: ncls
   !! number of PF coils in group j
 
   integer :: nfxfh
@@ -288,7 +288,7 @@ module pfcoil_variables
   !! offset (m) of radial position of `ipfloc=2` PF coils from being at
   !! rmajor (offset = rpf2*triang*rminor)
 
-  real(dp), dimension(ngrpmx) :: rref
+  real(dp), dimension(n_pf_groups_max) :: rref
   !! PF coil radial positioning adjuster:
   !!
   !! - for groups j with ipfloc(j) = 1; rref(j) is ignored
@@ -374,7 +374,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: zpf
   !! z (height) location of PF coil i (m)
 
-  real(dp), dimension(ngrpmx) :: zref
+  real(dp), dimension(n_pf_groups_max) :: zref
   !! PF coil vertical positioning adjuster:
   !!
   !! - for groups j with ipfloc(j) = 1; zref(j) is ignored

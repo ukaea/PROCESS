@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, ngrpmx, ngc2, rpf1, &
+      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, n_pf_groups_max, ngc2, rpf1, &
       ngrp, isumatpf, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1850,7 +1850,7 @@ contains
           call parse_real_variable('fcupfsu', fcupfsu, 0.0D0, 1.0D0, &
                'Cu fraction of PF cable conductor')
        case ('ipfloc')
-          call parse_int_array('ipfloc', ipfloc, isub1, ngrpmx, &
+          call parse_int_array('ipfloc', ipfloc, isub1, n_pf_groups_max, &
                'PF coil location', icode)
        case ('ipfres')
           call parse_int_variable('ipfres', ipfres, 0, 1, &
@@ -1871,13 +1871,13 @@ contains
           call parse_int_variable('i_sup_pf_shape', i_sup_pf_shape, 0, 1, &
                'Switch to place outboard PF coils when TF superconducting')
        case ('ncls')
-          call parse_int_array('ncls', ncls, isub1, ngrpmx+2, &
+          call parse_int_array('ncls', ncls, isub1, n_pf_groups_max+2, &
                'No of coils in PF group', icode)
        case ('nfxfh')
           call parse_int_variable('nfxfh', nfxfh, 1, nfixmx/2, &
                'Central Solenoid splitting parameter')
        case ('ngrp')
-          call parse_int_variable('ngrp', ngrp, 0, ngrpmx, &
+          call parse_int_variable('ngrp', ngrp, 0, n_pf_groups_max, &
                'No of groups of PF coils')
        case ('ohhghf')
           call parse_real_variable('ohhghf', ohhghf, 0.0D0, 2.0D0, &
@@ -1898,13 +1898,13 @@ contains
           call parse_real_variable('rpf2', rpf2, -3.0D0, 3.0D0, &
                'Radial offset for location 2 PF coils')
        case ('rref')
-          call parse_real_array('rref', rref, isub1, ngrpmx, &
+          call parse_real_array('rref', rref, isub1, n_pf_groups_max, &
                'radius of location 4 coil groups, minor radii from major radius', icode)
        case ('ccl0_ma')
-          call parse_real_array('ccl0_ma', ccl0_ma, isub1, ngrpmx, &
+          call parse_real_array('ccl0_ma', ccl0_ma, isub1, n_pf_groups_max, &
                'Flux-swing cancel current of PF coil groups, MA', icode)
        case ('ccls_ma')
-          call parse_real_array('ccls_ma', ccls_ma, isub1, ngrpmx, &
+          call parse_real_array('ccls_ma', ccls_ma, isub1, n_pf_groups_max, &
                'Equilibrium current of PF coil groups, MA', icode)
        case ('sigpfcalw')
           call parse_real_variable('sigpfcalw', sigpfcalw, 1.0D0, 1.0D3, &
@@ -1919,7 +1919,7 @@ contains
           call parse_real_variable('vfohc', vfohc, 0.0D0, 1.0D0, &
                'Central Solenoid void fraction for coolant')
        case ('zref')
-          call parse_real_array('zref', zref, isub1, ngrpmx, &
+          call parse_real_array('zref', zref, isub1, n_pf_groups_max, &
                'height of location 3 and 4 coil groups / minor radius', icode)
 
        case ('radius_fw_channel')

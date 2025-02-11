@@ -280,11 +280,11 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch
     """
-    ngrpmx = 10
+    n_pf_groups_max = 10
     nptsmx = 32
     nfixmx = 64
-    lrow1 = 2 * nptsmx + ngrpmx
-    lcol1 = ngrpmx
+    lrow1 = 2 * nptsmx + n_pf_groups_max
+    lcol1 = n_pf_groups_max
     npts = 32
     rpts = np.array([
         6.0547741935483881,
@@ -407,6 +407,14 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
+    rc = np.full(nclsmx, 0.0)
+    zc = np.full(nclsmx, 0.0)
+    cc = np.full(nclsmx, 0.0)
+    xc = np.full(nclsmx, 0.0)
+    umat = np.full([lrow1, lcol1], 0.0, order="F")
+    vmat = np.full([lrow1, lcol1], 0.0, order="F")
+    sigma = np.full(n_pf_groups_max, 0.0)
+    work2 = np.full(n_pf_groups_max, 0.0)
 
     ssq, ccls = pfcoil.efc(
         npts,
@@ -1621,13 +1629,15 @@ def test_solv(pfcoil: PFCoil):
     :param pfcoil: a PFCoil instance
     :type pfcoil: process.pfcoil.PFCoil
     """
-    ngrpmx = 3
+    n_pf_groups_max = 3
     ngrp = 3
     nrws = 3
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
+    ccls = pfcoil.solv(
+        n_pf_groups_max, ngrp, nrws, gmat, bvec
+    )
 
     assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
 
