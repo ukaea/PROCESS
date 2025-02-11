@@ -129,7 +129,6 @@ class Stellarator:
             self.costs.output()
             self.availability.run(output=True)
             self.physics.outplas()
-            self.stigma()
             self.stheat(True)
             self.stphys(True)
             self.stopt(True)
@@ -187,69 +186,6 @@ class Stellarator:
             )
 
         st.first_call = False
-
-    def stigma(self):
-        """Routine to calculate ignition margin at the final point
-        with different stellarator confinement time scaling laws
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        This routine calculates the ignition margin at the final
-        point with different stellarator confinement time scaling laws
-        """
-        po.osubhd(self.outfile, "Confinement times, and required H-factors :")
-
-        po.write(
-            self.outfile,
-            f"{' ' * 5}scaling law{' ' * 30}confinement time (s){' ' * 55}H-factor for",
-        )
-        po.write(self.outfile, f"{' ' * 34}for H = 2{' ' * 54}power balance")
-
-        #  Label stellarator scaling laws (update if more are added)
-
-        istlaw = [21, 22, 23, 37, 38]
-
-        #  Calculate power balances for all stellarator scaling laws
-        #  assuming H = 2
-
-        for iisc, i in enumerate(istlaw):
-            (
-                physics_variables.pden_electron_transport_loss_mw,
-                physics_variables.pden_ion_transport_loss_mw,
-                physics_variables.t_electron_energy_confinement,
-                physics_variables.t_ion_energy_confinement,
-                physics_variables.t_energy_confinement,
-                physics_variables.p_plasma_loss_mw,
-            ) = self.physics.calculate_confinement_time(
-                physics_variables.m_fuel_amu,
-                physics_variables.alpha_power_total,
-                physics_variables.aspect,
-                physics_variables.bt,
-                physics_variables.nd_ions_total,
-                physics_variables.dene,
-                physics_variables.dnla,
-                physics_variables.eps,
-                2.0,
-                physics_variables.i_confinement_time,
-                physics_variables.ignite,
-                physics_variables.kappa,
-                physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
-                physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
-                physics_variables.rmajor,
-                physics_variables.rminor,
-                physics_variables.te,
-                physics_variables.ten,
-                physics_variables.tin,
-                physics_variables.q,
-                physics_variables.qstar,
-                physics_variables.vol_plasma,
-                physics_variables.a_plasma_poloidal,
-                physics_variables.zeff,
-            )
-
-            physics_variables.hfac[iisc] = self.physics.find_other_h_factors(i)
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
@@ -4478,13 +4414,11 @@ class Stellarator:
             physics_variables.pcoreradpv,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.te,
             physics_variables.ten,
             physics_variables.tin,
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.a_plasma_poloidal,
             physics_variables.zeff,
         )
 
@@ -4508,14 +4442,17 @@ class Stellarator:
         (
             physics_variables.burnup,
             physics_variables.ntau,
+            physics_variables.nTtau,
             physics_variables.figmer,
             fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.dene,
+            physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusion_rate_density_total,
             physics_variables.alpha_rate_density_total,

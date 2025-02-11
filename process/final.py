@@ -65,7 +65,7 @@ def output_once_through():
 
     labels = [
         f2py_compatible_to_string(i)
-        for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns]]
+        for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns] - 1]
     ]
     units = [f2py_compatible_to_string(i) for i in units]
     physical_constraint = [
