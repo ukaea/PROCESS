@@ -1558,7 +1558,7 @@ class Costs:
                 pfwndl
                 + constants.twopi
                 * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.turns[i]
+                * pfcoil_variables.n_pf_coil_turns[i]
             )
 
         #  Account 222.2.1 : Conductor
@@ -1588,7 +1588,10 @@ class Costs:
                         cost_variables.ucsc[pfcoil_variables.i_pf_superconductor - 1]
                         * (1.0e0 - pfcoil_variables.fcupfsu)
                         * (1.0e0 - pfcoil_variables.vf[i])
-                        * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
+                        * abs(
+                            pfcoil_variables.ric[i]
+                            / pfcoil_variables.n_pf_coil_turns[i]
+                        )
                         * 1.0e6
                         / pfcoil_variables.rjconpf[i]
                         * tfcoil_variables.dcond[
@@ -1617,7 +1620,7 @@ class Costs:
                     cost_variables.uccu
                     * pfcoil_variables.fcupfsu
                     * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
+                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.n_pf_coil_turns[i])
                     * 1.0e6
                     / pfcoil_variables.rjconpf[i]
                     * constants.dcopper
@@ -1626,7 +1629,7 @@ class Costs:
                 costpfcu = (
                     cost_variables.uccu
                     * (1.0e0 - pfcoil_variables.vf[i])
-                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.turns[i])
+                    * abs(pfcoil_variables.ric[i] / pfcoil_variables.n_pf_coil_turns[i])
                     * 1.0e6
                     / pfcoil_variables.rjconpf[i]
                     * constants.dcopper
@@ -1646,7 +1649,7 @@ class Costs:
                 1.0e-6
                 * constants.twopi
                 * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.turns[i]
+                * pfcoil_variables.n_pf_coil_turns[i]
                 * cpfconpm
             )
 
@@ -1662,7 +1665,7 @@ class Costs:
                         * pfcoil_variables.awpoh
                         * (1 - pfcoil_variables.vfohc)
                         * (1 - pfcoil_variables.fcuohsu)
-                        / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                        / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
                         * tfcoil_variables.dcond[
                             pfcoil_variables.i_cs_superconductor - 1
                         ]
@@ -1691,7 +1694,7 @@ class Costs:
                     * pfcoil_variables.awpoh
                     * (1 - pfcoil_variables.vfohc)
                     * pfcoil_variables.fcuohsu
-                    / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                    / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
                     * constants.dcopper
                 )
             else:
@@ -1700,7 +1703,7 @@ class Costs:
                     cost_variables.uccu
                     * pfcoil_variables.awpoh
                     * (1 - pfcoil_variables.vfohc)
-                    / pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                    / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
                     * constants.dcopper
                 )
 
@@ -1718,7 +1721,7 @@ class Costs:
                 1.0e-6
                 * constants.twopi
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.nohc - 1]
-                * pfcoil_variables.turns[pfcoil_variables.nohc - 1]
+                * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
                 * cpfconpm
             )
 
