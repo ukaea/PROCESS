@@ -268,7 +268,7 @@ module pfcoil_variables
   real(dp) :: rjohc0
   !! allowable central solenoid current density at beginning of pulse (A/m2)
 
-  real(dp), dimension(ngc2) :: rjpfalw
+  real(dp), dimension(ngc2) :: j_pf_wp_critical
   !! allowable winding pack current density of PF coil i (A/m2)
 
   real(dp) :: r_cs_middle
@@ -481,7 +481,7 @@ module pfcoil_variables
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)
     rjohc = 0.0D0
     rjohc0 = 0.0D0
-    rjpfalw = 0.0D0
+    j_pf_wp_critical = 0.0D0
     r_cs_middle = 0.0D0
     routr = 1.5D0
     r_pf_coil_middle = 0.0D0
