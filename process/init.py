@@ -1143,7 +1143,7 @@ def check_process():
         )
 
     # PF coil resistivity is zero if superconducting
-    if fortran.pfcoil_variables.ipfres == 0:
+    if fortran.pfcoil_variables.i_pf_conductor == 0:
         fortran.pfcoil_variables.pfclres = 0.0
 
     # If there is no NBI, then hot beam density should be zero

@@ -1269,7 +1269,7 @@ class Sctfcoil:
                 build_variables.tf_in_cs,
                 build_variables.dr_tf_inboard,
                 build_variables.dr_cs_tf_gap,
-                pfcoil_variables.ipfres,
+                pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.coheof,
                 pfcoil_variables.cohbop,
                 pfcoil_variables.cptdin,
@@ -3544,7 +3544,7 @@ class Sctfcoil:
         tf_in_cs,
         dr_tf_inboard,
         dr_cs_tf_gap,
-        ipfres,
+        i_pf_conductor,
         coheof,
         cohbop,
         cptdin,
@@ -3730,7 +3730,7 @@ class Sctfcoil:
                 radtf[0] = dr_bore
 
             # Superconducting CS
-            if ipfres == 0:
+            if i_pf_conductor == 0:
                 # Getting the turn dimention from scratch
                 # as the TF is called before CS in caller.f90
                 # -#
@@ -4199,7 +4199,7 @@ class Sctfcoil:
         # --------------------------------
         # SC central solenoid coil stress unsmearing (bucked and wedged only)
         # ---
-        if i_tf_bucking >= 2 and ipfres == 0:
+        if i_tf_bucking >= 2 and i_pf_conductor == 0:
             # Central Solenoid (OH) steel conduit stress unsmearing factors
             for ii in range(n_radial_array):
                 sig_tf_r[ii] = sig_tf_r[ii] * eyoung_cs_stiffest_leg / eyoung_axial[0]

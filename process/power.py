@@ -787,7 +787,7 @@ class Power:
         tfcoil_variables.cryo_cool_req = 0.0e0
 
         # Superconductors TF/PF cryogenic cooling
-        if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.ipfres == 0:
+        if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.i_pf_conductor == 0:
             # heat_transport_variables.helpow calculation
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,

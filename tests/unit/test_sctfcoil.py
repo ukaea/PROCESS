@@ -3531,7 +3531,7 @@ class StressclParam(NamedTuple):
 
     n_tf_wp_layers: Any = None
 
-    ipfres: Any = None
+    i_pf_conductor: Any = None
 
     oh_steel_frac: Any = None
 
@@ -3657,7 +3657,7 @@ class StressclParam(NamedTuple):
             fcutfsu=0.80884,
             str_wp=0,
             n_tf_wp_layers=5,
-            ipfres=0,
+            i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
             ohhghf=0.90000000000000002,
             coheof=20726000,
@@ -3780,7 +3780,7 @@ class StressclParam(NamedTuple):
             fcutfsu=0.80884,
             str_wp=0.0015619754370069119,
             n_tf_wp_layers=5,
-            ipfres=0,
+            i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
             ohhghf=0.90000000000000002,
             coheof=20726000,
@@ -3906,7 +3906,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.tf_in_cs,
         stressclparam.dr_tf_inboard,
         stressclparam.dr_cs_tf_gap,
-        stressclparam.ipfres,
+        stressclparam.i_pf_conductor,
         stressclparam.coheof,
         stressclparam.cohbop,
         stressclparam.cptdin,
