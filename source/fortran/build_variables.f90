@@ -267,7 +267,7 @@ module build_variables
   real(dp) :: dz_shld_thermal
   !! TF-VV thermal shield thickness, vertical build (m)
 
-  real(dp) :: vgap_vv_thermalshield
+  real(dp) :: dz_shld_vv_gap
   !! vertical gap between vacuum vessel and thermal shields (m)
 
   real(dp) :: dz_xpoint_divertor
@@ -382,7 +382,7 @@ module build_variables
     dr_shld_thermal_inboard = 0.05D0
     dr_shld_thermal_outboard = 0.05D0
     dz_shld_thermal = 0.05D0
-    vgap_vv_thermalshield = 0.163D0
+    dz_shld_vv_gap = 0.163D0
     dz_xpoint_divertor= 0.0D0
     vgaptop = 0.60D0
     dr_shld_blkt_gap = 0.05D0

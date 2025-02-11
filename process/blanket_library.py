@@ -112,7 +112,7 @@ class BlanketLibrary:
         elif icomponent == 2:
             hbot = (
                 build_variables.hmax
-                - build_variables.vgap_vv_thermalshield
+                - build_variables.dz_shld_vv_gap
                 - build_variables.d_vv_bot
             )
         else:

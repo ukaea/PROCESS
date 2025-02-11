@@ -123,7 +123,7 @@ OBS_VARS = {
     "ips": "i_pfirsch_schluter_current",
     "bootipf": "bootstrap_current_fraction",
     "bscfmax": "bootstrap_current_fraction_max",
-    "vgap2": "vgap_vv_thermalshield",
+    "vgap2": "dz_shld_vv_gap",
     "vgap": "dz_xpoint_divertor",
     "ftritbm": "f_tritium_bream",
     "enbeam": "beam_energy",
