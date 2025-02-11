@@ -207,7 +207,7 @@ class PfpwrParam(NamedTuple):
 
     etapsu: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
     c_pf_cs_coil_pulse_end_ma: Any = None
 
@@ -467,7 +467,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1210,7 +1210,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1820,7 +1820,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "etapsu", pfpwrparam.etapsu)
 
-    monkeypatch.setattr(pfcoil_variables, "cptdin", pfpwrparam.cptdin)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_coil_turn_peak_input",
+        pfpwrparam.c_pf_coil_turn_peak_input,
+    )
 
     monkeypatch.setattr(
         pfcoil_variables,

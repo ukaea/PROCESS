@@ -46,7 +46,7 @@ class TohswgParam(NamedTuple):
 
     n_pf_coil_turns: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
     plasma_current: Any = None
 
@@ -523,7 +523,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1081,7 +1081,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1257,7 +1257,11 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
     )
 
-    monkeypatch.setattr(pfcoil_variables, "cptdin", tohswgparam.cptdin)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_coil_turn_peak_input",
+        tohswgparam.c_pf_coil_turn_peak_input,
+    )
 
     monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
 

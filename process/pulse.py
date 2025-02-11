@@ -78,7 +78,12 @@ class Pulse:
 
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
         albusa = (
-            abs(pfcoil_variables.cptdin[pfcoil_variables.n_cs_pf_coils - 1]) / 100.0e0
+            abs(
+                pfcoil_variables.c_pf_coil_turn_peak_input[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ]
+            )
+            / 100.0e0
         )
 
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa

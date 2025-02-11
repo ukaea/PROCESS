@@ -299,7 +299,7 @@ contains
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
-      n_pf_coils_in_group, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
+      n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, i_l_h_threshold, &
@@ -1834,8 +1834,8 @@ contains
        case ('j_cs_flat_top_end')
           call parse_real_variable('j_cs_flat_top_end', j_cs_flat_top_end, 1.0D4, 5.0D8, &
                'Central Solenoid current density at EOF')
-       case ('cptdin')
-          call parse_real_array('cptdin', cptdin, isub1, ngc2, &
+       case ('c_pf_coil_turn_peak_input')
+          call parse_real_array('c_pf_coil_turn_peak_input', c_pf_coil_turn_peak_input, isub1, ngc2, &
                'Current per turn for PF coil', icode)
        case ('etapsu')
           call parse_real_variable('etapsu', etapsu, 0.0D0, 1.0D0, &

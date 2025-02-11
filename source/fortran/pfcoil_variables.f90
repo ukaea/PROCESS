@@ -80,7 +80,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2,6) :: c_pf_coil_turn
   !! current per turn in coil i at time j (A)
 
-  real(dp), dimension(ngc2) :: cptdin
+  real(dp), dimension(ngc2) :: c_pf_coil_turn_peak_input
   !! peak current per turn input for PF coil i (A)
 
   real(dp), dimension(ngc2) :: c_pf_cs_coil_pulse_start_ma
@@ -430,7 +430,7 @@ module pfcoil_variables
     j_cs_pulse_start = 0.0D0
     j_cs_flat_top_end = 1.85D7
     c_pf_coil_turn = 0.0D0
-    cptdin = (/4.0D4, 4.0D4, 4.0D4, &
+    c_pf_coil_turn_peak_input = (/4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4/)

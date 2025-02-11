@@ -557,9 +557,10 @@ class PFCoil:
                     area = 4.0e0 * dx * dz * pfv.pf_current_safety_factor
 
                     # Number of turns
-                    # CPTDIN[i] is the current per turn (input)
+                    # c_pf_coil_turn_peak_input[i] is the current per turn (input)
                     pfv.n_pf_coil_turns[i] = abs(
-                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6) / pfv.cptdin[i]
+                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6)
+                        / pfv.c_pf_coil_turn_peak_input[i]
                     )
                     aturn[i] = area / pfv.n_pf_coil_turns[i]
 
@@ -591,7 +592,8 @@ class PFCoil:
                     )
 
                     pfv.n_pf_coil_turns[i] = abs(
-                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6) / pfv.cptdin[i]
+                        (pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6)
+                        / pfv.c_pf_coil_turn_peak_input[i]
                     )
                     aturn[i] = area / pfv.n_pf_coil_turns[i]
 
@@ -769,14 +771,16 @@ class PFCoil:
         for m in range(pfv.n_pf_coil_groups):
             for _n in range(pfv.n_pf_coils_in_group[m]):
                 pfv.itr_sum = pfv.itr_sum + (
-                    pfv.r_pf_coil_middle[c] * pfv.n_pf_coil_turns[c] * pfv.cptdin[c]
+                    pfv.r_pf_coil_middle[c]
+                    * pfv.n_pf_coil_turns[c]
+                    * pfv.c_pf_coil_turn_peak_input[c]
                 )
                 c = c + 1
 
         pfv.itr_sum = pfv.itr_sum + (
             (bv.dr_bore + 0.5 * bv.dr_cs)
             * pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
-            * pfv.cptdin[pfv.n_cs_pf_coils - 1]
+            * pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1]
         )
 
         # Find Central Solenoid information
@@ -805,11 +809,11 @@ class PFCoil:
         pfv.n_pf_coil_turns[pfv.n_cs_pf_coils] = 1.0e0
 
         # Generate coil currents as a function of time using
-        # user-provided waveforms etc. (cptdin, fcohbop, fcohbof)
+        # user-provided waveforms etc. (c_pf_coil_turn_peak_input, fcohbop, fcohbof)
         for k in range(6):  # time points
             for i in range(pfv.n_pf_cs_plasma_circuits - 1):
                 pfv.c_pf_coil_turn[i, k] = pfv.waves[i, k] * math.copysign(
-                    pfv.cptdin[i], pfv.c_pf_cs_coils_peak_ma[i]
+                    pfv.c_pf_coil_turn_peak_input[i], pfv.c_pf_cs_coils_peak_ma[i]
                 )
 
         # Plasma wave form
@@ -1079,7 +1083,7 @@ class PFCoil:
         pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1] = (
             1.0e6
             * abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1])
-            / pfv.cptdin[pfv.n_cs_pf_coils - 1]
+            / pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1]
         )
 
         # Turn vertical cross-sectionnal area

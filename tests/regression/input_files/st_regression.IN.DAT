@@ -1955,7 +1955,7 @@ zref(4) = 5.2
 * DESCRIPTION:   Offset (rminor's) of Radial Position of i_pf_location=4 PF coils From Being at Rmajor
 * JUSTIFICATION: Position coils inside and in the middle of TF coil
 
-*cptdin: Current per turn for PF coil
+*c_pf_coil_turn_peak_input: Current per turn for PF coil
 *rjconpf: Current per turn for PF coil resistivity (ohm-m)
 *rref: Radius of i_pf_location = 4 coil groups. Number of minor radii from major radius
 *zref: Height of i_pf_location 3/4 coil groups. Units of minor radius
