@@ -189,6 +189,9 @@ OBS_VARS = {
     "isc": "i_confinement_time",
     "iradloss": "i_rad_loss",
     "ipnlaws": "n_confinement_scalings",
+    "rli": "ind_plasma_internal_norm",
+    "gamma": "ejima_coeff",
+    "lpulse": "i_pulsed_plant",
 }
 
 OBS_VARS_HELP = {
