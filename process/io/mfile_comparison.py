@@ -261,7 +261,7 @@ GENERIC_LIST = [
     "dr_tf_shld_gap",
     "dr_tf_outboard",
     "dz_xpoint_divertor",
-    "divfix",
+    "dz_divertor",
     "d_vv_bot",
     "shldlth",
     "vgap_vv_thermalshield",

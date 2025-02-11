@@ -154,7 +154,7 @@ RADIAL_BUILD = [
 vertical_lower = [
     "z_plasma_xpoint_lower",
     "dz_xpoint_divertor",
-    "divfix",
+    "dz_divertor",
     "shldlth",
     "d_vv_bot",
     "vgap_vv_thermalshield",
@@ -3645,7 +3645,7 @@ def main(args=None):
         vertical_upper = [
             "z_plasma_xpoint_upper",
             "vgaptop",
-            "divfix",
+            "dz_divertor",
             "shldtth",
             "d_vv_top",
             "vgap_vv_thermalshield",

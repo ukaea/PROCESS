@@ -371,7 +371,7 @@ class ComponentHalfHeightParam(NamedTuple):
     z_plasma_xpoint_lower: Any = None
     z_plasma_xpoint_upper: Any = None
     idivrt: Any = None
-    divfix: Any = None
+    dz_divertor: Any = None
     icomponent: Any = None
     expected_icomponent: Any = None
     expected_half_height: Any = None
@@ -395,7 +395,7 @@ class ComponentHalfHeightParam(NamedTuple):
             z_plasma_xpoint_lower=4.93333333333333333,
             z_plasma_xpoint_upper=4.93333333333333333,
             idivrt=1,
-            divfix=0.62000000000000011,
+            dz_divertor=0.62000000000000011,
             icomponent=0,
             expected_icomponent=0,
             expected_half_height=5.9532752487304119,
@@ -458,7 +458,9 @@ def test_component_half_height(
         componenthalfheightparam.z_plasma_xpoint_upper,
     )
     monkeypatch.setattr(physics_variables, "idivrt", componenthalfheightparam.idivrt)
-    monkeypatch.setattr(divertor_variables, "divfix", componenthalfheightparam.divfix)
+    monkeypatch.setattr(
+        divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
+    )
 
     half_height = blanket_library_fixture.component_half_height(
         componenthalfheightparam.icomponent

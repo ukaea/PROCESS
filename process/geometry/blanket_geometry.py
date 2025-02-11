@@ -64,7 +64,7 @@ def blanket_geometry_single_null(
     )
 
     # Lower blanket
-    divgap = cumulative_lower["divfix"]
+    divgap = cumulative_lower["dz_divertor"]
 
     (
         rs_lower_outboard,
@@ -175,7 +175,7 @@ def blanket_geometry_double_null(
     :rtype: ArbitraryGeometry
     """
     # Lower blanket
-    divgap = cumulative_lower["divfix"]
+    divgap = cumulative_lower["dz_divertor"]
 
     (
         rs_lower_outboard,

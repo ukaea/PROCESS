@@ -1649,7 +1649,7 @@
         "divcst": 0.0,
         "divdens": 10000.0,
         "divdum": 0.0,
-        "divfix": 0.2,
+        "dz_divertor": 0.2,
         "divlife": 0.0,
         "divmas": 0.0,
         "divplt": 0.035,
@@ -9301,7 +9301,7 @@
         "divcst": "divertor direct cost (M$)",
         "divdens": "divertor structure density (kg/m3)",
         "divdum": "switch for divertor Zeff model:\n<ul>\n<li>=0 calc</li>\n<li>=1 input</li>\n</ul>",
-        "divfix": "divertor structure vertical thickness (m)",
+        "dz_divertor": "divertor structure vertical thickness (m)",
         "divlife": "Full power lifetime of divertor (y)",
         "divmas": "divertor plate mass (kg)",
         "divplt": "divertor plate thickness (m) (from Spears, Sept 1990)",
@@ -12233,7 +12233,7 @@
             "lb": 0,
             "ub": 1
         },
-        "divfix": {
+        "dz_divertor": {
             "lb": 0.1,
             "ub": 5.0
         },
@@ -17908,7 +17908,7 @@
             "divclfr",
             "divdens",
             "divdum",
-            "divfix",
+            "dz_divertor",
             "divmas",
             "divplt",
             "divsur",
@@ -20165,7 +20165,7 @@
         "divclfr": "real_variable",
         "divdens": "real_variable",
         "divdum": "int_variable",
-        "divfix": "real_variable",
+        "dz_divertor": "real_variable",
         "divplt": "real_variable",
         "beta_norm_max": "real_variable",
         "dp_he": "real_variable",

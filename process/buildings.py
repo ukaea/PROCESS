@@ -627,7 +627,7 @@ class Buildings:
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
         if cost_variables.divlife != 0.0e0:
-            hcomp_height = divertor_variables.divfix
+            hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (

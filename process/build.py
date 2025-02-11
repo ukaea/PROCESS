@@ -146,7 +146,7 @@ class Build:
                     + build_variables.vgap_vv_thermalshield
                     + build_variables.d_vv_top
                     + build_variables.shldtth
-                    + divertor_variables.divfix
+                    + divertor_variables.dz_divertor
                     + build_variables.vgaptop
                     + build_variables.z_plasma_xpoint_upper
                 )
@@ -245,17 +245,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
 
                 po.obuild(
                     self.outfile,
@@ -313,19 +313,19 @@ class Build:
                     build_variables.dz_xpoint_divertor,
                 )
 
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -609,19 +609,19 @@ class Build:
                     build_variables.dz_xpoint_divertor,
                 )
 
-                vbuild = vbuild - divertor_variables.divfix
+                vbuild = vbuild - divertor_variables.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.divfix,
+                    divertor_variables.dz_divertor,
                     vbuild,
-                    "(divfix)",
+                    "(dz_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
-                    "(divfix)",
-                    divertor_variables.divfix,
+                    "(dz_divertor)",
+                    divertor_variables.dz_divertor,
                 )
 
                 vbuild = vbuild - build_variables.shldlth
@@ -734,7 +734,7 @@ class Build:
         build_variables.hmax = (
             build_variables.z_plasma_xpoint_upper
             + build_variables.dz_xpoint_divertor
-            + divertor_variables.divfix
+            + divertor_variables.dz_divertor
             + build_variables.shldlth
             + build_variables.d_vv_bot
             + build_variables.vgap_vv_thermalshield
@@ -1975,7 +1975,7 @@ class Build:
         hbot = (
             build_variables.z_plasma_xpoint_lower
             + build_variables.dz_xpoint_divertor
-            + divertor_variables.divfix
+            + divertor_variables.dz_divertor
             - build_variables.blnktth
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )

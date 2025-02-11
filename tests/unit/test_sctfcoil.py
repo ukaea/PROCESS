@@ -14111,7 +14111,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "shldtth", 0.3)  # Baseline 2018
     monkeypatch.setattr(
-        divertor_variables, "divfix", 2.05
+        divertor_variables, "dz_divertor", 2.05
     )  # chosen to achieve H_vv in Table 2
 
     monkeypatch.setattr(build_variables, "dr_tf_shld_gap", 0.05)  # Baseline 2018

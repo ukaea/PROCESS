@@ -175,7 +175,7 @@ pinjalw  = 200.0 * maximum allowable value for injected power (MW) (`constraint 
 
 *----------------Divertor Variables----------------*
 
-divfix   = 0.62 * divertor structure vertical thickness (m)
+dz_divertor   = 0.62 * divertor structure vertical thickness (m)
 
 *------------------Error Handling------------------*
 
