@@ -1828,7 +1828,7 @@ def test_vscalc(voltsecondreqparam):
         rmajor=voltsecondreqparam.rmajor,
         res_plasma=voltsecondreqparam.res_plasma,
         t_burn=voltsecondreqparam.t_burn,
-            t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
+        t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
     )
 
     assert vs_plasma_internal == pytest.approx(

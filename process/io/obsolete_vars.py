@@ -198,6 +198,9 @@ OBS_VARS = {
     "rhotfbus": "rho_tf_bus",
     "flhthresh": "fl_h_threshold",
     "ilhthresh": "i_l_h_threshold",
+    "rli": "ind_plasma_internal_norm",
+    "gamma": "ejima_coeff",
+    "lpulse": "i_pulsed_plant",
 }
 
 OBS_VARS_HELP = {

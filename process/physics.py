@@ -2355,6 +2355,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
+            times_variables.t_fusion_ramp,
             times_variables.t_burn,
             physics_variables.ind_plasma_internal_norm,
         )
@@ -5482,7 +5483,7 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "V-s needed during flat-top (heat + burn times) (Wb)",
+                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
                 "(vs_plasma_burn_required)",
                 physics_variables.vs_plasma_burn_required,
                 "OP ",
@@ -5505,7 +5506,7 @@ class Physics:
 
             po.ovarre(
                 self.outfile,
-                "Resistive diffusion time (s)",
+                "Plasma resistive diffusion time (s)",
                 "(t_plasma_res_diffusion)",
                 physics_variables.t_plasma_res_diffusion,
                 "OP ",
