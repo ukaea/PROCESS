@@ -3318,25 +3318,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_149
-    !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
+    !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(149) = 'fbmaxcs       '
+    lablxc(149) = 'fb_cs_limit_max       '
     boundl(149) = 0.001D0
     boundu(149) = 1.000D0
   end subroutine init_itv_149
 
   real(kind(1.d0)) function itv_149()
-    use pfcoil_variables, only: fbmaxcs
+    use pfcoil_variables, only: fb_cs_limit_max
     implicit none
-    itv_149 = fbmaxcs
+    itv_149 = fb_cs_limit_max
   end function itv_149
 
   subroutine set_itv_149(ratio)
-    use pfcoil_variables, only: fbmaxcs
+    use pfcoil_variables, only: fb_cs_limit_max
     implicit none
     real(kind(1.d0)) :: ratio
-    fbmaxcs = ratio
+    fb_cs_limit_max = ratio
   end subroutine set_itv_149
 
   !---------------------------------
