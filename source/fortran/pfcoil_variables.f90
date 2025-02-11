@@ -198,7 +198,7 @@ module pfcoil_variables
   real(dp) :: jcableoh_eof
   !! central solenoid cable critical current density (A/m2) at end-of-flattop
 
-  integer :: ncirt
+  integer :: n_pf_cs_plasma_circuits
   !! number of PF circuits (including central solenoid and plasma)
 
   integer, dimension(n_pf_groups_max+2) :: ncls
@@ -456,7 +456,7 @@ module pfcoil_variables
     jscoh_eof = 0.0D0
     jcableoh_bop = 0.0D0
     jcableoh_eof = 0.0D0
-    ncirt = 0
+    n_pf_cs_plasma_circuits = 0
     ncls = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7
     n_pf_coil_groups = 3
