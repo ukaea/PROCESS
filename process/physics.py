@@ -2261,7 +2261,7 @@ class Physics:
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
-        physics_variables.res_time = res_diff_time(
+        physics_variables.t_plasma_res_diffusion = res_diff_time(
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.kappa95,
@@ -5506,8 +5506,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Resistive diffusion time (s)",
-                "(res_time)",
-                physics_variables.res_time,
+                "(t_plasma_res_diffusion)",
+                physics_variables.t_plasma_res_diffusion,
                 "OP ",
             )
             po.ovarre(
