@@ -2156,7 +2156,7 @@ dz_xpoint_divertor = 0.75
 * DESCRIPTION:   Top vert gap between plasma and first wall (m)
 * JUSTIFICATION: Not yet set
 
-divfix = 1.0
+dz_divertor = 1.0
 * DESCRIPTION:   Divertor Structure Vertical Thickness (m)
 * JUSTIFICATION: 
 

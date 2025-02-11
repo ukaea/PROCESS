@@ -66,7 +66,7 @@ def first_wall_geometry_single_null(
     )
 
     # Lower first wall
-    divgap = cumulative_lower["divfix"]
+    divgap = cumulative_lower["dz_divertor"]
     top_point = divgap + blnktth
     (
         rs_lower_outboard,
@@ -180,7 +180,7 @@ def first_wall_geometry_double_null(
     :rtype: ArbitraryGeometry
     """
     # Lower first wall
-    divgap = cumulative_lower["divfix"]
+    divgap = cumulative_lower["dz_divertor"]
     top_point = divgap + blnktth
     (
         rs_lower_outboard,

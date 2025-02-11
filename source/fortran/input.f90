@@ -262,7 +262,7 @@ contains
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
-      zeffdiv, hldivlim, rlenmax, divfix, c3div, &
+      zeffdiv, hldivlim, rlenmax, dz_divertor, c3div, &
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
@@ -1194,8 +1194,8 @@ contains
        case ('divdum')
           call parse_int_variable('divdum', divdum, 0, 1, &
                'Switch for divertor Zeff value')
-       case ('divfix')
-          call parse_real_variable('divfix', divfix, 0.1D0, 5.0D0, &
+       case ('dz_divertor')
+          call parse_real_variable('dz_divertor', dz_divertor, 0.1D0, 5.0D0, &
                'Divertor structure vertical extent (m)')
        case ('divplt')
           call parse_real_variable('divplt', divplt, 0.01D0, 1.0D0, &

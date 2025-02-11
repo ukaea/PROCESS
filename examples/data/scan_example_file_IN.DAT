@@ -333,7 +333,7 @@ dr_cryostat = 0.15
 dr_shld_outboard = 0.800
 
 * Divertor structure vertical thickness [m]
-divfix = 0.62 
+dz_divertor = 0.62 
 
 * Coolant void fraction in shield
 vfshld = 0.60 
