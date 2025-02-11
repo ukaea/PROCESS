@@ -3412,7 +3412,7 @@ iavail = 0
 *icc = 61
 * DESCRIPTION:   Constraint equation for availability limit
 * JUSTIFICATION: Turned off, do not care about availability limit 
-* VARIABLES:     tmargmin_cs (Minimum allowable temperature margin in CS (K)), tmargoh calculated in-situ
+* VARIABLES:     tmargmin_cs (Minimum allowable temperature margin in CS (K)), temp_cs_margin calculated in-situ
 
 *avail_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)

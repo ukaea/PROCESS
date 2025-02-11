@@ -1247,7 +1247,7 @@ class PFCoil:
             pfv.rjpfalw[pfv.nohc - 1] = jcritwp * pfv.awpoh / pfv.areaoh
             pfv.rjohc0 = pfv.rjpfalw[pfv.nohc - 1]
 
-            pfv.tmargoh = min(tmarg1, tmarg2)
+            pfv.temp_cs_margin = min(tmarg1, tmarg2)
 
         else:
             # Resistive power losses (non-superconducting coil)
@@ -2150,8 +2150,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS temperature margin (K)",
-                    "(tmargoh)",
-                    pfv.tmargoh,
+                    "(temp_cs_margin)",
+                    pfv.temp_cs_margin,
                     "OP ",
                 )
                 op.ovarre(
@@ -2243,7 +2243,7 @@ class PFCoil:
                     abs(pfv.coheof) > 0.99e0 * abs(numerics.boundu[37] * pfv.rjohc)
                 ) or (abs(pfv.cohbop) > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)):
                     pf.cslimit = True
-                if pfv.tmargoh < 1.01e0 * tfv.tmargmin_cs:
+                if pfv.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
                     pf.cslimit = True
                 if not pf.cslimit:
                     eh.report_error(135)
