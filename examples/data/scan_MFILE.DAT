@@ -616,7 +616,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -1611,7 +1611,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -2606,7 +2606,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -3601,7 +3601,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -4596,7 +4596,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -5591,7 +5591,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -6586,7 +6586,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -7581,7 +7581,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -8576,7 +8576,7 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      7.5516E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      6.4527E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              5    
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              5    
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_strand_current_density_at_BOP_(A/m2)___________________________ (jstrandoh_bop)_______________      1.9843E+08 OP 
@@ -9224,7 +9224,7 @@ zref(8) = 1.0
 
 alstroh = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
 fcuohsu = 0.70 * copper fraction of strand in central solenoid cable
-isumatoh = 5 * WST Nb3Sn parameterisation
+i_cs_superconductor = 5 * WST Nb3Sn parameterisation
 oh_steel_frac = 0.8
 
 *----------------Physics Variables-----------------*

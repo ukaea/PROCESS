@@ -1243,7 +1243,7 @@ def check_process():
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 60
-    ).any() and fortran.pfcoil_variables.isumatoh == 8:
+    ).any() and fortran.pfcoil_variables.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
