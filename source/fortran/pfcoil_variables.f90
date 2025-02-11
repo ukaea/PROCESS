@@ -217,7 +217,7 @@ module pfcoil_variables
   real(dp) :: f_z_cs_tf_internal
   !! Central solenoid height / TF coil internal height
 
-  real(dp) :: oh_steel_frac
+  real(dp) :: f_a_cs_steel
   !! central solenoid steel fraction (`iteration variable 122`)
 
   real(dp) :: pf_current_safety_factor
@@ -462,7 +462,7 @@ module pfcoil_variables
     n_pf_coil_groups = 3
     n_cs_pf_coils = 0
     f_z_cs_tf_internal = 0.71D0
-    oh_steel_frac = 0.5D0
+    f_a_cs_steel = 0.5D0
     pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
     rho_pf_coil = 2.5D-8

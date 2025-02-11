@@ -213,7 +213,7 @@ def main(args=None):
         "dr_cs",
         "f_z_cs_tf_internal",
         "csfv.n_cycle_min",
-        "pfv.oh_steel_frac",
+        "pfv.f_a_cs_steel",
         "csfv.t_crack_vertical",
         "",
         "",

@@ -101,7 +101,7 @@ module scan_module
   !!         <LI> 63 dr_cs : CS thickness (m)
   !!         <LI> 64 f_z_cs_tf_internal : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90
-  !!         <LI> 66 oh_steel_frac: Steel fraction in CS coil
+  !!         <LI> 66 f_a_cs_steel: Steel fraction in CS coil
   !!         <LI> 67 t_crack_vertical: Initial crack vertical dimension (m) </UL>
   !!         <LI> 68 `inlet_temp_liq' : Inlet temperature of blanket liquid metal coolant/breeder (K)
   !!         <LI> 69 `outlet_temp_liq' : Outlet temperature of blanket liquid metal coolant/breeder (K)
@@ -610,7 +610,7 @@ contains
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
     use heat_transport_variables, only: crypmw_max, etath
     use rebco_variables, only: copperaoh_m2_max
-    use pfcoil_variables, only: j_cs_flat_top_end, f_z_cs_tf_internal, oh_steel_frac
+    use pfcoil_variables, only: j_cs_flat_top_end, f_z_cs_tf_internal, f_a_cs_steel
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
     implicit none
 
@@ -808,8 +808,8 @@ contains
             n_cycle_min = swp(iscn)
             vlab = 'n_cycle_min' ; xlab = 'CS stress cycles min'
         case (66)
-            oh_steel_frac = swp(iscn)
-            vlab = 'oh_steel_frac' ; xlab = 'CS steel fraction'
+            f_a_cs_steel = swp(iscn)
+            vlab = 'f_a_cs_steel' ; xlab = 'CS steel fraction'
         case (67)
             t_crack_vertical = swp(iscn)
             vlab = 't_crack_vertical' ; xlab = 'Initial crack vertical size (m)'
