@@ -709,7 +709,7 @@ class PFCoil:
 
                 # Weight of steel case
 
-                pfv.wts[i] = (
+                pfv.m_pf_coil_structure[i] = (
                     areaspf
                     * 2.0e0
                     * constants.pi
@@ -721,7 +721,10 @@ class PFCoil:
 
                 pfv.pfmmax = max(
                     pfv.pfmmax,
-                    (1.0e-3 * (pfv.m_pf_coil_conductor[i] + pfv.wts[i])),
+                    (
+                        1.0e-3
+                        * (pfv.m_pf_coil_conductor[i] + pfv.m_pf_coil_structure[i])
+                    ),
                 )
                 i = i + 1
 
@@ -754,7 +757,9 @@ class PFCoil:
             pfv.m_pf_coil_conductor_total = (
                 pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_conductor[i]
             )
-            pfv.m_pf_coil_structure_total = pfv.m_pf_coil_structure_total + pfv.wts[i]
+            pfv.m_pf_coil_structure_total = (
+                pfv.m_pf_coil_structure_total + pfv.m_pf_coil_structure[i]
+            )
             pf.ricpf = pf.ricpf + abs(pfv.ric[i])
 
         # Plasma size and shape
@@ -1156,7 +1161,7 @@ class PFCoil:
             pfv.pfcaseth[pfv.nohc - 1] = 0.0e0
 
         # Weight of steel
-        pfv.wts[pfv.nohc - 1] = (
+        pfv.m_pf_coil_structure[pfv.nohc - 1] = (
             areaspf
             * 2.0e0
             * constants.pi
@@ -2479,12 +2484,12 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t{pfv.rjpfalw[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.rjpfalw[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.ric[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.wts[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
+                    f"PF {k}\t{pfv.ric[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.bpf[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
@@ -2493,12 +2498,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t{pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.nohc - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.wts[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.nohc - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.nohc - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.nohc - 1]:.2e}\t{pfv.bpf[pfv.nohc - 1]:.2e}",
                 )
 
         # Miscellaneous totals

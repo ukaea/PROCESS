@@ -362,7 +362,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: m_pf_coil_conductor
   !! conductor mass for PF coil i (kg)
 
-  real(dp), dimension(ngc2) :: wts
+  real(dp), dimension(ngc2) :: m_pf_coil_structure
   !! structure mass for PF coil i (kg)
 
   real(dp), dimension(ngc2) :: z_pf_coil_upper
@@ -510,7 +510,7 @@ module pfcoil_variables
     m_pf_coil_conductor_total = 0.0D0
     m_pf_coil_structure_total = 0.0D0
     m_pf_coil_conductor = 0.0D0
-    wts = 0.0D0
+    m_pf_coil_structure = 0.0D0
     z_pf_coil_upper = 0.0D0
     z_pf_coil_lower = 0.0D0
     z_pf_coil_middle = 0.0D0
