@@ -29,7 +29,7 @@ into account `i_single_null` and other recent changes e.g. rclsnorm)
 
 `i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
 *R* = `r_cs_middle` + `rpf1`<br>
-*Z* = $\pm$(`hmax` * `ohhghf` + 0.1 + 0.5 * (`hmax` * (1 - `ohhghf`) + `dr_tf_inboard` + 0.1))
+*Z* = $\pm$(`hmax` * `f_z_cs_tf_internal` + 0.1 + 0.5 * (`hmax` * (1 - `f_z_cs_tf_internal`) + `dr_tf_inboard` + 0.1))
 
 `i_pf_location(j)` = 2: PF coils are placed above the TF coils (one group only);<br>
 *R* = `rmajor` + `rpf2`<br>

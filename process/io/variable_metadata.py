@@ -220,7 +220,7 @@ var_dicts = {
         description="central solenoid overall current density at end of flat-top",
         units="A m^{-2}",
     ),
-    "ohhghf": VariableMetadata(
+    "f_z_cs_tf_internal": VariableMetadata(
         latex=r"$Thickness_{\mathrm{CS}}[m]$",
         description="Central solenoid height / TF coil internal height",
         units="m",

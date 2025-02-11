@@ -1661,7 +1661,7 @@ i_pf_conductor = 0
 * Geometry *
 *----------*
 
-*ohhghf =  
+*f_z_cs_tf_internal =  
 * DESCRIPTION:   Central solenoid height / TF coil internal height (default = 0.71)
 * JUSTIFICATION: Not yet set.
 
