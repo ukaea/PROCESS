@@ -66,7 +66,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "ngrp", 4)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
     monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-    monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "itr_sum", 0.0)
@@ -148,7 +148,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     pfcoil.pfcoil()
 
     assert pytest.approx(pv.bvert) == -0.65121393
-    assert pytest.approx(pfv.zpf) == np.array([
+    assert pytest.approx(pfv.z_pf_coil_middle) == np.array([
         4.86,
         -4.86,
         7.2075,
@@ -217,7 +217,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "ric", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "bpf", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "jscoh_eof", 4.758e8)
-    monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_inner", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "jscoh_bop", 3.562e8)
@@ -2365,7 +2365,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pfv, "bpf", np.zeros(22, dtype=int))  # maybe
     monkeypatch.setattr(
         pfv,
-        "zpf",
+        "z_pf_coil_middle",
         np.array([
             9.606146709677418,
             -11.141090021562032,
@@ -2807,7 +2807,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "zpf",
+        "z_pf_coil_middle",
         np.array([
             9.606146709677418,
             -11.141090021562032,
