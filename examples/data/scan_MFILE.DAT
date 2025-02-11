@@ -9203,7 +9203,7 @@ epsvmc   = 1.0e-8 * Error tolerance for vmcon
 *-----------------Pfcoil Variables-----------------*
 
 j_cs_flat_top_end   = 13540000.0 * Central solenoid overall current density at end of flat-top (a/m2)
-cptdin   = 4.22d4, 4.22d4, 4.22d4, 4.22d4, 4.3d4, 4.3d4,  4.3d4, 4.3d4, * Peak current per turn input for pf coil i (a)
+c_pf_coil_turn_peak_input   = 4.22d4, 4.22d4, 4.22d4, 4.22d4, 4.3d4, 4.3d4,  4.3d4, 4.3d4, * Peak current per turn input for pf coil i (a)
 fcohbop  = 0.9362 * Ratio of central solenoid overall current density at
 i_pf_location   = 2,2,3,3 * Switch for locating scheme of pf coil group i;
 i_pf_superconductor = 3 * Switch for superconductor material in pf coils;

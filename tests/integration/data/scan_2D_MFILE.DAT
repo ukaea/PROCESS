@@ -18015,7 +18015,7 @@ iavail = 0
 ************
 
 * Peak current per turn input for PF coil i [A]
-cptdin = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
+c_pf_coil_turn_peak_input = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
 
 * Switch for locating scheme of pf coil group i
 i_pf_location = 2,2,3,3

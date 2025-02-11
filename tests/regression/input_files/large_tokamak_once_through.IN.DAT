@@ -280,7 +280,7 @@ epsvmc   = 1e-7 * epsvmc /1;0e-6/ ; error tolerance for VMCON
 
 alstroh  = 7.5d8 * allowable hoop stress in Central Solenoid structural material (Pa)
 j_cs_flat_top_end   = 21443595.371072624 * Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)
-cptdin   = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4 * peak current per turn input for PF coil i (A)
+c_pf_coil_turn_peak_input   = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4 * peak current per turn input for PF coil i (A)
 fcohbop  = 0.93491189654662 * ratio of central solenoid overall current density at beginning of pulse / end of flat-top
 fcuohsu  = 0.70 * copper fraction of strand in central solenoid
 i_pf_location   = 2,2,3,3 * Switch for location of PF coil group i;

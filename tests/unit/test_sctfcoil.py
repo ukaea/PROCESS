@@ -3543,7 +3543,7 @@ class StressclParam(NamedTuple):
 
     n_pf_coils_in_group: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
     awpc: Any = None
 
@@ -3665,7 +3665,7 @@ class StressclParam(NamedTuple):
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -3788,7 +3788,7 @@ class StressclParam(NamedTuple):
             n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -3909,7 +3909,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.i_pf_conductor,
         stressclparam.j_cs_flat_top_end,
         stressclparam.j_cs_pulse_start,
-        stressclparam.cptdin,
+        stressclparam.c_pf_coil_turn_peak_input,
         stressclparam.n_pf_coils_in_group,
         70 / 22,
         3e-3,
