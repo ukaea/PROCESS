@@ -124,7 +124,7 @@ $$
 
 ### Steady current burn phase
 
-At plasma current flat-top there is no self inductance contribution as the plasma current is expected to be at a constants value. However there is still a resistive contribution.
+At plasma current flat-top there is no self inductance contribution as the plasma current is expected to be at a constant value. However there is still a resistive contribution.
 
 
 
