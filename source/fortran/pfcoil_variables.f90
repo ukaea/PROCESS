@@ -71,7 +71,7 @@ module pfcoil_variables
   !! PF group current array, equilibrium current (MA)
   !! Input if i_pf_current=0, computed otherwise
 
-  real(dp) :: cohbop
+  real(dp) :: j_cs_pulse_start
   !! Central solenoid overall current density at beginning of pulse (A/m2)
 
   real(dp) :: coheof
@@ -427,7 +427,7 @@ module pfcoil_variables
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
     ccls_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
-    cohbop = 0.0D0
+    j_cs_pulse_start = 0.0D0
     coheof = 1.85D7
     c_pf_coil_turn = 0.0D0
     cptdin = (/4.0D4, 4.0D4, 4.0D4, &

@@ -1978,7 +1978,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
     """
     monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
     monkeypatch.setattr(pfv, "bmaxoh0", 13.522197474024983)
-    monkeypatch.setattr(pfv, "cohbop", 19311657.760000002)
+    monkeypatch.setattr(pfv, "j_cs_pulse_start", 19311657.760000002)
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
