@@ -1740,7 +1740,7 @@ i_pf_conductor = 0
 * JUSTIFICATION: Not using icc=79
 
 *ixc = 149
-*fbmaxcs = 
+*fb_cs_limit_max = 
 *boundl(149)
 *boundu(149)
 * DESCRIPTION:   F-value for max peak CS field (icc = 79)
