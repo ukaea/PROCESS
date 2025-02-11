@@ -1134,8 +1134,8 @@ class PFCoil:
         bohco = abs(bzo)
 
         # Peak field at the Beginning-Of-Pulse (BOP)
-        # Occurs at inner edge of coil; bmaxoh0 and bzi are of same sign at BOP
-        pfv.bmaxoh0 = self.bfmax(
+        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
+        pfv.b_cs_peak_pulse_start = self.bfmax(
             pfv.j_cs_pulse_start,
             pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
@@ -1144,10 +1144,12 @@ class PFCoil:
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
 
-        pfv.bmaxoh0 = abs(pfv.bmaxoh0 + bzi)
+        pfv.b_cs_peak_pulse_start = abs(pfv.b_cs_peak_pulse_start + bzi)
 
         # Maximum field values
-        pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(pfv.bmaxoh, abs(pfv.bmaxoh0))
+        pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(
+            pfv.bmaxoh, abs(pfv.b_cs_peak_pulse_start)
+        )
         pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
 
         # Stress ==> cross-sectional area of supporting steel to use
@@ -1271,7 +1273,7 @@ class PFCoil:
             # Allowable coil overall current density at BOP
 
             jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2 = self.superconpf(
-                pfv.bmaxoh0,
+                pfv.b_cs_peak_pulse_start,
                 pfv.vfohc,
                 pfv.fcuohsu,
                 (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
@@ -1627,7 +1629,7 @@ class PFCoil:
         epsilon = r / a
 
         # Field at inner radius of coil [T]
-        b_a = pfv.bmaxoh0
+        b_a = pfv.b_cs_peak_pulse_start
 
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
@@ -2039,8 +2041,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Maximum field at Beginning Of Pulse (T)",
-                    "(bmaxoh0)",
-                    pfv.bmaxoh0,
+                    "(b_cs_peak_pulse_start)",
+                    pfv.b_cs_peak_pulse_start,
                     "OP ",
                 )
                 op.ovarre(
