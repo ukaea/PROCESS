@@ -249,7 +249,7 @@ module pfcoil_variables
   real(dp) :: powpfres
   !! total PF coil resistive losses during flattop (W)
 
-  real(dp), dimension(ngc2) :: ra
+  real(dp), dimension(ngc2) :: r_pf_coil_inner
   !! inner radius of coil i (m)
 
   real(dp), dimension(ngc2) :: rb
@@ -472,7 +472,7 @@ module pfcoil_variables
     pfwpmw = 0.0D0
     powohres = 0.0D0
     powpfres = 0.0D0
-    ra = 0.0D0
+    r_pf_coil_inner = 0.0D0
     rb = 0.0D0
     ric = 0.0D0
     rjconpf = (/3.0D7, 3.0D7, 3.0D7, &

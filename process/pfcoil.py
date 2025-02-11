@@ -547,10 +547,10 @@ class PFCoil:
                     pfv.rjconpf[i] = 1.0e6 * abs(pfv.ric[i]) / area
 
                     # Location of edges of each coil:
-                    # ra = inner radius, rb = outer radius
+                    # r_pf_coil_inner = inner radius, rb = outer radius
                     # zl = 'lower' edge z (i.e. edge nearer to midplane)
                     # zh = 'upper' edge z (i.e. edge further from midplane)
-                    pfv.ra[i] = pfv.rpf[i] - dx
+                    pfv.r_pf_coil_inner[i] = pfv.rpf[i] - dx
                     pfv.rb[i] = pfv.rpf[i] + dx
 
                     pfv.zl[i] = pfv.zpf[i] - dz
@@ -575,7 +575,7 @@ class PFCoil:
 
                     dx = 0.5e0 * math.sqrt(area)  # square cross-section
 
-                    pfv.ra[i] = pfv.rpf[i] - dx
+                    pfv.r_pf_coil_inner[i] = pfv.rpf[i] - dx
                     pfv.rb[i] = pfv.rpf[i] + dx
 
                     pfv.zl[i] = pfv.zpf[i] - dx
@@ -690,7 +690,7 @@ class PFCoil:
                     # Thickness found via a simple quadratic equation
 
                     drpdz = (
-                        pfv.rb[i] - pfv.ra[i] + abs(pfv.zh[i] - pfv.zl[i])
+                        pfv.rb[i] - pfv.r_pf_coil_inner[i] + abs(pfv.zh[i] - pfv.zl[i])
                     )  # dr + dz
                     pfv.pfcaseth[i] = 0.25e0 * (
                         -drpdz + math.sqrt(drpdz * drpdz + 4.0e0 * areaspf)
@@ -743,7 +743,7 @@ class PFCoil:
         # Plasma size and shape
         pfv.zh[pfv.nohc] = pv.rminor * pv.kappa
         pfv.zl[pfv.nohc] = -pv.rminor * pv.kappa
-        pfv.ra[pfv.nohc] = pv.rmajor - pv.rminor
+        pfv.r_pf_coil_inner[pfv.nohc] = pv.rmajor - pv.rminor
         pfv.rb[pfv.nohc] = pv.rmajor + pv.rminor
         pfv.turns[pfv.nohc] = 1.0e0
 
@@ -995,7 +995,7 @@ class PFCoil:
         pfv.rb[pfv.nohc - 1] = pfv.r_cs_middle + 0.5e0 * bv.dr_cs
 
         # Radius of inner edge
-        pfv.ra[pfv.nohc - 1] = pfv.rb[pfv.nohc - 1] - bv.dr_cs
+        pfv.r_pf_coil_inner[pfv.nohc - 1] = pfv.rb[pfv.nohc - 1] - bv.dr_cs
 
         # Total cross-sectional area
         pfv.areaoh = 2.0e0 * hohc * bv.dr_cs
@@ -1051,7 +1051,7 @@ class PFCoil:
         # Peak field due to central Solenoid itself
         bmaxoh2 = self.bfmax(
             pfv.coheof,
-            pfv.ra[pfv.nohc - 1],
+            pfv.r_pf_coil_inner[pfv.nohc - 1],
             pfv.rb[pfv.nohc - 1],
             hohc,
         )
@@ -1070,7 +1070,7 @@ class PFCoil:
         # Occurs at inner edge of coil; bmaxoh0 and bzi are of same sign at BOP
         pfv.bmaxoh0 = self.bfmax(
             pfv.cohbop,
-            pfv.ra[pfv.nohc - 1],
+            pfv.r_pf_coil_inner[pfv.nohc - 1],
             pfv.rb[pfv.nohc - 1],
             hohc,
         )
@@ -1088,7 +1088,7 @@ class PFCoil:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pf.sig_hoop = self.hoop_stress(pfv.ra[pfv.nohc - 1])
+            pf.sig_hoop = self.hoop_stress(pfv.r_pf_coil_inner[pfv.nohc - 1])
 
             # New calculation from Y. Iwasa for axial stress
             pf.sig_axial, pf.axial_force = self.axial_stress()
@@ -1340,7 +1340,7 @@ class PFCoil:
             pf.rfxf[:kk],
             pf.zfxf[:kk],
             pf.cfxf[:kk],
-            pfv.ra[i - 1],
+            pfv.r_pf_coil_inner[i - 1],
             pfv.zpf[i - 1],
         )
         pf.xind[:kk], bro, bzo, psi = bfield(
@@ -1493,7 +1493,7 @@ class PFCoil:
         :return: hoop stress (MPa)
         :rtype: float
         """
-        a = pfv.ra[pfv.nohc - 1]
+        a = pfv.r_pf_coil_inner[pfv.nohc - 1]
 
         # Outer radius of central Solenoid [m]
         b = pfv.rb[pfv.nohc - 1]
@@ -1596,7 +1596,9 @@ class PFCoil:
         axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
 
         # axial area [m2]
-        area_ax = constants.pi * (pfv.rb[pfv.nohc - 1] ** 2 - pfv.ra[pfv.nohc - 1] ** 2)
+        area_ax = constants.pi * (
+            pfv.rb[pfv.nohc - 1] ** 2 - pfv.r_pf_coil_inner[pfv.nohc - 1] ** 2
+        )
 
         # calculate unsmeared axial stress [MPa]
         s_axial = axial_force / (pfv.oh_steel_frac * 0.5 * area_ax)
@@ -1640,7 +1642,7 @@ class PFCoil:
             math.ceil(
                 2.0e0
                 * pfv.zh[pfv.nohc - 1]
-                / (pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1])
+                / (pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1])
             )
         )
 
@@ -1746,7 +1748,9 @@ class PFCoil:
             # Central Solenoid self inductance
             a = pfv.r_cs_middle  # mean radius of coil
             b = 2.0e0 * pfv.zh[pfv.nohc - 1]  # length of coil
-            c = pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]  # radial winding thickness
+            c = (
+                pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]
+            )  # radial winding thickness
             pfv.sxlg[pfv.nohc - 1, pfv.nohc - 1] = self.selfinductance(
                 a, b, c, pfv.turns[pfv.nohc - 1]
             )
@@ -2325,7 +2329,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.ra[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2345,7 +2349,7 @@ class PFCoil:
                 self.mfile,
                 f"PF coil {k} radial thickness (m)",
                 f"(pfdr({k}))",
-                pfv.rb[k] - pfv.ra[k],
+                pfv.rb[k] - pfv.r_pf_coil_inner[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2377,7 +2381,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.rpf[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
+                f"CS\t\t\t\t{pfv.rpf[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2395,7 +2399,7 @@ class PFCoil:
                 self.mfile,
                 "Central solenoid radial thickness (m)",
                 "(ohdr)",
-                (pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1]),
+                (pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]),
             )
             op.ovarre(
                 self.mfile,
