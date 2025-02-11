@@ -230,7 +230,7 @@ i_pf_location   = 2,2,3,3 * Switch for locating scheme of pf coil group i;
 i_pf_superconductor = 3 * Switch for superconductor material in pf coils;
 n_pf_coils_in_group     = 1,1,2,2, * Number of pf coils in group j
 n_pf_coil_groups     = 4 * Number of groups of pf coils;
-ohhghf   = 0.9 * Central solenoid height / tf coil internal height
+f_z_cs_tf_internal   = 0.9 * Central solenoid height / tf coil internal height
 rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6, * Average winding pack current density of pf coil i (a/m2)
 rpf2     = -1.825 * Offset (m) of radial position of i_pf_location=2 pf coils
 
