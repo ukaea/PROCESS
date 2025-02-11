@@ -114,7 +114,7 @@ module pfcoil_variables
   real(dp) :: fvssu
   !! F-value for `constraint equation 51`
 
-  integer, dimension(n_pf_groups_max) :: ipfloc
+  integer, dimension(n_pf_groups_max) :: i_pf_location
   !! Switch for location of PF coil group i:
   !!
   !! - =1 PF coil on top of central solenoid (flux ramp only)
@@ -260,7 +260,7 @@ module pfcoil_variables
 
   real(dp), dimension(ngc2) :: rjconpf
   !! average winding pack current density of PF coil i (A/m2) at time of peak
-  !! current in that coil (calculated for `ipfloc=1` coils)
+  !! current in that coil (calculated for `i_pf_location=1` coils)
 
   real(dp) :: rjohc
   !! allowable central solenoid current density at end of flat-top (A/m2)
@@ -275,26 +275,26 @@ module pfcoil_variables
   !! radius to the centre of the central solenoid (m)
 
   real(dp) :: routr
-  !! radial distance (m) from outboard TF coil leg to centre of `ipfloc=3` PF coils
+  !! radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils
 
   real(dp), dimension(ngc2) :: rpf
   !! radius of PF coil i (m)
 
   real(dp) :: rpf1
-  !! offset (m) of radial position of `ipfloc=1` PF coils from being directly above
+  !! offset (m) of radial position of `i_pf_location=1` PF coils from being directly above
   !! the central solenoid
 
   real(dp) :: rpf2
-  !! offset (m) of radial position of `ipfloc=2` PF coils from being at
+  !! offset (m) of radial position of `i_pf_location=2` PF coils from being at
   !! rmajor (offset = rpf2*triang*rminor)
 
   real(dp), dimension(n_pf_groups_max) :: rref
   !! PF coil radial positioning adjuster:
   !!
-  !! - for groups j with ipfloc(j) = 1; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 2; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 3; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 4; rref(j) is radius of
+  !! - for groups j with i_pf_location(j) = 1; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 2; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 3; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 4; rref(j) is radius of
   !!   the coil in units of minor radii from the major radius
   !!   (r = rmajor + rref*rminor)
 
@@ -377,14 +377,14 @@ module pfcoil_variables
   real(dp), dimension(n_pf_groups_max) :: zref
   !! PF coil vertical positioning adjuster:
   !!
-  !! - for groups j with ipfloc(j) = 1; zref(j) is ignored
-  !! - for groups j with ipfloc(j) = 2 AND itart=1 (only);
+  !! - for groups j with i_pf_location(j) = 1; zref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 2 AND itart=1 (only);
   !!   zref(j) is distance of centre of PF coil from inside
   !!   edge of TF coil (remember that PF coils for STs lie
   !!   within the TF coil)
-  !! - for groups j with ipfloc(j) = 3; zref(j) = ratio of
+  !! - for groups j with i_pf_location(j) = 3; zref(j) = ratio of
   !!   height of coil group j to plasma minor radius</UL>
-  !! - for groups j with ipfloc(j) = 4; zref(j) = ratio of
+  !! - for groups j with i_pf_location(j) = 4; zref(j) = ratio of
   !!   height of coil group j to plasma minor radius</UL>
 
   real(dp) :: bmaxcs_lim
@@ -443,7 +443,7 @@ module pfcoil_variables
     fcuohsu = 0.7D0
     fcupfsu = 0.69D0
     fvssu = 1.0
-    ipfloc = (/2,2,3,0,0,0,0,0,0,0/)
+    i_pf_location = (/2,2,3,0,0,0,0,0,0,0/)
     ipfres = 0
     itr_sum = 0.0D0
     i_cs_superconductor = 1

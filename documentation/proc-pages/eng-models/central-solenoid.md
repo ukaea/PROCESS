@@ -9,7 +9,7 @@ amount actually available. The code measures the magnetic flux in units of Volt.
 Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
 is present, and should be assigned a non-zero thickness `dr_cs`. A value of `iohcl` = 0 denotes 
 that no central solenoid is present, in which case the thickness `dr_cs` should be zero. No PF 
-coils should be located at positions defined by `ipfloc(j)` = 1 if no central solenoid is present.
+coils should be located at positions defined by `i_pf_location(j)` = 1 if no central solenoid is present.
 
 The central solenoid can be either resistive or superconducting (controlled via switch `ipfres` as 
 for the other PF coils), and if superconducting, switch `i_pf_superconductor` determines the superconducting 
