@@ -237,7 +237,7 @@ module pfcoil_variables
   real(dp) :: pfmmax
   !! mass of heaviest PF coil (tonnes)
 
-  real(dp) :: pfrmax
+  real(dp) :: r_pf_coil_outer_max
   !! radius of largest PF coil (m)
 
   real(dp) :: pfwpmw
@@ -468,7 +468,7 @@ module pfcoil_variables
     rho_pf_coil = 2.5D-8
     rhopfbus = 3.93D-8
     pfmmax = 0.0D0
-    pfrmax = 0.0D0
+    r_pf_coil_outer_max = 0.0D0
     pfwpmw = 0.0D0
     powohres = 0.0D0
     powpfres = 0.0D0

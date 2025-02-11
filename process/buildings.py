@@ -74,7 +74,7 @@ class Buildings:
                 buildings_variables.elevol,
             ) = self.bldgs(
                 output,
-                pfcoil_variables.pfrmax,
+                pfcoil_variables.r_pf_coil_outer_max,
                 pfcoil_variables.pfmmax,
                 tfro,
                 tfri,
@@ -396,7 +396,9 @@ class Buildings:
         # Lateral size driven by radial width of largest component, from:
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
-            pfcoil_variables.pfrmax, fwbs_variables.r_cryostat_inboard, tf_radial_dim
+            pfcoil_variables.r_pf_coil_outer_max,
+            fwbs_variables.r_cryostat_inboard,
+            tf_radial_dim,
         )
         # Allow for biological shielding around reactor
         width_reactor_piece = width_reactor_piece + buildings_variables.bioshld_thk

@@ -32,7 +32,7 @@ def costs2015():
 class CalcBuildingCostsParam(NamedTuple):
     pwpnb: Any = None
 
-    pfrmax: Any = None
+    r_pf_coil_outer_max: Any = None
 
     pthermmw: Any = None
 
@@ -82,7 +82,7 @@ class CalcBuildingCostsParam(NamedTuple):
     (
         CalcBuildingCostsParam(
             pwpnb=109.38112972595434,
-            pfrmax=17.814040399601147,
+            r_pf_coil_outer_max=17.814040399601147,
             pthermmw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
@@ -1182,7 +1182,7 @@ class CalcBuildingCostsParam(NamedTuple):
         ),
         CalcBuildingCostsParam(
             pwpnb=109.38112972595434,
-            pfrmax=17.81462428923539,
+            r_pf_coil_outer_max=17.81462428923539,
             pthermmw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
@@ -2292,7 +2292,11 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(current_drive_variables, "pwpnb", calcbuildingcostsparam.pwpnb)
 
-    monkeypatch.setattr(pfcoil_variables, "pfrmax", calcbuildingcostsparam.pfrmax)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "r_pf_coil_outer_max",
+        calcbuildingcostsparam.r_pf_coil_outer_max,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "pthermmw", calcbuildingcostsparam.pthermmw
