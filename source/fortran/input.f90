@@ -298,7 +298,7 @@ contains
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
-      ngrp, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
+      ngrp, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
       ncls, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
@@ -1882,8 +1882,8 @@ contains
        case ('ohhghf')
           call parse_real_variable('ohhghf', ohhghf, 0.0D0, 2.0D0, &
                'Central Solenoid height / TF coil height')
-       case ('pfclres')
-          call parse_real_variable('pfclres', pfclres, 0.0D0, 1.0D-4, &
+       case ('rho_pf_coil')
+          call parse_real_variable('rho_pf_coil', rho_pf_coil, 0.0D0, 1.0D-4, &
                'PF coil resistivity (ohm-m)')
        case ('rjconpf')
           call parse_real_array('rjconpf', rjconpf, isub1, ngc2, &

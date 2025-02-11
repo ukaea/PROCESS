@@ -648,7 +648,7 @@ class PFCoil:
                 if pfv.i_pf_conductor == 1:
                     # Coil resistance (vf is the void fraction)
 
-                    respf = pfv.pfclres * rll / (aturn[i] * (1.0e0 - pfv.vf[i]))
+                    respf = pfv.rho_pf_coil * rll / (aturn[i] * (1.0e0 - pfv.vf[i]))
 
                     # Sum resistive power losses
 
@@ -1256,7 +1256,7 @@ class PFCoil:
                 2.0e0
                 * constants.pi
                 * pfv.r_cs_middle
-                * pfv.pfclres
+                * pfv.rho_pf_coil
                 / (pfv.areaoh * (1.0e0 - pfv.vfohc))
                 * (1.0e6 * pfv.ric[pfv.nohc - 1]) ** 2
             )

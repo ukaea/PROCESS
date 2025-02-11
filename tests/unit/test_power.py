@@ -197,7 +197,7 @@ class PfpwrParam(NamedTuple):
 
     pfwpmw: Any = None
 
-    pfclres: Any = None
+    rho_pf_coil: Any = None
 
     ncirt: Any = None
 
@@ -431,7 +431,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             pfwpmw=0,
-            pfclres=0,
+            rho_pf_coil=0,
             ncirt=8,
             ncls=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
@@ -1174,7 +1174,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             pfwpmw=0.89998039031509891,
-            pfclres=0,
+            rho_pf_coil=0,
             ncirt=8,
             ncls=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
@@ -1802,7 +1802,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", pfpwrparam.pfwpmw)
 
-    monkeypatch.setattr(pfcoil_variables, "pfclres", pfpwrparam.pfclres)
+    monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", pfpwrparam.rho_pf_coil)
 
     monkeypatch.setattr(pfcoil_variables, "ncirt", pfpwrparam.ncirt)
 

@@ -227,7 +227,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: pfcaseth
   !! steel case thickness for PF coil i (m)
 
-  real(dp) :: pfclres
+  real(dp) :: rho_pf_coil
   !! PF coil resistivity (if i_pf_conductor=1) (Ohm-m)
 
   real(dp) :: rhopfbus
@@ -465,7 +465,7 @@ module pfcoil_variables
     oh_steel_frac = 0.5D0
     pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
-    pfclres = 2.5D-8
+    rho_pf_coil = 2.5D-8
     rhopfbus = 3.93D-8
     pfmmax = 0.0D0
     pfrmax = 0.0D0
