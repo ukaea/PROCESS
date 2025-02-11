@@ -118,7 +118,7 @@ class Power:
                 pfcoil_variables.pfclres
                 * 2.0e0
                 * np.pi
-                * pfcoil_variables.rpf[ic]
+                * pfcoil_variables.r_pf_coil_middle[ic]
                 * abs(
                     pfcoil_variables.rjconpf[ic]
                     / (

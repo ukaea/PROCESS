@@ -1556,7 +1556,9 @@ class Costs:
         for i in range(pfcoil_variables.nohc):
             pfwndl = (
                 pfwndl
-                + constants.twopi * pfcoil_variables.rpf[i] * pfcoil_variables.turns[i]
+                + constants.twopi
+                * pfcoil_variables.r_pf_coil_middle[i]
+                * pfcoil_variables.turns[i]
             )
 
         #  Account 222.2.1 : Conductor
@@ -1643,7 +1645,7 @@ class Costs:
             self.c22221 = self.c22221 + (
                 1.0e-6
                 * constants.twopi
-                * pfcoil_variables.rpf[i]
+                * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.turns[i]
                 * cpfconpm
             )
@@ -1715,7 +1717,7 @@ class Costs:
             self.c22221 = self.c22221 + (
                 1.0e-6
                 * constants.twopi
-                * pfcoil_variables.rpf[pfcoil_variables.nohc - 1]
+                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.nohc - 1]
                 * pfcoil_variables.turns[pfcoil_variables.nohc - 1]
                 * cpfconpm
             )

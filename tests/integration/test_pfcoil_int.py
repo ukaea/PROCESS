@@ -87,7 +87,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "vf", np.full(22, 3.0e-1))
     monkeypatch.setattr(pfv, "turns", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "curpfs", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "zref", [3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     monkeypatch.setattr(pfv, "pfmmax", 0.0)
     monkeypatch.setattr(pfv, "i_pf_conductor", 0)
@@ -223,7 +223,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "jscoh_bop", 3.562e8)
     monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "cohbop", 1.693e7)
     monkeypatch.setattr(pfv, "zh", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "wtc", np.full(22, 0.0))
@@ -2303,7 +2303,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "rpf",
+        "r_pf_coil_middle",
         np.array([
             6.2732560483870969,
             6.2732560483870969,
@@ -2835,7 +2835,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "rpf",
+        "r_pf_coil_middle",
         np.array([
             6.2732560483870969,
             6.2732560483870969,

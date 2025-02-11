@@ -2189,7 +2189,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     # Number of coils, both PF and CS
     number_of_coils = 0
     for item in mfile_data.data:
-        if "rpf[" in item:
+        if "r_pf_coil_middle[" in item:
             number_of_coils += 1
 
     # Check for Central Solenoid
@@ -2200,7 +2200,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     noc = number_of_coils - 1 if iohcl == 1 else number_of_coils
 
     for coil in range(noc):
-        coils_r.append(mfile_data.data[f"rpf[{coil:01}]"].get_scan(scan))
+        coils_r.append(mfile_data.data[f"r_pf_coil_middle[{coil:01}]"].get_scan(scan))
         coils_z.append(mfile_data.data[f"zpf[{coil:01}]"].get_scan(scan))
         coils_dr.append(mfile_data.data[f"pfdr({coil:01})"].get_scan(scan))
         coils_dz.append(mfile_data.data[f"pfdz({coil:01})"].get_scan(scan))
@@ -2583,7 +2583,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
     # Number of coils (1 is OH coil)
     number_of_coils = 0
     for item in mfile_data.data:
-        if "rpf[" in item:
+        if "r_pf_coil_middle[" in item:
             number_of_coils += 1
 
     pf_info = [

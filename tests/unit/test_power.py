@@ -219,7 +219,7 @@ class PfpwrParam(NamedTuple):
 
     rjconpf: Any = None
 
-    rpf: Any = None
+    r_pf_coil_middle: Any = None
 
     p_plasma_ohmic_mw: Any = None
 
@@ -828,7 +828,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -1571,7 +1571,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -1824,7 +1824,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "rjconpf", pfpwrparam.rjconpf)
 
-    monkeypatch.setattr(pfcoil_variables, "rpf", pfpwrparam.rpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw

@@ -480,7 +480,7 @@ class PFCoil:
         ncl = 0
         for nng in range(pfv.ngrp):
             for ng2 in range(pfv.ncls[nng]):
-                pfv.rpf[ncl] = pf.rcls[nng, ng2]
+                pfv.r_pf_coil_middle[ncl] = pf.rcls[nng, ng2]
                 pfv.zpf[ncl] = pf.zcls[nng, ng2]
 
                 # Currents at different times:
@@ -550,8 +550,8 @@ class PFCoil:
                     # r_pf_coil_inner = inner radius, rb = outer radius
                     # zl = 'lower' edge z (i.e. edge nearer to midplane)
                     # zh = 'upper' edge z (i.e. edge further from midplane)
-                    pfv.r_pf_coil_inner[i] = pfv.rpf[i] - dx
-                    pfv.rb[i] = pfv.rpf[i] + dx
+                    pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
+                    pfv.rb[i] = pfv.r_pf_coil_middle[i] + dx
 
                     pfv.zl[i] = pfv.zpf[i] - dz
                     if pfv.zpf[i] < 0.0e0:
@@ -575,8 +575,8 @@ class PFCoil:
 
                     dx = 0.5e0 * math.sqrt(area)  # square cross-section
 
-                    pfv.r_pf_coil_inner[i] = pfv.rpf[i] - dx
-                    pfv.rb[i] = pfv.rpf[i] + dx
+                    pfv.r_pf_coil_inner[i] = pfv.r_pf_coil_middle[i] - dx
+                    pfv.rb[i] = pfv.r_pf_coil_middle[i] + dx
 
                     pfv.zl[i] = pfv.zpf[i] - dx
                     if pfv.zpf[i] < 0.0e0:
@@ -636,7 +636,7 @@ class PFCoil:
 
                 # Length of conductor
 
-                rll = 2.0e0 * constants.pi * pfv.rpf[i] * pfv.turns[i]
+                rll = 2.0e0 * constants.pi * pfv.r_pf_coil_middle[i] * pfv.turns[i]
 
                 # Resistive coils
 
@@ -670,7 +670,10 @@ class PFCoil:
                 # (J x B) force on coil
 
                 forcepf = (
-                    0.5e6 * (pfv.bpf[i] + pf.bpf2[i]) * abs(pfv.ric[i]) * pfv.rpf[i]
+                    0.5e6
+                    * (pfv.bpf[i] + pf.bpf2[i])
+                    * abs(pfv.ric[i])
+                    * pfv.r_pf_coil_middle[i]
                 )
 
                 # Stress ==> cross-sectional area of supporting steel to use
@@ -702,7 +705,13 @@ class PFCoil:
 
                 # Weight of steel case
 
-                pfv.wts[i] = areaspf * 2.0e0 * constants.pi * pfv.rpf[i] * fwbsv.denstl
+                pfv.wts[i] = (
+                    areaspf
+                    * 2.0e0
+                    * constants.pi
+                    * pfv.r_pf_coil_middle[i]
+                    * fwbsv.denstl
+                )
 
                 # Mass of heaviest PF coil (tonnes)
 
@@ -717,7 +726,9 @@ class PFCoil:
         pfv.itr_sum = 0.0e0
         for m in range(pfv.ngrp):
             for _n in range(pfv.ncls[m]):
-                pfv.itr_sum = pfv.itr_sum + (pfv.rpf[c] * pfv.turns[c] * pfv.cptdin[c])
+                pfv.itr_sum = pfv.itr_sum + (
+                    pfv.r_pf_coil_middle[c] * pfv.turns[c] * pfv.cptdin[c]
+                )
                 c = c + 1
 
         pfv.itr_sum = pfv.itr_sum + (
@@ -897,11 +908,11 @@ class PFCoil:
                 for ii in range(pfv.ngrp):
                     for ij in range(pfv.ncls[ii]):
                         if pf.rcls[ii, ij] <= (  # Outboard TF coil collision
-                            pf.rclsnorm - pfv.routr + pfv.rpf[i]
+                            pf.rclsnorm - pfv.routr + pfv.r_pf_coil_middle[i]
                         ) and pf.rcls[ii, ij] >= (
                             bv.r_tf_outboard_mid
                             - (0.5 * bv.dr_tf_outboard)
-                            - pfv.rpf[i]
+                            - pfv.r_pf_coil_middle[i]
                         ):
                             pf_tf_collision += 1
                         if pf.rcls[ii, ij] <= (  # Inboard TF coil collision
@@ -910,19 +921,21 @@ class PFCoil:
                             + bv.dr_cs_precomp
                             + bv.dr_cs_tf_gap
                             + bv.dr_tf_inboard
-                            + pfv.rpf[i]
+                            + pfv.r_pf_coil_middle[i]
                         ) and pf.rcls[ii, ij] >= (
                             bv.dr_bore
                             + bv.dr_cs
                             + bv.dr_cs_precomp
                             + bv.dr_cs_tf_gap
-                            - pfv.rpf[i]
+                            - pfv.r_pf_coil_middle[i]
                         ):
                             pf_tf_collision += 1
                         if (  # Vertical TF coil collision
-                            abs(pf.zcls[ii, ij]) <= bv.hpfu + pfv.rpf[i]
+                            abs(pf.zcls[ii, ij]) <= bv.hpfu + pfv.r_pf_coil_middle[i]
                             and abs(pf.zcls[ii, ij])
-                            >= bv.hpfu - (0.5 * bv.dr_tf_outboard) - pfv.rpf[i]
+                            >= bv.hpfu
+                            - (0.5 * bv.dr_tf_outboard)
+                            - pfv.r_pf_coil_middle[i]
                         ):
                             pf_tf_collision += 1
 
@@ -988,7 +1001,7 @@ class PFCoil:
         pfv.zl[pfv.nohc - 1] = -pfv.zh[pfv.nohc - 1]
 
         # (R,Z) coordinates of coil centre
-        pfv.rpf[pfv.nohc - 1] = pfv.r_cs_middle
+        pfv.r_pf_coil_middle[pfv.nohc - 1] = pfv.r_cs_middle
         pfv.zpf[pfv.nohc - 1] = 0.0e0
 
         # Radius of outer edge
@@ -1138,7 +1151,11 @@ class PFCoil:
 
         # Weight of steel
         pfv.wts[pfv.nohc - 1] = (
-            areaspf * 2.0e0 * constants.pi * pfv.rpf[pfv.nohc - 1] * fwbsv.denstl
+            areaspf
+            * 2.0e0
+            * constants.pi
+            * pfv.r_pf_coil_middle[pfv.nohc - 1]
+            * fwbsv.denstl
         )
 
         # Non-steel cross-sectional area
@@ -1158,7 +1175,7 @@ class PFCoil:
                 * (1.0e0 - pfv.vfohc)
                 * 2.0e0
                 * constants.pi
-                * pfv.rpf[pfv.nohc - 1]
+                * pfv.r_pf_coil_middle[pfv.nohc - 1]
                 * tfv.dcond[pfv.i_cs_superconductor - 1]
             )
         else:
@@ -1167,7 +1184,7 @@ class PFCoil:
                 * (1.0e0 - pfv.vfohc)
                 * 2.0e0
                 * constants.pi
-                * pfv.rpf[pfv.nohc - 1]
+                * pfv.r_pf_coil_middle[pfv.nohc - 1]
                 * constants.dcopper
             )
 
@@ -1294,25 +1311,25 @@ class PFCoil:
                     kk = kk + 1
 
                     dzpf = pfv.zh[jj - 1] - pfv.zl[jj - 1]
-                    pf.rfxf[kk - 1] = pfv.rpf[jj - 1]
+                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1] + dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.rpf[jj - 1]
+                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1] + dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.rpf[jj - 1]
+                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1] - dzpf * 0.125e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
                     )
                     kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.rpf[jj - 1]
+                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1] - dzpf * 0.375e0
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 0.25e6
@@ -1321,7 +1338,7 @@ class PFCoil:
                 else:
                     # Field from different coil
                     kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.rpf[jj - 1]
+                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
                     pf.zfxf[kk - 1] = pfv.zpf[jj - 1]
                     pf.cfxf[kk - 1] = (
                         pfv.ric[jj - 1] * pfv.waves[jj - 1, it - 1] * 1.0e6
@@ -1729,7 +1746,7 @@ class PFCoil:
         for i in range(pfv.ngrp):
             xpfpl = 0.0
             ncoils = ncoils + pfv.ncls[i]
-            rp = pfv.rpf[ncoils - 1]
+            rp = pfv.r_pf_coil_middle[ncoils - 1]
             zp = pfv.zpf[ncoils - 1]
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for ii in range(nplas):
@@ -1764,7 +1781,7 @@ class PFCoil:
             for i in range(pfv.ngrp):
                 xohpf = 0.0
                 ncoils = ncoils + pfv.ncls[i]
-                rp = pfv.rpf[ncoils - 1]
+                rp = pfv.r_pf_coil_middle[ncoils - 1]
                 zp = pfv.zpf[ncoils - 1]
                 xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
                 for ii in range(noh):
@@ -1790,9 +1807,9 @@ class PFCoil:
                 jj = j + 1 + 1 if j >= i else j + 1
 
                 zc[j] = pfv.zpf[jj - 1]
-                rc[j] = pfv.rpf[jj - 1]
+                rc[j] = pfv.r_pf_coil_middle[jj - 1]
 
-            rp = pfv.rpf[i]
+            rp = pfv.r_pf_coil_middle[i]
             zp = pfv.zpf[i]
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for k in range(pf.nef):
@@ -1803,8 +1820,8 @@ class PFCoil:
                     pfv.sxlg[k, k] = (
                         constants.rmu0
                         * pfv.turns[k] ** 2
-                        * pfv.rpf[k]
-                        * (math.log(8.0e0 * pfv.rpf[k] / rl) - 1.75e0)
+                        * pfv.r_pf_coil_middle[k]
+                        * (math.log(8.0e0 * pfv.r_pf_coil_middle[k] / rl) - 1.75e0)
                     )
                 else:
                     pfv.sxlg[i, k] = xc[k - 1] * pfv.turns[k] * pfv.turns[i]
@@ -2329,15 +2346,15 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.rpf[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.zpf[k]:.2e}\t{pfv.rb[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.zh[k] - pfv.zl[k]):.2e}\t{pfv.turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} radius (m)",
-                f"(rpf[{k}])",
-                pfv.rpf[k],
+                f"(r_pf_coil_middle[{k}])",
+                pfv.r_pf_coil_middle[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2381,13 +2398,13 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.rpf[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
+                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.zpf[pfv.nohc - 1]:.2e}\t{pfv.rb[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
                 "Central solenoid radius (m)",
-                "(rpf[nohc-1])",
-                pfv.rpf[pfv.nohc - 1],
+                "(r_pf_coil_middle[nohc-1])",
+                pfv.r_pf_coil_middle[pfv.nohc - 1],
             )
             op.ovarre(
                 self.mfile,

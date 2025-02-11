@@ -2040,7 +2040,7 @@ class Acc2222Param(NamedTuple):
 
     ric: Any = None
 
-    rpf: Any = None
+    r_pf_coil_middle: Any = None
 
     i_cs_superconductor: Any = None
 
@@ -2194,7 +2194,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2390,7 +2390,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2586,7 +2586,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2731,7 +2731,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "ric", acc2222param.ric)
 
-    monkeypatch.setattr(pfcoil_variables, "rpf", acc2222param.rpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_middle", acc2222param.r_pf_coil_middle
+    )
 
     monkeypatch.setattr(
         pfcoil_variables, "i_cs_superconductor", acc2222param.i_cs_superconductor
