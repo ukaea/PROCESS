@@ -709,7 +709,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -1704,7 +1704,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -2699,7 +2699,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -3694,7 +3694,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -4689,7 +4689,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -5684,7 +5684,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -6679,7 +6679,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -7674,7 +7674,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
@@ -8669,7 +8669,7 @@
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_01_-_Time_point_01_(A)_______________________________________ (pfc01t01)____________________      0.0000E+00    
  PF_Circuit_01_-_Time_point_02_(A)_______________________________________ (pfc01t02)____________________      1.2790E+07    
  PF_Circuit_01_-_Time_point_03_(A)_______________________________________ (pfc01t03)____________________      1.5750E+07    
