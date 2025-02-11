@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, f_a_cs_steel, vf, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
+      fb_cs_limit_max, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
       n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1819,8 +1819,8 @@ contains
        case ('b_cs_limit_max')
          call parse_real_variable('b_cs_limit_max', b_cs_limit_max, 0.01D0, 100.0D0, &
                'Maximum allowed peak field on central solenoid')
-       case ('fbmaxcs')
-         call parse_real_variable('fbmaxcs', fbmaxcs, 0.01D0, 1.0D0, &
+       case ('fb_cs_limit_max')
+         call parse_real_variable('fb_cs_limit_max', fb_cs_limit_max, 0.01D0, 1.0D0, &
                'F-value for max peak CS field (con. 79, itvar 149)')
        case ('alstroh')
                call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &

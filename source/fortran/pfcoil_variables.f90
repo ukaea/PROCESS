@@ -390,7 +390,7 @@ module pfcoil_variables
   real(dp) :: b_cs_limit_max
   !! Central solenoid max field limit [T]
 
-  real(dp) :: fbmaxcs
+  real(dp) :: fb_cs_limit_max
   !! F-value for CS mmax field (`cons. 79`, `itvar 149`)
 
   real(dp) :: ld_ratio_cst
@@ -517,7 +517,7 @@ module pfcoil_variables
     zref = (/3.6D0, 1.2D0, 2.5D0, &
       1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0/)
     b_cs_limit_max = 13.0
-    fbmaxcs = 1.0
+    fb_cs_limit_max = 1.0
     ld_ratio_cst = 70/22
     l_cond_cst = 0.0D0
     d_cond_cst = 0.0D0

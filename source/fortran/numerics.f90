@@ -181,7 +181,7 @@ module numerics
   !!  <LI> (76) Eich critical separatrix density
   !!  <LI> (77) TF coil current per turn upper limit
   !!  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)
-  !!  <LI> (79) Peak CS field upper limit (itv  149 fbmaxcs)
+  !!  <LI> (79) Peak CS field upper limit (itv  149 fb_cs_limit_max)
   !!  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
@@ -352,7 +352,7 @@ module numerics
   !! <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
-  !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
+  !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
   !! <LI> (150) REMOVED
   !! <LI> (151) REMOVED
   !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density

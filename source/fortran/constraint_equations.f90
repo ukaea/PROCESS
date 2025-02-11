@@ -2987,15 +2987,15 @@ contains
       !! args : output structure : residual error; constraint value; residual error in physical units; output string; units string
       !! Equation for maximum CS field
       !! #=# pfcoil
-      !! #=#=# fbmaxcs, b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_limit_max
+      !! #=#=# fb_cs_limit_max, b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_limit_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbmaxcs : input : F-value for CS mmax field (cons. 79, itvar 149)
+      !! fb_cs_limit_max : input : F-value for CS mmax field (cons. 79, itvar 149)
       !! b_cs_limit_max : input : Central solenoid max field limit [T]
       !! b_cs_peak_pulse_start : input : maximum field in central solenoid at beginning of pulse (T)
       !! b_cs_peak_flat_top_end : input real : maximum field in central solenoid at end of flat-top (EoF) (T)
       !! (Note: original code has "b_cs_peak_flat_top_end/b_cs_peak_pulse_start |  peak CS field [T]".)
-      use pfcoil_variables, only: fbmaxcs, b_cs_limit_max, b_cs_peak_pulse_start, b_cs_peak_flat_top_end
+      use pfcoil_variables, only: fb_cs_limit_max, b_cs_limit_max, b_cs_peak_pulse_start, b_cs_peak_flat_top_end
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3003,7 +3003,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc     = 1.0D0 - fbmaxcs * b_cs_limit_max/max(b_cs_peak_flat_top_end, b_cs_peak_pulse_start)
+      tmp_cc     = 1.0D0 - fb_cs_limit_max * b_cs_limit_max/max(b_cs_peak_flat_top_end, b_cs_peak_pulse_start)
       tmp_con    = b_cs_limit_max
       tmp_err    = max(b_cs_peak_flat_top_end, b_cs_peak_pulse_start) * tmp_cc
       tmp_symbol = '<'
