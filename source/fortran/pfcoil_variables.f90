@@ -365,7 +365,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: wts
   !! structure mass for PF coil i (kg)
 
-  real(dp), dimension(ngc2) :: zh
+  real(dp), dimension(ngc2) :: z_pf_coil_upper
   !! upper point of PF coil i (m)
 
   real(dp), dimension(ngc2) :: zl
@@ -511,7 +511,7 @@ module pfcoil_variables
     whtpfs = 0.0D0
     wtc = 0.0D0
     wts = 0.0D0
-    zh = 0.0D0
+    z_pf_coil_upper = 0.0D0
     zl = 0.0D0
     zpf = 0.0D0
     zref = (/3.6D0, 1.2D0, 2.5D0, &
