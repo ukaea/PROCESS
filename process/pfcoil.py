@@ -114,7 +114,7 @@ class PFCoil:
         pfv.n_pf_cs_plasma_circuits = pfv.n_cs_pf_coils + 1
 
         # Overall current density in the Central Solenoid at beginning of pulse
-        pfv.cohbop = pfv.coheof * pfv.fcohbop
+        pfv.j_cs_pulse_start = pfv.coheof * pfv.fcohbop
 
         # Set up array of times
         tv.tim[0] = 0.0e0
@@ -237,7 +237,7 @@ class PFCoil:
         # coils.
 
         # Flux swing coils:
-        if pfv.cohbop != 0.0e0:
+        if pfv.j_cs_pulse_start != 0.0e0:
             # Find currents for plasma initiation to null field across plasma
             npts = 32  # Number of test points across plasma midplane
             if npts > pfv.nptsmx:
@@ -1036,9 +1036,11 @@ class PFCoil:
         pfv.areaoh = 2.0e0 * hohc * bv.dr_cs
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
-        if pfv.cohbop > pfv.coheof:
+        if pfv.j_cs_pulse_start > pfv.coheof:
             sgn = 1.0e0
-            pfv.ric[pfv.n_cs_pf_coils - 1] = sgn * 1.0e-6 * pfv.cohbop * pfv.areaoh
+            pfv.ric[pfv.n_cs_pf_coils - 1] = (
+                sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.areaoh
+            )
         else:
             sgn = -1.0e0
             pfv.ric[pfv.n_cs_pf_coils - 1] = sgn * 1.0e-6 * pfv.coheof * pfv.areaoh
@@ -1106,7 +1108,7 @@ class PFCoil:
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; bmaxoh0 and bzi are of same sign at BOP
         pfv.bmaxoh0 = self.bfmax(
-            pfv.cohbop,
+            pfv.j_cs_pulse_start,
             pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
             hohc,
@@ -1307,7 +1309,7 @@ class PFCoil:
                 # No Central Solenoid
                 kk = 0
             else:
-                sgn = 1.0 if pfv.cohbop > pfv.coheof else -1.0
+                sgn = 1.0 if pfv.j_cs_pulse_start > pfv.coheof else -1.0
 
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pf.nfxf):
@@ -1569,7 +1571,7 @@ class PFCoil:
         b_b = 0.0e0
 
         # current density [A/m^2]
-        j = pfv.cohbop
+        j = pfv.j_cs_pulse_start
 
         # K term
         k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
@@ -1998,8 +2000,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Actual overall current density at BOP (A/m2)",
-                    "(cohbop)",
-                    pfv.cohbop,
+                    "(j_cs_pulse_start)",
+                    pfv.j_cs_pulse_start,
                     "OP ",
                 )
                 op.oblnkl(self.outfile)
@@ -2270,7 +2272,10 @@ class PFCoil:
                 # iteration variable(38) fjohc
                 if (
                     abs(pfv.coheof) > 0.99e0 * abs(numerics.boundu[37] * pfv.rjohc)
-                ) or (abs(pfv.cohbop) > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)):
+                ) or (
+                    abs(pfv.j_cs_pulse_start)
+                    > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)
+                ):
                     pf.cslimit = True
                 if pfv.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
                     pf.cslimit = True
@@ -2545,12 +2550,12 @@ class PFCoil:
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)):.2e}\t{max(abs(pfv.cohbop), abs(pfv.coheof)) / pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.coheof)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.coheof)) / pfv.rjpfalw[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.cohbop)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{pfv.ric[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.coheof):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.bpf[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals

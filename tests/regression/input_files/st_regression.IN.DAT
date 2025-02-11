@@ -1765,7 +1765,7 @@ i_pf_conductor = 0
 *icc = 27
 * DESCRIPTION:   Constraint equation for CS current density upper limit at BOP 
 * JUSTIFICATION: Turned off, dont care about CS current density limit 
-* VARIABLES:     cohbop calculated in-situ
+* VARIABLES:     j_cs_pulse_start calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

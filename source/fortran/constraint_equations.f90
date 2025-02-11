@@ -1387,9 +1387,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjohc0 : input real : f-value for central solenoid current at beginning of pulse
       !! rjohc0 : input real : allowable central solenoid current density at beginning of pulse (A/m2)
-      !! cohbop : input real : central solenoid overall current density at beginning of pulse (A/m2)
+      !! j_cs_pulse_start : input real : central solenoid overall current density at beginning of pulse (A/m2)
       use constraint_variables, only: fjohc0
-      use pfcoil_variables, only: rjohc0, cohbop
+      use pfcoil_variables, only: rjohc0, j_cs_pulse_start
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1397,9 +1397,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjohc0 * rjohc0/cohbop
+      tmp_cc =  1.0D0 - fjohc0 * rjohc0/j_cs_pulse_start
       tmp_con = rjohc0
-      tmp_err = rjohc0 - cohbop / fjohc0
+      tmp_err = rjohc0 - j_cs_pulse_start / fjohc0
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
