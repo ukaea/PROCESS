@@ -1731,7 +1731,9 @@ class Costs:
 
         #  Account 222.2.3 : Steel case - will be zero for resistive coils
 
-        self.c22223 = 1.0e-6 * cost_variables.uccase * pfcoil_variables.whtpfs
+        self.c22223 = (
+            1.0e-6 * cost_variables.uccase * pfcoil_variables.m_pf_coil_structure_total
+        )
         self.c22223 = cost_variables.fkind * self.c22223 * cmlsa[cost_variables.lsa - 1]
 
         #  Account 222.2.4 : Support structure

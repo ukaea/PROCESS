@@ -57,7 +57,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(eh, "idiags", np.full(8, -999999))
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(pfv, "rpf1", 0.0)
-    monkeypatch.setattr(pfv, "whtpfs", 0.0)
+    monkeypatch.setattr(pfv, "m_pf_coil_structure_total", 0.0)
     monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "nohc", 0)
     monkeypatch.setattr(pfv, "pfrmax", 0.0)
