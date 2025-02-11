@@ -137,7 +137,7 @@ class TestDivertor:
         rminor = 0.97142857142857153
         triang = 0.5
         dr_fw_plasma_gap_inboard = 0.09595
-        vgap_xpoint_divertor = 0.5
+        dz_xpoint_divertor = 0.5
         pdivt = 7.7197999809272062
         monkeypatch.setattr(dv, "i_hldiv", 1)
 
@@ -148,7 +148,7 @@ class TestDivertor:
             rminor,
             triang,
             dr_fw_plasma_gap_inboard,
-            vgap_xpoint_divertor,
+            dz_xpoint_divertor,
             pdivt,
             False,
         )
