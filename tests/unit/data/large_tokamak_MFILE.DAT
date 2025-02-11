@@ -1482,7 +1482,7 @@ dr_tf_wp = 0.5
 * Thermal shield radial thickness [m]
 dr_shld_thermal_inboard = 0.050
 dr_shld_thermal_outboard = 0.050
-thshield_vb = 0.050
+dz_shld_thermal = 0.050
 
 * Gap between thermal shield and vacuum vessel [m]
 dr_shld_vv_gap_inboard = 0.02

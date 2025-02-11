@@ -144,7 +144,7 @@ class BldgsSizesParam(NamedTuple):
     dr_tf_shld_gap: Any
     dr_shld_thermal_inboard: Any
     dr_shld_thermal_outboard: Any
-    thshield_vb: Any
+    dz_shld_thermal: Any
     dr_shld_inboard: Any
     dr_shld_outboard: Any
     dr_fw_plasma_gap_inboard: Any
@@ -287,7 +287,7 @@ class BldgsSizesParam(NamedTuple):
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -426,7 +426,7 @@ class BldgsSizesParam(NamedTuple):
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -699,7 +699,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         "dr_shld_thermal_outboard",
         bldgssizesparam.dr_shld_thermal_outboard,
     )
-    monkeypatch.setattr(build_variables, "thshield_vb", bldgssizesparam.thshield_vb)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
     )

@@ -192,7 +192,7 @@ contains
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
       shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
-      dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, i_cs_precomp, &
+      dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
       rinboard, dr_blkt_outboard, fseppc, plsepo, dr_blkt_inboard, &
@@ -1422,8 +1422,8 @@ contains
        case ('dr_shld_thermal_outboard')
           call parse_real_variable('dr_shld_thermal_outboard', dr_shld_thermal_outboard, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, outboard (m)')
-       case ('thshield_vb')
-          call parse_real_variable('thshield_vb', thshield_vb, 0.0D0, 10.0D0, &
+       case ('dz_shld_thermal')
+          call parse_real_variable('dz_shld_thermal', dz_shld_thermal, 0.0D0, 10.0D0, &
                'TF/VV thermal shield thickness, vertical build (m)')
        case ('vgap_xpoint_divertor')
           call parse_real_variable('vgap_xpoint_divertor', vgap_xpoint_divertor, 0.0D0, 10.0D0, &

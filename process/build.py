@@ -142,7 +142,7 @@ class Build:
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
+                    + build_variables.dz_shld_thermal
                     + build_variables.vgap_vv_thermalshield
                     + build_variables.d_vv_top
                     + build_variables.shldtth
@@ -193,18 +193,18 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 po.ovarre(
                     self.mfile,
                     "Thermal shield, vertical (m)",
-                    "(thshield_vb)",
-                    build_variables.thshield_vb,
+                    "(dz_shld_thermal)",
+                    build_variables.dz_shld_thermal,
                 )
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
@@ -360,13 +360,13 @@ class Build:
                     "(vgap_vv_thermalshield)",
                 )
 
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_shld_gap
@@ -415,7 +415,7 @@ class Build:
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
+                    + build_variables.dz_shld_thermal
                     + build_variables.vgap_vv_thermalshield
                     + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
                     + build_variables.dr_shld_blkt_gap
@@ -469,17 +469,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Thermal shield, vertical (m)",
-                    "(thshield_vb)",
-                    build_variables.thshield_vb,
+                    "(dz_shld_thermal)",
+                    build_variables.dz_shld_thermal,
                 )
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
@@ -656,13 +656,13 @@ class Build:
                     "(vgap_vv_thermalshield)",
                 )
 
-                vbuild = vbuild - build_variables.thshield_vb
+                vbuild = vbuild - build_variables.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.thshield_vb,
+                    build_variables.dz_shld_thermal,
                     vbuild,
-                    "(thshield_vb)",
+                    "(dz_shld_thermal)",
                 )
 
                 vbuild = vbuild - build_variables.dr_tf_shld_gap
@@ -738,7 +738,7 @@ class Build:
             + build_variables.shldlth
             + build_variables.d_vv_bot
             + build_variables.vgap_vv_thermalshield
-            + build_variables.thshield_vb
+            + build_variables.dz_shld_thermal
             + build_variables.dr_tf_shld_gap
         )
 
@@ -750,7 +750,7 @@ class Build:
             build_variables.hpfu = (
                 build_variables.dr_tf_inboard
                 + build_variables.dr_tf_shld_gap
-                + build_variables.thshield_vb
+                + build_variables.dz_shld_thermal
                 + build_variables.vgap_vv_thermalshield
                 + build_variables.d_vv_top
                 + build_variables.shldtth
