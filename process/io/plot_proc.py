@@ -2645,7 +2645,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
-            ("tmargoh", "CS Temperature margin", "K"),
+            ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
             ("whttf/n_tf_coils", "Mass per TF coil", "kg"),

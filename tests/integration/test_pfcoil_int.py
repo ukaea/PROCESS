@@ -209,7 +209,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "oh_steel_frac", 5.926e-1)
     monkeypatch.setattr(pfv, "bmaxoh0", 1.4e1)
     monkeypatch.setattr(pfv, "rjohc", 4.070e7)
-    monkeypatch.setattr(pfv, "tmargoh", 1.5)
+    monkeypatch.setattr(pfv, "temp_cs_margin", 1.5)
     monkeypatch.setattr(pfv, "i_pf_conductor", 0)
     monkeypatch.setattr(pfv, "rjpfalw", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "pfclres", 2.8e-8)

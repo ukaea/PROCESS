@@ -2395,10 +2395,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftmargoh : input real :  f-value for central solenoid temperature margin
-      !! tmargoh : input real :  Central solenoid temperature margin (K)
+      !! temp_cs_margin : input real :  Central solenoid temperature margin (K)
       !! tmargmin_cs : input real :  Minimum allowable temperature margin : CS (K)
       use constraint_variables, only: ftmargoh
-      use pfcoil_variables, only: tmargoh
+      use pfcoil_variables, only: temp_cs_margin
       use tfcoil_variables, only: tmargmin_cs
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2407,9 +2407,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - ftmargoh * tmargoh/tmargmin_cs
+      tmp_cc = 1.0D0 - ftmargoh * temp_cs_margin/tmargmin_cs
       tmp_con = tmargmin_cs
-      tmp_err = tmargmin_cs - tmargoh
+      tmp_err = tmargmin_cs - temp_cs_margin
       tmp_symbol = '>'
       tmp_units = 'K'
 
