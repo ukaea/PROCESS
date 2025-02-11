@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
+      fbmaxcs, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, bmaxcs_lim, &
       n_pf_coils_in_group, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1879,8 +1879,8 @@ contains
        case ('n_pf_coil_groups')
           call parse_int_variable('n_pf_coil_groups', n_pf_coil_groups, 0, n_pf_groups_max, &
                'No of groups of PF coils')
-       case ('ohhghf')
-          call parse_real_variable('ohhghf', ohhghf, 0.0D0, 2.0D0, &
+       case ('f_z_cs_tf_internal')
+          call parse_real_variable('f_z_cs_tf_internal', f_z_cs_tf_internal, 0.0D0, 2.0D0, &
                'Central Solenoid height / TF coil height')
        case ('rho_pf_coil')
           call parse_real_variable('rho_pf_coil', rho_pf_coil, 0.0D0, 1.0D-4, &

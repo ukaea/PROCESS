@@ -259,7 +259,7 @@ def main(args=None):
         61: "copperaoh_m2_max",
         62: "coheof",
         63: "dr_cs",
-        64: "ohhghf",
+        64: "f_z_cs_tf_internal",
         65: "csfv.n_cycle_min",
         66: "pfv.oh_steel_frac",
         67: "csfv.t_crack_vertical",

@@ -3575,7 +3575,7 @@ class StressclParam(NamedTuple):
 
     oh_steel_frac: Any = None
 
-    ohhghf: Any = None
+    f_z_cs_tf_internal: Any = None
 
     coheof: Any = None
 
@@ -3699,7 +3699,7 @@ class StressclParam(NamedTuple):
             n_tf_wp_layers=5,
             i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
-            ohhghf=0.90000000000000002,
+            f_z_cs_tf_internal=0.90000000000000002,
             coheof=20726000,
             j_cs_pulse_start=0,
             n_pf_coils_in_group=np.array(
@@ -3822,7 +3822,7 @@ class StressclParam(NamedTuple):
             n_tf_wp_layers=5,
             i_pf_conductor=0,
             oh_steel_frac=0.57874999999999999,
-            ohhghf=0.90000000000000002,
+            f_z_cs_tf_internal=0.90000000000000002,
             coheof=20726000,
             j_cs_pulse_start=19311657.760000002,
             n_pf_coils_in_group=np.array(
@@ -3941,7 +3941,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.r_tf_inboard_in,
         stressclparam.dr_bore,
         stressclparam.hmax,
-        stressclparam.ohhghf,
+        stressclparam.f_z_cs_tf_internal,
         stressclparam.dr_cs,
         stressclparam.tf_in_cs,
         stressclparam.dr_tf_inboard,

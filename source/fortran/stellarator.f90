@@ -53,7 +53,7 @@ contains
 
     use build_variables, only: dr_cs_tf_gap, iohcl, dr_cs, tfootfi
     use current_drive_variables, only: irfcd
-    use pfcoil_variables, only: ohhghf
+    use pfcoil_variables, only: f_z_cs_tf_internal
     use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q95, rmajor, &
       triang, hfac, labels_confinement_scalings
     use numerics, only: boundl, boundu
@@ -92,7 +92,7 @@ contains
 
     dr_cs = 0.0D0
     iohcl = 0
-    ohhghf = 0.0D0
+    f_z_cs_tf_internal = 0.0D0
     dr_cs_tf_gap = 0.0D0
     tfootfi = 1.0D0
 

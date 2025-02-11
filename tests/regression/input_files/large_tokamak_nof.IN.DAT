@@ -535,7 +535,7 @@ n_pf_coils_in_group = 1,1,2,2
 n_pf_coil_groups = 4
 
 * Central solenoid height / TF coil internal height
-ohhghf = 0.9
+f_z_cs_tf_internal = 0.9
 
 * Average winding pack current density of PF coil i [A/m2]
 rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6

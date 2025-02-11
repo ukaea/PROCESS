@@ -73,7 +73,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "itr_sum", 0.0)
     monkeypatch.setattr(pfv, "sigpfcf", 6.66e-1)
-    monkeypatch.setattr(pfv, "ohhghf", 9.0e-1)
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 9.0e-1)
     monkeypatch.setattr(pfv, "i_pf_location", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
     monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "powpfres", 0.0)
@@ -200,7 +200,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
     monkeypatch.setattr(pfv, "i_cs_superconductor", 5)
-    monkeypatch.setattr(pfv, "ohhghf", 0.9)
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 0.9)
     monkeypatch.setattr(pfv, "areaoh", 1.039e1)
     monkeypatch.setattr(pfv, "powpfres", 0.0)
     monkeypatch.setattr(pfv, "jcableoh_eof", 1.427e8)
@@ -2276,7 +2276,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ohhghf", 0.90000000000000002)
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 0.90000000000000002)
     monkeypatch.setattr(
         pfv,
         "r_pf_coil_outer",

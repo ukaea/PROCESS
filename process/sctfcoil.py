@@ -1266,7 +1266,7 @@ class Sctfcoil:
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
                 build_variables.hmax,
-                pfcoil_variables.ohhghf,
+                pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.tf_in_cs,
                 build_variables.dr_tf_inboard,
@@ -3581,7 +3581,7 @@ class Sctfcoil:
         r_tf_inboard_in,
         dr_bore,
         hmax,
-        ohhghf,
+        f_z_cs_tf_internal,
         dr_cs,
         tf_in_cs,
         dr_tf_inboard,
@@ -3779,9 +3779,9 @@ class Sctfcoil:
 
                 # CS vertical cross-section area [m2]
                 if tf_in_cs == 1:
-                    a_oh = 2.0e0 * hmax * ohhghf * (dr_bore - dr_tf_inboard)
+                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * (dr_bore - dr_tf_inboard)
                 else:
-                    a_oh = 2.0e0 * hmax * ohhghf * dr_cs
+                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * dr_cs
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
