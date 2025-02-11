@@ -52,7 +52,7 @@ def test_rsid(pfcoil):
     brin = np.zeros(nptsmx)
     bzin = np.zeros(nptsmx)
     nfix = 14
-    ngrp = 4
+    n_pf_coil_groups = 4
     ccls = np.array([
         14742063.826112622,
         20032681.634901665,
@@ -901,7 +901,7 @@ def test_rsid(pfcoil):
     ssq_exp = 0.0006400910095285954
 
     brssq, brnrm, bzssq, bznrm, ssq = rsid(
-        npts, brin, bzin, nfix, ngrp, ccls, bfix, gmat
+        npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat
     )
 
     assert brssq == pytest.approx(brssq_exp)

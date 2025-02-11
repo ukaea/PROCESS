@@ -821,7 +821,7 @@ def check_process():
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(fortran.pfcoil_variables.ngrp):
+        for i in range(fortran.pfcoil_variables.n_pf_coil_groups):
             if (
                 fortran.pfcoil_variables.i_pf_location[i] != 2
                 and fortran.pfcoil_variables.ncls[i] != 2

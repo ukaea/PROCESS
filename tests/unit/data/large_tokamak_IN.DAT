@@ -551,7 +551,7 @@ i_pf_superconductor = 3
 ncls = 1,1,2,2
 
 * Number of groups of PF coils
-ngrp = 4
+n_pf_coil_groups = 4
 
 * Central solenoid height / TF coil internal height
 ohhghf = 0.9

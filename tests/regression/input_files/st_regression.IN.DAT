@@ -1946,7 +1946,7 @@ ncls = 2,2,2,2
 * DESCRIPTION:   Number of PF Coils in Group j
 * JUSTIFICATION: Design choice, symmetric top and bottom
 
-ngrp = 4
+n_pf_coil_groups = 4
 * DESCRIPTION:   Number of Groups of PF Coils
 * JUSTIFICATION: Design choice, symmetric top and bottom
 
