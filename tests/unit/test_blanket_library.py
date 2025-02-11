@@ -360,7 +360,7 @@ class ComponentHalfHeightParam(NamedTuple):
     hmax: Any = None
     dz_xpoint_divertor: Any = None
     dz_shld_vv_gap: Any = None
-    blnktth: Any = None
+    dz_blkt_top: Any = None
     shldtth: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
@@ -384,7 +384,7 @@ class ComponentHalfHeightParam(NamedTuple):
             hmax=8.8182171641274945,
             dz_xpoint_divertor=2.0018838307941582,
             dz_shld_vv_gap=0.16300000000000001,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shldtth=0.59999999999999998,
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
@@ -427,7 +427,9 @@ def test_component_half_height(
         "dz_shld_vv_gap",
         componenthalfheightparam.dz_shld_vv_gap,
     )
-    monkeypatch.setattr(build_variables, "blnktth", componenthalfheightparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", componenthalfheightparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
     monkeypatch.setattr(
         build_variables,
@@ -481,7 +483,7 @@ class DshapedComponentParam(NamedTuple):
     blareaob: Any = None
     blarea: Any = None
     dr_blkt_outboard: Any = None
-    blnktth: Any = None
+    dz_blkt_top: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
@@ -538,7 +540,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=0,
             blarea=0,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -591,7 +593,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -644,7 +646,7 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_top=0.5,
             shareaib=208.91591146372122,
             shareaob=1013.8483589087293,
             sharea=1222.7642703724505,
@@ -728,7 +730,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
     )
-    monkeypatch.setattr(build_variables, "blnktth", dshapedcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", dshapedcomponentparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shareaib", dshapedcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", dshapedcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", dshapedcomponentparam.sharea)
@@ -788,7 +792,7 @@ class EllipticalComponentParam(NamedTuple):
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
-    blnktth: Any = None
+    dz_blkt_top: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
@@ -844,7 +848,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=0,
             blareaob=0,
             blarea=0,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -896,7 +900,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
@@ -948,7 +952,7 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_top=0.85000000000000009,
             shareaib=700.06731267447844,
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
@@ -1023,7 +1027,9 @@ def test_elliptical_component(
     monkeypatch.setattr(build_variables, "blareaib", ellipticalcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", ellipticalcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", ellipticalcomponentparam.blarea)
-    monkeypatch.setattr(build_variables, "blnktth", ellipticalcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_top", ellipticalcomponentparam.dz_blkt_top
+    )
     monkeypatch.setattr(build_variables, "shareaib", ellipticalcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", ellipticalcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)
