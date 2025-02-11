@@ -314,7 +314,7 @@ module pfcoil_variables
   real(dp) :: tmargoh
   !! Central solenoid temperature margin (K)
 
-  real(dp), dimension(ngc2) :: turns
+  real(dp), dimension(ngc2) :: n_pf_coil_turns
   !! number of turns in PF coil i
 
   real(dp), dimension(ngc2) :: vf
@@ -494,7 +494,7 @@ module pfcoil_variables
     sigpfcf = 1.0D0
     sxlg = 0.0D0
     tmargoh = 0.0D0
-    turns = 0.0D0
+    n_pf_coil_turns = 0.0D0
     vf = 0.3D0
     vfohc = 0.3D0
     vsbn = 0.0D0

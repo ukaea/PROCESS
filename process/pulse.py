@@ -103,7 +103,11 @@ class Pulse:
             loh
             * (ioht2 - ioht1)
             / (
-                ioht2 * (r * pfcoil_variables.turns[pfcoil_variables.nohc - 1] + rho)
+                ioht2
+                * (
+                    r * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.nohc - 1]
+                    + rho
+                )
                 - v
                 + m * ipdot
             )

@@ -213,7 +213,7 @@ class PfpwrParam(NamedTuple):
 
     sxlg: Any = None
 
-    turns: Any = None
+    n_pf_coil_turns: Any = None
 
     vf: Any = None
 
@@ -738,7 +738,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         349.33800535811901,
@@ -1480,7 +1480,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.26292595093463,
@@ -1816,7 +1816,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "sxlg", pfpwrparam.sxlg)
 
-    monkeypatch.setattr(pfcoil_variables, "turns", pfpwrparam.turns)
+    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", pfpwrparam.n_pf_coil_turns)
 
     monkeypatch.setattr(pfcoil_variables, "vf", pfpwrparam.vf)
 

@@ -430,7 +430,7 @@ class PFCoil:
         # them to (very) approximate values to avoid strange behaviour...
         if pf.first_call:
             pfv.sxlg[:, :] = 1.0e0
-            pfv.turns[:] = 100.0e0
+            pfv.n_pf_coil_turns[:] = 100.0e0
             pf.first_call = False
 
         pfflux = 0.0e0
@@ -440,7 +440,7 @@ class PFCoil:
                 pfflux = pfflux + (
                     pf.ccls[ccount]
                     * pfv.sxlg[nocoil, pfv.ncirt - 1]
-                    / pfv.turns[nocoil]
+                    / pfv.n_pf_coil_turns[nocoil]
                 )
                 nocoil = nocoil + 1
 
@@ -540,8 +540,8 @@ class PFCoil:
 
                     # Number of turns
                     # CPTDIN[i] is the current per turn (input)
-                    pfv.turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
-                    aturn[i] = area / pfv.turns[i]
+                    pfv.n_pf_coil_turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
+                    aturn[i] = area / pfv.n_pf_coil_turns[i]
 
                     # Actual winding pack current density
                     pfv.rjconpf[i] = 1.0e6 * abs(pfv.ric[i]) / area
@@ -570,8 +570,8 @@ class PFCoil:
                         * pfv.pf_current_safety_factor
                     )
 
-                    pfv.turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
-                    aturn[i] = area / pfv.turns[i]
+                    pfv.n_pf_coil_turns[i] = abs((pfv.ric[i] * 1.0e6) / pfv.cptdin[i])
+                    aturn[i] = area / pfv.n_pf_coil_turns[i]
 
                     dx = 0.5e0 * math.sqrt(area)  # square cross-section
 
@@ -636,7 +636,12 @@ class PFCoil:
 
                 # Length of conductor
 
-                rll = 2.0e0 * constants.pi * pfv.r_pf_coil_middle[i] * pfv.turns[i]
+                rll = (
+                    2.0e0
+                    * constants.pi
+                    * pfv.r_pf_coil_middle[i]
+                    * pfv.n_pf_coil_turns[i]
+                )
 
                 # Resistive coils
 
@@ -649,7 +654,7 @@ class PFCoil:
 
                     pfv.powpfres = (
                         pfv.powpfres
-                        + respf * (1.0e6 * pfv.curpfb[i] / pfv.turns[i]) ** 2
+                        + respf * (1.0e6 * pfv.curpfb[i] / pfv.n_pf_coil_turns[i]) ** 2
                     )
 
                 # Winding pack volume
@@ -734,13 +739,13 @@ class PFCoil:
         for m in range(pfv.ngrp):
             for _n in range(pfv.ncls[m]):
                 pfv.itr_sum = pfv.itr_sum + (
-                    pfv.r_pf_coil_middle[c] * pfv.turns[c] * pfv.cptdin[c]
+                    pfv.r_pf_coil_middle[c] * pfv.n_pf_coil_turns[c] * pfv.cptdin[c]
                 )
                 c = c + 1
 
         pfv.itr_sum = pfv.itr_sum + (
             (bv.dr_bore + 0.5 * bv.dr_cs)
-            * pfv.turns[pfv.nohc - 1]
+            * pfv.n_pf_coil_turns[pfv.nohc - 1]
             * pfv.cptdin[pfv.nohc - 1]
         )
 
@@ -767,7 +772,7 @@ class PFCoil:
         pfv.z_pf_coil_lower[pfv.nohc] = -pv.rminor * pv.kappa
         pfv.r_pf_coil_inner[pfv.nohc] = pv.rmajor - pv.rminor
         pfv.r_pf_coil_outer[pfv.nohc] = pv.rmajor + pv.rminor
-        pfv.turns[pfv.nohc] = 1.0e0
+        pfv.n_pf_coil_turns[pfv.nohc] = 1.0e0
 
         # Generate coil currents as a function of time using
         # user-provided waveforms etc. (cptdin, fcohbop, fcohbof)
@@ -1033,12 +1038,12 @@ class PFCoil:
             pfv.ric[pfv.nohc - 1] = sgn * 1.0e-6 * pfv.coheof * pfv.areaoh
 
         # Number of turns
-        pfv.turns[pfv.nohc - 1] = (
+        pfv.n_pf_coil_turns[pfv.nohc - 1] = (
             1.0e6 * abs(pfv.ric[pfv.nohc - 1]) / pfv.cptdin[pfv.nohc - 1]
         )
 
         # Turn vertical cross-sectionnal area
-        pfv.a_oh_turn = pfv.areaoh / pfv.turns[pfv.nohc - 1]
+        pfv.a_oh_turn = pfv.areaoh / pfv.n_pf_coil_turns[pfv.nohc - 1]
 
         # Depth/width of cs turn conduit
         pfv.d_cond_cst = (pfv.a_oh_turn / pfv.ld_ratio_cst) ** 0.5
@@ -1746,7 +1751,7 @@ class PFCoil:
                     xohpl = xohpl + xc[ii]
 
             pfv.sxlg[pfv.ncirt - 1, pfv.nohc - 1] = (
-                xohpl / (nplas * noh) * pfv.turns[pfv.nohc - 1]
+                xohpl / (nplas * noh) * pfv.n_pf_coil_turns[pfv.nohc - 1]
             )
             pfv.sxlg[pfv.nohc - 1, pfv.ncirt - 1] = pfv.sxlg[
                 pfv.ncirt - 1, pfv.nohc - 1
@@ -1770,7 +1775,7 @@ class PFCoil:
             for j in range(pfv.ncls[i]):
                 ncoilj = ncoils + 1 - (j + 1)
                 pfv.sxlg[ncoilj - 1, pfv.ncirt - 1] = (
-                    xpfpl / nplas * pfv.turns[ncoilj - 1]
+                    xpfpl / nplas * pfv.n_pf_coil_turns[ncoilj - 1]
                 )
                 pfv.sxlg[pfv.ncirt - 1, ncoilj - 1] = pfv.sxlg[
                     ncoilj - 1, pfv.ncirt - 1
@@ -1784,7 +1789,7 @@ class PFCoil:
                 pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]
             )  # radial winding thickness
             pfv.sxlg[pfv.nohc - 1, pfv.nohc - 1] = self.selfinductance(
-                a, b, c, pfv.turns[pfv.nohc - 1]
+                a, b, c, pfv.n_pf_coil_turns[pfv.nohc - 1]
             )
 
             # Central Solenoid / PF coil mutual inductances
@@ -1805,7 +1810,10 @@ class PFCoil:
                 for j in range(pfv.ncls[i]):
                     ncoilj = ncoils + 1 - (j + 1)
                     pfv.sxlg[ncoilj - 1, pfv.nohc - 1] = (
-                        xohpf * pfv.turns[ncoilj - 1] * pfv.turns[pfv.nohc - 1] / noh
+                        xohpf
+                        * pfv.n_pf_coil_turns[ncoilj - 1]
+                        * pfv.n_pf_coil_turns[pfv.nohc - 1]
+                        / noh
                     )
                     pfv.sxlg[pfv.nohc - 1, ncoilj - 1] = pfv.sxlg[
                         ncoilj - 1, pfv.nohc - 1
@@ -1829,19 +1837,23 @@ class PFCoil:
             xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
             for k in range(pf.nef):
                 if k < i:
-                    pfv.sxlg[i, k] = xc[k] * pfv.turns[k] * pfv.turns[i]
+                    pfv.sxlg[i, k] = (
+                        xc[k] * pfv.n_pf_coil_turns[k] * pfv.n_pf_coil_turns[i]
+                    )
                 elif k == i:
                     rl = abs(
                         pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]
                     ) / math.sqrt(constants.pi)
                     pfv.sxlg[k, k] = (
                         constants.rmu0
-                        * pfv.turns[k] ** 2
+                        * pfv.n_pf_coil_turns[k] ** 2
                         * pfv.r_pf_coil_middle[k]
                         * (math.log(8.0e0 * pfv.r_pf_coil_middle[k] / rl) - 1.75e0)
                     )
                 else:
-                    pfv.sxlg[i, k] = xc[k - 1] * pfv.turns[k] * pfv.turns[i]
+                    pfv.sxlg[i, k] = (
+                        xc[k - 1] * pfv.n_pf_coil_turns[k] * pfv.n_pf_coil_turns[i]
+                    )
 
         # Output section
         if not output:
@@ -2363,7 +2375,7 @@ class PFCoil:
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.z_pf_coil_middle[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]):.2e}\t{pfv.turns[k]:.2e}",
+                f"PF {k}\t\t\t{pfv.r_pf_coil_middle[k]:.2e}\t{pfv.z_pf_coil_middle[k]:.2e}\t{pfv.r_pf_coil_outer[k] - pfv.r_pf_coil_inner[k]:.2e}\t{abs(pfv.z_pf_coil_upper[k] - pfv.z_pf_coil_lower[k]):.2e}\t{pfv.n_pf_coil_turns[k]:.2e}",
             )
 
         for k in range(pf.nef):
@@ -2394,8 +2406,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 f"PF coil {k} turns",
-                f"(turns[{k}])",
-                pfv.turns[k],
+                f"(n_pf_coil_turns[{k}])",
+                pfv.n_pf_coil_turns[k],
             )
             op.ovarre(
                 self.mfile,
@@ -2415,7 +2427,7 @@ class PFCoil:
         if bv.iohcl != 0:
             op.write(
                 self.outfile,
-                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.z_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]):.2e}\t{pfv.turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
+                f"CS\t\t\t\t{pfv.r_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.z_pf_coil_middle[pfv.nohc - 1]:.2e}\t{pfv.r_pf_coil_outer[pfv.nohc - 1] - pfv.r_pf_coil_inner[pfv.nohc - 1]:.2e}\t{abs(pfv.z_pf_coil_upper[pfv.nohc - 1] - pfv.z_pf_coil_lower[pfv.nohc - 1]):.2e}\t{pfv.n_pf_coil_turns[pfv.nohc - 1]:.2e}\t{pfv.pfcaseth[pfv.nohc - 1]:.2e}",
             )
             op.ovarre(
                 self.mfile,
@@ -2444,8 +2456,8 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 "Central solenoid turns",
-                "(turns[nohc-1])",
-                pfv.turns[pfv.nohc - 1],
+                "(n_pf_coil_turns[nohc-1])",
+                pfv.n_pf_coil_turns[pfv.nohc - 1],
             )
             op.ovarre(
                 self.mfile,
@@ -2600,7 +2612,7 @@ class PFCoil:
         for k in range(pfv.ncirt - 1):
             line = f"\t{k}\t\t"
             for jj in range(6):
-                line += f"\t{pfv.c_pf_coil_turn[k, jj] * pfv.turns[k]:.3e}"
+                line += f"\t{pfv.c_pf_coil_turn[k, jj] * pfv.n_pf_coil_turns[k]:.3e}"
             op.write(self.outfile, line)
 
         line = "Plasma (A)\t\t"
@@ -2615,12 +2627,12 @@ class PFCoil:
             op.write(
                 self.outfile,
                 (
-                    f"{k}\t\t\t{pfv.c_pf_coil_turn[k, 0] * pfv.turns[k]:.3e}\t"
-                    f"{pfv.c_pf_coil_turn[k, 1] * pfv.turns[k]:.3e}\t"
-                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
-                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
-                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
-                    f"{pfv.c_pf_coil_turn[k, 5] * pfv.turns[k]:.3e}"
+                    f"{k}\t\t\t{pfv.c_pf_coil_turn[k, 0] * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
+                    f"{pfv.c_pf_coil_turn[k, 5] * pfv.n_pf_coil_turns[k]:.3e}"
                 ),
             )
 
@@ -2631,9 +2643,9 @@ class PFCoil:
                 self.outfile,
                 (
                     f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfv.c_pf_coil_turn[k, 2] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
-                    f"{(pfv.c_pf_coil_turn[k, 3] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
-                    f"{(pfv.c_pf_coil_turn[k, 4] + pfv.c_pf_coil_turn[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 2] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 3] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 4] + pfv.c_pf_coil_turn[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
                     "0.0e0"
                 ),
             )
@@ -2676,7 +2688,7 @@ class PFCoil:
                     self.outfile,
                     circuit_name,
                     circuit_var_name,
-                    pfv.c_pf_coil_turn[k, jjj] * pfv.turns[k],
+                    pfv.c_pf_coil_turn[k, jjj] * pfv.n_pf_coil_turns[k],
                 )
 
     def selfinductance(self, a, b, c, n):
