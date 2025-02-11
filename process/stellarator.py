@@ -129,7 +129,6 @@ class Stellarator:
             self.costs.output()
             self.availability.run(output=True)
             self.physics.outplas()
-            self.output_confinement_comparison_stell()
             self.stheat(True)
             self.stphys(True)
             self.stopt(True)
@@ -187,65 +186,6 @@ class Stellarator:
             )
 
         st.first_call = False
-
-    def output_confinement_comparison_stell(self):
-        """Routine to calculate ignition margin at the final point
-        with different stellarator confinement time scaling laws
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        This routine calculates the ignition margin at the final
-        point with different stellarator confinement time scaling laws
-        """
-        po.osubhd(self.outfile, "Confinement times, and required H-factors :")
-
-        po.write(
-            self.outfile,
-            f"{' ' * 5}scaling law{' ' * 30}confinement time (s){' ' * 55}H-factor for",
-        )
-        po.write(self.outfile, f"{' ' * 34}for H = 2{' ' * 54}power balance")
-
-        #  Calculate power balances for all stellarator scaling laws
-        #  assuming H = 2
-
-        for i_confinement_time in [21, 22, 23, 37, 38]:
-            (
-                physics_variables.pden_electron_transport_loss_mw,
-                physics_variables.pden_ion_transport_loss_mw,
-                physics_variables.t_electron_energy_confinement,
-                physics_variables.t_ion_energy_confinement,
-                physics_variables.t_energy_confinement,
-                physics_variables.p_plasma_loss_mw,
-            ) = self.physics.calculate_confinement_time(
-                physics_variables.m_fuel_amu,
-                physics_variables.alpha_power_total,
-                physics_variables.aspect,
-                physics_variables.bt,
-                physics_variables.nd_ions_total,
-                physics_variables.dene,
-                physics_variables.dnla,
-                physics_variables.eps,
-                1.0,
-                i_confinement_time,
-                physics_variables.ignite,
-                physics_variables.kappa,
-                physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
-                physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
-                physics_variables.rmajor,
-                physics_variables.rminor,
-                physics_variables.ten,
-                physics_variables.tin,
-                physics_variables.q,
-                physics_variables.qstar,
-                physics_variables.vol_plasma,
-                physics_variables.zeff,
-            )
-
-            physics_variables.hfac[i_confinement_time - 1] = (
-                self.physics.find_other_h_factors(i_confinement_time)
-            )
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald

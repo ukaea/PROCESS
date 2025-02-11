@@ -5349,7 +5349,7 @@ class Physics:
         )
 
         # Plot table of al the H-factor scalings and coparison values
-        self.output_confinement_comparison()
+        self.output_confinement_comparison(istell=stellarator_variables.istell)
 
         if stellarator_variables.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
@@ -5740,7 +5740,7 @@ class Physics:
                 reinke_variables.fzactual,
             )
 
-    def output_confinement_comparison(self) -> None:
+    def output_confinement_comparison(self, istell: int) -> None:
         """
         Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
 
@@ -5750,7 +5750,7 @@ class Physics:
         - Energy confinement times
         - Required H-factors for power balance
 
-        The routine iterates over a range of confinement times, skipping the first user input and a specific index (25). For each confinement time, it calculates various parameters related to confinement and ignition using the `calculate_confinement_time` method. It then calculates the H-factor for when the plasma is ignited using the `fhfac` method and writes the results to the output file.
+        The routine iterates over a range of confinement times, skipping the first user input and a specific index (25). For each confinement time, it calculates various parameters related to confinement and ignition using the `calculate_confinement_time` method. It then calculates the H-factor for when the plasma is ignited using the `find_other_h_factors` method and writes the results to the output file.
 
         Output format:
         - Header: "Energy confinement times, and required H-factors :"
@@ -5758,10 +5758,10 @@ class Physics:
 
         Methods used:
         - `calculate_confinement_time`: Calculates confinement-related parameters.
-        - `fhfac`: Calculates the H-factor for a given confinement time.
+        - `find_other_h_factors`: Calculates the H-factor for a given confinement time.
 
         Parameters:
-        - None
+        - istell (int): Indicator for stellarator (0 for tokamak, >=1 for stellarator).
 
         Returns:
         - None
@@ -5778,9 +5778,17 @@ class Physics:
         )
         po.oblnkl(self.outfile)
 
+        # List of key values for stellarator scalings
+        stellarator_scalings = [21, 22, 23, 37, 38]
+
         # Plot all of the confinement scalings for comparison when H = 1
         # Start from range 1 as the first i_confinement_time is a user input
-        for i_confinement_time in range(1, physics_variables.n_confinement_scalings):
+        # If stellarator, use the stellarator scalings
+        for i_confinement_time in (
+            range(1, physics_variables.n_confinement_scalings)
+            if istell == 0
+            else stellarator_scalings
+        ):
             if i_confinement_time == 25:
                 continue
             (
