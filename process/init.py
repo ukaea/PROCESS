@@ -689,9 +689,9 @@ def check_process():
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if fortran.physics_variables.itartpf == 0:
-            fortran.pfcoil_variables.ipfloc[0] = 2
-            fortran.pfcoil_variables.ipfloc[1] = 3
-            fortran.pfcoil_variables.ipfloc[2] = 3
+            fortran.pfcoil_variables.i_pf_location[0] = 2
+            fortran.pfcoil_variables.i_pf_location[1] = 3
+            fortran.pfcoil_variables.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
         if fortran.tfcoil_variables.i_tf_sup == 0:
@@ -823,28 +823,28 @@ def check_process():
         k = 0
         for i in range(fortran.pfcoil_variables.ngrp):
             if (
-                fortran.pfcoil_variables.ipfloc[i] != 2
+                fortran.pfcoil_variables.i_pf_location[i] != 2
                 and fortran.pfcoil_variables.ncls[i] != 2
             ):
                 raise ProcessValidationError(
-                    "ncls(i) .ne. 2 is not a valid option except for (ipfloc = 2)"
+                    "ncls(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if fortran.pfcoil_variables.ipfloc[i] == 2:
+            if fortran.pfcoil_variables.i_pf_location[i] == 2:
                 j = j + 1
                 k = k + fortran.pfcoil_variables.ncls[i]
 
         if k == 1:
             raise ProcessValidationError(
-                "Only 1 divertor coil (ipfloc = 2) is not a valid configuration"
+                "Only 1 divertor coil (i_pf_location = 2) is not a valid configuration"
             )
         if k > 2:
             raise ProcessValidationError(
-                "More than 2 divertor coils (ipfloc = 2) is not a valid configuration"
+                "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
             )
         if fortran.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
-                "If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; ncls = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints

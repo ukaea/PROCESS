@@ -83,7 +83,7 @@ class PFCoil:
         signn = np.zeros(2)
         aturn = np.zeros(pfv.ngc2)
 
-        # Toggle switch for ipfloc()=2 coils above/below midplane
+        # Toggle switch for i_pf_location()=2 coils above/below midplane
         top_bottom = 1
 
         # Set up the number of PF coils including the Central Solenoid (nohc),
@@ -165,7 +165,7 @@ class PFCoil:
 
         # N.B. Problems here if k=ncls(group) is greater than 2.
         for j in range(pfv.ngrp):
-            if pfv.ipfloc[j] == 1:
+            if pfv.i_pf_location[j] == 1:
                 # PF coil is stacked on top of the Central Solenoid
                 for k in range(pfv.ncls[j]):
                     pf.rcls[j, k] = pfv.rohc + pfv.rpf1
@@ -179,7 +179,7 @@ class PFCoil:
                         * (bv.hmax * (1.0e0 - pfv.ohhghf) + bv.dr_tf_inboard + 0.1e0)
                     )
 
-            elif pfv.ipfloc[j] == 2:
+            elif pfv.i_pf_location[j] == 2:
                 # PF coil is on top of the TF coil
                 for k in range(pfv.ncls[j]):
                     pf.rcls[j, k] = pv.rmajor + pfv.rpf2 * pv.triang * pv.rminor
@@ -196,7 +196,7 @@ class PFCoil:
                             )
                             top_bottom = 1
 
-            elif pfv.ipfloc[j] == 3:
+            elif pfv.i_pf_location[j] == 3:
                 # PF coil is radially outside the TF coil
                 for k in range(pfv.ncls[j]):
                     pf.zcls[j, k] = pv.rminor * pfv.zref[j] * signn[k]
@@ -214,7 +214,7 @@ class PFCoil:
                             )
                             pf.rcls[j, k] = 1e10
 
-            elif pfv.ipfloc[j] == 4:
+            elif pfv.i_pf_location[j] == 4:
                 # PF coil is in general location
                 # See issue 1418
                 # https://git.ccfe.ac.uk/process/process/-/issues/1418
@@ -224,7 +224,7 @@ class PFCoil:
 
             else:
                 eh.idiags[0] = j
-                eh.idiags[1] = pfv.ipfloc[j]
+                eh.idiags[1] = pfv.i_pf_location[j]
                 eh.report_error(67)
 
         # Allocate current to the PF coils:
@@ -282,23 +282,23 @@ class PFCoil:
             # Bypasses SVD solver
             if pv.itart == 1 and pv.itartpf == 0:
                 for i in range(pfv.ngrp):
-                    if pfv.ipfloc[i] == 1:
+                    if pfv.i_pf_location[i] == 1:
                         # PF coil is stacked on top of the Central Solenoid
                         pf.ccls[i] = 0.0e0
                         eh.idiags[0] = i
                         eh.report_error(69)
 
-                    elif pfv.ipfloc[i] == 2:
+                    elif pfv.i_pf_location[i] == 2:
                         # PF coil is on top of the TF coil
                         pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plasma_current
 
-                    elif pfv.ipfloc[i] == 3:
+                    elif pfv.i_pf_location[i] == 3:
                         # PF coil is radially outside the TF coil
                         pf.ccls[i] = -0.4e0 * pv.plasma_current
 
                     else:
                         eh.idiags[0] = i
-                        eh.idiags[1] = pfv.ipfloc[i]
+                        eh.idiags[1] = pfv.i_pf_location[i]
                         eh.report_error(70)
 
                 # Vertical field (T)
@@ -320,7 +320,7 @@ class PFCoil:
                 ngrp0 = 0
                 nocoil = 0
                 for i in range(pfv.ngrp):
-                    if pfv.ipfloc[i] == 1:
+                    if pfv.i_pf_location[i] == 1:
                         # Do not allow if no central solenoid
                         if bv.iohcl == 0:
                             eh.report_error(288)
@@ -335,7 +335,7 @@ class PFCoil:
                             pf.cfxf[nocoil] = pf.ccls[i]
                             nocoil = nocoil + 1
 
-                    elif pfv.ipfloc[i] == 2:
+                    elif pfv.i_pf_location[i] == 2:
                         # PF coil is on top of the TF coil; divertor coil
                         # This is a fixed current for this calculation -- RK 07/12
 
@@ -351,14 +351,14 @@ class PFCoil:
                             pf.cfxf[nocoil] = pf.ccls[i]
                             nocoil = nocoil + 1
 
-                    elif pfv.ipfloc[i] == 3:
+                    elif pfv.i_pf_location[i] == 3:
                         # PF coil is radially outside the TF coil
                         # This is an equilibrium coil, current must be solved for
 
                         pcls0[ngrp0] = i + 1
                         ngrp0 = ngrp0 + 1
 
-                    elif pfv.ipfloc[i] == 4:
+                    elif pfv.i_pf_location[i] == 4:
                         # PF coil is generally placed
                         # See issue 1418
                         # https://git.ccfe.ac.uk/process/process/-/issues/1418
@@ -369,7 +369,7 @@ class PFCoil:
 
                     else:
                         eh.idiags[0] = i
-                        eh.idiags[1] = pfv.ipfloc[i]
+                        eh.idiags[1] = pfv.i_pf_location[i]
                         eh.report_error(70)
 
                 for ccount in range(ngrp0):
@@ -530,7 +530,7 @@ class PFCoil:
 
         for ii in range(pfv.ngrp):
             for _ij in range(pfv.ncls[ii]):
-                if pfv.ipfloc[ii] == 1:
+                if pfv.i_pf_location[ii] == 1:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.dr_cs
                     dz = 0.5e0 * (

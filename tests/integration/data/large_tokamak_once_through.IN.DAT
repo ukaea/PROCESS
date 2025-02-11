@@ -283,7 +283,7 @@ coheof   = 21443595.371072624 * Central solenoid overall current density at end 
 cptdin   = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4 * peak current per turn input for PF coil i (A)
 fcohbop  = 0.93491189654662 * ratio of central solenoid overall current density at beginning of pulse / end of flat-top
 fcuohsu  = 0.70 * copper fraction of strand in central solenoid
-ipfloc   = 2,2,3,3 * Switch for location of PF coil group i;
+i_pf_location   = 2,2,3,3 * Switch for location of PF coil group i;
 i_cs_superconductor = 1 * switch for superconductor material in central solenoid;
 i_pf_superconductor = 3 * switch for superconductor material in PF coils;
 ncls     = 1,1,2,2 * number of PF coils in group j
@@ -291,7 +291,7 @@ ngrp     = 4 * number of groups of PF coils; Symmetric coil pairs should all be 
 ohhghf   = 0.9 * Central solenoid height / TF coil internal height
 oh_steel_frac = 0.4856940627014451 * central solenoid steel fraction (`iteration variable 122`)
 rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6 * average winding pack current density of PF coil i (A/m2) at time of peak
-rpf2     = -1.825 * offset (m) of radial position of `ipfloc=2` PF coils from being at
+rpf2     = -1.825 * offset (m) of radial position of `i_pf_location=2` PF coils from being at
 sigpfcf  = 0.666 * fraction of JxB hoop force supported by steel case for superconducting PF coils (`ipfres=0`)
 zref(1) = 3.6
 zref(2) = 1.2

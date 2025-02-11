@@ -299,7 +299,7 @@ contains
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       ngrp, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
-      ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
+      ncls, nfixmx, cptdin, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, i_l_h_threshold, &
@@ -1849,8 +1849,8 @@ contains
        case ('fcupfsu')
           call parse_real_variable('fcupfsu', fcupfsu, 0.0D0, 1.0D0, &
                'Cu fraction of PF cable conductor')
-       case ('ipfloc')
-          call parse_int_array('ipfloc', ipfloc, isub1, n_pf_groups_max, &
+       case ('i_pf_location')
+          call parse_int_array('i_pf_location', i_pf_location, isub1, n_pf_groups_max, &
                'PF coil location', icode)
        case ('ipfres')
           call parse_int_variable('ipfres', ipfres, 0, 1, &

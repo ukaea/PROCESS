@@ -1909,7 +1909,7 @@ i_pf_superconductor = 9
 * Positioning *
 *-------------*
 
-ipfloc = 2,3,3,4
+i_pf_location = 2,3,3,4
 * DESCRIPTION:   Switch for Locating Scheme of PF Coil Group i
 * =1 PF coil on top of central solenoid (flux ramp only)
 * =2 PF coil on top of TF coil (flux ramp only)
@@ -1919,28 +1919,28 @@ ipfloc = 2,3,3,4
 
 
 i_sup_pf_shape = 1
-* DESCRIPTION:   Switch for the placement of ipfloc = 3 (outboard) PF coils
+* DESCRIPTION:   Switch for the placement of i_pf_location = 3 (outboard) PF coils
 *  when the TF coils are superconducting (i_tf_sup = 1)
 *  =0 (Default) Outboard PF coils follow TF shape
 *  in an ellipsoidal winding surface
 *  =1 Outboard PF coils all have same radius, cylindrical
 *  winding surface
-* JUSTIFICATION: Not used, no ipfloc = 3 coils
+* JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
 *routr =  
-* DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of ipfloc=3 PF coils
+* DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of i_pf_location=3 PF coils
 * (default = 1.5) 
-* JUSTIFICATION: Not used, no ipfloc = 3 coils
+* JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
 *rpf1 =  
-* DESCRIPTION:  offset (m) of radial position of ipfloc=1 PF coils from being directly above
+* DESCRIPTION:  offset (m) of radial position of i_pf_location=1 PF coils from being directly above
 * the central solenoid
-* JUSTIFICATION: Not used, no ipfloc = 1 coils
+* JUSTIFICATION: Not used, no i_pf_location = 1 coils
 
 *rpf2 =  
-* DESCRIPTION:  offset (m) of radial position of ipfloc=2 PF coils from being at
+* DESCRIPTION:  offset (m) of radial position of i_pf_location=2 PF coils from being at
 *rmajor (offset = rpf2*triang*rminor)
-* JUSTIFICATION: Not used, no ipfloc = 2 coils
+* JUSTIFICATION: Not used, no i_pf_location = 2 coils
 
 ncls = 2,2,2,2
 * DESCRIPTION:   Number of PF Coils in Group j
@@ -1952,13 +1952,13 @@ ngrp = 4
 
 rref(4) = 2.0
 zref(4) = 5.2
-* DESCRIPTION:   Offset (rminor's) of Radial Position of ipfloc=4 PF coils From Being at Rmajor
+* DESCRIPTION:   Offset (rminor's) of Radial Position of i_pf_location=4 PF coils From Being at Rmajor
 * JUSTIFICATION: Position coils inside and in the middle of TF coil
 
 *cptdin: Current per turn for PF coil
 *rjconpf: Current per turn for PF coil resistivity (ohm-m)
-*rref: Radius of ipfloc = 4 coil groups. Number of minor radii from major radius
-*zref: Height of ipfloc 3/4 coil groups. Units of minor radius
+*rref: Radius of i_pf_location = 4 coil groups. Number of minor radii from major radius
+*zref: Height of i_pf_location 3/4 coil groups. Units of minor radius
 
 
 *______________________________________________________________________________________________________________________________________________________________________________________________________________________*
@@ -2224,7 +2224,7 @@ i_r_cp_top = 2
 * JUSTIFICATION: Not scaling cryostat height.
 
 *dr_pf_cryostat = 
-* DESCRIPTION:   radial distance between outer edge of largest (`ipfloc=3`) PF coil (or stellarator
+* DESCRIPTION:   radial distance between outer edge of largest (`i_pf_location=3`) PF coil (or stellarator
 * modular coil) and cryostat [m])
 * JUSTIFICATION: Not scaling cryostat distance.
 
