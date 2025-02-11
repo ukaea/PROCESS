@@ -1982,7 +1982,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "nohc", 7)
     monkeypatch.setattr(
         pfv,
-        "rb",
+        "r_pf_coil_outer",
         np.array([
             6.8520884119768697,
             6.9480065348448967,

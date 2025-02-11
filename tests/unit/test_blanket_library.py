@@ -1235,7 +1235,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     vdewin: Any = None
     denstl: Any = None
     dewmkg: Any = None
-    rb: Any = None
+    r_pf_coil_outer: Any = None
     zh: Any = None
     dz_tf_cryostat: Any = None
     dz_pf_cryostat: Any = None
@@ -1264,7 +1264,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             vdewin=1016.2876250857248,
             denstl=7800,
             dewmkg=0,
-            rb=np.array(
+            r_pf_coil_outer=np.array(
                 np.array(
                     (
                         6.1290994712971543,
@@ -1380,7 +1380,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(fwbs_variables, "vdewin", externalcryogeometryparam.vdewin)
     monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
-    monkeypatch.setattr(pfcoil_variables, "rb", externalcryogeometryparam.rb)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer
+    )
     monkeypatch.setattr(pfcoil_variables, "zh", externalcryogeometryparam.zh)
     monkeypatch.setattr(
         buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat

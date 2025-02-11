@@ -378,7 +378,7 @@ class BlanketLibrary:
         # Cryostat radius [m]
         # Take radius of furthest PF coil and add clearance
         fwbs_variables.r_cryostat_inboard = (
-            np.max(pfcoil_variables.rb) + fwbs_variables.dr_pf_cryostat
+            np.max(pfcoil_variables.r_pf_coil_outer) + fwbs_variables.dr_pf_cryostat
         )
 
         # Clearance between uppermost PF coil and cryostat lid [m].
