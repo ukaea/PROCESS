@@ -7917,7 +7917,7 @@
         "vfi": 0.0,
         "vfi_star": 0.0,
         "vfile": 14.0,
-        "vfohc": 0.3,
+        "f_a_cs_void": 0.3,
         "vforce": 0.0,
         "vforce_inboard_tot": 0.0,
         "vforce_outboard": 0.0,
@@ -11026,7 +11026,7 @@
         "vfi": "",
         "vfi_star": "",
         "vfile": "Verbose diagnostics file",
-        "vfohc": "void fraction of central solenoid conductor for coolant",
+        "f_a_cs_void": "void fraction of central solenoid conductor for coolant",
         "vforce": "vertical tension on inboard leg/coil (N)",
         "vforce_inboard_tot": "Total inboard vertical tension (all coils) [N]",
         "vforce_outboard": "Vertical tension on outboard leg/coil (N)",
@@ -14949,7 +14949,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "vfohc": {
+        "f_a_cs_void": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18993,7 +18993,7 @@
             "temp_cs_margin",
             "turns",
             "f_a_pf_coil_void",
-            "vfohc",
+            "f_a_cs_void",
             "vsbn",
             "vsefbn",
             "vsefsu",
@@ -20877,7 +20877,7 @@
         "f_a_pf_coil_void": "real_array",
         "vfblkt": "real_variable",
         "vfcblkt": "real_variable",
-        "vfohc": "real_variable",
+        "f_a_cs_void": "real_variable",
         "vfpblkt": "real_variable",
         "vfshld": "real_variable",
         "vftf": "real_variable",

@@ -320,7 +320,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: f_a_pf_coil_void
   !! winding pack void fraction of PF coil i for coolant
 
-  real(dp) :: vfohc
+  real(dp) :: f_a_cs_void
   !! void fraction of central solenoid conductor for coolant
 
   real(dp) :: vsbn
@@ -496,7 +496,7 @@ module pfcoil_variables
     temp_cs_margin = 0.0D0
     n_pf_coil_turns = 0.0D0
     f_a_pf_coil_void = 0.3D0
-    vfohc = 0.3D0
+    f_a_cs_void = 0.3D0
     vsbn = 0.0D0
     vsefbn = 0.0D0
     vsefsu = 0.0D0
