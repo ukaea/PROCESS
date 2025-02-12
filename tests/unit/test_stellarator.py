@@ -2718,7 +2718,7 @@ class StCalcEffChiParam(NamedTuple):
 
     rminor: Any = None
 
-    coreradius: Any = None
+    radius_plasma_core_norm: Any = None
 
     stella_config_rminor_ref: Any = None
 
@@ -2741,7 +2741,7 @@ class StCalcEffChiParam(NamedTuple):
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2620230359599852,
@@ -2758,7 +2758,7 @@ class StCalcEffChiParam(NamedTuple):
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2368034193234161,
@@ -2812,7 +2812,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
-        impurity_radiation_module, "coreradius", stcalceffchiparam.coreradius
+        impurity_radiation_module,
+        "radius_plasma_core_norm",
+        stcalceffchiparam.radius_plasma_core_norm,
     )
 
     monkeypatch.setattr(

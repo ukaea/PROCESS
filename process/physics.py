@@ -4659,8 +4659,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Normalised minor radius defining 'core'",
-            "(coreradius)",
-            impurity_radiation_module.coreradius,
+            "(radius_plasma_core_norm)",
+            impurity_radiation_module.radius_plasma_core_norm,
         )
         po.ovarre(
             self.outfile,

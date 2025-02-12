@@ -1606,7 +1606,7 @@ class Power:
             )
             po.ovarrf(
                 self.outfile,
-                'Radiation power from inside "coreradius" (MW)',
+                'Radiation power from inside "radius_plasma_core_norm" (MW)',
                 "(pcoreradmw.)",
                 physics_variables.p_plasma_inner_rad_mw,
                 "OP ",

@@ -291,7 +291,7 @@ contains
       fburn, fwdzu, etave, v3dr, uctarg, shdzl, ucflib, v3dzl, v1dzu, v2dzl, &
       chdzl, chrad, cdriv1, tgain, somtdr, v2matf, rrmax, bldr, frrmax, &
       blmatf, ife
-    use impurity_radiation_module, only: coreradius, n_impurities, &
+    use impurity_radiation_module, only: radius_plasma_core_norm, n_impurities, &
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
@@ -544,8 +544,8 @@ contains
        case ('burnup_in')
           call parse_real_variable('burnup_in', burnup_in, 0.0D0, 1.0D0, &
                'User input plasma fuel burnup fraction')
-       case ('coreradius')
-          call parse_real_variable('coreradius', coreradius, 0.0D0, 1.0D0, &
+       case ('radius_plasma_core_norm')
+          call parse_real_variable('radius_plasma_core_norm', radius_plasma_core_norm, 0.0D0, 1.0D0, &
                'Normalised core radius')
        case ('coreradiationfraction')
           call parse_real_variable('coreradiationfraction', coreradiationfraction, 0.0D0, 1.0D0, &

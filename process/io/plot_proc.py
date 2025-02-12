@@ -2732,7 +2732,11 @@ def plot_power_info(axis, mfile_data, scan):
     )
 
     # Define appropriate pedestal and impurity parameters
-    coredescription = ("coreradius", "Normalised radius of 'core' region", "")
+    coredescription = (
+        "radius_plasma_core_norm",
+        "Normalised radius of 'core' region",
+        "",
+    )
     if ipedestal == 1:
         ped_height = ("neped", "Electron density at pedestal", "m$^{-3}$")
         ped_pos = ("rhopedn", "r/a at density pedestal", "")

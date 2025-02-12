@@ -1518,7 +1518,7 @@
         "copperaoh_m2": 0.0,
         "copperaoh_m2_max": 100000000.0,
         "coreradiationfraction": 1.0,
-        "coreradius": 0.6,
+        "radius_plasma_core_norm": 0.6,
         "cost_factor_bop": 1.0,
         "cost_factor_buildings": 1.0,
         "cost_factor_fwbs": 1.0,
@@ -9180,7 +9180,7 @@
         "copperaoh_m2": "CS coil current / copper area (A/m2) (`sweep variable 61`)",
         "copperaoh_m2_max": "Maximum CS coil current / copper area (A/m2)",
         "coreradiationfraction": "coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power\nfimp(n_impurities) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :\n        impurity number density fractions relative to electron density\n)",
-        "coreradius": "coreradius /0.6/ : normalised radius defining the 'core' region",
+        "radius_plasma_core_norm": "radius_plasma_core_norm /0.6/ : normalised radius defining the 'core' region",
         "cost_factor_bop": "cost scaling factor for energy conversion system",
         "cost_factor_buildings": "cost scaling factor for buildings",
         "cost_factor_fwbs": "cost scaling factor for fwbs",
@@ -10192,7 +10192,7 @@
         "nre": "",
         "nsix": "",
         "nsixi": "",
-        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 beta_norm_max\n         <LI> 12 bootstrap_current_fraction_max (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: dr_cs)\n         <LI> 20 t_burn_min\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 coreradius\n       <LI> 31 f_alpha_energy_confinement_min\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 dr_blkt_outboard\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness\n         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap\n         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF\n         <LI> 63 dr_cs : CS thickness (m)\n         <LI> 64 f_z_cs_tf_internal : CS height (m) </UL>",
+        "nsweep": "Switch denoting quantity to scan:<UL>\n         <LI> 1  aspect\n         <LI> 2  hldivlim\n         <LI> 3  pnetelin\n         <LI> 4  hfact\n         <LI> 5  oacdcp\n         <LI> 6  walalw\n         <LI> 7  beamfus0\n         <LI> 8  fqval\n         <LI> 9  te\n         <LI> 10 boundu(15: fvs)\n         <LI> 11 beta_norm_max\n         <LI> 12 bootstrap_current_fraction_max (use negative values only)\n         <LI> 13 boundu(10: hfact)\n         <LI> 14 fiooic\n         <LI> 15 fjprot\n         <LI> 16 rmajor\n         <LI> 17 bmxlim\n         <LI> 18 gammax\n         <LI> 19 boundl(16: dr_cs)\n         <LI> 20 t_burn_min\n         <LI> 21 not used\n         <LI> 22 cfactr (N.B. requires iavail=0)\n         <LI> 23 boundu(72: fipir)\n         <LI> 24 powfmax\n         <LI> 25 kappa\n         <LI> 26 triang\n         <LI> 27 tbrmin (for blktmodel > 0 only)\n         <LI> 28 bt\n         <LI> 29 radius_plasma_core_norm\n       <LI> 31 f_alpha_energy_confinement_min\n         <LI> 32 epsvmc\n         <LI> 33 ttarget\n         <LI> 34 qtargettotal\n         <LI> 35 lambda_q_omp\n         <LI> 36 lambda_target\n         <LI> 37 lcon_factor\n         <LI> 38 Neon upper limit\n         <LI> 39 Argon upper limit\n         <LI> 40 Xenon upper limit\n         <LI> 41 dr_blkt_outboard\n         <LI> 42 Argon fraction fimp(9)\n         <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum\n         <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material\n         <LI> 45 Minimum allowable temperature margin ; tf coils\n         <LI> 46 boundu(150) fgwsep\n         <LI> 47 impurity_enrichment(9) Argon impurity enrichment\n         <LI> 48 TF coil - n_pancake (integer turn winding pack)\n         <LI> 49 TF coil - n_layer (integer turn winding pack)\n         <LI> 50 Xenon fraction fimp(13)\n         <LI> 51 Power fraction to lower DN Divertor ftar\n         <LI> 52 SoL radiation fraction\n         <LI> 54 GL_nbti upper critical field at 0 Kelvin\n         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness\n         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)\n         <LI> 57 `bt` lower boundary\n         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap\n         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap\n         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)\n         <LI> 61 copperaoh_m2_max : CS coil current / copper area\n         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF\n         <LI> 63 dr_cs : CS thickness (m)\n         <LI> 64 f_z_cs_tf_internal : CS height (m) </UL>",
         "nsweep_2": "nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:",
         "nt": "",
         "ntype": "switch for vacuum pump type:\n<ul>\n<li>=0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s\n   (1.95 for N2, 1.8 for He, 1.8 for DT)</li>\n<li>=1 - for compound cryopump with nominal speed of 10.0 m3/s\n   (9.0 for N2, 5.0 for He and 25.0 for DT)</li>\n</ul>",
@@ -11973,7 +11973,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "coreradius": {
+        "radius_plasma_core_norm": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18351,7 +18351,7 @@
         ],
         "impurity_radiation_module": [
             "n_impurities",
-            "coreradius",
+            "radius_plasma_core_norm",
             "coreradiationfraction",
             "fimp",
             "imp_label",
@@ -19909,7 +19909,7 @@
         "26": "triang",
         "27": "tbrmin",
         "28": "bt",
-        "29": "coreradius",
+        "29": "radius_plasma_core_norm",
         "3": "pnetelin",
         "31": "f_alpha_energy_confinement_min",
         "32": "epsvmc",
@@ -20098,7 +20098,7 @@
         "copperaoh_m2": "real_variable",
         "copperaoh_m2_max": "real_variable",
         "coreradiationfraction": "real_variable",
-        "coreradius": "real_variable",
+        "radius_plasma_core_norm": "real_variable",
         "cost_factor_bop": "real_variable",
         "cost_factor_buildings": "real_variable",
         "cost_factor_fwbs": "real_variable",

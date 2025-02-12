@@ -284,7 +284,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -959,7 +959,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -1279,7 +1279,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -1954,7 +1954,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -2274,7 +2274,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -2949,7 +2949,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -3269,7 +3269,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -3944,7 +3944,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -4264,7 +4264,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -4939,7 +4939,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -5259,7 +5259,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -5934,7 +5934,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -6254,7 +6254,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -6929,7 +6929,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -7249,7 +7249,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -7924,7 +7924,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -8244,7 +8244,7 @@
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -8919,7 +8919,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -9177,7 +9177,7 @@ etath = 0.375D0  * thermal to electric conversion efficiency
 *------------Impurity Radiation Module-------------*
 
 *imprad_model = 1 * Switch for impurity radiation model;
-coreradius = 0.75 * Normalised radius defining the 'core' region
+radius_plasma_core_norm = 0.75 * Normalised radius defining the 'core' region
 coreradiationfraction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
 fimp(1) = 1.0
 fimp(2) = 0.1

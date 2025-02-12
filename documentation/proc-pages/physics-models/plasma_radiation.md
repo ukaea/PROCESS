@@ -75,7 +75,7 @@ $$
 
 --------------------
 
-By changing the input parameter `coreradius`, the user may set the normalised 
+By changing the input parameter `radius_plasma_core_norm`, the user may set the normalised 
 radius defining the 'core' region. Only the impurity and synchrotron radiation 
 from this affects the confinement scaling. Figure 1 below shows the
 radiation power contributions.

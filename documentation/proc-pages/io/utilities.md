@@ -431,7 +431,7 @@ The configuration file `config_evaluate_uncertainties.json` uses the [JSON forma
             "Std": 0.1
         },
         {
-            "Varname": "coreradius",
+            "Varname": "radius_plasma_core_norm",
             "Errortype": "Gaussian",
             "Mean": 0.6,
             "Std": 0.15

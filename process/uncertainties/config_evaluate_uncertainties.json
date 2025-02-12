@@ -15,7 +15,7 @@
             "Std": 0.05
         },
         {
-            "Varname": "coreradius",
+            "Varname": "radius_plasma_core_norm",
             "Errortype": "Uniform",
             "Lowerbound": 0.6,
             "Upperbound": 0.9
@@ -86,7 +86,7 @@
         ],
         "names": [
             "hfact",
-            "coreradius",
+            "radius_plasma_core_norm",
             "kappa",
             "etaech",
             "etath",
@@ -118,7 +118,7 @@
         "names": [
             "boundu(9)",
             "hfact",
-            "coreradius",
+            "radius_plasma_core_norm",
             "fimp(2)"
         ],
         "num_vars": 4
