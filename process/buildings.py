@@ -75,7 +75,7 @@ class Buildings:
             ) = self.bldgs(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
-                pfcoil_variables.pfmmax,
+                pfcoil_variables.m_pf_coil_max,
                 tfro,
                 tfri,
                 tf_vertical_dim,

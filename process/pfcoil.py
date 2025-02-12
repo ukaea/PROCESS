@@ -628,7 +628,7 @@ class PFCoil:
         i = 0
         it = 0
         pfv.powpfres = 0.0e0
-        pfv.pfmmax = 0.0e0
+        pfv.m_pf_coil_max = 0.0e0
 
         for ii in range(pfv.n_pf_coil_groups):
             iii = ii
@@ -762,8 +762,8 @@ class PFCoil:
 
                 # Mass of heaviest PF coil (tonnes)
 
-                pfv.pfmmax = max(
-                    pfv.pfmmax,
+                pfv.m_pf_coil_max = max(
+                    pfv.m_pf_coil_max,
                     (
                         1.0e-3
                         * (pfv.m_pf_coil_conductor[i] + pfv.m_pf_coil_structure[i])
