@@ -134,6 +134,7 @@ primary_pumping = 0     *Switch for pumping power (0: User sets pump power direc
 secondary_cycle = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt   = 0.10         *Coolant void fraction in blanket (blktmodel=0)
 vfshld   = 0.60         *Coolant void fraction in shield
+radius_fw_channel = 0.008 *Inner radius of first wall coolant channel (m) is 0.008 for stellarator
 
 *-------------Heat Transport Variables-------------*
 
