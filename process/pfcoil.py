@@ -1280,7 +1280,7 @@ class PFCoil:
             else:
                 pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
 
-            pfv.rjohc = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
+            pfv.j_cs_critical_flat_top_end = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
 
             # Allowable coil overall current density at BOP
 
@@ -2110,8 +2110,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Allowable overall current density at EOF (A/m2)",
-                    "(rjohc)",
-                    pfv.rjohc,
+                    "(j_cs_critical_flat_top_end)",
+                    pfv.j_cs_critical_flat_top_end,
                     "OP ",
                 )
                 op.ovarre(
@@ -2353,7 +2353,7 @@ class PFCoil:
                 # iteration variable(38) fjohc
                 if (
                     abs(pfv.j_cs_flat_top_end)
-                    > 0.99e0 * abs(numerics.boundu[37] * pfv.rjohc)
+                    > 0.99e0 * abs(numerics.boundu[37] * pfv.j_cs_critical_flat_top_end)
                 ) or (
                     abs(pfv.j_cs_pulse_start)
                     > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)
