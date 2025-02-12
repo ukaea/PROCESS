@@ -329,7 +329,7 @@ module pfcoil_variables
   real(dp) :: vsefbn
   !! flux swing from PF coils for burn (Wb)
 
-  real(dp) :: vsefsu
+  real(dp) :: vs_pf_coils_total_ramp
   !! flux swing from PF coils for startup (Wb)
 
   real(dp) :: vseft
@@ -499,7 +499,7 @@ module pfcoil_variables
     f_a_cs_void = 0.3D0
     vsbn = 0.0D0
     vsefbn = 0.0D0
-    vsefsu = 0.0D0
+    vs_pf_coils_total_ramp = 0.0D0
     vseft = 0.0D0
     vsoh = 0.0D0
     vs_cs_burn = 0.0D0
