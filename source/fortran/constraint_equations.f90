@@ -1382,14 +1382,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for Central Solenoid current density upper limit at BOP
       !! #=# pfcoil
-      !! #=#=# fjohc0, rjohc0
+      !! #=#=# fjohc0, j_cs_critical_pulse_start
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjohc0 : input real : f-value for central solenoid current at beginning of pulse
-      !! rjohc0 : input real : allowable central solenoid current density at beginning of pulse (A/m2)
+      !! j_cs_critical_pulse_start : input real : allowable central solenoid current density at beginning of pulse (A/m2)
       !! j_cs_pulse_start : input real : central solenoid overall current density at beginning of pulse (A/m2)
       use constraint_variables, only: fjohc0
-      use pfcoil_variables, only: rjohc0, j_cs_pulse_start
+      use pfcoil_variables, only: j_cs_critical_pulse_start, j_cs_pulse_start
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1397,9 +1397,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjohc0 * rjohc0/j_cs_pulse_start
-      tmp_con = rjohc0
-      tmp_err = rjohc0 - j_cs_pulse_start / fjohc0
+      tmp_cc =  1.0D0 - fjohc0 * j_cs_critical_pulse_start/j_cs_pulse_start
+      tmp_con = j_cs_critical_pulse_start
+      tmp_err = j_cs_critical_pulse_start - j_cs_pulse_start / fjohc0
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 

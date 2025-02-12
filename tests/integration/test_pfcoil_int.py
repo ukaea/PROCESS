@@ -205,7 +205,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "powpfres", 0.0)
     monkeypatch.setattr(pfv, "jcableoh_eof", 1.427e8)
     monkeypatch.setattr(pfv, "p_cs_resistive_flat_top", 0.0)
-    monkeypatch.setattr(pfv, "rjohc0", 3.048e7)
+    monkeypatch.setattr(pfv, "j_cs_critical_pulse_start", 3.048e7)
     monkeypatch.setattr(pfv, "s_tresca_oh", 5.718e8)
     monkeypatch.setattr(pfv, "awpoh", 4.232)
     monkeypatch.setattr(pfv, "f_a_cs_steel", 5.926e-1)

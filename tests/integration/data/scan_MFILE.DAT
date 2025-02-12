@@ -620,7 +620,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -1615,7 +1615,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -2610,7 +2610,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -3605,7 +3605,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -4600,7 +4600,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -5595,7 +5595,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -6590,7 +6590,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -7585,7 +7585,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 
@@ -8580,7 +8580,7 @@
  Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.1499E+01 OP 
  Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      6.6143E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.9843E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      9.2008E+07 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      9.2008E+07 OP 
  Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.2788E+07 OP 
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.0525E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      8.1933E+08 OP 

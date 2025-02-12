@@ -1301,7 +1301,7 @@ class PFCoil:
             pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1] = (
                 jcritwp * pfv.awpoh / pfv.a_cs_poloidal
             )
-            pfv.rjohc0 = pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]
+            pfv.j_cs_critical_pulse_start = pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]
 
             pfv.temp_cs_margin = min(tmarg1, tmarg2)
 
@@ -2074,8 +2074,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Allowable overall current density at BOP (A/m2)",
-                    "(rjohc0)",
-                    pfv.rjohc0,
+                    "(j_cs_critical_pulse_start)",
+                    pfv.j_cs_critical_pulse_start,
                     "OP ",
                 )
                 op.ovarre(
@@ -2356,7 +2356,7 @@ class PFCoil:
                     > 0.99e0 * abs(numerics.boundu[37] * pfv.j_cs_critical_flat_top_end)
                 ) or (
                     abs(pfv.j_cs_pulse_start)
-                    > 0.99e0 * abs(numerics.boundu[38] * pfv.rjohc0)
+                    > 0.99e0 * abs(numerics.boundu[38] * pfv.j_cs_critical_pulse_start)
                 ):
                     pf.cslimit = True
                 if pfv.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
