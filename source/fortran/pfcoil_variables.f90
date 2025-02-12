@@ -234,7 +234,7 @@ module pfcoil_variables
   !! Resistivity of CS and PF coil bus bars (irrespective of
   !! whether the coils themselves are superconducting or resistive) (Ohm-m)
 
-  real(dp) :: pfmmax
+  real(dp) :: m_pf_coil_max
   !! mass of heaviest PF coil (tonnes)
 
   real(dp) :: r_pf_coil_outer_max
@@ -467,7 +467,7 @@ module pfcoil_variables
     pfcaseth = 0.0D0
     rho_pf_coil = 2.5D-8
     rhopfbus = 3.93D-8
-    pfmmax = 0.0D0
+    m_pf_coil_max = 0.0D0
     r_pf_coil_outer_max = 0.0D0
     pfwpmw = 0.0D0
     p_cs_resistive_flat_top = 0.0D0
