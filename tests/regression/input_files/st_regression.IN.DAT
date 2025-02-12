@@ -577,7 +577,7 @@ alphaj = 0.1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radiation,Fuelling & Impurities ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-coreradius = 0.75 
+radius_plasma_core_norm = 0.75 
 * DESCRIPTION:   Normalised Radius Defining the 'Core' Region
 * JUSTIFICATION:
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001

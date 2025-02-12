@@ -512,7 +512,7 @@ The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
 plasma core. The wall reflection factor \texttt{f_sync_reflect} may be set by the
 user.
 
-By changing the input parameter \texttt{coreradius}, the user may set
+By changing the input parameter \texttt{radius_plasma_core_norm}, the user may set
 the normalised radius defining the core region. Only the impurity and
 synchrotron radiation from the core region affects the confinement
 scaling. Figure 1 below shows the radiation power contributions.

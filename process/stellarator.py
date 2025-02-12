@@ -4681,7 +4681,7 @@ class Stellarator:
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
         )
         q_PROCESS_r1 = (
             (
@@ -4740,7 +4740,7 @@ class Stellarator:
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
         )
         dmdt_neo_fuel = (
             dndt_neo_fuel * physics_variables.m_fuel_amu * constants.proton_mass * 1.0e6
@@ -4749,7 +4749,7 @@ class Stellarator:
             4
             * dndt_neo_e
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
             * physics_variables.m_fuel_amu
             * constants.proton_mass
             * 1.0e6
@@ -4805,7 +4805,7 @@ class Stellarator:
             physics_variables.vol_plasma
             * st.f_r
             * (
-                impurity_radiation_module.coreradius
+                impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
                 / stellarator_configuration.stella_config_rminor_ref
             )
@@ -4815,7 +4815,7 @@ class Stellarator:
             physics_variables.a_plasma_surface
             * st.f_r
             * (
-                impurity_radiation_module.coreradius
+                impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
                 / stellarator_configuration.stella_config_rminor_ref
             )
@@ -4839,8 +4839,8 @@ class Stellarator:
                 * physics_variables.te0
                 * 1e3
                 * physics_variables.alphat
-                * impurity_radiation_module.coreradius
-                * (1 - impurity_radiation_module.coreradius**2)
+                * impurity_radiation_module.radius_plasma_core_norm
+                * (1 - impurity_radiation_module.radius_plasma_core_norm**2)
                 ** (physics_variables.alphan + physics_variables.alphat - 1)
             )
             * surfacescaling

@@ -85,7 +85,7 @@ def test_pimpden():
 
 class FradcoreParam(NamedTuple):
     rho: np.array = np.array
-    coreradius: float = 0.0
+    radius_plasma_core_norm: float = 0.0
     coreradiationfraction: float = 0.0
     expected_fradcore: np.array = np.array
 
@@ -96,8 +96,8 @@ def test_fradcore():
     :param rho: normalised minor radius
     :type rho: np.array
 
-    :param coreradius:  normalised core radius
-    :type coreradius: float
+    :param radius_plasma_core_norm:  normalised core radius
+    :type radius_plasma_core_norm: float
 
     :param coreradiationfraction: fraction of core radiation
     :type coreradiationfraction: float
@@ -105,7 +105,7 @@ def test_fradcore():
     """
     fradcoreparam = FradcoreParam(
         rho=np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]),
-        coreradius=0.75000000000000011,
+        radius_plasma_core_norm=0.75000000000000011,
         coreradiationfraction=0.60000000000000009,
         expected_fradcore=np.array([
             0.6,
@@ -121,7 +121,9 @@ def test_fradcore():
         ]),
     )
     fradcore = impurity_radiation.fradcore(
-        fradcoreparam.rho, fradcoreparam.coreradius, fradcoreparam.coreradiationfraction
+        fradcoreparam.rho,
+        fradcoreparam.radius_plasma_core_norm,
+        fradcoreparam.coreradiationfraction,
     )
     assert pytest.approx(fradcore) == fradcoreparam.expected_fradcore
 
