@@ -1414,7 +1414,7 @@ def test_vsec(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "vs_cs_ramp", 0)
     monkeypatch.setattr(pfv, "vseft", 0)
     monkeypatch.setattr(pfv, "vsoh", 0)
-    monkeypatch.setattr(pfv, "vssu", 0)
+    monkeypatch.setattr(pfv, "vs_cs_pf_total_ramp", 0)
     monkeypatch.setattr(pfv, "vstot", 0)
     monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(
