@@ -648,7 +648,7 @@ class PFCoil:
 
                     pfv.j_pf_wp_critical[i], jstrand, jsc, tmarg = self.superconpf(
                         bmax,
-                        pfv.vf[i],
+                        pfv.f_a_pf_coil_void[i],
                         pfv.fcupfsu,
                         pfv.j_pf_coil_wp_peak[i],
                         pfv.i_pf_superconductor,
@@ -678,9 +678,13 @@ class PFCoil:
                 # Resistive coils
 
                 if pfv.i_pf_conductor == 1:
-                    # Coil resistance (vf is the void fraction)
+                    # Coil resistance (f_a_pf_coil_void is the void fraction)
 
-                    respf = pfv.rho_pf_coil * rll / (aturn[i] * (1.0e0 - pfv.vf[i]))
+                    respf = (
+                        pfv.rho_pf_coil
+                        * rll
+                        / (aturn[i] * (1.0e0 - pfv.f_a_pf_coil_void[i]))
+                    )
 
                     # Sum resistive power losses
 
@@ -699,17 +703,17 @@ class PFCoil:
 
                 volpf = aturn[i] * rll
 
-                # Conductor weight (vf is the void fraction)
+                # Conductor weight (f_a_pf_coil_void is the void fraction)
 
                 if pfv.i_pf_conductor == 0:
                     pfv.m_pf_coil_conductor[i] = (
                         volpf
                         * tfv.dcond[pfv.i_pf_superconductor - 1]
-                        * (1.0e0 - pfv.vf[i])
+                        * (1.0e0 - pfv.f_a_pf_coil_void[i])
                     )
                 else:
                     pfv.m_pf_coil_conductor[i] = (
-                        volpf * constants.dcopper * (1.0e0 - pfv.vf[i])
+                        volpf * constants.dcopper * (1.0e0 - pfv.f_a_pf_coil_void[i])
                     )
 
                 # (J x B) force on coil
@@ -1122,7 +1126,7 @@ class PFCoil:
             csfv.t_structural_radial = 1.0e-3
 
         # Non-steel area void fraction for coolant
-        pfv.vf[pfv.n_cs_pf_coils - 1] = pfv.vfohc
+        pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.vfohc
 
         # Peak field at the End-Of-Flattop (EOF)
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
