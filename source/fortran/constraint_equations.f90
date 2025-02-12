@@ -450,7 +450,7 @@ contains
     !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
     !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
     !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
-    !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
+    !! pden_plasma_core_rad_mw : input real : total core radiation power per volume (MW/m3)
     !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
     !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
     !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
@@ -459,7 +459,7 @@ contains
     !! vol_plasma : input real : plasma volume (m3)
 
     use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
-                                  pcoreradpv, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
+                                  pden_plasma_core_rad_mw, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: pinjmw
 
@@ -480,7 +480,7 @@ contains
     if (i_rad_loss == 0) then
         pnumerator = pscaling + pden_plasma_rad_mw
     else if (i_rad_loss == 1) then
-        pnumerator = pscaling + pcoreradpv
+        pnumerator = pscaling + pden_plasma_core_rad_mw
     else
         pnumerator = pscaling
     end if
@@ -569,13 +569,13 @@ contains
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
       !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
-      !! pcoreradpv : input real : total core radiation power per volume (MW/m3)
+      !! pden_plasma_core_rad_mw : input real : total core radiation power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! pinjemw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pcoreradpv, f_alpha_plasma, &
+      use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_plasma_core_rad_mw, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: pinjemw
       implicit none
@@ -593,7 +593,7 @@ contains
       if (i_rad_loss == 0) then
          pnumerator = pscaling + pden_plasma_rad_mw
       else if (i_rad_loss == 1) then
-         pnumerator = pscaling + pcoreradpv
+         pnumerator = pscaling + pden_plasma_core_rad_mw
       else
          pnumerator = pscaling
       end if

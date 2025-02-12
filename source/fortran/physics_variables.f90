@@ -591,7 +591,7 @@ module physics_variables
   real(dp) :: p_plasma_inner_rad_mw
   !! radiation power from inner zone (MW)
 
-  real(dp) :: pcoreradpv
+  real(dp) :: pden_plasma_core_rad_mw
   !! total core radiation power per volume (MW/m3)
 
   real(dp) :: dd_power
@@ -1030,7 +1030,7 @@ module physics_variables
     charged_power_density = 0.0D0
     pcoef = 0.0D0
     p_plasma_inner_rad_mw = 0.0D0
-    pcoreradpv = 0.0D0
+    pden_plasma_core_rad_mw = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0
     pdivt = 0.0D0

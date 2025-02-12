@@ -2706,7 +2706,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alpha_power_density_total: Any = None
 
-    pcoreradpv: Any = None
+    pden_plasma_core_rad_mw: Any = None
 
     alphan: Any = None
 
@@ -2735,7 +2735,7 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.2629524018077414,
-            pcoreradpv=0.10762698429338043,
+            pden_plasma_core_rad_mw=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
@@ -2752,7 +2752,7 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.0570658694225301,
-            pcoreradpv=0.1002475669217598,
+            pden_plasma_core_rad_mw=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
@@ -2793,7 +2793,11 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stcalceffchiparam.alpha_power_density_total,
     )
 
-    monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
+    monkeypatch.setattr(
+        physics_variables,
+        "pden_plasma_core_rad_mw",
+        stcalceffchiparam.pden_plasma_core_rad_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "alphan", stcalceffchiparam.alphan)
 

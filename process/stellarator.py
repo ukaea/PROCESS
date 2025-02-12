@@ -4310,15 +4310,17 @@ class Stellarator:
         #  Calculate radiation power
         radpwr_data = physics_funcs.calculate_radiation_powers(self.plasma_profile)
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
-        physics_variables.pcoreradpv = radpwr_data.pcoreradpv
+        physics_variables.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw
         physics_variables.pedgeradpv = radpwr_data.pedgeradpv
         physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
-        physics_variables.pcoreradpv = max(physics_variables.pcoreradpv, 0.0e0)
+        physics_variables.pden_plasma_core_rad_mw = max(
+            physics_variables.pden_plasma_core_rad_mw, 0.0e0
+        )
         physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
 
         physics_variables.p_plasma_inner_rad_mw = (
-            physics_variables.pcoreradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )  # Should probably be vol_core
         physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
@@ -4441,7 +4443,7 @@ class Stellarator:
             physics_variables.non_alpha_charged_power,
             current_drive_variables.pinjmw,
             physics_variables.plasma_current,
-            physics_variables.pcoreradpv,
+            physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
@@ -4701,7 +4703,7 @@ class Stellarator:
             (
                 physics_variables.f_alpha_plasma
                 * physics_variables.alpha_power_density_total
-                - physics_variables.pcoreradpv
+                - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
@@ -4711,7 +4713,7 @@ class Stellarator:
             (
                 physics_variables.f_alpha_plasma
                 * physics_variables.alpha_power_density_total
-                - physics_variables.pcoreradpv
+                - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
@@ -4848,7 +4850,7 @@ class Stellarator:
         nominator = (
             physics_variables.f_alpha_plasma
             * physics_variables.alpha_power_density_total
-            - physics_variables.pcoreradpv
+            - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 
         # in fortran there was a 0*alphan term which I have removed for obvious reasons

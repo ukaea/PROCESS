@@ -550,7 +550,7 @@ class RadpwrData:
     """DataClass which holds the output of the function radpwr"""
 
     pden_plasma_sync_mw: float
-    pcoreradpv: float
+    pden_plasma_core_rad_mw: float
     pedgeradpv: float
     pden_plasma_rad_mw: float
 
@@ -569,7 +569,7 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
     Returns:
         RadpwrData: A dataclass containing the following radiation power densities:
             - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
-            - pcoreradpv (float): Total core radiation power per unit volume (MW/m^3).
+            - pden_plasma_core_rad_mw (float): Total core radiation power per unit volume (MW/m^3).
             - pedgeradpv (float): Edge radiation power per unit volume (MW/m^3).
             - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
 
@@ -585,12 +585,14 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
     pden_plasma_sync_mw = psync_albajar_fidone()
 
     # Total core radiation power/volume.
-    pcoreradpv = imp_rad.radcore + pden_plasma_sync_mw
+    pden_plasma_core_rad_mw = imp_rad.radcore + pden_plasma_sync_mw
 
     # Total radiation power/volume.
     pden_plasma_rad_mw = imp_rad.radtot + pden_plasma_sync_mw
 
-    return RadpwrData(pden_plasma_sync_mw, pcoreradpv, pedgeradpv, pden_plasma_rad_mw)
+    return RadpwrData(
+        pden_plasma_sync_mw, pden_plasma_core_rad_mw, pedgeradpv, pden_plasma_rad_mw
+    )
 
 
 def psync_albajar_fidone() -> float:
