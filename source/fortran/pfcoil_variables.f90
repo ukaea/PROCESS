@@ -186,7 +186,7 @@ module pfcoil_variables
   !! - =1 Outboard PF coils all have same radius, cylindrical
   !!   winding surface
 
-  real(dp) :: jscoh_bop
+  real(dp) :: j_cs_conductor_critical_pulse_start
   !! central solenoid superconductor critical current density (A/m2) at beginning-of-pulse
 
   real(dp) :: jscoh_eof
@@ -452,7 +452,7 @@ module pfcoil_variables
     j_crit_str_pf = 0.0D0
     i_pf_current = 1
     i_sup_pf_shape = 0
-    jscoh_bop = 0.0D0
+    j_cs_conductor_critical_pulse_start = 0.0D0
     jscoh_eof = 0.0D0
     jcableoh_bop = 0.0D0
     jcableoh_eof = 0.0D0

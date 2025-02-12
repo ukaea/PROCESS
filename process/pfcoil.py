@@ -1284,7 +1284,12 @@ class PFCoil:
 
             # Allowable coil overall current density at BOP
 
-            jcritwp, pfv.jcableoh_bop, pfv.jscoh_bop, tmarg2 = self.superconpf(
+            
+                jcritwp,
+                pfv.jcableoh_bop,
+                pfv.j_cs_conductor_critical_pulse_start,
+                tmarg2,
+             = self.superconpf(
                 pfv.b_cs_peak_pulse_start,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -2060,8 +2065,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Critical superconductor current density at BOP (A/m2)",
-                    "(jscoh_bop)",
-                    pfv.jscoh_bop,
+                    "(j_cs_conductor_critical_pulse_start)",
+                    pfv.j_cs_conductor_critical_pulse_start,
                     "OP ",
                 )
                 op.ovarre(
