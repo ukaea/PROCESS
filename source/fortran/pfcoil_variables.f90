@@ -258,7 +258,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: c_pf_cs_coils_peak_ma
   !! peak current in coil i (MA-turns)
 
-  real(dp), dimension(ngc2) :: rjconpf
+  real(dp), dimension(ngc2) :: j_pf_coil_wp_peak
   !! average winding pack current density of PF coil i (A/m2) at time of peak
   !! current in that coil (calculated for `i_pf_location=1` coils)
 
@@ -475,7 +475,7 @@ module pfcoil_variables
     r_pf_coil_inner = 0.0D0
     r_pf_coil_outer = 0.0D0
     c_pf_cs_coils_peak_ma = 0.0D0
-    rjconpf = (/3.0D7, 3.0D7, 3.0D7, &
+    j_pf_coil_wp_peak = (/3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)

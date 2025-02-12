@@ -1593,7 +1593,7 @@ class Costs:
                             / pfcoil_variables.n_pf_coil_turns[i]
                         )
                         * 1.0e6
-                        / pfcoil_variables.rjconpf[i]
+                        / pfcoil_variables.j_pf_coil_wp_peak[i]
                         * tfcoil_variables.dcond[
                             pfcoil_variables.i_pf_superconductor - 1
                         ]
@@ -1625,7 +1625,7 @@ class Costs:
                         / pfcoil_variables.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.rjconpf[i]
+                    / pfcoil_variables.j_pf_coil_wp_peak[i]
                     * constants.dcopper
                 )
             else:
@@ -1637,7 +1637,7 @@ class Costs:
                         / pfcoil_variables.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.rjconpf[i]
+                    / pfcoil_variables.j_pf_coil_wp_peak[i]
                     * constants.dcopper
                 )
 

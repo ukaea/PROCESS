@@ -295,7 +295,7 @@ contains
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
-    use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, f_a_cs_steel, vf, &
+    use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, vf, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fb_cs_limit_max, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
@@ -1885,8 +1885,8 @@ contains
        case ('rho_pf_coil')
           call parse_real_variable('rho_pf_coil', rho_pf_coil, 0.0D0, 1.0D-4, &
                'PF coil resistivity (ohm-m)')
-       case ('rjconpf')
-          call parse_real_array('rjconpf', rjconpf, isub1, ngc2, &
+       case ('j_pf_coil_wp_peak')
+          call parse_real_array('j_pf_coil_wp_peak', j_pf_coil_wp_peak, isub1, ngc2, &
                'Average J of PF coil (A/m2)', icode)
        case ('routr')
           call parse_real_variable('routr', routr, -3.0D0, 3.0D0, &

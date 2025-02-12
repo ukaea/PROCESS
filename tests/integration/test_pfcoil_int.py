@@ -62,7 +62,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 0)
     monkeypatch.setattr(pfv, "r_pf_coil_outer_max", 0.0)
     monkeypatch.setattr(pfv, "fcohbop", 1.0)
-    monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
+    monkeypatch.setattr(pfv, "j_pf_coil_wp_peak", np.full(22, 1.1e7))
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
     monkeypatch.setattr(

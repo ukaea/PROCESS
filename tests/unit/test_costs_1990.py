@@ -2018,7 +2018,7 @@ class Acc2222Param(NamedTuple):
 
     fkind: Any = None
 
-    rjconpf: Any = None
+    j_pf_coil_wp_peak: Any = None
 
     supercond_cost_model: Any = None
 
@@ -2096,7 +2096,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2292,7 +2292,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2488,7 +2488,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2705,7 +2705,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2222param.fkind)
 
-    monkeypatch.setattr(pfcoil_variables, "rjconpf", acc2222param.rjconpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "j_pf_coil_wp_peak", acc2222param.j_pf_coil_wp_peak
+    )
 
     monkeypatch.setattr(
         cost_variables, "supercond_cost_model", acc2222param.supercond_cost_model

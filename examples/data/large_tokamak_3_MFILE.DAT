@@ -1747,7 +1747,7 @@ n_pf_coil_groups = 4
 f_z_cs_tf_internal = 0.9
 
 * Average winding pack current density of PF coil i [A/m2]
-rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
+j_pf_coil_wp_peak  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
 
 * Offset of radial position of i_pf_location=2 pf coils [m]
 rpf2 = -1.825 

@@ -43,7 +43,7 @@ The void fraction (for coolant) in each coil `i`'s winding pack is given by `vf(
 
 ## Coil currents
 
-The peak current per turn, `c_pf_coil_turn_peak_input(i)`, and the winding pack peak current density `rjconpf(i)` in 
+The peak current per turn, `c_pf_coil_turn_peak_input(i)`, and the winding pack peak current density `j_pf_coil_wp_peak(i)` in 
 each PF coil `i` are inputs. The PF coil currents vary as a function of time during the tokamak 
 operation as indicated in Figure 2. They contribute part of the flux swing necessary to maintain the plasma current.
 

@@ -1956,7 +1956,7 @@ zref(4) = 5.2
 * JUSTIFICATION: Position coils inside and in the middle of TF coil
 
 *c_pf_coil_turn_peak_input: Current per turn for PF coil
-*rjconpf: Current per turn for PF coil resistivity (ohm-m)
+*j_pf_coil_wp_peak: Current per turn for PF coil resistivity (ohm-m)
 *rref: Radius of i_pf_location = 4 coil groups. Number of minor radii from major radius
 *zref: Height of i_pf_location 3/4 coil groups. Units of minor radius
 

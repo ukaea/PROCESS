@@ -120,7 +120,7 @@ class Power:
                 * np.pi
                 * pfcoil_variables.r_pf_coil_middle[ic]
                 * abs(
-                    pfcoil_variables.rjconpf[ic]
+                    pfcoil_variables.j_pf_coil_wp_peak[ic]
                     / (
                         (1.0e0 - pfcoil_variables.vf[ic])
                         * 1.0e6
