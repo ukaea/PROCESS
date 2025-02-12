@@ -2048,7 +2048,7 @@ class Acc2222Param(NamedTuple):
 
     fcuohsu: Any = None
 
-    vf: Any = None
+    f_a_pf_coil_void: Any = None
 
     awpoh: Any = None
 
@@ -2227,7 +2227,7 @@ class Acc2222Param(NamedTuple):
             i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2423,7 +2423,7 @@ class Acc2222Param(NamedTuple):
             i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2619,7 +2619,7 @@ class Acc2222Param(NamedTuple):
             i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2753,7 +2753,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "fcuohsu", acc2222param.fcuohsu)
 
-    monkeypatch.setattr(pfcoil_variables, "vf", acc2222param.vf)
+    monkeypatch.setattr(
+        pfcoil_variables, "f_a_pf_coil_void", acc2222param.f_a_pf_coil_void
+    )
 
     monkeypatch.setattr(pfcoil_variables, "awpoh", acc2222param.awpoh)
 

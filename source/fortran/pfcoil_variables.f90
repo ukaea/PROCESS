@@ -317,7 +317,7 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: n_pf_coil_turns
   !! number of turns in PF coil i
 
-  real(dp), dimension(ngc2) :: vf
+  real(dp), dimension(ngc2) :: f_a_pf_coil_void
   !! winding pack void fraction of PF coil i for coolant
 
   real(dp) :: vfohc
@@ -495,7 +495,7 @@ module pfcoil_variables
     ind_pf_cs_plasma_mutual = 0.0D0
     temp_cs_margin = 0.0D0
     n_pf_coil_turns = 0.0D0
-    vf = 0.3D0
+    f_a_pf_coil_void = 0.3D0
     vfohc = 0.3D0
     vsbn = 0.0D0
     vsefbn = 0.0D0

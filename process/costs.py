@@ -1587,7 +1587,7 @@ class Costs:
                     costpfsc = (
                         cost_variables.ucsc[pfcoil_variables.i_pf_superconductor - 1]
                         * (1.0e0 - pfcoil_variables.fcupfsu)
-                        * (1.0e0 - pfcoil_variables.vf[i])
+                        * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
                         * abs(
                             pfcoil_variables.c_pf_cs_coils_peak_ma[i]
                             / pfcoil_variables.n_pf_coil_turns[i]
@@ -1619,7 +1619,7 @@ class Costs:
                 costpfcu = (
                     cost_variables.uccu
                     * pfcoil_variables.fcupfsu
-                    * (1.0e0 - pfcoil_variables.vf[i])
+                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
                     * abs(
                         pfcoil_variables.c_pf_cs_coils_peak_ma[i]
                         / pfcoil_variables.n_pf_coil_turns[i]
@@ -1631,7 +1631,7 @@ class Costs:
             else:
                 costpfcu = (
                     cost_variables.uccu
-                    * (1.0e0 - pfcoil_variables.vf[i])
+                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
                     * abs(
                         pfcoil_variables.c_pf_cs_coils_peak_ma[i]
                         / pfcoil_variables.n_pf_coil_turns[i]

@@ -122,7 +122,7 @@ class Power:
                 * abs(
                     pfcoil_variables.j_pf_coil_wp_peak[ic]
                     / (
-                        (1.0e0 - pfcoil_variables.vf[ic])
+                        (1.0e0 - pfcoil_variables.f_a_pf_coil_void[ic])
                         * 1.0e6
                         * pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
                     )

@@ -39,7 +39,7 @@ into account `i_single_null` and other recent changes e.g. rclsnorm)
 *R* = `rtot` + `dr_tf_outboard`/2 + `routr`<br>
 *Z* = $\pm$(`rminor` * `zref(j)`
 
-The void fraction (for coolant) in each coil `i`'s winding pack is given by `vf(i)`.
+The void fraction (for coolant) in each coil `i`'s winding pack is given by `f_a_pf_coil_void(i)`.
 
 ## Coil currents
 
