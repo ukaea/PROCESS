@@ -356,6 +356,110 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_current_profiles_over_time(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Plots the current profiles over time for PF circuits, CS coil, and plasma.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_precharge,
+        t_current_ramp_up,
+        t_fusion_ramp,
+        t_burn,
+        t_ramp_down,
+    ])
+
+    # Find the number of PF circuits, ncirt includes the CS and plasma circuits
+    ncirt = mfile_data.data["ncirt"].get_scan(scan)
+
+    # Extract PF circuit times
+    # ncirt contains the CS and plasma at the end so we subtract 2
+    pf_circuits = {}
+    for i in range(int(ncirt - 2)):
+        pf_circuits[f"PF Circuit {i}"] = [
+            mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(6)
+        ]
+        # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+        axis.plot(
+            t_steps,
+            pf_circuits[f"PF Circuit {i}"],
+            label=f"PF Coil {i + 1}",
+            linestyle="--",
+        )
+
+    # Since CS may not always be present try to retireve values
+    try:
+        cs_circuit = [mfile_data.data[f"cs_t{i}"].get_scan(scan) for i in range(6)]
+        axis.plot(t_steps, cs_circuit, label="CS Coil", linestyle="--")
+    except KeyError:
+        pass
+
+    # Plasma current values
+    plasmat1 = mfile_data.data["plasmat1"].get_scan(scan)
+    plasmat2 = mfile_data.data["plasmat2"].get_scan(scan)
+    plasmat3 = mfile_data.data["plasmat3"].get_scan(scan)
+    plasmat4 = mfile_data.data["plasmat4"].get_scan(scan)
+    plasmat5 = mfile_data.data["plasmat5"].get_scan(scan)
+
+    # x-coirdinates for the plasma current
+    x_plasma = t_steps[1:]
+    # x-coirdinates for the plasma current
+    y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
+
+    # Plot the plasma current
+    axis.plot(x_plasma, y_plasma, "black", linewidth=2, label="Plasma")
+
+    # Move the x-axis to 0 on the y-axis
+    axis.spines["bottom"].set_position("zero")
+
+    # Annotate key points
+    # Create a secondary x-axis for annotations
+    secax = axis.secondary_xaxis("bottom")
+    secax.set_xticks(t_steps)
+    secax.set_xticklabels(
+        [
+            "Precharge",
+            r"$I_{\text{P}}$ Ramp-Up",
+            "Fusion Ramp",
+            "Burn",
+            "Ramp Down",
+            "Between Pulse",
+        ],
+        rotation=60,
+    )
+    secax.tick_params(axis="x", which="major")
+
+    # Add axis labels
+    axis.set_xlabel("Time [s]", fontsize=12)
+    axis.xaxis.set_label_coords(1.05, 0.5)
+    axis.set_ylabel("Current [A]", fontsize=12)
+
+    # Add a title
+    axis.set_title("Current Profiles Over Time", fontsize=14)
+
+    # Add a legend
+    axis.legend()
+
+    axis.set_yscale("symlog")
+
+    # Add a grid for better readability
+    axis.grid(True, linestyle="--", alpha=0.6)
+
+
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
@@ -650,7 +754,7 @@ def plot_nprofile(prof, demo_ranges):
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n_{e} $ $[10^{19} \mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
@@ -672,7 +776,7 @@ def plot_nprofile(prof, demo_ranges):
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
-    prof.plot(rho, ni, label="$n_{i}$", color="red")
+    prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
     prof.plot(rho, ne, label="$n_{e}$", color="blue")
     prof.legend()
 
@@ -711,12 +815,12 @@ def plot_nprofile(prof, demo_ranges):
         # Add text box with density profile parameters
         textstr_density = "\n".join((
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
-            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
             f"{nd_fuel_ions / dene:.3f}",
             rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -785,7 +889,7 @@ def plot_tprofile(prof, demo_ranges):
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel("$T_{e}$ [keV]")
+    prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
 
     if ipedestal == 1:
@@ -836,12 +940,12 @@ def plot_tprofile(prof, demo_ranges):
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
-        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}\n",
+        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}\n",
-        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV\n",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}",
+        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -3225,6 +3329,7 @@ def main_plot(
     fig4,
     fig5,
     fig6,
+    fig7,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3259,18 +3364,16 @@ def main_plot(
 
     # Plot poloidal cross-section
     plot_1 = fig3.add_subplot(121, aspect="equal")
-    plot_1.set_position([0.0, 0.1, 0.5, 0.8])
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
     plot_2 = fig3.add_subplot(122, aspect="equal")
-    plot_2.set_position([0.425, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
     # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
     plot_3 = fig3.add_subplot(222)
-    plot_3.set_position([0.45, 0.5, 0.5, 0.5])
+    plot_3.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
@@ -3346,6 +3449,9 @@ def main_plot(
 
     plot_11 = fig6.add_subplot(221)
     plot_density_limit_comparison(plot_11, m_file_data, scan)
+
+    plot_12 = fig7.add_subplot(111)
+    plot_current_profiles_over_time(plot_12, m_file_data, scan)
 
 
 def main(args=None):
@@ -3615,6 +3721,7 @@ def main(args=None):
     page4 = plt.figure(figsize=(12, 9), dpi=80)
     page5 = plt.figure(figsize=(12, 9), dpi=80)
     page6 = plt.figure(figsize=(12, 9), dpi=80)
+    page7 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3624,6 +3731,7 @@ def main(args=None):
         page4,
         page5,
         page6,
+        page7,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3638,6 +3746,7 @@ def main(args=None):
         pdf.savefig(page4)
         pdf.savefig(page5)
         pdf.savefig(page6)
+        pdf.savefig(page7)
 
     # show fig if option used
     if args.show:
@@ -3649,6 +3758,7 @@ def main(args=None):
     plt.close(page4)
     plt.close(page5)
     plt.close(page6)
+    plt.close(page7)
 
 
 if __name__ == "__main__":
