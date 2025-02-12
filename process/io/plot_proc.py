@@ -2747,7 +2747,7 @@ def plot_power_info(axis, mfile_data, scan):
     crypmw = mfile_data.data["crypmw"].get_scan(scan)
 
     data = [
-        ("wallmw", "Nominal neutron wall load", "MW m$^{-2}$"),
+        ("pflux_fw_neutron_mw", "Nominal neutron wall load", "MW m$^{-2}$"),
         coredescription,
         ped_height,
         ped_pos,

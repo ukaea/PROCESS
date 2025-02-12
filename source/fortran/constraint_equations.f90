@@ -750,9 +750,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fwalld : input real : f-value for maximum wall load
       !! walalw : input real : allowable wall-load (MW/m2)
-      !! wallmw : input real : average neutron wall load (MW/m2)
+      !! pflux_fw_neutron_mw : input real : average neutron wall load (MW/m2)
       use constraint_variables, only: fwalld, walalw
-      use physics_variables, only: wallmw
+      use physics_variables, only: pflux_fw_neutron_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -760,9 +760,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fwalld * walalw/wallmw
+      tmp_cc =  1.0D0 - fwalld * walalw/pflux_fw_neutron_mw
       tmp_con = fwalld * walalw
-      tmp_err = fwalld * walalw - wallmw
+      tmp_err = fwalld * walalw - pflux_fw_neutron_mw
       tmp_symbol = '<'
       tmp_units = 'MW/m2'
 

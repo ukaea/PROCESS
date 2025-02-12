@@ -1484,7 +1484,7 @@ class IFE:
 
             phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
             sang = 1.0 - np.cos(phi)
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
             )
 
@@ -1496,12 +1496,12 @@ class IFE:
             sang = 1.0 - np.cos(phi)
             phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
             sang = sang - (1.0 - np.cos(phi))
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
             )
 
         else:
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.fusion_power / build_variables.a_fw_total
             )
 
@@ -1548,8 +1548,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Neutron wall load (MW/m2)",
-            "(wallmw)",
-            physics_variables.wallmw,
+            "(pflux_fw_neutron_mw)",
+            physics_variables.pflux_fw_neutron_mw,
         )
 
     def driver(self, edrive, gainve, etave):
@@ -1835,7 +1835,7 @@ class IFE:
             life = min(
                 cost_variables.tlife,
                 cost_variables.abktflnc
-                / (physics_variables.wallmw * cost_variables.cfactr),
+                / (physics_variables.pflux_fw_neutron_mw * cost_variables.cfactr),
             )
 
         fwbs_variables.bktlife = life

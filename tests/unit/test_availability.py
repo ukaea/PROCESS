@@ -45,7 +45,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(fwbsv, "life_fw_fpy", life_fw_fpy)
     monkeypatch.setattr(cv, "ibkt_life", ibkt_life)
     monkeypatch.setattr(cv, "abktflnc", 4.0)
-    monkeypatch.setattr(pv, "wallmw", 10.0)
+    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "life_dpa", 40.0)
     monkeypatch.setattr(cv, "adivflnc", 8.0)
@@ -151,7 +151,7 @@ def calc_u_planned_param(**kwargs):
         "cpstflnc": 0.0,
         "tlife": 30.0,
         "num_rh_systems": 5,
-        "wallmw": 1.0,
+        "pflux_fw_neutron_mw": 1.0,
         "hldiv": 10.0,
         "itart": 0,
         "expected": approx(0.3, abs=0.05),
@@ -177,7 +177,7 @@ def calc_u_planned_params():
             cpstflnc=20.0,
             tlife=30.0,
             num_rh_systems=4,
-            wallmw=1.0,
+            pflux_fw_neutron_mw=1.0,
             hldiv=1.0,
             itart=1,
             expected=approx(0.03, abs=0.005),
@@ -207,7 +207,9 @@ def calc_u_planned_fix(request, monkeypatch):
     # Some are parameterised
     monkeypatch.setattr(fortran.divertor_variables, "hldiv", param["hldiv"])
     monkeypatch.setattr(fortran.fwbs_variables, "bktlife", 0.0)
-    monkeypatch.setattr(fortran.physics_variables, "wallmw", param["wallmw"])
+    monkeypatch.setattr(
+        fortran.physics_variables, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
+    )
     monkeypatch.setattr(fortran.physics_variables, "itart", param["itart"])
     monkeypatch.setattr(cv, "tlife", param["tlife"])
     monkeypatch.setattr(cv, "divlife", 0.0)
@@ -568,7 +570,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(dv, "hldiv", 10.0)
     monkeypatch.setattr(cv, "ibkt_life", 0)
     monkeypatch.setattr(cv, "abktflnc", 10.0)
-    monkeypatch.setattr(pv, "wallmw", 10.0)
+    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
     monkeypatch.setattr(cv, "cplife", 5.0)
     monkeypatch.setattr(cv, "cdrlife", 15.0)
 
@@ -594,7 +596,7 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     monkeypatch.setattr(ctv, "nflutfmax", 1.0e23)
     monkeypatch.setattr(fwbsv, "neut_flux_cp", 5.0e14)
     monkeypatch.setattr(cv, "cpstflnc", 20.0)
-    monkeypatch.setattr(pv, "wallmw", 5.0)
+    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 5.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
 
     cplife = availability.cp_lifetime()

@@ -2141,7 +2141,7 @@ class Physics:
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
                 / physics_variables.a_plasma_surface
@@ -2149,14 +2149,14 @@ class Physics:
         else:
             if physics_variables.idivrt == 2:
                 # Double null configuration
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
@@ -4744,8 +4744,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Nominal mean neutron load on inside surface of reactor (MW/m2)",
-            "(wallmw)",
-            physics_variables.wallmw,
+            "(pflux_fw_neutron_mw)",
+            physics_variables.pflux_fw_neutron_mw,
             "OP ",
         )
 

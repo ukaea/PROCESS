@@ -2839,7 +2839,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_shld_outboard: Any = None
     cfactr: Any = None
     tlife: Any = None
-    wallmw: Any = None
+    pflux_fw_neutron_mw: Any = None
     casthi: Any = None
     i_tf_sup: Any = None
     tfsai: Any = None
@@ -2870,7 +2870,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_shld_outboard=0.20000000000000001,
             cfactr=0.75000000000000011,
             tlife=40,
-            wallmw=0.61095969282042206,
+            pflux_fw_neutron_mw=0.61095969282042206,
             casthi=0.050000000000000003,
             i_tf_sup=1,
             tfsai=0,
@@ -2941,7 +2941,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
     )
     monkeypatch.setattr(
-        physics_variables, "wallmw", sctfcoilnuclearheatingiter90param.wallmw
+        physics_variables,
+        "pflux_fw_neutron_mw",
+        sctfcoilnuclearheatingiter90param.pflux_fw_neutron_mw,
     )
     monkeypatch.setattr(
         tfcoil_variables, "casthi", sctfcoilnuclearheatingiter90param.casthi
