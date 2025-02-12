@@ -1639,7 +1639,7 @@ class PFCoil:
         pfv.vs_pf_coils_total_pulse = (
             pfv.vs_pf_coils_total_ramp + pfv.vs_pf_coils_total_burn
         )
-        pfv.vsoh = pfv.vs_cs_burn + pfv.vs_cs_ramp
+        pfv.vs_cs_total_pulse = pfv.vs_cs_burn + pfv.vs_cs_ramp
 
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
@@ -2702,7 +2702,7 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            f"CS coil:\t\t{pfv.vs_cs_ramp:.2f}\t\t\t\t{pfv.vs_cs_burn:.2f}\t\t\t{pfv.vsoh:.2f}",
+            f"CS coil:\t\t{pfv.vs_cs_ramp:.2f}\t\t\t\t{pfv.vs_cs_burn:.2f}\t\t\t{pfv.vs_cs_total_pulse:.2f}",
         )
         op.write(
             self.outfile, "\t" * 3 + "-" * 7 + "\t" * 4 + "-" * 7 + "\t" * 3 + "-" * 7

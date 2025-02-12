@@ -1413,7 +1413,7 @@ def test_vsec(pfcoil, monkeypatch):
     monkeypatch.setattr(pfv, "vs_pf_coils_total_burn", 0)
     monkeypatch.setattr(pfv, "vs_cs_ramp", 0)
     monkeypatch.setattr(pfv, "vs_pf_coils_total_pulse", 0)
-    monkeypatch.setattr(pfv, "vsoh", 0)
+    monkeypatch.setattr(pfv, "vs_cs_total_pulse", 0)
     monkeypatch.setattr(pfv, "vs_cs_pf_total_ramp", 0)
     monkeypatch.setattr(pfv, "vstot", 0)
     monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
@@ -1961,7 +1961,7 @@ def test_vsec(pfcoil, monkeypatch):
     pfcoil.vsec()
 
     assert_array_almost_equal(pfv.vs_cs_pf_total_burn, vsbn_exp)
-    assert_array_almost_equal(pfv.vsoh, vsoh_exp)
+    assert_array_almost_equal(pfv.vs_cs_total_pulse, vsoh_exp)
 
 
 def test_hoop_stress(pfcoil, monkeypatch):
