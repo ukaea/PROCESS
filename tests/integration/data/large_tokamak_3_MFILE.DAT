@@ -777,7 +777,7 @@
  Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.3920E+01 OP 
  Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      3.6097E+08 OP 
  Critical_cable_current_density_at_EOF_(A/m2)___________________________ (jcableoh_eof)_______________      1.0829E+08 OP 
- Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (rjohc)_______________________      3.6485E+07 OP 
+ Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (j_cs_critical_flat_top_end)_______________________      3.6485E+07 OP 
  Actual_overall_current_density_at_EOF_(A/m2)____________________________ (j_cs_flat_top_end)______________________      2.0264E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      1.9854E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.7587E-01 ITV

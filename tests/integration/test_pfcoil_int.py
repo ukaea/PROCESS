@@ -210,7 +210,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "awpoh", 4.232)
     monkeypatch.setattr(pfv, "f_a_cs_steel", 5.926e-1)
     monkeypatch.setattr(pfv, "b_cs_peak_pulse_start", 1.4e1)
-    monkeypatch.setattr(pfv, "rjohc", 4.070e7)
+    monkeypatch.setattr(pfv, "j_cs_critical_flat_top_end", 4.070e7)
     monkeypatch.setattr(pfv, "temp_cs_margin", 1.5)
     monkeypatch.setattr(pfv, "i_pf_conductor", 0)
     monkeypatch.setattr(pfv, "j_pf_wp_critical", np.full(22, 0.0))
@@ -271,7 +271,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     pfcoil.ohcalc()
 
     assert pytest.approx(pfv.b_pf_coil_peak[4]) == 13.073958753751993
-    assert pytest.approx(pfv.rjohc) == 54101481.7685945
+    assert pytest.approx(pfv.j_cs_critical_flat_top_end) == 54101481.7685945
 
 
 def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):

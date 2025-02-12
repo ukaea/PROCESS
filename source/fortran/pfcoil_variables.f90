@@ -262,7 +262,7 @@ module pfcoil_variables
   !! average winding pack current density of PF coil i (A/m2) at time of peak
   !! current in that coil (calculated for `i_pf_location=1` coils)
 
-  real(dp) :: rjohc
+  real(dp) :: j_cs_critical_flat_top_end
   !! allowable central solenoid current density at end of flat-top (A/m2)
 
   real(dp) :: rjohc0
@@ -479,7 +479,7 @@ module pfcoil_variables
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)
-    rjohc = 0.0D0
+    j_cs_critical_flat_top_end = 0.0D0
     rjohc0 = 0.0D0
     j_pf_wp_critical = 0.0D0
     r_cs_middle = 0.0D0

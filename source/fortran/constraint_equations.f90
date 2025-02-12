@@ -1352,14 +1352,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for Central Solenoid current density upper limit at EOF
       !! #=# pfcoil
-      !! #=#=# fjohc, rjohc
+      !! #=#=# fjohc, j_cs_critical_flat_top_end
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjohc : input real : f-value for central solenoid current at end-of-flattop
-      !! rjohc : input real : allowable central solenoid current density at end of flat-top (A/m2)
+      !! j_cs_critical_flat_top_end : input real : allowable central solenoid current density at end of flat-top (A/m2)
       !! j_cs_flat_top_end : input real : central solenoid overall current density at end of flat-top (A/m2)
       use constraint_variables, only: fjohc
-      use pfcoil_variables, only: rjohc, j_cs_flat_top_end
+      use pfcoil_variables, only: j_cs_critical_flat_top_end, j_cs_flat_top_end
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1367,9 +1367,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjohc * rjohc/j_cs_flat_top_end
-      tmp_con = rjohc
-      tmp_err = rjohc - j_cs_flat_top_end / fjohc
+      tmp_cc =  1.0D0 - fjohc * j_cs_critical_flat_top_end/j_cs_flat_top_end
+      tmp_con = j_cs_critical_flat_top_end
+      tmp_err = j_cs_critical_flat_top_end - j_cs_flat_top_end / fjohc
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
