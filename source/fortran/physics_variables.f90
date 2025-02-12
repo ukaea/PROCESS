@@ -561,7 +561,7 @@ module physics_variables
   real(dp) :: alpha_power_electron_density
   !! Alpha power per volume to electrons [MW/m3]
 
-  real(dp) :: palpfwmw
+  real(dp) :: p_fw_alpha_mw
   !! alpha power escaping plasma and reaching first wall (MW)
 
   real(dp) :: alpha_power_ions_density
@@ -1024,7 +1024,7 @@ module physics_variables
     alpha_power_density_plasma = 0.0D0
     alpha_power_density_total = 0.0D0
     alpha_power_electron_density = 0.0D0
-    palpfwmw = 0.0D0
+    p_fw_alpha_mw = 0.0D0
     alpha_power_ions_density = 0.0D0
     alpha_power_total = 0.0D0
     alpha_power_plasma = 0.0D0
