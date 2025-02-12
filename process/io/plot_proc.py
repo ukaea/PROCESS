@@ -387,10 +387,11 @@ def plot_current_profiles_over_time(
     ncirt = mfile_data.data["ncirt"].get_scan(scan)
 
     # Extract PF circuit times
+    # ncirt contains the CS and plasma at the end so we subtract 2
     pf_circuits = {}
     for i in range(int(ncirt - 2)):
         pf_circuits[f"PF Circuit {i}"] = [
-            mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(int(ncirt - 2))
+            mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(6)
         ]
         # Change from 0 to 1 index to align with poloidal cross-section plot numbering
         axis.plot(
