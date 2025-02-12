@@ -72,7 +72,7 @@ class BurnParam(NamedTuple):
 
     vs_cs_pf_total_burn: Any = None
 
-    vstot: Any = None
+    vs_cs_pf_total_pulse: Any = None
 
     plasma_current: Any = None
 
@@ -1286,7 +1286,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             vsres=59.392760827339345,
             vsind=284.23601098215397,
             vs_cs_pf_total_burn=0,
-            vstot=-718.91787876294552,
+            vs_cs_pf_total_pulse=-718.91787876294552,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
@@ -1301,7 +1301,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             res_plasma=3.2347283861249307e-09,
             vsres=59.392760827339345,
             vsind=284.23601098215397,
-            vstot=-718.9849676846776,
+            vs_cs_pf_total_pulse=-718.9849676846776,
             vs_cs_pf_total_burn=-354.76231817639609,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
@@ -1334,7 +1334,9 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "vsind", burnparam.vsind)
 
-    monkeypatch.setattr(pfcoil_variables, "vstot", burnparam.vstot)
+    monkeypatch.setattr(
+        pfcoil_variables, "vs_cs_pf_total_pulse", burnparam.vs_cs_pf_total_pulse
+    )
 
     monkeypatch.setattr(
         pfcoil_variables, "vs_cs_pf_total_burn", burnparam.vs_cs_pf_total_burn

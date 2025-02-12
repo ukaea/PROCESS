@@ -164,7 +164,7 @@ class Pulse:
         vssoft = physics_variables.vsres + physics_variables.vsind
 
         #  Total volt-seconds available during flat-top (heat + burn)
-        #  (Previously calculated as (abs(pfcoil_variables.vstot) - vssoft) )
+        #  (Previously calculated as (abs(pfcoil_variables.vs_cs_pf_total_pulse) - vssoft) )
 
         vsmax = (
             -pfcoil_variables.vs_cs_pf_total_burn
@@ -199,8 +199,8 @@ class Pulse:
             po.ovarre(
                 self.outfile,
                 "Total V-s capability of Central Solenoid/PF coils (Wb)",
-                "(abs(vstot))",
-                abs(pfcoil_variables.vstot),
+                "(abs(vs_cs_pf_total_pulse))",
+                abs(pfcoil_variables.vs_cs_pf_total_pulse),
             )
             po.ovarre(
                 self.outfile,
