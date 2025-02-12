@@ -1843,7 +1843,7 @@ i_pf_superconductor = 9
 * DESCRIPTION:  PF coil resistivity (if i_pf_conductor=1) (Ohm-m) 
 * JUSTIFICATION: Not used, superconducting PF coil
 
-*vf =  
+*f_a_pf_coil_void =  
 * DESCRIPTION:   Winding pack void fraction of PF coil i for coolant (default = 0.3)
 * JUSTIFICATION: Not yet set
 
