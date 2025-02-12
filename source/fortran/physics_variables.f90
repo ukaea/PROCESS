@@ -621,7 +621,7 @@ module physics_variables
   real(dp) :: p_plasma_outer_rad_mw
   !! radiation power from outer zone (MW)
 
-  real(dp) :: pedgeradpv
+  real(dp) :: pden_plasma_outer_rad_mw
   !! edge radiation power per volume (MW/m3)
 
   real(dp) :: vs_plasma_internal
@@ -1040,7 +1040,7 @@ module physics_variables
     dt_power_total = 0.0D0
     dt_power_plasma = 0.0D0
     p_plasma_outer_rad_mw = 0.0D0
-    pedgeradpv = 0.0D0
+    pden_plasma_outer_rad_mw = 0.0D0
     charged_particle_power = 0.0D0
     vs_plasma_internal = 0.0D0
     pflux_fw_rad_mw = 0.0D0

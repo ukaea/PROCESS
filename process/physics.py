@@ -2179,14 +2179,14 @@ class Physics:
         radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
         physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         physics_variables.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
-        physics_variables.pedgeradpv = radpwrdata.pedgeradpv
+        physics_variables.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
         physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
         physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_outer_rad_mw = (
-            physics_variables.pedgeradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_outer_rad_mw * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_rad_mw = (
             physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
