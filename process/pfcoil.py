@@ -1636,7 +1636,9 @@ class PFCoil:
         pfv.vs_cs_pf_total_burn = pfv.vs_cs_burn + pfv.vs_pf_coils_total_burn
 
         pfv.vstot = pfv.vs_cs_pf_total_ramp + pfv.vs_cs_pf_total_burn
-        pfv.vseft = pfv.vs_pf_coils_total_ramp + pfv.vs_pf_coils_total_burn
+        pfv.vs_pf_coils_total_pulse = (
+            pfv.vs_pf_coils_total_ramp + pfv.vs_pf_coils_total_burn
+        )
         pfv.vsoh = pfv.vs_cs_burn + pfv.vs_cs_ramp
 
     def hoop_stress(self, r):
@@ -2696,7 +2698,7 @@ class PFCoil:
         op.write(self.outfile, "\t" * 3 + "start-up\t\t\t_burn\t\t\ttotal")
         op.write(
             self.outfile,
-            f"PF coils:\t\t{pfv.vs_pf_coils_total_ramp:.2f}\t\t\t\t{pfv.vs_pf_coils_total_burn:.2f}\t\t\t{pfv.vseft:.2f}",
+            f"PF coils:\t\t{pfv.vs_pf_coils_total_ramp:.2f}\t\t\t\t{pfv.vs_pf_coils_total_burn:.2f}\t\t\t{pfv.vs_pf_coils_total_pulse:.2f}",
         )
         op.write(
             self.outfile,
