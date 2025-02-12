@@ -1653,7 +1653,7 @@ i_pf_conductor = 0
 * DESCRIPTION:   Central solenoid steel fraction
 * JUSTIFICATION: Not used. Using default
 
-*vfohc =  
+*f_a_cs_void =  
 * DESCRIPTION:   Void fraction of central solenoid conductor for coolant
 * JUSTIFICATION: Not yet set.
 

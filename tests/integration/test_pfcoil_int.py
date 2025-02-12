@@ -196,7 +196,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
     monkeypatch.setattr(pfv, "j_cs_flat_top_end", 1.693e7)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
-    monkeypatch.setattr(pfv, "vfohc", 3.0e-1)
+    monkeypatch.setattr(pfv, "f_a_cs_void", 3.0e-1)
     monkeypatch.setattr(pfv, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
     monkeypatch.setattr(pfv, "i_cs_superconductor", 5)

@@ -1126,7 +1126,7 @@ class PFCoil:
             csfv.t_structural_radial = 1.0e-3
 
         # Non-steel area void fraction for coolant
-        pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.vfohc
+        pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
 
         # Peak field at the End-Of-Flattop (EOF)
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
@@ -1244,7 +1244,7 @@ class PFCoil:
         if pfv.i_pf_conductor == 0:
             pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
                 pfv.awpoh
-                * (1.0e0 - pfv.vfohc)
+                * (1.0e0 - pfv.f_a_cs_void)
                 * 2.0e0
                 * constants.pi
                 * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
@@ -1253,7 +1253,7 @@ class PFCoil:
         else:
             pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
                 pfv.awpoh
-                * (1.0e0 - pfv.vfohc)
+                * (1.0e0 - pfv.f_a_cs_void)
                 * 2.0e0
                 * constants.pi
                 * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
@@ -1271,7 +1271,7 @@ class PFCoil:
                 tmarg1,
              = self.superconpf(
                 pfv.b_cs_peak_flat_top_end,
-                pfv.vfohc,
+                pfv.f_a_cs_void,
                 pfv.fcuohsu,
                 (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
                 * 1.0e6,
@@ -1302,7 +1302,7 @@ class PFCoil:
                 tmarg2,
              = self.superconpf(
                 pfv.b_cs_peak_pulse_start,
-                pfv.vfohc,
+                pfv.f_a_cs_void,
                 pfv.fcuohsu,
                 (abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) / pfv.awpoh)
                 * 1.0e6,
@@ -1329,7 +1329,7 @@ class PFCoil:
                 * constants.pi
                 * pfv.r_cs_middle
                 * pfv.rho_pf_coil
-                / (pfv.a_cs_poloidal * (1.0e0 - pfv.vfohc))
+                / (pfv.a_cs_poloidal * (1.0e0 - pfv.f_a_cs_void))
                 * (1.0e6 * pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) ** 2
             )
             pfv.p_pf_coil_resistive_total_flat_top = (
@@ -2165,15 +2165,15 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "   CS conductor cross-sectional area (m2)",
-                    "(awpoh*(1-vfohc))",
-                    pfv.awpoh * (1.0e0 - pfv.vfohc),
+                    "(awpoh*(1-f_a_cs_void))",
+                    pfv.awpoh * (1.0e0 - pfv.f_a_cs_void),
                     "OP ",
                 )
                 op.ovarre(
                     self.outfile,
                     "   CS void cross-sectional area (m2)",
-                    "(awpoh*vfohc)",
-                    pfv.awpoh * pfv.vfohc,
+                    "(awpoh*f_a_cs_void)",
+                    pfv.awpoh * pfv.f_a_cs_void,
                     "OP ",
                 )
                 op.ovarre(
@@ -2268,8 +2268,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Void (coolant) fraction in conductor",
-                    "(vfohc)",
-                    pfv.vfohc,
+                    "(f_a_cs_void)",
+                    pfv.f_a_cs_void,
                 )
                 op.ovarre(
                     self.outfile,
@@ -3037,7 +3037,7 @@ class PFCoil:
             # The CS coil current/copper area calculation for quench protection
             # Copper area = (area of coil - area of steel)*(1- void fraction)*
             # (fraction of copper in strands)
-            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu)
 
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
@@ -3066,7 +3066,7 @@ class PFCoil:
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu)
 
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
@@ -3082,7 +3082,7 @@ class PFCoil:
             # The CS coil current at EOF
             # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu)
+            # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu)
 
         else:
             # Error condition
@@ -3102,7 +3102,7 @@ class PFCoil:
                 )
                 # CS coil current/copper area calculation for quench protection
                 rcv.copperaoh_m2 = ioheof / (
-                    pfv.awpoh * (1.0 - pfv.vfohc) * pfv.fcuohsu
+                    pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu
                 )
 
         #  Critical current density in winding pack

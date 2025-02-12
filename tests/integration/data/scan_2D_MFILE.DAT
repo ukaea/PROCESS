@@ -785,8 +785,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.8157E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4641E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.1249E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3392E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.1249E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3392E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3516E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9362E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -797,7 +797,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7111E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5002E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -1948,8 +1948,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7740E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4122E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0885E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3236E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0885E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3236E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3618E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9713E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -1960,7 +1960,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7249E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5045E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -3111,8 +3111,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7859E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4050E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0835E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3215E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0835E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3215E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3809E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9863E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -3123,7 +3123,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7388E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5074E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -4274,8 +4274,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7854E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4021E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0815E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3206E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0815E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3206E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3832E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9892E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -4286,7 +4286,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7345E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5086E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -5437,8 +5437,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.7723E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.4171E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0920E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3251E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0920E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3251E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3552E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9647E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -5449,7 +5449,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7279E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5092E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -6600,8 +6600,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6728E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3772E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0641E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3132E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0641E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3132E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2955E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9529E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -6612,7 +6612,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7019E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5008E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -7763,8 +7763,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6497E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3615E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0530E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3084E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0530E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3084E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2882E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9576E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -7775,7 +7775,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.6962E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5019E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -8926,8 +8926,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6700E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3602E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0522E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3081E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0522E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3081E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3098E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9709E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -8938,7 +8938,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7147E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5057E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -10089,8 +10089,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6862E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3557E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0490E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3067E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0490E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3067E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3305E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9855E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -10101,7 +10101,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7317E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5072E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -11252,8 +11252,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6857E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3543E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0480E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3063E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0480E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3063E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3314E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -11264,7 +11264,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7296E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5076E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -12415,8 +12415,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6819E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3642E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0549E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3092E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0549E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3092E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3178E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9733E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -12427,7 +12427,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7126E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5092E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -13578,8 +13578,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6566E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3537E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0476E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3061E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0476E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3061E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3029E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9706E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -13590,7 +13590,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.6888E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5115E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -14741,8 +14741,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6562E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3519E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0463E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3056E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0463E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3056E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3043E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9725E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -14753,7 +14753,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.6861E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5123E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -15904,8 +15904,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6782E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3542E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0480E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3063E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0480E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3063E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3239E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9826E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -15916,7 +15916,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7081E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5149E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
@@ -17067,8 +17067,8 @@
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
  CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      8.6980E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3540E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0478E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3062E+00 OP 
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0478E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3062E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3439E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9942E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
@@ -17079,7 +17079,7 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.7292E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
  CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5162E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    

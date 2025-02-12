@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, f_a_pf_coil_void, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fb_cs_limit_max, ngc, rpf2, fcohbop, f_z_cs_tf_internal, vfohc, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
+      fb_cs_limit_max, ngc, rpf2, fcohbop, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
       n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1915,8 +1915,8 @@ contains
        case ('f_a_pf_coil_void')
           call parse_real_array('f_a_pf_coil_void', f_a_pf_coil_void, isub1, ngc2, &
                'Void fraction of PF coil', icode)
-       case ('vfohc')
-          call parse_real_variable('vfohc', vfohc, 0.0D0, 1.0D0, &
+       case ('f_a_cs_void')
+          call parse_real_variable('f_a_cs_void', f_a_cs_void, 0.0D0, 1.0D0, &
                'Central Solenoid void fraction for coolant')
        case ('zref')
           call parse_real_array('zref', zref, isub1, n_pf_groups_max, &
