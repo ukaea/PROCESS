@@ -217,7 +217,7 @@ class PfpwrParam(NamedTuple):
 
     vf: Any = None
 
-    rjconpf: Any = None
+    j_pf_coil_wp_peak: Any = None
 
     r_pf_coil_middle: Any = None
 
@@ -798,7 +798,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -1540,7 +1540,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -1838,7 +1838,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "vf", pfpwrparam.vf)
 
-    monkeypatch.setattr(pfcoil_variables, "rjconpf", pfpwrparam.rjconpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "j_pf_coil_wp_peak", pfpwrparam.j_pf_coil_wp_peak
+    )
 
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
