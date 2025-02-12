@@ -1,13 +1,14 @@
 import logging
 import math
 
+from scipy.special import comb as combinations
+
 from process import fortran as ft
 from process.fortran import constraint_variables as ctv
 from process.fortran import cost_variables as cv
 from process.fortran import divertor_variables as dv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import ife_variables as ifev
-from process.fortran import maths_library
 from process.fortran import physics_variables as pv
 from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
@@ -953,10 +954,9 @@ class Availability:
 
         for n in range(cv.redun_vac + 1, total_pumps + 1):
             # Probability for n failures in the operational period, n > number of redundant pumps
-            # vac_fail_p.append(maths_library.binomial(total_pumps,n) * (cryo_nfailure_rate**(total_pumps-n)) *(cryo_failure_rate**n))
 
             # calculate sum in formula for downtime
-            sum_prob = sum_prob + maths_library.binomial(total_pumps, n) * (
+            sum_prob = sum_prob + combinations(total_pumps, n) * (
                 cryo_nfailure_rate ** (total_pumps - n)
             ) * (cryo_failure_rate**n) * (n - cv.redun_vac)
 

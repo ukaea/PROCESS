@@ -281,7 +281,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: MonkeyPatch
     """
     ngrpmx = 10
-    nclsmx = 2
     nptsmx = 32
     nfixmx = 64
     lrow1 = 2 * nptsmx + ngrpmx
@@ -408,14 +407,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
-    rc = np.full(nclsmx, 0.0)
-    zc = np.full(nclsmx, 0.0)
-    cc = np.full(nclsmx, 0.0)
-    xc = np.full(nclsmx, 0.0)
-    umat = np.full([lrow1, lcol1], 0.0, order="F")
-    vmat = np.full([lrow1, lcol1], 0.0, order="F")
-    sigma = np.full(ngrpmx, 0.0)
-    work2 = np.full(ngrpmx, 0.0)
 
     ssq, ccls = pfcoil.efc(
         npts,
@@ -435,23 +426,17 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         bfix,
         gmat,
         bvec,
-        rc,
-        zc,
-        cc,
-        xc,
-        umat,
-        vmat,
-        sigma,
-        work2,
     )
 
     assert pytest.approx(ssq) == 4.208729e-4
-    assert pytest.approx(ccls[0:4]) == np.array([
-        12846165.42893886,
-        16377261.02000236,
-        579111.6216917,
-        20660782.82356247,
-    ])
+    assert ccls[0:4] == pytest.approx(
+        np.array([
+            12846165.42893886,
+            16377261.02000236,
+            579111.6216917,
+            0.0,
+        ])
+    )
 
 
 def test_mtrx(pfcoil: PFCoil):
@@ -1642,31 +1627,9 @@ def test_solv(pfcoil: PFCoil):
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls, umat, vmat, sigma, work2 = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
+    ccls = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
 
-    assert_array_almost_equal(ccls, np.array([0.16666667, 0.37079081, -0.03745748]))
-    assert_array_almost_equal(
-        umat,
-        np.array([
-            [-0.81649658, -0.57735027, 0.0],
-            [0.40824829, -0.57735027, -0.70710678],
-            [0.40824829, -0.57735027, 0.70710678],
-        ]),
-    )
-    assert_array_almost_equal(
-        vmat,
-        np.array([
-            [-0.81649658, -0.57735027, 0.0],
-            [0.40824829, -0.57735027, -0.70710678],
-            [0.40824829, -0.57735027, 0.70710678],
-        ]),
-    )
-    assert_array_almost_equal(
-        sigma, np.array([5.1279005e-16, 6.0000000e00, 0.0000000e00])
-    )
-    assert_array_almost_equal(
-        work2, np.array([-2.22044605e-16, -1.73205081e00, 0.00000000e00])
-    )
+    assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
 
 
 def test_fixb(pfcoil: PFCoil):

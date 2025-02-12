@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
     blanket_library,
     build_variables,
@@ -11,7 +12,6 @@ from process.fortran import (
     divertor_variables,
     error_handling,
     fwbs_variables,
-    maths_library,
     numerics,
     pfcoil_variables,
     physics_variables,
@@ -2001,15 +2001,12 @@ class Build:
                 + build_variables.dr_fw_plasma_gap_outboard
             ) - r1
             #  Calculate surface area, assuming 100% coverage
-            # maths_library.eshellarea was not working across
-            # the interface so has been reimplemented here
-            # as a test
 
             (
                 build_variables.fwareaib,
                 build_variables.fwareaob,
                 build_variables.fwarea,
-            ) = maths_library.dshellarea(r1, r2, hfw)
+            ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
             #  Major radius to centre of inboard and outboard ellipses
@@ -2038,15 +2035,11 @@ class Build:
 
             #  Calculate surface area, assuming 100% coverage
 
-            # maths_library.eshellarea was not working across
-            # the interface so has been reimplemented here
-            # as a test
-
             (
                 build_variables.fwareaib,
                 build_variables.fwareaob,
                 build_variables.fwarea,
-            ) = maths_library.eshellarea(r1, r2, r3, hfw)
+            ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
