@@ -565,7 +565,9 @@ class PFCoil:
                     aturn[i] = area / pfv.n_pf_coil_turns[i]
 
                     # Actual winding pack current density
-                    pfv.rjconpf[i] = 1.0e6 * abs(pfv.c_pf_cs_coils_peak_ma[i]) / area
+                    pfv.j_pf_coil_wp_peak[i] = (
+                        1.0e6 * abs(pfv.c_pf_cs_coils_peak_ma[i]) / area
+                    )
 
                     # Location of edges of each coil:
                     # r_pf_coil_inner = inner radius, r_pf_coil_outer = outer radius
@@ -584,10 +586,14 @@ class PFCoil:
                         pfv.z_pf_coil_upper[i] = pfv.z_pf_coil_middle[i] - dz
 
                 else:
-                    # Other coils. N.B. Current density RJCONPF[i] is defined in
+                    # Other coils. N.B. Current density j_pf_coil_wp_peak[i] is defined in
                     # routine INITIAL for these coils.
                     area = (
-                        abs(pfv.c_pf_cs_coils_peak_ma[i] * 1.0e6 / pfv.rjconpf[i])
+                        abs(
+                            pfv.c_pf_cs_coils_peak_ma[i]
+                            * 1.0e6
+                            / pfv.j_pf_coil_wp_peak[i]
+                        )
                         * pfv.pf_current_safety_factor
                     )
 
@@ -644,7 +650,7 @@ class PFCoil:
                         bmax,
                         pfv.vf[i],
                         pfv.fcupfsu,
-                        pfv.rjconpf[i],
+                        pfv.j_pf_coil_wp_peak[i],
                         pfv.i_pf_superconductor,
                         tfv.fhts,
                         tfv.str_pf_con_res,
@@ -2612,12 +2618,12 @@ class PFCoil:
             if pfv.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.rjconpf[k]:.2e}\t{pfv.rjconpf[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t{pfv.j_pf_wp_critical[k]:.2e}\t{pfv.j_pf_coil_wp_peak[k]:.2e}\t{pfv.j_pf_coil_wp_peak[k] / pfv.j_pf_wp_critical[k]:.2e}\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{pfv.rjconpf[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}\t",
+                    f"PF {k}\t{pfv.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{pfv.j_pf_coil_wp_peak[k]:.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[k]:.2e}\t{pfv.m_pf_coil_structure[k]:.2e}\t{pfv.b_pf_coil_peak[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
