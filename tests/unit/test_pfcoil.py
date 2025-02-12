@@ -1222,7 +1222,7 @@ def test_vsec(pfcoil, monkeypatch):
     """
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfv, "vs_pf_coils_total_ramp", 0)
-    monkeypatch.setattr(pfv, "vsbn", 0)
+    monkeypatch.setattr(pfv, "vs_cs_pf_total_burn", 0)
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "vs_cs_burn", 0)
     monkeypatch.setattr(
@@ -1960,7 +1960,7 @@ def test_vsec(pfcoil, monkeypatch):
 
     pfcoil.vsec()
 
-    assert_array_almost_equal(pfv.vsbn, vsbn_exp)
+    assert_array_almost_equal(pfv.vs_cs_pf_total_burn, vsbn_exp)
     assert_array_almost_equal(pfv.vsoh, vsoh_exp)
 
 

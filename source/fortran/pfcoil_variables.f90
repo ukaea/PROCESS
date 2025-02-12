@@ -323,7 +323,7 @@ module pfcoil_variables
   real(dp) :: f_a_cs_void
   !! void fraction of central solenoid conductor for coolant
 
-  real(dp) :: vsbn
+  real(dp) :: vs_cs_pf_total_burn
   !! total flux swing available for burn (Wb)
 
   real(dp) :: vs_pf_coils_total_burn
@@ -497,7 +497,7 @@ module pfcoil_variables
     n_pf_coil_turns = 0.0D0
     f_a_pf_coil_void = 0.3D0
     f_a_cs_void = 0.3D0
-    vsbn = 0.0D0
+    vs_cs_pf_total_burn = 0.0D0
     vs_pf_coils_total_burn = 0.0D0
     vs_pf_coils_total_ramp = 0.0D0
     vseft = 0.0D0
