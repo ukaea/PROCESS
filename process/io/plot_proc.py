@@ -406,7 +406,7 @@ def plot_current_profiles_over_time(
         cs_circuit = [mfile_data.data[f"cs_t{i}"].get_scan(scan) for i in range(6)]
         axis.plot(t_steps, cs_circuit, label="CS Coil", linestyle="--")
     except KeyError:
-        print("CS circuit data not found in MFILE.")
+        pass
 
     # Plasma current values
     plasmat1 = mfile_data.data["plasmat1"].get_scan(scan)
