@@ -2639,7 +2639,7 @@ f_fw_rad_max = 1.0
 *icc = 8
 * DESCRIPTION:   Neutron wall load upper limit
 * JUSTIFICATION: Turned off, dot care about wall load
-* VARIABLES:     wallmw calculated in-situ
+* VARIABLES:     pflux_fw_neutron_mw calculated in-situ
 
 *iwalld = 2
 * DESCRIPTION:   Switch for neutron wall load calculation (default = 1)

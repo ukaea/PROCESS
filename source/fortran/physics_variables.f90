@@ -879,7 +879,7 @@ module physics_variables
   real(dp) :: vsstt
   !! total V-s needed (Wb)
 
-  real(dp) :: wallmw
+  real(dp) :: pflux_fw_neutron_mw
   !! average neutron wall load (MW/m2)
 
   real(dp) :: wtgpd
@@ -1121,7 +1121,7 @@ module physics_variables
     vsind = 0.0D0
     vsres = 0.0D0
     vsstt = 0.0D0
-    wallmw = 0.0D0
+    pflux_fw_neutron_mw = 0.0D0
     wtgpd = 0.0D0
     a_plasma_poloidal = 0.0D0
     zeff = 0.0D0

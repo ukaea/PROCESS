@@ -100,12 +100,14 @@ class Availability:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
-                    fwbsv.bktlife = min(cv.abktflnc / pv.wallmw, cv.tlife)
+                    fwbsv.bktlife = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
                 else:
                     fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
             else:
                 if cv.ibkt_life == 0:
-                    fwbsv.bktlife = min(fwbsv.fwlife, cv.abktflnc / pv.wallmw, cv.tlife)
+                    fwbsv.bktlife = min(
+                        fwbsv.fwlife, cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
+                    )
                 else:
                     fwbsv.bktlife = min(
                         fwbsv.fwlife, cv.life_dpa / dpa_fpy, cv.tlife
@@ -472,7 +474,7 @@ class Availability:
         # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
         # or DEMO fusion power model (ibkt_life=1)
         if cv.ibkt_life == 0:
-            fwbsv.bktlife = min(cv.abktflnc / pv.wallmw, cv.tlife)
+            fwbsv.bktlife = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
         else:
             fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
 
@@ -1043,7 +1045,7 @@ class Availability:
         dpa_fpy = f_scale * ref_dpa_fpy
 
         if cv.ibkt_life == 0:
-            fwbsv.bktlife = min(cv.abktflnc / pv.wallmw, cv.tlife)
+            fwbsv.bktlife = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
         else:
             fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
 
@@ -1188,8 +1190,8 @@ class Availability:
                 po.ovarre(
                     self.outfile,
                     "Average neutron wall load (MW/m2)",
-                    "(wallmw)",
-                    pv.wallmw,
+                    "(pflux_fw_neutron_mw)",
+                    pv.pflux_fw_neutron_mw,
                     "OP ",
                 )
             po.ovarre(
@@ -1286,7 +1288,7 @@ class Availability:
         # Aluminium/Copper magnets CP lifetime
         # For now, we keep the original def, developed for GLIDCOP magnets ...
         else:
-            cplife = min(cv.cpstflnc / pv.wallmw, cv.tlife)
+            cplife = min(cv.cpstflnc / pv.pflux_fw_neutron_mw, cv.tlife)
 
         return cplife
 

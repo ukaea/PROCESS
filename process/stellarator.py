@@ -1108,7 +1108,8 @@ class Stellarator:
         of the plasma.
         """
         fwbs_variables.fwlife = min(
-            cost_variables.abktflnc / physics_variables.wallmw, cost_variables.tlife
+            cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
+            cost_variables.tlife,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -1865,8 +1866,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Average neutron wall load (MW/m2)",
-                "(wallmw)",
-                physics_variables.wallmw,
+                "(pflux_fw_neutron_mw)",
+                physics_variables.pflux_fw_neutron_mw,
             )
             if fwbs_variables.blktmodel > 0:
                 po.ovarre(
@@ -2346,7 +2347,7 @@ class Stellarator:
 
             coilhtmx = (
                 fact[0]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
                 * np.exp(-decay[5, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
@@ -2361,7 +2362,7 @@ class Stellarator:
             )
             ptfowp = (
                 fact[0]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
                 * np.exp(-decay[5, ishmat] * (dshoeq + tfcoil_variables.casthi))
                 * tfcoil_variables.tfsao
@@ -2373,7 +2374,7 @@ class Stellarator:
 
             htheci = (
                 fact[1]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshieq)
             )
@@ -2385,7 +2386,7 @@ class Stellarator:
             )
             pheco = (
                 fact[1]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshoeq)
                 * tfcoil_variables.tfsao
@@ -2409,7 +2410,7 @@ class Stellarator:
                 coef[2, ishmat]
                 * fpsdt
                 * fact[2]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * np.exp(-decay[2, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
 
@@ -2418,7 +2419,7 @@ class Stellarator:
             nflutf = (
                 fpsdt
                 * fact[3]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[3, ishmat]
                 * np.exp(-decay[3, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
@@ -2428,7 +2429,7 @@ class Stellarator:
             dpacop = (
                 fpsdt
                 * fact[4]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[4, ishmat]
                 * np.exp(-decay[4, ishmat] * (dshieq + tfcoil_variables.casthi))
             )
@@ -4241,20 +4242,20 @@ class Stellarator:
         #  Neutron wall load
 
         if physics_variables.iwalld == 1:
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhole)
                     * physics_variables.neutron_power_total
                     / build_variables.fwarea
                 )
             else:
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (
                         1.0e0
                         - fwbs_variables.fhole
