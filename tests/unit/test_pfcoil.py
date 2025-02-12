@@ -1412,7 +1412,7 @@ def test_vsec(pfcoil, monkeypatch):
     )
     monkeypatch.setattr(pfv, "vs_pf_coils_total_burn", 0)
     monkeypatch.setattr(pfv, "vs_cs_ramp", 0)
-    monkeypatch.setattr(pfv, "vseft", 0)
+    monkeypatch.setattr(pfv, "vs_pf_coils_total_pulse", 0)
     monkeypatch.setattr(pfv, "vsoh", 0)
     monkeypatch.setattr(pfv, "vs_cs_pf_total_ramp", 0)
     monkeypatch.setattr(pfv, "vstot", 0)
