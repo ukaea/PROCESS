@@ -218,7 +218,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "vf", np.full(22, 0.3))
     monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "b_pf_coil_peak", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "jscoh_eof", 4.758e8)
+    monkeypatch.setattr(pfv, "j_cs_conductor_critical_flat_top_end", 4.758e8)
     monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_inner", np.full(22, 0.0))
