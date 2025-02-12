@@ -36,7 +36,7 @@ class TohswgParam(NamedTuple):
 
     n_cs_pf_coils: Any = None
 
-    powohres: Any = None
+    p_cs_resistive_flat_top: Any = None
 
     ind_pf_cs_plasma_mutual: Any = None
 
@@ -102,7 +102,7 @@ class BurnParam(NamedTuple):
             n_pf_cs_plasma_circuits=8,
             i_pf_conductor=0,
             n_cs_pf_coils=7,
-            powohres=0,
+            p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
@@ -660,7 +660,7 @@ class BurnParam(NamedTuple):
             n_pf_cs_plasma_circuits=8,
             i_pf_conductor=0,
             n_cs_pf_coils=7,
-            powohres=0,
+            p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
@@ -1241,7 +1241,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
 
-    monkeypatch.setattr(pfcoil_variables, "powohres", tohswgparam.powohres)
+    monkeypatch.setattr(
+        pfcoil_variables, "p_cs_resistive_flat_top", tohswgparam.p_cs_resistive_flat_top
+    )
 
     monkeypatch.setattr(
         pfcoil_variables, "ind_pf_cs_plasma_mutual", tohswgparam.ind_pf_cs_plasma_mutual

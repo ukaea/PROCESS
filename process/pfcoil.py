@@ -1308,7 +1308,7 @@ class PFCoil:
         else:
             # Resistive power losses (non-superconducting coil)
 
-            pfv.powohres = (
+            pfv.p_cs_resistive_flat_top = (
                 2.0e0
                 * constants.pi
                 * pfv.r_cs_middle
@@ -1316,7 +1316,7 @@ class PFCoil:
                 / (pfv.a_cs_poloidal * (1.0e0 - pfv.vfohc))
                 * (1.0e6 * pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) ** 2
             )
-            pfv.powpfres = pfv.powpfres + pfv.powohres
+            pfv.powpfres = pfv.powpfres + pfv.p_cs_resistive_flat_top
 
     def peakb(self, i, ii, it):
         """Calculates the peak field at a PF coil.
@@ -2470,8 +2470,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Central solenoid resistive power (W)",
-                    "(powohres)",
-                    pfv.powohres,
+                    "(p_cs_resistive_flat_top)",
+                    pfv.p_cs_resistive_flat_top,
                     "OP ",
                 )
 

@@ -243,7 +243,7 @@ module pfcoil_variables
   real(dp) :: pfwpmw
   !! Total mean wall plug power dissipated in PFC and CS power supplies (MW) (issue #713)
 
-  real(dp) :: powohres
+  real(dp) :: p_cs_resistive_flat_top
   !! central solenoid resistive power during flattop (W)
 
   real(dp) :: powpfres
@@ -470,7 +470,7 @@ module pfcoil_variables
     pfmmax = 0.0D0
     r_pf_coil_outer_max = 0.0D0
     pfwpmw = 0.0D0
-    powohres = 0.0D0
+    p_cs_resistive_flat_top = 0.0D0
     powpfres = 0.0D0
     r_pf_coil_inner = 0.0D0
     r_pf_coil_outer = 0.0D0

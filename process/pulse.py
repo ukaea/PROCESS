@@ -63,7 +63,7 @@ class Pulse:
             r = 0.0e0
         else:
             r = (
-                pfcoil_variables.powohres
+                pfcoil_variables.p_cs_resistive_flat_top
                 / (
                     1.0e6
                     * pfcoil_variables.c_pf_cs_coils_peak_ma[
