@@ -1221,7 +1221,7 @@ def test_vsec(pfcoil, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(pfv, "vsefsu", 0)
+    monkeypatch.setattr(pfv, "vs_pf_coils_total_ramp", 0)
     monkeypatch.setattr(pfv, "vsbn", 0)
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "vs_cs_burn", 0)

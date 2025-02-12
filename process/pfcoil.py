@@ -1601,7 +1601,7 @@ class PFCoil:
         else:
             pf.nef = pfv.n_pf_cs_plasma_circuits - 2
 
-        pfv.vsefsu = 0.0e0
+        pfv.vs_pf_coils_total_ramp = 0.0e0
 
         for i in range(pf.nef):
             pf.vsdum[i, 0] = (
@@ -1612,7 +1612,9 @@ class PFCoil:
                 pfv.ind_pf_cs_plasma_mutual[pfv.n_pf_cs_plasma_circuits - 1, i]
                 * pfv.c_pf_coil_turn[i, 2]
             )
-            pfv.vsefsu = pfv.vsefsu + (pf.vsdum[i, 1] - pf.vsdum[i, 0])
+            pfv.vs_pf_coils_total_ramp = pfv.vs_pf_coils_total_ramp + (
+                pf.vsdum[i, 1] - pf.vsdum[i, 0]
+            )
 
         # Central Solenoid startup volt-seconds
         if bv.iohcl != 0:
@@ -1633,7 +1635,7 @@ class PFCoil:
             )
 
         # Total available volt-seconds for start-up
-        pfv.vssu = pfv.vs_cs_ramp + pfv.vsefsu
+        pfv.vssu = pfv.vs_cs_ramp + pfv.vs_pf_coils_total_ramp
 
         # Burn volt-seconds
         if bv.iohcl != 0:
@@ -1659,7 +1661,7 @@ class PFCoil:
         pfv.vsbn = pfv.vs_cs_burn + pfv.vsefbn
 
         pfv.vstot = pfv.vssu + pfv.vsbn
-        pfv.vseft = pfv.vsefsu + pfv.vsefbn
+        pfv.vseft = pfv.vs_pf_coils_total_ramp + pfv.vsefbn
         pfv.vsoh = pfv.vs_cs_burn + pfv.vs_cs_ramp
 
     def hoop_stress(self, r):
@@ -2717,7 +2719,7 @@ class PFCoil:
         op.write(self.outfile, "\t" * 3 + "start-up\t\t\t_burn\t\t\ttotal")
         op.write(
             self.outfile,
-            f"PF coils:\t\t{pfv.vsefsu:.2f}\t\t\t\t{pfv.vsefbn:.2f}\t\t\t{pfv.vseft:.2f}",
+            f"PF coils:\t\t{pfv.vs_pf_coils_total_ramp:.2f}\t\t\t\t{pfv.vsefbn:.2f}\t\t\t{pfv.vseft:.2f}",
         )
         op.write(
             self.outfile,
