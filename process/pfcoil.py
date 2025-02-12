@@ -1608,7 +1608,7 @@ class PFCoil:
             )
 
         # Total available volt-seconds for start-up
-        pfv.vssu = pfv.vs_cs_ramp + pfv.vs_pf_coils_total_ramp
+        pfv.vs_cs_pf_total_ramp = pfv.vs_cs_ramp + pfv.vs_pf_coils_total_ramp
 
         # Burn volt-seconds
         if bv.iohcl != 0:
@@ -1633,7 +1633,7 @@ class PFCoil:
 
         pfv.vsbn = pfv.vs_cs_burn + pfv.vsefbn
 
-        pfv.vstot = pfv.vssu + pfv.vsbn
+        pfv.vstot = pfv.vs_cs_pf_total_ramp + pfv.vsbn
         pfv.vseft = pfv.vs_pf_coils_total_ramp + pfv.vsefbn
         pfv.vsoh = pfv.vs_cs_burn + pfv.vs_cs_ramp
 
@@ -2705,7 +2705,7 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            f"Total:\t\t\t{pfv.vssu:.2f}\t\t\t\t{pfv.vsbn:.2f}\t\t\t{pfv.vstot:.2f}",
+            f"Total:\t\t\t{pfv.vs_cs_pf_total_ramp:.2f}\t\t\t\t{pfv.vsbn:.2f}\t\t\t{pfv.vstot:.2f}",
         )
 
         op.oblnkl(self.outfile)

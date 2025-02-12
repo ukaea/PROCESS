@@ -1719,7 +1719,7 @@ i_pf_conductor = 0
 *icc = 51
 * DESCRIPTION:   Constraint equation to enforce startup flux = able startup flux
 * JUSTIFICATION: Turned off, do not care about startup flux.
-* VARIABLES:     vssu,vs_plasma_ind_ramp,vs_plasma_res_ramp calculated in situ
+* VARIABLES:     vs_cs_pf_total_ramp,vs_plasma_ind_ramp,vs_plasma_res_ramp calculated in situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
