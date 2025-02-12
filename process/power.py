@@ -628,7 +628,7 @@ class Power:
                     + (fwbs_variables.pnucblkt * (1 - fwbs_variables.f_nuc_pow_bz_liq))
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.palpfwmw
+                    + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
                 )
             elif fwbs_variables.icooldual == 1:
@@ -639,7 +639,7 @@ class Power:
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.palpfwmw
+                    + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
                 )
             else:
@@ -649,7 +649,7 @@ class Power:
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
-                    + physics_variables.palpfwmw
+                    + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.nbshinemw
                 )
 
@@ -661,7 +661,7 @@ class Power:
                 + fwbs_variables.pnucblkt
                 + primary_pumping_variables.htpmw_fw_blkt
                 + current_drive_variables.porbitlossmw
-                + physics_variables.palpfwmw
+                + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.nbshinemw
             )
 
@@ -672,7 +672,7 @@ class Power:
                 + fwbs_variables.pradfw
                 + heat_transport_variables.htpmw_fw
                 + current_drive_variables.porbitlossmw
-                + physics_variables.palpfwmw
+                + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.nbshinemw
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.pnucblkt already)
@@ -759,13 +759,13 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.pinjmw + current_drive_variables.porbitlossmw + physics_variables.palpfwmw)/etacd
+        # heat_transport_variables.pinjwp = (current_drive_variables.pinjmw + current_drive_variables.porbitlossmw + physics_variables.p_fw_alpha_mw)/etacd
         # heat_transport_variables.pinjwp calculated in current_drive.f90
 
         #  Waste injection power
         if physics_variables.ignite == 0:
             # MDK
-            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.pinjmw - current_drive_variables.porbitlossmw - physics_variables.palpfwmw
+            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.pinjmw - current_drive_variables.porbitlossmw - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
                 heat_transport_variables.pinjwp - current_drive_variables.pinjmw
             )
@@ -1317,14 +1317,14 @@ class Power:
 
         po.write(self.outfile, "First wall:")
         po.dblcol(self.outfile, "pnucfw", 0.0e0, fwbs_variables.pnucfw)
-        po.dblcol(self.outfile, "palpfwmw", 0.0e0, physics_variables.palpfwmw)
+        po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
         po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
         po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
 
         primsum = (
             primsum
             + fwbs_variables.pnucfw
-            + physics_variables.palpfwmw
+            + physics_variables.p_fw_alpha_mw
             + fwbs_variables.pradfw
             + heat_transport_variables.htpmw_fw
         )
