@@ -1551,9 +1551,7 @@ class Sctfcoil:
 
         # Area of rectangular cross-section TF outboard leg [m2]
         tfcoil_variables.a_tf_leg_outboard = (
-            (
             tfcoil_variables.tftort * build_variables.dr_tf_outboard
-        )
         )
         # ---
 
