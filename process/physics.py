@@ -2135,12 +2135,12 @@ class Physics:
 
         radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
         physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
-        physics_variables.pcoreradpv = radpwrdata.pcoreradpv
+        physics_variables.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
         physics_variables.pedgeradpv = radpwrdata.pedgeradpv
         physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
         physics_variables.p_plasma_inner_rad_mw = (
-            physics_variables.pcoreradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_outer_rad_mw = (
             physics_variables.pedgeradpv * physics_variables.vol_plasma
@@ -2271,7 +2271,7 @@ class Physics:
             physics_variables.non_alpha_charged_power,
             current_drive_variables.pinjmw,
             physics_variables.plasma_current,
-            physics_variables.pcoreradpv,
+            physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
@@ -5815,7 +5815,7 @@ class Physics:
                 physics_variables.non_alpha_charged_power,
                 current_drive_variables.pinjmw,
                 physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
+                physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.ten,
@@ -6608,7 +6608,7 @@ class Physics:
                 physics_variables.non_alpha_charged_power,
                 current_drive_variables.pinjmw,
                 physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
+                physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.ten,
@@ -6639,7 +6639,7 @@ class Physics:
             if physics_variables.i_rad_loss == 0:
                 fhz_value += physics_variables.pden_plasma_rad_mw
             elif physics_variables.i_rad_loss == 1:
-                fhz_value += physics_variables.pcoreradpv
+                fhz_value += physics_variables.pden_plasma_core_rad_mw
 
             return fhz_value
 
@@ -6663,7 +6663,7 @@ class Physics:
         non_alpha_charged_power: float,
         pinjmw: float,
         plasma_current: float,
-        pcoreradpv: float,
+        pden_plasma_core_rad_mw: float,
         rmajor: float,
         rminor: float,
         ten: float,
@@ -6692,7 +6692,7 @@ class Physics:
         :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
         :param pinjmw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
-        :param pcoreradpv: Total core radiation power (MW/m3)
+        :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
         :param q: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
@@ -6732,7 +6732,7 @@ class Physics:
             )
         elif physics_variables.i_rad_loss == 1:
             p_plasma_loss_mw = (
-                p_plasma_loss_mw - pcoreradpv * vol_plasma
+                p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
             )  # shouldn't this be vol_core instead of vol_plasma?
         # else do not adjust p_plasma_loss_mw for radiation
 
