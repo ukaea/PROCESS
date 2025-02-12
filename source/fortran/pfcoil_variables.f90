@@ -338,7 +338,7 @@ module pfcoil_variables
   real(dp) :: vsoh
   !! total flux swing from the central solenoid (Wb)
 
-  real(dp) :: vsohbn
+  real(dp) :: vs_cs_burn
   !! central solenoid flux swing for burn (Wb)
 
   real(dp) :: vs_cs_ramp
@@ -502,7 +502,7 @@ module pfcoil_variables
     vsefsu = 0.0D0
     vseft = 0.0D0
     vsoh = 0.0D0
-    vsohbn = 0.0D0
+    vs_cs_burn = 0.0D0
     vs_cs_ramp = 0.0D0
     vssu = 0.0D0
     vstot = 0.0D0
