@@ -222,7 +222,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_inner", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "jscoh_bop", 3.562e8)
+    monkeypatch.setattr(pfv, "j_cs_conductor_critical_pulse_start", 3.562e8)
     monkeypatch.setattr(pfv, "c_pf_coil_turn_peak_input", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
