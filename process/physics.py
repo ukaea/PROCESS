@@ -4642,12 +4642,19 @@ class Physics:
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
-        po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
+        po.osubhd(self.outfile, "Plasma radiation powers (excluding SOL):")
         po.ovarre(
             self.outfile,
             "Plasma total synchrotron radiation power (MW)",
             "(p_plasma_sync_mw)",
             physics_variables.p_plasma_sync_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma total synchrotron radiation power density (MW/m^3)",
+            "(pden_plasma_sync_mw)",
+            physics_variables.pden_plasma_sync_mw,
             "OP ",
         )
         po.ovarrf(
@@ -4656,9 +4663,10 @@ class Physics:
             "(f_sync_reflect)",
             physics_variables.f_sync_reflect,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Normalised minor radius defining 'core'",
+            "Plasma normalised minor radius defining 'core' region",
             "(radius_plasma_core_norm)",
             impurity_radiation_module.radius_plasma_core_norm,
         )
@@ -4670,14 +4678,14 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Radiation power from inner zone (MW)",
+            "Plasma total radiation power from core region (MW)",
             "(p_plasma_inner_rad_mw)",
             physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Radiation power from outer zone (MW)",
+            "Plasma total radiation power from edge region (MW)",
             "(p_plasma_outer_rad_mw)",
             physics_variables.p_plasma_outer_rad_mw,
             "OP ",
@@ -4694,7 +4702,7 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Total radiation power from inside LCFS (MW)",
+            "Plasma total radiation power from inside last closed flux surface (MW)",
             "(p_plasma_rad_mw)",
             physics_variables.p_plasma_rad_mw,
             "OP ",
@@ -4708,21 +4716,21 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Nominal mean radiation load on inside surface of reactor (MW/m2)",
+            "Nominal mean radiation load on vessel first-wall (MW/m^2)",
             "(pflux_fw_rad_mw)",
             physics_variables.pflux_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Peaking factor for radiation wall load",
+            "Peaking factor for radiation first-wall load",
             "(f_fw_rad_max)",
             constraint_variables.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
-            "Maximum permitted radiation wall load (MW/m^2)",
+            "Maximum permitted radiation first-wall load (MW/m^2)",
             "(pflux_fw_rad_max)",
             constraint_variables.pflux_fw_rad_max,
             "IP ",
@@ -4736,14 +4744,14 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Fast alpha particle power incident on the first wall (MW)",
+            "Fast alpha particle power incident on the first-wall (MW)",
             "(p_fw_alpha_mw)",
             physics_variables.p_fw_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Nominal mean neutron load on inside surface of reactor (MW/m2)",
+            "Nominal mean neutron load on vessel first-wall (MW/m^2)",
             "(pflux_fw_neutron_mw)",
             physics_variables.pflux_fw_neutron_mw,
             "OP ",
