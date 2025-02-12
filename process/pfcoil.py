@@ -1635,7 +1635,7 @@ class PFCoil:
 
         pfv.vs_cs_pf_total_burn = pfv.vs_cs_burn + pfv.vs_pf_coils_total_burn
 
-        pfv.vstot = pfv.vs_cs_pf_total_ramp + pfv.vs_cs_pf_total_burn
+        pfv.vs_cs_pf_total_pulse = pfv.vs_cs_pf_total_ramp + pfv.vs_cs_pf_total_burn
         pfv.vs_pf_coils_total_pulse = (
             pfv.vs_pf_coils_total_ramp + pfv.vs_pf_coils_total_burn
         )
@@ -2709,15 +2709,15 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            f"Total:\t\t\t{pfv.vs_cs_pf_total_ramp:.2f}\t\t\t\t{pfv.vs_cs_pf_total_burn:.2f}\t\t\t{pfv.vstot:.2f}",
+            f"Total:\t\t\t{pfv.vs_cs_pf_total_ramp:.2f}\t\t\t\t{pfv.vs_cs_pf_total_burn:.2f}\t\t\t{pfv.vs_cs_pf_total_pulse:.2f}",
         )
 
         op.oblnkl(self.outfile)
         op.ovarre(
             self.outfile,
             "Total volt-second consumption by coils (Wb)",
-            "(vstot)",
-            f"{pfv.vstot:.2}",
+            "(vs_cs_pf_total_pulse)",
+            f"{pfv.vs_cs_pf_total_pulse:.2}",
             "OP",
         )
 

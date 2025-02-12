@@ -347,7 +347,7 @@ module pfcoil_variables
   real(dp) :: vs_cs_pf_total_ramp
   !! total flux swing for startup (`constraint eqn 51` to enforce vs_cs_pf_total_ramp=vs_plasma_res_ramp+vs_plasma_ind_ramp) (Wb)
 
-  real(dp) :: vstot
+  real(dp) :: vs_cs_pf_total_pulse
   !! total flux swing for pulse (Wb)
 
   real(dp), dimension(ngc2,6) :: waves
@@ -505,7 +505,7 @@ module pfcoil_variables
     vs_cs_burn = 0.0D0
     vs_cs_ramp = 0.0D0
     vs_cs_pf_total_ramp = 0.0D0
-    vstot = 0.0D0
+    vs_cs_pf_total_pulse = 0.0D0
     waves = 0.0D0
     m_pf_coil_conductor_total = 0.0D0
     m_pf_coil_structure_total = 0.0D0
