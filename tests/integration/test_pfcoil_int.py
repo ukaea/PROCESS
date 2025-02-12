@@ -91,7 +91,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_end_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "zref", [3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    monkeypatch.setattr(pfv, "pfmmax", 0.0)
+    monkeypatch.setattr(pfv, "m_pf_coil_max", 0.0)
     monkeypatch.setattr(pfv, "i_pf_conductor", 0)
     monkeypatch.setattr(pfv, "alfapf", 5.0e-10)
     monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
