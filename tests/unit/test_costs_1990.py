@@ -2018,7 +2018,7 @@ class Acc2222Param(NamedTuple):
 
     fkind: Any = None
 
-    rjconpf: Any = None
+    j_pf_coil_wp_peak: Any = None
 
     supercond_cost_model: Any = None
 
@@ -2026,29 +2026,29 @@ class Acc2222Param(NamedTuple):
 
     j_crit_str_pf: Any = None
 
-    ipfres: Any = None
+    i_pf_conductor: Any = None
 
-    vfohc: Any = None
+    f_a_cs_void: Any = None
 
-    nohc: Any = None
+    n_cs_pf_coils: Any = None
 
-    turns: Any = None
+    n_pf_coil_turns: Any = None
 
-    isumatpf: Any = None
+    i_pf_superconductor: Any = None
 
-    whtpfs: Any = None
+    m_pf_coil_structure_total: Any = None
 
-    ric: Any = None
+    c_pf_cs_coils_peak_ma: Any = None
 
-    rpf: Any = None
+    r_pf_coil_middle: Any = None
 
-    isumatoh: Any = None
+    i_cs_superconductor: Any = None
 
     fcupfsu: Any = None
 
     fcuohsu: Any = None
 
-    vf: Any = None
+    f_a_pf_coil_void: Any = None
 
     awpoh: Any = None
 
@@ -2096,7 +2096,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2129,10 +2129,10 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
-            vfohc=0.29999999999999999,
-            nohc=7,
-            turns=np.array(
+            i_pf_conductor=0,
+            f_a_cs_void=0.29999999999999999,
+            n_cs_pf_coils=7,
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         349.33800535811901,
@@ -2162,9 +2162,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatpf=3,
-            whtpfs=2695737.563343476,
-            ric=np.array(
+            i_pf_superconductor=3,
+            m_pf_coil_structure_total=2695737.563343476,
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         14.742063826112622,
@@ -2194,7 +2194,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2224,10 +2224,10 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatoh=5,
+            i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2292,7 +2292,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2325,10 +2325,10 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
-            vfohc=0.29999999999999999,
-            nohc=7,
-            turns=np.array(
+            i_pf_conductor=0,
+            f_a_cs_void=0.29999999999999999,
+            n_cs_pf_coils=7,
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.26292595093469,
@@ -2358,9 +2358,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatpf=3,
-            whtpfs=2510424.9065680322,
-            ric=np.array(
+            i_pf_superconductor=3,
+            m_pf_coil_structure_total=2510424.9065680322,
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.579095475129446,
@@ -2390,7 +2390,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2420,10 +2420,10 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatoh=5,
+            i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2488,7 +2488,7 @@ class Acc2222Param(NamedTuple):
             ucwindpf=465,
             lsa=2,
             fkind=1,
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -2521,10 +2521,10 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=1,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            ipfres=0,
-            vfohc=0.29999999999999999,
-            nohc=7,
-            turns=np.array(
+            i_pf_conductor=0,
+            f_a_cs_void=0.29999999999999999,
+            n_cs_pf_coils=7,
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.26292595093469,
@@ -2554,9 +2554,9 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatpf=3,
-            whtpfs=2510424.9065680322,
-            ric=np.array(
+            i_pf_superconductor=3,
+            m_pf_coil_structure_total=2510424.9065680322,
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.579095475129446,
@@ -2586,7 +2586,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -2616,10 +2616,10 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            isumatoh=5,
+            i_cs_superconductor=5,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -2705,7 +2705,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2222param.fkind)
 
-    monkeypatch.setattr(pfcoil_variables, "rjconpf", acc2222param.rjconpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "j_pf_coil_wp_peak", acc2222param.j_pf_coil_wp_peak
+    )
 
     monkeypatch.setattr(
         cost_variables, "supercond_cost_model", acc2222param.supercond_cost_model
@@ -2715,29 +2717,45 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "j_crit_str_pf", acc2222param.j_crit_str_pf)
 
-    monkeypatch.setattr(pfcoil_variables, "ipfres", acc2222param.ipfres)
+    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", acc2222param.i_pf_conductor)
 
-    monkeypatch.setattr(pfcoil_variables, "vfohc", acc2222param.vfohc)
+    monkeypatch.setattr(pfcoil_variables, "f_a_cs_void", acc2222param.f_a_cs_void)
 
-    monkeypatch.setattr(pfcoil_variables, "nohc", acc2222param.nohc)
+    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", acc2222param.n_cs_pf_coils)
 
-    monkeypatch.setattr(pfcoil_variables, "turns", acc2222param.turns)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coil_turns", acc2222param.n_pf_coil_turns
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "isumatpf", acc2222param.isumatpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "i_pf_superconductor", acc2222param.i_pf_superconductor
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "whtpfs", acc2222param.whtpfs)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "m_pf_coil_structure_total",
+        acc2222param.m_pf_coil_structure_total,
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "ric", acc2222param.ric)
+    monkeypatch.setattr(
+        pfcoil_variables, "c_pf_cs_coils_peak_ma", acc2222param.c_pf_cs_coils_peak_ma
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "rpf", acc2222param.rpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_middle", acc2222param.r_pf_coil_middle
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "isumatoh", acc2222param.isumatoh)
+    monkeypatch.setattr(
+        pfcoil_variables, "i_cs_superconductor", acc2222param.i_cs_superconductor
+    )
 
     monkeypatch.setattr(pfcoil_variables, "fcupfsu", acc2222param.fcupfsu)
 
     monkeypatch.setattr(pfcoil_variables, "fcuohsu", acc2222param.fcuohsu)
 
-    monkeypatch.setattr(pfcoil_variables, "vf", acc2222param.vf)
+    monkeypatch.setattr(
+        pfcoil_variables, "f_a_pf_coil_void", acc2222param.f_a_pf_coil_void
+    )
 
     monkeypatch.setattr(pfcoil_variables, "awpoh", acc2222param.awpoh)
 

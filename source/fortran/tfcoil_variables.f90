@@ -151,7 +151,7 @@ module tfcoil_variables
   !! density of coil case (kg/m3)
 
   real(dp), dimension(9) :: dcond
-  !! density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)
+  !! density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)
 
   real(dp) :: dcondins
   !! density of conduit + ground-wall insulation (kg/m3)
@@ -430,8 +430,8 @@ module tfcoil_variables
   ! real(dp) :: strtf0
   !! Maximum shear stress (Tresca criterion) in CS structures at CS flux swing [Pa]:
   !!
-  !!  - If superconducting CS (ipfres = 0): turn steel conduits stress
-  !!  - If resistive       CS (ipfres = 1): copper conductor stress
+  !!  - If superconducting CS (i_pf_conductor = 0): turn steel conduits stress
+  !!  - If resistive       CS (i_pf_conductor = 1): copper conductor stress
   !!
   !! Quantity only computed for bucked and wedged design (`i_tf_bucking >= 2`)
   !! Def : CS Flux swing, instant when the current changes sign in CS (null current)

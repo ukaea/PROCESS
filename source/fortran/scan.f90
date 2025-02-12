@@ -97,11 +97,11 @@ module scan_module
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
-  !!         <LI> 62 coheof : CS coil current density at EOF
+  !!         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF
   !!         <LI> 63 dr_cs : CS thickness (m)
-  !!         <LI> 64 ohhghf : CS height (m)
+  !!         <LI> 64 f_z_cs_tf_internal : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90
-  !!         <LI> 66 oh_steel_frac: Steel fraction in CS coil
+  !!         <LI> 66 f_a_cs_steel: Steel fraction in CS coil
   !!         <LI> 67 t_crack_vertical: Initial crack vertical dimension (m) </UL>
   !!         <LI> 68 `inlet_temp_liq' : Inlet temperature of blanket liquid metal coolant/breeder (K)
   !!         <LI> 69 `outlet_temp_liq' : Outlet temperature of blanket liquid metal coolant/breeder (K)
@@ -187,7 +187,7 @@ contains
     use error_handling, only: errors_on
     use heat_transport_variables, only: pgrossmw, pinjwp, pnetelmw
     use impurity_radiation_module, only: fimp
-    use pfcoil_variables, only: whtpf
+    use pfcoil_variables, only: m_pf_coil_conductor_total
     use pf_power_variables, only: srcktpm
     use process_output, only: oblnkl
     use numerics, only: sqsumsq
@@ -257,7 +257,7 @@ contains
     outvar(43,iscan) = vcool
     outvar(44,iscan) = ppump/1.0D6
     outvar(45,iscan) = 1.0D-3 * srcktpm
-    outvar(46,iscan) = whtpf
+    outvar(46,iscan) = m_pf_coil_conductor_total
     outvar(47,iscan) = pgrossmw
     outvar(48,iscan) = pnetelmw
     if (ireactor == 1) then
@@ -610,7 +610,7 @@ contains
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
     use heat_transport_variables, only: crypmw_max, etath
     use rebco_variables, only: copperaoh_m2_max
-    use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
+    use pfcoil_variables, only: j_cs_flat_top_end, f_z_cs_tf_internal, f_a_cs_steel
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
     implicit none
 
@@ -796,20 +796,20 @@ contains
             copperaoh_m2_max = swp(iscn)
             vlab = 'copperaoh_m2_max' ; xlab = 'Max CS coil current / copper area'
         case (62)
-            coheof = swp(iscn)
-            vlab = 'coheof' ; xlab = 'CS coil current density at EOF (A/m2)'
+            j_cs_flat_top_end = swp(iscn)
+            vlab = 'j_cs_flat_top_end' ; xlab = 'CS coil current density at EOF (A/m2)'
         case (63)
             dr_cs = swp(iscn)
             vlab = 'dr_cs' ; xlab = 'CS coil thickness (m)'
         case (64)
-            ohhghf = swp(iscn)
-            vlab = 'ohhghf' ; xlab = 'CS height (m)'
+            f_z_cs_tf_internal = swp(iscn)
+            vlab = 'f_z_cs_tf_internal' ; xlab = 'CS height (m)'
         case (65)
             n_cycle_min = swp(iscn)
             vlab = 'n_cycle_min' ; xlab = 'CS stress cycles min'
         case (66)
-            oh_steel_frac = swp(iscn)
-            vlab = 'oh_steel_frac' ; xlab = 'CS steel fraction'
+            f_a_cs_steel = swp(iscn)
+            vlab = 'f_a_cs_steel' ; xlab = 'CS steel fraction'
         case (67)
             t_crack_vertical = swp(iscn)
             vlab = 't_crack_vertical' ; xlab = 'Initial crack vertical size (m)'

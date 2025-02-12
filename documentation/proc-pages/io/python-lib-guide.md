@@ -26,7 +26,7 @@ To get values of input file entries from the object
     i.number_of_constraints
     i.number_of_itvars
     i.data["fimp"].value
-    i.data["ipfloc"].value
+    i.data["i_pf_location"].value
 ```
 
 To add/remove constraints, iteration variables
