@@ -3283,7 +3283,7 @@
         "maxlen": 2000.0,
         "maxmat": 8.0,
         "maxpoloidalpower": 1000.0,
-        "maxradwallload": 1.0,
+        "pflux_fw_rad_max": 1.0,
         "mbvfac": 2.8,
         "mc2_": "mc2_SI/keV_",
         "mc2_SI": "me_*c_**2",
@@ -10057,7 +10057,7 @@
         "maxlen": "",
         "maxmat": "Total number of materials in IFE device. Material numbers are as follows:\n<ul>\n<li>=0 void</li>\n<li>=1 steel</li>\n<li>=2 carbon cloth</li>\n<li>=3 FLiBe</li>\n<li>=4 lithium oxide Li2O</li>\n<li>=5 concrete</li>\n<li>=6 helium</li>\n<li>=7 xenon</li>\n<li>=8 lithium</li>\n</ul>",
         "maxpoloidalpower": "Maximum permitted absolute rate of change of stored energy in poloidal field (MW)",
-        "maxradwallload": "Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)",
+        "pflux_fw_rad_max": "Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)",
         "mbvfac": "maintenance building volume multiplication factor",
         "mc2_": "",
         "mc2_SI": "",
@@ -13689,7 +13689,7 @@
             "lb": 0.0,
             "ub": 2000.0
         },
-        "maxradwallload": {
+        "pflux_fw_rad_max": {
             "lb": 0.1,
             "ub": 10.0
         },
@@ -17437,7 +17437,7 @@
             "fwalld",
             "fzeffmax",
             "gammax",
-            "maxradwallload",
+            "pflux_fw_rad_max",
             "mvalim",
             "nbshinefmax",
             "nflutfmax",
@@ -20539,7 +20539,7 @@
         "max_gyrotron_frequency": "real_variable",
         "maxcal": "int_variable",
         "maxpoloidalpower": "real_variable",
-        "maxradwallload": "real_variable",
+        "pflux_fw_rad_max": "real_variable",
         "mbvfac": "real_variable",
         "mcdriv": "real_variable",
         "minmax": "int_variable",

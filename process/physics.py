@@ -4723,8 +4723,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Maximum permitted radiation wall load (MW/m^2)",
-            "(maxradwallload)",
-            constraint_variables.maxradwallload,
+            "(pflux_fw_rad_max)",
+            constraint_variables.pflux_fw_rad_max,
             "IP ",
         )
         po.ovarre(

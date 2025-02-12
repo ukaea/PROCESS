@@ -112,7 +112,7 @@ The scaling value `fradpwr` can be varied also.
 
 This constraint can be activated by stating `icc = 67` in the input file.
 
-The limiting value of $q_{\text{fw,rad}}$ in $\mathrm {MWm^{-2}}$ is be set using input parameter `maxradwallload`.
+The limiting value of $q_{\text{fw,rad}}$ in $\mathrm {MWm^{-2}}$ is be set using input parameter `pflux_fw_rad_max`.
 
 The scaling value `fradwall` can be varied also.
 

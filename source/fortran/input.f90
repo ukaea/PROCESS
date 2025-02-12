@@ -228,7 +228,7 @@ contains
       workshop_l, workshop_w, workshop_h
     use constraint_variables, only: fl_h_threshold, fpeakb, fpsep, fdivcol, ftcycl, &
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
-      maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
+      pflux_fw_rad_max, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
       fauxmn, fiooic,fr_conducting_wall, fjohc0, frminor, psepbqarmax, ftpeak, bigqmin, &
       fstrcond, fptemp, ftmargoh, fvs, fbeta_max, vvhealw, fpnetel, ft_burn, &
@@ -984,8 +984,8 @@ contains
        case ('gammax')
           call parse_real_variable('gammax', gammax, 0.01D0, 10.0D0, &
                'Maximum current drive gamma (A/W-m2)')
-       case ('maxradwallload')
-          call parse_real_variable('maxradwallload', maxradwallload, 0.1D0, 10.0D0, &
+       case ('pflux_fw_rad_max')
+          call parse_real_variable('pflux_fw_rad_max', pflux_fw_rad_max, 0.1D0, 10.0D0, &
                'Maximum permitted radiation wall load (MW/m^2)')
        case ('mvalim')
           call parse_real_variable('mvalim', mvalim, 0.0D0, 1000.0D0, &
