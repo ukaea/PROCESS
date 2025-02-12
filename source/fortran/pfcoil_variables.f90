@@ -246,7 +246,7 @@ module pfcoil_variables
   real(dp) :: p_cs_resistive_flat_top
   !! central solenoid resistive power during flattop (W)
 
-  real(dp) :: powpfres
+  real(dp) :: p_pf_coil_resistive_total_flat_top
   !! total PF coil resistive losses during flattop (W)
 
   real(dp), dimension(ngc2) :: r_pf_coil_inner
@@ -471,7 +471,7 @@ module pfcoil_variables
     r_pf_coil_outer_max = 0.0D0
     pfwpmw = 0.0D0
     p_cs_resistive_flat_top = 0.0D0
-    powpfres = 0.0D0
+    p_pf_coil_resistive_total_flat_top = 0.0D0
     r_pf_coil_inner = 0.0D0
     r_pf_coil_outer = 0.0D0
     c_pf_cs_coils_peak_ma = 0.0D0

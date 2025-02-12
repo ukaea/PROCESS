@@ -627,7 +627,7 @@ class PFCoil:
         # power losses and volumes and weights for each PF coil, index i
         i = 0
         it = 0
-        pfv.powpfres = 0.0e0
+        pfv.p_pf_coil_resistive_total_flat_top = 0.0e0
         pfv.m_pf_coil_max = 0.0e0
 
         for ii in range(pfv.n_pf_coil_groups):
@@ -684,8 +684,8 @@ class PFCoil:
 
                     # Sum resistive power losses
 
-                    pfv.powpfres = (
-                        pfv.powpfres
+                    pfv.p_pf_coil_resistive_total_flat_top = (
+                        pfv.p_pf_coil_resistive_total_flat_top
                         + respf
                         * (
                             1.0e6
@@ -1328,7 +1328,9 @@ class PFCoil:
                 / (pfv.a_cs_poloidal * (1.0e0 - pfv.vfohc))
                 * (1.0e6 * pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]) ** 2
             )
-            pfv.powpfres = pfv.powpfres + pfv.p_cs_resistive_flat_top
+            pfv.p_pf_coil_resistive_total_flat_top = (
+                pfv.p_pf_coil_resistive_total_flat_top + pfv.p_cs_resistive_flat_top
+            )
 
     def peakb(self, i, ii, it):
         """Calculates the peak field at a PF coil.
@@ -2474,8 +2476,8 @@ class PFCoil:
             op.ovarre(
                 self.outfile,
                 "PF coil resistive power (W)",
-                "(powpfres)",
-                pfv.powpfres,
+                "(p_pf_coil_resistive_total_flat_top)",
+                pfv.p_pf_coil_resistive_total_flat_top,
                 "OP ",
             )
             if bv.iohcl != 0:
