@@ -169,8 +169,8 @@ class Pulse:
         #  (Previously calculated as (abs(pfcoil_variables.vstot) - vssoft) )
 
         vsmax = (
-            -pfcoil_variables.vsbn
-        )  # pfcoil_variables.vsbn is (or should be...) negative
+            -pfcoil_variables.vs_cs_pf_total_burn
+        )  # pfcoil_variables.vs_cs_pf_total_burn is (or should be...) negative
 
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
