@@ -11561,14 +11561,6 @@
             "lb": 0.001,
             "ub": 0.5
         },
-        "afwi": {
-            "lb": 0.001,
-            "ub": 0.05
-        },
-        "afwo": {
-            "lb": 0.001,
-            "ub": 0.05
-        },
         "airtemp": {
             "lb": -15.0,
             "ub": 40.0
@@ -18080,8 +18072,6 @@
             "i_shield_mat",
             "secondary_cycle",
             "coolwh",
-            "afwi",
-            "afwo",
             "i_fw_coolant_type",
             "dr_fw_wall",
             "radius_fw_channel",
@@ -19989,8 +19979,6 @@
         "adivflnc": "real_variable",
         "admv": "real_variable",
         "radius_fw_channel": "real_variable",
-        "afwi": "real_variable",
-        "afwo": "real_variable",
         "airtemp": "real_variable",
         "alfapf": "real_variable",
         "alphaj": "real_variable",

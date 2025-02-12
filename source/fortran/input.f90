@@ -267,10 +267,10 @@ contains
       zeffdiv, hldivlim, rlenmax, divfix, c3div, &
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
-      dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
+      dx_fw_module, i_blanket_type, blktmodel, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
+      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, &
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
@@ -2054,12 +2054,6 @@ contains
           call parse_int_variable('secondary_cycle_liq', secondary_cycle_liq, 2, 4, &
                'Switch for blanket thermodynamic model - liquid breeder')
 
-       case ('afwi')
-          call parse_real_variable('afwi', afwi, 1.0D-3, 0.05D0, &
-               'I/B fw/blkt coolant channel inner radius (m)')
-       case ('afwo')
-          call parse_real_variable('afwo', afwo, 1.0D-3, 0.05D0, &
-               'O/B fw/blkt coolant channel inner radius (m)')
        case ('inlet_temp')
           call parse_real_variable('inlet_temp', inlet_temp, 200.0D0, 600.0D0, &
                'Coolant inlet temperature (K)')
