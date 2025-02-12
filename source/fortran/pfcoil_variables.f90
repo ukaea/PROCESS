@@ -189,7 +189,7 @@ module pfcoil_variables
   real(dp) :: j_cs_conductor_critical_pulse_start
   !! central solenoid superconductor critical current density (A/m2) at beginning-of-pulse
 
-  real(dp) :: jscoh_eof
+  real(dp) :: j_cs_conductor_critical_flat_top_end
   !! central solenoid superconductor critical current density (A/m2) at end-of-flattop
 
   real(dp) :: jcableoh_bop
@@ -453,7 +453,7 @@ module pfcoil_variables
     i_pf_current = 1
     i_sup_pf_shape = 0
     j_cs_conductor_critical_pulse_start = 0.0D0
-    jscoh_eof = 0.0D0
+    j_cs_conductor_critical_flat_top_end = 0.0D0
     jcableoh_bop = 0.0D0
     jcableoh_eof = 0.0D0
     n_pf_cs_plasma_circuits = 0

@@ -1260,7 +1260,12 @@ class PFCoil:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
-            jcritwp, pfv.jcableoh_eof, pfv.jscoh_eof, tmarg1 = self.superconpf(
+            
+                jcritwp,
+                pfv.jcableoh_eof,
+                pfv.j_cs_conductor_critical_flat_top_end,
+                tmarg1,
+             = self.superconpf(
                 pfv.b_cs_peak_flat_top_end,
                 pfv.vfohc,
                 pfv.fcuohsu,
@@ -1276,9 +1281,11 @@ class PFCoil:
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
             if pfv.i_cs_superconductor.item() in {2, 6, 8}:
-                pfv.j_crit_str_cs = pfv.jscoh_eof
+                pfv.j_crit_str_cs = pfv.j_cs_conductor_critical_flat_top_end
             else:
-                pfv.j_crit_str_cs = pfv.jscoh_eof * (1 - pfv.fcuohsu)
+                pfv.j_crit_str_cs = pfv.j_cs_conductor_critical_flat_top_end * (
+                    1 - pfv.fcuohsu
+                )
 
             pfv.j_cs_critical_flat_top_end = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
 
@@ -2101,8 +2108,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Critical superconductor current density at EOF (A/m2)",
-                    "(jscoh_eof)",
-                    pfv.jscoh_eof,
+                    "(j_cs_conductor_critical_flat_top_end)",
+                    pfv.j_cs_conductor_critical_flat_top_end,
                     "OP ",
                 )
                 op.ovarre(
