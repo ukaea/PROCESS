@@ -1601,12 +1601,12 @@ class PFCoil:
                 ]
                 * pfv.c_pf_coil_turn[pfv.n_pf_cs_plasma_circuits - 2, 2]
             )
-            pfv.vsohsu = (
+            pfv.vs_cs_ramp = (
                 pf.vsdum[pfv.n_cs_pf_coils - 1, 1] - pf.vsdum[pfv.n_cs_pf_coils - 1, 0]
             )
 
         # Total available volt-seconds for start-up
-        pfv.vssu = pfv.vsohsu + pfv.vsefsu
+        pfv.vssu = pfv.vs_cs_ramp + pfv.vsefsu
 
         # Burn volt-seconds
         if bv.iohcl != 0:
@@ -1633,7 +1633,7 @@ class PFCoil:
 
         pfv.vstot = pfv.vssu + pfv.vsbn
         pfv.vseft = pfv.vsefsu + pfv.vsefbn
-        pfv.vsoh = pfv.vsohbn + pfv.vsohsu
+        pfv.vsoh = pfv.vsohbn + pfv.vs_cs_ramp
 
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
@@ -2696,7 +2696,7 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            f"CS coil:\t\t{pfv.vsohsu:.2f}\t\t\t\t{pfv.vsohbn:.2f}\t\t\t{pfv.vsoh:.2f}",
+            f"CS coil:\t\t{pfv.vs_cs_ramp:.2f}\t\t\t\t{pfv.vsohbn:.2f}\t\t\t{pfv.vsoh:.2f}",
         )
         op.write(
             self.outfile, "\t" * 3 + "-" * 7 + "\t" * 4 + "-" * 7 + "\t" * 3 + "-" * 7
