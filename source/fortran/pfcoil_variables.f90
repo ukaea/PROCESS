@@ -335,7 +335,7 @@ module pfcoil_variables
   real(dp) :: vs_pf_coils_total_pulse
   !! total flux swing from PF coils (Wb)
 
-  real(dp) :: vsoh
+  real(dp) :: vs_cs_total_pulse
   !! total flux swing from the central solenoid (Wb)
 
   real(dp) :: vs_cs_burn
@@ -501,7 +501,7 @@ module pfcoil_variables
     vs_pf_coils_total_burn = 0.0D0
     vs_pf_coils_total_ramp = 0.0D0
     vs_pf_coils_total_pulse = 0.0D0
-    vsoh = 0.0D0
+    vs_cs_total_pulse = 0.0D0
     vs_cs_burn = 0.0D0
     vs_cs_ramp = 0.0D0
     vs_cs_pf_total_ramp = 0.0D0
