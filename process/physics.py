@@ -2139,6 +2139,9 @@ class Physics:
         physics_variables.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
         physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
+        physics_variables.p_plasma_sync_mw = (
+            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma
+        )
         physics_variables.p_plasma_inner_rad_mw = (
             physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )
@@ -4590,9 +4593,9 @@ class Physics:
         po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
         po.ovarre(
             self.outfile,
-            "Synchrotron radiation power (MW)",
-            "(pden_plasma_sync_mw*vol_plasma)",
-            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma,
+            "Plasma total synchrotron radiation power (MW)",
+            "(p_plasma_sync_mw)",
+            physics_variables.p_plasma_sync_mw,
             "OP ",
         )
         po.ovarrf(

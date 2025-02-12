@@ -136,7 +136,7 @@ BASELINE_LIST = [
     "f_nd_alpha_electron",
     "wallmw",
     "p_plasma_inner_rad_mw",
-    "pden_plasma_sync_mw*vol_plasma",
+    "p_plasma_sync_mw",
     "p_plasma_rad_mw",
     "pnucblkt",
     "pnucshld",

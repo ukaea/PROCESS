@@ -681,6 +681,9 @@ module physics_variables
   real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
 
+  real(dp) :: p_plasma_sync_mw
+  !! Total synchrotron radiation power from plasma (MW)
+
   integer :: ilhthresh
   !! switch for L-H mode power threshold scaling to use (see pthrmw for list)
 
@@ -1061,6 +1064,7 @@ module physics_variables
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     pden_plasma_sync_mw = 0.0D0
+    p_plasma_sync_mw = 0.0D0
     ilhthresh = 19
     plhthresh = 0.0D0
     pthrmw = 0.0D0
