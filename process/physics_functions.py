@@ -550,12 +550,26 @@ class RadpwrData:
     """DataClass which holds the output of the function radpwr"""
 
     pden_plasma_sync_mw: float
-    pcoreradpv: float
-    pedgeradpv: float
+    pden_plasma_core_rad_mw: float
+    pden_plasma_outer_rad_mw: float
     pden_plasma_rad_mw: float
 
 
-def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
+def calculate_radiation_powers(
+    plasma_profile: PlasmaProfile,
+    ne0: float,
+    rminor: float,
+    bt: float,
+    aspect: float,
+    alphan: float,
+    alphat: float,
+    tbeta: float,
+    te0: float,
+    f_sync_reflect: float,
+    rmajor: float,
+    kappa: float,
+    vol_plasma: float,
+) -> RadpwrData:
     """
     Calculate the radiation powers in MW/m^3 by calling relevant routines.
 
@@ -563,96 +577,173 @@ def calculate_radiation_powers(plasma_profile: PlasmaProfile) -> RadpwrData:
     impurity radiation and synchrotron radiation. It returns a dataclass containing
     the calculated radiation power densities.
 
-    Parameters:
-        plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+    :param plasma_profile: The parameterized temperature and density profiles of the plasma.
+    :type plasma_profile: PlasmaProfile
+    :param ne0: Central electron density (m^-3).
+    :type ne0: float
+    :param rminor: Minor radius of the plasma (m).
+    :type rminor: float
+    :param bt: Toroidal magnetic field (T).
+    :type bt: float
+    :param aspect: Aspect ratio of the plasma.
+    :type aspect: float
+    :param alphan: Alpha parameter for density profile.
+    :type alphan: float
+    :param alphat: Alpha parameter for temperature profile.
+    :type alphat: float
+    :param tbeta: Beta parameter for temperature profile.
+    :type tbeta: float
+    :param te0: Central electron temperature (keV).
+    :type te0: float
+    :param f_sync_reflect: Fraction of synchrotron radiation reflected.
+    :type f_sync_reflect: float
+    :param rmajor: Major radius of the plasma (m).
+    :type rmajor: float
+    :param kappa: Elongation of the plasma.
+    :type kappa: float
+    :param vol_plasma: Plasma volume (m^3).
+    :type vol_plasma: float
 
-    Returns:
-        RadpwrData: A dataclass containing the following radiation power densities:
-            - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
-            - pcoreradpv (float): Total core radiation power per unit volume (MW/m^3).
-            - pedgeradpv (float): Edge radiation power per unit volume (MW/m^3).
-            - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
+    :returns: A dataclass containing the following radiation power densities:
+        - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
+        - pden_plasma_core_rad_mw (float): Total core radiation power per unit volume (MW/m^3).
+        - pden_plasma_outer_rad_mw (float): Edge radiation power per unit volume (MW/m^3).
+        - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
+    :rtype: RadpwrData
 
-    Author:
-        P J Knight, CCFE, Culham Science Centre
+    :references:
+        - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
+          Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+        - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
+          Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+
     """
     imp_rad = impurity.ImpurityRadiation(plasma_profile)
     imp_rad.calculate_imprad()
 
-    pedgeradpv = imp_rad.radtot - imp_rad.radcore
+    pden_plasma_outer_rad_mw = imp_rad.radtot - imp_rad.radcore
 
     # Synchrotron radiation power/volume; assumed to be from core only.
-    pden_plasma_sync_mw = psync_albajar_fidone()
+    pden_plasma_sync_mw = psync_albajar_fidone(
+        ne0,
+        rminor,
+        bt,
+        aspect,
+        alphan,
+        alphat,
+        tbeta,
+        te0,
+        f_sync_reflect,
+        rmajor,
+        kappa,
+        vol_plasma,
+    )
 
     # Total core radiation power/volume.
-    pcoreradpv = imp_rad.radcore + pden_plasma_sync_mw
+    pden_plasma_core_rad_mw = imp_rad.radcore + pden_plasma_sync_mw
 
     # Total radiation power/volume.
     pden_plasma_rad_mw = imp_rad.radtot + pden_plasma_sync_mw
 
-    return RadpwrData(pden_plasma_sync_mw, pcoreradpv, pedgeradpv, pden_plasma_rad_mw)
-
-
-def psync_albajar_fidone() -> float:
-    """
-        Calculate the synchrotron radiation power in MW/m^3.
-
-        This function computes the synchrotron radiation power density for the plasma based on
-        the plasma shape, major and minor radii, electron density, and temperature profiles.
-
-        Returns:
-            float: Synchrotron radiation power per unit volume (MW/m^3).
-
-        Notes:
-
-        References:
-            - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
-                Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
-    ‌
-            - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
-                Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
-    ‌
-    """
-
-    # rpow is the (1-Rsyn) power dependence based on plasma shape
-    # (see Fidone)
-
-    de2o = 1.0e-20 * physics_variables.ne0
-    pao = 6.04e3 * (physics_variables.rminor * de2o) / physics_variables.bt
-    gfun = 0.93e0 * (1.0e0 + 0.85e0 * np.exp(-0.82e0 * physics_variables.aspect))
-    kfun = (
-        (physics_variables.alphan + 3.87 * physics_variables.alphat + 1.46) ** -0.79
-        * (1.98 + physics_variables.alphat) ** 1.36
-        * physics_variables.tbeta**2.14
-        * (physics_variables.tbeta**1.53 + 1.87 * physics_variables.alphat - 0.16)
-        ** -1.33
+    return RadpwrData(
+        pden_plasma_sync_mw,
+        pden_plasma_core_rad_mw,
+        pden_plasma_outer_rad_mw,
+        pden_plasma_rad_mw,
     )
 
-    dum = (
-        1.0
-        + 0.12
-        * (physics_variables.te0 / pao**0.41)
-        * (1.0 - physics_variables.f_sync_reflect) ** 0.41
-    ) ** -1.51
 
-    psync = (
+def psync_albajar_fidone(
+    ne0: float,
+    rminor: float,
+    bt: float,
+    aspect: float,
+    alphan: float,
+    alphat: float,
+    tbeta: float,
+    te0: float,
+    f_sync_reflect: float,
+    rmajor: float,
+    kappa: float,
+    vol_plasma: float,
+) -> float:
+    """
+    Calculate the synchrotron radiation power in MW/m^3.
+
+    This function computes the synchrotron radiation power density for the plasma based on
+    the plasma shape, major and minor radii, electron density, and temperature profiles.
+
+    :param ne0: Central electron density (m^-3).
+    :type ne0: float
+    :param rminor: Minor radius of the plasma (m).
+    :type rminor: float
+    :param bt: Toroidal magnetic field (T).
+    :type bt: float
+    :param aspect: Aspect ratio of the plasma.
+    :type aspect: float
+    :param alphan: Alpha parameter for density profile.
+    :type alphan: float
+    :param alphat: Alpha parameter for temperature profile.
+    :type alphat: float
+    :param tbeta: Beta parameter for temperature profile.
+    :type tbeta: float
+    :param te0: Central electron temperature (keV).
+    :type te0: float
+    :param f_sync_reflect: Fraction of synchrotron radiation reflected.
+    :type f_sync_reflect: float
+    :param rmajor: Major radius of the plasma (m).
+    :type rmajor: float
+    :param kappa: Elongation of the plasma.
+    :type kappa: float
+    :param vol_plasma: Plasma volume (m^3).
+    :type vol_plasma: float
+
+    :returns: Synchrotron radiation power per unit volume (MW/m^3).
+    :rtype: float
+
+    :references:
+        - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
+          Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+
+        - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
+          Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    """
+
+    # Variable names are created to closely match those from the reference papers.
+
+    ne0_20 = 1.0e-20 * ne0
+
+    p_a0 = 6.04e3 * (rminor * ne0_20) / bt
+
+    g_function = 0.93 * (1.0 + 0.85 * np.exp(-0.82 * aspect))
+
+    k_function = (
+        (alphan + 3.87 * alphat + 1.46) ** -0.79
+        * (1.98 + alphat) ** 1.36
+        * tbeta**2.14
+        * (tbeta**1.53 + 1.87 * alphat - 0.16) ** -1.33
+    )
+
+    dum = (1.0 + 0.12 * (te0 / p_a0**0.41) * (1.0 - f_sync_reflect) ** 0.41) ** -1.51
+
+    p_sync_mw = (
         3.84e-8
-        * (1.0 - physics_variables.f_sync_reflect) ** 0.62
-        * physics_variables.rmajor
-        * physics_variables.rminor**1.38
-        * physics_variables.kappa**0.79
-        * physics_variables.bt**2.62
-        * de2o**0.38
-        * physics_variables.te0
-        * (16.0 + physics_variables.te0) ** 2.61
+        * (1.0 - f_sync_reflect) ** 0.62
+        * rmajor
+        * rminor**1.38
+        * kappa**0.79
+        * bt**2.62
+        * ne0_20**0.38
+        * te0
+        * (16.0 + te0) ** 2.61
         * dum
-        * gfun
-        * kfun
+        * g_function
+        * k_function
     )
 
     # pden_plasma_sync_mw should be per unit volume; Albajar gives it as total
 
-    return psync / physics_variables.vol_plasma
+    return p_sync_mw / vol_plasma
 
 
 @dataclass

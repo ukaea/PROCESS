@@ -65,7 +65,7 @@ module scan_module
   !!         <LI> 26 triang
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)
   !!         <LI> 28 bt
-  !!         <LI> 29 coreradius
+  !!         <LI> 29 radius_plasma_core_norm
   !!         <LI> 30 fimpvar # OBSOLETE
   !!         <LI> 31 f_alpha_energy_confinement_min
   !!         <LI> 32 epsvmc
@@ -196,7 +196,7 @@ contains
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
     use physics_variables, only: q, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
-      pdivt, f_nd_alpha_electron, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
+      pdivt, f_nd_alpha_electron, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, pflux_fw_neutron_mw, &
       beta, beta_max, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
     use constants, only: nout
@@ -237,7 +237,7 @@ contains
     outvar(23,iscan) = hfac(7)
     outvar(24,iscan) = fusion_power
     outvar(25,iscan) = alpha_power_beams * 5.0D0
-    outvar(26,iscan) = wallmw
+    outvar(26,iscan) = pflux_fw_neutron_mw
     outvar(27,iscan) = pinjmw
     outvar(28,iscan) = pinjwp
     outvar(29,iscan) = pheat
@@ -602,7 +602,7 @@ contains
 	use error_handling, only: idiags, report_error
     use fwbs_variables, only: inlet_temp_liq, outlet_temp_liq, blpressure_liq, &
         n_liq_recirc, bz_channel_conduct_liq, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, pitch
-	use impurity_radiation_module, only: fimp, coreradius, impurity_arr_frac
+	use impurity_radiation_module, only: fimp, radius_plasma_core_norm, impurity_arr_frac
     use physics_variables, only: kappa, beta_norm_max, te, aspect, ftar, bt, &
         rad_fraction_sol, triang, rmajor, beamfus0, hfact
     use numerics, only: epsvmc, boundu, boundl
@@ -710,8 +710,8 @@ contains
             bt = swp(iscn)
             vlab = 'bt' ; xlab = 'Tor._field_on_axis_(T)'
         case (29)
-            coreradius = swp(iscn)
-            vlab = 'coreradius' ; xlab = 'Core_radius'
+            radius_plasma_core_norm = swp(iscn)
+            vlab = 'radius_plasma_core_norm' ; xlab = 'Core_radius'
         case (30)
             !fimpvar = swp(iscn)
             vlab = 'OBSOLETE' ; xlab = 'OBSOLETE'

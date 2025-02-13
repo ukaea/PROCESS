@@ -321,20 +321,20 @@ def z2index(zimp):
     return None
 
 
-def fradcore(rho, coreradius, coreradiationfraction):
+def fradcore(rho, radius_plasma_core_norm, coreradiationfraction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
     :param rho: normalised minor radius
     :type rho: numpy.array
-    :param coreradius: normalised radius defining the 'core' region
-    :type coreradius: float
+    :param radius_plasma_core_norm: normalised radius defining the 'core' region
+    :type radius_plasma_core_norm: float
     :param coreradiationfraction: fraction of radiation from the core region
     :type coreradiationfraction: float
     :return: fradcore - array filled with the coreradiationfraction
     :rtype: numpy.array
     """
     fradcore = np.zeros(len(rho))
-    rho_mask = rho < coreradius
+    rho_mask = rho < radius_plasma_core_norm
     fradcore[rho_mask] = coreradiationfraction
 
     return fradcore
@@ -541,7 +541,7 @@ class ImpurityRadiation:
             self.rho
             * fradcore(
                 self.rho,
-                impurity_radiation_module.coreradius,
+                impurity_radiation_module.radius_plasma_core_norm,
                 impurity_radiation_module.coreradiationfraction,
             )
         )

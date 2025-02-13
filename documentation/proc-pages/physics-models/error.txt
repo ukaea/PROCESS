@@ -512,7 +512,7 @@ The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
 plasma core. The wall reflection factor \texttt{f_sync_reflect} may be set by the
 user.
 
-By changing the input parameter \texttt{coreradius}, the user may set
+By changing the input parameter \texttt{radius_plasma_core_norm}, the user may set
 the normalised radius defining the core region. Only the impurity and
 synchrotron radiation from the core region affects the confinement
 scaling. Figure 1 below shows the radiation power contributions.
@@ -999,7 +999,7 @@ radiation
 \texttt{i_rad_loss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
-\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
+\texttt{pscaling\ +\ pden_plasma_core_rad_mw\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
 
 \texttt{i_rad_loss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power

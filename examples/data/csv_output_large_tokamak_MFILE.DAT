@@ -426,9 +426,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.7935E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.4356E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4715E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      1.2665E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      1.2665E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      8.9376E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (p_plasma_outer_rad_mw)_____________      1.3480E+02 OP 
@@ -437,10 +437,10 @@
  LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.9094E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.7570E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.8507E-01 OP 
- Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (palpfwmw)____________________      1.5907E+01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.9792E-01 OP 
+ Fast_alpha_particle_power_incident_on_the_first_wall_(MW)_______________ (p_fw_alpha_mw)____________________      1.5907E+01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.9792E-01 OP 
  Radiation_power_from_SoL_(MW)___________________________________________ (pradsolmw)___________________      1.2414E+02 OP 
  SoL_radiation_fraction_=_total_radiation_in_SoL_/_total_power_accross_se (rad_fraction_sol)____________      8.0000E-01 IP 
  Radiation_fraction_total_=_SoL_+_LCFS_radiation_/_total_power_deposited_ (rad_fraction_total)__________      9.1819E-01 OP 
@@ -1137,7 +1137,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.1348E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      2.8997E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      8.9376E+01    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      8.9376E+01    
  Total_(MW)______________________________________________________________ ______________________________      3.7935E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.0224E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.2322E+00    
@@ -1664,7 +1664,7 @@ pheat = 75.0
 **********************
 
 * Normalised radius defining the 'core' region
-coreradius = 0.75
+radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
 coreradiationfraction = 0.6

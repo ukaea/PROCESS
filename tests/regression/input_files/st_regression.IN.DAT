@@ -577,7 +577,7 @@ alphaj = 0.1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radiation,Fuelling & Impurities ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-coreradius = 0.75 
+radius_plasma_core_norm = 0.75 
 * DESCRIPTION:   Normalised Radius Defining the 'Core' Region
 * JUSTIFICATION:
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001
@@ -2639,7 +2639,7 @@ f_fw_rad_max = 1.0
 *icc = 8
 * DESCRIPTION:   Neutron wall load upper limit
 * JUSTIFICATION: Turned off, dot care about wall load
-* VARIABLES:     wallmw calculated in-situ
+* VARIABLES:     pflux_fw_neutron_mw calculated in-situ
 
 *iwalld = 2
 * DESCRIPTION:   Switch for neutron wall load calculation (default = 1)
@@ -2665,7 +2665,7 @@ icc = 67
 * JUSTIFICATION: To avoid melting the first wall
 * VARIABLES:     pflux_fw_rad_max_mw calculated in-situ 
 
-maxradwallload = 1.2
+pflux_fw_rad_max = 1.2
 * DESCRIPTION:   Peak radiation wall load (MW/m^2) 
 * JUSTIFICATION: 
 

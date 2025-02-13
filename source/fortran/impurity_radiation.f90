@@ -33,8 +33,8 @@ module impurity_radiation_module
   integer, public, parameter :: n_impurities = 14
   !! n_impurities /14/ FIX : number of ion species in impurity radiation model
 
-  real(dp), public :: coreradius
-  !! coreradius /0.6/ : normalised radius defining the 'core' region
+  real(dp), public :: radius_plasma_core_norm
+  !! radius_plasma_core_norm /0.6/ : normalised radius defining the 'core' region
 
   real(dp), public :: coreradiationfraction
   !! coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power
@@ -112,7 +112,7 @@ contains
     !! Initialise module variables
     implicit none
 
-    coreradius = 0.6D0
+    radius_plasma_core_norm = 0.6D0
     coreradiationfraction = 1.0D0
     fimp = (/ 1.0D0, 0.1D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.00D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0 /)

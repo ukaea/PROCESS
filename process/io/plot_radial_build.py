@@ -176,7 +176,7 @@ def main(args=None):
         "triang",
         "tbrmin",
         "bt",
-        "coreradius",
+        "radius_plasma_core_norm",
         "Obsolete",  # Removed
         "f_alpha_energy_confinement_min",
         "epsvmc",
