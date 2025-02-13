@@ -282,11 +282,11 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if ft.fwbs_variables.iblanket == 1:
+        if ft.fwbs_variables.i_blanket_type == 1:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run(output=False)
-        # iblanket = 2, KIT HCPB removed
-        elif ft.fwbs_variables.iblanket == 3:
+        # i_blanket_type = 2, KIT HCPB removed
+        elif ft.fwbs_variables.i_blanket_type == 3:
             # CCFE HCPB model with Tritium Breeding Ratio calculation
             self.models.ccfe_hcpb.run(output=False)
             ft.fwbs_variables.tbr = self.models.ccfe_hcpb.tbr_shimwell(
@@ -295,8 +295,8 @@ class Caller:
                 ft.fwbs_variables.iblanket_thickness,
                 output=False,
             )
-        # iblanket = 4, KIT HCLL removed
-        elif ft.fwbs_variables.iblanket == 5:
+        # i_blanket_type = 4, KIT HCLL removed
+        elif ft.fwbs_variables.i_blanket_type == 5:
             # DCLL model
             self.models.dcll.run(output=False)
 

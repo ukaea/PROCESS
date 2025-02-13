@@ -220,7 +220,7 @@ class StbildParam(NamedTuple):
 
     dr_vv_outboard: Any = None
 
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     dr_fw_inboard: Any = None
 
@@ -268,7 +268,7 @@ class StbildParam(NamedTuple):
 
     required_radial_space: Any = None
 
-    afw: Any = None
+    radius_fw_channel: Any = None
 
     blktmodel: Any = None
 
@@ -278,7 +278,7 @@ class StbildParam(NamedTuple):
 
     fhole: Any = None
 
-    fw_wall: Any = None
+    dr_fw_wall: Any = None
 
     ipowerflow: Any = None
 
@@ -308,7 +308,7 @@ class StbildParam(NamedTuple):
 
     expected_bore: Any = None
 
-    expected_fwarea: Any = None
+    expected_a_fw_total: Any = None
 
     expected_dr_fw_inboard: Any = None
 
@@ -349,7 +349,7 @@ class StbildParam(NamedTuple):
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            fwarea=0,
+            a_fw_total=0,
             dr_fw_inboard=0,
             dr_fw_outboard=0,
             dr_shld_vv_gap_inboard=0.025000000000000005,
@@ -373,12 +373,12 @@ class StbildParam(NamedTuple):
             available_radial_space=0,
             f_avspace=1,
             required_radial_space=0,
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             fdiv=0.115,
             fhcd=0,
             fhole=0,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -393,7 +393,7 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=1918.8188778803135,
+            expected_a_fw_total=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
@@ -419,7 +419,7 @@ class StbildParam(NamedTuple):
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            fwarea=1918.8188778803135,
+            a_fw_total=1918.8188778803135,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
             dr_shld_vv_gap_inboard=0.025000000000000005,
@@ -443,12 +443,12 @@ class StbildParam(NamedTuple):
             available_radial_space=1.8828828828828827,
             f_avspace=1,
             required_radial_space=2.0332922403587861,
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             fdiv=0.021924555536480182,
             fhcd=0,
             fhole=0,
-            fw_wall=0.0030000000000000001,
+            dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -463,7 +463,7 @@ class StbildParam(NamedTuple):
             outfile=11,
             expected_blnktth=0.75,
             expected_bore=17.79214950143977,
-            expected_fwarea=2120.6210472630282,
+            expected_a_fw_total=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
@@ -517,7 +517,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
-    monkeypatch.setattr(build_variables, "fwarea", stbildparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", stbildparam.a_fw_total)
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
@@ -585,7 +585,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "required_radial_space", stbildparam.required_radial_space
     )
 
-    monkeypatch.setattr(fwbs_variables, "afw", stbildparam.afw)
+    monkeypatch.setattr(
+        fwbs_variables, "radius_fw_channel", stbildparam.radius_fw_channel
+    )
 
     monkeypatch.setattr(fwbs_variables, "blktmodel", stbildparam.blktmodel)
 
@@ -595,7 +597,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(fwbs_variables, "fhole", stbildparam.fhole)
 
-    monkeypatch.setattr(fwbs_variables, "fw_wall", stbildparam.fw_wall)
+    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", stbildparam.dr_fw_wall)
 
     monkeypatch.setattr(heat_transport_variables, "ipowerflow", stbildparam.ipowerflow)
 
@@ -636,7 +638,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
-    assert build_variables.fwarea == pytest.approx(stbildparam.expected_fwarea)
+    assert build_variables.a_fw_total == pytest.approx(stbildparam.expected_a_fw_total)
 
     assert build_variables.dr_fw_inboard == pytest.approx(
         stbildparam.expected_dr_fw_inboard

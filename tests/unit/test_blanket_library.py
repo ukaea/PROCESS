@@ -27,13 +27,13 @@ def blanket_library_fixture():
 
 
 class PrimaryCoolantPropertiesParam(NamedTuple):
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
-    fwinlet: Any = None
+    temp_fw_coolant_in: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_coolant_out: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
     rhof_fw: Any = None
 
@@ -84,10 +84,10 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     "primarycoolantpropertiesparam",
     (
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
             rhof_fw=0,
             cp_fw=0,
             cv_fw=0,
@@ -112,10 +112,10 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_fw=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
             rhof_fw=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
@@ -159,19 +159,23 @@ def test_primary_coolant_properties(
     # monkeypatch doesnt work for strings
     # but helium is the default
     # monkeypatch.setattr(
-    #     fwbs_variables, "fwcoolant", primarycoolantpropertiesparam.fwcoolant
+    #     fwbs_variables, "i_fw_coolant_type", primarycoolantpropertiesparam.i_fw_coolant_type
     # )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwinlet", primarycoolantpropertiesparam.fwinlet
+        fwbs_variables,
+        "temp_fw_coolant_in",
+        primarycoolantpropertiesparam.temp_fw_coolant_in,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwoutlet", primarycoolantpropertiesparam.fwoutlet
+        fwbs_variables,
+        "temp_fw_coolant_out",
+        primarycoolantpropertiesparam.temp_fw_coolant_out,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwpressure", primarycoolantpropertiesparam.fwpressure
+        fwbs_variables, "pres_fw_coolant", primarycoolantpropertiesparam.pres_fw_coolant
     )
 
     monkeypatch.setattr(
@@ -254,7 +258,7 @@ def test_primary_coolant_properties(
 
 
 def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
 
     data = {
@@ -280,7 +284,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
 def test_deltap_tot_outboard_blanket_breeder_liquid(
     monkeypatch, blanket_library_fixture
 ):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
     monkeypatch.setattr(fwbs_variables, "ifci", 1)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", 0.11625)
@@ -1735,7 +1739,7 @@ def test_liquid_breeder_properties(
 
 
 class PressureDropParam(NamedTuple):
-    afw: Any = None
+    radius_fw_channel: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
     roughness: Any = None
@@ -1756,7 +1760,7 @@ class PressureDropParam(NamedTuple):
     "pressuredropparam",
     (
         PressureDropParam(
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
             roughness=9.9999999999999995e-07,
@@ -1786,7 +1790,9 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "afw", pressuredropparam.afw)
+    monkeypatch.setattr(
+        fwbs_variables, "radius_fw_channel", pressuredropparam.radius_fw_channel
+    )
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", pressuredropparam.a_bz_liq)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", pressuredropparam.b_bz_liq)
     monkeypatch.setattr(fwbs_variables, "roughness", pressuredropparam.roughness)

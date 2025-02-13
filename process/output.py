@@ -89,11 +89,11 @@ def write(models, _outfile):
     # 3    |  CCFE HCPB model with Tritium Breeding Ratio calculation
     # 4    |  KIT HCLL model
     # 5    |  DCLL model
-    if ft.fwbs_variables.iblanket == 1:
+    if ft.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
-    # iblanket = 2, KIT HCPB removed
-    elif ft.fwbs_variables.iblanket == 3:
+    # i_blanket_type = 2, KIT HCPB removed
+    elif ft.fwbs_variables.i_blanket_type == 3:
         # CCFE HCPB model with Tritium Breeding Ratio calculation
         models.ccfe_hcpb.run(output=True)
         ft.fwbs_variables.tbr = models.ccfe_hcpb.tbr_shimwell(
@@ -102,8 +102,8 @@ def write(models, _outfile):
             ft.fwbs_variables.iblanket_thickness,
             output=True,
         )
-    # iblanket = 4, KIT HCLL removed
-    elif ft.fwbs_variables.iblanket == 5:
+    # i_blanket_type = 4, KIT HCLL removed
+    elif ft.fwbs_variables.i_blanket_type == 5:
         # DCLL model
         models.dcll.run(output=True)
 
