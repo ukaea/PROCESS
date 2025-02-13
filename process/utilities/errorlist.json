@@ -493,7 +493,7 @@
     {
       "no": 97,
       "level": 2,
-      "message": "SCTFCOIL: Negative TF coil current; ritfc forced to be positive..."
+      "message": "SCTFCOIL: Negative TF coil current; c_tf_total forced to be positive..."
     },
     {
       "no": 98,
@@ -1198,22 +1198,22 @@
     {
       "no": 238,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined."
     },
     {
       "no": 239,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents."
     },
     {
       "no": 240,
       "level": 3,
-      "message": "CHECK: Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+      "message": "CHECK: Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
     },
     {
       "no": 241,
       "level": 3,
-      "message": "CHECK: Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+      "message": "CHECK: Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
     },
     {
       "no": 242,

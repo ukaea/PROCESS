@@ -55,7 +55,7 @@ class CryoParam(NamedTuple):
 
     ptfnuc: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     tfcryoarea: Any = None
 
@@ -87,7 +87,7 @@ class CryoParam(NamedTuple):
             cpttf=74026.751437500003,
             ensxpfm=37429.525515086898,
             ptfnuc=0.044178296011112193,
-            n_tf=16,
+            n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=10364.426139387357,
             expected_qss=20361.633927097802,
@@ -108,7 +108,7 @@ class CryoParam(NamedTuple):
             cpttf=74026.751437500003,
             ensxpfm=37427.228965055205,
             ptfnuc=0.045535131445547841,
-            n_tf=16,
+            n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=364.42613938735633,
             expected_qss=20342.863776957758,
@@ -150,7 +150,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         cpttf=cryoparam.cpttf,
         ensxpfm=cryoparam.ensxpfm,
         ptfnuc=cryoparam.ptfnuc,
-        n_tf=cryoparam.n_tf,
+        n_tf_coils=cryoparam.n_tf_coils,
         tfcryoarea=cryoparam.tfcryoarea,
         t_pulse_repetition=cryoparam.t_pulse_repetition,
     )

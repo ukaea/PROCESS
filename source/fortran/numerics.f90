@@ -221,7 +221,7 @@ module numerics
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
   !! <LI> (19) beam_energy
-  !! <LI> (20) tcpav
+  !! <LI> (20) temp_cp_average
   !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp

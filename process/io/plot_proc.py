@@ -601,8 +601,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
 
     # Segment the TF coil inboard
     # Calculate centrelines
-    n = int(n_tf / 4) + 1
-    spacing = 2 * np.pi / n_tf
+    n = int(n_tf_coils / 4) + 1
+    spacing = 2 * np.pi / n_tf_coils
     i = np.arange(0, n)
 
     ang = i * spacing
@@ -630,7 +630,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         TF_outboard(
             axis,
             item,
-            n_tf=n_tf,
+            n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
             w=w + nbshield,
@@ -640,7 +640,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         TF_outboard(
             axis,
             item,
-            n_tf=n_tf,
+            n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
             w=w,
@@ -687,8 +687,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def TF_outboard(axis, item, n_tf, r3, r4, w, facecolor):
-    spacing = 2 * np.pi / n_tf
+def TF_outboard(axis, item, n_tf_coils, r3, r4, w, facecolor):
+    spacing = 2 * np.pi / n_tf_coils
     ang = item * spacing
     dx = w * np.sin(ang)
     dy = w * np.cos(ang)
@@ -2476,7 +2476,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("a_plasma_surface", "Plasma surface area", "m$^2$"),
         ("a_plasma_poloidal", "Plasma cross-sectional area", "m$^2$"),
         ("vol_plasma", "Plasma volume", "m$^3$"),
-        ("n_tf", "No. of TF coils", ""),
+        ("n_tf_coils", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("dr_inboard_build", "Inboard build thickness", "m"),
         (out_blanket_thk, "Outboard blanket+shield", "m"),
@@ -2656,13 +2656,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("tmargoh", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("whttf/n_tf", "Mass per TF coil", "kg"),
+            ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
         ]
 
     else:
-        n_tf = mfile_data.data["n_tf"].get_scan(scan)
-        prescp = 1.0e-6 * mfile_data.data["prescp"].get_scan(scan)
-        presleg = 1.0e-6 * mfile_data.data["presleg"].get_scan(scan)
+        p_cp_resistive = 1.0e-6 * mfile_data.data["p_cp_resistive"].get_scan(scan)
+        p_tf_leg_resistive = 1.0e-6 * mfile_data.data["p_tf_leg_resistive"].get_scan(
+            scan
+        )
         pres_joints = 1.0e-6 * mfile_data.data["pres_joints"].get_scan(scan)
         fcoolcp = 100.0 * mfile_data.data["fcoolcp"].get_scan(scan)
 
@@ -2676,15 +2677,19 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
-            ("ritfc", "TF coil currents sum", "A"),
+            ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
-            (prescp, "CP Resisitive heating", "MW"),
-            (presleg * n_tf, "legs Resisitive heating (all legs)", "MW"),
+            (p_cp_resistive, "CP Resisitive heating", "MW"),
+            (
+                p_tf_leg_resistive,
+                "legs Resisitive heating (all legs)",
+                "MW",
+            ),
             (pres_joints, "TF joints resisitive heating ", "MW"),
         ]
 
@@ -3525,7 +3530,7 @@ def main(args=None):
     j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
     # Magnets related
-    global n_tf
+    global n_tf_coils
     global wwp1
     global wwp2
     global dr_tf_wp
@@ -3533,7 +3538,7 @@ def main(args=None):
     global thkcas
     global casthi
 
-    n_tf = m_file.data["n_tf"].get_scan(scan)
+    n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
         wwp1 = m_file.data["wwp1"].get_scan(scan)
         if i_tf_wp_geom == 1:

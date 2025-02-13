@@ -58,7 +58,7 @@ contains
       triang, hfac, labels_confinement_scalings
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
-    use tfcoil_variables, only: n_tf
+    use tfcoil_variables, only: n_tf_coils
     use times_variables, only: t_burn, t_cycle, tdown, t_between_pulse, t_fusion_ramp, t_current_ramp_up, &
       t_pulse_repetition, t_ramp_down, t_precharge
 		use global_variables, only: icase

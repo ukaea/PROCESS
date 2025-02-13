@@ -327,24 +327,25 @@ contains
       f_w, bmn, shear, m_res, f_rad, flpitch, istell, max_gyrotron_frequency, &
       te0_ecrh_achievable
     use tfcoil_variables, only: fcoolcp, tfinsgap, vftf, &
-      fhts, dr_tf_wp, rcool, rhotfleg, thkcas, &
+      fhts, dr_tf_wp, rcool, rho_tf_leg, thkcas, &
       casthi, n_pancake, bcritsc, i_tf_sup, str_pf_con_res, thwcndut, &
       thicndut, tftmp, oacdcp, tmax_croco, ptempalw, tmargmin_tf, tmpcry, &
       sig_tf_case_max, dztop, dcond, str_cs_con_res, etapump, drtop, vcool, dcondins, &
-      i_tf_tresca, dhecoil, tmaxpro, n_tf, tcpav, fcutfsu, jbus, &
+      i_tf_tresca, dhecoil, tmaxpro, n_tf_coils, temp_cp_average, fcutfsu, j_tf_bus, &
       casthi_fraction, tmargmin_cs, vdalw, dcase, t_turn_tf,&
       cpttf_max, tdmptf, casths, i_tf_turns_integer, quench_model, &
       tcritsc, layer_ins, tinstf, n_layer, tcoolin, ripmax, frhocp, &
       cpttf, tmargmin, casths_fraction, eff_tf_cryo, eyoung_ins, &
       eyoung_steel, eyoung_res_tf_buck, eyoung_cond_axial, f_vforce_inboard, &
-      fcoolleg, frholeg, ftoroidalgap, i_tf_sc_mat, i_tf_shape, i_tf_bucking, &
+      f_a_tf_cool_outboard, frholeg, ftoroidalgap, i_tf_sc_mat, i_tf_shape, i_tf_bucking, &
       n_tf_graded_layers, n_tf_joints, n_tf_joints_contact, poisson_al, &
-      poisson_copper, poisson_steel, rho_tf_joints, rhotfbus, th_joint_contact,&
+      poisson_copper, poisson_steel, rho_tf_joints, rho_tf_bus, th_joint_contact,&
       i_tf_stress_model, eyoung_al, i_tf_wp_geom, i_tf_case_geom, &
       i_tf_turns_integer, n_rad_per_layer, b_crit_upper_nbti, t_crit_nbti, &
       i_cp_joints, n_tf_turn, f_t_turn_tf, t_turn_tf_max, t_cable_tf, &
       sig_tf_wp_max, eyoung_cond_trans, i_tf_cond_eyoung_axial, i_tf_cond_eyoung_trans, &
-      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
+      str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv, &
+      len_tf_bus
 
     use times_variables, only: t_current_ramp_up, pulsetimings, t_ramp_down, t_fusion_ramp, t_precharge, t_burn, &
       t_between_pulse, tohsin
@@ -1587,8 +1588,8 @@ contains
        case ('fcoolcp')
           call parse_real_variable('fcoolcp', fcoolcp, 0.0D0, 1.0D0, &
                'Coolant fraction of TF centrepost (itart=1) or the whole magnet (itart=0)')
-       case ('fcoolleg')
-          call parse_real_variable('fcoolleg', fcoolleg, 0.0D0, 1.0D0, &
+       case ('f_a_tf_cool_outboard')
+          call parse_real_variable('f_a_tf_cool_outboard', f_a_tf_cool_outboard, 0.0D0, 1.0D0, &
                'Coolant fraction of TF outboard leg (itart=1 only)')
        case ('fcutfsu')
           call parse_real_variable('fcutfsu', fcutfsu, 0.0D0, 1.0D0, &
@@ -1665,8 +1666,8 @@ contains
        case ('i_str_wp')
          call parse_int_variable('i_str_wp', i_str_wp, 0, 1, &
               'Switch for the TF coil strain behavior')
-       case ('jbus')
-          call parse_real_variable('jbus', jbus, 1.0D4, 1.0D8, &
+       case ('j_tf_bus')
+          call parse_real_variable('j_tf_bus', j_tf_bus, 1.0D4, 1.0D8, &
                'TF coil bus current density (A/m2)')
        case ('n_pancake')
           call parse_int_variable('n_pancake', n_pancake, 1, 100, &
@@ -1726,8 +1727,8 @@ contains
        case ('tcoolin')
           call parse_real_variable('tcoolin', tcoolin, 4.0D0, 373.15D0, &
                'Centrepost coolant inlet temperature (K)')
-       case ('tcpav')
-          call parse_real_variable('tcpav', tcpav, 4.0D0, 573.15D0, &
+       case ('temp_cp_average')
+          call parse_real_variable('temp_cp_average', temp_cp_average, 4.0D0, 573.15D0, &
                'Average centrepost coolant temperature (K)')
        case ('tcritsc')
           call parse_real_variable('tcritsc', tcritsc, 1.0D0, 300.0D0, &
@@ -1738,11 +1739,11 @@ contains
        case ('tfinsgap')
           call parse_real_variable('tfinsgap', tfinsgap, 1.0D-10, 1.0D-1, &
                'TF coil WP insertion gap (m)')
-       case ('rhotfbus')
-          call parse_real_variable('rhotfbus', rhotfbus, 0.0D0, 1.0D-5, &
+       case ('rho_tf_bus')
+          call parse_real_variable('rho_tf_bus', rho_tf_bus, 0.0D0, 1.0D-5, &
                'TF coil bus (feeders) resistivity (ohm-m)')
-       case ('n_tf')
-          call parse_real_variable('n_tf', n_tf, 0.0D0, 100.0D0, &
+       case ('n_tf_coils')
+          call parse_real_variable('n_tf_coils', n_tf_coils, 0.0D0, 100.0D0, &
                'Number of TF coils')
        case ('n_tf_turn')
           call parse_real_variable('n_tf_turn', n_tf_turn, 0.0D0, 100.0D0, &
@@ -1815,6 +1816,9 @@ contains
        case ('vftf')
           call parse_real_variable('vftf', vftf, 0.0D0, 1.0D0, &
                'Coolant fraction of TF coil leg')
+       case ('len_tf_bus')
+          call parse_real_variable('len_tf_bus', len_tf_bus, 0.01D0, 1.0D3, &
+               'TF coil bus length (m)')
 
        !  PF coil settings
 

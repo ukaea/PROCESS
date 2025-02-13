@@ -131,7 +131,7 @@ class BldgsSizesParam(NamedTuple):
     hotcell_h: Any
     hot_sepdist: Any
     iefrf: Any
-    n_tf: Any
+    n_tf_coils: Any
     i_tf_sup: Any
     pfrmax: Any
     tlife: Any
@@ -274,7 +274,7 @@ class BldgsSizesParam(NamedTuple):
             hotcell_h=12,
             hot_sepdist=2,
             iefrf=10,
-            n_tf=16,
+            n_tf_coils=16,
             i_tf_sup=1,
             pfrmax=18.98258241468535,
             tlife=40,
@@ -413,7 +413,7 @@ class BldgsSizesParam(NamedTuple):
             hotcell_h=12,
             hot_sepdist=2,
             iefrf=10,
-            n_tf=16,
+            n_tf_coils=16,
             i_tf_sup=1,
             pfrmax=18.982980877139834,
             tlife=40,
@@ -672,7 +672,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "hotcell_h", bldgssizesparam.hotcell_h)
     monkeypatch.setattr(buildings_variables, "hot_sepdist", bldgssizesparam.hot_sepdist)
     monkeypatch.setattr(current_drive_variables, "iefrf", bldgssizesparam.iefrf)
-    monkeypatch.setattr(tfcoil_variables, "n_tf", bldgssizesparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
     monkeypatch.setattr(pfcoil_variables, "pfrmax", bldgssizesparam.pfrmax)
     monkeypatch.setattr(cost_variables, "tlife", bldgssizesparam.tlife)
@@ -786,7 +786,7 @@ class BldgsParam(NamedTuple):
     tfri: Any
     tfh: Any
     tfm: Any
-    n_tf: Any
+    n_tf_coils: Any
     shro: Any
     shri: Any
     shh: Any
@@ -850,7 +850,7 @@ class BldgsParam(NamedTuple):
             tfri=2.9939411851091102,
             tfh=20.562180043124066,
             tfm=1327.1818597762153,
-            n_tf=16,
+            n_tf_coils=16,
             shro=13.764874193548387,
             shri=4.7423258064516141,
             shh=17.446180043124063,
@@ -910,7 +910,7 @@ class BldgsParam(NamedTuple):
             tfri=2.9939411851091102,
             tfh=20.562180043124066,
             tfm=1327.9750836697808,
-            n_tf=16,
+            n_tf_coils=16,
             shro=13.782874193548388,
             shri=4.7243258064516143,
             shh=17.446180043124063,
@@ -975,7 +975,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         tfri=bldgsparam.tfri,
         tfh=bldgsparam.tfh,
         tfm=bldgsparam.tfm,
-        n_tf=bldgsparam.n_tf,
+        n_tf_coils=bldgsparam.n_tf_coils,
         shro=bldgsparam.shro,
         shri=bldgsparam.shri,
         shh=bldgsparam.shh,

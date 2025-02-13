@@ -50,7 +50,7 @@ from process.fortran import sctfcoil_variables as sctfv
 
 @njit
 def my_other_function(n):
-    return n + sctfv.n_tf
+    return n + sctfv.n_tf_coils
 ```
 
 because Numba does not know what `sctfv` is.
