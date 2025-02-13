@@ -1,20 +1,6 @@
 # ifail value of a successful process run
 IFAIL_SUCCESS = 1
 
-# default values for making a plot file from MFILE.DAT
-PARAMETER_DEFAULTS = [
-    "rmajor",
-    "aspect",
-    "rminor",
-    "bt",
-    "fusion_power",
-    "pnetelmw",
-    "te",
-    "pdivt",
-    "sig_tf_case",
-    "sig_tf_wp",
-]
-
 # parameters that start with f, but are not f-values
 NON_F_VALUES = ["fcohbop", "fvsbrnni", "feffcd", "fcutfsu"]
 
@@ -29,24 +15,6 @@ DICT_TF_TYPE = {
     7: "NbTi Ginzburg-Landau",
     8: "REBCO Ginzburg-Landau",
     9: "REBCO Hazelton-Zhai",
-}
-
-# FIMP Values
-DICT_FIMP = {
-    "fimp(1)": "Hydrogen (fraction calculated by code)",
-    "fimp(2)": "Helium",
-    "fimp(3)": "Beryllium",
-    "fimp(4)": "Carbon",
-    "fimp(5)": "Nitrogen",
-    "fimp(6)": "Oxygen",
-    "fimp(7)": "Neon",
-    "fimp(8)": "Silicon",
-    "fimp(9)": "Argon",
-    "fimp(10)": "Iron",
-    "fimp(11)": "Nickel",
-    "fimp(12)": "Krypton",
-    "fimp(13)": "Xenon",
-    "fimp(14)": "Tungsten",
 }
 
 # Optimisation variable dictionary

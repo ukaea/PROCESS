@@ -896,23 +896,6 @@ def dict_ixc_bounds():
     return ixc_bounds
 
 
-def dict_ixc_default():
-    # Returns dictionary mapping iteration variable name to default value
-    ixc_default = {}
-    default = output_dict["DICT_DEFAULT"]
-    ixc_full = output_dict["DICT_IXC_FULL"]
-
-    for value in ixc_full.values():
-        name = value["name"]
-
-        if name in default:
-            ixc_default[name] = default[name]
-        else:
-            logging.warning("print_dict_ixc could not find %s in DICT_DEFAULT\n", name)
-
-    return ixc_default
-
-
 def dict_ixc_simple():
     # Returns dictionary mapping ixc no to iteration variable name
     ixc_simple = {}
@@ -946,14 +929,10 @@ def create_dicts(project):
         DefaultValues(project, python_variables),
         Modules(project, python_variables),
         HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
-        HardcodedDictionary("DICT_FIMP", create_dicts_config.DICT_FIMP),
         HardcodedDictionary(
             "DICT_OPTIMISATION_VARS", create_dicts_config.DICT_OPTIMISATION_VARS
         ),
         HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
-        HardcodedDictionary(
-            "PARAMETER_DEFAULTS", create_dicts_config.PARAMETER_DEFAULTS
-        ),
         HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
@@ -963,7 +942,6 @@ def create_dicts(project):
         SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
         SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
-        SourceDictionary("DICT_IXC_DEFAULT", dict_ixc_default),
         SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
         SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
     ])
