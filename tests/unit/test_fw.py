@@ -153,8 +153,8 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
         False,
         pnuc_deposited=fwtempparam.pnuc_deposited,
         radius_fw_channel=fwtempparam.radius_fw_channel,
-        thickness=fwtempparam.thickness,
-        area=fwtempparam.area,
+        dr_fw=fwtempparam.thickness,
+        a_fw=fwtempparam.area,
         prad_incident=fwtempparam.prad_incident,
         label=fwtempparam.label,
     )
