@@ -190,6 +190,12 @@ OBS_VARS = {
     "iradloss": "i_rad_loss",
     "ipnlaws": "n_confinement_scalings",
     "iinvqd": None,
+    "rhotfleg": "rho_tf_leg",
+    "n_tf": "n_tf_coils",
+    "tcpav": "temp_cp_average",
+    "jbus": "j_tf_bus",
+    "fcoolleg": "f_a_tf_cooil_outboard",
+    "rhotfbus": "rho_tf_bus",
 }
 
 OBS_VARS_HELP = {
