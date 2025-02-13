@@ -214,10 +214,10 @@ class Stellarator:
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
         physics_variables.eps = 1.0e0 / physics_variables.aspect
 
-        tfcoil_variables.n_tf = (
+        tfcoil_variables.n_tf_coils = (
             stellarator_configuration.stella_config_coilspermodule
             * stellarator_configuration.stella_config_symmetry
-        )  # This overwrites tfcoil_variables.n_tf in input file.
+        )  # This overwrites tfcoil_variables.n_tf_coils in input file.
 
         #  Factors used to scale the reference point.
         st.f_r = (
@@ -233,7 +233,7 @@ class Stellarator:
             physics_variables.aspect
             / stellarator_configuration.stella_config_aspect_ref
         )
-        st.f_n = tfcoil_variables.n_tf / (
+        st.f_n = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
@@ -1044,11 +1044,11 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.tfleng * tfcoil_variables.tfareain
+            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.tfareain
             + 0.75
-            * tfcoil_variables.tfleng
-            * tfcoil_variables.arealeg
-            * tfcoil_variables.n_tf
+            * tfcoil_variables.len_tf_coil
+            * tfcoil_variables.a_tf_leg_outboard
+            * tfcoil_variables.n_tf_coils
         )
 
         fwbs_variables.ptfnucpm3 = fwbs_variables.ptfnuc / tf_volume
@@ -2515,7 +2515,7 @@ class Stellarator:
             b_max_k[k] = self.bmax_from_awp(
                 wp_width_r[k],
                 coilcurrent,
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
                 r_coil_major,
                 r_coil_minor,
             )
@@ -2570,7 +2570,7 @@ class Stellarator:
         tfcoil_variables.bmaxtf = self.bmax_from_awp(
             wp_width_r_min,
             coilcurrent,
-            tfcoil_variables.n_tf,
+            tfcoil_variables.n_tf_coils,
             r_coil_major,
             r_coil_minor,
         )
@@ -2707,7 +2707,7 @@ class Stellarator:
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
-        tfcoil_variables.arealeg = (
+        tfcoil_variables.a_tf_leg_outboard = (
             build_variables.dr_tf_inboard * tfcoil_variables.tftort
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
@@ -2724,10 +2724,10 @@ class Stellarator:
 
         # [m^2] Total surface area of coil side facing plasma: inboard region
         tfcoil_variables.tfsai = (
-            tfcoil_variables.n_tf
+            tfcoil_variables.n_tf_coils
             * tfcoil_variables.tftort
             * 0.5e0
-            * tfcoil_variables.tfleng
+            * tfcoil_variables.len_tf_coil
         )
         # [m^2] Total surface area of coil side facing plasma: outboard region
         tfcoil_variables.tfsao = (
@@ -2749,13 +2749,13 @@ class Stellarator:
 
         #  Variables for ALL coils.
         tfcoil_variables.tfareain = (
-            tfcoil_variables.n_tf * tfcoil_variables.arealeg
+            tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
         )  # [m^2] Total area of all coil legs (midplane)
-        tfcoil_variables.ritfc = (
-            tfcoil_variables.n_tf * coilcurrent * 1.0e6
+        tfcoil_variables.c_tf_total = (
+            tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.ritfc / tfcoil_variables.tfareain
+            tfcoil_variables.c_tf_total / tfcoil_variables.tfareain
         )  # [A / m^2] overall current density
         tfcoil_variables.rbmax = (
             r_coil_major - r_coil_minor + awp_rad
@@ -2779,7 +2779,7 @@ class Stellarator:
                 ** 2
                 * st.f_n**2
             )
-            * (tfcoil_variables.ritfc / tfcoil_variables.n_tf) ** 2
+            * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
             * 1.0e-9
         )  # [GJ] Total magnetic energy
 
@@ -2800,10 +2800,10 @@ class Stellarator:
 
         tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
 
-        tfcoil_variables.tfleng = (
+        tfcoil_variables.len_tf_coil = (
             stellarator_configuration.stella_config_coillength
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
-            / tfcoil_variables.n_tf
+            / tfcoil_variables.n_tf_coils
         )  # [m] estimated average length of a coil
 
         # [m^2] Total surface area of toroidal shells covering coils
@@ -2829,47 +2829,51 @@ class Stellarator:
         #
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
-        # This is only correct if the winding pack is 'thin' (tfleng>>sqrt(tfcoil_variables.acasetf)).
+        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.acasetf)).
         tfcoil_variables.whtcas = (
-            tfcoil_variables.tfleng * tfcoil_variables.acasetf * tfcoil_variables.dcase
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.acasetf
+            * tfcoil_variables.dcase
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
-            tfcoil_variables.tfleng * (awpc - awptf) * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil * (awpc - awptf) * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acstf
             * (1.0e0 - tfcoil_variables.vftf)
             * (1.0e0 - tfcoil_variables.fcutfsu)
-            - tfcoil_variables.tfleng * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
         ) * tfcoil_variables.dcond[
             tfcoil_variables.i_tf_sc_mat - 1
         ]  # awphec is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acstf
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
-            - tfcoil_variables.tfleng * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.whtconsh = (
-            tfcoil_variables.tfleng
+            tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acndttf
             * fwbs_variables.denstl
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.tfleng* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
         # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
         tfcoil_variables.whtconin = (
-            tfcoil_variables.tfleng * tfcoil_variables.aiwp * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.aiwp
+            * tfcoil_variables.dcondins
         )
         # [kg] Total conductor mass
         tfcoil_variables.whtcon = (
@@ -2881,7 +2885,7 @@ class Stellarator:
         # [kg] Total coil mass
         tfcoil_variables.whttf = (
             tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
-        ) * tfcoil_variables.n_tf
+        ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
         #######################################################################################
 
@@ -2919,7 +2923,7 @@ class Stellarator:
             / (1e0 * 5.2e0 * 0.014e0)
             * (
                 physics_variables.bt
-                * tfcoil_variables.ritfc
+                * tfcoil_variables.c_tf_total
                 * physics_variables.rminor**2
                 / (
                     (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
@@ -2943,10 +2947,10 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(cpttf,estotftgj/tfcoil_variables.n_tf*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(cpttf,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
-            tfcoil_variables.estotftgj / tfcoil_variables.n_tf * 1.0e9,
+            tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
             tfcoil_variables.tdmptf,
             tfcoil_variables.cpttf,
         )
@@ -3025,8 +3029,8 @@ class Stellarator:
             * tfcoil_variables.bmaxtf
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
-            / tfcoil_variables.n_tf
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.n_tf_coils
+            / tfcoil_variables.len_tf_coil
         )
         centering_force_min_mn = (
             stellarator_configuration.stella_config_centering_force_min_mn
@@ -3035,8 +3039,8 @@ class Stellarator:
             * tfcoil_variables.bmaxtf
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
-            / tfcoil_variables.n_tf
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.n_tf_coils
+            / tfcoil_variables.len_tf_coil
         )
         centering_force_avg_mn = (
             stellarator_configuration.stella_config_centering_force_avg_mn
@@ -3045,8 +3049,8 @@ class Stellarator:
             * tfcoil_variables.bmaxtf
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
-            / tfcoil_variables.n_tf
-            / tfcoil_variables.tfleng
+            / tfcoil_variables.n_tf_coils
+            / tfcoil_variables.len_tf_coil
         )
         #
         ####################################
@@ -3270,7 +3274,9 @@ class Stellarator:
 
         return j_crit_sc * 1e-6
 
-    def bmax_from_awp(self, wp_width_radial, current, n_tf, r_coil_major, r_coil_minor):
+    def bmax_from_awp(
+        self, wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor
+    ):
         """Returns a fitted function for bmax for stellarators
 
         author: J Lion, IPP Greifswald
@@ -3282,7 +3288,7 @@ class Stellarator:
         return (
             2e-1
             * current
-            * n_tf
+            * n_tf_coils
             / (r_coil_major - r_coil_minor)
             * (
                 stellarator_configuration.stella_config_a1
@@ -3579,7 +3585,10 @@ class Stellarator:
         po.osubhd(self.outfile, "General Coil Parameters :")
 
         po.ovarre(
-            self.outfile, "Number of modular coils", "(n_tf)", tfcoil_variables.n_tf
+            self.outfile,
+            "Number of modular coils",
+            "(n_tf_coils)",
+            tfcoil_variables.n_tf_coils,
         )
         po.ovarre(self.outfile, "Av. coil major radius", "(coil_r)", r_coil_major)
         po.ovarre(self.outfile, "Av. coil minor radius", "(coil_a)", r_coil_minor)
@@ -3593,8 +3602,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cross-sectional area per coil (m2)",
-            "(tfarea/n_tf)",
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf,
+            "(tfarea/n_tf_coils)",
+            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -3644,20 +3653,20 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Mean coil circumference (m)",
-            "(tfleng)",
-            tfcoil_variables.tfleng,
+            "(len_tf_coil)",
+            tfcoil_variables.len_tf_coil,
         )
         po.ovarre(
             self.outfile,
             "Total current (MA)",
-            "(ritfc)",
-            1.0e-6 * tfcoil_variables.ritfc,
+            "(c_tf_total)",
+            1.0e-6 * tfcoil_variables.c_tf_total,
         )
         po.ovarre(
             self.outfile,
             "Current per coil(MA)",
-            "(ritfc/n_tf)",
-            1.0e-6 * tfcoil_variables.ritfc / tfcoil_variables.n_tf,
+            "(c_tf_total/n_tf_coils)",
+            1.0e-6 * tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -3843,17 +3852,21 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
-            "(ritfc/acond)",
+            "(c_tf_total/acond)",
             1.0e-6
-            * tfcoil_variables.ritfc
-            / tfcoil_variables.n_tf
+            * tfcoil_variables.c_tf_total
+            / tfcoil_variables.n_tf_coils
             / tfcoil_variables.acond,
         )
         po.ovarre(
             self.outfile,
             "Current density in SC area (A/m2)",
-            "(ritfc/acond/f_scu)",
-            1.0e-6 * tfcoil_variables.ritfc / tfcoil_variables.n_tf / ap / f_scu,
+            "(c_tf_total/acond/f_scu)",
+            1.0e-6
+            * tfcoil_variables.c_tf_total
+            / tfcoil_variables.n_tf_coils
+            / ap
+            / f_scu,
         )
         po.ovarre(self.outfile, "Superconductor faction of WP (1)", "(f_scu)", f_scu)
 

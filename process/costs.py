@@ -1451,7 +1451,7 @@ class Costs:
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc
-                    / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                    / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
                 )
             else:
                 costtfsc = (
@@ -1465,7 +1465,7 @@ class Costs:
             costtfcu = (
                 cost_variables.uccu
                 * tfcoil_variables.whtconcu
-                / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
             )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1481,8 +1481,8 @@ class Costs:
             self.c22211 = (
                 1.0e-6
                 * ctfconpm
-                * tfcoil_variables.n_tf
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.n_tf_coils
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22211 = (
@@ -1494,8 +1494,8 @@ class Costs:
             self.c22212 = (
                 1.0e-6
                 * cost_variables.ucwindtf
-                * tfcoil_variables.n_tf
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.n_tf_coils
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22212 = (
@@ -1507,7 +1507,7 @@ class Costs:
             self.c22213 = (
                 1.0e-6
                 * (tfcoil_variables.whtcas * cost_variables.uccase)
-                * tfcoil_variables.n_tf
+                * tfcoil_variables.n_tf_coils
             )
             self.c22213 = (
                 cost_variables.fkind * self.c22213 * cmlsa[cost_variables.lsa - 1]
@@ -1939,7 +1939,7 @@ class Costs:
         if tfcoil_variables.i_tf_sup == 1:
             self.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
-                * tfcoil_variables.n_tf
+                * tfcoil_variables.n_tf_coils
                 * (tfcoil_variables.cpttf * tfcoil_variables.vtfskv * 1.0e3) ** expel
                 + cost_variables.uctfsw * tfcoil_variables.cpttf
             )
@@ -1952,25 +1952,27 @@ class Costs:
 
         self.c22513 = 1.0e-6 * (
             1.0e9 * cost_variables.uctfdr * tfcoil_variables.estotftgj
-            + cost_variables.uctfgr * 0.5e0 * tfcoil_variables.n_tf
+            + cost_variables.uctfgr * 0.5e0 * tfcoil_variables.n_tf_coils
         )
         self.c22513 = cost_variables.fkind * self.c22513
 
         #  Account 225.1.4 : TF coil instrumentation and control
 
-        self.c22514 = 1.0e-6 * cost_variables.uctfic * (30.0e0 * tfcoil_variables.n_tf)
+        self.c22514 = (
+            1.0e-6 * cost_variables.uctfic * (30.0e0 * tfcoil_variables.n_tf_coils)
+        )
         self.c22514 = cost_variables.fkind * self.c22514
 
         #  Account 225.1.5 : TF coil bussing
 
         if tfcoil_variables.i_tf_sup != 1:
-            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.tfbusmas
+            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.m_tf_bus
         else:
             self.c22515 = (
                 1.0e-6
                 * cost_variables.ucbus
                 * tfcoil_variables.cpttf
-                * tfcoil_variables.tfbusl
+                * tfcoil_variables.len_tf_bus
             )
 
         self.c22515 = cost_variables.fkind * self.c22515

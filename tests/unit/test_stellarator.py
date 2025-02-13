@@ -861,7 +861,7 @@ def test_bmax_from_awp(stellarator, monkeypatch):
     assert stellarator.bmax_from_awp(
         wp_width_radial=0.11792792792792792,
         current=12.711229086229087,
-        n_tf=50,
+        n_tf_coils=50,
         r_coil_major=22.237837837837837,
         r_coil_minor=4.7171171171171169,
     ) == pytest.approx(39.193416982177489)

@@ -902,7 +902,7 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ General settings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-n_tf = 12 
+n_tf_coils = 12 
 * DESCRIPTION:   Number of TF Coils 
 * JUSTIFICATION: 
 
@@ -1484,7 +1484,7 @@ tftmp = 20.0
 * DESCRIPTION:   Max Centrepost Coolant Flow Speed (m/s)
 * JUSTIFICATION: 
 
-*fcoolleg = 
+*f_a_tf_cool_outboard = 
 * DESCRIPTION:   Coolant fraction of TF outboard leg (itart=1 only) (default = 0.2)
 * JUSTIFICATION: Not set, using default
 
@@ -1584,7 +1584,7 @@ tftmp = 20.0
 * VARIABLES:     itart.  tcpav2 calculated in-situ
 
 *ixc = 20
-*tcpav = 20.42
+*temp_cp_average = 20.42
 *boundl(20) = 20.0
 *boundu(20) = 25.0
 * DESCRIPTION:   Average temperature of centrepost
@@ -1605,11 +1605,11 @@ tftmp = 20.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Power Supplies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-* rhotfbus = 
+* rho_tf_bus = 
 * DESCRIPTION:   TF coil bus (feeders) resistivity (ohm-m) 
 * JUSTIFICATION: Unknown, assuming default
 
-* jbus =  
+* j_tf_bus =  
 * DESCRIPTION:   Bussing Current Density (A/m2) 
 * JUSTIFICATION: Unknown
 

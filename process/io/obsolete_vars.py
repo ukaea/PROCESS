@@ -14,7 +14,7 @@ Note: this is now relied upon by Blueprint, pending implementing a proper API.
 
 OBS_VARS = {
     "snull": "i_single_null",
-    "tfno": "n_tf",
+    "tfno": "n_tf_coils",
     "itfsup": "i_tf_sup",
     "r_tf_inleg_mid": "r_tf_inboard_mid",
     "rtot": "r_tf_outboard_mid",
@@ -190,6 +190,12 @@ OBS_VARS = {
     "iradloss": "i_rad_loss",
     "ipnlaws": "n_confinement_scalings",
     "iinvqd": None,
+    "rhotfleg": "rho_tf_leg",
+    "n_tf": "n_tf_coils",
+    "tcpav": "temp_cp_average",
+    "jbus": "j_tf_bus",
+    "fcoolleg": "f_a_tf_cooil_outboard",
+    "rhotfbus": "rho_tf_bus",
 }
 
 OBS_VARS_HELP = {

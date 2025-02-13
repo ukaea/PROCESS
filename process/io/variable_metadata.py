@@ -84,7 +84,7 @@ var_dicts = {
         description="Mean peak field at TF coil",
         units="T",
     ),
-    "ritfc": VariableMetadata(
+    "c_tf_total": VariableMetadata(
         latex=r"$I_\mathrm{TF}^\mathrm{tot}$ [$A$]",
         description="Total TF coil current",
         units="A",
