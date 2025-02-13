@@ -928,11 +928,6 @@ def create_dicts(project):
         VariableDescriptions(project, python_variables),
         DefaultValues(project, python_variables),
         Modules(project, python_variables),
-        HardcodedDictionary("DICT_TF_TYPE", create_dicts_config.DICT_TF_TYPE),
-        HardcodedDictionary(
-            "DICT_OPTIMISATION_VARS", create_dicts_config.DICT_OPTIMISATION_VARS
-        ),
-        HardcodedDictionary("IFAIL_SUCCESS", create_dicts_config.IFAIL_SUCCESS),
         HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),

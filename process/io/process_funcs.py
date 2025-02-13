@@ -331,18 +331,16 @@ def no_unfeasible_mfile(wdir="."):
     """
 
     m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
 
     # no scans
     if not m_file.data["isweep"].exists:
-        if m_file.data["ifail"].get_scan(-1) == dicts["IFAIL_SUCCESS"]:
+        if m_file.data["ifail"].get_scan(-1) == 1:
             return 0
         return 1
 
     ifail = m_file.data["ifail"].get_scans()
     try:
-        return len(ifail) - ifail.count(dicts["IFAIL_SUCCESS"])
+        return len(ifail) - ifail.count(1)
     except TypeError:
         # This seems to occur, if ifail is not in MFILE!
         # This probably means in the mfile library a KeyError
@@ -392,8 +390,6 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     If the run was a scan, the values of the last scan point
     will be returned.
     """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
     m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
 
     ifail = m_file.data["ifail"].get_scan(-1)
@@ -411,7 +407,7 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
         m_file.data[f"normres{con_no + 1:03}"].get_scan(-1) for con_no in range(neqns)
     ]
 
-    if ifail != dicts["IFAIL_SUCCESS"]:
+    if ifail != 1:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
 
     return ifail, objective_function, constraints, table_sol, table_res
