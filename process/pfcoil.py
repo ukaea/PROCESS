@@ -9,6 +9,7 @@ from scipy.special import ellipe, ellipk
 
 import process.superconductors as superconductors
 from process import fortran as ft
+from process import process_output as op
 from process.fortran import build_variables as bv
 from process.fortran import constants, numerics
 from process.fortran import constraint_variables as ctv
@@ -18,7 +19,6 @@ from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import process_output as op
 from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
@@ -2050,7 +2050,7 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Residual manufacturing strain in CS superconductor material",
-                    "(tfcoil_variables.str_cs_con_res)",
+                    "(str_cs_con_res)",
                     tfv.str_cs_con_res,
                 )
                 op.ovarre(
