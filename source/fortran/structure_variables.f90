@@ -20,7 +20,7 @@ module structure_variables
   real(dp) :: clgsmass
   !! gravity support structure for TF coil, PF coil and intercoil support systems (kg)
 
-  real(dp) :: coldmass
+  real(dp) :: m_cryo_cooled_total
   !! total mass of components at cryogenic temperatures (kg)
 
   real(dp) :: fncmass
@@ -37,7 +37,7 @@ module structure_variables
 
     aintmass = 0.0D0
     clgsmass = 0.0D0
-    coldmass = 0.0D0
+    m_cryo_cooled_total = 0.0D0
     fncmass = 0.0D0
     gsmass = 0.0D0
   end subroutine init_structure_variables

@@ -796,7 +796,7 @@ class Stellarator:
         # This fits for the Helias 5b reactor design point ( F. and Bykov, V. design of Helias 5-B. (nucl Fus. 2013)).
 
         #  Total mass of cooled components
-        structure_variables.coldmass = (
+        structure_variables.m_cryo_cooled_total = (
             tfcoil_variables.whttf
             + structure_variables.aintmass
             + fwbs_variables.dewmkg
@@ -827,8 +827,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Mass of cooled components (kg)",
-                "(coldmass)",
-                structure_variables.coldmass,
+                "(m_cryo_cooled_total)",
+                structure_variables.m_cryo_cooled_total,
             )
 
     def stdiv(self, output: bool):

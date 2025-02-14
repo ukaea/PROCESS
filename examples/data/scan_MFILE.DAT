@@ -761,7 +761,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -1756,7 +1756,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -2751,7 +2751,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -3746,7 +3746,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -4741,7 +4741,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -5736,7 +5736,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -6731,7 +6731,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -7726,7 +7726,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 
@@ -8721,7 +8721,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      3.4462E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      6.4606E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      5.5703E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      5.5703E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      2.3725E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      9.7562E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      5.9858E+05 OP 

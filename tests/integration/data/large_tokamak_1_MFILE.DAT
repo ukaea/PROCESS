@@ -924,7 +924,7 @@
  # Support Structure #
  Outer_PF_coil_fence_mass_(kg)___________________________________________ (fncmass)_____________________      2.2924E+05 OP 
  Intercoil_support_structure_mass_(kg)___________________________________ (aintmass)____________________      4.3045E+06 OP 
- Mass_of_cooled_components_(kg)__________________________________________ (coldmass)____________________      3.4369E+07 OP 
+ Mass_of_cooled_components_(kg)__________________________________________ (m_cryo_cooled_total)____________________      3.4369E+07 OP 
  Gravity_support_structure_mass_(kg)_____________________________________ (clgsmass)____________________      1.2760E+06 OP 
  Torus_leg_support_mass_(kg)_____________________________________________ (gsm1)________________________      8.5820E+04 OP 
  Ring_beam_mass_(kg)_____________________________________________________ (gsm2)________________________      4.0088E+05 OP 

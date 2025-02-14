@@ -682,7 +682,7 @@ class StstrcParam(NamedTuple):
 
     clgsmass: Any = None
 
-    coldmass: Any = None
+    m_cryo_cooled_total: Any = None
 
     fncmass: Any = None
 
@@ -716,7 +716,7 @@ class StstrcParam(NamedTuple):
 
     expected_clgsmass: Any = None
 
-    expected_coldmass: Any = None
+    expected_m_cryo_cooled_total: Any = None
 
 
 @pytest.mark.parametrize(
@@ -727,7 +727,7 @@ class StstrcParam(NamedTuple):
             denstl=7800,
             aintmass=0,
             clgsmass=0,
-            coldmass=0,
+            m_cryo_cooled_total=0,
             fncmass=0,
             gsmass=0,
             whttf=5204872.8206625767,
@@ -744,14 +744,14 @@ class StstrcParam(NamedTuple):
             outfile=11,
             expected_aintmass=4882304.266547408,
             expected_clgsmass=976460.85330948164,
-            expected_coldmass=10087177.087209985,
+            expected_m_cryo_cooled_total=10087177.087209985,
         ),
         StstrcParam(
             dewmkg=22397931.480129492,
             denstl=7800,
             aintmass=4882304.266547408,
             clgsmass=976460.85330948164,
-            coldmass=10087177.087209985,
+            m_cryo_cooled_total=10087177.087209985,
             fncmass=0,
             gsmass=0,
             whttf=5204872.8206625767,
@@ -768,7 +768,7 @@ class StstrcParam(NamedTuple):
             outfile=11,
             expected_aintmass=4882304.266547408,
             expected_clgsmass=976460.85330948164,
-            expected_coldmass=32485108.567339476,
+            expected_m_cryo_cooled_total=32485108.567339476,
         ),
     ),
 )
@@ -793,7 +793,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(structure_variables, "clgsmass", ststrcparam.clgsmass)
 
-    monkeypatch.setattr(structure_variables, "coldmass", ststrcparam.coldmass)
+    monkeypatch.setattr(
+        structure_variables, "m_cryo_cooled_total", ststrcparam.m_cryo_cooled_total
+    )
 
     monkeypatch.setattr(structure_variables, "fncmass", ststrcparam.fncmass)
 
@@ -833,7 +835,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     assert structure_variables.clgsmass == pytest.approx(ststrcparam.expected_clgsmass)
 
-    assert structure_variables.coldmass == pytest.approx(ststrcparam.expected_coldmass)
+    assert structure_variables.m_cryo_cooled_total == pytest.approx(
+        ststrcparam.expected_m_cryo_cooled_total
+    )
 
 
 def test_u_max_protect_v(stellarator):

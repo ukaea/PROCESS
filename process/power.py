@@ -786,7 +786,7 @@ class Power:
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.tfcryoarea,
-                structure_variables.coldmass,
+                structure_variables.m_cryo_cooled_total,
                 fwbs_variables.ptfnuc,
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
@@ -2263,7 +2263,7 @@ class Power:
         self,
         i_tf_sup: int,
         tfcryoarea: float,
-        coldmass: float,
+        m_cryo_cooled_total: float,
         ptfnuc: float,
         ensxpfm: float,
         t_pulse_repetition: float,
@@ -2277,8 +2277,8 @@ class Power:
         :type i_tf_sup: int
         :param tfcryoarea: Surface area of toroidal shells covering TF coils (m^2).
         :type tfcryoarea: float
-        :param coldmass: Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
-        :type coldmass: float
+        :param m_cryo_cooled_total: Mass of cold (cryogenic) components (kg), including TF coils, PF coils, cryostat, and intercoil structure.
+        :type m_cryo_cooled_total: float
         :param ptfnuc: Nuclear heating in TF coils (MW).
         :type ptfnuc: float
         :param ensxpfm: Maximum PF coil stored energy (MJ).
@@ -2295,7 +2295,7 @@ class Power:
         This routine calculates the cryogenic heat load.
         D. Slack memo SCMDG 88-5-1-059, LLNL ITER-88-054, Aug. 1988.
         """
-        self.qss = 4.3e-4 * coldmass
+        self.qss = 4.3e-4 * m_cryo_cooled_total
         if i_tf_sup == 1:
             self.qss += 2.0e0 * tfcryoarea
 
@@ -2312,7 +2312,9 @@ class Power:
 
         # 45% extra miscellaneous, piping and reserves
         self.qmisc = 0.45e0 * (self.qss + fwbs_variables.qnuc + self.qac + self.qcl)
-        return max(0.0e0, self.qmisc + self.qss + fwbs_variables.qnuc + self.qac + self.qcl)
+        return max(
+            0.0e0, self.qmisc + self.qss + fwbs_variables.qnuc + self.qac + self.qcl
+        )
 
     def plant_thermal_efficiency(self, etath):
         """

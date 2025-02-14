@@ -47,7 +47,7 @@ class CryoParam(NamedTuple):
 
     i_tf_sup: Any = None
 
-    coldmass: Any = None
+    m_cryo_cooled_total: Any = None
 
     cpttf: Any = None
 
@@ -83,7 +83,7 @@ class CryoParam(NamedTuple):
             qcl=0,
             qmisc=0,
             i_tf_sup=1,
-            coldmass=47352637.039762333,
+            m_cryo_cooled_total=47352637.039762333,
             cpttf=74026.751437500003,
             ensxpfm=37429.525515086898,
             ptfnuc=0.044178296011112193,
@@ -104,7 +104,7 @@ class CryoParam(NamedTuple):
             qcl=16108.2211128,
             qmisc=23850.540321823562,
             i_tf_sup=1,
-            coldmass=47308985.527808741,
+            m_cryo_cooled_total=47308985.527808741,
             cpttf=74026.751437500003,
             ensxpfm=37427.228965055205,
             ptfnuc=0.045535131445547841,
@@ -146,7 +146,7 @@ def test_cryo(cryoparam, monkeypatch, power):
 
     helpow = power.cryo(
         i_tf_sup=cryoparam.i_tf_sup,
-        coldmass=cryoparam.coldmass,
+        m_cryo_cooled_total=cryoparam.m_cryo_cooled_total,
         cpttf=cryoparam.cpttf,
         ensxpfm=cryoparam.ensxpfm,
         ptfnuc=cryoparam.ptfnuc,
