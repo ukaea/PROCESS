@@ -3643,22 +3643,22 @@ contains
     !! <LI> (164) f-value for maximum cryogenic plant power
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(164) = 'f_crypmw         '
+    lablxc(164) = 'fp_cryo_plant_electric_max_mw         '
     boundl(164) = 0.001D0
     boundu(164) = 1.000D0
   end subroutine init_itv_164
 
   real(kind(1.d0)) function itv_164()
-    use heat_transport_variables, only: f_crypmw
+    use heat_transport_variables, only: fp_cryo_plant_electric_max_mw
     implicit none
-    itv_164 = f_crypmw
+    itv_164 = fp_cryo_plant_electric_max_mw
   end function itv_164
 
   subroutine set_itv_164(ratio)
-    use heat_transport_variables, only: f_crypmw
+    use heat_transport_variables, only: fp_cryo_plant_electric_max_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    f_crypmw = ratio
+    fp_cryo_plant_electric_max_mw = ratio
   end subroutine set_itv_164
 
   !---------------------------------

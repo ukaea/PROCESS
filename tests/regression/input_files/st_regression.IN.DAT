@@ -3053,7 +3053,7 @@ iprimshld = 1
 * JUSTIFICATION: Turned off, not using icc=85
 
 *ixc = 164
-*f_crypmw = 
+*fp_cryo_plant_electric_max_mw = 
 *boundl(164) = 
 *boundu(164) = 
 * DESCRIPTION: f-value for maximum cryogenic plant power
