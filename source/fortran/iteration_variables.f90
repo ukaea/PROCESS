@@ -3850,30 +3850,34 @@ contains
     casths = ratio
   end subroutine set_itv_172
 
+!---------------------------------
+
+  subroutine init_itv_173
+    !! <LI> (173) alphan :
+    use numerics, only: lablxc, boundl, boundu
+    implicit none
+    lablxc(173) = 'alphan         '
+    boundl(173) = 0.01
+    boundu(173) = 10.0
+  end subroutine init_itv_173
+
+  real(kind(1.d0)) function itv_173()
+  use physics_variables, only: alphan
+    implicit none
+    itv_173 = alphan
+  end function itv_173
+
+  subroutine set_itv_173(ratio)
+    use physics_variables, only: alphan
+    implicit none
+    real(kind(1.d0)) :: ratio
+    alphan = ratio
+  end subroutine set_itv_173
+
   !---------------------------------
   ! DUMMY variables below here
   !---------------------------------
   !---------------------------------
-
-  subroutine init_itv_173
-    !! <LI> (173) DUMMY : Description
-    use numerics, only: lablxc, boundl, boundu
-    implicit none
-    lablxc(173) = 'DUMMY         '
-    boundl(173) = 1.0d-99
-    boundu(173) = 1.0d99
-  end subroutine init_itv_173
-
-  real(kind(1.d0)) function itv_173()
-    implicit none
-    itv_173 = DUMMY
-  end function itv_173
-
-  subroutine set_itv_173(ratio)
-    implicit none
-    real(kind(1.d0)) :: ratio
-    DUMMY = ratio
-  end subroutine set_itv_173
 
   !---------------------------------
 
