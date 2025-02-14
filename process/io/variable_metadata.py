@@ -17,7 +17,7 @@ var_dicts = {
     "rmajor": VariableMetadata(
         latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
     ),
-    "crypmw": VariableMetadata(
+    "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
     "bt": VariableMetadata(

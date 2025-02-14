@@ -779,7 +779,7 @@ contains
             vlab = 'dr_shld_inboard' ; xlab = 'Inboard neutronic shield'
         case(56)
             crypmw_max = swp(iscn)
-            vlab = 'crypmw_max' ; xlab = 'max allowable crypmw'
+            vlab = 'crypmw_max' ; xlab = 'max allowable p_cryo_plant_electric_mw'
         case(57)
             boundl(2) = swp(iscn)
             vlab = 'boundl(2)' ; xlab = 'bt minimum'
