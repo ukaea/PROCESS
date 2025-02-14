@@ -340,19 +340,19 @@ def fradcore(rho, coreradius, coreradiationfraction):
     return fradcore
 
 
-def zav_of_te(imp_element_index, tprofile):
+def zav_of_te(imp_element_index, teprofile):
     """Calculates electron temperature dependent average atomic number
 
     :param imp_element_index: Impurity element index
     :type imp_element_index: int
-    :param tprofile: temperature profile
-    :type tprofile: numpy.array
+    :param teprofile: temperature profile
+    :type teprofile: numpy.array
     :return: zav_of_te - electron temperature dependent average atomic number
     :rtype: numpy.array
     """
-    # less_than_imp_temp_mask = tprofile values less than impurity temperature. greater_than_imp_temp_mask = tprofile values higher than impurity temperature.
+    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
-    indices = np.digitize(tprofile, bins)
+    indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
     yi = impurity_radiation_module.impurity_arr_zav[imp_element_index, indices - 1]
@@ -367,16 +367,16 @@ def zav_of_te(imp_element_index, tprofile):
         )
         - xi
     )
-    zav_of_te = yi + c * (np.log(tprofile) - xi)
+    zav_of_te = yi + c * (np.log(teprofile) - xi)
     less_than_imp_temp_mask = (
-        tprofile
+        teprofile
         <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
     )
     zav_of_te[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_zav[
         imp_element_index, 0
     ]
     greater_than_imp_temp_mask = (
-        tprofile
+        teprofile
         >= impurity_radiation_module.impurity_arr_temp_kev[
             imp_element_index,
             (impurity_radiation_module.impurity_arr_len_tab[imp_element_index]) - 1,
@@ -390,21 +390,21 @@ def zav_of_te(imp_element_index, tprofile):
     return zav_of_te
 
 
-def pimpden(imp_element_index, nprofile, tprofile):
+def pimpden(imp_element_index, neprofile, teprofile):
     """Calculates the impurity radiation density (W/m3)
 
     :param imp_element_index: Impurity element index
     :type imp_element_index: int
-    :param nprofile: density profile
-    :type nprofile: numpy.array
-    :param tprofile: temperature profile
-    :type tprofile: numpy.array
+    :param neprofile: density profile
+    :type neprofile: numpy.array
+    :param teprofile: temperature profile
+    :type teprofile: numpy.array
     :return: pimpden - total impurity radiation density (W/m3)
     :rtype: numpy.array
     """
-    # less_than_imp_temp_mask = tprofile values less than impurity temperature. greater_than_imp_temp_mask = tprofile values higher than impurity temperature.
+    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
-    indices = np.digitize(tprofile, bins)
+    indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
 
@@ -425,17 +425,17 @@ def pimpden(imp_element_index, nprofile, tprofile):
         )
         - xi
     )
-    pimpden = np.exp(yi + c * (np.log(tprofile) - xi))
+    pimpden = np.exp(yi + c * (np.log(teprofile) - xi))
 
     pimpden = (
         impurity_radiation_module.impurity_arr_frac[imp_element_index]
-        * nprofile
-        * nprofile
+        * neprofile
+        * neprofile
         * pimpden
     )
 
     less_than_imp_temp_mask = (
-        tprofile
+        teprofile
         <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
     )
     pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
@@ -443,11 +443,11 @@ def pimpden(imp_element_index, nprofile, tprofile):
     ]
     # if not impurity_radiation_module.toolow:  # Only print warning once during a run
     #     impurity_radiation_module.toolow = True
-    #     error_handling.fdiags[0] = tprofile
+    #     error_handling.fdiags[0] = teprofile
     #     error_handling.report_error(35)
 
     greater_than_imp_temp_mask = (
-        tprofile
+        teprofile
         >= impurity_radiation_module.impurity_arr_temp_kev[
             imp_element_index,
             impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,

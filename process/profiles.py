@@ -90,7 +90,7 @@ class Profile(ABC):
         )
 
 
-class NProfile(Profile):
+class NeProfile(Profile):
     """Electron density profile class. Contains a function to calculate the electron density profile and
     store the data.
 
@@ -98,14 +98,14 @@ class NProfile(Profile):
         Inherits attributes from the base class `Profile`.
 
     Methods:
-        run(): Subroutine which calls functions and stores nprofile data.
+        run(): Subroutine which calls functions and stores neprofile data.
         calculate_profile_y(rho, rhopedn, n0, nped, nsep, alphan): Calculates the density at each normalised minor radius position.
         ncore(rhopedn, nped, nsep, nav, alphan): Calculates the core density of a pedestalised profile.
         set_physics_variables(): Calculates and sets physics variables required for the profile.
     """
 
     def run(self) -> None:
-        """Subroutine which calls profile functions and stores nprofile data."""
+        """Subroutine which calls profile functions and stores neprofile data."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
@@ -130,7 +130,7 @@ class NProfile(Profile):
     ) -> None:
         """
         This routine calculates the density at each normalised minor radius position
-        rho for a HELIOS-type density pedestal profile (nprofile).
+        rho for a HELIOS-type density pedestal profile (neprofile).
 
         Authors:
             R Kemp, CCFE, Culham Science Centre
@@ -237,11 +237,11 @@ class NProfile(Profile):
         )
 
 
-class TProfile(Profile):
-    """Temperature profile class. Contains a function to calculate the temperature profile and store the data."""
+class TeProfile(Profile):
+    """Electron temperature profile class. Contains a function to calculate the temperature profile and store the data."""
 
     def run(self) -> None:
-        """Subroutine to initialise nprofile and execute calculations."""
+        """Subroutine to initialise neprofile and execute calculations."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
@@ -267,7 +267,7 @@ class TProfile(Profile):
         tbeta: float,
     ) -> None:
         """
-        Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (tprofile).
+        Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
         If ipedestal = 0 the original parabolic profile form is used instead.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650

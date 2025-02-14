@@ -747,7 +747,7 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def plot_nprofile(prof, demo_ranges):
+def plot_neprofile(prof, demo_ranges):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
@@ -882,7 +882,7 @@ def plot_jprofile(prof):
     )
 
 
-def plot_tprofile(prof, demo_ranges):
+def plot_teprofile(prof, demo_ranges):
     """Function to plot temperature profile
     Arguments:
       prof --> axis object to add plot to
@@ -3384,12 +3384,12 @@ def main_plot(
     # Plot density profiles
     plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
     plot_4.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_nprofile(plot_4, demo_ranges)
+    plot_neprofile(plot_4, demo_ranges)
 
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(232)
     plot_5.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_tprofile(plot_5, demo_ranges)
+    plot_teprofile(plot_5, demo_ranges)
 
     # Plot impurity profiles
     plot_8 = fig2.add_subplot(233)
