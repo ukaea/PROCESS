@@ -3875,31 +3875,33 @@ contains
   end subroutine set_itv_173
 
   !---------------------------------
-  ! DUMMY variables below here
-  !---------------------------------
-  !---------------------------------
-
-  !---------------------------------
 
   subroutine init_itv_174
-    !! <LI> (174) DUMMY : Description
+    !! <LI> (174) alphat : 
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(174) = 'DUMMY         '
-    boundl(174) = 1.0d-99
-    boundu(174) = 1.0d99
+    lablxc(174) = 'alphat         '
+    boundl(174) = 0.01
+    boundu(174) = 10.0
   end subroutine init_itv_174
 
   real(kind(1.d0)) function itv_174()
+  use physics_variables, only: alphat
     implicit none
-    itv_174 = DUMMY
+    itv_174 = alphat
   end function itv_174
 
   subroutine set_itv_174(ratio)
+    use physics_variables, only: alphat
     implicit none
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    alphat = ratio
   end subroutine set_itv_174
+
+  !---------------------------------
+  ! DUMMY variables below here
+  !---------------------------------
+  !---------------------------------
 
   !---------------------------------
 
@@ -4121,9 +4123,10 @@ contains
            case (170);  xcm(i) = itv_170()
            case (171);  xcm(i) = itv_171()
            case (172);  xcm(i) = itv_172()
-            ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
-           case (174);  xcm(i) = itv_174()
+           case (174);  xcm(i) = itv_174() 
+            ! DUMMY Cases
+           
            case (175);  xcm(i) = itv_175()
 
        case default
