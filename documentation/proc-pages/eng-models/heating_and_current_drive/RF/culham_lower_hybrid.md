@@ -2,18 +2,15 @@
 
 - `iefrf/iefrffix` = 6
 
-
-
 This routine calculates the current drive parameters for a
 lower hybrid system, based on the AEA FUS 172 model.
 AEA FUS 251: A User's Guide to the PROCESS Systems Code
 AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 
-
 1. Call the [`lhrad()`](#lower-hybrid-wave-absorption-radius--lhrad) method to calculate the lower hybrid wave absorption radius, `rratio`.
 2. Calculate the penetration radius, `rpenet`, by multiplying `rratio` with the minor radius of the plasma.
-3. Calculate the local density, `dlocal`, using the `nprofile()` function from the `profiles_module` module. This function takes into account various plasma parameters such as the density profile, electron density at the edge, pedestal density, separatrix density, and the value of the parameter `alphan`.
-4. Similarly, calculate the local temperature, `tlocal`, using the `tprofile()` function from the `profiles_module` module. This function considers parameters such as the temperature profile, electron temperature at the edge, pedestal temperature, separatrix temperature, `alphat`, and `tbeta`.
+3. Calculate the local density, `dlocal`, using the `neprofile()` function from the `profiles_module` module. This function takes into account various plasma parameters such as the density profile, electron density at the edge, pedestal density, separatrix density, and the value of the parameter `alphan`.
+4. Similarly, calculate the local temperature, `tlocal`, using the `teprofile()` function from the `profiles_module` module. This function considers parameters such as the temperature profile, electron temperature at the edge, pedestal temperature, separatrix temperature, `alphat`, and `tbeta`.
 5. Calculate the local toroidal magnetic field, `blocal`, using the formula `bt * rmajor / (rmajor - rpenet)`. Here, `bt` is the toroidal magnetic field at the magnetic axis, and `rmajor` is the major radius of the plasma.
 6. Calculate the parallel refractive index, `nplacc`, which is needed for plasma access. It uses the local density `dlocal` and the local magnetic field `blocal` to calculate a fraction `frac`. `nplacc` is then obtained by adding `frac` to the square root of `1.0 + frac * frac`.
 7. Calculate the local inverse aspect ratio, `epslh`, by dividing `rpenet` by `rmajor`.
@@ -46,5 +43,3 @@ Iterate over the following steps to find the minor radius ratio:
     - Update $\mathtt{rat0}$ with the new approximation, $\mathtt{rat1}$.
 3. If the loop completes all 100 iterations without finding a satisfactory solution, report an error and set $\mathtt{rat0}$ to 0.8.
 4. Return the final value of $\mathtt{rat0}$.
-
-[^1]: T. C. Hender, M. K. Bevir, M. Cox, R. J. Hastie, P. J. Knight, C. N. Lashmore-Davies, B. Lloyd, G. P. Maddison, A. W. Morris, M. R. O'Brien, M.F. Turner abd H. R. Wilson, *"Physics Assessment for the European Reactor Study"*, AEA Fusion Report AEA FUS 172 (1992)
