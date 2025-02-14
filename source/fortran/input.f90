@@ -284,7 +284,7 @@ contains
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
-      fpumpfw, crypmw_max, f_crypmw
+      fpumpfw, p_cryo_plant_electric_max_mw, f_crypmw
     use ife_variables, only: bldzu, etali, sombdr, gainve, cdriv0, v1dzl, &
       bldrc, fauxbop, pfusife, dcdrv0, fwdr, pdrive, mcdriv, ucconc, shdr, &
       v3dzu, bldzl, rrin, maxmat, shmatf, fwmatf, drveff, flirad, shdzu, v2dzu, &
@@ -2272,8 +2272,8 @@ contains
        case ('baseel')
           call parse_real_variable('baseel', baseel, 1.0D6, 1.0D10, &
                'Base plant electric load (W)')
-       case ('crypmw_max')
-          call parse_real_variable('crypmw_max', crypmw_max, 0.01D0, 200.0D0, &
+       case ('p_cryo_plant_electric_max_mw')
+          call parse_real_variable('p_cryo_plant_electric_max_mw', p_cryo_plant_electric_max_mw, 0.01D0, 200.0D0, &
                ' Maximum cryogenic plant power (MW)')
        case ('f_crypmw')
           call parse_real_variable('f_crypmw', f_crypmw, 0.0D0, 100.0D0, &

@@ -91,7 +91,7 @@ module scan_module
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness
-  !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
+  !!         <LI> 56 p_cryo_plant_electric_max_mw: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
@@ -608,7 +608,7 @@ contains
     use numerics, only: epsvmc, boundu, boundl
     use tfcoil_variables, only: tmargmin_tf, sig_tf_case_max, n_pancake, oacdcp, &
       n_layer, b_crit_upper_nbti, sig_tf_wp_max, fcoolcp, n_tf_turn
-    use heat_transport_variables, only: crypmw_max, etath
+    use heat_transport_variables, only: p_cryo_plant_electric_max_mw, etath
     use rebco_variables, only: copperaoh_m2_max
     use pfcoil_variables, only: coheof, ohhghf, oh_steel_frac
     use CS_fatigue_variables, only: n_cycle_min, t_crack_vertical
@@ -778,8 +778,8 @@ contains
             dr_shld_inboard = swp(iscn)
             vlab = 'dr_shld_inboard' ; xlab = 'Inboard neutronic shield'
         case(56)
-            crypmw_max = swp(iscn)
-            vlab = 'crypmw_max' ; xlab = 'max allowable p_cryo_plant_electric_mw'
+            p_cryo_plant_electric_max_mw = swp(iscn)
+            vlab = 'p_cryo_plant_electric_max_mw' ; xlab = 'max allowable p_cryo_plant_electric_mw'
         case(57)
             boundl(2) = swp(iscn)
             vlab = 'boundl(2)' ; xlab = 'bt minimum'
