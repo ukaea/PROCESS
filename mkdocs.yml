@@ -107,6 +107,7 @@ nav:
                   - ITER Model: eng-models/heating_and_current_drive/NBI/iter_nb.md
                   - Culham Model: eng-models/heating_and_current_drive/NBI/culham_nb.md
           - Cryostat and vacuum system: eng-models/cryostat-and-vacuum-system.md
+          - Cryogenic Plant: eng-models/cryogenic-system.md
           - Plant Availability: eng-models/plant-availability.md
           - Power Requirements: eng-models/power-requirements.md
           - Vacuum Vessel: eng-models/vacuum-vessel.md
