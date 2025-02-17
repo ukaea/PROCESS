@@ -693,7 +693,7 @@ class DCLL:
         )
 
         # Total mass of blanket
-        fwbs_variables.whtblkt = (
+        fwbs_variables.m_blkt_total = (
             dcll_module.wht_stl_struct
             + dcll_module.wht_cool_struct
             + fwbs_variables.wht_liq
@@ -709,13 +709,13 @@ class DCLL:
         fwbs_variables.armour_fw_bl_mass = (
             fwbs_variables.fw_armour_mass
             + fwbs_variables.m_fw_total
-            + fwbs_variables.whtblkt
+            + fwbs_variables.m_blkt_total
         )
 
         # Total mass of IB/OB segment
         if fwbs_variables.i_blkt_inboard == 1:
             dcll_module.mass_segm_ib = (
-                fwbs_variables.whtblkt
+                fwbs_variables.m_blkt_total
                 * (fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total)
                 + fwbs_variables.m_fw_total
                 * (
@@ -735,7 +735,7 @@ class DCLL:
             ) / fwbs_variables.nblktmodti
 
         dcll_module.mass_segm_ob = (
-            fwbs_variables.whtblkt
+            fwbs_variables.m_blkt_total
             * (fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total)
             + fwbs_variables.m_fw_total
             * (
@@ -796,8 +796,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total Blanket Mass (kg)",
-                "(whtblkt)",
-                fwbs_variables.whtblkt,
+                "(m_blkt_total)",
+                fwbs_variables.m_blkt_total,
                 "OP ",
             )
             if fwbs_variables.ifci == 1:

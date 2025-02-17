@@ -136,7 +136,7 @@ module fwbs_variables
   real(dp) :: pnucshld
   !! nuclear heating in the shield [MW]
 
-  real(dp) :: whtblkt
+  real(dp) :: m_blkt_total
   !! mass of blanket [kg]
 
   real(dp) :: whtblss
@@ -694,7 +694,7 @@ module fwbs_variables
     pnucloss = 0.0D0
     pnucvvplus = 0.0D0
     pnucshld = 0.0D0
-    whtblkt = 0.0D0
+    m_blkt_total = 0.0D0
     whtblss = 0.0D0
     armour_fw_bl_mass = 0.0D0
     breeder_f = 0.5D0
