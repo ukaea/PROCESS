@@ -671,7 +671,7 @@ class BlanketLibrary:
                 - physics_variables.rminor
                 - build_variables.dr_fw_plasma_gap_inboard
             )
-        ) / fwbs_variables.nblktmodti
+        ) / fwbs_variables.n_blkt_inboard_modules_toroidal
         blanket_library.blwidto = (
             2.0e0
             * np.pi
@@ -841,7 +841,7 @@ class BlanketLibrary:
                 # Have DEMO DCLL set here for now
                 npblkti_liq = (
                     fwbs_variables.nopipes
-                    * fwbs_variables.nblktmodti
+                    * fwbs_variables.n_blkt_inboard_modules_toroidal
                     * fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
@@ -922,7 +922,7 @@ class BlanketLibrary:
                 # Have DEMO DCLL set here for now
                 npblkti_liq = (
                     fwbs_variables.nopipes
-                    * fwbs_variables.nblktmodti
+                    * fwbs_variables.n_blkt_inboard_modules_toroidal
                     * fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 

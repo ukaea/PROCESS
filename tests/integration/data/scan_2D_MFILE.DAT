@@ -983,7 +983,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -2146,7 +2146,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -3309,7 +3309,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -4472,7 +4472,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -5635,7 +5635,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -6798,7 +6798,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -7961,7 +7961,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -9124,7 +9124,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -10287,7 +10287,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -11450,7 +11450,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -12613,7 +12613,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -13776,7 +13776,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -14939,7 +14939,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -16102,7 +16102,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
@@ -17265,7 +17265,7 @@
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    

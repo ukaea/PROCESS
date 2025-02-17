@@ -358,7 +358,7 @@ class DcllMassesParam(NamedTuple):
 
     rhof_bl: Any = None
 
-    nblktmodti: Any = None
+    n_blkt_inboard_modules_toroidal: Any = None
 
     nblktmodto: Any = None
 
@@ -560,7 +560,7 @@ class DcllMassesParam(NamedTuple):
             icooldual=2,
             den_fw_coolant=5.6389735407435868,
             rhof_bl=5.6389735407435868,
-            nblktmodti=32,
+            n_blkt_inboard_modules_toroidal=32,
             nblktmodto=48,
             r_fci=0,
             r_backwall=0,
@@ -679,7 +679,7 @@ class DcllMassesParam(NamedTuple):
             icooldual=2,
             den_fw_coolant=5.6389735407435868,
             rhof_bl=5.6389735407435868,
-            nblktmodti=32,
+            n_blkt_inboard_modules_toroidal=32,
             nblktmodto=48,
             r_fci=0.050000000000000003,
             r_backwall=0.02,
@@ -879,7 +879,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "rhof_bl", dcllmassesparam.rhof_bl)
 
-    monkeypatch.setattr(fwbs_variables, "nblktmodti", dcllmassesparam.nblktmodti)
+    monkeypatch.setattr(fwbs_variables, "n_blkt_inboard_modules_toroidal", dcllmassesparam.n_blkt_inboard_modules_toroidal)
 
     monkeypatch.setattr(fwbs_variables, "nblktmodto", dcllmassesparam.nblktmodto)
 
