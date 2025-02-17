@@ -21,7 +21,7 @@ module fwbs_variables
   real(dp) :: life_blkt
   !! Calendar year blanket lifetime (years)
 
-  real(dp) :: coolmass
+  real(dp) :: m_fw_blkt_div_coolant_total
   !! mass of water coolant (in shield, blanket, first wall, divertor) [kg]
 
   real(dp) :: vvmass
@@ -666,7 +666,7 @@ module fwbs_variables
 
     life_blkt_fpy = 0.0D0
     life_blkt = 0.0D0
-    coolmass = 0.0D0
+    m_fw_blkt_div_coolant_total = 0.0D0
     vvmass = 0.0D0
     denstl = 7800.0D0
     denwc = 15630.0D0

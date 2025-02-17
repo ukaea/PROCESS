@@ -244,7 +244,7 @@ class CCFE_HCPB:
         )
 
         # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
-        fwbs_variables.coolmass = coolvol * 1.517
+        fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 1.517
 
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
         fwbs_variables.fwclfr = (
