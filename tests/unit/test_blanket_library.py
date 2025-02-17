@@ -1455,7 +1455,7 @@ def test_external_cryo_geometry(
 class BlanketModPolHeightParam(NamedTuple):
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
-    fwbsshape: Any = None
+    i_fw_blkt_vv_shape: Any = None
     nblktmodpi: Any = None
     fdiv: Any = None
     nblktmodpo: Any = None
@@ -1477,7 +1477,7 @@ class BlanketModPolHeightParam(NamedTuple):
         BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
-            fwbsshape=2,
+            i_fw_blkt_vv_shape=2,
             nblktmodpi=7,
             fdiv=0.115,
             nblktmodpo=8,
@@ -1495,7 +1495,7 @@ class BlanketModPolHeightParam(NamedTuple):
         BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.10000000000000001,
             dr_fw_plasma_gap_outboard=0.10000000000000001,
-            fwbsshape=1,
+            i_fw_blkt_vv_shape=1,
             nblktmodpi=7,
             fdiv=0.115,
             nblktmodpo=8,
@@ -1538,7 +1538,11 @@ def test_blanket_mod_pol_height(
         "dr_fw_plasma_gap_outboard",
         blanketmodpolheightparam.dr_fw_plasma_gap_outboard,
     )
-    monkeypatch.setattr(fwbs_variables, "fwbsshape", blanketmodpolheightparam.fwbsshape)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_fw_blkt_vv_shape",
+        blanketmodpolheightparam.i_fw_blkt_vv_shape,
+    )
     monkeypatch.setattr(
         fwbs_variables, "nblktmodpi", blanketmodpolheightparam.nblktmodpi
     )

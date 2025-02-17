@@ -2079,7 +2079,7 @@
         "fwbs_nu": 40000.0,
         "fwbs_prob_fail": 0.0002,
         "fwbs_umain_time": 0.25,
-        "fwbsshape": 2.0,
+        "i_fw_blkt_vv_shape": 2.0,
         "fwclfr": 0.15,
         "i_fw_coolant_type": "'helium'",
         "fwdr": 0.01,
@@ -9671,7 +9671,7 @@
         "fwbs_nu": "The cycle when the blanket fails with 100% probability",
         "fwbs_prob_fail": "Fwbs probability of failure (per op day)",
         "fwbs_umain_time": "Fwbs unplanned maintenance time (years)",
-        "fwbsshape": "switch for first wall, blanket, shield and vacuum vessel shape:\n<ul>\n<li>=1 D-shaped (cylinder inboard + ellipse outboard)</li>\n<li>=2 defined by two ellipses</li>\n</ul>",
+        "i_fw_blkt_vv_shape": "switch for first wall, blanket, shield and vacuum vessel shape:\n<ul>\n<li>=1 D-shaped (cylinder inboard + ellipse outboard)</li>\n<li>=2 defined by two ellipses</li>\n</ul>",
         "fwclfr": "first wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)",
         "i_fw_coolant_type": "switch for first wall coolant (can be different from blanket coolant):\n<ul>\n<li>'helium'</li>\n<li>'water'</li>\n</ul>",
         "fwdr": "radial thickness of IFE first wall (m)",
@@ -13021,7 +13021,7 @@
             "lb": 0.1,
             "ub": 2.0
         },
-        "fwbsshape": {
+        "i_fw_blkt_vv_shape": {
             "lb": 1,
             "ub": 2
         },
@@ -18024,7 +18024,7 @@
             "fdiv",
             "fhcd",
             "fhole",
-            "fwbsshape",
+            "i_fw_blkt_vv_shape",
             "life_fw_fpy",
             "m_fw_total",
             "fw_armour_mass",
@@ -20363,7 +20363,7 @@
         "fwbs_nu": "real_variable",
         "fwbs_prob_fail": "real_variable",
         "fwbs_umain_time": "real_variable",
-        "fwbsshape": "int_variable",
+        "i_fw_blkt_vv_shape": "int_variable",
         "fwclfr": "real_variable",
         "fwdr": "real_variable",
         "fwdzl": "real_variable",

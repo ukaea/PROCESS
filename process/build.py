@@ -1996,7 +1996,7 @@ class Build:
         hfw = 0.5e0 * (htop + hbot)
 
         if (physics_variables.itart == 1) or (
-            fwbs_variables.fwbsshape == 1
+            fwbs_variables.i_fw_blkt_vv_shape == 1
         ):  # D-shaped
             #  Major radius to outer edge of inboard section
             r1 = (
