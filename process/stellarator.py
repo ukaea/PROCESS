@@ -1377,7 +1377,7 @@ class Stellarator:
 
                 if fwbs_variables.i_blkt_coolant_type == 2:
                     if fwbs_variables.irefprop:
-                        fwbs_variables.outlet_temp = (
+                        fwbs_variables.temp_blkt_coolant_out = (
                             FluidProperties.of(
                                 "Water",
                                 pressure=fwbs_variables.coolp,
@@ -1386,7 +1386,7 @@ class Stellarator:
                             - 20
                         )
                     else:
-                        fwbs_variables.outlet_temp = (
+                        fwbs_variables.temp_blkt_coolant_out = (
                             273.15
                             + 168.396
                             + 0.314653 / fwbs_variables.coolp
