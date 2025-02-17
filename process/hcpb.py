@@ -369,7 +369,7 @@ class CCFE_HCPB:
         )
 
         # Total blanket mass (kg)
-        fwbs_variables.whtblkt = (
+        fwbs_variables.m_blkt_total = (
             fwbs_variables.whtbltibe12
             + fwbs_variables.whtblli4sio4
             + fwbs_variables.whtblss
@@ -379,7 +379,7 @@ class CCFE_HCPB:
         fwbs_variables.armour_fw_bl_mass = (
             fwbs_variables.fw_armour_mass
             + fwbs_variables.m_fw_total
-            + fwbs_variables.whtblkt
+            + fwbs_variables.m_blkt_total
         )
 
     def nuclear_heating_magnets(self, output: bool):
@@ -416,7 +416,7 @@ class CCFE_HCPB:
         ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
         ccfe_hcpb_module.fw_density = fwbs_variables.denstl * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
-            fwbs_variables.whtblkt / fwbs_variables.vol_blkt_total
+            fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total
         )
         ccfe_hcpb_module.shield_density = (
             fwbs_variables.whtshld / fwbs_variables.volshld
@@ -566,7 +566,7 @@ class CCFE_HCPB:
         b = 2.476e-3  # 1/tonne
 
         # Mass of the blanket in tonnes
-        mass = fwbs_variables.whtblkt / 1000
+        mass = fwbs_variables.m_blkt_total / 1000
 
         # Total blanket nuclear heating (MW)
         ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
@@ -1319,8 +1319,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Blanket Mass - Total(kg)",
-            "(whtblkt)",
-            fwbs_variables.whtblkt,
+            "(m_blkt_total)",
+            fwbs_variables.m_blkt_total,
             "OP ",
         )
         po.ovarre(
