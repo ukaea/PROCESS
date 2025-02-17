@@ -475,7 +475,7 @@ class BlanketLibrary:
             fwbs_variables.visc_fw_coolant = fw_bb_fluid_properties.viscosity
 
             fwbs_variables.den_blkt_coolant = fwbs_variables.den_fw_coolant
-            fwbs_variables.visc_bl = fwbs_variables.visc_fw_coolant
+            fwbs_variables.visc_blkt_coolant = fwbs_variables.visc_fw_coolant
             fwbs_variables.cp_bl = fwbs_variables.cp_fw
             fwbs_variables.cv_bl = fwbs_variables.cv_fw
 
@@ -508,7 +508,7 @@ class BlanketLibrary:
             fwbs_variables.den_blkt_coolant = bb_fluid_properties.density
             fwbs_variables.cp_bl = bb_fluid_properties.specific_heat_const_p
             fwbs_variables.cv_bl = bb_fluid_properties.specific_heat_const_v
-            fwbs_variables.visc_bl = bb_fluid_properties.viscosity
+            fwbs_variables.visc_blkt_coolant = bb_fluid_properties.viscosity
 
         if (
             fwbs_variables.den_fw_coolant > 1e9
@@ -608,8 +608,8 @@ class BlanketLibrary:
                 po.ovarrf(
                     self.outfile,
                     "Viscosity (Pa s)",
-                    "(visc_bl)",
-                    fwbs_variables.visc_bl,
+                    "(visc_blkt_coolant)",
+                    fwbs_variables.visc_blkt_coolant,
                     "OP ",
                 )
 
@@ -1049,7 +1049,7 @@ class BlanketLibrary:
             no90=no90bz,
             no180=no180bz,
             coolant_density=fwbs_variables.den_blkt_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_bl,
+            coolant_dynamic_viscosity=fwbs_variables.visc_blkt_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -1065,7 +1065,7 @@ class BlanketLibrary:
                 no90=no90bz,
                 no180=no180bz,
                 coolant_density=fwbs_variables.den_blkt_coolant,
-                coolant_dynamic_viscosity=fwbs_variables.visc_bl,
+                coolant_dynamic_viscosity=fwbs_variables.visc_blkt_coolant,
                 coolant_electrical_conductivity=0.0e0,
                 pol_channel_length=pollengi,
                 nopolchan=npoltoti,

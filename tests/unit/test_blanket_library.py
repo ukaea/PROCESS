@@ -53,7 +53,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     icooldual: Any = None
 
-    visc_bl: Any = None
+    visc_blkt_coolant: Any = None
 
     cp_bl: Any = None
 
@@ -71,7 +71,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     expected_den_blkt_coolant: Any = None
 
-    expected_visc_bl: Any = None
+    expected_visc_blkt_coolant: Any = None
 
     expected_cp_bl: Any = None
 
@@ -97,7 +97,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             pres_blkt_coolant=8000000,
             den_blkt_coolant=0,
             icooldual=2,
-            visc_bl=0,
+            visc_blkt_coolant=0,
             cp_bl=0,
             cv_bl=0,
             visc_fw_coolant=0,
@@ -106,7 +106,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_den_blkt_coolant=5.6389735407435868,
-            expected_visc_bl=3.5036293160410249e-05,
+            expected_visc_blkt_coolant=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
             expected_visc_fw_coolant=3.5036293160410249e-05,
@@ -125,7 +125,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             pres_blkt_coolant=8000000,
             den_blkt_coolant=5.6389735407435868,
             icooldual=2,
-            visc_bl=3.5036293160410249e-05,
+            visc_blkt_coolant=3.5036293160410249e-05,
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
             visc_fw_coolant=3.5036293160410249e-05,
@@ -134,7 +134,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_den_blkt_coolant=5.6389735407435868,
-            expected_visc_bl=3.5036293160410249e-05,
+            expected_visc_blkt_coolant=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
             expected_visc_fw_coolant=3.5036293160410249e-05,
@@ -221,7 +221,9 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_bl", primarycoolantpropertiesparam.visc_bl
+        fwbs_variables,
+        "visc_blkt_coolant",
+        primarycoolantpropertiesparam.visc_blkt_coolant,
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_bl", primarycoolantpropertiesparam.cp_bl)
@@ -256,8 +258,8 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_den_blkt_coolant, rel=1e-4
     )
 
-    assert fwbs_variables.visc_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_bl, rel=1e-4
+    assert fwbs_variables.visc_blkt_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_visc_blkt_coolant, rel=1e-4
     )
 
     assert fwbs_variables.cp_bl == pytest.approx(
