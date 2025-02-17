@@ -66,7 +66,7 @@ def acc2261_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"coolwh": 1, "expected": approx(49.68, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": approx(49.68, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -83,7 +83,7 @@ def acc2261_params():
     """
     return [
         acc2261_param(),
-        acc2261_param(coolwh=2, expected=approx(53.85, abs=0.01)),
+        acc2261_param(i_blkt_coolant_type=2, expected=approx(53.85, abs=0.01)),
     ]
 
 
@@ -111,7 +111,7 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(costs, "c2261", 0)
 
     # Parameterised mocks
-    monkeypatch.setattr(fv, "coolwh", param["coolwh"])
+    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -408,7 +408,7 @@ def acc23_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"coolwh": 1, "expected": approx(230, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": approx(230, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -423,7 +423,10 @@ def acc23_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc23_param(), acc23_param(coolwh=2, expected=approx(245, abs=0.01))]
+    return [
+        acc23_param(),
+        acc23_param(i_blkt_coolant_type=2, expected=approx(245, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc23_params(), ids=["he", "h2o"])
@@ -441,7 +444,7 @@ def acc23_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc23()
     # Some may be parameterised
-    monkeypatch.setattr(fv, "coolwh", param["coolwh"])
+    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
     monkeypatch.setattr(htv, "pgrossmw", 1200.0)
     monkeypatch.setattr(costs, "c23", 0)
 
@@ -3806,7 +3809,7 @@ class Acc2261Param(NamedTuple):
 
     fkind: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
     pnucshld: Any = None
 
@@ -3845,7 +3848,7 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pnucshld=1.3609360176065353,
             pnucblkt=1504.711566619962,
             pthermmw=2620.2218111502593,
@@ -3867,7 +3870,7 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pnucshld=1.4036212304705389,
             pnucblkt=1549.9285082739402,
             pthermmw=2619.4223856129224,
@@ -3903,7 +3906,9 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2261param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "coolwh", acc2261param.coolwh)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", acc2261param.i_blkt_coolant_type
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", acc2261param.pnucshld)
 
@@ -4650,7 +4655,7 @@ class Acc23Param(NamedTuple):
 
     ireactor: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
     pgrossmw: Any = None
 
@@ -4667,7 +4672,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pgrossmw=982.58317918134742,
             c23=0,
             expected_c23=194.83812507173698,
@@ -4677,7 +4682,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pgrossmw=982.28339460484608,
             c23=194.83812507173698,
             expected_c23=194.78878460447092,
@@ -4701,7 +4706,9 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "ireactor", acc23param.ireactor)
 
-    monkeypatch.setattr(fwbs_variables, "coolwh", acc23param.coolwh)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", acc23param.i_blkt_coolant_type
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc23param.pgrossmw)
 

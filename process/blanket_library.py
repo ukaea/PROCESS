@@ -444,13 +444,13 @@ class BlanketLibrary:
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Helium"
-            and fwbs_variables.coolwh == 2
+            and fwbs_variables.i_blkt_coolant_type == 2
         ):
             fwbs_variables.ipump = 1
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Water"
-            and fwbs_variables.coolwh == 1
+            and fwbs_variables.i_blkt_coolant_type == 1
         ):
             fwbs_variables.ipump = 1
 
@@ -495,7 +495,7 @@ class BlanketLibrary:
             # BB
             mid_temp_bl = (fwbs_variables.inlet_temp + fwbs_variables.outlet_temp) * 0.5
             bb_fluid_properties = FluidProperties.of(
-                "Helium" if fwbs_variables.coolwh == 1 else "Water",
+                "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water",
                 temperature=mid_temp_bl,
                 pressure=fwbs_variables.blpressure,
             )
@@ -584,10 +584,14 @@ class BlanketLibrary:
             if fwbs_variables.ipump == 1:
                 po.osubhd(self.outfile, "Breeding Blanket :")
 
-                if fwbs_variables.coolwh == 1:
-                    po.ocmmnt(self.outfile, "Coolant type (coolwh=1), Helium")
-                if fwbs_variables.coolwh == 2:
-                    po.ocmmnt(self.outfile, "Coolant type (coolwh=2), Water")
+                if fwbs_variables.i_blkt_coolant_type == 1:
+                    po.ocmmnt(
+                        self.outfile, "Coolant type (i_blkt_coolant_type=1), Helium"
+                    )
+                if fwbs_variables.i_blkt_coolant_type == 2:
+                    po.ocmmnt(
+                        self.outfile, "Coolant type (i_blkt_coolant_type=2), Water"
+                    )
                 po.ovarrf(
                     self.outfile,
                     "Density (kg m-3)",
@@ -1534,7 +1538,7 @@ class BlanketLibrary:
 
             Coolant                     FW                      BB primary          BB secondary
 
-            primary coolant switch      i_fw_coolant_type               coolwh              ---
+            primary coolant switch      i_fw_coolant_type               i_blkt_coolant_type              ---
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              temp_fw_coolant_in                 inlet_temp          inlet_temp_liq
             outlet temp (K)             temp_fw_coolant_out                outlet_temp         outlet_temp_liq
@@ -1599,13 +1603,13 @@ class BlanketLibrary:
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Helium"
-            and fwbs_variables.coolwh == 2
+            and fwbs_variables.i_blkt_coolant_type == 2
         ):
             fwbs_variables.ipump = 1
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Water"
-            and fwbs_variables.coolwh == 1
+            and fwbs_variables.i_blkt_coolant_type == 1
         ):
             fwbs_variables.ipump = 1
 
@@ -1909,7 +1913,7 @@ class BlanketLibrary:
                 pdrop=deltap_blkt.item(),
                 mf=blanket_library.mfblkt,
                 primary_coolant_switch=(
-                    "Helium" if fwbs_variables.coolwh == 1 else "Water"
+                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                 ),
                 coolant_density=blanket_library.rhof_bl,
                 label="Blanket",
@@ -1945,7 +1949,7 @@ class BlanketLibrary:
                 pdrop=deltap_bl_liq,
                 mf=fwbs_variables.mfblkt_liq,
                 primary_coolant_switch=(
-                    "Helium" if fwbs_variables.coolwh == 1 else "Water"
+                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                 ),
                 coolant_density=fwbs_variables.den_liq,
                 label="Liquid Metal Breeder/Coolant",
@@ -2034,8 +2038,8 @@ class BlanketLibrary:
             po.ovarin(
                 self.outfile,
                 "Blanket coolant type (1=He, 2=H20)",
-                "(coolwh)",
-                fwbs_variables.coolwh,
+                "(i_blkt_coolant_type)",
+                fwbs_variables.i_blkt_coolant_type,
             )
             po.ovarrf(
                 self.outfile,
@@ -2641,7 +2645,7 @@ class BlanketLibrary:
         coolpin = pressure + pdrop
 
         # Adiabatic index for helium or water
-        gamma = (5 / 3) if fwbs_variables.coolwh == 1 else (4 / 3)
+        gamma = (5 / 3) if fwbs_variables.i_blkt_coolant_type == 1 else (4 / 3)
 
         # If caculating for primary coolant...
         if icoolpump == 1:
