@@ -407,11 +407,21 @@ module numerics
   ! !!  boundu(ipnvars) /../ : upper bounds used on ixc variables
 
   real(dp), dimension(ipnvars) :: bondl
+  !! Upper bound of the ixc variables scaled to (divided by)
+  !! the initial value of the corresponding ixc
+
   real(dp), dimension(ipnvars) :: bondu
+  !! Lower bound of the ixc variables scaled to (divided by)
+  !! the initial value of the corresponding ixc
+
   real(dp), dimension(ipnvars) :: rcm
   real(dp), dimension(ipnvars) :: resdl
   real(dp), dimension(ipnvars) :: scafc
+  !! The initial value of each ixc variable
+
   real(dp), dimension(ipnvars) :: scale
+  !! The reciprocal of the initial value of each ixc variable
+
   real(dp), dimension(ipnvars) :: xcm
   real(dp), dimension(ipnvars) :: xcs
   real(dp), dimension(ipvlam)  :: vlam
