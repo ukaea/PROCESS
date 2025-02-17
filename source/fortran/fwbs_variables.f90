@@ -532,7 +532,7 @@ module fwbs_variables
   !! Thermodynamic Model for primary_pumping == 2
   !! -----------------------------------------------------
 
-  integer :: ipump
+  integer :: i_fw_blkt_shared_coolant
   !! Switch for whether the FW and BB are on the same pump system
   !! i.e. do they have the same primary coolant or not
   !!  - =0    FW and BB have the same primary coolant, flow = FWin->FWout->BBin->BBout
@@ -805,7 +805,7 @@ module fwbs_variables
     pnuc_cp_sh = 0.0D0
     pnuc_cp_tf = 0.0D0
     neut_flux_cp = 0.0D0
-    ipump = 0
+    i_fw_blkt_shared_coolant = 0
     i_bb_liq = 0
     icooldual = 0
     ifci = 0

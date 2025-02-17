@@ -441,22 +441,22 @@ class BlanketLibrary:
         """
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the ipump variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2
         ):
-            fwbs_variables.ipump = 1
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Water"
             and fwbs_variables.i_blkt_coolant_type == 1
         ):
-            fwbs_variables.ipump = 1
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
 
         # If FW and BB have same coolant...
-        if fwbs_variables.ipump == 0:
+        if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Use FW inlet temp and BB outlet temp
             mid_temp = (
                 fwbs_variables.temp_fw_coolant_in + fwbs_variables.temp_blkt_coolant_out
@@ -535,7 +535,7 @@ class BlanketLibrary:
             )
 
             # FW (or FW/BB)
-            if fwbs_variables.ipump == 1:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 1:
                 po.osubhd(self.outfile, "First Wall :")
 
             po.ovarst(
@@ -567,7 +567,7 @@ class BlanketLibrary:
                 "OP ",
             )
 
-            if fwbs_variables.ipump == 0:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 0:
                 po.ovarre(
                     self.outfile,
                     "Outlet Temperature (Celcius)",
@@ -585,7 +585,7 @@ class BlanketLibrary:
                 )
 
             # BB
-            if fwbs_variables.ipump == 1:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 1:
                 po.osubhd(self.outfile, "Breeding Blanket :")
 
                 if fwbs_variables.i_blkt_coolant_type == 1:
@@ -1616,22 +1616,22 @@ class BlanketLibrary:
         # FW and BB Mass Flow ###########
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the ipump variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2
         ):
-            fwbs_variables.ipump = 1
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
         if (
             f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
             == "Water"
             and fwbs_variables.i_blkt_coolant_type == 1
         ):
-            fwbs_variables.ipump = 1
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
 
         # If FW and BB have the same coolant...
-        if fwbs_variables.ipump == 0:
+        if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Fraction of heat to be removed by IB/OB FW
             if fwbs_variables.icooldual == 2:
                 f_nuc_fwi = (blanket_library.pnucfwi + fwbs_variables.psurffwi) / (
@@ -1666,7 +1666,7 @@ class BlanketLibrary:
             ) * fwbs_variables.temp_fw_coolant_in
             inlet_tempo = fwoutleto
 
-        elif fwbs_variables.ipump == 1:
+        elif fwbs_variables.i_fw_blkt_shared_coolant == 1:
             fwoutleti = fwbs_variables.temp_fw_coolant_out
             inlet_tempi = fwbs_variables.temp_blkt_coolant_in
             fwoutleto = fwbs_variables.temp_fw_coolant_out
@@ -1865,7 +1865,7 @@ class BlanketLibrary:
 
         # Pumping Power
         # If FW and BB have the same coolant...
-        if fwbs_variables.ipump == 0:
+        if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Total pressure drop in the first wall/blanket  (Pa)
             if fwbs_variables.primary_pumping == 2:
                 if fwbs_variables.i_blkt_inboard == 1:
@@ -1894,7 +1894,7 @@ class BlanketLibrary:
             )
 
         # If FW and BB have different coolants...
-        elif fwbs_variables.ipump == 1:
+        elif fwbs_variables.i_fw_blkt_shared_coolant == 1:
             if fwbs_variables.primary_pumping == 2:
                 # Total pressure drop in the first wall (Pa)
                 deltap_fw = deltap_fwi + deltap_fwo
@@ -2036,7 +2036,7 @@ class BlanketLibrary:
                 "(pres_fw_coolant)",
                 fwbs_variables.pres_fw_coolant,
             )
-            if fwbs_variables.ipump == 1:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 1:
                 po.ovarre(
                     self.outfile,
                     "First wall coolant mass flow rate (kg/s)",
@@ -2085,7 +2085,7 @@ class BlanketLibrary:
                 "(pres_blkt_coolant)",
                 fwbs_variables.pres_blkt_coolant,
             )
-            if fwbs_variables.ipump == 1:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 1:
                 po.ovarre(
                     self.outfile,
                     "Blanket coolant mass flow rate (kg/s)",
@@ -2095,7 +2095,7 @@ class BlanketLibrary:
                 )
 
             # Total primary coolant mass flow rate (if they are the same coolant)
-            if fwbs_variables.ipump == 0:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 0:
                 po.ovarre(
                     self.outfile,
                     "Total (FW+BB) primary coolant mass flow rate(kg/s)",
@@ -2153,7 +2153,7 @@ class BlanketLibrary:
             # Pumping Power
             po.osubhd(self.outfile, "Mechanical pumping power: ")
 
-            if fwbs_variables.ipump == 1:
+            if fwbs_variables.i_fw_blkt_shared_coolant == 1:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW (MW)",
