@@ -3097,7 +3097,7 @@ cost_model = 0
 
 *abktflnc = 
 * DESCRIPTION:   Allowable FW/Blanket Neutron Fluence (MW-yr/m2)
-* JUSTIFICATION: Set to enforce a blanket lifetime (`bktlife`) of 5 years
+* JUSTIFICATION: Set to enforce a blanket lifetime (`life_blkt_fpy`) of 5 years
 
 *adivflnc = 
 * DESCRIPTION:   Allowable Divertor Heat Fluence (MW-yr/m2)

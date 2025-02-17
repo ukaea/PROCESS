@@ -2173,8 +2173,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket lifetime (full power years)",
-                    "(bktlife)",
-                    fwbs_variables.bktlife,
+                    "(life_blkt_fpy)",
+                    fwbs_variables.life_blkt_fpy,
                 )
                 po.ovarre(
                     self.outfile,

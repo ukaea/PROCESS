@@ -3171,13 +3171,13 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned
       !! only if present.
       !! cplife : input real : calculated CP full power year lifetime (years)
-      !! bktlife : input real : calculated first wall/blanket power year lifetime (years)
+      !! life_blkt_fpy : input real : calculated first wall/blanket power year lifetime (years)
       !! divlife : input real : calculated divertor  power year lifetime (years)
       !! i_cp_lifetime : input integer : switch chosing which plant element the CP
       !!                                 the CP lifetime must equate
       use cost_variables, only : cplife, divlife, cplife_input, &
          tlife, i_cp_lifetime
-      use fwbs_variables, only : bktlife
+      use fwbs_variables, only : life_blkt_fpy
 
       implicit none
 
@@ -3198,7 +3198,7 @@ contains
 
       ! The CP lifetime is equal to the tritium breeding blankets / FW one
       else if ( i_cp_lifetime == 2 ) then
-         tmp_cc = 1.0D0 - cplife/bktlife
+         tmp_cc = 1.0D0 - cplife/life_blkt_fpy
 
       ! The CP lifetime is equal to the
       else if ( i_cp_lifetime == 3 ) then

@@ -1838,7 +1838,7 @@ class IFE:
                 / (physics_variables.pflux_fw_neutron_mw * cost_variables.cfactr),
             )
 
-        fwbs_variables.bktlife = life
+        fwbs_variables.life_blkt_fpy = life
         fwbs_variables.life_fw_fpy = life
 
         if not output:
