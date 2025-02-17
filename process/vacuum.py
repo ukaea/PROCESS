@@ -659,6 +659,9 @@ class Vacuum:
             po.ovarre(self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3)
             po.ovarre(self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP ")
             po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, f"The vacuum system uses {i_fw_blkt_shared_coolant} pumps.")
+            po.ocmmnt(
+                self.outfile,
+                f"The vacuum system uses {i_fw_blkt_shared_coolant} pumps.",
+            )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
