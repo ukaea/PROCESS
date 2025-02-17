@@ -59,7 +59,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     cv_bl: Any = None
 
-    visc_fw: Any = None
+    visc_fw_coolant: Any = None
 
     ipump: Any = None
 
@@ -77,7 +77,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     expected_cv_bl: Any = None
 
-    expected_visc_fw: Any = None
+    expected_visc_fw_coolant: Any = None
 
 
 @pytest.mark.parametrize(
@@ -100,7 +100,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             visc_bl=0,
             cp_bl=0,
             cv_bl=0,
-            visc_fw=0,
+            visc_fw_coolant=0,
             ipump=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
@@ -109,7 +109,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_bl=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
-            expected_visc_fw=3.5036293160410249e-05,
+            expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
             i_fw_coolant_type="helium",
@@ -128,7 +128,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             visc_bl=3.5036293160410249e-05,
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
-            visc_fw=3.5036293160410249e-05,
+            visc_fw_coolant=3.5036293160410249e-05,
             ipump=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
@@ -137,7 +137,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_bl=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
-            expected_visc_fw=3.5036293160410249e-05,
+            expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
     ),
 )
@@ -217,7 +217,7 @@ def test_primary_coolant_properties(
     monkeypatch.setattr(fwbs_variables, "cv_bl", primarycoolantpropertiesparam.cv_bl)
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_fw", primarycoolantpropertiesparam.visc_fw
+        fwbs_variables, "visc_fw_coolant", primarycoolantpropertiesparam.visc_fw_coolant
     )
 
     monkeypatch.setattr(fwbs_variables, "ipump", primarycoolantpropertiesparam.ipump)
@@ -252,8 +252,8 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_cv_bl, rel=1e-4
     )
 
-    assert fwbs_variables.visc_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_fw, rel=1e-4
+    assert fwbs_variables.visc_fw_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_visc_fw_coolant, rel=1e-4
     )
 
 

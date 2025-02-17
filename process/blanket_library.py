@@ -467,10 +467,10 @@ class BlanketLibrary:
             fwbs_variables.den_fw_coolant = fw_bb_fluid_properties.density
             fwbs_variables.cp_fw = fw_bb_fluid_properties.specific_heat_const_p
             fwbs_variables.cv_fw = fw_bb_fluid_properties.specific_heat_const_v
-            fwbs_variables.visc_fw = fw_bb_fluid_properties.viscosity
+            fwbs_variables.visc_fw_coolant = fw_bb_fluid_properties.viscosity
 
             fwbs_variables.rhof_bl = fwbs_variables.den_fw_coolant
-            fwbs_variables.visc_bl = fwbs_variables.visc_fw
+            fwbs_variables.visc_bl = fwbs_variables.visc_fw_coolant
             fwbs_variables.cp_bl = fwbs_variables.cp_fw
             fwbs_variables.cv_bl = fwbs_variables.cv_fw
 
@@ -488,7 +488,7 @@ class BlanketLibrary:
             fwbs_variables.den_fw_coolant = fw_fluid_properties.density
             fwbs_variables.cp_fw = fw_fluid_properties.specific_heat_const_p
             fwbs_variables.cv_fw = fw_fluid_properties.specific_heat_const_v
-            fwbs_variables.visc_fw = fw_fluid_properties.viscosity
+            fwbs_variables.visc_fw_coolant = fw_fluid_properties.viscosity
 
             # BB
             mid_temp_bl = (fwbs_variables.inlet_temp + fwbs_variables.outlet_temp) * 0.5
@@ -548,8 +548,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Viscosity (Pa s)",
-                "(visc_fw)",
-                fwbs_variables.visc_fw,
+                "(visc_fw_coolant)",
+                fwbs_variables.visc_fw_coolant,
                 "OP ",
             )
 
@@ -1000,7 +1000,7 @@ class BlanketLibrary:
             no90=no90fw,
             no180=no180fw,
             coolant_density=fwbs_variables.den_fw_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_fw,
+            coolant_dynamic_viscosity=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengi,
             nopolchan=npoltoti,
@@ -1015,7 +1015,7 @@ class BlanketLibrary:
             no90=no90fw,
             no180=no180fw,
             coolant_density=fwbs_variables.den_fw_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_fw,
+            coolant_dynamic_viscosity=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
