@@ -116,14 +116,14 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "ccls_ma", np.full(10, 0.0))
     monkeypatch.setattr(pv, "bvert", -6.51e-1)
     monkeypatch.setattr(pv, "kappa", 1.727)
-    monkeypatch.setattr(pv, "rli", 1.693)
+    monkeypatch.setattr(pv, "ind_plasma_internal_norm", 1.693)
     monkeypatch.setattr(pv, "itartpf", 0)
-    monkeypatch.setattr(pv, "vsres", 6.151e1)
+    monkeypatch.setattr(pv, "vs_plasma_res_ramp", 6.151e1)
     monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
     monkeypatch.setattr(pv, "triang", 0.413)
     monkeypatch.setattr(pv, "rminor", 2.883)
     monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "vsind", 3.497e2)
+    monkeypatch.setattr(pv, "vs_plasma_ind_ramp", 3.497e2)
     monkeypatch.setattr(pv, "aspect", 3.1)
     monkeypatch.setattr(pv, "itart", 0)
     monkeypatch.setattr(pv, "beta_poloidal", 6.313e-1)
@@ -2969,7 +2969,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ]),
     )
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "rlp", 1.6039223939491056e-05)
+    monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
 
     sxlg_exp = np.array([
         [

@@ -257,7 +257,7 @@ dene     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
 beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
 fvsbrnni = 0.4434 * Fraction of the plasma current produced by
-gamma    = 0.3 * Ejima coefficient for resistive startup v-s formula
+ejima_coeff    = 0.3 * Ejima coefficient for resistive startup v-s formula
 hfact    = 1.1 * H factor on energy confinement times (iteration variable 10)
 i_bootstrap_current     = 4 * Switch for bootstrap current scaling;
 i_beta_component   = 1 * Switch for beta limit scaling (constraint equation 24);
@@ -291,7 +291,7 @@ plasma_res_factor = 0.66 * plasma resistivity pre-factor
 
 *-----------------Pulse Variables------------------*
 
-lpulse = 1 * Switch for reactor model;
+i_pulsed_plant = 1 * Switch for reactor model;
 t_between_pulse = 0 * dwell time (s)
 pulsetimings = 0
 t_precharge = 500.0
@@ -329,8 +329,8 @@ qnuc = 1.292E4
 
 *-----------------Times Variables------------------*
 
-t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
-t_burn    = 1.0d4 * Burn time (s) (calculated if lpulse=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
+t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 
 
                      bt            =   5.3292E+00

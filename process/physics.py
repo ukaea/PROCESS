@@ -59,83 +59,129 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     return conie * (ti - te) / (te**1.5)
 
 
-@nb.jit(nopython=True, cache=True)
-def vscalc(
-    csawth,
-    eps,
-    inductive_current_fraction,
-    gamma,
-    kappa,
-    rmajor,
-    res_plasma,
-    plasma_current,
-    t_fusion_ramp,
-    t_burn,
-    rli,
-    rmu0,
-):
-    """Volt-second requirements
-    author: P J Knight, CCFE, Culham Science Centre
-    csawth : input real :  coefficient for sawteeth effects
-    eps    : input real :  inverse aspect ratio
-    inductive_current_fraction  : input real :  fraction of plasma current produced inductively
-    gamma  : input real :  Ejima coeff for resistive start-up V-s component
-    kappa  : input real :  plasma elongation
-    plasma_current: input real :  plasma current (A)
-    rli    : input real :  plasma normalised inductivity
-    rmajor : input real :  plasma major radius (m)
-    res_plasma  : input real :  plasma resistance (ohm)
-    t_fusion_ramp  : input real :  heating time (s)
-    t_burn  : input real :  burn time (s)
-    phiint : output real : internal plasma volt-seconds (Wb)
-    rlp    : output real : plasma inductance (H)
-    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
-    vsind  : output real : internal and external plasma inductance V-s (Wb)
-    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
-    vsstt  : output real : total volt-seconds needed (Wb)
-    This subroutine calculates the volt-second requirements and some
-    other related items.
-    """
-    # Internal inductance
+def calculate_volt_second_requirements(
+    csawth: float,
+    eps: float,
+    inductive_current_fraction: float,
+    ejima_coeff: float,
+    kappa: float,
+    rmajor: float,
+    res_plasma: float,
+    plasma_current: float,
+    t_fusion_ramp: float,
+    t_burn: float,
+    ind_plasma_internal_norm: float,
+) -> tuple[float, float, float, float, float, float]:
+    """Calculate the volt-second requirements and related parameters for plasma physics.
 
-    rlpint = rmu0 * rmajor * rli / 2.0
-    phiint = rlpint * plasma_current
+            :param csawth: Coefficient for sawteeth effects
+            :type csawth: float
+            :param eps: Inverse aspect ratio
+            :type eps: float
+            :param inductive_current_fraction: Fraction of plasma current produced inductively
+            :type inductive_current_fraction: float
+            :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+            :type ejima_coeff: float
+            :param kappa: Plasma elongation
+            :type kappa: float
+            :param rmajor: Plasma major radius (m)
+            :type rmajor: float
+            :param res_plasma: Plasma resistance (ohm)
+            :type res_plasma: float
+            :param plasma_current: Plasma current (A)
+            :type plasma_current: float
+            :param t_fusion_ramp: Heating time (s)
+            :type t_fusion_ramp: float
+            :param t_burn: Burn time (s)
+            :type t_burn: float
+            :param ind_plasma_internal_norm: Plasma normalized internal inductance
+            :type ind_plasma_internal_norm: float
+
+            :return: A tuple containing:
+                - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+                - ind_plasma_internal: Plasma inductance (H)
+                - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+                - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+                - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
+                - vs_plasma_total_required: Total volt-seconds needed (Wb)
+            :rtype: tuple[float, float, float, float, float, float]
+
+            :notes:
+
+            :references:
+                - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+                “Volt-second analysis and consumption in Doublet III plasmas,”
+                Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+                https://doi.org/10.1088/0029-5515/22/10/006.
+    ‌
+                - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+                “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+                Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+                doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+    ‌
+                - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+                The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+                doi: https://doi.org/10.1063/1.865934.
+        ‌
+    """
+    # Plasma internal inductance
+
+    ind_plasma_internal = constants.rmu0 * rmajor * ind_plasma_internal_norm / 2.0
+
+    # Internal plasma flux (V-s) component
+    vs_plasma_internal = ind_plasma_internal * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = gamma * rmu0 * plasma_current * rmajor
+    vs_res_ramp = ejima_coeff * constants.rmu0 * plasma_current * rmajor
 
-    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
-    # fit for external inductance
+    # ======================================================================
+
+    # Hirshman and Neilson fit for external inductance
 
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
-    rlp = rlpext + rlpint
+    ind_plasma_external = (
+        rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+    )
+
+    # ======================================================================
+
+    ind_plasma_total = ind_plasma_external + ind_plasma_internal
 
     # Inductive V-s component
 
-    vsind = rlp * plasma_current
-    vsstt = vsres + vsind
+    vs_self_ind_ramp = ind_plasma_total * plasma_current
+    vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
-    # Loop voltage during flat-top
+    # Plasma loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plasma_current * res_plasma * inductive_current_fraction * csawth
+    v_plasma_loop_burn = plasma_current * res_plasma * inductive_current_fraction
+
+    v_burn_resistive = v_plasma_loop_burn * csawth
 
     # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vsbrn = vburn * (t_fusion_ramp + t_burn)
-    vsstt = vsstt + vsbrn
+    vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_plasma_total_required = vs_ramp_required + vs_plasma_burn_required
 
-    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+    return (
+        vs_plasma_internal,
+        ind_plasma_total,
+        vs_plasma_burn_required,
+        vs_self_ind_ramp,
+        vs_res_ramp,
+        vs_plasma_total_required,
+        v_plasma_loop_burn,
+    )
 
 
 @nb.jit(nopython=True, cache=True)
@@ -1521,7 +1567,7 @@ class Physics:
         # Calculate plasma current
         (
             physics_variables.alphaj,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plasma_current,
@@ -1538,7 +1584,7 @@ class Physics:
             physics_variables.len_plasma_poloidal,
             physics_variables.q0,
             physics_variables.q,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.triang,
@@ -1644,7 +1690,7 @@ class Physics:
         )
 
         # Set PF coil ramp times
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             if times_variables.tohsin == 0.0e0:
                 times_variables.t_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
@@ -1808,7 +1854,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 eps=physics_variables.eps,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
             )
         )
 
@@ -1816,7 +1862,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.ne0,
                 average_density=physics_variables.dene,
                 inverse_aspect=physics_variables.eps,
@@ -2154,7 +2200,7 @@ class Physics:
         (
             physics_variables.pden_plasma_ohmic_mw,
             physics_variables.p_plasma_ohmic_mw,
-            physics_variables.rpfac,
+            physics_variables.f_res_plasma_neo,
             physics_variables.res_plasma,
         ) = self.plasma_ohmic_heating(
             physics_variables.inductive_current_fraction,
@@ -2215,7 +2261,7 @@ class Physics:
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
-        physics_variables.res_time = res_diff_time(
+        physics_variables.t_plasma_res_diffusion = res_diff_time(
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.kappa95,
@@ -2293,25 +2339,25 @@ class Physics:
 
         # Calculate Volt-second requirements
         (
-            physics_variables.phiint,
-            physics_variables.rlp,
-            physics_variables.vsbrn,
-            physics_variables.vsind,
-            physics_variables.vsres,
-            physics_variables.vsstt,
-        ) = vscalc(
+            physics_variables.vs_plasma_internal,
+            physics_variables.ind_plasma,
+            physics_variables.vs_plasma_burn_required,
+            physics_variables.vs_plasma_ind_ramp,
+            physics_variables.vs_plasma_res_ramp,
+            physics_variables.vs_plasma_total_required,
+            physics_variables.v_plasma_loop_burn,
+        ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.inductive_current_fraction,
-            physics_variables.gamma,
+            physics_variables.ejima_coeff,
             physics_variables.kappa,
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
             times_variables.t_burn,
-            physics_variables.rli,
-            constants.rmu0,
+            physics_variables.ind_plasma_internal_norm,
         )
 
         # Calculate auxiliary physics related information
@@ -2352,7 +2398,9 @@ class Physics:
             # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
             # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 
-            physics_variables.beta_norm_max = 4.0e0 * physics_variables.rli
+            physics_variables.beta_norm_max = (
+                4.0e0 * physics_variables.ind_plasma_internal_norm
+            )
 
         if physics_variables.iprofile == 2:
             # Original scaling law
@@ -3074,7 +3122,7 @@ class Physics:
             Tuple[float, float, float, float]: Tuple containing:
                 - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
                 - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
-                - rpfac (float): Neo-classical resistivity enhancement factor.
+                - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
                 - res_plasma (float): Plasma resistance (ohm).
 
         Notes:
@@ -3098,8 +3146,12 @@ class Physics:
         # Neo-classical resistivity enhancement factor
         # Taken from ITER Physics Design Guidelines: 1989
         # The expression is valid for aspect ratios in the range 2.5 to 4.0
-        rpfac = 4.3 - 0.6 * rmajor / rminor
-        res_plasma = res_plasma * rpfac
+
+        f_res_plasma_neo = (
+            1.0 if 2.5 >= rmajor / rminor <= 4.0 else 4.3 - 0.6 * rmajor / rminor
+        )
+
+        res_plasma = res_plasma * f_res_plasma_neo
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
@@ -3110,6 +3162,7 @@ class Physics:
 
         # Ohmic heating power per unit volume
         # Corrected from: pden_plasma_ohmic_mw = (inductive_current_fraction*plasma_current)**2 * ...
+
         pden_plasma_ohmic_mw = (
             inductive_current_fraction
             * plasma_current**2
@@ -3121,7 +3174,7 @@ class Physics:
         # Total ohmic heating power
         p_plasma_ohmic_mw = pden_plasma_ohmic_mw * vol_plasma
 
-        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, res_plasma
+        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, f_res_plasma_neo, res_plasma
 
     @staticmethod
     def calculate_plasma_current(
@@ -3137,7 +3190,7 @@ class Physics:
         len_plasma_poloidal: float,
         q0: float,
         q95: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         rmajor: float,
         rminor: float,
         triang: float,
@@ -3161,26 +3214,26 @@ class Physics:
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, rli, beta_norm_max.
+                0: Use input values for alphaj, ind_plasma_internal_norm, beta_norm_max.
                 1: Make these consistent with input q, q_0 values.
-                2: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling).
-                3: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling).
-                5: Use input value for alphaj. Set rli and beta_norm_max from Menard scaling.
+                2: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling).
+                3: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling).
+                5: Use input value for alphaj. Set ind_plasma_internal_norm and beta_norm_max from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            rli (float): Plasma normalised internal inductance.
+            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, rli.
+            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, ind_plasma_internal_norm.
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3303,14 +3356,14 @@ class Physics:
 
             # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)
+            ind_plasma_internal_norm = np.log(1.65 + 0.89 * alphaj)
 
         if iprofile in [4, 5, 6]:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            rli = 3.4 - kappa
+            ind_plasma_internal_norm = 3.4 - kappa
 
-        return alphaj, rli, bp, qstar, plasma_current
+        return alphaj, ind_plasma_internal_norm, bp, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -3626,12 +3679,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is enforced",
+                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is not enforced",
+                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3674,9 +3727,9 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma internal inductance, li",
-                    "(rli)",
-                    physics_variables.rli,
+                    "Plasma normalised internal inductance",
+                    "(ind_plasma_internal_norm)",
+                    physics_variables.ind_plasma_internal_norm,
                     "OP ",
                 )
                 po.ovarrf(
@@ -5399,35 +5452,91 @@ class Physics:
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
                 self.outfile,
-                "Total volt-second requirement (Wb)",
-                "(vsstt)",
-                physics_variables.vsstt,
+                "Total plasma volt-seconds required for pulse (Wb)",
+                "(vs_plasma_total_required)",
+                physics_variables.vs_plasma_total_required,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Inductive volt-seconds (Wb)",
-                "(vsind)",
-                physics_variables.vsind,
+                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_ind_ramp)",
+                physics_variables.vs_plasma_ind_ramp,
                 "OP ",
             )
             po.ovarrf(
-                self.outfile, "Ejima coefficient", "(gamma)", physics_variables.gamma
+                self.outfile,
+                "Ejima coefficient",
+                "(ejima_coeff)",
+                physics_variables.ejima_coeff,
             )
             po.ovarre(
                 self.outfile,
-                "Start-up resistive (Wb)",
-                "(vsres)",
-                physics_variables.vsres,
+                "Internal plasma V-s",
+                "(vs_plasma_internal)",
+                physics_variables.vs_plasma_internal,
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_res_ramp)",
+                physics_variables.vs_plasma_res_ramp,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Flat-top resistive (Wb)",
-                "(vsbrn)",
-                physics_variables.vsbrn,
+                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
+                "(vs_plasma_burn_required)",
+                physics_variables.vs_plasma_burn_required,
                 "OP ",
             )
+
+            po.ovarre(
+                self.outfile,
+                "Plasma loop voltage during burn (V)",
+                "(v_plasma_loop_burn)",
+                physics_variables.v_plasma_loop_burn,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma resistance (ohm)",
+                "(res_plasma)",
+                physics_variables.res_plasma,
+                "OP ",
+            )
+
+            po.ovarre(
+                self.outfile,
+                "Plasma resistive diffusion time (s)",
+                "(t_plasma_res_diffusion)",
+                physics_variables.t_plasma_res_diffusion,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma inductance (H)",
+                "(ind_plasma)",
+                physics_variables.ind_plasma,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Plasma normalised internal inductance",
+                "(ind_plasma_internal_norm)",
+                physics_variables.ind_plasma_internal_norm,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Coefficient for sawtooth effects on burn V-s requirement",
+                "(csawth)",
+                physics_variables.csawth,
+            )
+
+            po.oblnkl(self.outfile)
+            po.ostars(self.outfile, 110)
+            po.oblnkl(self.outfile)
 
             po.ovarrf(
                 self.outfile,
@@ -5649,44 +5758,6 @@ class Physics:
                 "(ps_current_fraction.)",
                 current_drive_variables.ps_current_fraction,
                 "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Loop voltage during burn (V)",
-                "(vburn)",
-                physics_variables.plasma_current
-                * physics_variables.res_plasma
-                * physics_variables.inductive_current_fraction,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Resistive diffusion time (s)",
-                "(res_time)",
-                physics_variables.res_time,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(rlp)",
-                physics_variables.rlp,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
             )
 
         po.osubhd(self.outfile, "Fuelling :")
@@ -6251,7 +6322,7 @@ class Physics:
         alphan: float,
         alphat: float,
         eps: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
     ) -> float:
         """
         Calculate the bootstrap fraction using the Sakai formula.
@@ -6263,7 +6334,7 @@ class Physics:
         alphan (float): Density profile index
         alphat (float): Temperature profile index
         eps (float): Inverse aspect ratio.
-        rli (float): Internal Inductance
+        ind_plasma_internal_norm (float): Plasma normalised internal inductance
 
         Returns:
         float: The calculated bootstrap fraction.
@@ -6287,7 +6358,7 @@ class Physics:
         return (
             10 ** (0.951 * eps - 0.948)
             * beta_poloidal ** (1.226 * eps + 1.584)
-            * rli ** (-0.184 * eps - 0.282)
+            * ind_plasma_internal_norm ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
             * alphat ** (0.502 * eps - 0.273)
@@ -6296,7 +6367,7 @@ class Physics:
     @staticmethod
     def bootstrap_fraction_aries(
         beta_poloidal: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         core_density: float,
         average_density: float,
         inverse_aspect: float,
@@ -6306,7 +6377,7 @@ class Physics:
 
         Parameters:
         beta_poloidal (float): Plasma poloidal beta.
-        rli (float): Plasma normalized internal inductance.
+        ind_plasma_internal_norm (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6324,8 +6395,14 @@ class Physics:
 
         """
         # Using the standard variable naming from the ARIES paper
-        a_1 = 1.10 - 1.165 * rli + 0.47 * rli**2
-        b_1 = 0.806 - 0.885 * rli + 0.297 * rli**2
+        a_1 = (
+            1.10 - 1.165 * ind_plasma_internal_norm + 0.47 * ind_plasma_internal_norm**2
+        )
+        b_1 = (
+            0.806
+            - 0.885 * ind_plasma_internal_norm
+            + 0.297 * ind_plasma_internal_norm**2
+        )
 
         c_bs = a_1 + b_1 * (core_density / average_density)
 

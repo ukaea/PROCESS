@@ -322,7 +322,7 @@ beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`i_plasma_geometry=2; 3`)
 fvsbrnni = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
-gamma    = 0.3 * Ejima coefficient for resistive startup V-s formula
+ejima_coeff    = 0.3 * Ejima coefficient for resistive startup V-s formula
 hfact    = 1.185971818905028 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
 i_bootstrap_current = 4 * switch for bootstrap current scaling
 i_beta_component   = 1 * switch for beta limit scaling (`constraint equation 24`)
@@ -368,7 +368,7 @@ triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geomet
 
 *-----------------Pulse Variables------------------*
 
-lpulse   = 1 * Switch for reactor model;
+i_pulsed_plant   = 1 * Switch for reactor model;
 
 *-----------------Rebco Variables------------------*
 
@@ -428,7 +428,7 @@ vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (
 
 *-----------------Times Variables------------------*
 
-pulsetimings = 0 * Switch for pulse timings (if lpulse=1);
+pulsetimings = 0 * Switch for pulse timings (if i_pulsed_plant=1);
 t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 t_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_current_ramp_up
 

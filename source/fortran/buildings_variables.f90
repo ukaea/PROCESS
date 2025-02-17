@@ -86,7 +86,7 @@ module buildings_variables
     !! volume of electrical equipment building (m3)
 
     real(dp) :: esbldgm3
-    !! volume of energy storage equipment building (m3) (not used if `lpulse=0`)
+    !! volume of energy storage equipment building (m3) (not used if `i_pulsed_plant=0`)
 
     real(dp) :: fc_building_l, fc_building_w
     !! Fuel Cycle facilities length, width (m)

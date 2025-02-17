@@ -2629,8 +2629,8 @@ def plot_magnetics_info(axis, mfile_data, scan):
     else:
         tftype = "Resistive Copper"
 
-    vssoft = mfile_data.data["vsres"].get_scan(scan) + mfile_data.data[
-        "vsind"
+    vssoft = mfile_data.data["vs_plasma_res_ramp"].get_scan(scan) + mfile_data.data[
+        "vs_plasma_ind_ramp"
     ].get_scan(scan)
 
     sig_case = 1.0e-6 * mfile_data.data[f"sig_tf_tresca_max({i_tf_bucking})"].get_scan(

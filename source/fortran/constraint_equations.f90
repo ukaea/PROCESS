@@ -866,14 +866,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for volt-second capability lower limit
       !! #=# pfcoil
-      !! #=#=# fvs, vsstt
+      !! #=#=# fvs, vs_plasma_total_required
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vsstt : input real : total V-s needed (Wb)
-      !! vsstt (lower limit) is positive; vstot (available) is negative
+      !! vs_plasma_total_required : input real : total V-s needed (Wb)
+      !! vs_plasma_total_required (lower limit) is positive; vstot (available) is negative
       !! fvs : input real : f-value for flux-swing (V-s) requirement (STEADY STATE)
       !! vstot : input real :   total flux swing for pulse (Wb)
-      use physics_variables, only: vsstt
+      use physics_variables, only: vs_plasma_total_required
       use constraint_variables, only: fvs
       use pfcoil_variables, only: vstot
       implicit none
@@ -883,9 +883,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 + fvs * vstot/vsstt
-      tmp_con = vsstt * (1.0D0 - tmp_cc)
-      tmp_err = vsstt * tmp_cc
+      tmp_cc =  1.0D0 + fvs * vstot/vs_plasma_total_required
+      tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
+      tmp_err = vs_plasma_total_required * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'V.sec'
 
@@ -902,7 +902,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ft_burn : input real : f-value for minimum burn time
-      !! t_burn : input real : burn time (s) (calculated if lpulse=1)
+      !! t_burn : input real : burn time (s) (calculated if i_pulsed_plant=1)
       !! t_burn_min : input real :  minimum burn time (s)
       use constraint_variables, only: ft_burn,t_burn_min
       use times_variables, only: t_burn
@@ -2157,10 +2157,10 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vsres : input real : resistive losses in startup V-s (Wb)
-      !! vsind : input real :  internal and external plasma inductance V-s (Wb))
+      !! vs_plasma_res_ramp : input real : resistive losses in startup V-s (Wb)
+      !! vs_plasma_ind_ramp : input real :  internal and external plasma inductance V-s (Wb))
       !! vssu : input real :  total flux swing for startup (Wb)
-      use physics_variables, only: vsres, vsind
+      use physics_variables, only: vs_plasma_res_ramp, vs_plasma_ind_ramp
       use pfcoil_variables, only: vssu, fvssu
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2169,7 +2169,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fvssu * abs((vsres+vsind) / vssu)
+      tmp_cc =  1.0D0 - fvssu * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vssu)
       tmp_con = vssu * (1.0D0 - tmp_cc)
       tmp_err = vssu * tmp_cc
       tmp_symbol = '='
