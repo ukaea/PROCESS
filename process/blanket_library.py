@@ -191,7 +191,7 @@ class BlanketLibrary:
         if icomponent == 0:
             (
                 fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.volblkto,
+                fwbs_variables.vol_blkt_outboard,
                 fwbs_variables.vol_blkt_total,
             ) = dshellvol(
                 r1,
@@ -281,7 +281,7 @@ class BlanketLibrary:
         if icomponent == 0:
             (
                 fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.volblkto,
+                fwbs_variables.vol_blkt_outboard,
                 fwbs_variables.vol_blkt_total,
             ) = eshellvol(
                 r1,
@@ -344,13 +344,13 @@ class BlanketLibrary:
 
         build_variables.blarea = build_variables.blareaib + build_variables.blareaob
 
-        fwbs_variables.volblkto = (
+        fwbs_variables.vol_blkt_outboard = (
             fwbs_variables.vol_blkt_total
             * (1.0 - fwbs_variables.fdiv - fwbs_variables.fhcd)
             - fwbs_variables.vol_blkt_inboard
         )
         fwbs_variables.vol_blkt_total = (
-            fwbs_variables.vol_blkt_inboard + fwbs_variables.volblkto
+            fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
         )
 
         # Apply shield coverage factors
@@ -792,7 +792,7 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.npblkto = (
-                fwbs_variables.vfblkt * fwbs_variables.volblkto
+                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -865,7 +865,7 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.npblkto = (
-                fwbs_variables.vfblkt * fwbs_variables.volblkto
+                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -952,7 +952,7 @@ class BlanketLibrary:
             # Calculate total number of pipes (in all outboard modules) from coolant fraction and
             # channel dimensions (assumes up/down flow, two 90 deg bends per length)
             blanket_library.npblkto = (
-                fwbs_variables.vfblkt * fwbs_variables.volblkto
+                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -1573,7 +1573,7 @@ class BlanketLibrary:
         # Neutron power deposited in outboard blanket (MW)
         blanket_library.pnucblkto = (
             fwbs_variables.pnucblkt
-            * fwbs_variables.volblkto
+            * fwbs_variables.vol_blkt_outboard
             / fwbs_variables.vol_blkt_total
         )
 
@@ -1594,9 +1594,9 @@ class BlanketLibrary:
             )
             pnucblkto_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
-            ) * (fwbs_variables.volblkto / fwbs_variables.vol_blkt_total)
+            ) * (fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total)
             pnucblkto_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkto / fwbs_variables.vol_blkt_total
+                fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total
             )
 
         # FW and BB Mass Flow ###########

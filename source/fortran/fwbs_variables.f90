@@ -441,7 +441,7 @@ module fwbs_variables
   real(dp) :: vol_blkt_inboard
   !! volume of inboard blanket [m^3]
 
-  real(dp) :: volblkto
+  real(dp) :: vol_blkt_outboard
   !! volume of outboard blanket [m^3]
 
   real(dp) :: volshld
@@ -778,7 +778,7 @@ module fwbs_variables
     vfshld = 0.25D0
     vol_blkt_total = 0.0D0
     vol_blkt_inboard = 0.0D0
-    volblkto = 0.0D0
+    vol_blkt_outboard = 0.0D0
     volshld = 0.0D0
     whtshld = 0.0D0
     wpenshld = 0.0D0
