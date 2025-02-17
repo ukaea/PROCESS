@@ -334,6 +334,14 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Lifetimes
+
+- Lifetimes of componenets should start with the `life_` prefix.
+
+The unit declaration `_fpy` can be used to specify that it is the full-power year lifetime.
+
+---------------------
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
