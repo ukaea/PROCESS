@@ -342,6 +342,13 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Viscosities
+
+- Viscosities should start with the `visc_` prefix.
+
+---------------------
+
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
