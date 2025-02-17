@@ -2080,11 +2080,11 @@ class Costs:
 
         #  Pumps and piping system
         #  N.B. with blktmodel > 0, the blanket is assumed to be helium-cooled,
-        #  but the shield etc. is water-cooled (coolwh=2). Therefore, a slight
+        #  but the shield etc. is water-cooled (i_blkt_coolant_type=2). Therefore, a slight
         #  inconsistency exists here...
         self.cpp = (
             1.0e-6
-            * cost_variables.uchts[fwbs_variables.coolwh - 1]
+            * cost_variables.uchts[fwbs_variables.i_blkt_coolant_type - 1]
             * (
                 (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
                 + (1.0e6 * fwbs_variables.pnucblkt) ** exphts
@@ -2305,7 +2305,7 @@ class Costs:
         if cost_variables.ireactor == 1:
             self.c23 = (
                 1.0e-6
-                * cost_variables.ucturb[fwbs_variables.coolwh - 1]
+                * cost_variables.ucturb[fwbs_variables.i_blkt_coolant_type - 1]
                 * (heat_transport_variables.pgrossmw / 1200.0e0) ** exptpe
             )
 

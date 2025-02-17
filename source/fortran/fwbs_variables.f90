@@ -293,7 +293,7 @@ module fwbs_variables
   !! - =2 user input thermal-electric efficiency (etath)
   !! - =4 supercritical CO2 cycle
 
-  integer :: coolwh
+  integer :: i_blkt_coolant_type
   !! Switch for blanket coolant (set via blkttype):
   !!
   !! - =1 helium
@@ -356,8 +356,8 @@ module fwbs_variables
   real(dp) :: outlet_temp
   !! Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
   !!
-  !! - input if `coolwh=1` (helium)
-  !! - calculated if `coolwh=2` (water)
+  !! - input if `i_blkt_coolant_type=1` (helium)
+  !! - calculated if `i_blkt_coolant_type=2` (water)
 
   real(dp) :: coolp
   !! blanket coolant pressure [Pa] (stellarator only)
@@ -735,7 +735,7 @@ module fwbs_variables
     i_shield_mat = 0
     secondary_cycle = 0
     secondary_cycle_liq = 4
-    coolwh = 1
+    i_blkt_coolant_type = 1
     afwi = 0.008D0
     afwo = 0.008D0
     i_fw_coolant_type = 'helium'
