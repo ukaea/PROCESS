@@ -1219,7 +1219,9 @@ class Costs:
                         1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
                     )
 
-            self.c22123 = 1.0e-6 * fwbs_variables.whtblss * cost_variables.ucblss
+            self.c22123 = (
+                1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
+            )
             self.c22124 = 1.0e-6 * fwbs_variables.whtblvd * cost_variables.ucblvd
             self.c22125 = 0.0e0
             self.c22126 = 0.0e0
@@ -1231,7 +1233,9 @@ class Costs:
 
             self.c22121 = 0.0e0
             self.c22122 = 1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
-            self.c22123 = 1.0e-6 * fwbs_variables.whtblss * cost_variables.ucblss
+            self.c22123 = (
+                1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
+            )
             self.c22124 = 0.0e0
             self.c22125 = (
                 1.0e-6
