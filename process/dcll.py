@@ -137,7 +137,7 @@ class DCLL:
 
         # Nuclear heating in the blanket with energy multiplication (MW)
         fwbs_variables.pnuc_blkt_ratio_dcll = 1 - fwbs_variables.pnuc_fw_ratio_dcll
-        fwbs_variables.pnucblkt = (
+        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
             physics_variables.neutron_power_total
             * fwbs_variables.pnuc_blkt_ratio_dcll
             * fwbs_variables.emult
@@ -243,8 +243,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in the blanket (including emult) (MW)",
-                "(pnucblkt)",
-                fwbs_variables.pnucblkt,
+                "(p_blkt_nuclear_heat_total_mw)",
+                fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 "OP ",
             )
             po.ovarre(
@@ -302,7 +302,8 @@ class DCLL:
                 + fwbs_variables.psurffwo
             )
             primary_pumping_variables.htpmw_blkt = (
-                heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
+                heat_transport_variables.fpumpblkt
+                * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
             # For CCFE HCPB: htpmw_shld = fpumpshld * ( pnucshld + pnuc_cp_sh )
             # Use same as KIT HCLL for now "pnucshld is not available and is very small

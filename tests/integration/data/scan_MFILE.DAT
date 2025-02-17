@@ -799,7 +799,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8227E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -1794,7 +1794,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8227E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -2789,7 +2789,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -3784,7 +3784,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -4779,7 +4779,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -5774,7 +5774,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -6769,7 +6769,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -7764,7 +7764,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
@@ -8759,7 +8759,7 @@
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      9.5369E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.5585E+03 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 

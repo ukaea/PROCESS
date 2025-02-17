@@ -127,7 +127,7 @@ class CCFE_HCPB:
         # Total nuclear power deposited in the blancket sector (MW)
         ccfe_hcpb_module.pnuc_tot_blk_sector = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
-            + fwbs_variables.pnucblkt
+            + fwbs_variables.p_blkt_nuclear_heat_total_mw
             + fwbs_variables.pnucshld
             + fwbs_variables.ptfnuc
         )
@@ -135,7 +135,7 @@ class CCFE_HCPB:
         # Total nuclear power deposited in the
         # if ( pnuc_tot_blk_sector < 1.0d0 .or. pnuc_tot_blk_sector /= pnuc_tot_blk_sector ) then
         # #TODO This can flood the terminal, and should be logged once in Python
-        # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ', 'pnucblkt =', pnucblkt
+        # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ', 'p_blkt_nuclear_heat_total_mw =', p_blkt_nuclear_heat_total_mw
         # write(*,*)'pnucshld =', pnucshld, ' ptfnuc =', ptfnuc
         # end if
 
@@ -154,8 +154,11 @@ class CCFE_HCPB:
         )
 
         # Power to the blanket (MW)
-        fwbs_variables.pnucblkt = (
-            (fwbs_variables.pnucblkt / ccfe_hcpb_module.pnuc_tot_blk_sector)
+        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+            (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                / ccfe_hcpb_module.pnuc_tot_blk_sector
+            )
             * fwbs_variables.emult
             * f_geom_blanket
             * physics_variables.neutron_power_total
@@ -190,7 +193,7 @@ class CCFE_HCPB:
         # ---
         # pnucdiv is not changed.
         # The energy due to multiplication, by subtraction:
-        # emultmw = p_fw_nuclear_heat_total_mw + pnucblkt + pnucshld + ptfnuc + pnucdiv - neutron_power_total
+        # emultmw = p_fw_nuclear_heat_total_mw + p_blkt_nuclear_heat_total_mw + pnucshld + ptfnuc + pnucdiv - neutron_power_total
         # ---
 
         # New code, a bit simpler
@@ -567,12 +570,12 @@ class CCFE_HCPB:
 
         # Total blanket nuclear heating (MW)
         ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
-        fwbs_variables.pnucblkt = (
+        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
             physics_variables.fusion_power * a * ccfe_hcpb_module.exp_blanket
         )
 
-        if fwbs_variables.pnucblkt < 1:
-            eh.fdiags[0] = fwbs_variables.pnucblkt
+        if fwbs_variables.p_blkt_nuclear_heat_total_mw < 1:
+            eh.fdiags[0] = fwbs_variables.p_blkt_nuclear_heat_total_mw
             eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
             eh.fdiags[2] = physics_variables.fusion_power
             eh.fdiags[3] = mass
@@ -709,7 +712,8 @@ class CCFE_HCPB:
                 + fwbs_variables.psurffwo
             )
             heat_transport_variables.htpmw_blkt = (
-                heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
+                heat_transport_variables.fpumpblkt
+                * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
             heat_transport_variables.htpmw_shld = heat_transport_variables.fpumpshld * (
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
@@ -765,7 +769,7 @@ class CCFE_HCPB:
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.psurffwi
                 + fwbs_variables.psurffwo
-                + fwbs_variables.pnucblkt
+                + fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
             primary_pumping_variables.htpmw_fw_blkt = fpump / (1 - fpump) * p_plasma
 
@@ -1416,8 +1420,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the blanket (including emult) (MW)",
-            "(pnucblkt)",
-            fwbs_variables.pnucblkt,
+            "(p_blkt_nuclear_heat_total_mw)",
+            fwbs_variables.p_blkt_nuclear_heat_total_mw,
             "OP ",
         )
         po.ocmmnt(self.outfile, "(Note: emult is fixed for this model inside the code)")

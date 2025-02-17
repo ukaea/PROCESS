@@ -1914,12 +1914,14 @@ class IFE:
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
             heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.pthermmw
-            fwbs_variables.pnucblkt = (
+            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                 heat_transport_variables.pthermmw - heat_transport_variables.pfwdiv
             )
         else:
             heat_transport_variables.pfwdiv = 0.0
-            fwbs_variables.pnucblkt = heat_transport_variables.pthermmw
+            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+                heat_transport_variables.pthermmw
+            )
 
         fwbs_variables.pnucshld = 0.0
 
@@ -2050,8 +2052,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Blanket nuclear heating (MW)",
-                "(pnucblkt)",
-                fwbs_variables.pnucblkt,
+                "(p_blkt_nuclear_heat_total_mw)",
+                fwbs_variables.p_blkt_nuclear_heat_total_mw,
             )
             process_output.ovarre(
                 self.outfile,
