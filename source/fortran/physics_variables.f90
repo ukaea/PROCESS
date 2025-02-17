@@ -681,14 +681,14 @@ module physics_variables
   real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
 
-  integer :: ilhthresh
-  !! switch for L-H mode power threshold scaling to use (see pthrmw for list)
+  integer :: i_l_h_threshold
+  !! switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)
 
-  real(dp) :: plhthresh
-  !! L-H mode power threshold (MW) (chosen via ilhthresh, and enforced if
+  real(dp) :: p_l_h_threshold_mw
+  !! L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if
   !! constraint equation 15 is on)
 
-  real(dp), dimension(21) :: pthrmw
+  real(dp), dimension(21) :: l_h_threshold_powers
   !! L-H power threshold for various scalings (MW)
   !!
   !! - =1 ITER 1996 scaling: nominal
@@ -1061,9 +1061,9 @@ module physics_variables
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     pden_plasma_sync_mw = 0.0D0
-    ilhthresh = 19
-    plhthresh = 0.0D0
-    pthrmw = 0.0D0
+    i_l_h_threshold = 19
+    p_l_h_threshold_mw = 0.0D0
+    l_h_threshold_powers = 0.0D0
     p_electron_transport_loss_mw = 0.0D0
     pden_electron_transport_loss_mw = 0.0D0
     p_ion_transport_loss_mw = 0.0D0

@@ -228,7 +228,7 @@ contains
       tw_storage_l, tw_storage_w, tw_storage_h, warm_shop_l, warm_shop_w, &
       warm_shop_h, water_buildings_l, water_buildings_w, water_buildings_h, &
       workshop_l, workshop_w, workshop_h
-    use constraint_variables, only: flhthresh, fpeakb, fpsep, fdivcol, ftcycl, &
+    use constraint_variables, only: fl_h_threshold, fpeakb, fpsep, fdivcol, ftcycl, &
       beta_poloidal_max, fpsepbqar, ftmargtf, fradwall, fptfnuc, fnesep, fportsz, tbrmin, &
       maxradwallload, pseprmax, fdene, fniterpump, fpinj, pnetelin, powfmax, &
       fgamcd, ftbr, mvalim, f_alpha_energy_confinement_min, walalw, fmva, fradpwr, nflutfmax, fipir, &
@@ -304,7 +304,7 @@ contains
       ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
-      rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, ilhthresh, &
+      rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, i_l_h_threshold, &
       fpdivlim, beta_poloidal_eps_max, i_confinement_time, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, f_sync_reflect, f_nd_beam_electron, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
@@ -642,8 +642,8 @@ contains
        case ('ignite')
           call parse_int_variable('ignite', ignite, 0, 1, &
                'Switch for ignited plasma assumption')
-       case ('ilhthresh')
-          call parse_int_variable('ilhthresh', ilhthresh, 1, 21, &
+       case ('i_l_h_threshold')
+          call parse_int_variable('i_l_h_threshold', i_l_h_threshold, 1, 21, &
                'Switch for L-H power threshold to enforce')
           write(outfile,*) 'impvar is now deprecated - use iteration variables 125-136 instead.'
        case ('ipedestal')
@@ -853,8 +853,8 @@ contains
        case ('fjprot')
           call parse_real_variable('fjprot', fjprot, 0.001D0, 10.0D0, &
                'F-value for SCTF winding pack J')
-       case ('flhthresh')
-          call parse_real_variable('flhthresh', flhthresh, 0.001D0, 1.0D6, &
+       case ('fl_h_threshold')
+          call parse_real_variable('fl_h_threshold', fl_h_threshold, 0.001D0, 1.0D6, &
                'F-value for L-H power threshold')
        case ('fmva')
           call parse_real_variable('fmva', fmva, 0.001D0, 10.0D0, &

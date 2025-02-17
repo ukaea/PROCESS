@@ -196,6 +196,8 @@ OBS_VARS = {
     "jbus": "j_tf_bus",
     "fcoolleg": "f_a_tf_cooil_outboard",
     "rhotfbus": "rho_tf_bus",
+    "flhthresh": "fl_h_threshold",
+    "ilhthresh": "i_l_h_threshold",
 }
 
 OBS_VARS_HELP = {

@@ -2219,25 +2219,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_103
-    !! <LI> (103) flhthresh (f-value for equation 15)
+    !! <LI> (103) fl_h_threshold (f-value for equation 15)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(103) = 'flhthresh     '
+    lablxc(103) = 'fl_h_threshold     '
     boundl(103) = 1.000D0
     boundu(103) = 1.000D6
   end subroutine init_itv_103
 
   real(kind(1.d0)) function itv_103()
-    use constraint_variables, only: flhthresh
+    use constraint_variables, only: fl_h_threshold
     implicit none
-    itv_103 = flhthresh
+    itv_103 = fl_h_threshold
   end function itv_103
 
   subroutine set_itv_103(ratio)
-    use constraint_variables, only: flhthresh
+    use constraint_variables, only: fl_h_threshold
     implicit none
     real(kind(1.d0)) :: ratio
-    flhthresh = ratio
+    fl_h_threshold = ratio
   end subroutine set_itv_103
 
   !---------------------------------
