@@ -210,7 +210,7 @@ contains
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
+      fvolsi, etahtp, n_blkt_outboard_modules_poloidal, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, temp_blkt_coolant_in, temp_blkt_coolant_out, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
@@ -2002,8 +2002,8 @@ contains
        case ('temp_blkt_coolant_out')
           call parse_real_variable('temp_blkt_coolant_out', temp_blkt_coolant_out, 450.0D0, 900.0D0, &
                'Coolant outlet temperature (K)')
-       case ('nblktmodpo')
-          call parse_int_variable('nblktmodpo', nblktmodpo, 1, 16, &
+       case ('n_blkt_outboard_modules_poloidal')
+          call parse_int_variable('n_blkt_outboard_modules_poloidal', n_blkt_outboard_modules_poloidal, 1, 16, &
                'No of o/b blanket modules in poloidal direction')
        case ('nblktmodpi')
           call parse_int_variable('nblktmodpi', nblktmodpi, 1, 16, &

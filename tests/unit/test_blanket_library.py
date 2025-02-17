@@ -1486,7 +1486,7 @@ class BlanketModPolHeightParam(NamedTuple):
     i_fw_blkt_vv_shape: Any = None
     nblktmodpi: Any = None
     fdiv: Any = None
-    nblktmodpo: Any = None
+    n_blkt_outboard_modules_poloidal: Any = None
     itart: Any = None
     rminor: Any = None
     idivrt: Any = None
@@ -1508,7 +1508,7 @@ class BlanketModPolHeightParam(NamedTuple):
             i_fw_blkt_vv_shape=2,
             nblktmodpi=7,
             fdiv=0.115,
-            nblktmodpo=8,
+            n_blkt_outboard_modules_poloidal=8,
             itart=0,
             rminor=2.6666666666666665,
             idivrt=1,
@@ -1526,7 +1526,7 @@ class BlanketModPolHeightParam(NamedTuple):
             i_fw_blkt_vv_shape=1,
             nblktmodpi=7,
             fdiv=0.115,
-            nblktmodpo=8,
+            n_blkt_outboard_modules_poloidal=8,
             itart=1,
             rminor=2.5,
             idivrt=2,
@@ -1576,7 +1576,7 @@ def test_blanket_mod_pol_height(
     )
     monkeypatch.setattr(fwbs_variables, "fdiv", blanketmodpolheightparam.fdiv)
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpo", blanketmodpolheightparam.nblktmodpo
+        fwbs_variables, "n_blkt_outboard_modules_poloidal", blanketmodpolheightparam.n_blkt_outboard_modules_poloidal
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)

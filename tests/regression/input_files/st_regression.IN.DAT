@@ -2397,7 +2397,7 @@ i_blkt_inboard = 0
 * =1    SMS
 * JUSTIFICATION: Not yet set.
 
-*nblktmodpo = 
+*n_blkt_outboard_modules_poloidal = 
 * DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 8)
 * JUSTIFICATION: Not set as not used
 

@@ -660,7 +660,7 @@ class BlanketLibrary:
         # Should not need this as nblktmodpi is input but make sure here.
         if fwbs_variables.ims == 1:
             fwbs_variables.nblktmodpi = 1
-            fwbs_variables.nblktmodpo = 1
+            fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
         # Calculate mid-plane toroidal circumference and segment
         blanket_library.blwidti = (
@@ -807,7 +807,7 @@ class BlanketLibrary:
             npblkto_liq = (
                 fwbs_variables.nopipes
                 * fwbs_variables.nblktmodto
-                * fwbs_variables.nblktmodpo
+                * fwbs_variables.n_blkt_outboard_modules_poloidal
             )
 
             # Mass flow rate per coolant pipe
@@ -880,7 +880,7 @@ class BlanketLibrary:
             npblkto_liq = (
                 fwbs_variables.nopipes
                 * fwbs_variables.nblktmodto
-                * fwbs_variables.nblktmodpo
+                * fwbs_variables.n_blkt_outboard_modules_poloidal
             )
 
             # Mass flow rate per coolant pipe
@@ -1155,12 +1155,12 @@ class BlanketLibrary:
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.fdiv)
-                    / fwbs_variables.nblktmodpo
+                    / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
             else:
                 # single null configuration
                 blanket_library.bllengo = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.nblktmodpo
+                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 
         # shape defined by two half-ellipses
@@ -1221,12 +1221,12 @@ class BlanketLibrary:
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.fdiv)
-                    / fwbs_variables.nblktmodpo
+                    / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
             else:
                 # single null configuration
                 blanket_library.bllengo = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.nblktmodpo
+                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 
     def liquid_breeder_properties(self, output: bool = False):
