@@ -808,7 +808,7 @@ class PowerflowCalcParam(NamedTuple):
 
     i_blkt_coolant_type: Any = None
 
-    outlet_temp: Any = None
+    temp_blkt_coolant_out: Any = None
 
     pres_blkt_coolant: Any = None
 
@@ -898,7 +898,7 @@ class PowerflowCalcParam(NamedTuple):
             fhcd=0,
             pradfw=0,
             i_blkt_coolant_type=1,
-            outlet_temp=823,
+            temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
             primary_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
@@ -947,7 +947,7 @@ class PowerflowCalcParam(NamedTuple):
             fhcd=0,
             pradfw=254.39207240222791,
             i_blkt_coolant_type=1,
-            outlet_temp=823,
+            temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
             primary_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
@@ -1025,7 +1025,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "i_blkt_coolant_type", powerflowcalcparam.i_blkt_coolant_type
     )
 
-    monkeypatch.setattr(fwbs_variables, "outlet_temp", powerflowcalcparam.outlet_temp)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "temp_blkt_coolant_out",
+        powerflowcalcparam.temp_blkt_coolant_out,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "pres_blkt_coolant", powerflowcalcparam.pres_blkt_coolant

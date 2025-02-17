@@ -87,7 +87,7 @@ Summary of key variables and switches:
 |  primary coolant switch  |       `i_fw_coolant_type`       | `i_blkt_coolant_type`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
 |      inlet temp (K)      |        `temp_fw_coolant_in`        | `temp_blkt_coolant_in`             | `inlet_temp_liq`                     |
-|     outlet temp (K)      |       `temp_fw_coolant_out`        | `outlet_temp`            | `outlet_temp_liq`                    |
+|     outlet temp (K)      |       `temp_fw_coolant_out`        | `temp_blkt_coolant_out`            | `outlet_temp_liq`                    |
 |      pressure (Pa)       |      `pres_fw_coolant`       | `pres_blkt_coolant`             | `blpressure_liq`                     |
 
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
