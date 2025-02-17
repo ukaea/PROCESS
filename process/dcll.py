@@ -636,7 +636,7 @@ class DCLL:
             * dcll_module.vol_bz_struct
         )
         dcll_module.wht_cool_struct = (
-            fwbs_variables.rhof_bl
+            fwbs_variables.den_blkt_coolant
             * (1 - dcll_module.f_vol_stl_bz_struct)
             * dcll_module.vol_bz_struct
         )
@@ -649,7 +649,7 @@ class DCLL:
             fwbs_variables.denstl * dcll_module.f_vol_stl_back_wall * dcll_module.vol_bw
         )
         dcll_module.wht_bw_cool = (
-            fwbs_variables.rhof_bl
+            fwbs_variables.den_blkt_coolant
             * (1 - dcll_module.f_vol_stl_back_wall)
             * dcll_module.vol_bw
         )
@@ -659,7 +659,9 @@ class DCLL:
             fwbs_variables.denstl * dcll_module.f_vol_mfbss_stl * dcll_module.vol_bss
         )
         dcll_module.wht_mfbss_cool = (
-            fwbs_variables.rhof_bl * dcll_module.f_vol_mfbss_he * dcll_module.vol_bss
+            fwbs_variables.den_blkt_coolant
+            * dcll_module.f_vol_mfbss_he
+            * dcll_module.vol_bss
         )
         dcll_module.wht_mfbss_pbli = (
             fwbs_variables.den_liq * dcll_module.f_vol_mfbss_pbli * dcll_module.vol_bss
