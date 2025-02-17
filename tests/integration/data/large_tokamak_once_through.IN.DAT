@@ -208,7 +208,7 @@ dz_divertor   = 0.62 * divertor structure vertical thickness (m)
 
 inuclear = 1 * switch for nuclear heating in the coils;
 qnuc     = 1.3e4 * nuclear heating in the coils (W) (`inuclear=1`)
-primary_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
+i_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 secondary_cycle = 2 * Switch for power conversion cycle;
 vfshld   = 0.60 * coolant void fraction in shield
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps

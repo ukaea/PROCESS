@@ -1104,7 +1104,7 @@
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (fdiv)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
- Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
+ Switch_for_pumping_of_primary_coolant___________________________________ (i_coolant_pumping)_____________              3    
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6407E+02 OP 
@@ -1685,7 +1685,7 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-primary_pumping = 3
+i_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
 etahtp = 0.87
