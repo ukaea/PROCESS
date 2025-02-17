@@ -3147,7 +3147,9 @@ class Physics:
         # Taken from ITER Physics Design Guidelines: 1989
         # The expression is valid for aspect ratios in the range 2.5 to 4.0
 
-        f_res_plasma_neo = 1.0 if rmajor / rminor < 2.5 else 4.3 - 0.6 * rmajor / rminor
+        f_res_plasma_neo = (
+            1.0 if 2.5 >= rmajor / rminor <= 4.0 else 4.3 - 0.6 * rmajor / rminor
+        )
 
         res_plasma = res_plasma * f_res_plasma_neo
 
