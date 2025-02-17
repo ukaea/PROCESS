@@ -2417,7 +2417,7 @@ i_blkt_inboard = 0
 * DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
 * JUSTIFICATION: Not set as not used
 
-*outlet_temp = 
+*temp_blkt_coolant_out = 
 * DESCRIPTION:   Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
 * input if `i_blkt_coolant_type=1` (helium)
 * calculated if `i_blkt_coolant_type=2` (water)
