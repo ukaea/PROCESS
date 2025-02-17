@@ -27,6 +27,8 @@ import create_dicts_config
 import numpy as np
 from python_dicts import get_python_variables
 
+from process.scan import SCAN_VARIABLES
+
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
 # {descriptions_dict}
@@ -630,53 +632,25 @@ def remove_comments(line):
 
 def dict_ixc2nsweep():
     """Returns a dict mapping ixc_no to nsweep_no, if both exist for a
-    particular variable. Looks in scan.f90 for mapping from nsweep_no to
-    iteration variable name, and uses ixc_full to map variable name to ixc_no.
-
-    Example of a fragment we are looking for:
-        case (1)
-            aspect = swp(iscn)
-            vlabel = 'aspect = ' ; xlabel = 'Aspect_ratio'
+    particular variable.
 
     Example dictionary entry:
         DICT_IXC2NSWEEP['1'] = '1'
     """
 
-    ixc2nsweep = {}
-    file = SOURCEDIR + "/scan.f90"
-    # slice the file to get the switch statement relating to nsweep
-    lines = slice_file(file, r"select case \(nwp\)", r"case default")
-
-    # remove extra lines that aren't case(#) or varname = sweep(iscan) lines
-    modlines = []
-    for line in lines[1:-1]:
-        if "case" in line or "swp(iscn)" in line:
-            line = remove_comments(line).replace(" ", "")
-            modlines.append(line)
+    name_to_nsweep = {
+        var.variable_name: nsweep for nsweep, var in SCAN_VARIABLES.items()
+    }
 
     # create a dictionary that maps iteration variable names to ixc_no
     ixc_full = dict_ixc_full()
-    ixc_simple_rev = {}
-    for num, value in ixc_full.items():
-        ixc_simple_rev[value["name"]] = num
+    name_to_ixc = {
+        name: ixc
+        for ixc, data in ixc_full.items()
+        if (name := data["name"]) in name_to_nsweep
+    }
 
-    for i in range(len(modlines)):
-        # get the number from the case statement
-        match = re.match(r"case\((\d+)\)", modlines[i])
-        if match:
-            num = match.group(1)
-            # if the case statement matched, get the variable name
-            # from the next line
-            match_2 = re.match(r"(.*?)=swp\(iscn\)", modlines[i + 1])
-            if not match_2:
-                logging.warning("Error in dict_ixc2nsweep\n")
-            else:
-                name = match_2.group(1)
-                if name in ixc_simple_rev:
-                    ixcnum = ixc_simple_rev[name]
-                    ixc2nsweep[ixcnum] = num
-
-    return ixc2nsweep
+    return {ixc: name_to_nsweep[name] for name, ixc in name_to_ixc.items()}
 
 
 def dict_nsweep2ixc():
@@ -801,31 +775,7 @@ def dict_input_bounds():
 
 
 def dict_nsweep2varname():
-    # This function creates the nsweep2varname dictionary from the fortran code
-    # It maps the sweep variable number to its variable name
-
-    di = {}
-    file = SOURCEDIR + "/scan.f90"
-
-    # slice the file to get the switch statement relating to nsweep
-    lines = slice_file(file, r"select case \(nwp\)", r"case default")
-
-    # remove extra lines that aren't case(#) or varname = sweep(iscan) lines
-    modlines = []
-    for line in lines[1:-1]:
-        if "case" in line or "swp(iscn)" in line:
-            line = remove_comments(line).replace(" ", "")
-            modlines.append(line)
-
-    for i in range(len(modlines) // 2):
-        line1 = modlines[i * 2]
-        no = line1.replace("case(", "")
-        no = no.replace(")", "")
-        line2 = modlines[i * 2 + 1]
-        varname = line2.replace("=swp(iscn)", "")
-        di[no] = varname
-
-    return di
+    return {str(nsweep): var.variable_name for nsweep, var in SCAN_VARIABLES.items()}
 
 
 def dict_ixc_full():

@@ -1,3 +1,5 @@
+from dataclasses import astuple, dataclass
+
 import numpy as np
 from tabulate import tabulate
 
@@ -30,6 +32,111 @@ from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
+
+
+@dataclass
+class ScanVariable:
+    variable_name: str
+    variable_description: str
+
+    def __iter__(self):
+        return iter(astuple(self))
+
+
+SCAN_VARIABLES = {
+    1: ScanVariable("aspect", "Aspect_ratio"),
+    2: ScanVariable("hldivlim", "Div_heat_limit_(MW/m2)"),
+    3: ScanVariable("pnetelin", "Net_electric_power_(MW)"),
+    4: ScanVariable("hfact", "Confinement_H_factor"),
+    5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
+    6: ScanVariable("walalw", "Allow._wall_load_(MW/m2)"),
+    7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
+    8: ScanVariable("fqval", "Big_Q_f-value"),
+    9: ScanVariable("te", "Electron_temperature_keV"),
+    10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
+    11: ScanVariable("beta_norm_max", "Beta_coefficient"),
+    12: ScanVariable("bootstrap_current_fraction_max", "Bootstrap_fraction"),
+    13: ScanVariable("boundu(10)", "H_factor_upper_bound"),
+    14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
+    15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
+    16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
+    17: ScanVariable("bmxlim", "Max_toroidal_field_(T)"),
+    18: ScanVariable("gammax", "Maximum_CD_gamma"),
+    19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
+    20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
+    22: ScanVariable("cfactr", "Plant_availability_factor"),
+    23: ScanVariable("boundu(72)", "Ip/Irod_upper_bound"),
+    24: ScanVariable("powfmax", "Fusion_power_limit_(MW)"),
+    25: ScanVariable("kappa", "Plasma_elongation"),
+    26: ScanVariable("triang", "Plasma_triangularity"),
+    27: ScanVariable("tbrmin", "Min_tritium_breed._ratio"),
+    28: ScanVariable("bt", "Tor._field_on_axis_(T)"),
+    29: ScanVariable("coreradius", "Core_radius"),
+    31: ScanVariable(
+        "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit"
+    ),
+    32: ScanVariable("epsvmc", "VMCON error tolerance"),
+    38: ScanVariable("boundu(129)", " Neon upper limit"),
+    39: ScanVariable("boundu(131)", " Argon upper limit"),
+    40: ScanVariable("boundu(135)", " Xenon upper limit"),
+    41: ScanVariable("dr_blkt_outboard", "Outboard blanket thick."),
+    42: ScanVariable("fimp(9)", "Argon fraction"),
+    44: ScanVariable("sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"),
+    45: ScanVariable("tmargmin_tf", "Minimum_allowable_temperature_margin"),
+    46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
+    48: ScanVariable("n_pancake", "TF Coil - n_pancake"),
+    49: ScanVariable("n_layer", "TF Coil - n_layer"),
+    50: ScanVariable("fimp(13)", "Xenon fraction"),
+    51: ScanVariable("ftar", "lower_divertor_power_fraction"),
+    52: ScanVariable("rad_fraction_sol", "SoL radiation fraction"),
+    53: ScanVariable("boundu(157)", "Max allowable fvssu"),
+    54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
+    55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
+    56: ScanVariable("crypmw_max", "max allowable crypmw"),
+    57: ScanVariable("boundl(2)", "bt minimum"),
+    58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
+    59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
+    60: ScanVariable(
+        "sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"
+    ),
+    61: ScanVariable("copperaoh_m2_max", "Max CS coil current / copper area"),
+    62: ScanVariable("coheof", "CS coil current density at EOF (A/m2)"),
+    63: ScanVariable("dr_cs", "CS coil thickness (m)"),
+    64: ScanVariable("ohhghf", "CS height (m)"),
+    65: ScanVariable("n_cycle_min", "CS stress cycles min"),
+    66: ScanVariable("oh_steel_frac", "CS steel fraction"),
+    67: ScanVariable("t_crack_vertical", "Initial crack vertical size (m)"),
+    68: ScanVariable(
+        "inlet_temp_liq", "Inlet Temperature Liquid Metal Breeder/Coolant (K)"
+    ),
+    69: ScanVariable(
+        "outlet_temp_liq", "Outlet Temperature Liquid Metal Breeder/Coolant (K)"
+    ),
+    70: ScanVariable(
+        "blpressure_liq", "Blanket liquid metal breeder/coolant pressure (Pa)"
+    ),
+    71: ScanVariable(
+        "n_liq_recirc", "Selected number of liquid metal breeder recirculations per day"
+    ),
+    72: ScanVariable(
+        "bz_channel_conduct_liq",
+        "Conductance of liquid metal breeder duct walls (A V-1 m-1)",
+    ),
+    73: ScanVariable(
+        "pnuc_fw_ratio_dcll", "Ratio of FW nuclear power as fraction of total (FW+BB)"
+    ),
+    74: ScanVariable(
+        "f_nuc_pow_bz_struct",
+        "Fraction of BZ power cooled by primary coolant for dual-coolant balnket",
+    ),
+    75: ScanVariable("dx_fw_module", "dx_fw_module of first wall cooling channels (m)"),
+    76: ScanVariable("etath", "Thermal conversion eff."),
+    77: ScanVariable("startupratio", "Gyrotron redundancy"),
+    78: ScanVariable("fkind", "Multiplier for Nth of a kind costs"),
+    79: ScanVariable("etaech", "ECH wall plug to injector efficiency"),
+    80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
+    81: ScanVariable("n_tf_turn", "Number of turns in TF"),
+}
 
 
 class Scan:
@@ -767,257 +874,157 @@ class Scan:
         match nwp:
             case 1:
                 physics_variables.aspect = swp[iscn - 1]
-                return "aspect", "Aspect_ratio"
             case 2:
                 divertor_variables.hldivlim = swp[iscn - 1]
-                return "hldivlim", "Div_heat_limit_(MW/m2)"
             case 3:
                 constraint_variables.pnetelin = swp[iscn - 1]
-                return "pnetelin", "Net_electric_power_(MW)"
             case 4:
                 physics_variables.hfact = swp[iscn - 1]
-                return "hfact", "Confinement_H_factor"
             case 5:
                 tfcoil_variables.oacdcp = swp[iscn - 1]
-                return "oacdcp", "TF_inboard_leg_J_(MA/m2)"
             case 6:
                 constraint_variables.walalw = swp[iscn - 1]
-                return "walalw", "Allow._wall_load_(MW/m2)"
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
-                return "beamfus0", "Beam_bkgrd_multiplier"
             case 8:
                 constraint_variables.fqval = swp[iscn - 1]
-                return "fqval", "Big_Q_f-value"
             case 9:
                 physics_variables.te = swp[iscn - 1]
-                return "te", "Electron_temperature_keV"
             case 10:
                 numerics.boundu[14] = swp[iscn - 1]
-                return "boundu(15)", "Volt-second_upper_bound"
             case 11:
                 physics_variables.beta_norm_max = swp[iscn - 1]
-                return "beta_norm_max", "Beta_coefficient"
             case 12:
                 current_drive_variables.bootstrap_current_fraction_max = swp[iscn - 1]
-                return "bootstrap_current_fraction_max", "Bootstrap_fraction"
             case 13:
                 numerics.boundu[9] = swp[iscn - 1]
-                return "boundu(10)", "H_factor_upper_bound"
             case 14:
                 constraint_variables.fiooic = swp[iscn - 1]
-                return "fiooic", "TFC_Iop_/_Icrit_f-value"
             case 15:
                 constraint_variables.fjprot = swp[iscn - 1]
-                return "fjprot", "TFC_Jprot_limit_f-value"
             case 16:
                 physics_variables.rmajor = swp[iscn - 1]
-                return "rmajor", "Plasma_major_radius_(m)"
             case 17:
                 constraint_variables.bmxlim = swp[iscn - 1]
-                return "bmxlim", "Max_toroidal_field_(T)"
             case 18:
                 constraint_variables.gammax = swp[iscn - 1]
-                return "gammax", "Maximum_CD_gamma"
             case 19:
                 numerics.boundl[15] = swp[iscn - 1]
-                return "boundl(16)", "CS_thickness_lower_bound"
             case 20:
                 constraint_variables.t_burn_min = swp[iscn - 1]
-                return "t_burn_min", "Minimum_burn_time_(s)"
-            case 21:
-                # sigpfalw = swp[iscn-1]
-                return "obsolete", "obsolete"
             case 22:
                 if cost_variables.iavail == 1:
                     raise ProcessValueError("Do not scan cfactr if iavail=1")
                 cost_variables.cfactr = swp[iscn - 1]
-                return "cfactr", "Plant_availability_factor"
             case 23:
                 numerics.boundu[71] = swp[iscn - 1]
-                return "boundu(72)", "Ip/Irod_upper_bound"
             case 24:
                 constraint_variables.powfmax = swp[iscn - 1]
-                return "powfmax", "Fusion_power_limit_(MW)"
             case 25:
                 physics_variables.kappa = swp[iscn - 1]
-                return "kappa", "Plasma_elongation"
             case 26:
                 physics_variables.triang = swp[iscn - 1]
-                return "triang", "Plasma_triangularity"
             case 27:
                 constraint_variables.tbrmin = swp[iscn - 1]
-                return "tbrmin", "Min_tritium_breed._ratio"
             case 28:
                 physics_variables.bt = swp[iscn - 1]
-                return "bt", "Tor._field_on_axis_(T)"
             case 29:
                 impurity_radiation_module.coreradius = swp[iscn - 1]
-                return "coreradius", "Core_radius"
             case 31:
                 constraint_variables.f_alpha_energy_confinement_min = swp[iscn - 1]
-                return (
-                    "f_alpha_energy_confinement_min",
-                    "t_alpha_confinement/taueff_lower_limit",
-                )
             case 32:
                 numerics.epsvmc = swp[iscn - 1]
-                return "epsvmc", "VMCON error tolerance"
             case 38:
                 numerics.boundu[128] = swp[iscn - 1]
-                return "boundu(129)", " Neon upper limit"
             case 39:
                 numerics.boundu[130] = swp[iscn - 1]
-                return "boundu(131)", " Argon upper limit"
             case 40:
                 numerics.boundu[134] = swp[iscn - 1]
-                return "boundu(135)", " Xenon upper limit"
             case 41:
                 build_variables.dr_blkt_outboard = swp[iscn - 1]
-                return "dr_blkt_outboard", "Outboard blanket thick."
             case 42:
                 impurity_radiation_module.fimp[8] = swp[iscn - 1]
                 impurity_radiation_module.impurity_arr_frac[8] = (
                     impurity_radiation_module.fimp[8]
                 )
-                return "fimp(9)", "Argon fraction"
             case 44:
                 tfcoil_variables.sig_tf_case_max = swp[iscn - 1]
-                return "sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"
             case 45:
                 tfcoil_variables.tmargmin_tf = swp[iscn - 1]
-                return "tmargmin_tf", "Minimum_allowable_temperature_margin"
             case 46:
                 numerics.boundu[151] = swp[iscn - 1]
-                return "boundu(152)", "Max allowable fgwsep"
             case 48:
                 tfcoil_variables.n_pancake = int(swp[iscn - 1])
-                return "n_pancake", "TF Coil - n_pancake"
             case 49:
                 tfcoil_variables.n_layer = int(swp[iscn - 1])
-                return "n_layer", "TF Coil - n_layer"
             case 50:
                 impurity_radiation_module.fimp[12] = swp[iscn - 1]
                 impurity_radiation_module.impurity_arr_frac[12] = (
                     impurity_radiation_module.fimp[12]
                 )
-                return "fimp(13)", "Xenon fraction"
             case 51:
                 physics_variables.ftar = swp[iscn - 1]
-                return "ftar", "lower_divertor_power_fraction"
             case 52:
                 physics_variables.rad_fraction_sol = swp[iscn - 1]
-                return "rad_fraction_sol", "SoL radiation fraction"
             case 53:
                 numerics.boundu[156] = swp[iscn - 1]
-                return "boundu(157)", "Max allowable fvssu"
             case 54:
                 tfcoil_variables.b_crit_upper_nbti = swp[iscn - 1]
-                return "Bc2(0K)", "GL_NbTi Bc2(0K)"
             case 55:
                 build_variables.dr_shld_inboard = swp[iscn - 1]
-                return "dr_shld_inboard", "Inboard neutronic shield"
             case 56:
                 heat_transport_variables.crypmw_max = swp[iscn - 1]
-                return "crypmw_max", "max allowable crypmw"
             case 57:
                 numerics.boundl[1] = swp[iscn - 1]
-                return "boundl(2)", "bt minimum"
             case 58:
                 build_variables.dr_fw_plasma_gap_inboard = swp[iscn - 1]
-                return "dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"
             case 59:
                 build_variables.dr_fw_plasma_gap_outboard = swp[iscn - 1]
-                return "dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"
             case 60:
                 tfcoil_variables.sig_tf_wp_max = swp[iscn - 1]
-                return (
-                    "sig_tf_wp_max",
-                    "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)",
-                )
             case 61:
                 rebco_variables.copperaoh_m2_max = swp[iscn - 1]
-                return "copperaoh_m2_max", "Max CS coil current / copper area"
             case 62:
                 pfcoil_variables.coheof = swp[iscn - 1]
-                return "coheof", "CS coil current density at EOF (A/m2)"
             case 63:
                 build_variables.dr_cs = swp[iscn - 1]
-                return "dr_cs", "CS coil thickness (m)"
             case 64:
                 pfcoil_variables.ohhghf = swp[iscn - 1]
-                return "ohhghf", "CS height (m)"
             case 65:
                 cs_fatigue_variables.n_cycle_min = swp[iscn - 1]
-                return "n_cycle_min", "CS stress cycles min"
             case 66:
                 pfcoil_variables.oh_steel_frac = swp[iscn - 1]
-                return "oh_steel_frac", "CS steel fraction"
             case 67:
                 cs_fatigue_variables.t_crack_vertical = swp[iscn - 1]
-                return "t_crack_vertical", "Initial crack vertical size (m)"
             case 68:
                 fwbs_variables.inlet_temp_liq = swp[iscn - 1]
-                return (
-                    "inlet_temp_liq",
-                    "Inlet Temperature Liquid Metal Breeder/Coolant (K)",
-                )
             case 69:
                 fwbs_variables.outlet_temp_liq = swp[iscn - 1]
-                return (
-                    "outlet_temp_liq",
-                    "Outlet Temperature Liquid Metal Breeder/Coolant (K)",
-                )
             case 70:
                 fwbs_variables.blpressure_liq = swp[iscn - 1]
-                return (
-                    "blpressure_liq",
-                    "Blanket liquid metal breeder/coolant pressure (Pa)",
-                )
             case 71:
                 fwbs_variables.n_liq_recirc = swp[iscn - 1]
-                return (
-                    "n_liq_recirc",
-                    "Selected number of liquid metal breeder recirculations per day",
-                )
             case 72:
                 fwbs_variables.bz_channel_conduct_liq = swp[iscn - 1]
-                return (
-                    "bz_channel_conduct_liq",
-                    "Conductance of liquid metal breeder duct walls (A V-1 m-1)",
-                )
             case 73:
                 fwbs_variables.pnuc_fw_ratio_dcll = swp[iscn - 1]
-                return (
-                    "pnuc_fw_ratio_dcll",
-                    "Ratio of FW nuclear power as fraction of total (FW+BB)",
-                )
             case 74:
                 fwbs_variables.f_nuc_pow_bz_struct = swp[iscn - 1]
-                return (
-                    "f_nuc_pow_bz_struct",
-                    "Fraction of BZ power cooled by primary coolant for dual-coolant balnket",
-                )
             case 75:
                 fwbs_variables.dx_fw_module = swp[iscn - 1]
-                return "dx_fw_module", "dx_fw_module of first wall cooling channels (m)"
             case 76:
                 heat_transport_variables.etath = swp[iscn - 1]
-                return "etath", "Thermal conversion eff."
             case 77:
                 cost_variables.startupratio = swp[iscn - 1]
-                return "startupratio", "Gyrotron redundancy"
             case 78:
                 cost_variables.fkind = swp[iscn - 1]
-                return "fkind", "Multiplier for Nth of a kind costs"
             case 79:
                 current_drive_variables.etaech = swp[iscn - 1]
-                return "etaech", "ECH wall plug to injector efficiency"
             case 80:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
-                return "fcoolcp", "Coolant fraction of TF"
             case 81:
                 tfcoil_variables.n_tf_turn = swp[iscn - 1]
-                return "n_tf_turn", "Number of turns in TF"
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
+
+        return SCAN_VARIABLES[int(nwp)]
