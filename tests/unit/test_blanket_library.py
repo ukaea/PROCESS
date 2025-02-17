@@ -1484,7 +1484,7 @@ class BlanketModPolHeightParam(NamedTuple):
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
     i_fw_blkt_vv_shape: Any = None
-    nblktmodpi: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
     fdiv: Any = None
     n_blkt_outboard_modules_poloidal: Any = None
     itart: Any = None
@@ -1506,7 +1506,7 @@ class BlanketModPolHeightParam(NamedTuple):
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
             i_fw_blkt_vv_shape=2,
-            nblktmodpi=7,
+            n_blkt_inboard_modules_poloidal=7,
             fdiv=0.115,
             n_blkt_outboard_modules_poloidal=8,
             itart=0,
@@ -1524,7 +1524,7 @@ class BlanketModPolHeightParam(NamedTuple):
             dr_fw_plasma_gap_inboard=0.10000000000000001,
             dr_fw_plasma_gap_outboard=0.10000000000000001,
             i_fw_blkt_vv_shape=1,
-            nblktmodpi=7,
+            n_blkt_inboard_modules_poloidal=7,
             fdiv=0.115,
             n_blkt_outboard_modules_poloidal=8,
             itart=1,
@@ -1572,7 +1572,7 @@ def test_blanket_mod_pol_height(
         blanketmodpolheightparam.i_fw_blkt_vv_shape,
     )
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpi", blanketmodpolheightparam.nblktmodpi
+        fwbs_variables, "n_blkt_inboard_modules_poloidal", blanketmodpolheightparam.n_blkt_inboard_modules_poloidal
     )
     monkeypatch.setattr(fwbs_variables, "fdiv", blanketmodpolheightparam.fdiv)
     monkeypatch.setattr(

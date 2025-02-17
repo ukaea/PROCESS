@@ -657,9 +657,9 @@ class BlanketLibrary:
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
 
         # If SMS blanket then do not have seperate poloidal modules....
-        # Should not need this as nblktmodpi is input but make sure here.
+        # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
         if fwbs_variables.ims == 1:
-            fwbs_variables.nblktmodpi = 1
+            fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
         # Calculate mid-plane toroidal circumference and segment
@@ -842,7 +842,7 @@ class BlanketLibrary:
                 npblkti_liq = (
                     fwbs_variables.nopipes
                     * fwbs_variables.nblktmodti
-                    * fwbs_variables.nblktmodpi
+                    * fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
                 # Mass flow rate per coolant pipe
@@ -923,7 +923,7 @@ class BlanketLibrary:
                 npblkti_liq = (
                     fwbs_variables.nopipes
                     * fwbs_variables.nblktmodti
-                    * fwbs_variables.nblktmodpi
+                    * fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
                 # Mass flow rate per coolant pipe
@@ -1129,7 +1129,7 @@ class BlanketLibrary:
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (
                 2.0 * blanket_library.hblnkt
-            ) / fwbs_variables.nblktmodpi
+            ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
             # Calculate perimeter of ellipse that defines the internal
             # surface of the outboard first wall / blanket
@@ -1194,12 +1194,12 @@ class BlanketLibrary:
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.fdiv)
-                    / fwbs_variables.nblktmodpi
+                    / fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
             else:
                 # single null configuration
                 blanket_library.bllengi = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.nblktmodpi
+                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
             # Distance between r1 and inner edge of outboard first wall / blanket (m)

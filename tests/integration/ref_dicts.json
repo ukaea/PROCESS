@@ -3350,7 +3350,7 @@
         "nb_tor_ob": 0.0,
         "nbi_sys_l": 225.0,
         "nbi_sys_w": 185.0,
-        "nblktmodpi": 7.0,
+        "n_blkt_inboard_modules_poloidal": 7.0,
         "n_blkt_outboard_modules_poloidal": 8.0,
         "nblktmodti": 32.0,
         "nblktmodto": 48.0,
@@ -10123,7 +10123,7 @@
         "nb_tor_ob": "",
         "nbi_sys_l": "NBI system length, width (m)",
         "nbi_sys_w": "NBI system length, width (m)",
-        "nblktmodpi": "number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)",
+        "n_blkt_inboard_modules_poloidal": "number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)",
         "n_blkt_outboard_modules_poloidal": "number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)",
         "nblktmodti": "number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)",
         "nblktmodto": "number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)",
@@ -13749,7 +13749,7 @@
             "lb": 10.0,
             "ub": 1000.0
         },
-        "nblktmodpi": {
+        "n_blkt_inboard_modules_poloidal": {
             "lb": 1,
             "ub": 16
         },
@@ -18098,7 +18098,7 @@
             "temp_blkt_coolant_out",
             "coolp",
             "n_blkt_outboard_modules_poloidal",
-            "nblktmodpi",
+            "n_blkt_inboard_modules_poloidal",
             "nblktmodto",
             "nblktmodti",
             "temp_fw_max",
@@ -20555,7 +20555,7 @@
         "n_tf_turn": "real_variable",
         "nbi_sys_l": "real_variable",
         "nbi_sys_w": "real_variable",
-        "nblktmodpi": "int_variable",
+        "n_blkt_inboard_modules_poloidal": "int_variable",
         "n_blkt_outboard_modules_poloidal": "int_variable",
         "nblktmodti": "int_variable",
         "nblktmodto": "int_variable",
