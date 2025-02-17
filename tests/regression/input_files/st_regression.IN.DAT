@@ -2245,7 +2245,7 @@ primary_pumping = 3
 *    =3 Mechanical pumping power is calculated using specified pressure drop
 * JUSTIFICATION: Used for He cooling.  Pressure drop is default value and may be wrong
 
-ipump = 0
+i_fw_blkt_shared_coolant = 0
 * DESCRIPTION:   Switch for whether the FW and BB are on the same pump system
 * i.e. do they have the same primary coolant or not
 * =0    FW and BB have the same primary coolant, flow = FWin->FWout->BBin->BBout

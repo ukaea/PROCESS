@@ -51,7 +51,7 @@ class DCLL:
              (bz_channel_conduct_liq)
 
          Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
-             (ipump)
+             (i_fw_blkt_shared_coolant)
 
          Can set inlet and oulet temperature for liquid metal breeder
              (inlet_temp_liq)

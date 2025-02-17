@@ -61,7 +61,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     visc_fw_coolant: Any = None
 
-    ipump: Any = None
+    i_fw_blkt_shared_coolant: Any = None
 
     expected_den_fw_coolant: Any = None
 
@@ -101,7 +101,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cp_bl=0,
             cv_bl=0,
             visc_fw_coolant=0,
-            ipump=0,
+            i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
@@ -129,7 +129,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
             visc_fw_coolant=3.5036293160410249e-05,
-            ipump=0,
+            i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
@@ -230,7 +230,7 @@ def test_primary_coolant_properties(
         fwbs_variables, "visc_fw_coolant", primarycoolantpropertiesparam.visc_fw_coolant
     )
 
-    monkeypatch.setattr(fwbs_variables, "ipump", primarycoolantpropertiesparam.ipump)
+    monkeypatch.setattr(fwbs_variables, "i_fw_blkt_shared_coolant", primarycoolantpropertiesparam.i_fw_blkt_shared_coolant)
 
     blanket_library_fixture.primary_coolant_properties(output=False)
 

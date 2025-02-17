@@ -218,7 +218,7 @@ contains
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
+      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
       i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
@@ -1969,8 +1969,8 @@ contains
       case  ('outlet_temp_liq')
          call parse_real_variable('outlet_temp_liq', outlet_temp_liq, 508.D0, 1.5D3, &
                'Outlet temperature for blanket liquid metal')
-      case ('ipump')
-         call parse_int_variable('ipump', ipump, 0, 2, &
+      case ('i_fw_blkt_shared_coolant')
+         call parse_int_variable('i_fw_blkt_shared_coolant', i_fw_blkt_shared_coolant, 0, 2, &
                'Switch for same or different pumping system for FW/BB')
       case ('ims')
          call parse_int_variable('ims', ims, 0, 1, &

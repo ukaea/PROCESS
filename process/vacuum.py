@@ -625,7 +625,7 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            ipump = "cryo " if vacv.ntype == 1 else "turbo"
+            i_fw_blkt_shared_coolant = "cryo " if vacv.ntype == 1 else "turbo"
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")
@@ -659,6 +659,6 @@ class Vacuum:
             po.ovarre(self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3)
             po.ovarre(self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP ")
             po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, f"The vacuum system uses {ipump} pumps.")
+            po.ocmmnt(self.outfile, f"The vacuum system uses {i_fw_blkt_shared_coolant} pumps.")
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
