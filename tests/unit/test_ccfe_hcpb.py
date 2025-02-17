@@ -55,7 +55,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     whtblkt: Any = None
 
-    volblkt: Any = None
+    vol_blkt_total: Any = None
 
     whtshld: Any = None
 
@@ -142,7 +142,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dx_fw_module=0.02,
             denstl=7800,
             whtblkt=3501027.3252278985,
-            volblkt=1397.9003011502937,
+            vol_blkt_total=1397.9003011502937,
             whtshld=2294873.8131476045,
             volshld=735.53647857295027,
             vvmass=9043937.8018644415,
@@ -191,7 +191,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dx_fw_module=0.02,
             denstl=7800,
             whtblkt=3507503.3737008357,
-            volblkt=1400.4860764869636,
+            vol_blkt_total=1400.4860764869636,
             whtshld=2297808.3935174854,
             volshld=736.47704920432227,
             vvmass=9056931.558219457,
@@ -288,7 +288,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingmagnetsparam.whtblkt)
 
-    monkeypatch.setattr(fwbs_variables, "volblkt", nuclearheatingmagnetsparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", nuclearheatingmagnetsparam.vol_blkt_total
+    )
 
     monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingmagnetsparam.whtshld)
 
@@ -1431,7 +1433,7 @@ class ComponentMassesParam(NamedTuple):
     a_fw_outboard: Any = None
     dr_fw_outboard: Any = None
     a_fw_total: Any = None
-    volblkt: Any = None
+    vol_blkt_total: Any = None
     vfblkt: Any = None
     whtblbe: Any = None
     whtblss: Any = None
@@ -1522,7 +1524,7 @@ class ComponentMassesParam(NamedTuple):
             a_fw_outboard=838.00728058362097,
             dr_fw_outboard=0.018000000000000002,
             a_fw_total=1343.9683762356615,
-            volblkt=1182.5433772195902,
+            vol_blkt_total=1182.5433772195902,
             vfblkt=0.25,
             whtblbe=0,
             whtblss=0,
@@ -1636,7 +1638,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )
     monkeypatch.setattr(build_variables, "a_fw_total", componentmassesparam.a_fw_total)
-    monkeypatch.setattr(fwbs_variables, "volblkt", componentmassesparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", componentmassesparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
     monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
     monkeypatch.setattr(fwbs_variables, "whtblss", componentmassesparam.whtblss)

@@ -1035,7 +1035,9 @@ class Stellarator:
             )
             fwbs_variables.densbreed = 2.12e3
 
-        fwbs_variables.whtblkt = fwbs_variables.volblkt * fwbs_variables.densbreed
+        fwbs_variables.whtblkt = (
+            fwbs_variables.vol_blkt_total * fwbs_variables.densbreed
+        )
         self.hcpb.nuclear_heating_blanket()
 
         # Heating of the magnets
@@ -1061,7 +1063,7 @@ class Stellarator:
 
         # Tritium breeding ratio
         fwbs_variables.tbr = self.hcpb.tbr_shimwell(
-            fwbs_variables.volblkt, fwbs_variables.li6enrich, 1, output=False
+            fwbs_variables.vol_blkt_total, fwbs_variables.li6enrich, 1, output=False
         )
 
         # Use older model to calculate neutron fluence since it
@@ -1154,7 +1156,9 @@ class Stellarator:
         fwbs_variables.volblkto = (
             build_variables.blareaob * build_variables.dr_blkt_outboard
         )
-        fwbs_variables.volblkt = fwbs_variables.volblkti + fwbs_variables.volblkto
+        fwbs_variables.vol_blkt_total = (
+            fwbs_variables.volblkti + fwbs_variables.volblkto
+        )
 
         #  Shield volume
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
@@ -1605,30 +1609,32 @@ class Stellarator:
                 fwbs_variables.blkttype == 2
             ):  # liquid breeder (WCLL or HCLL)
                 fwbs_variables.wtbllipb = (
-                    fwbs_variables.volblkt * fwbs_variables.fbllipb * 9400.0e0
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
                 )
                 fwbs_variables.whtblli = (
-                    fwbs_variables.volblkt * fwbs_variables.fblli * 534.0e0
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
                 )
                 fwbs_variables.whtblkt = (
                     fwbs_variables.wtbllipb + fwbs_variables.whtblli
                 )
             else:  # solid breeder (HCPB); always for ipowerflow=0
                 fwbs_variables.wtblli2o = (
-                    fwbs_variables.volblkt * fwbs_variables.fblli2o * 2010.0e0
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
                 )
                 fwbs_variables.whtblbe = (
-                    fwbs_variables.volblkt * fwbs_variables.fblbe * 1850.0e0
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
                 )
                 fwbs_variables.whtblkt = (
                     fwbs_variables.wtblli2o + fwbs_variables.whtblbe
                 )
 
             fwbs_variables.whtblss = (
-                fwbs_variables.volblkt * fwbs_variables.denstl * fwbs_variables.fblss
+                fwbs_variables.vol_blkt_total
+                * fwbs_variables.denstl
+                * fwbs_variables.fblss
             )
             fwbs_variables.whtblvd = (
-                fwbs_variables.volblkt * 5870.0e0 * fwbs_variables.fblvd
+                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
             )
 
             fwbs_variables.whtblkt = (
@@ -1692,7 +1698,7 @@ class Stellarator:
 
             fwbs_variables.vfblkt = (
                 fwbs_variables.volblkti
-                / fwbs_variables.volblkt
+                / fwbs_variables.vol_blkt_total
                 * (  # inboard portion
                     (build_variables.blbuith / build_variables.dr_blkt_inboard)
                     * (
@@ -1710,7 +1716,7 @@ class Stellarator:
             fwbs_variables.vfblkt = (
                 fwbs_variables.vfblkt
                 + fwbs_variables.volblkto
-                / fwbs_variables.volblkt
+                / fwbs_variables.vol_blkt_total
                 * (  # outboard portion
                     (build_variables.blbuoth / build_variables.dr_blkt_outboard)
                     * (
@@ -1733,7 +1739,7 @@ class Stellarator:
         #  in the blanket.
 
         if fwbs_variables.blktmodel == 0:
-            coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+            coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
 
         # Shield mass
         fwbs_variables.whtshld = (
@@ -2200,12 +2206,12 @@ class Stellarator:
 
             #     if (fwbs_variables.blktmodel == 0) :
             #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) volblkti, volblkto, volblkt,                whtblkt, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,601) volblkti, volblkto, vol_blkt_total,                whtblkt, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
             #         else:  #  (also if ipowerflow=0)
-            #             po.write(self.outfile,600) volblkti, volblkto, volblkt,                whtblkt, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,600) volblkti, volblkto, vol_blkt_total,                whtblkt, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             #     else:
-            #         po.write(self.outfile,602) volblkti, volblkto, volblkt, whtblkt, vfblkt,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.volblkti/fwbs_variables.volblkt/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.volblkto/fwbs_variables.volblkt/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #         po.write(self.outfile,602) volblkti, volblkto, vol_blkt_total, whtblkt, vfblkt,             (fwbs_variables.volblkti/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.volblkti/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.volblkti/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.volblkto/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 
