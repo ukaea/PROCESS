@@ -3352,7 +3352,7 @@
         "nbi_sys_w": 185.0,
         "n_blkt_inboard_modules_poloidal": 7.0,
         "n_blkt_outboard_modules_poloidal": 8.0,
-        "nblktmodti": 32.0,
+        "n_blkt_inboard_modules_toroidal": 32.0,
         "nblktmodto": 48.0,
         "nbshield": 0.5,
         "nbshinef": 0.0,
@@ -10125,7 +10125,7 @@
         "nbi_sys_w": "NBI system length, width (m)",
         "n_blkt_inboard_modules_poloidal": "number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)",
         "n_blkt_outboard_modules_poloidal": "number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)",
-        "nblktmodti": "number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)",
+        "n_blkt_inboard_modules_toroidal": "number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)",
         "nblktmodto": "number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)",
         "nbshield": "neutral beam duct shielding thickness (m)",
         "nbshinef": "neutral beam shine-through fraction",
@@ -13757,7 +13757,7 @@
             "lb": 1,
             "ub": 16
         },
-        "nblktmodti": {
+        "n_blkt_inboard_modules_toroidal": {
             "lb": 8,
             "ub": 96
         },
@@ -18100,7 +18100,7 @@
             "n_blkt_outboard_modules_poloidal",
             "n_blkt_inboard_modules_poloidal",
             "nblktmodto",
-            "nblktmodti",
+            "n_blkt_inboard_modules_toroidal",
             "temp_fw_max",
             "fw_th_conductivity",
             "fvoldw",
@@ -20557,7 +20557,7 @@
         "nbi_sys_w": "real_variable",
         "n_blkt_inboard_modules_poloidal": "int_variable",
         "n_blkt_outboard_modules_poloidal": "int_variable",
-        "nblktmodti": "int_variable",
+        "n_blkt_inboard_modules_toroidal": "int_variable",
         "nblktmodto": "int_variable",
         "nbshield": "real_variable",
         "nbshinefmax": "real_variable",

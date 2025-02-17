@@ -732,7 +732,7 @@ class DCLL:
                     * fwbs_variables.fw_armour_thickness
                     / fwbs_variables.fw_armour_vol
                 )
-            ) / fwbs_variables.nblktmodti
+            ) / fwbs_variables.n_blkt_inboard_modules_toroidal
 
         dcll_module.mass_segm_ob = (
             fwbs_variables.m_blkt_total

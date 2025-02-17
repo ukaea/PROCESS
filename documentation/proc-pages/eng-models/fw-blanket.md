@@ -173,7 +173,7 @@ The user can select the number poloidal and toroidal modules for the IB and OB B
 | :----------: | :---: | ------ | ------- | -------------------------------------------------------- |
 | `n_blkt_inboard_modules_poloidal` |  ---  |        | 7       | Number of inboard blanket modules in poloidal direction  |
 | `n_blkt_outboard_modules_poloidal` |  ---  |        | 8       | Number of outboard blanket modules in poloidal direction |
-| `nblktmodti` |  ---  |        | 32      | Number of inboard blanket modules in toroidal direction  |
+| `n_blkt_inboard_modules_toroidal` |  ---  |        | 32      | Number of inboard blanket modules in toroidal direction  |
 | `nblktmodto` |  ---  |        | 48      | Number of outboard blanket modules in toroidal direction |
 
 #### Liquid Breeder or Dual Coolant

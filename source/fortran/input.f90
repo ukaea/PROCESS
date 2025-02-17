@@ -209,7 +209,7 @@ contains
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
+      f_neut_shield, fw_th_conductivity, n_blkt_inboard_modules_toroidal, dr_fw_wall, afwo, &
       fvolsi, etahtp, n_blkt_outboard_modules_poloidal, pres_fw_coolant, emult, temp_fw_coolant_out, n_blkt_inboard_modules_poloidal, &
       fblhebpi, fblss, temp_blkt_coolant_in, temp_blkt_coolant_out, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
@@ -2011,8 +2011,8 @@ contains
        case ('nblktmodto')
           call parse_int_variable('nblktmodto', nblktmodto, 8, 96, &
                'No of o/b blanket modules in toroidal direction')
-       case ('nblktmodti')
-          call parse_int_variable('nblktmodti', nblktmodti, 8, 96, &
+       case ('n_blkt_inboard_modules_toroidal')
+          call parse_int_variable('n_blkt_inboard_modules_toroidal', n_blkt_inboard_modules_toroidal, 8, 96, &
                'No of i/b blanket modules in toroidal direction')
        case ('temp_fw_max')
           call parse_real_variable('temp_fw_max', temp_fw_max, 500.0D0, 2000.0D0, &
