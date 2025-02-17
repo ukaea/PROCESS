@@ -508,7 +508,7 @@ class DshapedComponentParam(NamedTuple):
     vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     rminor: Any = None
     volshldi: Any = None
     volshldo: Any = None
@@ -527,7 +527,7 @@ class DshapedComponentParam(NamedTuple):
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldi: Any = None
     expected_volshldo: Any = None
     expected_volvvi: Any = None
@@ -565,7 +565,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_outboard=0,
             vol_blkt_total=0,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=0,
             volshldo=0,
@@ -584,7 +584,7 @@ class DshapedComponentParam(NamedTuple):
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=0,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=0,
             expected_volshldo=0,
             expected_volvvi=0,
@@ -618,7 +618,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=0,
             volshldo=0,
@@ -637,7 +637,7 @@ class DshapedComponentParam(NamedTuple):
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
             expected_volvvi=0,
@@ -671,7 +671,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
             volshld=450.46122947809488,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=79.896984366095609,
             volshldo=370.5642451119993,
@@ -690,7 +690,7 @@ class DshapedComponentParam(NamedTuple):
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
-            expected_vdewin=340.45369594344834,
+            expected_vol_vv=340.45369594344834,
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
             expected_volvvi=34.253413020620215,
@@ -775,7 +775,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
         fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
     )
     monkeypatch.setattr(fwbs_variables, "volshld", dshapedcomponentparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", dshapedcomponentparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", dshapedcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
     monkeypatch.setattr(blanket_library, "volshldi", dshapedcomponentparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", dshapedcomponentparam.volshldo)
@@ -827,7 +827,7 @@ class EllipticalComponentParam(NamedTuple):
     vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
@@ -849,7 +849,7 @@ class EllipticalComponentParam(NamedTuple):
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldi: Any = None
     expected_volshldo: Any = None
     expected_volvvi: Any = None
@@ -883,7 +883,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_outboard=0,
             vol_blkt_total=0,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
@@ -905,7 +905,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=0,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=0,
             expected_volshldo=0,
             expected_volvvi=0,
@@ -935,7 +935,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
@@ -957,7 +957,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
             expected_volvvi=0,
@@ -987,7 +987,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
             volshld=1124.4621612595051,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
@@ -1009,7 +1009,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
-            expected_vdewin=584.07334775041659,
+            expected_vol_vv=584.07334775041659,
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
             expected_volvvi=143.03162449152501,
@@ -1080,7 +1080,7 @@ def test_elliptical_component(
         fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
     )
     monkeypatch.setattr(fwbs_variables, "volshld", ellipticalcomponentparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", ellipticalcomponentparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", ellipticalcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
     monkeypatch.setattr(physics_variables, "triang", ellipticalcomponentparam.triang)
@@ -1124,8 +1124,8 @@ def test_elliptical_component(
     assert fwbs_variables.volshld == pytest.approx(
         ellipticalcomponentparam.expected_volshld
     )
-    assert fwbs_variables.vdewin == pytest.approx(
-        ellipticalcomponentparam.expected_vdewin
+    assert fwbs_variables.vol_vv == pytest.approx(
+        ellipticalcomponentparam.expected_vol_vv
     )
     assert blanket_library.volshldi == pytest.approx(
         ellipticalcomponentparam.expected_volshldi
@@ -1156,7 +1156,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     fvolsi: Any = None
     fvolso: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     fvoldw: Any = None
     idivrt: Any = None
     volshldi: Any = None
@@ -1168,7 +1168,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldo: Any = None
 
 
@@ -1190,7 +1190,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             fvolsi=1,
             fvolso=0.64000000000000001,
             volshld=1124.4621612595051,
-            vdewin=584.07334775041659,
+            vol_vv=584.07334775041659,
             fvoldw=1.74,
             idivrt=1,
             volshldi=177.89822933168091,
@@ -1202,7 +1202,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
             expected_volshld=783.69914576548854,
-            expected_vdewin=1016.2876250857248,
+            expected_vol_vv=1016.2876250857248,
             expected_volshldo=605.80091643380763,
         ),
     ),
@@ -1241,7 +1241,7 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
     monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", applycoveragefactorsparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
     monkeypatch.setattr(physics_variables, "idivrt", applycoveragefactorsparam.idivrt)
     monkeypatch.setattr(blanket_library, "volshldi", applycoveragefactorsparam.volshldi)
@@ -1270,8 +1270,8 @@ def test_apply_coverage_factors(
     assert fwbs_variables.volshld == pytest.approx(
         applycoveragefactorsparam.expected_volshld
     )
-    assert fwbs_variables.vdewin == pytest.approx(
-        applycoveragefactorsparam.expected_vdewin
+    assert fwbs_variables.vol_vv == pytest.approx(
+        applycoveragefactorsparam.expected_vol_vv
     )
     assert blanket_library.volshldo == pytest.approx(
         applycoveragefactorsparam.expected_volshldo
@@ -1288,7 +1288,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     z_cryostat_half_inside: Any = None
     vol_cryostat: Any = None
     vvmass: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     denstl: Any = None
     dewmkg: Any = None
     r_pf_coil_outer: Any = None
@@ -1317,7 +1317,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             z_cryostat_half_inside=0,
             vol_cryostat=0,
             vvmass=0,
-            vdewin=1016.2876250857248,
+            vol_vv=1016.2876250857248,
             denstl=7800,
             dewmkg=0,
             r_pf_coil_outer=np.array(
@@ -1433,7 +1433,7 @@ def test_external_cryo_geometry(
         fwbs_variables, "vol_cryostat", externalcryogeometryparam.vol_cryostat
     )
     monkeypatch.setattr(fwbs_variables, "vvmass", externalcryogeometryparam.vvmass)
-    monkeypatch.setattr(fwbs_variables, "vdewin", externalcryogeometryparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
