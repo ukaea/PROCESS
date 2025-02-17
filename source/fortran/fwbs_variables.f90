@@ -435,7 +435,7 @@ module fwbs_variables
   real(dp) :: vfshld
   !! coolant void fraction in shield
 
-  real(dp) :: volblkt
+  real(dp) :: vol_blkt_total
   !! volume of blanket [m^3]
 
   real(dp) :: volblkti
@@ -776,7 +776,7 @@ module fwbs_variables
     vol_cryostat_internal = 0.0D0
     vdewin = 0.0D0
     vfshld = 0.25D0
-    volblkt = 0.0D0
+    vol_blkt_total = 0.0D0
     volblkti = 0.0D0
     volblkto = 0.0D0
     volshld = 0.0D0

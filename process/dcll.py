@@ -520,7 +520,7 @@ class DCLL:
             if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
-                ) / fwbs_variables.volblkt
+                ) / fwbs_variables.vol_blkt_total
 
             dcll_module.vol_bz_liq = (
                 fwbs_variables.volblkti
@@ -592,7 +592,7 @@ class DCLL:
             if fwbs_variables.icooldual > 0:
                 fwbs_variables.vfblkt = (
                     (1 - dcll_module.f_vol_stl_bz_struct) * dcll_module.vol_bz_struct
-                ) / fwbs_variables.volblkt
+                ) / fwbs_variables.vol_blkt_total
 
             dcll_module.vol_bz_liq = (
                 fwbs_variables.volblkto
@@ -715,7 +715,7 @@ class DCLL:
         if fwbs_variables.i_blkt_inboard == 1:
             dcll_module.mass_segm_ib = (
                 fwbs_variables.whtblkt
-                * (fwbs_variables.volblkti / fwbs_variables.volblkt)
+                * (fwbs_variables.volblkti / fwbs_variables.vol_blkt_total)
                 + fwbs_variables.m_fw_total
                 * (
                     build_variables.a_fw_inboard
@@ -734,7 +734,8 @@ class DCLL:
             ) / fwbs_variables.nblktmodti
 
         dcll_module.mass_segm_ob = (
-            fwbs_variables.whtblkt * (fwbs_variables.volblkto / fwbs_variables.volblkt)
+            fwbs_variables.whtblkt
+            * (fwbs_variables.volblkto / fwbs_variables.vol_blkt_total)
             + fwbs_variables.m_fw_total
             * (
                 build_variables.a_fw_outboard
@@ -908,8 +909,8 @@ class DCLL:
         po.ovarrf(
             self.outfile,
             "Blanket Volume (m3)",
-            "(volblkt)",
-            fwbs_variables.volblkt,
+            "(vol_blkt_total)",
+            fwbs_variables.vol_blkt_total,
             "OP ",
         )
         po.ovarrf(
