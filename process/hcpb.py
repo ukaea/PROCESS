@@ -1473,8 +1473,8 @@ class CCFE_HCPB:
         po.ovarin(
             self.outfile,
             "Switch for plant secondary cycle ",
-            "(secondary_cycle)",
-            fwbs_variables.secondary_cycle,
+            "(i_thermal_electric_conversion)",
+            fwbs_variables.i_thermal_electric_conversion,
         )
         po.ovarre(
             self.outfile,

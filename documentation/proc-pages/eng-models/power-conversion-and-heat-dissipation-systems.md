@@ -75,19 +75,19 @@ for the primary coolant.
 
      - The defaults for these variables are geared towards a WCLL concept, so different values should be used with Helium cooling.
 
-`secondary_cycle` : This switch controls the calculation of the thermal to electric conversion 
+`i_thermal_electric_conversion` : This switch controls the calculation of the thermal to electric conversion 
 efficiency in the secondary cycle.
 
-  - If `secondary_cycle` = 0, the efficiency of the power generation cycle is set to a single value 
+  - If `i_thermal_electric_conversion` = 0, the efficiency of the power generation cycle is set to a single value 
     obtained from previous cycle modelling studies. The heat deposited in the Toroidal Field coils 
     divertor coolant is assumed to be at such low temperature that it cannot be used for power 
     generation and is dumped to the environment.
-  - In the remaining options (`secondary_cycle` = 1, 2 or 3), the heat deposited in the divertor 
+  - In the remaining options (`i_thermal_electric_conversion` = 1, 2 or 3), the heat deposited in the divertor 
     coolant is used for power generation
   - If `secondary cycle` = 1, the efficiency of the power generation cycle is set as above, but the 
     divertor heat is used for electricity generation.
-  - If `secondary_cycle` = 2, the efficiency of the power generation cycle is input by the user.
-  - If `secondary_cycle` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
+  - If `i_thermal_electric_conversion` = 2, the efficiency of the power generation cycle is input by the user.
+  - If `i_thermal_electric_conversion` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
     efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency[^1]:
 
@@ -96,7 +96,7 @@ efficiency in the secondary cycle.
     \eta & = & -0.8002 + 0.1802 \, \mathrm{ln}(T) \,\, \mathrm{(helium \, coolant; superheated \, steam \, Rankine \, cycle)}
     \end{eqnarray*}$
 
-  - If `secondary_cycle` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
+  - If `i_thermal_electric_conversion` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
     efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency from [^1]:
 

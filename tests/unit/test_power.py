@@ -2061,7 +2061,7 @@ class Power2Param(NamedTuple):
 
     fhcd: Any = None
 
-    secondary_cycle: Any = None
+    i_thermal_electric_conversion: Any = None
 
     pnuc_cp: Any = None
 
@@ -2252,7 +2252,7 @@ class Power2Param(NamedTuple):
             praddiv=33.119482558354782,
             fdiv=0.115,
             fhcd=0,
-            secondary_cycle=2,
+            i_thermal_electric_conversion=2,
             pnuc_cp=0,
             pnucdiv=182.69222981118057,
             i_coolant_pumping=3,
@@ -2354,7 +2354,7 @@ class Power2Param(NamedTuple):
             praddiv=33.119482558354782,
             fdiv=0.115,
             fhcd=0,
-            secondary_cycle=2,
+            i_thermal_electric_conversion=2,
             pnuc_cp=0,
             pnucdiv=182.6352084763719,
             i_coolant_pumping=3,
@@ -2488,7 +2488,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "fhcd", power2param.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "secondary_cycle", power2param.secondary_cycle)
+    monkeypatch.setattr(fwbs_variables, "i_thermal_electric_conversion", power2param.i_thermal_electric_conversion)
 
     monkeypatch.setattr(fwbs_variables, "pnuc_cp", power2param.pnuc_cp)
 
