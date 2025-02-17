@@ -15,14 +15,14 @@ logger = logging.getLogger(__name__)
 
 class PlasmaProfile:
     """
-    Plasma profile class. Initiates the density and temperature profiles and
+    Plasma profile class. Initiates the electron density and electron temperature profiles and
     handles the required physics variables.
 
     Attributes:
         profile_size (int): The size of the plasma profile.
         outfile (str): The output file path.
-        neprofile (NProfile): An instance of the NProfile class.
-        teprofile (TProfile): An instance of the TProfile class.
+        neprofile (NeProfile): An instance of the NeProfile class.
+        teprofile (TeProfile): An instance of the TeProfile class.
 
     Methods:
         run(): Subroutine to execute PlasmaProfile functions.
@@ -40,14 +40,14 @@ class PlasmaProfile:
         Args:
             profile_size (int): The size of the plasma profile.
             outfile (str): The output file path.
-            neprofile (NProfile): An instance of the NProfile class.
-            teprofile (TProfile): An instance of the TProfile class.
+            neprofile (NeProfile): An instance of the NeProfile class.
+            teprofile (TeProfile): An instance of the TeProfile class.
         """
         # Default profile_size = 501, but it's possible to experiment with this value.
         self.profile_size = 501
         self.outfile = constants.nout
-        self.neprofile = profiles.NProfile(self.profile_size)
-        self.teprofile = profiles.TProfile(self.profile_size)
+        self.neprofile = profiles.NeProfile(self.profile_size)
+        self.teprofile = profiles.TeProfile(self.profile_size)
 
     def run(self) -> None:
         """
@@ -186,7 +186,7 @@ class PlasmaProfile:
         Returns:
             None
         """
-        #  Run TProfile and NProfile class methods:
+        #  Run TeProfile and NeProfile class methods:
         #  Re-caluclate core and profile values
 
         self.teprofile.run()

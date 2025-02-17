@@ -4,13 +4,12 @@
 
 In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `ipedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `ipedestal == 0` or with a pedestal `ipedestal == 1`.  `ipedestal == 0` is better suited for modelling L-mode plasmas, while `ipedestal == 1` is better suited for modelling [H-mode](https://en.wikipedia.org/wiki/High-confinement_mode) plasmas.
 
-The files responsible for calculating and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`NProfile`](plasma_density_profile.md) and [`TProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py` 
+The files responsible for calculating and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`NeProfile`](plasma_density_profile.md) and [`TeProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py`
 
 <figure markdown>
 ![UML of profiles](./uml_classes_PlasmaProfile.png){height="1000px"}
 <figcaption>Figure 1: UML class breakdown of the plasma profiles</figcaption>
 </figure>
-
 
 ## Parabolic Profile | L-mode
 
@@ -39,7 +38,6 @@ be described as 1/2-D.  The relevant profile index variables are
 ???+ note "Plasma current profile"
 
     While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
-
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
 
@@ -113,9 +111,8 @@ The graph below is for a standard parabolic profile. You can vary the core value
 
 If `ipedestal == 1` there is now a pedestal present in the profile and they follow the form shown below:
 
-
 $$\begin{aligned}
-\mbox{Density:} \qquad n(\rho) = \left\{ 
+\mbox{Density:} \qquad n(\rho) = \left\{
 \begin{aligned}
     & \text{n}_{\text{ped}} + (n_0 - \text{n}_{\text{ped}}) \left( 1 -
     \frac{\rho^2}{\rho_{\text{ped},n}^2}\right)^{\alpha_n}
@@ -126,9 +123,8 @@ $$\begin{aligned}
 \right.
 \end{aligned}$$
 
-
 $$\begin{aligned}
-\mbox{Temperature:} \ T(\rho) = \left\{ 
+\mbox{Temperature:} \ T(\rho) = \left\{
 \begin{aligned}
    & \text{T}_{\text{ped}} + (T_0 - \text{T}_{\text{ped}}) \left( 1 - \frac{\rho^{\beta_T}}
     {\rho_{\text{ped},T}^{\beta_T}}\right)^{\alpha_T}  &  0 \leq \rho \leq \rho_{\text{ped},T} \\
@@ -136,7 +132,7 @@ $$\begin{aligned}
    &  \rho_{\text{ped},T} < \rho \leq 1
 \end{aligned}
 \right.
-\end{aligned}$$ 
+\end{aligned}$$
 
 Subscripts $0$, $\text{ped}$ and $\text{sep}$, denote values at the centre ($\rho = 0$), the
 pedestal ($\rho = \rho_{\text{ped}}$) and the separatrix ($\rho=1$),
@@ -152,21 +148,19 @@ scaled from the electron values by the ratio of the volume-averaged values).
     $\beta_T$ can have an important impact not on just the plasma profile shape but also synchrotron radiation calculations.
     For more info on its effect, visit the radiation section [here](../plasma_radiation.md).
 
-
 !!! warning " Pedestal setting"
-    If `ipedestal == 1` then the pedestal density `neped` is set as a fraction `fgwped` of the 
-    Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2]. 
+    If `ipedestal == 1` then the pedestal density `neped` is set as a fraction `fgwped` of the
+    Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2].
 
 A table of the the associated variables can be seen below
 
-
-| Profile parameter                | Density   |        Temperature |                
+| Profile parameter                | Density   |        Temperature |
 |----------------------------------|-----------|-------------|
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped},n}$ |   `rhopedt`, $\rho_{\text{ped},T}$   |  
-| Plasma centre value              | `ne0`, $n_0$      |           `te0`, $T_0$       |           
-| Pedestal value                   | `neped`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |       
-| Separatrix value                 | `nesep`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |       
-| Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |      
+| Plasma centre value              | `ne0`, $n_0$      |           `te0`, $T_0$       |
+| Pedestal value                   | `neped`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |
+| Separatrix value                 | `nesep`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |
+| Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |
 | Profile index $\beta$            |           |                 `tbeta`, $\beta_T$     |
 
 The graph below is for a standard pedestal profile. You can vary its attributes given in the table above to see how the function behaves.
@@ -237,18 +231,18 @@ The graph below is for a standard pedestal profile. You can vary its attributes 
 
 !!! warning " Un-realistic profiles"
 
-    If setting `ipedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$. 
+    If setting `ipedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$.
     Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{dene})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
 
 --------
 
-## Plasma Profile Class | `PlasmaProfile` 
+## Plasma Profile Class | `PlasmaProfile`
 ### Initialization | `__init__()`
-The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to [`NProfile`](plasma_density_profile.md) & [`TProfile`](plasma_temperature_profile.md) objects from `profiles.py`
+The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to [`NeProfile`](plasma_density_profile.md) & [`TeProfile`](plasma_temperature_profile.md) objects from `profiles.py`
 
 ???+ Note
 
-    Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile`. Changing this will affect the values when doing Simpsons rule integration on the profiles. 
+    Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile`. Changing this will affect the values when doing Simpsons rule integration on the profiles.
 
 ----------
 
@@ -272,8 +266,7 @@ Depending on the value of `ipedestal` different functions will be ran, the diffe
 
 If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temepratures are zero. This will then warn the user in the terminal.
 
-The density and temperature profile runner function [`TProfile/NProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values. 
-
+The density and temperature profile runner function [`TeProfile/NeProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values.
 
 Ratio of density-weighted to volume-averaged temperature factor is calculated:
 
@@ -304,9 +297,8 @@ $$
 
 $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function) and is calculated in the code with [scipy.special.gamma()](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gamma.html)
 
-
 $$
-\mathtt{dnla} / \bar{n_{\text{e}}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)} 
+\mathtt{dnla} / \bar{n_{\text{e}}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}
 $$
 
 This is in agreement with the derivation from the ITER Physics Design 1989 [^2]
@@ -316,7 +308,6 @@ $\blacksquare$
 ------
 
 The density weighted temperatures are set:
-
 
 $$\begin{aligned}
 \mathtt{ten} = \mathtt{pcoef} \times T_\text{e} \\
@@ -381,7 +372,6 @@ $$
 \langle n \rangle =  \frac{2\pi \int^1_0     \rho  \left(n_0(1-\rho^2)^{\alpha_n}\right) \ d\rho}{\pi\rho^2}  
 $$
 
-
 $\blacksquare$
 
 ------
@@ -399,7 +389,6 @@ $$\begin{aligned}
 \end{aligned}$$
 
 -----
-
 
 ##### `calculate_profile_factors()`
 
@@ -425,7 +414,7 @@ $$
 
 ???+ note "Pressure profile factor"
 
-    The calculation of $\alpha_p$ is only valid assuming a parabolic profile case. The calculatio of $p_0$ is still true as the core values are calculated independantly for each profile type. 
+    The calculation of $\alpha_p$ is only valid assuming a parabolic profile case. The calculatio of $p_0$ is still true as the core values are calculated independantly for each profile type.
 
     $p_0$ is NOT equal to $\langle p \rangle \times (1 + \alpha_p)$, but $p(\rho) = n(\rho)T(\rho)$ and $\langle p \rangle = \langle n \rangle$ $T_n$, where $T_n$ is the
     density-weighted temperature.
@@ -502,7 +491,7 @@ This solution for the profile gradient only holds true if $\alpha_T \ge 1$.
 In the region $0 \le \alpha_T \le 1$ when substituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
 
 To overcome this we can assume the second derivative root to be a value. In this case we assume a default value of $\mathtt{rho\_te\_max}$ = 0.9.
-Then we just substitute this value into the first derivative to 
+Then we just substitute this value into the first derivative to
 
 $$
 -2T_0\alpha_T(0.9)(1-(0.9)^2)^{-1+\alpha_T}
@@ -575,9 +564,6 @@ You can use the slider in the graph below to experiment with the value of $\math
   </body>
 </html>
 
-
-
-
 We can now set the normalised gradient length:
 
 $$
@@ -594,7 +580,7 @@ $$
 
 ##### `pedestal_parameterisation()`
 
-The density and temperature profile runner function [`TProfile/NProfile.run()`](plasma_density_profile.md#runner-function-run) is firstly called to re-calculate the profile and core values. 
+The density and temperature profile runner function [`TeProfile/NeProfile.run()`](plasma_density_profile.md#runner-function-run) is firstly called to re-calculate the profile and core values.
 
  Perform integrations to calculate ratio of density-weighted to volume-averaged temperature, etc. Density-weighted temperature = $\frac{\int{nT \ dV}}{\int{n \ dV}}$,  which is approximately equal to the ratio $\frac{\int{\rho \ n(\rho) T(\rho) \ d\rho}}{\int{\rho \ n(\rho) \ d\rho}}$
 
@@ -637,9 +623,9 @@ The same function is run from the `ipedestal == 0 ` profile case, found [here](p
 
 --------
 
-### Setting pedestal values as fractions of the Greenwald limit 
+### Setting pedestal values as fractions of the Greenwald limit
 
-By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as: 
+By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
 
 $$
 n_{\text{ped}} = \mathtt{fgwped} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
@@ -668,10 +654,10 @@ To prevent unrealistic profiles when iterating the values of `ne0, nesep, neped`
 
 This constraint can be activated by stating `icc = 76` in the input file
 
-Eich et.al has given a usable formula for the critical separatrix density in terms of fundamental plasma parameters[^4]. A function for the ballooning parameter at the separatrix $(\alpha_{\text{sep}}^{\text{crit}})$ is seen to increase about 
-linearly with the separatrix density normalised to Greenwald density. This is seen in JET and ASDEX based on Thomson-scattering measurements, a clear correlation of the density limit of the tokamak H-mode high-confinement regime with 
-the approach to the ideal ballooning instability threshold at the periphery of the plasma. 
- 
+Eich et.al has given a usable formula for the critical separatrix density in terms of fundamental plasma parameters[^4]. A function for the ballooning parameter at the separatrix $(\alpha_{\text{sep}}^{\text{crit}})$ is seen to increase about
+linearly with the separatrix density normalised to Greenwald density. This is seen in JET and ASDEX based on Thomson-scattering measurements, a clear correlation of the density limit of the tokamak H-mode high-confinement regime with
+the approach to the ideal ballooning instability threshold at the periphery of the plasma.
+
 $$
 \alpha_{\text{sep}}^{\text{crit}} \approx \kappa^{1.2}(1+1.5\delta) \approx 2.5
 $$
@@ -689,7 +675,6 @@ $$
 Where $A$ is the plasma aspect ratio, $P_{\text{sep}}$ is the power crossing the separatrix and is the heating power minus the radiated power in this case, $n_{\text{GW}}$ is the Greenwald density limit.
 
 The value of `nesep` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$. This can be scaled with `fnesep`
-
 
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
