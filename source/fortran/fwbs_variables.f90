@@ -63,7 +63,7 @@ module fwbs_variables
   !! - =2 defined by two ellipses
   !#TODO: change to adopt switch naming convention
 
-  real(dp) :: fwlife
+  real(dp) :: life_fw_fpy
   !! first wall full-power year lifetime (y)
 
   real(dp) :: m_fw_total
@@ -678,7 +678,7 @@ module fwbs_variables
     fhcd = 0.0D0
     fhole = 0.0D0
     fwbsshape = 2
-    fwlife = 0.0D0
+    life_fw_fpy = 0.0D0
     m_fw_total = 0.0D0
     fw_armour_mass = 0.0D0
     fw_armour_thickness = 0.005D0

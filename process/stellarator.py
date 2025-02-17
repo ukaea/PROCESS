@@ -1106,7 +1106,7 @@ class Stellarator:
         which scale the surface area of the components from that
         of the plasma.
         """
-        fwbs_variables.fwlife = min(
+        fwbs_variables.life_fw_fpy = min(
             cost_variables.abktflnc / physics_variables.wallmw, cost_variables.tlife
         )
 
@@ -1892,8 +1892,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "First wall full-power lifetime (years)",
-                "(fwlife)",
-                fwbs_variables.fwlife,
+                "(life_fw_fpy)",
+                fwbs_variables.life_fw_fpy,
             )
 
             po.ovarre(

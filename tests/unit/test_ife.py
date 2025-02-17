@@ -1221,7 +1221,7 @@ class IfefbsParam(NamedTuple):
     wtblli2o: Any = None
     whtblli: Any = None
     bktlife: Any = None
-    fwlife: Any = None
+    life_fw_fpy: Any = None
     chmatm: Any = None
     chmatv: Any = None
     fwmatm: Any = None
@@ -1244,7 +1244,7 @@ class IfefbsParam(NamedTuple):
     expected_whtblkt: Any = None
     expected_whtshld: Any = None
     expected_bktlife: Any = None
-    expected_fwlife: Any = None
+    expected_life_fw_fpy: Any = None
     expected_fwmatm: Any = None
     expected_v1matm: Any = None
     expected_blmatm: Any = None
@@ -1271,7 +1271,7 @@ class IfefbsParam(NamedTuple):
             wtblli2o=0,
             whtblli=0,
             bktlife=0,
-            fwlife=0,
+            life_fw_fpy=0,
             chmatm=np.array(
                 np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
@@ -1455,7 +1455,7 @@ class IfefbsParam(NamedTuple):
             expected_whtblkt=347956.92928704334,
             expected_whtshld=1067310.9593707009,
             expected_bktlife=3.000406304846492,
-            expected_fwlife=3.000406304846492,
+            expected_life_fw_fpy=3.000406304846492,
             expected_fwmatm=np.array(
                 (
                     (0, 0, 0),
@@ -1556,7 +1556,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(fwbs_variables, "wtblli2o", ifefbsparam.wtblli2o)
     monkeypatch.setattr(fwbs_variables, "whtblli", ifefbsparam.whtblli)
     monkeypatch.setattr(fwbs_variables, "bktlife", ifefbsparam.bktlife)
-    monkeypatch.setattr(fwbs_variables, "fwlife", ifefbsparam.fwlife)
+    monkeypatch.setattr(fwbs_variables, "life_fw_fpy", ifefbsparam.life_fw_fpy)
     monkeypatch.setattr(ife_variables, "chmatm", ifefbsparam.chmatm)
     monkeypatch.setattr(ife_variables, "chmatv", ifefbsparam.chmatv)
     monkeypatch.setattr(ife_variables, "fwmatm", ifefbsparam.fwmatm)
@@ -1582,7 +1582,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     assert fwbs_variables.whtblkt == pytest.approx(ifefbsparam.expected_whtblkt)
     assert fwbs_variables.whtshld == pytest.approx(ifefbsparam.expected_whtshld)
     assert fwbs_variables.bktlife == pytest.approx(ifefbsparam.expected_bktlife)
-    assert fwbs_variables.fwlife == pytest.approx(ifefbsparam.expected_fwlife)
+    assert fwbs_variables.life_fw_fpy == pytest.approx(ifefbsparam.expected_life_fw_fpy)
     assert ife_variables.fwmatm == pytest.approx(ifefbsparam.expected_fwmatm)
     assert ife_variables.v1matm == pytest.approx(ifefbsparam.expected_v1matm)
     assert ife_variables.blmatm == pytest.approx(ifefbsparam.expected_blmatm)

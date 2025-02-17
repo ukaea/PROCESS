@@ -1839,7 +1839,7 @@ class IFE:
             )
 
         fwbs_variables.bktlife = life
-        fwbs_variables.fwlife = life
+        fwbs_variables.life_fw_fpy = life
 
         if not output:
             return
