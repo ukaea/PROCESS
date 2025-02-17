@@ -362,7 +362,7 @@ module fwbs_variables
   real(dp) :: coolp
   !! blanket coolant pressure [Pa] (stellarator only)
 
-  integer :: nblktmodpo
+  integer :: n_blkt_outboard_modules_poloidal
   !! number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)
 
   integer :: nblktmodpi
@@ -753,7 +753,7 @@ module fwbs_variables
     temp_blkt_coolant_in = 573.0D0
     temp_blkt_coolant_out = 823.0D0
     coolp = 15.5D6
-    nblktmodpo = 8
+    n_blkt_outboard_modules_poloidal = 8
     nblktmodpi = 7
     nblktmodto = 48
     nblktmodti = 32
