@@ -1,13 +1,11 @@
 # Culham Electron Cyclotron Model | `culecd()`
 
-
-- `iefrf/iefrffix` = 7 
+- `iefrf/iefrffix` = 7
 
 This routine calculates the current drive parameters for a electron cyclotron system, based on the AEA FUS 172 model[^1]
 
-
-1. Local electron temperature $(\mathtt{tlocal})$ is calculated using the `tprofile` method  
-2. Local electron density $(\mathtt{dlocal})$ is calculated using the `nprofile` method
+1. Local electron temperature $(\mathtt{tlocal})$ is calculated using the `teprofile` method  
+2. Local electron density $(\mathtt{dlocal})$ is calculated using the `neprofile` method
 
 3. Calculate the inverse aspect ratio `epsloc`.
 
@@ -47,7 +45,7 @@ Uses the `eccdef` model found [here](ec_overview.md)
 
 $$
 \mathtt{ecgam} = 0.25(\mathtt{ecgam1} + \mathtt{ecgam2} +\mathtt{ecgam3} + \mathtt{ecgam4})
- $$      
+ $$
 
 7. Calculate the current drive efficiency by dividing `ecgam` by `(dlocal * physics_variables.rmajor)`.
 
@@ -56,8 +54,6 @@ $$
 $$
 
 Note: The `eccdef` method is called to calculate the current drive efficiency at each poloidal angle.
-
-
 
 [^1]: Hender, T.C., Bevir, M.K., Cox, M., Hastie, R.J., Knight, P.J., Lashmore-Davies, C.N., Lloyd, B., Maddison, G.P., Morris, A.W., O’Brien, M.R. and Turner, M.F., 1992. *"Physics assessment for the European reactor study."* AEA FUS, 172.
 
