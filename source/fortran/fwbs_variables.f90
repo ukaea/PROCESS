@@ -343,7 +343,7 @@ module fwbs_variables
   !! Length of a single first wall channel (all in parallel) [m]
   !! (`iteration variable 114`, useful for `constraint equation 39`)
 
-  real(dp) :: peaking_factor
+  real(dp) :: f_fw_peak
   !! peaking factor for first wall heat loads. (Applied separately to inboard and outboard loads.
   !! Applies to both neutron and surface loads. Only used to calculate peak temperature - not
   !! the coolant flow rate.)
@@ -749,7 +749,7 @@ module fwbs_variables
     temp_fw_peak = 873.0D0
     roughness = 1.0D-6
     len_fw_channel = 4.0D0
-    peaking_factor = 1.0D0
+    f_fw_peak = 1.0D0
     blpressure = 15.50D6
     inlet_temp = 573.0D0
     outlet_temp = 823.0D0

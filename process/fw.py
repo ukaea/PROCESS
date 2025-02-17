@@ -168,7 +168,7 @@ class Fw:
         #  ______________
 
         # Worst case load (as above) per unit length in 1-D calculation (W/m)
-        onedload = fwbs_variables.peaking_factor * (
+        onedload = fwbs_variables.f_fw_peak * (
             pden_fw_nuclear * fwbs_variables.dx_fw_module * dr_fw / 4
             + pflux_fw_rad * fwbs_variables.dx_fw_module
         )
@@ -241,8 +241,8 @@ class Fw:
             po.ovarre(
                 self.outfile,
                 "Ratio of peak local heat load (surface and nuclear) to mean",
-                "(peaking_factor)",
-                fwbs_variables.peaking_factor,
+                "(f_fw_peak)",
+                fwbs_variables.f_fw_peak,
             )
             po.ovarre(
                 self.outfile,

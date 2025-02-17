@@ -2628,7 +2628,7 @@ f_fw_rad_max = 1.0
 * DESCRIPTION:   Radiation wall load peacking factor
 * JUSTIFICATION: We consider an average wall load value as a limit
 
-*peaking_factor = 
+*f_fw_peak = 
 * DESCRIPTION:   peaking factor for first wall heat loads. (Applied separately to  (default = 1.0)
 *inboard and outboard loads. Applies to both neutron and surface loads. Only used to calculate peak 
 *temperature - not the coolant flow rate.) 

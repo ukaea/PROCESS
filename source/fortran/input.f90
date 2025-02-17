@@ -275,7 +275,7 @@ contains
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
-      npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
+      npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, fwbsshape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
@@ -1952,8 +1952,8 @@ contains
        case ('len_fw_channel')
           call parse_real_variable('len_fw_channel', len_fw_channel, 1.0D-3, 1.0D3, &
                'first wall channel length')
-       case ('peaking_factor')
-          call parse_real_variable('peaking_factor', peaking_factor, 1.0d0, 100.0D0, &
+       case ('f_fw_peak')
+          call parse_real_variable('f_fw_peak', f_fw_peak, 1.0d0, 100.0D0, &
                'peaking factor for first wall heat loads')
 
 
