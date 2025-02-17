@@ -114,35 +114,35 @@ boundu(154) = 0.99
 
 *-----------------Build Variables------------------*
 
-blnkith  = 0.0 * inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0;0 if `iblnkith=0`)
-blnkoth  = 1.0 * outboard blanket thickness (m); calculated if `blktmodel>0`
-bore     = 0.23375250334739459 * central solenoid inboard radius (m) (`iteration variable 29`)
-d_vv_in  = 0.2 * vacuum vessel inboard thickness (TF coil / shield) (m)
-d_vv_out = 0.3 * vacuum vessel outboard thickness (TF coil / shield) (m)
+dr_blkt_inboard  = 0.0 * inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0;0 if `iblnkith=0`)
+dr_blkt_outboard  = 1.0 * outboard blanket thickness (m); calculated if `blktmodel>0`
+dr_bore     = 0.23375250334739459 * central solenoid inboard radius (m) (`iteration variable 29`)
+dr_vv_inboard  = 0.2 * vacuum vessel inboard thickness (TF coil / shield) (m)
+dr_vv_outboard = 0.3 * vacuum vessel outboard thickness (TF coil / shield) (m)
 d_vv_top = 0.3 * vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)
 d_vv_bot = 0.3 * vacuum vessel underside thickness (TF coil / shield) (m)
-gapds    = 0.01 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
-gapoh    = 0.0 * gap between central solenoid and TF coil (m) (`iteration variable 42`)
+dr_shld_vv_gap_inboard    = 0.01 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
+dr_cs_tf_gap    = 0.0 * gap between central solenoid and TF coil (m) (`iteration variable 42`)
 gapomin  = 0.0 * minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)
 iohcl    = 0 * Switch for existence of central solenoid;
-iprecomp = 0 * Switch for existence of central solenoid pre-compression structure;
+i_cs_precomp = 0 * Switch for existence of central solenoid pre-compression structure;
 tf_in_cs = 0 * Switch for placing the TF coil inside the CS
-ohcth    = 0.20016400484967947 * Central solenoid thickness (m) (`iteration variable 16`)
+dr_cs    = 0.20016400484967947 * Central solenoid thickness (m) (`iteration variable 16`)
 i_r_cp_top = 2 * Switch selecting the he parametrization of the outer radius of the top of the CP part of the TF coil
-scrapli  = 0.1 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
-scraplo  = 0.1 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
-shldith  = 0.39314459807893426 * inboard shield thickness (m) (`iteration variable 93`)
+dr_fw_plasma_gap_inboard  = 0.1 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
+dr_fw_plasma_gap_outboard  = 0.1 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
+dr_shld_inboard  = 0.39314459807893426 * inboard shield thickness (m) (`iteration variable 93`)
 shldlth  = 0.6 * lower (under divertor) shield thickness (m)
-shldoth  = 0.3 * outboard shield thickness (m) (`iteration variable 94`)
+dr_shld_outboard  = 0.3 * outboard shield thickness (m) (`iteration variable 94`)
 shldtth  = 0.3 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)
 tfootfi  = 1.0 * TF coil outboard leg / inboard leg radial thickness
-tftsgap  = 0.01 * Minimum metal-to-metal gap between TF coil and thermal shield (m)
-thshield_ib = 0.05 * TF-VV thermal shield thickness; inboard (m)
-thshield_ob = 0.07 * TF-VV thermal shield thickness; outboard (m)
+dr_tf_shld_gap  = 0.01 * Minimum metal-to-metal gap between TF coil and thermal shield (m)
+dr_shld_thermal_inboard = 0.05 * TF-VV thermal shield thickness; inboard (m)
+dr_shld_thermal_outboard = 0.07 * TF-VV thermal shield thickness; outboard (m)
 thshield_vb = 0.075 * TF-VV thermal shield thickness; vertical build (m)
 vgap_vv_thermalshield = 2.0 * vertical gap between vacuum vessel and thermal shields (m)
 vgap_xpoint_divertor = 0.75 * vertical gap between x-point and divertor (m) (if = 0; it is calculated)
-vvblgap  = 0.01 * gap between vacuum vessel and blanket (m)
+dr_shld_blkt_gap  = 0.01 * gap between vacuum vessel and blanket (m)
 
 *---------------Buildings Variables----------------*
 
@@ -161,7 +161,7 @@ fdene    = 1.0 * f-value for density limit (`constraint equation 5`; `iteration 
 ffuspow  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
 fiooic   = 0.9942981023320613 * f-value for TF coil operating current / critical current ratio
 fipir    = 0.5460655498423221 * f-value for Ip/Irod upper limit
-flhthresh = 2.903148909029756 * f-value for L-H power threshold (`constraint equation 15`; `iteration variable 103`)
+fl_h_threshold = 2.903148909029756 * f-value for L-H power threshold (`constraint equation 15`; `iteration variable 103`)
 fpinj    = 0.9546763572954339 * f-value for injection power (`constraint equation 30`; `iteration variable 46`)
 fpsepr   = 1.0 * f-value for maximum Psep/R limit (`constraint equation 56`; `iteration variable 97`)
 fradpwr  = 0.7109311818294267 * f-value for core radiation power limit (`constraint equation 17`; `iteration variable 28`)
@@ -172,8 +172,8 @@ maxradwallload = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constrai
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
 powfmax  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
 pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
-taulimit = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
-ftaulimit = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
+f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
+falpha_energy_confinement = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
 
 *-------------------Constraints--------------------*
 
@@ -230,7 +230,7 @@ divfix   = 1.0 * divertor structure vertical thickness (m)
 fwbsshape = 1 * switch for first wall; blanket; shield and vacuum vessel shape;
 fw_armour_thickness = 0.003 * first wall armour thickness [m]
 iblanket = 1 * switch for blanket model;
-iblnkith = 0 * switch for inboard blanket;
+i_blkt_inboard = 0 * switch for inboard blanket;
 inuclear = 0 * switch for nuclear heating in the coils;
 primary_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 secondary_cycle = 2 * Switch for power conversion cycle;
@@ -427,7 +427,7 @@ i_tf_bucking = 1 * Switch for TF inboard suport structure design;
 eyoung_res_tf_buck = 205.0e9 * Resistive TF magnets bucking cylinder young modulus (Pa)
 ripmax   = 1.0 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
 i_cp_joints = 0 * Switch for CP demoutable joints type
-n_tf     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
+n_tf_coils     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)
 thkcas   = 0.1293140904093427 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp = 0.6044340543574178 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)

@@ -168,7 +168,7 @@ OBS_VARS = {
     "vvblgap": "dr_shld_blkt_gap",
     "thshield_ib": "dr_shld_thermal_inboard",
     "thshield_ob": "dr_shld_thermal_outboard",
-    "iprecomp`:": "i_cs_precomp",
+    "iprecomp": "i_cs_precomp",
     "tfcth": "dr_tf_inboard",
     "tftsgap": "dr_tf_shld_gap",
     "bore": "dr_bore",
