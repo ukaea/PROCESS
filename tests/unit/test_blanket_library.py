@@ -505,7 +505,7 @@ class DshapedComponentParam(NamedTuple):
     dz_vv_upper: Any = None
     dz_vv_lower: Any = None
     vol_blkt_inboard: Any = None
-    volblkto: Any = None
+    vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
     volshld: Any = None
     vdewin: Any = None
@@ -524,7 +524,7 @@ class DshapedComponentParam(NamedTuple):
     expected_shareaib: Any = None
     expected_shareaob: Any = None
     expected_sharea: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
     expected_vdewin: Any = None
@@ -562,7 +562,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=0,
-            volblkto=0,
+            vol_blkt_outboard=0,
             vol_blkt_total=0,
             volshld=0,
             vdewin=0,
@@ -581,7 +581,7 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=0,
             expected_shareaob=0,
             expected_sharea=0,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=0,
             expected_vdewin=0,
@@ -615,7 +615,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=0,
-            volblkto=691.06561956756764,
+            vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
             volshld=0,
             vdewin=0,
@@ -634,7 +634,7 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=208.91591146372122,
             expected_shareaob=1013.8483589087293,
             expected_sharea=1222.7642703724505,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
             expected_vdewin=0,
@@ -668,7 +668,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=0,
-            volblkto=691.06561956756764,
+            vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
             volshld=450.46122947809488,
             vdewin=0,
@@ -687,7 +687,7 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=208.91591146372122,
             expected_shareaob=1013.8483589087293,
             expected_sharea=1222.7642703724505,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
             expected_vdewin=340.45369594344834,
@@ -768,7 +768,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", dshapedcomponentparam.vol_blkt_inboard
     )
-    monkeypatch.setattr(fwbs_variables, "volblkto", dshapedcomponentparam.volblkto)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", dshapedcomponentparam.vol_blkt_outboard
+    )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
     )
@@ -794,8 +796,8 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     assert build_variables.blarea == pytest.approx(
         dshapedcomponentparam.expected_blarea
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        dshapedcomponentparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        dshapedcomponentparam.expected_vol_blkt_outboard
     )
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         dshapedcomponentparam.expected_volblkt
@@ -822,7 +824,7 @@ class EllipticalComponentParam(NamedTuple):
     dz_vv_upper: Any = None
     dz_vv_lower: Any = None
     vol_blkt_inboard: Any = None
-    volblkto: Any = None
+    vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
     volshld: Any = None
     vdewin: Any = None
@@ -844,7 +846,7 @@ class EllipticalComponentParam(NamedTuple):
     expected_shareaob: Any = None
     expected_sharea: Any = None
     expected_vol_blkt_inboard: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
     expected_vdewin: Any = None
@@ -878,7 +880,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=0,
-            volblkto=0,
+            vol_blkt_outboard=0,
             vol_blkt_total=0,
             volshld=0,
             vdewin=0,
@@ -900,7 +902,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaob=0,
             expected_sharea=0,
             expected_vol_blkt_inboard=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=0,
             expected_vdewin=0,
@@ -930,7 +932,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=315.83946385183026,
-            volblkto=1020.3677420460117,
+            vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
             volshld=0,
             vdewin=0,
@@ -952,7 +954,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaob=1344.1106481995357,
             expected_sharea=2044.1779608740142,
             expected_vol_blkt_inboard=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
             expected_vdewin=0,
@@ -982,7 +984,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             dz_vv_lower=0.30000000000000004,
             vol_blkt_inboard=315.83946385183026,
-            volblkto=1020.3677420460117,
+            vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
             volshld=1124.4621612595051,
             vdewin=0,
@@ -1004,7 +1006,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaob=1344.1106481995357,
             expected_sharea=2044.1779608740142,
             expected_vol_blkt_inboard=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
             expected_vdewin=584.07334775041659,
@@ -1071,7 +1073,9 @@ def test_elliptical_component(
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", ellipticalcomponentparam.vol_blkt_inboard
     )
-    monkeypatch.setattr(fwbs_variables, "volblkto", ellipticalcomponentparam.volblkto)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", ellipticalcomponentparam.vol_blkt_outboard
+    )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
     )
@@ -1111,8 +1115,8 @@ def test_elliptical_component(
     assert fwbs_variables.vol_blkt_inboard == pytest.approx(
         ellipticalcomponentparam.expected_vol_blkt_inboard
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        ellipticalcomponentparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_blkt_outboard
     )
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         ellipticalcomponentparam.expected_volblkt
@@ -1146,7 +1150,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     sharea: Any = None
     fdiv: Any = None
     fhcd: Any = None
-    volblkto: Any = None
+    vol_blkt_outboard: Any = None
     vol_blkt_inboard: Any = None
     vol_blkt_total: Any = None
     fvolsi: Any = None
@@ -1161,7 +1165,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     expected_blarea: Any = None
     expected_shareaob: Any = None
     expected_sharea: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
     expected_vdewin: Any = None
@@ -1180,7 +1184,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             sharea=2044.1779608740142,
             fdiv=0.115,
             fhcd=0,
-            volblkto=1020.3677420460117,
+            vol_blkt_outboard=1020.3677420460117,
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_total=1336.207205897842,
             fvolsi=1,
@@ -1195,7 +1199,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             expected_blarea=1563.2068386818949,
             expected_shareaob=860.23081484770285,
             expected_sharea=1560.2981275221814,
-            expected_volblkto=866.70391336775992,
+            expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
             expected_volshld=783.69914576548854,
             expected_vdewin=1016.2876250857248,
@@ -1225,7 +1229,9 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(build_variables, "sharea", applycoveragefactorsparam.sharea)
     monkeypatch.setattr(fwbs_variables, "fdiv", applycoveragefactorsparam.fdiv)
     monkeypatch.setattr(fwbs_variables, "fhcd", applycoveragefactorsparam.fhcd)
-    monkeypatch.setattr(fwbs_variables, "volblkto", applycoveragefactorsparam.volblkto)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", applycoveragefactorsparam.vol_blkt_outboard
+    )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", applycoveragefactorsparam.vol_blkt_inboard
     )
@@ -1255,8 +1261,8 @@ def test_apply_coverage_factors(
     assert build_variables.sharea == pytest.approx(
         applycoveragefactorsparam.expected_sharea
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        applycoveragefactorsparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        applycoveragefactorsparam.expected_vol_blkt_outboard
     )
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         applycoveragefactorsparam.expected_volblkt
