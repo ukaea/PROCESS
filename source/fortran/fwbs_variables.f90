@@ -371,7 +371,7 @@ module fwbs_variables
   integer :: nblktmodto
   !! number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)
 
-  integer :: nblktmodti
+  integer :: n_blkt_inboard_modules_toroidal
   !! number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)
 
   real(dp) :: temp_fw_max
@@ -756,7 +756,7 @@ module fwbs_variables
     n_blkt_outboard_modules_poloidal = 8
     n_blkt_inboard_modules_poloidal = 7
     nblktmodto = 48
-    nblktmodti = 32
+    n_blkt_inboard_modules_toroidal = 32
     temp_fw_max = 823.0D0
     fw_th_conductivity = 28.34D0
     fvoldw = 1.74D0
