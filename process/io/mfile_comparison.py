@@ -198,7 +198,7 @@ BLANKET_COMPARE_PARAMS = [
     "dr_blkt_outboard",
     "fusion_power",
     "pnucblkt",
-    "pnucfw",
+    "p_fw_nuclear_mw",
     "ptfnuc",
     "pnucshld",
     "pnucdiv",

@@ -1198,7 +1198,7 @@ class Stellarator:
                 fwbs_variables.pnuchcd = (
                     physics_variables.neutron_power_total * fwbs_variables.fhcd
                 )
-                fwbs_variables.pnucfw = (
+                fwbs_variables.p_fw_nuclear_mw = (
                     physics_variables.neutron_power_total
                     - fwbs_variables.pnucdiv
                     - fwbs_variables.pnucloss
@@ -1222,7 +1222,7 @@ class Stellarator:
                 )
 
                 heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                    fwbs_variables.pnucfw
+                    fwbs_variables.p_fw_nuclear_mw
                     + fwbs_variables.pradfw
                     + current_drive_variables.porbitlossmw
                 )
@@ -1488,7 +1488,7 @@ class Stellarator:
 
                 #  Total nuclear heating of first wall (MW)
 
-                fwbs_variables.pnucfw = pnucfwi + pnucfwo
+                fwbs_variables.p_fw_nuclear_mw = pnucfwi + pnucfwo
 
                 #  Total nuclear heating of blanket (MW)
 

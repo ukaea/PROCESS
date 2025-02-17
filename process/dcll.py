@@ -129,7 +129,7 @@ class DCLL:
             covf = 1 - fwbs_variables.fdiv - fwbs_variables.fhcd
 
         # Nuclear heating in the first wall (MW)
-        fwbs_variables.pnucfw = (
+        fwbs_variables.p_fw_nuclear_mw = (
             physics_variables.neutron_power_total
             * fwbs_variables.pnuc_fw_ratio_dcll
             * covf
@@ -226,8 +226,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in FW (MW)",
-                "(pnucfw)",
-                fwbs_variables.pnucfw,
+                "(p_fw_nuclear_mw)",
+                fwbs_variables.p_fw_nuclear_mw,
                 "OP ",
             )
             po.ovarre(
@@ -297,7 +297,7 @@ class DCLL:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
             heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                fwbs_variables.pnucfw
+                fwbs_variables.p_fw_nuclear_mw
                 + fwbs_variables.psurffwi
                 + fwbs_variables.psurffwo
             )
