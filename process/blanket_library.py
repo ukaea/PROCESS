@@ -65,7 +65,7 @@ class BlanketLibrary:
         blanket_library.hvv = self.component_half_height(icomponent=2)
 
         # D-shaped blanket and shield
-        if physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1:
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
             for icomponent in range(3):
                 self.dshaped_component(icomponent)
 
@@ -1114,7 +1114,7 @@ class BlanketLibrary:
         Calculations for blanket module poloidal height for D shaped and elliptical machines
         """
         if (
-            physics_variables.itart == 1 or fwbs_variables.fwbsshape == 1
+            physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1
         ):  # D-shaped machine
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (

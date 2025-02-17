@@ -56,12 +56,11 @@ module fwbs_variables
   real(dp) :: fhole
   !! area fraction taken up by other holes (IFE)
 
-  integer :: fwbsshape
+  integer :: i_fw_blkt_vv_shape
   !! switch for first wall, blanket, shield and vacuum vessel shape:
   !!
   !! - =1 D-shaped (cylinder inboard + ellipse outboard)
   !! - =2 defined by two ellipses
-  !#TODO: change to adopt switch naming convention
 
   real(dp) :: life_fw_fpy
   !! first wall full-power year lifetime (y)
@@ -677,7 +676,7 @@ module fwbs_variables
     fdiv = 0.115D0
     fhcd = 0.0D0
     fhole = 0.0D0
-    fwbsshape = 2
+    i_fw_blkt_vv_shape = 2
     life_fw_fpy = 0.0D0
     m_fw_total = 0.0D0
     fw_armour_mass = 0.0D0

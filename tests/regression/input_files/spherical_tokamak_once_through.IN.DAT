@@ -227,7 +227,7 @@ dz_divertor   = 1.0 * divertor structure vertical thickness (m)
 
 *------------------Fwbs Variables------------------*
 
-fwbsshape = 1 * switch for first wall; blanket; shield and vacuum vessel shape;
+i_fw_blkt_vv_shape = 1 * switch for first wall; blanket; shield and vacuum vessel shape;
 fw_armour_thickness = 0.003 * first wall armour thickness [m]
 i_blanket_type = 1 * switch for blanket model;
 i_blkt_inboard = 0 * switch for inboard blanket;

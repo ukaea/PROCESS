@@ -216,7 +216,7 @@ contains
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, temp_fw_max, irefprop, len_fw_channel, &
+      fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
@@ -2104,8 +2104,8 @@ contains
        case ('fwclfr')
           call parse_real_variable('fwclfr', fwclfr, 0.0D0, 1.0D0, &
                'First wall coolant fraction')
-       case ('fwbsshape')
-          call parse_int_variable('fwbsshape', fwbsshape, 1, 2, &
+       case ('i_fw_blkt_vv_shape')
+          call parse_int_variable('i_fw_blkt_vv_shape', i_fw_blkt_vv_shape, 1, 2, &
                'Switch for fw/blanket/shield/vv shape')
        case ('fw_armour_thickness')
           call parse_real_variable('fw_armour_thickness', fw_armour_thickness, 0.0D0, 1.0D0, &
