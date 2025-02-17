@@ -361,7 +361,7 @@ class Costs2015:
         # It includes the first wall, blanket and shield, but excludes the breeder and multiplier materials.
         self.s_cref[25] = 317.0e6
         #  Scale with steel mass in blanket + shield mass
-        self.s_k[25] = fwbs_variables.whtblss + fwbs_variables.whtshld
+        self.s_k[25] = fwbs_variables.m_blkt_steel_total + fwbs_variables.whtshld
         self.s_kref[25] = 4.07e6
         self.s_cost[25] = (
             self.s_cost_factor[25]

@@ -362,7 +362,7 @@ class CCFE_HCPB:
         )
 
         # Steel mass (kg)
-        fwbs_variables.whtblss = (
+        fwbs_variables.m_blkt_steel_total = (
             fwbs_variables.vol_blkt_total
             * fwbs_variables.fblss_ccfe
             * fwbs_variables.denstl
@@ -372,7 +372,7 @@ class CCFE_HCPB:
         fwbs_variables.m_blkt_total = (
             fwbs_variables.whtbltibe12
             + fwbs_variables.whtblli4sio4
-            + fwbs_variables.whtblss
+            + fwbs_variables.m_blkt_steel_total
         )
 
         # Total mass of first wall and blanket
@@ -1340,8 +1340,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "    Blanket Mass - Steel (kg)",
-            "(whtblss)",
-            fwbs_variables.whtblss,
+            "(m_blkt_steel_total)",
+            fwbs_variables.m_blkt_steel_total,
             "OP ",
         )
         po.ovarre(
