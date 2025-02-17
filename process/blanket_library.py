@@ -500,7 +500,7 @@ class BlanketLibrary:
             bb_fluid_properties = FluidProperties.of(
                 "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water",
                 temperature=mid_temp_bl,
-                pressure=fwbs_variables.blpressure,
+                pressure=fwbs_variables.pres_blkt_coolant,
             )
             fwbs_variables.rhof_bl = bb_fluid_properties.density
             fwbs_variables.cp_bl = bb_fluid_properties.specific_heat_const_p
@@ -1545,7 +1545,7 @@ class BlanketLibrary:
             secondary coolant switch    ---                     ---                 i_bb_liq
             inlet temp (K)              temp_fw_coolant_in                 inlet_temp          inlet_temp_liq
             outlet temp (K)             temp_fw_coolant_out                outlet_temp         outlet_temp_liq
-            pressure (Pa)               pres_fw_coolant              blpressure          blpressure_liq
+            pressure (Pa)               pres_fw_coolant              pres_blkt_coolant          blpressure_liq
         """
         ######################################################
         # Pre calculations needed for thermo-hydraulic model #
@@ -1916,7 +1916,7 @@ class BlanketLibrary:
                 icoolpump=1,
                 temp_in=fwbs_variables.inlet_temp.item(),
                 temp_out=fwbs_variables.outlet_temp.item(),
-                pressure=fwbs_variables.blpressure.item(),
+                pressure=fwbs_variables.pres_blkt_coolant.item(),
                 pdrop=deltap_blkt.item(),
                 mf=blanket_library.mfblkt,
                 primary_coolant_switch=(
@@ -2063,8 +2063,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Blanket (primary) coolant pressure (Pa)",
-                "(blpressure)",
-                fwbs_variables.blpressure,
+                "(pres_blkt_coolant)",
+                fwbs_variables.pres_blkt_coolant,
             )
             if fwbs_variables.ipump == 1:
                 po.ovarre(
