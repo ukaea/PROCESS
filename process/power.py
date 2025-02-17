@@ -620,13 +620,14 @@ class Power:
             heat_transport_variables.htpmw - self.htpmw_mech
         )
 
-        # Calculate total deposited power (MW), n.b. energy multiplication in pnucblkt already
+        # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
 
         if fwbs_variables.primary_pumping == 2:
             # Liquid metal breeder/coolant
             if fwbs_variables.icooldual == 2:
                 self.pthermblkt_liq = (
-                    fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_liq
+                    fwbs_variables.p_blkt_nuclear_heat_total_mw
+                    * fwbs_variables.f_nuc_pow_bz_liq
                 ) + heat_transport_variables.htpmw_blkt_liq
             elif fwbs_variables.icooldual == 1:
                 self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
@@ -637,7 +638,10 @@ class Power:
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
-                    + (fwbs_variables.pnucblkt * (1 - fwbs_variables.f_nuc_pow_bz_liq))
+                    + (
+                        fwbs_variables.p_blkt_nuclear_heat_total_mw
+                        * (1 - fwbs_variables.f_nuc_pow_bz_liq)
+                    )
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
@@ -648,7 +652,7 @@ class Power:
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
-                    + fwbs_variables.pnucblkt
+                    + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
@@ -658,7 +662,7 @@ class Power:
                 self.pthermfw_blkt = (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
-                    + fwbs_variables.pnucblkt
+                    + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
                     + physics_variables.p_fw_alpha_mw
@@ -670,7 +674,7 @@ class Power:
             self.pthermfw_blkt = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.pradfw
-                + fwbs_variables.pnucblkt
+                + fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + primary_pumping_variables.htpmw_fw_blkt
                 + current_drive_variables.porbitlossmw
                 + physics_variables.p_fw_alpha_mw
@@ -687,9 +691,10 @@ class Power:
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.nbshinemw
             )
-            #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.pnucblkt already)
+            #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
             self.pthermblkt = (
-                fwbs_variables.pnucblkt + heat_transport_variables.htpmw_blkt
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                + heat_transport_variables.htpmw_blkt
             )
             self.pthermfw_blkt = self.pthermfw + self.pthermblkt
 
@@ -1350,7 +1355,12 @@ class Power:
         po.oblnkl(self.outfile)
 
         po.write(self.outfile, "Blanket:")
-        po.dblcol(self.outfile, "pnucblkt", 0.0e0, fwbs_variables.pnucblkt)
+        po.dblcol(
+            self.outfile,
+            "p_blkt_nuclear_heat_total_mw",
+            0.0e0,
+            fwbs_variables.p_blkt_nuclear_heat_total_mw,
+        )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
@@ -1358,7 +1368,9 @@ class Power:
         )
 
         primsum = (
-            primsum + fwbs_variables.pnucblkt + heat_transport_variables.htpmw_blkt
+            primsum
+            + fwbs_variables.p_blkt_nuclear_heat_total_mw
+            + heat_transport_variables.htpmw_blkt
         )
         secsum = secsum
 

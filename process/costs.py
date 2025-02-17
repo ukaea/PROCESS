@@ -2120,7 +2120,7 @@ class Costs:
             * cost_variables.uchts[fwbs_variables.i_blkt_coolant_type - 1]
             * (
                 (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
-                + (1.0e6 * fwbs_variables.pnucblkt) ** exphts
+                + (1.0e6 * fwbs_variables.p_blkt_nuclear_heat_total_mw) ** exphts
                 + (1.0e6 * fwbs_variables.pnucshld) ** exphts
             )
         )

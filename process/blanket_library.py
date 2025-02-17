@@ -1567,14 +1567,14 @@ class BlanketLibrary:
         # Neutron power deposited in inboard blanket (MW)
         if fwbs_variables.i_blkt_inboard == 1:
             blanket_library.pnucblkti = (
-                fwbs_variables.pnucblkt
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
                 * fwbs_variables.vol_blkt_inboard
                 / fwbs_variables.vol_blkt_total
             )
 
         # Neutron power deposited in outboard blanket (MW)
         blanket_library.pnucblkto = (
-            fwbs_variables.pnucblkt
+            fwbs_variables.p_blkt_nuclear_heat_total_mw
             * fwbs_variables.vol_blkt_outboard
             / fwbs_variables.vol_blkt_total
         )
@@ -1589,17 +1589,19 @@ class BlanketLibrary:
 
             # Inboard blanket calc. Will return 0 if no inboard dr_shld_inboard thickness
             pnucblkti_struct = (
-                fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total)
-            pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total
-            )
+            pnucblkti_liq = (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total)
             pnucblkto_struct = (
-                fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                * fwbs_variables.f_nuc_pow_bz_struct
             ) * (fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total)
-            pnucblkto_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total
-            )
+            pnucblkto_liq = (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw * f_nuc_pow_bz_liq
+            ) * (fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total)
 
         # FW and BB Mass Flow ###########
 

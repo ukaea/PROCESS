@@ -1232,7 +1232,8 @@ class Stellarator:
                     + current_drive_variables.porbitlossmw
                 )
                 heat_transport_variables.htpmw_blkt = (
-                    heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
+                    heat_transport_variables.fpumpblkt
+                    * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.htpmw_shld = (
                     heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
@@ -1284,12 +1285,14 @@ class Stellarator:
                     - fwbs_variables.fblbe
                 )
 
-                fwbs_variables.pnucblkt = pneut2 * (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw = pneut2 * (
                     1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybl)
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.pnucshld = pneut2 - fwbs_variables.pnucblkt
+                fwbs_variables.pnucshld = (
+                    pneut2 - fwbs_variables.p_blkt_nuclear_heat_total_mw
+                )
 
                 #  Superconducting coil shielding calculations
                 (
@@ -1497,7 +1500,9 @@ class Stellarator:
 
                 #  Total nuclear heating of blanket (MW)
 
-                fwbs_variables.pnucblkt = (pnucbzi + pnucbzo) * fwbs_variables.emult
+                fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+                    pnucbzi + pnucbzo
+                ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = fwbs_variables.emultmw + (
                     pnucbzi + pnucbzo
@@ -2028,8 +2033,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blkt_nuclear_heat_total_mw)",
+                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2048,8 +2053,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blkt_nuclear_heat_total_mw)",
+                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,

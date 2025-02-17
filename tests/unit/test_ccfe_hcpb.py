@@ -497,13 +497,13 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 class NuclearHeatingBlanketParam(NamedTuple):
     whtblkt: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
     fusion_power: Any = None
 
     exp_blanket: Any = None
 
-    expected_pnucblkt: Any = None
+    expected_p_blkt_nuclear_heat_total_mw: Any = None
 
     expected_exp_blanket: Any = None
 
@@ -513,18 +513,18 @@ class NuclearHeatingBlanketParam(NamedTuple):
     (
         NuclearHeatingBlanketParam(
             whtblkt=3501027.3252278985,
-            pnucblkt=0,
+            p_blkt_nuclear_heat_total_mw=0,
             fusion_power=1986.0623241661431,
             exp_blanket=0,
-            expected_pnucblkt=1517.0907688379014,
+            expected_p_blkt_nuclear_heat_total_mw=1517.0907688379014,
             expected_exp_blanket=0.99982809071915879,
         ),
         NuclearHeatingBlanketParam(
             whtblkt=3507503.3737008357,
-            pnucblkt=1504.9215740808861,
+            p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             fusion_power=1985.4423932312809,
             exp_blanket=0.99982809071915879,
-            expected_pnucblkt=1516.6213709741428,
+            expected_p_blkt_nuclear_heat_total_mw=1516.6213709741428,
             expected_exp_blanket=0.99983082524994527,
         ),
     ),
@@ -544,7 +544,11 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingblanketparam.whtblkt)
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        nuclearheatingblanketparam.p_blkt_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
@@ -556,8 +560,8 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     ccfe_hcpb.nuclear_heating_blanket()
 
-    assert fwbs_variables.pnucblkt == pytest.approx(
-        nuclearheatingblanketparam.expected_pnucblkt
+    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingblanketparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
     assert ccfe_hcpb_module.exp_blanket == pytest.approx(
@@ -808,7 +812,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_fw_nuclear_heat_total_mw: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
     pnucdiv: Any = None
 
@@ -894,7 +898,7 @@ class PowerflowCalcParam(NamedTuple):
             blpressure=15500000,
             primary_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
-            pnucblkt=1504.9215740808861,
+            p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             pnucdiv=182.71773382328519,
             pnucshld=1.3611259588044891,
             etaiso=0.90000000000000002,
@@ -943,7 +947,7 @@ class PowerflowCalcParam(NamedTuple):
             blpressure=15500000,
             primary_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
-            pnucblkt=1550.1447895848396,
+            p_blkt_nuclear_heat_total_mw=1550.1447895848396,
             pnucdiv=182.66070017727785,
             pnucshld=1.4038170956592293,
             etaiso=0.90000000000000002,
@@ -1031,7 +1035,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", powerflowcalcparam.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        powerflowcalcparam.p_blkt_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucdiv", powerflowcalcparam.pnucdiv)
 

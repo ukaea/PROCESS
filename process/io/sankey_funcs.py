@@ -49,10 +49,12 @@ def plot_full_sankey(
     emultmw = m_file.data["emultmw"].get_scan(
         -1
     )  # Energy multiplication in blanket (MW)
-    pnucblkt = m_file.data["pnucblkt"].get_scan(
+    p_blkt_nuclear_heat_total_mw = m_file.data["p_blkt_nuclear_heat_total_mw"].get_scan(
         -1
     )  # Total Nuclear heating in the blanket (MW)
-    pnucemblkt = pnucblkt - emultmw  # External nuclear heating in blanket (MW)
+    pnucemblkt = (
+        p_blkt_nuclear_heat_total_mw - emultmw
+    )  # External nuclear heating in blanket (MW)
     pnucdiv = m_file.data["pnucdiv"].get_scan(
         -1
     )  # Nuclear heating in the divertor (MW)
@@ -102,7 +104,9 @@ def plot_full_sankey(
     )  # Pump Power in FW and blanket (MW)
     htpmwblkt = htpmw_fw_blkt / 2  # Pump power in blanket (MW)
     htpmwfw = htpmw_fw_blkt / 2  # Pump power in FW (MW)
-    pthermfw = pthermfw_blkt - htpmwblkt - pnucblkt  # Power extracted 1st wall (MW)
+    pthermfw = (
+        pthermfw_blkt - htpmwblkt - p_blkt_nuclear_heat_total_mw
+    )  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
     # nbshinemw = m_file.data['nbshinemw'].get_scan(-1) # Injection shine-through to 1st wall
 
@@ -521,7 +525,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_fw_nuclear_heat_total_mw = m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(
         -1
     )  # nuclear heating in the first wall (MW)
-    pnucblkt = m_file.data["pnucblkt"].get_scan(
+    p_blkt_nuclear_heat_total_mw = m_file.data["p_blkt_nuclear_heat_total_mw"].get_scan(
         -1
     )  # nuclear heating in the blanket (MW)
     pnucshld = m_file.data["pnucshld"].get_scan(
@@ -548,12 +552,19 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
     totalblktetc = (
+        (
         p_fw_nuclear_heat_total_mw
-        + pnucblkt
+       
+        + p_blkt
+       _nuclear_heat_total_mw
         + pnucshld
+       
         + pradfw
+       
         + p_fw_alpha_mw
+       
         - emultmw
+    )
     )
 
     if itart == 0:
