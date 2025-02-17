@@ -923,7 +923,7 @@ class DCLL:
         po.ovarrf(
             self.outfile,
             "Vacuum vessel volume (m3)",
-            "(vdewin)",
-            fwbs_variables.vdewin,
+            "(vol_vv)",
+            fwbs_variables.vol_vv,
             "OP ",
         )

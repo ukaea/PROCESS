@@ -429,7 +429,7 @@ module fwbs_variables
   real(dp) :: vol_cryostat_internal
   !! Internal volume of the cryostat [m^3]
 
-  real(dp) :: vdewin
+  real(dp) :: vol_vv
   !! vacuum vessel volume [m^3]
 
   real(dp) :: vfshld
@@ -774,7 +774,7 @@ module fwbs_variables
     dr_pf_cryostat = 0.5D0
     vol_cryostat = 0.0D0
     vol_cryostat_internal = 0.0D0
-    vdewin = 0.0D0
+    vol_vv = 0.0D0
     vfshld = 0.25D0
     vol_blkt_total = 0.0D0
     vol_blkt_inboard = 0.0D0

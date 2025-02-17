@@ -220,7 +220,7 @@ class BlanketLibrary:
             (
                 blanket_library.volvvi,
                 blanket_library.volvvo,
-                fwbs_variables.vdewin,
+                fwbs_variables.vol_vv,
             ) = dshellvol(
                 r1,
                 r2,
@@ -312,7 +312,7 @@ class BlanketLibrary:
             (
                 blanket_library.volvvi,
                 blanket_library.volvvo,
-                fwbs_variables.vdewin,
+                fwbs_variables.vol_vv,
             ) = eshellvol(
                 r1,
                 r2,
@@ -367,7 +367,7 @@ class BlanketLibrary:
         # Apply vacuum vessel coverage factor
         # moved from dshaped_* and elliptical_* to keep coverage factor
         # changes in the same location.
-        fwbs_variables.vdewin = fwbs_variables.fvoldw * fwbs_variables.vdewin
+        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
 
     @staticmethod
     def external_cryo_geometry() -> None:
@@ -425,11 +425,11 @@ class BlanketLibrary:
         ) - (fwbs_variables.vol_cryostat_internal)
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl
+        fwbs_variables.vvmass = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
+            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
     def primary_coolant_properties(self, output: bool):
