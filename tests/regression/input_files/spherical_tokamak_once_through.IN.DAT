@@ -355,7 +355,7 @@ kappa    = 2.8 * plasma separatrix elongation (calculated if `i_plasma_geometry 
 q        = 5.835830999686161 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 2.0 * safety factor on axis
 f_nd_alpha_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
-rli      = 0.3 * plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+ind_plasma_internal_norm      = 0.3 * plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
 rmajor   = 4.5 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 0 * switch for single null / double null plasma;
 f_sync_reflect = 0.6 * synchrotron wall reflectivity factor
@@ -377,7 +377,7 @@ triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geomet
 
 *-----------------Pulse Variables------------------*
 
-lpulse   = 0 * Switch for reactor model;
+i_pulsed_plant   = 0 * Switch for reactor model;
 
 *-----------------Rebco Variables------------------*
 
@@ -436,7 +436,7 @@ f_vforce_inboard = 0.5 * Fraction of the total vertical force taken by the TF in
 
 *-----------------Times Variables------------------*
 
-t_burn   = 1000.0 * flat-top duration (s) (calculated if `lpulse=1`)
+t_burn   = 1000.0 * flat-top duration (s) (calculated if `i_pulsed_plant=1`)
 t_between_pulse = 100.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 
 *--------------------Utilities---------------------*

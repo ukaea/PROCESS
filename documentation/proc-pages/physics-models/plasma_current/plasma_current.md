@@ -92,7 +92,7 @@ Instead of $q_a$, $q_{95}$ is used as in plasma configurations with divertors th
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
-This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$), normalized beta ($\beta_{\text{N}}$) and then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{rli}$ ($l_{\mathtt{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
+This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$), normalized beta ($\beta_{\text{N}}$) and then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{ind_plasma_internal_norm}$ ($l_{\mathtt{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
 
 
 $$\begin{aligned}
@@ -556,7 +556,7 @@ $$
 
 A limited degree of self-consistency between the plasma current profile and other parameters can be 
 enforced by setting switch `iprofile = 1`. This sets the current 
-profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`rli`) and beta limit $g$-factor (`beta_norm_max`) using the 
+profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`ind_plasma_internal_norm`) and beta limit $g$-factor (`beta_norm_max`) using the 
 safety factor on axis `q0` and the cylindrical safety factor $q_*$ (`qstar`):   
 
 $$\begin{aligned}

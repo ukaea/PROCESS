@@ -193,7 +193,7 @@ will be inaccurate for single-null plasmas, `i_single_null = 1`)
 - `i_plasma_geometry = 8` -- The input values for `kappa` and `triang` are used directly and the 95% flux 
   surface values are calculated using the FIESTA fit from `i_plasma_geometry = 7`.
 ---------------------------------------------------------------------
-- `i_plasma_geometry = 9` -- The input values for `triang` and `rli` are used, `kappa` and the 95% flux 
+- `i_plasma_geometry = 9` -- The input values for `triang` and `ind_plasma_internal_norm` are used, `kappa` and the 95% flux 
   surface values are calculated.
 
   $$
