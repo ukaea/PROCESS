@@ -271,9 +271,9 @@ var_dicts = {
     "t_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
-    "vburn": VariableMetadata(
+    "v_plasma_loop_burn": VariableMetadata(
         latex=r"$V_{\mathrm{loop}}$ [$V$]",
-        description="Loop voltage during burn",
+        description="Plasma loop voltage during burn",
         units="V",
     ),
     "sig_tf_wp_max": VariableMetadata(
@@ -281,8 +281,8 @@ var_dicts = {
         description="Maximum TF winding pack stress",
         units="",
     ),
-    "rli": VariableMetadata(
-        latex=r"$l_i$", description="Normalized internal inductance", units=""
+    "ind_plasma_internal_norm": VariableMetadata(
+        latex=r"$l_i$", description="Plasma normalised internal inductance", units=""
     ),
     "n_cycle_min": VariableMetadata(
         latex=r"$MinCycles_{\mathrm{Stress.min}}^{\mathrm{CS}}$",

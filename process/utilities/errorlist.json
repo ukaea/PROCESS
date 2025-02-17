@@ -33,12 +33,12 @@
     {
       "no": 5,
       "level": 3,
-      "message": "CONSTRAINTS: tpeak = 0 ==> lpulse=0; do not use constraint 39 if lpulse=0"
+      "message": "CONSTRAINTS: tpeak = 0 ==> i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
     },
     {
       "no": 6,
       "level": 3,
-      "message": "CONSTRAINTS: tcycmn = 0 ==> lpulse=0; do not use constraint 42 if lpulse=0"
+      "message": "CONSTRAINTS: tcycmn = 0 ==> i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
     },
     {
       "no": 7,
@@ -258,7 +258,7 @@
     {
       "no": 50,
       "level": 3,
-      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if lpulse /= 1"
+      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if i_pulsed_plant /= 1"
     },
     {
       "no": 51,

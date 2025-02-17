@@ -123,7 +123,7 @@ be calculated. The following switch options are available below:
 
 This can be activated by stating `iprofile = 0` in the input file.
 
-`alphaj`, `rli` and `beta_norm_max` are inputs.
+`alphaj`, `ind_plasma_internal_norm` and `beta_norm_max` are inputs.
 
 ---------
 
@@ -131,7 +131,7 @@ This can be activated by stating `iprofile = 0` in the input file.
 
 This can be activated by stating `iprofile = 1` in the input file.
 
-`alphaj`, `rli` and `beta_norm_max` are calculated consistently. 
+`alphaj`, `ind_plasma_internal_norm` and `beta_norm_max` are calculated consistently. 
 
 `beta_norm_max` is calculated using:  
 
@@ -149,7 +149,7 @@ This is only recommended for high aspect ratio tokamaks[^3].
 
 This can be activated by stating `iprofile = 2` in the input file.
 
-`alphaj` and `rli` are inputs. `beta_norm_max` calculated using:
+`alphaj` and `ind_plasma_internal_norm` are inputs. `beta_norm_max` calculated using:
 
 $$
 g=2.7(1+5\epsilon^{3.5})
@@ -224,7 +224,7 @@ $$
 
 This can be activated by stating `iprofile = 3` in the input file.
 
-`alphaj` and `rli` are inputs. `beta_norm_max` calculated using[^4]:
+`alphaj` and `ind_plasma_internal_norm` are inputs. `beta_norm_max` calculated using[^4]:
 
 $$
 g=3.12+3.5\epsilon^{1.7}
@@ -299,7 +299,7 @@ $$
 
 This can be activated by stating `iprofile = 4` in the input file.
 
-`alphaj` and `beta_norm_max` are inputs. `rli` calculated from elongation [^4]. This is only recommended for spherical tokamaks.
+`alphaj` and `beta_norm_max` are inputs. `ind_plasma_internal_norm` calculated from elongation [^4]. This is only recommended for spherical tokamaks.
 
 ---------
 
@@ -307,7 +307,7 @@ This can be activated by stating `iprofile = 4` in the input file.
 
 This can be activated by stating `iprofile = 5` in the input file.
 
-`alphaj` is an input.  `rli` calculated from elongation and `beta_norm_max` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.
+`alphaj` is an input.  `ind_plasma_internal_norm` calculated from elongation and `beta_norm_max` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.
 
 ---------
 
@@ -315,7 +315,7 @@ This can be activated by stating `iprofile = 5` in the input file.
 
 This can be activated by stating `iprofile = 6` in the input file.
 
-`alphaj` and `c_beta` are inputs.  `rli` calculated from elongation and `beta_norm_max` calculated using 
+`alphaj` and `c_beta` are inputs.  `ind_plasma_internal_norm` calculated from elongation and `beta_norm_max` calculated using 
 
 $$
 C_{\beta}\approx\frac{(g-3.7)F_p}{12.5-3.5 F_p}
@@ -327,7 +327,7 @@ where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ a
 
 ---------
 
-Further details on the calculation of `alphaj` and `rli` is given in [Plasma Current](./plasma_current.md).
+Further details on the calculation of `alphaj` and `ind_plasma_internal_norm` is given in [Plasma Current](./plasma_current.md).
 
 ----------------------
 

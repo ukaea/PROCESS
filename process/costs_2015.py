@@ -1094,7 +1094,11 @@ class Costs2015:
         #  Scale with total magnetic energy in the poloidal field / resistive diffusion time (W)
         #  For ITER value see
         #  K:\Power Plant Physics and Technology\PROCESS\PROCESS documentation papers\resistive diffusion time.xmcd or pdf
-        self.s_k[51] = pf_power_variables.ensxpfm * 1.0e6 / physics_variables.res_time
+        self.s_k[51] = (
+            pf_power_variables.ensxpfm
+            * 1.0e6
+            / physics_variables.t_plasma_res_diffusion
+        )
         self.s_kref[51] = 8.0e9 / 953.0e0
         self.s_cost[51] = (
             self.s_cost_factor[51]

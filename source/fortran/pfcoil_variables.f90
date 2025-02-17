@@ -345,7 +345,7 @@ module pfcoil_variables
   !! central solenoid flux swing for startup (Wb)
 
   real(dp) :: vssu
-  !! total flux swing for startup (`constraint eqn 51` to enforce vssu=vsres+vsind) (Wb)
+  !! total flux swing for startup (`constraint eqn 51` to enforce vssu=vs_plasma_res_ramp+vs_plasma_ind_ramp) (Wb)
 
   real(dp) :: vstot
   !! total flux swing for pulse (Wb)

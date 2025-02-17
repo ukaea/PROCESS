@@ -309,7 +309,7 @@ class PFCoil:
                     * (
                         math.log(8.0e0 * pv.aspect)
                         + pv.beta_poloidal
-                        + (pv.rli / 2.0e0)
+                        + (pv.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )
                 )
@@ -384,7 +384,7 @@ class PFCoil:
                 zpts[0] = 0.0e0
                 brin[0] = 0.0e0
 
-                # Added pv.rli term correctly -- RK 07/12
+                # Added pv.ind_plasma_internal_norm term correctly -- RK 07/12
 
                 bzin[0] = (
                     -1.0e-7
@@ -393,7 +393,7 @@ class PFCoil:
                     * (
                         math.log(8.0e0 * pv.aspect)
                         + pv.beta_poloidal
-                        + (pv.rli / 2.0e0)
+                        + (pv.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )
                 )
@@ -445,7 +445,7 @@ class PFCoil:
                 nocoil = nocoil + 1
 
         # Flux swing required from CS coil
-        csflux = -(pv.vsres + pv.vsind) - pfflux
+        csflux = -(pv.vs_plasma_res_ramp + pv.vs_plasma_ind_ramp) - pfflux
 
         if bv.iohcl == 1:
             # Required current change in CS coil
@@ -1712,7 +1712,7 @@ class PFCoil:
             ]
 
         # Plasma self inductance
-        pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 1] = pv.rlp
+        pfv.sxlg[pfv.ncirt - 1, pfv.ncirt - 1] = pv.ind_plasma
 
         # PF coil / plasma mutual inductances
         ncoils = 0

@@ -46,7 +46,7 @@ class Pulse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             return
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
@@ -132,13 +132,15 @@ class Pulse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             return
 
         #  Volt-seconds required to produce plasma current during start-up
         #  (i.e. up to start of flat top)
 
-        vssoft = physics_variables.vsres + physics_variables.vsind
+        vssoft = (
+            physics_variables.vs_plasma_res_ramp + physics_variables.vs_plasma_ind_ramp
+        )
 
         #  Total volt-seconds available during flat-top (heat + burn)
         #  (Previously calculated as (abs(pfcoil_variables.vstot) - vssoft) )
@@ -149,7 +151,7 @@ class Pulse:
 
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
-        vburn = (
+        v_plasma_loop_burn = (
             physics_variables.plasma_current
             * physics_variables.res_plasma
             * physics_variables.inductive_current_fraction
@@ -158,11 +160,11 @@ class Pulse:
 
         #  Burn time (s)
 
-        tb = vsmax / vburn - times_variables.t_fusion_ramp
+        tb = vsmax / v_plasma_loop_burn - times_variables.t_fusion_ramp
         if tb < 0.0e0:
             error_handling.fdiags[0] = tb
             error_handling.fdiags[1] = vsmax
-            error_handling.fdiags[2] = vburn
+            error_handling.fdiags[2] = v_plasma_loop_burn
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 

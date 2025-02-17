@@ -1505,11 +1505,11 @@ contains
 
   real(kind(1.d0)) function itv_65()
     use error_handling, only: report_error
-    use pulse_variables, only: lpulse
+    use pulse_variables, only: i_pulsed_plant
     use times_variables, only: t_current_ramp_up
     implicit none
     itv_65 = t_current_ramp_up
-    if (lpulse /= 1) then
+    if (i_pulsed_plant /= 1) then
         call report_error(50)
     end if
   end function itv_65

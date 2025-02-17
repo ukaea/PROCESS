@@ -35,7 +35,7 @@ module pulse_variables
   !! - =2 no axial constraint, no bending
   !! - =3 no axial constraint, bending
 
-  integer :: lpulse
+  integer :: i_pulsed_plant
   !! Switch for reactor model:
   !!
   !! - =0 continuous operation
@@ -51,6 +51,6 @@ module pulse_variables
     dtstor = 300.0D0
     istore = 1
     itcycl = 1
-    lpulse = 0
+    i_pulsed_plant = 0
   end subroutine init_pulse_variables
 end module pulse_variables

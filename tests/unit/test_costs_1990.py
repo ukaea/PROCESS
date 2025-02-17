@@ -3628,7 +3628,7 @@ class Acc2253Param(NamedTuple):
 
     pnetelmw: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     dtstor: Any = None
 
@@ -3653,7 +3653,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2620.2218111502593,
             pnetelmw=493.01760776192009,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -3667,7 +3667,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2619.4223856129224,
             pnetelmw=422.4198205312706,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -3699,7 +3699,7 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", acc2253param.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
     monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
 
@@ -5292,7 +5292,7 @@ class Acc2253Param(NamedTuple):
 
     pnetelmw: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     dtstor: Any = None
 
@@ -5317,7 +5317,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2620.2218111502593,
             pnetelmw=493.01760776192009,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -5331,7 +5331,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2619.4223856129224,
             pnetelmw=422.4198205312706,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -5363,7 +5363,7 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", acc2253param.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
     monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
 
