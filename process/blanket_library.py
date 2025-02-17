@@ -680,7 +680,7 @@ class BlanketLibrary:
                 + physics_variables.rminor
                 + build_variables.dr_fw_plasma_gap_outboard
             )
-        ) / fwbs_variables.nblktmodto
+        ) / fwbs_variables.n_blkt_outboard_modules_toroidal
 
         # Calculate poloidal height of blanket modules
         self.blanket_mod_pol_height()
@@ -806,7 +806,7 @@ class BlanketLibrary:
             )
             npblkto_liq = (
                 fwbs_variables.nopipes
-                * fwbs_variables.nblktmodto
+                * fwbs_variables.n_blkt_outboard_modules_toroidal
                 * fwbs_variables.n_blkt_outboard_modules_poloidal
             )
 
@@ -879,7 +879,7 @@ class BlanketLibrary:
             )
             npblkto_liq = (
                 fwbs_variables.nopipes
-                * fwbs_variables.nblktmodto
+                * fwbs_variables.n_blkt_outboard_modules_toroidal
                 * fwbs_variables.n_blkt_outboard_modules_poloidal
             )
 
@@ -1160,7 +1160,10 @@ class BlanketLibrary:
             else:
                 # single null configuration
                 blanket_library.bllengo = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_outboard_modules_poloidal
+                    0.5
+                    * ptor
+                    * (1.0 - fwbs_variables.fdiv)
+                    / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 
         # shape defined by two half-ellipses
@@ -1199,7 +1202,10 @@ class BlanketLibrary:
             else:
                 # single null configuration
                 blanket_library.bllengi = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_inboard_modules_poloidal
+                    0.5
+                    * ptor
+                    * (1.0 - fwbs_variables.fdiv)
+                    / fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
             # Distance between r1 and inner edge of outboard first wall / blanket (m)
@@ -1226,7 +1232,10 @@ class BlanketLibrary:
             else:
                 # single null configuration
                 blanket_library.bllengo = (
-                    0.5 * ptor * (1.0 - fwbs_variables.fdiv) / fwbs_variables.n_blkt_outboard_modules_poloidal
+                    0.5
+                    * ptor
+                    * (1.0 - fwbs_variables.fdiv)
+                    / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 
     def liquid_breeder_properties(self, output: bool = False):

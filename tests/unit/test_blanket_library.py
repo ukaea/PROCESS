@@ -1572,11 +1572,15 @@ def test_blanket_mod_pol_height(
         blanketmodpolheightparam.i_fw_blkt_vv_shape,
     )
     monkeypatch.setattr(
-        fwbs_variables, "n_blkt_inboard_modules_poloidal", blanketmodpolheightparam.n_blkt_inboard_modules_poloidal
+        fwbs_variables,
+        "n_blkt_inboard_modules_poloidal",
+        blanketmodpolheightparam.n_blkt_inboard_modules_poloidal,
     )
     monkeypatch.setattr(fwbs_variables, "fdiv", blanketmodpolheightparam.fdiv)
     monkeypatch.setattr(
-        fwbs_variables, "n_blkt_outboard_modules_poloidal", blanketmodpolheightparam.n_blkt_outboard_modules_poloidal
+        fwbs_variables,
+        "n_blkt_outboard_modules_poloidal",
+        blanketmodpolheightparam.n_blkt_outboard_modules_poloidal,
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
