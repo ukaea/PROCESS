@@ -2423,7 +2423,7 @@ i_blkt_inboard = 0
 * calculated if `i_blkt_coolant_type=2` (water)
 * JUSTIFICATION: Not set as not used
 
-*blpressure = 
+*pres_blkt_coolant = 
 * DESCRIPTION:   Blanket coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set
 

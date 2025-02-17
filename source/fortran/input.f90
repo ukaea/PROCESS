@@ -211,7 +211,7 @@ contains
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
-      fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
+      fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
@@ -1889,8 +1889,8 @@ contains
        case ('bctmp')
           call parse_real_variable('bctmp', bctmp, 1.0D0, 800.0D0, &
                'First wall bulk coolant temperature (C)')
-       case ('blpressure')
-          call parse_real_variable('blpressure', blpressure, 1.0D5, 1.0D8, &
+       case ('pres_blkt_coolant')
+          call parse_real_variable('pres_blkt_coolant', pres_blkt_coolant, 1.0D5, 1.0D8, &
                'Blanket coolant pressure (Pa)')
        case ('blpressure_liq')
           call parse_real_variable('blpressure_liq', blpressure_liq, 1.0D5, 1.0D8, &
