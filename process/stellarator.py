@@ -1633,7 +1633,7 @@ class Stellarator:
                     fwbs_variables.wtblli2o + fwbs_variables.whtblbe
                 )
 
-            fwbs_variables.whtblss = (
+            fwbs_variables.m_blkt_steel_total = (
                 fwbs_variables.vol_blkt_total
                 * fwbs_variables.denstl
                 * fwbs_variables.fblss
@@ -1644,12 +1644,12 @@ class Stellarator:
 
             fwbs_variables.m_blkt_total = (
                 fwbs_variables.m_blkt_total
-                + fwbs_variables.whtblss
+                + fwbs_variables.m_blkt_steel_total
                 + fwbs_variables.whtblvd
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.whtblss = fwbs_variables.denstl * (
+            fwbs_variables.m_blkt_steel_total = fwbs_variables.denstl * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
@@ -1698,7 +1698,7 @@ class Stellarator:
                 )
             )
             fwbs_variables.m_blkt_total = (
-                fwbs_variables.whtblss
+                fwbs_variables.m_blkt_steel_total
                 + fwbs_variables.whtblbe
                 + fwbs_variables.whtblbreed
             )
@@ -2213,12 +2213,12 @@ class Stellarator:
 
             #     if (fwbs_variables.blktmodel == 0) :
             #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, m_blkt_steel_total, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
             #         else:  #  (also if ipowerflow=0)
-            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, m_blkt_steel_total, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             #     else:
-            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, vfblkt,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, vfblkt,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             m_blkt_steel_total,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 

@@ -139,7 +139,7 @@ module fwbs_variables
   real(dp) :: m_blkt_total
   !! mass of blanket [kg]
 
-  real(dp) :: whtblss
+  real(dp) :: m_blkt_steel_total
   !! mass of blanket - steel part [kg]
 
   real(dp) :: armour_fw_bl_mass
@@ -695,7 +695,7 @@ module fwbs_variables
     pnucvvplus = 0.0D0
     pnucshld = 0.0D0
     m_blkt_total = 0.0D0
-    whtblss = 0.0D0
+    m_blkt_steel_total = 0.0D0
     armour_fw_bl_mass = 0.0D0
     breeder_f = 0.5D0
     breeder_multiplier = 0.75D0

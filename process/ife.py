@@ -1792,12 +1792,14 @@ class IFE:
         # Other masses
         fwbs_variables.whtblbe = 0.0
         fwbs_variables.whtblvd = 0.0
-        fwbs_variables.whtblss = 0.0
+        fwbs_variables.m_blkt_steel_total = 0.0
         fwbs_variables.wtblli2o = 0.0
         fwbs_variables.whtblli = 0.0
 
         for j in range(3):
-            fwbs_variables.whtblss = fwbs_variables.whtblss + ife_variables.blmatm[j, 1]
+            fwbs_variables.m_blkt_steel_total = (
+                fwbs_variables.m_blkt_steel_total + ife_variables.blmatm[j, 1]
+            )
             fwbs_variables.wtblli2o = (
                 fwbs_variables.wtblli2o + ife_variables.blmatm[j, 4]
             )

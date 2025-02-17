@@ -1448,7 +1448,7 @@ class ComponentMassesParam(NamedTuple):
     vol_blkt_total: Any = None
     vfblkt: Any = None
     whtblbe: Any = None
-    whtblss: Any = None
+    m_blkt_steel_total: Any = None
     denstl: Any = None
     m_blkt_total: Any = None
     volshld: Any = None
@@ -1491,7 +1491,7 @@ class ComponentMassesParam(NamedTuple):
     expected_divsur: Any = None
     expected_divmas: Any = None
     expected_whtblbe: Any = None
-    expected_whtblss: Any = None
+    expected_m_blkt_steel_total: Any = None
     expected_m_blkt_total: Any = None
     expected_m_fw_blkt_div_coolant_total: Any = None
     expected_fwclfr: Any = None
@@ -1539,7 +1539,7 @@ class ComponentMassesParam(NamedTuple):
             vol_blkt_total=1182.5433772195902,
             vfblkt=0.25,
             whtblbe=0,
-            whtblss=0,
+            m_blkt_steel_total=0,
             denstl=7800,
             m_blkt_total=0,
             volshld=783.69914576548854,
@@ -1582,7 +1582,7 @@ class ComponentMassesParam(NamedTuple):
             expected_divsur=148.78582807401261,
             expected_divmas=36452.527878133093,
             expected_whtblbe=1002205.5121936026,
-            expected_whtblss=895173.51112145756,
+            expected_m_blkt_steel_total=895173.51112145756,
             expected_m_blkt_total=2961668.0628126911,
             expected_m_fw_blkt_div_coolant_total=1161.8025382862772,
             expected_fwclfr=0,
@@ -1655,7 +1655,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     )
     monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
     monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
-    monkeypatch.setattr(fwbs_variables, "whtblss", componentmassesparam.whtblss)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_steel_total", componentmassesparam.m_blkt_steel_total
+    )
     monkeypatch.setattr(fwbs_variables, "denstl", componentmassesparam.denstl)
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_total", componentmassesparam.m_blkt_total
@@ -1743,8 +1745,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.whtblbe == pytest.approx(
         componentmassesparam.expected_whtblbe
     )
-    assert fwbs_variables.whtblss == pytest.approx(
-        componentmassesparam.expected_whtblss
+    assert fwbs_variables.m_blkt_steel_total == pytest.approx(
+        componentmassesparam.expected_m_blkt_steel_total
     )
     assert fwbs_variables.m_blkt_total == pytest.approx(
         componentmassesparam.expected_m_blkt_total
