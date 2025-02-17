@@ -257,7 +257,7 @@ var_dicts = {
         description="Normalized TF current",
         units="",
     ),
-    "bktlife": VariableMetadata(
+    "life_blkt_fpy": VariableMetadata(
         latex=r"$T_{\mathrm{blk}}$", description="Blanket lifetime", units=""
     ),
     "bktcycles": VariableMetadata(

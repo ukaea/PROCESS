@@ -61,7 +61,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     cpfact_exp = 80.0
     assert pytest.approx(cpfact_obs) == cpfact_exp
 
-    bktlife_obs = fwbsv.bktlife
+    bktlife_obs = fwbsv.life_blkt_fpy
     bktlife_exp = bktlife_exp_param
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
@@ -88,7 +88,7 @@ def test_avail_1(monkeypatch, availability):
     # Mock module vars
     monkeypatch.setattr(cv, "iavail", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
-    monkeypatch.setattr(fwbsv, "bktlife", 7.0)
+    monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
     monkeypatch.setattr(cv, "tdivrepl", 0.1)
     monkeypatch.setattr(cv, "tbktrepl", 0.2)
     monkeypatch.setattr(cv, "tcomrepl", 0.3)
@@ -206,7 +206,7 @@ def calc_u_planned_fix(request, monkeypatch):
     # Mock all module variables used by calc_u_planned()
     # Some are parameterised
     monkeypatch.setattr(fortran.divertor_variables, "hldiv", param["hldiv"])
-    monkeypatch.setattr(fortran.fwbs_variables, "bktlife", 0.0)
+    monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", 0.0)
     monkeypatch.setattr(fortran.physics_variables, "wallmw", param["wallmw"])
     monkeypatch.setattr(fortran.physics_variables, "itart", param["itart"])
     monkeypatch.setattr(cv, "tlife", param["tlife"])
@@ -404,7 +404,11 @@ def calc_u_unplanned_fwbs_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"bktlife": 5, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
+    defaults = {
+        "life_blkt_fpy": 5,
+        "t_cycle": 9000,
+        "expected": approx(0.02, abs=0.005),
+    }
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -422,8 +426,8 @@ def calc_u_unplanned_fwbs_params():
     """
     return [
         calc_u_unplanned_fwbs_param(),
-        calc_u_unplanned_fwbs_param(bktlife=15, expected=approx(1, abs=0)),
-        calc_u_unplanned_fwbs_param(bktlife=8.5, expected=approx(0.1, abs=0.005)),
+        calc_u_unplanned_fwbs_param(life_blkt_fpy=15, expected=approx(1, abs=0)),
+        calc_u_unplanned_fwbs_param(life_blkt_fpy=8.5, expected=approx(0.1, abs=0.005)),
     ]
 
 
@@ -445,7 +449,7 @@ def calc_u_unplanned_fwbs_fix(request, monkeypatch):
     # Mock variables used by calc_u_unplanned_fwbs()
     # Some may be parameterised
     monkeypatch.setattr(fortran.times_variables, "t_cycle", param["t_cycle"])
-    monkeypatch.setattr(fortran.fwbs_variables, "bktlife", param["bktlife"])
+    monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", param["life_blkt_fpy"])
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -521,7 +525,7 @@ def test_avail_2(monkeypatch, availability):
     monkeypatch.setattr(tv, "t_cycle", 50.0)
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
-    monkeypatch.setattr(fwbsv, "bktlife", 5.0)
+    monkeypatch.setattr(fwbsv, "life_blkt_fpy", 5.0)
     monkeypatch.setattr(cv, "divlife", 10.0)
     monkeypatch.setattr(cv, "cplife", 15.0)
 
@@ -535,7 +539,7 @@ def test_avail_2(monkeypatch, availability):
     cpfact_exp = 0.07173
     assert pytest.approx(cpfact_obs) == cpfact_exp
 
-    bktlife_obs = fwbsv.bktlife
+    bktlife_obs = fwbsv.life_blkt_fpy
     bktlife_exp = 6.97058413
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
