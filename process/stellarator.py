@@ -1858,7 +1858,7 @@ class Stellarator:
             + build_variables.dr_blkt_outboard
             + build_variables.dr_shld_outboard
         )
-        fwbs_variables.vdewin = (
+        fwbs_variables.vol_vv = (
             (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0e0
             * physics_variables.a_plasma_surface
@@ -1869,12 +1869,12 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl
+        fwbs_variables.vvmass = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
+            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
         if output:
@@ -2267,8 +2267,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Internal vacuum vessel shell volume (m3)",
-                "(vdewin)",
-                fwbs_variables.vdewin,
+                "(vol_vv)",
+                fwbs_variables.vol_vv,
             )
             po.ovarre(
                 self.outfile,
