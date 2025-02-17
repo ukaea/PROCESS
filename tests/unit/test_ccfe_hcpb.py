@@ -812,7 +812,7 @@ class PowerflowCalcParam(NamedTuple):
 
     pres_blkt_coolant: Any = None
 
-    primary_pumping: Any = None
+    i_coolant_pumping: Any = None
 
     p_fw_nuclear_heat_total_mw: Any = None
 
@@ -900,7 +900,7 @@ class PowerflowCalcParam(NamedTuple):
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
-            primary_pumping=3,
+            i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             pnucdiv=182.71773382328519,
@@ -949,7 +949,7 @@ class PowerflowCalcParam(NamedTuple):
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
-            primary_pumping=3,
+            i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
             p_blkt_nuclear_heat_total_mw=1550.1447895848396,
             pnucdiv=182.66070017727785,
@@ -1036,7 +1036,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
+        fwbs_variables, "i_coolant_pumping", powerflowcalcparam.i_coolant_pumping
     )
 
     monkeypatch.setattr(

@@ -1,7 +1,7 @@
 module primary_pumping_variables
   !! author: J. Morris, M. Kovari (UKAEA)
   !!
-  !! Module containing global variables relating to `the primary_pumping=3` option.
+  !! Module containing global variables relating to `the i_coolant_pumping=3` option.
   !! (Mechanical pumping power is calculated using specified pressure drop)
   !!
   !!### References
@@ -17,38 +17,38 @@ module primary_pumping_variables
   public
 
   real(dp) :: gamma_he
-  !! ratio of specific heats for helium (`primary_pumping=3`)
+  !! ratio of specific heats for helium (`i_coolant_pumping=3`)
 
-  ! if cp_he is required place here specific heat capacity at constant pressure: helium (`primary_pumping=3`) [J/(kg.K)]
+  ! if cp_he is required place here specific heat capacity at constant pressure: helium (`i_coolant_pumping=3`) [J/(kg.K)]
   ! cp_he is only used in private routine hcll.f90 at the moment
 
   real(dp) :: t_in_bb
-  !! temperature in FW and blanket coolant at blanket entrance (`primary_pumping=3`) [K]
+  !! temperature in FW and blanket coolant at blanket entrance (`i_coolant_pumping=3`) [K]
 
   real(dp) :: t_out_bb
-  !! temperature in FW and blanket coolant at blanket exit (`primary_pumping=3`) [K]
+  !! temperature in FW and blanket coolant at blanket exit (`i_coolant_pumping=3`) [K]
 
   real(dp) :: p_he
-  !! pressure in FW and blanket coolant at pump exit (`primary_pumping=3`) [Pa]
+  !! pressure in FW and blanket coolant at pump exit (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: dp_he
-  !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+  !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: dp_fw_blkt
-  !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+  !! pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: dp_fw
-  !! pressure drop in FW coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+  !! pressure drop in FW coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: dp_blkt
-  !! pressure drop in blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+  !! pressure drop in blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: dp_liq
-  !! pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa]
+  !! pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
   real(dp) :: htpmw_fw_blkt
   !! mechanical pumping power for FW and blanket including heat exchanger and
-  !! pipes (`primary_pumping=3`) [MW]
+  !! pipes (`i_coolant_pumping=3`) [MW]
 
   contains
 

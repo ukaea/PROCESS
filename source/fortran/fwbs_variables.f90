@@ -86,7 +86,7 @@ module fwbs_variables
   !! - =4 KIT HCLL model  # REMOVED, no longer usable
   !! - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
   !!                      'dual-coolant blanket' fractions (provided in this file).
-  !!                 -  please use primary_pumping = 0 or 1.
+  !!                 -  please use i_coolant_pumping = 0 or 1.
 
   integer :: i_blkt_inboard
   !! switch for inboard blanket:
@@ -263,9 +263,9 @@ module fwbs_variables
   !! - =2 medium  0.64 m inboard, 1.11 m outboard
   !! - =3 thick   0.75 m inboard, 1.30 m outboard
 
-  integer :: primary_pumping
+  integer :: i_coolant_pumping
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
-  !! temperature is only calculated if `primary_pumping=2`):
+  !! temperature is only calculated if `i_coolant_pumping=2`):
   !!
   !! - =0 User sets pump power directly (htpmw_blkt, htpmw_fw, htpmw_div, htpmw_shld)
   !! - =1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)
@@ -529,7 +529,7 @@ module fwbs_variables
   !! -----------------------------------------------------
   !! BLANKET REFACTOR
   !! For DCLL, but to be used by all mods that share blanket library after testing.
-  !! Thermodynamic Model for primary_pumping == 2
+  !! Thermodynamic Model for i_coolant_pumping == 2
   !! -----------------------------------------------------
 
   integer :: i_fw_blkt_shared_coolant
@@ -731,7 +731,7 @@ module fwbs_variables
     whtblbreed = 0.0D0
     whtblbe = 0.0D0
     iblanket_thickness = 2
-    primary_pumping = 2
+    i_coolant_pumping = 2
     i_shield_mat = 0
     secondary_cycle = 0
     secondary_cycle_liq = 4

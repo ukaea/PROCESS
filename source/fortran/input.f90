@@ -214,7 +214,7 @@ contains
       fblhebpi, fblss, temp_blkt_coolant_in, temp_blkt_coolant_out, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
-      npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
+      npdiv, f_fw_peak, i_coolant_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
@@ -1936,8 +1936,8 @@ contains
 
           !  First wall, blanket, shield settings
 
-       case ('primary_pumping')
-          call parse_int_variable('primary_pumping', primary_pumping, 0, 3, &
+       case ('i_coolant_pumping')
+          call parse_int_variable('i_coolant_pumping', i_coolant_pumping, 0, 3, &
                'Switch for pumping of primary coolant')
        case ('htpmw_blkt')
           call parse_real_variable('htpmw_blkt', htpmw_blkt, 0.0D0, 1.0D3, &

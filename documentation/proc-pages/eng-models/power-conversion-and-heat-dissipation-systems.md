@@ -39,12 +39,12 @@ The primary coolant (less any thermal power required to produce hydrogen in a hy
 plant) is used to heat the secondary coolant to turn the turbines, which power the generator. The 
 remainder is dumped to the environment. All of the low-grade heat is dumped to the environment.
 
-`primary_pumping` : This switch controls the calculation of the mechanical pumping power required 
+`i_coolant_pumping` : This switch controls the calculation of the mechanical pumping power required 
 for the primary coolant.
 
-  - If `primary_pumping` = 0, the user sets mechanical pumping directly
-  - If `primary_pumping` = 1, the user sets mechanical pumping power as a fraction of thermal power removed by coolant.
-  - If `primary_pumping` = 2, the mechanical pumping power is calculated, as follows:
+  - If `i_coolant_pumping` = 0, the user sets mechanical pumping directly
+  - If `i_coolant_pumping` = 1, the user sets mechanical pumping power as a fraction of thermal power removed by coolant.
+  - If `i_coolant_pumping` = 2, the mechanical pumping power is calculated, as follows:
     - User inputs for the coolant outlets temperature (which may be used as an iteration variable), 
       the coolant channel diameter, and the segmentation of the blanket are used. The peak temperature 
       in the first wall material (underneath the armour) is derived. The user can apply an upper limit 
@@ -62,7 +62,7 @@ for the primary coolant.
       mechanical power used) is specified by the parameter `etaiso`. Note that the mechanical pumping 
       power for the shield and divertor are still calculated using the simplified method (a fixed 
       fraction of the heat transported).
-  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
+  - If `i_coolant_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
     The pressures and temperatures are set by the user.
       - When used with the DCLL model a different set of pressure drop variables are used, which are outlined below:
 

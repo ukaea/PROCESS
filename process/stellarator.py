@@ -1425,7 +1425,7 @@ class Stellarator:
                     / build_variables.a_fw_total
                 )
 
-                #  Simple blanket model (fwbs_variables.primary_pumping = 0 or 1) is assumed for stellarators
+                #  Simple blanket model (fwbs_variables.i_coolant_pumping = 0 or 1) is assumed for stellarators
 
                 #  The power deposited in the first wall, breeder zone and shield is
                 #  calculated according to their dimensions and materials assuming
@@ -1464,10 +1464,10 @@ class Stellarator:
 
                 #  First wall and Blanket pumping power (MW)
 
-                if fwbs_variables.primary_pumping == 0:
+                if fwbs_variables.i_coolant_pumping == 0:
                     #    Use input
                     pass
-                elif fwbs_variables.primary_pumping == 1:
+                elif fwbs_variables.i_coolant_pumping == 1:
                     heat_transport_variables.htpmw_fw = (
                         heat_transport_variables.fpumpfw
                         * (
@@ -1510,7 +1510,7 @@ class Stellarator:
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
-                #  simplified method as the first wall and breeder zone when fwbs_variables.primary_pumping = 1.
+                #  simplified method as the first wall and breeder zone when fwbs_variables.i_coolant_pumping = 1.
                 #  i.e. the pumping power is a fraction of the total thermal power deposited in the
                 #  coolant.
 
@@ -1554,7 +1554,7 @@ class Stellarator:
                 #     htpmw_i = fpump_i*C
                 #  where C is the non-pumping thermal power deposited in the coolant
 
-                if fwbs_variables.primary_pumping == 1:
+                if fwbs_variables.i_coolant_pumping == 1:
                     #  Shield pumping power (MW)
                     heat_transport_variables.htpmw_shld = (
                         heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
