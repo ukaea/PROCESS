@@ -194,7 +194,7 @@ contains
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf_coils, &
       dr_tf_wp, b_crit_upper_nbti
-    use fwbs_variables, only: tpeak
+    use fwbs_variables, only: temp_fw_peak
     use physics_variables, only: q95, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
       pdivt, f_nd_alpha_electron, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
       beta, beta_max, bt, plasma_current
@@ -269,7 +269,7 @@ contains
     !outvar(51,iscan) = fimpvar #OBSOLETE
     outvar(51,iscan) = 0.0d0
     outvar(52,iscan) = p_plasma_rad_mw
-    outvar(53,iscan) = tpeak
+    outvar(53,iscan) = temp_fw_peak
     outvar(54,iscan) = fcutfsu
     outvar(55,iscan) = (wwp1+wwp2)*dr_tf_wp
     outvar(56,iscan) = acond

@@ -1526,7 +1526,7 @@ class BlanketLibrary:
             wall thickness (m)          dr_fw_wall                 dr_fw_wall             th_wall_secondary
             dx_fw_module (m)                   dx_fw_module
             roughness epsilon           roughness
-            peak FW temp (K)            tpeak
+            peak FW temp (K)            temp_fw_peak
             maximum temp (K)            tfwmatmax
             FCI switch                  ---                     ---                 ifci
 
@@ -1698,7 +1698,9 @@ class BlanketLibrary:
         # )
 
         # Peak first wall temperature (K)
-        fwbs_variables.tpeak = max(blanket_library.tpeakfwi, blanket_library.tpeakfwo)
+        fwbs_variables.temp_fw_peak = max(
+            blanket_library.tpeakfwi, blanket_library.tpeakfwo
+        )
 
         # Total mass flow rate to remove inboard FW power (kg/s)
         blanket_library.mffwi = (
@@ -2019,8 +2021,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Actual peak temperature of first wall material (K)",
-                "(tpeak)",
-                fwbs_variables.tpeak,
+                "(temp_fw_peak)",
+                fwbs_variables.temp_fw_peak,
                 "OP ",
             )
 

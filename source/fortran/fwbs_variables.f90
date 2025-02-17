@@ -333,7 +333,7 @@ module fwbs_variables
   real(dp) :: pres_fw_coolant
   !! first wall coolant pressure [Pa] (`secondary_cycle>1`)
 
-  real(dp) :: tpeak
+  real(dp) :: temp_fw_peak
   !! peak first wall temperature [K]
 
   real(dp) :: roughness
@@ -746,7 +746,7 @@ module fwbs_variables
     temp_fw_coolant_in = 573.0D0
     temp_fw_coolant_out = 823.0D0
     pres_fw_coolant = 15.5D6
-    tpeak = 873.0D0
+    temp_fw_peak = 873.0D0
     roughness = 1.0D-6
     len_fw_channel = 4.0D0
     peaking_factor = 1.0D0

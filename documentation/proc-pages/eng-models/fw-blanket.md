@@ -80,7 +80,7 @@ Summary of key variables and switches:
 |    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
 |        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
-|     peak FW temp (K)     |         `tpeak`         | ---                      | ---                                  |
+|     peak FW temp (K)     |         `temp_fw_peak`         | ---                      | ---                                  |
 |     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
 |        FCI switch        |           ---           | ---                      | `ifci`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |

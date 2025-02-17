@@ -2685,7 +2685,7 @@ boundu(116) = 1.0
 *icc = 39
 * DESCRIPTION:   Constraint equation for first wall temperature upper limit
 * JUSTIFICATION: Turned off, do not care about FW temperature
-* VARIABLES:     tpeak (K) calculated in-situ
+* VARIABLES:     temp_fw_peak (K) calculated in-situ
 
 *tfwmatmax = 
 * DESCRIPTION:   Maximum temperature of first wall material [K] (`secondary_cycle>1`)(default = 823)

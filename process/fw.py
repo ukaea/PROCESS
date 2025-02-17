@@ -121,10 +121,10 @@ class Fw:
         # coolant velocity (m/s)
         vel_fw_coolant_average = mflux_fw_coolant / outlet_coolant_properties.density
 
-        # Mean temperature of the wall material on the plasma side of the coolant 'tpeak'
+        # Mean temperature of the wall material on the plasma side of the coolant 'temp_fw_peak'
         # is the estimate from the previous iteration of the wall surface temperature
         # (underneath the armour)
-        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.tpeak) / 2
+        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.temp_fw_peak) / 2
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
