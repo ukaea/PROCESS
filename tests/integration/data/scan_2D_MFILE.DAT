@@ -985,7 +985,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7774E+01 OP 
@@ -2148,7 +2148,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7765E+01 OP 
@@ -3311,7 +3311,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7758E+01 OP 
@@ -4474,7 +4474,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7759E+01 OP 
@@ -5637,7 +5637,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7766E+01 OP 
@@ -6800,7 +6800,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7775E+01 OP 
@@ -7963,7 +7963,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7776E+01 OP 
@@ -9126,7 +9126,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7768E+01 OP 
@@ -10289,7 +10289,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7760E+01 OP 
@@ -11452,7 +11452,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7761E+01 OP 
@@ -12615,7 +12615,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7769E+01 OP 
@@ -13778,7 +13778,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7777E+01 OP 
@@ -14941,7 +14941,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7778E+01 OP 
@@ -16104,7 +16104,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7770E+01 OP 
@@ -17267,7 +17267,7 @@
  No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
  No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
  No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7762E+01 OP 
