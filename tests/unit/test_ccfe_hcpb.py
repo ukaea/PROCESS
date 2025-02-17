@@ -53,7 +53,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     denstl: Any = None
 
-    whtblkt: Any = None
+    m_blkt_total: Any = None
 
     vol_blkt_total: Any = None
 
@@ -141,7 +141,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
             denstl=7800,
-            whtblkt=3501027.3252278985,
+            m_blkt_total=3501027.3252278985,
             vol_blkt_total=1397.9003011502937,
             whtshld=2294873.8131476045,
             volshld=735.53647857295027,
@@ -190,7 +190,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
             denstl=7800,
-            whtblkt=3507503.3737008357,
+            m_blkt_total=3507503.3737008357,
             vol_blkt_total=1400.4860764869636,
             whtshld=2297808.3935174854,
             volshld=736.47704920432227,
@@ -286,7 +286,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "denstl", nuclearheatingmagnetsparam.denstl)
 
-    monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingmagnetsparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", nuclearheatingmagnetsparam.m_blkt_total
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", nuclearheatingmagnetsparam.vol_blkt_total
@@ -495,7 +497,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
 
 class NuclearHeatingBlanketParam(NamedTuple):
-    whtblkt: Any = None
+    m_blkt_total: Any = None
 
     p_blkt_nuclear_heat_total_mw: Any = None
 
@@ -512,7 +514,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
     "nuclearheatingblanketparam",
     (
         NuclearHeatingBlanketParam(
-            whtblkt=3501027.3252278985,
+            m_blkt_total=3501027.3252278985,
             p_blkt_nuclear_heat_total_mw=0,
             fusion_power=1986.0623241661431,
             exp_blanket=0,
@@ -520,7 +522,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
             expected_exp_blanket=0.99982809071915879,
         ),
         NuclearHeatingBlanketParam(
-            whtblkt=3507503.3737008357,
+            m_blkt_total=3507503.3737008357,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             fusion_power=1985.4423932312809,
             exp_blanket=0.99982809071915879,
@@ -542,7 +544,9 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingblanketparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", nuclearheatingblanketparam.m_blkt_total
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -1446,7 +1450,7 @@ class ComponentMassesParam(NamedTuple):
     whtblbe: Any = None
     whtblss: Any = None
     denstl: Any = None
-    whtblkt: Any = None
+    m_blkt_total: Any = None
     volshld: Any = None
     vfshld: Any = None
     m_fw_blkt_div_coolant_total: Any = None
@@ -1488,7 +1492,7 @@ class ComponentMassesParam(NamedTuple):
     expected_divmas: Any = None
     expected_whtblbe: Any = None
     expected_whtblss: Any = None
-    expected_whtblkt: Any = None
+    expected_m_blkt_total: Any = None
     expected_m_fw_blkt_div_coolant_total: Any = None
     expected_fwclfr: Any = None
     expected_whtbltibe12: Any = None
@@ -1537,7 +1541,7 @@ class ComponentMassesParam(NamedTuple):
             whtblbe=0,
             whtblss=0,
             denstl=7800,
-            whtblkt=0,
+            m_blkt_total=0,
             volshld=783.69914576548854,
             vfshld=0.60000000000000009,
             m_fw_blkt_div_coolant_total=0,
@@ -1579,7 +1583,7 @@ class ComponentMassesParam(NamedTuple):
             expected_divmas=36452.527878133093,
             expected_whtblbe=1002205.5121936026,
             expected_whtblss=895173.51112145756,
-            expected_whtblkt=2961668.0628126911,
+            expected_m_blkt_total=2961668.0628126911,
             expected_m_fw_blkt_div_coolant_total=1161.8025382862772,
             expected_fwclfr=0,
             expected_whtbltibe12=1002205.5121936026,
@@ -1653,7 +1657,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
     monkeypatch.setattr(fwbs_variables, "whtblss", componentmassesparam.whtblss)
     monkeypatch.setattr(fwbs_variables, "denstl", componentmassesparam.denstl)
-    monkeypatch.setattr(fwbs_variables, "whtblkt", componentmassesparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", componentmassesparam.m_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", componentmassesparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vfshld", componentmassesparam.vfshld)
     monkeypatch.setattr(
@@ -1740,8 +1746,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.whtblss == pytest.approx(
         componentmassesparam.expected_whtblss
     )
-    assert fwbs_variables.whtblkt == pytest.approx(
-        componentmassesparam.expected_whtblkt
+    assert fwbs_variables.m_blkt_total == pytest.approx(
+        componentmassesparam.expected_m_blkt_total
     )
     assert fwbs_variables.m_fw_blkt_div_coolant_total == pytest.approx(
         componentmassesparam.expected_m_fw_blkt_div_coolant_total

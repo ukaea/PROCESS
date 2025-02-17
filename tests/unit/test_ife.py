@@ -1213,7 +1213,7 @@ class IfefbsParam(NamedTuple):
     cfactr: Any = None
     denstl: Any = None
     m_fw_total: Any = None
-    whtblkt: Any = None
+    m_blkt_total: Any = None
     whtshld: Any = None
     whtblbe: Any = None
     whtblvd: Any = None
@@ -1241,7 +1241,7 @@ class IfefbsParam(NamedTuple):
     ifetyp: Any = None
     pflux_fw_neutron_mw: Any = None
     expected_m_fw_total: Any = None
-    expected_whtblkt: Any = None
+    expected_m_blkt_total: Any = None
     expected_whtshld: Any = None
     expected_life_blkt_fpy: Any = None
     expected_life_fw_fpy: Any = None
@@ -1263,7 +1263,7 @@ class IfefbsParam(NamedTuple):
             cfactr=0.75000000000000011,
             denstl=7800,
             m_fw_total=0,
-            whtblkt=0,
+            m_blkt_total=0,
             whtshld=0,
             whtblbe=0,
             whtblvd=0,
@@ -1452,7 +1452,7 @@ class IfefbsParam(NamedTuple):
             ifetyp=1,
             pflux_fw_neutron_mw=8.8876851857005388,
             expected_m_fw_total=20574.366184891722,
-            expected_whtblkt=347956.92928704334,
+            expected_m_blkt_total=347956.92928704334,
             expected_whtshld=1067310.9593707009,
             expected_life_blkt_fpy=3.000406304846492,
             expected_life_fw_fpy=3.000406304846492,
@@ -1548,7 +1548,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(cost_variables, "cfactr", ifefbsparam.cfactr)
     monkeypatch.setattr(fwbs_variables, "denstl", ifefbsparam.denstl)
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
-    monkeypatch.setattr(fwbs_variables, "whtblkt", ifefbsparam.whtblkt)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifefbsparam.whtshld)
     monkeypatch.setattr(fwbs_variables, "whtblbe", ifefbsparam.whtblbe)
     monkeypatch.setattr(fwbs_variables, "whtblvd", ifefbsparam.whtblvd)
@@ -1581,7 +1581,9 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     ife.ifefbs(output=False)
 
     assert fwbs_variables.m_fw_total == pytest.approx(ifefbsparam.expected_m_fw_total)
-    assert fwbs_variables.whtblkt == pytest.approx(ifefbsparam.expected_whtblkt)
+    assert fwbs_variables.m_blkt_total == pytest.approx(
+        ifefbsparam.expected_m_blkt_total
+    )
     assert fwbs_variables.whtshld == pytest.approx(ifefbsparam.expected_whtshld)
     assert fwbs_variables.life_blkt_fpy == pytest.approx(
         ifefbsparam.expected_life_blkt_fpy

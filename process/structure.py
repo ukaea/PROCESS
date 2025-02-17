@@ -62,7 +62,7 @@ class Structure:
             total_weight_pf,
             tfv.whttf,
             fwbsv.m_fw_total,
-            fwbsv.whtblkt,
+            fwbsv.m_blkt_total,
             fwbsv.m_fw_blkt_div_coolant_total,
             fwbsv.dewmkg,
             output=output,

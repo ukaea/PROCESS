@@ -1775,15 +1775,15 @@ class IFE:
 
         # Total masses of components (excluding coolant)
         fwbs_variables.m_fw_total = 0.0
-        fwbs_variables.whtblkt = 0.0
+        fwbs_variables.m_blkt_total = 0.0
         fwbs_variables.whtshld = 0.0
         for i in range(5):
             for j in range(3):
                 fwbs_variables.m_fw_total = (
                     fwbs_variables.m_fw_total + ife_variables.fwmatm[j, i]
                 )
-                fwbs_variables.whtblkt = (
-                    fwbs_variables.whtblkt + ife_variables.blmatm[j, i]
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.m_blkt_total + ife_variables.blmatm[j, i]
                 )
                 fwbs_variables.whtshld = (
                     fwbs_variables.whtshld + ife_variables.shmatm[j, i]
@@ -1860,8 +1860,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Blanket mass (kg)",
-            "(whtblkt)",
-            fwbs_variables.whtblkt,
+            "(m_blkt_total)",
+            fwbs_variables.m_blkt_total,
         )
         process_output.ovarre(
             self.outfile,
