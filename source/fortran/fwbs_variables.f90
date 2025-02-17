@@ -15,7 +15,7 @@ module fwbs_variables
 
   public
 
-  real(dp) :: bktlife
+  real(dp) :: life_blkt_fpy
   !! Full power blanket lifetime (years)
 
   real(dp) :: bktlife_cal
@@ -664,7 +664,7 @@ module fwbs_variables
     !! Initialise fwbs variables
     implicit none
 
-    bktlife = 0.0D0
+    life_blkt_fpy = 0.0D0
     bktlife_cal = 0.0D0
     coolmass = 0.0D0
     vvmass = 0.0D0

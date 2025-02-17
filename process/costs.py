@@ -2678,7 +2678,9 @@ class Costs:
         )
 
         if cost_variables.ifueltyp == 2:
-            annfwbl = annfwbl * (1.0e0 - fwbs_variables.bktlife / cost_variables.tlife)
+            annfwbl = annfwbl * (
+                1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.tlife
+            )
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -2917,12 +2919,14 @@ class Costs:
         Author: J Foster, CCFE, Culham Campus
         """
         # FW/Blanket and HCD
-        if fwbs_variables.bktlife < cost_variables.tlife:
-            fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
+        if fwbs_variables.life_blkt_fpy < cost_variables.tlife:
+            fwbs_variables.bktlife_cal = (
+                fwbs_variables.life_blkt_fpy * cost_variables.cfactr
+            )
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
             cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
         else:
-            fwbs_variables.bktlife_cal = fwbs_variables.bktlife
+            fwbs_variables.bktlife_cal = fwbs_variables.life_blkt_fpy
 
         # Divertor
         if cost_variables.divlife < cost_variables.tlife:
