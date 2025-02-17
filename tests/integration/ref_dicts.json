@@ -7558,7 +7558,7 @@
         "tftmp": 4.5,
         "tftort": 1.0,
         "dr_tf_shld_gap": 0.05,
-        "tfwmatmax": 823.0,
+        "temp_fw_max": 823.0,
         "tgain": 85.0,
         "th_joint_contact": 0.03,
         "thcomp": null,
@@ -10803,7 +10803,7 @@
         "tftmp": "peak helium coolant temperature in TF coils and PF coils (K)",
         "tftort": "TF coil toroidal thickness (m)",
         "dr_tf_shld_gap": "Minimum metal-to-metal gap between TF coil and thermal shield (m)",
-        "tfwmatmax": "maximum temperature of first wall material (K) (`secondary_cycle>1`)",
+        "temp_fw_max": "maximum temperature of first wall material (K) (`secondary_cycle>1`)",
         "tgain": "IFE target gain (if `ifedrv = 0`) (`iteration variable 83`)",
         "th_joint_contact": "TF sliding joints contact pad width [m]",
         "thcomp": "",
@@ -14525,7 +14525,7 @@
             "lb": 0.0,
             "ub": 5.0
         },
-        "tfwmatmax": {
+        "temp_fw_max": {
             "lb": 500.0,
             "ub": 2000.0
         },
@@ -18101,7 +18101,7 @@
             "nblktmodpi",
             "nblktmodto",
             "nblktmodti",
-            "tfwmatmax",
+            "temp_fw_max",
             "fw_th_conductivity",
             "fvoldw",
             "fvolsi",
@@ -20762,7 +20762,7 @@
         "tfootfi": "real_variable",
         "tftmp": "real_variable",
         "dr_tf_shld_gap": "real_variable",
-        "tfwmatmax": "real_variable",
+        "temp_fw_max": "real_variable",
         "tgain": "real_variable",
         "th_joint_contact": "real_variable",
         "t_fusion_ramp": "real_variable",

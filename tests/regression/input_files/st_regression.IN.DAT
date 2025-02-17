@@ -2687,7 +2687,7 @@ boundu(116) = 1.0
 * JUSTIFICATION: Turned off, do not care about FW temperature
 * VARIABLES:     temp_fw_peak (K) calculated in-situ
 
-*tfwmatmax = 
+*temp_fw_max = 
 * DESCRIPTION:   Maximum temperature of first wall material [K] (`secondary_cycle>1`)(default = 823)
 * JUSTIFICATION: Not set as not used
 

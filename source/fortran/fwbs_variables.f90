@@ -375,7 +375,7 @@ module fwbs_variables
   integer :: nblktmodti
   !! number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)
 
-  real(dp) :: tfwmatmax
+  real(dp) :: temp_fw_max
   !! maximum temperature of first wall material [K] (`secondary_cycle>1`)
 
   real(dp) :: fw_th_conductivity
@@ -758,7 +758,7 @@ module fwbs_variables
     nblktmodpi = 7
     nblktmodto = 48
     nblktmodti = 32
-    tfwmatmax = 823.0D0
+    temp_fw_max = 823.0D0
     fw_th_conductivity = 28.34D0
     fvoldw = 1.74D0
     fvolsi = 1.0D0

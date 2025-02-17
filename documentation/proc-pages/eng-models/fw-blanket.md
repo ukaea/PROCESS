@@ -81,7 +81,7 @@ Summary of key variables and switches:
 |        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
 |     peak FW temp (K)     |         `temp_fw_peak`         | ---                      | ---                                  |
-|     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
+|     maximum temp (K)     |       `temp_fw_max`       | ---                      | ---                                  |
 |        FCI switch        |           ---           | ---                      | `ifci`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
 |  primary coolant switch  |       `i_fw_coolant_type`       | `coolwh`                 | ---                                  |

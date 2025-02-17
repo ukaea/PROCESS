@@ -1527,7 +1527,7 @@ class BlanketLibrary:
             dx_fw_module (m)                   dx_fw_module
             roughness epsilon           roughness
             peak FW temp (K)            temp_fw_peak
-            maximum temp (K)            tfwmatmax
+            maximum temp (K)            temp_fw_max
             FCI switch                  ---                     ---                 ifci
 
             Coolant                     FW                      BB primary          BB secondary
@@ -2015,8 +2015,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Allowable temperature of first wall material, excluding armour (K)",
-                "(tfwmatmax)",
-                fwbs_variables.tfwmatmax,
+                "(temp_fw_max)",
+                fwbs_variables.temp_fw_max,
             )
             po.ovarrf(
                 self.outfile,

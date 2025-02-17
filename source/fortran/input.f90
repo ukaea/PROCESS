@@ -277,7 +277,7 @@ contains
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, tfwmatmax, irefprop, len_fw_channel, &
+      fhole, fwbsshape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
@@ -2085,8 +2085,8 @@ contains
        case ('nblktmodti')
           call parse_int_variable('nblktmodti', nblktmodti, 8, 96, &
                'No of i/b blanket modules in toroidal direction')
-       case ('tfwmatmax')
-          call parse_real_variable('tfwmatmax', tfwmatmax, 500.0D0, 2000.0D0, &
+       case ('temp_fw_max')
+          call parse_real_variable('temp_fw_max', temp_fw_max, 500.0D0, 2000.0D0, &
                'Max temperature of first wall material (K)')
        case ('fw_th_conductivity')
           call parse_real_variable('fw_th_conductivity', fw_th_conductivity, 1.0D0, 100.0D0, &
