@@ -551,7 +551,7 @@ class Power:
         and plant power balance constituents.
         None
         """
-        if fwbs_variables.primary_pumping != 2 and fwbs_variables.primary_pumping != 3:
+        if fwbs_variables.i_coolant_pumping != 2 and fwbs_variables.i_coolant_pumping != 3:
             primary_pumping_variables.htpmw_fw_blkt = (
                 heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
             )
@@ -564,12 +564,12 @@ class Power:
         )
         self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
         self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.icooldual > 0 and fwbs_variables.i_coolant_pumping == 2:
             self.htpmwe_blkt_liq = (
                 heat_transport_variables.htpmw_blkt_liq / fwbs_variables.etahtp
             )
 
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.icooldual > 0 and fwbs_variables.i_coolant_pumping == 2:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.htpmw_fw_blkt
@@ -610,7 +610,7 @@ class Power:
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
 
-        if fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.i_coolant_pumping == 2:
             # Liquid metal breeder/coolant
             if fwbs_variables.icooldual == 2:
                 self.pthermblkt_liq = (
@@ -657,7 +657,7 @@ class Power:
                     + current_drive_variables.nbshinemw
                 )
 
-        elif fwbs_variables.primary_pumping == 3:
+        elif fwbs_variables.i_coolant_pumping == 3:
             # First wall and blanket coolant combined
             self.pthermfw_blkt = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
@@ -703,7 +703,7 @@ class Power:
         )
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
-        if fwbs_variables.primary_pumping != 3:
+        if fwbs_variables.i_coolant_pumping != 3:
             heat_transport_variables.pfwdiv = self.pthermfw + self.pthermdiv
 
         #  Thermal to electric efficiency
@@ -900,7 +900,7 @@ class Power:
         if cost_variables.ireactor == 1:
             #  Gross electric power
             # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
-            if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+            if fwbs_variables.icooldual > 0 and fwbs_variables.i_coolant_pumping == 2:
                 heat_transport_variables.pgrossmw = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
@@ -1081,22 +1081,22 @@ class Power:
         po.ovarin(
             self.outfile,
             "Switch for pumping of primary coolant",
-            "(primary_pumping)",
-            fwbs_variables.primary_pumping,
+            "(i_coolant_pumping)",
+            fwbs_variables.i_coolant_pumping,
         )
-        if fwbs_variables.primary_pumping == 0:
+        if fwbs_variables.i_coolant_pumping == 0:
             po.ocmmnt(self.outfile, "User sets mechanical pumping power directly")
-        elif fwbs_variables.primary_pumping == 1:
+        elif fwbs_variables.i_coolant_pumping == 1:
             po.ocmmnt(
                 self.outfile,
                 "User sets mechanical pumping power as a fraction of thermal power removed by coolant",
             )
-        elif fwbs_variables.primary_pumping == 2:
+        elif fwbs_variables.i_coolant_pumping == 2:
             po.ocmmnt(
                 self.outfile,
                 "Mechanical pumping power is calculated for FW and blanket",
             )
-        elif fwbs_variables.primary_pumping == 3:
+        elif fwbs_variables.i_coolant_pumping == 3:
             po.ocmmnt(
                 self.outfile, "Mechanical pumping power for FW and blanket cooling loop"
             )
@@ -1126,7 +1126,7 @@ class Power:
             "OP ",
         )
 
-        if fwbs_variables.primary_pumping != 3:
+        if fwbs_variables.i_coolant_pumping != 3:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for FW (MW)",
@@ -1186,7 +1186,7 @@ class Power:
             "OP ",
         )
 
-        if fwbs_variables.primary_pumping == 1:
+        if fwbs_variables.i_coolant_pumping == 1:
             po.ovarre(
                 self.outfile,
                 "Coolant pump power / non-pumping thermal power in first wall",
@@ -1200,7 +1200,7 @@ class Power:
                 heat_transport_variables.fpumpblkt,
             )
 
-        if fwbs_variables.primary_pumping != 0:
+        if fwbs_variables.i_coolant_pumping != 0:
             po.ovarre(
                 self.outfile,
                 "Coolant pump power / non-pumping thermal power in shield",
@@ -1828,7 +1828,7 @@ class Power:
             )
 
         # Heat rejected by main power conversion circuit
-        if fwbs_variables.icooldual > 0 and fwbs_variables.primary_pumping == 2:
+        if fwbs_variables.icooldual > 0 and fwbs_variables.i_coolant_pumping == 2:
             self.rejected_main = (
                 heat_transport_variables.pthermmw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (

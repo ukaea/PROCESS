@@ -265,7 +265,7 @@ fblss = 0.13 *Stainless steel fraction of blanket by volume (only relevant for m
 fblvd = 0. *Vanadium fraction of blanket by volume (only relevant for mass calculations)
 fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and fhcd when ipowerflow=1)
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
-primary_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
+i_coolant_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
 htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)
 htpmw_fw = 56. *First wall coolant mechanical pumping power (MW)
 htpmw_div = 24. *Divertor coolant mechanical pumping power (MW)

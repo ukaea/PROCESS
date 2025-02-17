@@ -1083,7 +1083,7 @@
     {
       "no": 215,
       "level": 3,
-      "message": "STELLARATOR: primary_pumping = 0 or 1 only"
+      "message": "STELLARATOR: i_coolant_pumping = 0 or 1 only"
     },
     {
       "no": 216,
