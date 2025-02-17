@@ -978,7 +978,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -2141,7 +2141,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -3304,7 +3304,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -4467,7 +4467,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -5630,7 +5630,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -6793,7 +6793,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -7956,7 +7956,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -9119,7 +9119,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -10282,7 +10282,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -11445,7 +11445,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -12608,7 +12608,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -13771,7 +13771,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -14934,7 +14934,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -16097,7 +16097,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -17260,7 +17260,7 @@
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
@@ -17982,7 +17982,7 @@ etahtp = 0.87
 etaiso = 0.9
 
 * Switch for secondary cycle - User input thermal-electric efficiency
-secondary_cycle = 2
+i_thermal_electric_conversion = 2
 
 * Thermal to electric conversion efficiency
 etath = 0.4

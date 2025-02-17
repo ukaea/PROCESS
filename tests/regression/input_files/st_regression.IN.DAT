@@ -2334,7 +2334,7 @@ etaiso = 0.9
 * JUSTIFICATION: Not yet set.
 
 *pres_fw_coolant = 
-* DESCRIPTION:   First wall coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
+* DESCRIPTION:   First wall coolant pressure [Pa] (`i_thermal_electric_conversion>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set.
 
 i_fw_coolant_type = helium 
@@ -2398,33 +2398,33 @@ i_blkt_inboard = 0
 * JUSTIFICATION: Not yet set.
 
 *n_blkt_outboard_modules_poloidal = 
-* DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 8)
+* DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)(default = 8)
 * JUSTIFICATION: Not set as not used
 
 *n_blkt_outboard_modules_toroidal = 
-* DESCRIPTION:   Number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)(default =48)
+* DESCRIPTION:   Number of outboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)(default =48)
 * JUSTIFICATION: Not set as not used
 
 *n_blkt_inboard_modules_poloidal = 
-* DESCRIPTION:   Number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 7)
+* DESCRIPTION:   Number of inboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)(default = 7)
 * JUSTIFICATION: Not set as not used
 
 *n_blkt_inboard_modules_toroidal = 
-* DESCRIPTION:   Number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)(default = 32)
+* DESCRIPTION:   Number of inboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)(default = 32)
 * JUSTIFICATION: Not set as not used
 
 *temp_blkt_coolant_in = 
-* DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
+* DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`i_thermal_electric_conversion>1`)
 * JUSTIFICATION: Not set as not used
 
 *temp_blkt_coolant_out = 
-* DESCRIPTION:   Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
+* DESCRIPTION:   Outlet temperature of blanket coolant [K] (`i_thermal_electric_conversion>1`)
 * input if `i_blkt_coolant_type=1` (helium)
 * calculated if `i_blkt_coolant_type=2` (water)
 * JUSTIFICATION: Not set as not used
 
 *pres_blkt_coolant = 
-* DESCRIPTION:   Blanket coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
+* DESCRIPTION:   Blanket coolant pressure [Pa] (`i_thermal_electric_conversion>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2688,7 +2688,7 @@ boundu(116) = 1.0
 * VARIABLES:     temp_fw_peak (K) calculated in-situ
 
 *temp_fw_max = 
-* DESCRIPTION:   Maximum temperature of first wall material [K] (`secondary_cycle>1`)(default = 823)
+* DESCRIPTION:   Maximum temperature of first wall material [K] (`i_thermal_electric_conversion>1`)(default = 823)
 * JUSTIFICATION: Not set as not used
 
 *________________________________________________________________________________________________________________________________________________________________________________________________________________*
@@ -3004,7 +3004,7 @@ fipir = 0.58
 *----------------------Heat transport / Power settings-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-secondary_cycle = 2 
+i_thermal_electric_conversion = 2 
 * DESCRIPTION:   Switch for power conversion cycle (2: User Input Thermal-Electric Efficiency) 
 *  =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
 *  =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)

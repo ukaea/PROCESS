@@ -60,7 +60,7 @@ electricity have been revised extensively.
     - `MEDIUM` -- 1.261
     - `THICK` -- 1.264.
 
-`secondary_cycle` -- This switch controls how the coolant pumping power in the 
+`i_thermal_electric_conversion` -- This switch controls how the coolant pumping power in the 
 first wall and blanket is determined, and also how the calculation of the plant's 
 thermal to electric conversion efficiency (the secondary cycle thermal 
 efficiency) proceeds.
