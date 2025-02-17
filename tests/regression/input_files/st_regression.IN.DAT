@@ -2348,7 +2348,7 @@ i_fw_coolant_type = helium
 * JUSTIFICATION: Not yet set.
 
 *ixc = 114
-*fw_channel_length = 
+*len_fw_channel = 
 *boundl(114) = 
 *boundu(114) = 
 * DESCRIPTION:   Length of a single first wall channel (all in parallel) [m] (default = 4.0)

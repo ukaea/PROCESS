@@ -757,10 +757,10 @@ class BlanketLibrary:
 
         # Total number of first wall pipes from channel length and dx_fw_module (02/12/2015)
         blanket_library.npfwi = build_variables.a_fw_inboard / (
-            fwbs_variables.fw_channel_length * fwbs_variables.dx_fw_module
+            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
         )
         blanket_library.npfwo = build_variables.a_fw_outboard / (
-            fwbs_variables.fw_channel_length * fwbs_variables.dx_fw_module
+            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
@@ -996,7 +996,7 @@ class BlanketLibrary:
             output,
             icoolpump=1,
             flow_velocity=velfwi,
-            flleng=fwbs_variables.fw_channel_length,
+            flleng=fwbs_variables.len_fw_channel,
             no90=no90fw,
             no180=no180fw,
             coolant_density=fwbs_variables.rhof_fw,
@@ -1011,7 +1011,7 @@ class BlanketLibrary:
             output,
             icoolpump=1,
             flow_velocity=velfwo,
-            flleng=fwbs_variables.fw_channel_length,
+            flleng=fwbs_variables.len_fw_channel,
             no90=no90fw,
             no180=no180fw,
             coolant_density=fwbs_variables.rhof_fw,
@@ -1521,7 +1521,7 @@ class BlanketLibrary:
 
             Coolant Channels            FW                      BB primary          BB Liquid Breeder/Coolant
 
-            length (m)                  fw_channel_length
+            length (m)                  len_fw_channel
             width (m)                   radius_fw_channel (radius, cicular)   radius_fw_channel                 a_bz_liq, b_bz_liq (rectangular)
             wall thickness (m)          dr_fw_wall                 dr_fw_wall             th_wall_secondary
             dx_fw_module (m)                   dx_fw_module

@@ -106,7 +106,7 @@ class Fw:
 
         # Coolant mass flow rate (kg/s) (use mean properties)
         mflow_fw_coolant = (
-            fwbs_variables.fw_channel_length
+            fwbs_variables.len_fw_channel
             * load
             / heatcap_fw_coolant_average
             / (fwbs_variables.temp_fw_coolant_out - fwbs_variables.temp_fw_coolant_in)
@@ -247,8 +247,8 @@ class Fw:
             po.ovarre(
                 self.outfile,
                 "Vertical length of a single coolant channel (all in parallel) (m)",
-                "(fw_channel_length)",
-                fwbs_variables.fw_channel_length,
+                "(len_fw_channel)",
+                fwbs_variables.len_fw_channel,
             )
             po.ovarre(
                 self.outfile,

@@ -277,7 +277,7 @@ contains
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
+      fhole, fwbsshape, coolp, tfwmatmax, irefprop, len_fw_channel, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
@@ -1949,8 +1949,8 @@ contains
        case ('roughness')
           call parse_real_variable('roughness', roughness, 0.0d0, 1.0D-2, &
                'first wall channel roughness epsilon')
-       case ('fw_channel_length')
-          call parse_real_variable('fw_channel_length', fw_channel_length, 1.0D-3, 1.0D3, &
+       case ('len_fw_channel')
+          call parse_real_variable('len_fw_channel', len_fw_channel, 1.0D-3, 1.0D3, &
                'first wall channel length')
        case ('peaking_factor')
           call parse_real_variable('peaking_factor', peaking_factor, 1.0d0, 100.0D0, &

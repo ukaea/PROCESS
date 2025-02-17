@@ -75,7 +75,7 @@ Summary of key variables and switches:
 |                          |       First Wall        | Breeding Blanket Primary | Liquid Breeder/Coolant               |
 | :----------------------: | :---------------------: | ------------------------ | ------------------------------------ |
 |     Coolant Channels     |      :-----------:      | ------------------------ | --------------------------           |
-|        length (m)        |   `fw_channel_length`   | ---                      | ---                                  |
+|        length (m)        |   `len_fw_channel`   | ---                      | ---                                  |
 |        width (m)         | `radius_fw_channel` (radius, cicular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
 |    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
 |        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |

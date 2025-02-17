@@ -29,7 +29,7 @@ class FwTempParam(NamedTuple):
 
     dx_fw_module: Any = None
 
-    fw_channel_length: Any = None
+    len_fw_channel: Any = None
 
     tpeak: Any = None
 
@@ -68,7 +68,7 @@ class FwTempParam(NamedTuple):
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
             dx_fw_module=0.005000000000000001,
-            fw_channel_length=4,
+            len_fw_channel=4,
             tpeak=873,
             peaking_factor=1,
             dr_fw_wall=0.0030000000000000001,
@@ -90,7 +90,7 @@ class FwTempParam(NamedTuple):
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
             dx_fw_module=0.005000000000000001,
-            fw_channel_length=4,
+            len_fw_channel=4,
             tpeak=873,
             peaking_factor=1,
             dr_fw_wall=0.0030000000000000001,
@@ -139,9 +139,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     monkeypatch.setattr(fwbs_variables, "dx_fw_module", fwtempparam.dx_fw_module)
 
-    monkeypatch.setattr(
-        fwbs_variables, "fw_channel_length", fwtempparam.fw_channel_length
-    )
+    monkeypatch.setattr(fwbs_variables, "len_fw_channel", fwtempparam.len_fw_channel)
 
     monkeypatch.setattr(fwbs_variables, "tpeak", fwtempparam.tpeak)
 

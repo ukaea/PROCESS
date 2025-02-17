@@ -315,7 +315,7 @@ module numerics
   !! <LI> (111) fniterpump: f-value for constraint that number
   !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
-  !! <LI> (114) fw_channel_length: Length of a single first wall channel
+  !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
   !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
