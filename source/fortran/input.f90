@@ -211,7 +211,7 @@ contains
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
-      fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, pres_blkt_coolant, &
+      fblhebpi, fblss, temp_blkt_coolant_in, outlet_temp, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
       npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
@@ -1993,8 +1993,8 @@ contains
        case ('afwo')
           call parse_real_variable('afwo', afwo, 1.0D-3, 0.05D0, &
                'O/B fw/blkt coolant channel inner radius (m)')
-       case ('inlet_temp')
-          call parse_real_variable('inlet_temp', inlet_temp, 200.0D0, 600.0D0, &
+       case ('temp_blkt_coolant_in')
+          call parse_real_variable('temp_blkt_coolant_in', temp_blkt_coolant_in, 200.0D0, 600.0D0, &
                'Coolant inlet temperature (K)')
        case ('irefprop')
           call parse_int_variable('irefprop', irefprop, 0, 1, &
