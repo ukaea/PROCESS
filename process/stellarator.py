@@ -1728,7 +1728,7 @@ class Stellarator:
 
         #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
-        #  water is heavier the calculation for fwbs_variables.coolmass is better done with
+        #  water is heavier the calculation for fwbs_variables.m_fw_blkt_div_coolant_total is better done with
         #  coolwh=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
@@ -1813,9 +1813,9 @@ class Stellarator:
         if (fwbs_variables.blktmodel > 0) or (
             fwbs_variables.coolwh == 2
         ):  # pressurised water coolant
-            fwbs_variables.coolmass = coolvol * 806.719e0
+            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
         else:  # gaseous helium coolant
-            fwbs_variables.coolmass = coolvol * 1.517e0
+            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 1.517e0
 
         #  Assume external cryostat is a torus with circular cross-section,
         #  centred on plasma major radius.

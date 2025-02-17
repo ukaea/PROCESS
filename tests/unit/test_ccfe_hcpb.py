@@ -1437,7 +1437,7 @@ class ComponentMassesParam(NamedTuple):
     whtblkt: Any = None
     volshld: Any = None
     vfshld: Any = None
-    coolmass: Any = None
+    m_fw_blkt_div_coolant_total: Any = None
     fwclfr: Any = None
     breeder_f: Any = None
     breeder_multiplier: Any = None
@@ -1477,7 +1477,7 @@ class ComponentMassesParam(NamedTuple):
     expected_whtblbe: Any = None
     expected_whtblss: Any = None
     expected_whtblkt: Any = None
-    expected_coolmass: Any = None
+    expected_m_fw_blkt_div_coolant_total: Any = None
     expected_fwclfr: Any = None
     expected_whtbltibe12: Any = None
     expected_whtblli4sio4: Any = None
@@ -1528,7 +1528,7 @@ class ComponentMassesParam(NamedTuple):
             whtblkt=0,
             volshld=783.69914576548854,
             vfshld=0.60000000000000009,
-            coolmass=0,
+            m_fw_blkt_div_coolant_total=0,
             fwclfr=0.14999999999999999,
             breeder_f=0.5,
             breeder_multiplier=0.75,
@@ -1568,7 +1568,7 @@ class ComponentMassesParam(NamedTuple):
             expected_whtblbe=1002205.5121936026,
             expected_whtblss=895173.51112145756,
             expected_whtblkt=2961668.0628126911,
-            expected_coolmass=1161.8025382862772,
+            expected_m_fw_blkt_div_coolant_total=1161.8025382862772,
             expected_fwclfr=0,
             expected_whtbltibe12=1002205.5121936026,
             expected_whtblli4sio4=1064289.0394976311,
@@ -1642,7 +1642,11 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "whtblkt", componentmassesparam.whtblkt)
     monkeypatch.setattr(fwbs_variables, "volshld", componentmassesparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vfshld", componentmassesparam.vfshld)
-    monkeypatch.setattr(fwbs_variables, "coolmass", componentmassesparam.coolmass)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "m_fw_blkt_div_coolant_total",
+        componentmassesparam.m_fw_blkt_div_coolant_total,
+    )
     monkeypatch.setattr(fwbs_variables, "fwclfr", componentmassesparam.fwclfr)
     monkeypatch.setattr(fwbs_variables, "breeder_f", componentmassesparam.breeder_f)
     monkeypatch.setattr(
@@ -1721,8 +1725,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.whtblkt == pytest.approx(
         componentmassesparam.expected_whtblkt
     )
-    assert fwbs_variables.coolmass == pytest.approx(
-        componentmassesparam.expected_coolmass
+    assert fwbs_variables.m_fw_blkt_div_coolant_total == pytest.approx(
+        componentmassesparam.expected_m_fw_blkt_div_coolant_total
     )
     assert fwbs_variables.fwclfr == pytest.approx(componentmassesparam.expected_fwclfr)
     assert fwbs_variables.whtbltibe12 == pytest.approx(
