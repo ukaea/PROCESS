@@ -395,9 +395,9 @@ def pimpden(imp_element_index, neprofile, teprofile):
 
     :param imp_element_index: Impurity element index
     :type imp_element_index: int
-    :param neprofile: density profile
+    :param neprofile: electron density profile
     :type neprofile: numpy.array
-    :param teprofile: temperature profile
+    :param teprofile: electron temperature profile
     :type teprofile: numpy.array
     :return: pimpden - total impurity radiation density (W/m3)
     :rtype: numpy.array
