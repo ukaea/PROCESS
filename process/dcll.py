@@ -677,7 +677,7 @@ class DCLL:
             * fwbs_variables.vol_fw_total
         )
         dcll_module.fwmass_cool = (
-            fwbs_variables.rhof_fw
+            fwbs_variables.den_fw_coolant
             * (1 - dcll_module.f_vol_stl_fw)
             * fwbs_variables.vol_fw_total
         )

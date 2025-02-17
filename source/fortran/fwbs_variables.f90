@@ -626,7 +626,7 @@ module fwbs_variables
   real(dp) :: inlet_temp_liq, outlet_temp_liq
   !! Inlet (scan var 68) and Outlet (scan var 69) temperature of the liquid breeder/coolant [K]
 
-  real(dp) :: rhof_fw
+  real(dp) :: den_fw_coolant
   !! Density of the FW primary coolant
 
   real(dp) :: visc_fw
@@ -837,7 +837,7 @@ module fwbs_variables
     blpressure_liq = 1.7D6
     inlet_temp_liq = 570.0D0
     outlet_temp_liq = 720.0D0
-    rhof_fw = 0.0D0
+    den_fw_coolant = 0.0D0
     visc_fw = 0.0D0
     rhof_bl = 0.0D0
     visc_bl = 0.0D0

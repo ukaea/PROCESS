@@ -350,7 +350,7 @@ class DcllMassesParam(NamedTuple):
 
     icooldual: Any = None
 
-    rhof_fw: Any = None
+    den_fw_coolant: Any = None
 
     rhof_bl: Any = None
 
@@ -554,7 +554,7 @@ class DcllMassesParam(NamedTuple):
             w_f_liq_ob=0.5,
             vfblkt=0.25,
             icooldual=2,
-            rhof_fw=5.6389735407435868,
+            den_fw_coolant=5.6389735407435868,
             rhof_bl=5.6389735407435868,
             nblktmodti=32,
             nblktmodto=48,
@@ -673,7 +673,7 @@ class DcllMassesParam(NamedTuple):
             w_f_liq_ob=0.79000002145767212,
             vfblkt=0.082598954955828252,
             icooldual=2,
-            rhof_fw=5.6389735407435868,
+            den_fw_coolant=5.6389735407435868,
             rhof_bl=5.6389735407435868,
             nblktmodti=32,
             nblktmodto=48,
@@ -863,7 +863,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "icooldual", dcllmassesparam.icooldual)
 
-    monkeypatch.setattr(fwbs_variables, "rhof_fw", dcllmassesparam.rhof_fw)
+    monkeypatch.setattr(
+        fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant
+    )
 
     monkeypatch.setattr(fwbs_variables, "rhof_bl", dcllmassesparam.rhof_bl)
 

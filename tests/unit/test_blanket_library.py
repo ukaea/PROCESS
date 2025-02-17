@@ -35,7 +35,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     pres_fw_coolant: Any = None
 
-    rhof_fw: Any = None
+    den_fw_coolant: Any = None
 
     cp_fw: Any = None
 
@@ -63,7 +63,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     ipump: Any = None
 
-    expected_rhof_fw: Any = None
+    expected_den_fw_coolant: Any = None
 
     expected_cp_fw: Any = None
 
@@ -88,7 +88,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
-            rhof_fw=0,
+            den_fw_coolant=0,
             cp_fw=0,
             cv_fw=0,
             coolwh=1,
@@ -102,7 +102,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cv_bl=0,
             visc_fw=0,
             ipump=0,
-            expected_rhof_fw=5.6389735407435868,
+            expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_rhof_bl=5.6389735407435868,
@@ -116,7 +116,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
-            rhof_fw=5.6389735407435868,
+            den_fw_coolant=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
             coolwh=1,
@@ -130,7 +130,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             cv_bl=3123.5687263525392,
             visc_fw=3.5036293160410249e-05,
             ipump=0,
-            expected_rhof_fw=5.6389735407435868,
+            expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_rhof_bl=5.6389735407435868,
@@ -179,7 +179,7 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "rhof_fw", primarycoolantpropertiesparam.rhof_fw
+        fwbs_variables, "den_fw_coolant", primarycoolantpropertiesparam.den_fw_coolant
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_fw", primarycoolantpropertiesparam.cp_fw)
@@ -224,8 +224,8 @@ def test_primary_coolant_properties(
 
     blanket_library_fixture.primary_coolant_properties(output=False)
 
-    assert fwbs_variables.rhof_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_rhof_fw, rel=1e-4
+    assert fwbs_variables.den_fw_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_den_fw_coolant, rel=1e-4
     )
 
     assert fwbs_variables.cp_fw == pytest.approx(
