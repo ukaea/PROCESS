@@ -1521,7 +1521,7 @@ class BlanketLibrary:
         Thermo-hydraulic model for first wall and blanket
         ONLY CALLED if i_coolant_pumping = 2 or 3
 
-        Calculations for detailed powerflow model secondary_cycle > 1
+        Calculations for detailed powerflow model i_thermal_electric_conversion > 1
 
         original author: J. Morris, CCFE, Culham Science Centre
         Dual-coolant modifications and generalisation refactor: G. Graham, CCFE

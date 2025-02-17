@@ -1758,7 +1758,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftpeak : input real : f-value for first wall peak temperature
-      !! temp_fw_max : input real : maximum temperature of first wall material (K) (secondary_cycle>1)
+      !! temp_fw_max : input real : maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
       !! temp_fw_peak : input real : peak first wall temperature (K)
       use constraint_variables, only: ftpeak
       use fwbs_variables, only: temp_fw_max, temp_fw_peak

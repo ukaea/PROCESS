@@ -728,7 +728,7 @@ class Power:
 
         #  Primary (high-grade) thermal power, available for electricity generation.  Switch heat_transport_variables.iprimshld
         #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
-        if fwbs_variables.secondary_cycle == 0:
+        if fwbs_variables.i_thermal_electric_conversion == 0:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
                 self.pthermfw_blkt
@@ -1257,13 +1257,13 @@ class Power:
             )
 
         if cost_variables.ireactor == 1:
-            if fwbs_variables.secondary_cycle == 0:
+            if fwbs_variables.i_thermal_electric_conversion == 0:
                 po.ocmmnt(
                     self.outfile,
                     "Power conversion cycle efficiency model: "
                     "efficiency set according to blanket type (div power to secondary)",
                 )
-            elif fwbs_variables.secondary_cycle == 1:
+            elif fwbs_variables.i_thermal_electric_conversion == 1:
                 po.ocmmnt(
                     self.outfile,
                     "Power conversion cycle efficiency model: "
@@ -1275,7 +1275,7 @@ class Power:
                     "(etath)",
                     heat_transport_variables.etath,
                 )
-            elif fwbs_variables.secondary_cycle == 2:
+            elif fwbs_variables.i_thermal_electric_conversion == 2:
                 po.ocmmnt(
                     self.outfile,
                     "Power conversion cycle efficiency model: user-defined efficiency",
@@ -1286,7 +1286,7 @@ class Power:
                     "(etath)",
                     heat_transport_variables.etath,
                 )
-            elif fwbs_variables.secondary_cycle == 3:
+            elif fwbs_variables.i_thermal_electric_conversion == 3:
                 po.ocmmnt(
                     self.outfile,
                     "Power conversion cycle efficiency model: steam Rankine cycle",
@@ -1297,7 +1297,7 @@ class Power:
                     "Power conversion cycle efficiency model: supercritical CO2 cycle",
                 )
 
-            if fwbs_variables.secondary_cycle > 2:
+            if fwbs_variables.i_thermal_electric_conversion > 2:
                 po.ovarrf(
                     self.outfile,
                     "Coolant temperature at turbine inlet (K)",
@@ -2352,15 +2352,15 @@ class Power:
         This gives the gross power of the plant, i.e. the primary coolant pumping
         power is not subtracted at this point; however, the pumping of the
         secondary coolant is accounted for.
-        <P>If secondary_cycle = 0, 1, a set efficiency for the chosen blanket design is used,
+        <P>If i_thermal_electric_conversion = 0, 1, a set efficiency for the chosen blanket design is used,
         taken from cycle modelling studies.
-        <P>If secondary_cycle > 1, the outlet temperature from the first wall
+        <P>If i_thermal_electric_conversion > 1, the outlet temperature from the first wall
         and breeder zone is used to calculate an efficiency, using a simple relationship
         between etath and temp_blkt_coolant_out again obtained from previous studies.
         C. Harrington, K:Power Plant Physics and Technology  PROCESS  blanket_model
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
-        if fwbs_variables.secondary_cycle == 0:
+        if fwbs_variables.i_thermal_electric_conversion == 0:
             #  CCFE HCPB Model (with or without TBR)
             if (
                 (fwbs_variables.i_blanket_type == 1)
@@ -2376,7 +2376,7 @@ class Power:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Etath from reference. Div power to primary
-        elif fwbs_variables.secondary_cycle == 1:
+        elif fwbs_variables.i_thermal_electric_conversion == 1:
             #  CCFE HCPB Model (with or without TBR)
             if (fwbs_variables.i_blanket_type == 1) or (
                 fwbs_variables.i_blanket_type == 3
@@ -2394,12 +2394,12 @@ class Power:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  User input used, etath not changed
-        elif fwbs_variables.secondary_cycle == 2:
+        elif fwbs_variables.i_thermal_electric_conversion == 2:
             return etath
             # Do nothing
 
             #  Steam Rankine cycle to be used
-        elif fwbs_variables.secondary_cycle == 3:
+        elif fwbs_variables.i_thermal_electric_conversion == 3:
             #  CCFE HCPB Model (with or without TBR)
             if (fwbs_variables.i_blanket_type == 1) or (
                 fwbs_variables.i_blanket_type == 3
@@ -2452,7 +2452,7 @@ class Power:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Supercritical CO2 cycle to be used
-        elif fwbs_variables.secondary_cycle == 4:
+        elif fwbs_variables.i_thermal_electric_conversion == 4:
             #  The same temperature/efficiency correlation is used regardless of
             #  primary coolant choice.  The turbine inlet temperature is assumed to
             #  be 20 degrees below the primary coolant outlet temperature.
@@ -2476,7 +2476,7 @@ class Power:
 
         else:
             logger.log(
-                f"{'secondary_cycle does not appear to have a value within its range (0-4)'}"
+                f"{'i_thermal_electric_conversion does not appear to have a value within its range (0-4)'}"
             )
         return etath
 

@@ -2203,10 +2203,10 @@ class Stellarator:
                 po.ovarin(
                     self.outfile,
                     "First wall / blanket thermodynamic model",
-                    "(secondary_cycle)",
-                    fwbs_variables.secondary_cycle,
+                    "(i_thermal_electric_conversion)",
+                    fwbs_variables.i_thermal_electric_conversion,
                 )
-                if fwbs_variables.secondary_cycle == 0:
+                if fwbs_variables.i_thermal_electric_conversion == 0:
                     po.ocmmnt(self.outfile, "   (Simple calculation)")
 
             po.osubhd(self.outfile, "Blanket / shield volumes and weights :")

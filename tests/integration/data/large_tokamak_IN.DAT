@@ -505,7 +505,7 @@ etahtp = 0.87
 etaiso = 0.9
 
 * Switch for secondary cycle - User input thermal-electric efficiency
-secondary_cycle = 2
+i_thermal_electric_conversion = 2
 
 * Thermal to electric conversion efficiency
 etath = 0.4

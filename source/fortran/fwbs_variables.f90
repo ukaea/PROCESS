@@ -278,7 +278,7 @@ module fwbs_variables
   !! - =0 Tungsten (default)
   !! - =1 Tungsten carbide
 
-  integer :: secondary_cycle
+  integer :: i_thermal_electric_conversion
   !! Switch for power conversion cycle:
   !!
   !! - =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
@@ -330,7 +330,7 @@ module fwbs_variables
   !! outlet temperature of first wall coolant [K]
 
   real(dp) :: pres_fw_coolant
-  !! first wall coolant pressure [Pa] (`secondary_cycle>1`)
+  !! first wall coolant pressure [Pa] (`i_thermal_electric_conversion>1`)
 
   real(dp) :: temp_fw_peak
   !! peak first wall temperature [K]
@@ -348,13 +348,13 @@ module fwbs_variables
   !! the coolant flow rate.)
 
   real(dp) :: pres_blkt_coolant
-  !! blanket coolant pressure [Pa] (`secondary_cycle>1`)
+  !! blanket coolant pressure [Pa] (`i_thermal_electric_conversion>1`)
 
   real(dp) :: temp_blkt_coolant_in
-  !! inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
+  !! inlet temperature of blanket coolant  [K] (`i_thermal_electric_conversion>1`)
 
   real(dp) :: temp_blkt_coolant_out
-  !! Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
+  !! Outlet temperature of blanket coolant [K] (`i_thermal_electric_conversion>1`)
   !!
   !! - input if `i_blkt_coolant_type=1` (helium)
   !! - calculated if `i_blkt_coolant_type=2` (water)
@@ -363,19 +363,19 @@ module fwbs_variables
   !! blanket coolant pressure [Pa] (stellarator only)
 
   integer :: n_blkt_outboard_modules_poloidal
-  !! number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)
+  !! number of outboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)
 
   integer :: n_blkt_inboard_modules_poloidal
-  !! number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)
+  !! number of inboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)
 
   integer :: n_blkt_outboard_modules_toroidal
-  !! number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)
+  !! number of outboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)
 
   integer :: n_blkt_inboard_modules_toroidal
-  !! number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)
+  !! number of inboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)
 
   real(dp) :: temp_fw_max
-  !! maximum temperature of first wall material [K] (`secondary_cycle>1`)
+  !! maximum temperature of first wall material [K] (`i_thermal_electric_conversion>1`)
 
   real(dp) :: fw_th_conductivity
   !! thermal conductivity of first wall material at 293 K (W/m/K) (Temperature dependence
@@ -733,7 +733,7 @@ module fwbs_variables
     iblanket_thickness = 2
     i_coolant_pumping = 2
     i_shield_mat = 0
-    secondary_cycle = 0
+    i_thermal_electric_conversion = 0
     secondary_cycle_liq = 4
     i_blkt_coolant_type = 1
     afwi = 0.008D0
