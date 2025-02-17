@@ -5475,7 +5475,7 @@ class CoelcParam(NamedTuple):
 
     life_blkt_fpy: Any = None
 
-    bktlife_cal: Any = None
+    life_blkt: Any = None
 
     uctarg: Any = None
 
@@ -5579,7 +5579,7 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             life_blkt_fpy=19.216116010620578,
-            bktlife_cal=19.216116010620578,
+            life_blkt=19.216116010620578,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5663,7 +5663,7 @@ class CoelcParam(NamedTuple):
                 order="F",
             ).transpose(),
             life_blkt_fpy=19.222115557991025,
-            bktlife_cal=19.222115557991025,
+            life_blkt=19.222115557991025,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5770,7 +5770,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", coelcparam.life_blkt_fpy)
 
-    monkeypatch.setattr(fwbs_variables, "bktlife_cal", coelcparam.bktlife_cal)
+    monkeypatch.setattr(fwbs_variables, "life_blkt", coelcparam.life_blkt)
 
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 

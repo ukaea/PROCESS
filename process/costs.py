@@ -134,8 +134,8 @@ class Costs:
         po.ovarrf(
             self.outfile,
             "First wall / blanket life (years)",
-            "(bktlife_cal)",
-            fwbs_variables.bktlife_cal,
+            "(life_blkt)",
+            fwbs_variables.life_blkt,
         )
 
         if ife_variables.ife != 1:
@@ -2662,7 +2662,7 @@ class Costs:
 
         #  Compound interest factor
 
-        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.bktlife_cal
+        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.life_blkt
 
         #  Capital recovery factor
 
@@ -2920,13 +2920,13 @@ class Costs:
         """
         # FW/Blanket and HCD
         if fwbs_variables.life_blkt_fpy < cost_variables.tlife:
-            fwbs_variables.bktlife_cal = (
+            fwbs_variables.life_blkt = (
                 fwbs_variables.life_blkt_fpy * cost_variables.cfactr
             )
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-            cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
+            cost_variables.cdrlife_cal = fwbs_variables.life_blkt
         else:
-            fwbs_variables.bktlife_cal = fwbs_variables.life_blkt_fpy
+            fwbs_variables.life_blkt = fwbs_variables.life_blkt_fpy
 
         # Divertor
         if cost_variables.divlife < cost_variables.tlife:
