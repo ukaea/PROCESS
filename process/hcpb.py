@@ -227,7 +227,7 @@ class CCFE_HCPB:
         )
 
         # Blanket coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+        coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
 
         # Shield coolant volume (m3)
         coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
@@ -335,13 +335,13 @@ class CCFE_HCPB:
             fwbs_variables.breeder_multiplier - fwbs_variables.fblli2sio4
         )
         fwbs_variables.whtbltibe12 = (
-            fwbs_variables.volblkt * fwbs_variables.fbltibe12 * 2260.0
+            fwbs_variables.vol_blkt_total * fwbs_variables.fbltibe12 * 2260.0
         )
 
         # Blanket Lithium orthosilicate mass (kg)
         # Ref: www.rockwoodlithium.com...
         fwbs_variables.whtblli4sio4 = (
-            fwbs_variables.volblkt * fwbs_variables.fblli2sio4 * 2400.0
+            fwbs_variables.vol_blkt_total * fwbs_variables.fblli2sio4 * 2400.0
         )
 
         # TODO sort this out so that costs model uses new variables.
@@ -360,7 +360,9 @@ class CCFE_HCPB:
 
         # Steel mass (kg)
         fwbs_variables.whtblss = (
-            fwbs_variables.volblkt * fwbs_variables.fblss_ccfe * fwbs_variables.denstl
+            fwbs_variables.vol_blkt_total
+            * fwbs_variables.fblss_ccfe
+            * fwbs_variables.denstl
         )
 
         # Total blanket mass (kg)
@@ -411,7 +413,7 @@ class CCFE_HCPB:
         ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
         ccfe_hcpb_module.fw_density = fwbs_variables.denstl * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
-            fwbs_variables.whtblkt / fwbs_variables.volblkt
+            fwbs_variables.whtblkt / fwbs_variables.vol_blkt_total
         )
         ccfe_hcpb_module.shield_density = (
             fwbs_variables.whtshld / fwbs_variables.volshld
@@ -1275,8 +1277,8 @@ class CCFE_HCPB:
         po.ovarrf(
             self.outfile,
             "Blanket Volume (m3)",
-            "(volblkt)",
-            fwbs_variables.volblkt,
+            "(vol_blkt_total)",
+            fwbs_variables.vol_blkt_total,
             "OP ",
         )
         po.ovarrf(

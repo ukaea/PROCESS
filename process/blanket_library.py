@@ -194,7 +194,7 @@ class BlanketLibrary:
             (
                 fwbs_variables.volblkti,
                 fwbs_variables.volblkto,
-                fwbs_variables.volblkt,
+                fwbs_variables.vol_blkt_total,
             ) = dshellvol(
                 r1,
                 r2,
@@ -284,7 +284,7 @@ class BlanketLibrary:
             (
                 fwbs_variables.volblkti,
                 fwbs_variables.volblkto,
-                fwbs_variables.volblkt,
+                fwbs_variables.vol_blkt_total,
             ) = eshellvol(
                 r1,
                 r2,
@@ -347,10 +347,13 @@ class BlanketLibrary:
         build_variables.blarea = build_variables.blareaib + build_variables.blareaob
 
         fwbs_variables.volblkto = (
-            fwbs_variables.volblkt * (1.0 - fwbs_variables.fdiv - fwbs_variables.fhcd)
+            fwbs_variables.vol_blkt_total
+            * (1.0 - fwbs_variables.fdiv - fwbs_variables.fhcd)
             - fwbs_variables.volblkti
         )
-        fwbs_variables.volblkt = fwbs_variables.volblkti + fwbs_variables.volblkto
+        fwbs_variables.vol_blkt_total = (
+            fwbs_variables.volblkti + fwbs_variables.volblkto
+        )
 
         # Apply shield coverage factors
         build_variables.shareaib = fwbs_variables.fvolsi * build_variables.shareaib
@@ -1566,12 +1569,14 @@ class BlanketLibrary:
             blanket_library.pnucblkti = (
                 fwbs_variables.pnucblkt
                 * fwbs_variables.volblkti
-                / fwbs_variables.volblkt
+                / fwbs_variables.vol_blkt_total
             )
 
         # Neutron power deposited in outboard blanket (MW)
         blanket_library.pnucblkto = (
-            fwbs_variables.pnucblkt * fwbs_variables.volblkto / fwbs_variables.volblkt
+            fwbs_variables.pnucblkt
+            * fwbs_variables.volblkto
+            / fwbs_variables.vol_blkt_total
         )
 
         # For a dual-coolant blanket, some fraction of the power goes into the
@@ -1585,15 +1590,15 @@ class BlanketLibrary:
             # Inboard blanket calc. Will return 0 if no inboard dr_shld_inboard thickness
             pnucblkti_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
-            ) * (fwbs_variables.volblkti / fwbs_variables.volblkt)
+            ) * (fwbs_variables.volblkti / fwbs_variables.vol_blkt_total)
             pnucblkti_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkti / fwbs_variables.volblkt
+                fwbs_variables.volblkti / fwbs_variables.vol_blkt_total
             )
             pnucblkto_struct = (
                 fwbs_variables.pnucblkt * fwbs_variables.f_nuc_pow_bz_struct
-            ) * (fwbs_variables.volblkto / fwbs_variables.volblkt)
+            ) * (fwbs_variables.volblkto / fwbs_variables.vol_blkt_total)
             pnucblkto_liq = (fwbs_variables.pnucblkt * f_nuc_pow_bz_liq) * (
-                fwbs_variables.volblkto / fwbs_variables.volblkt
+                fwbs_variables.volblkto / fwbs_variables.vol_blkt_total
             )
 
         # FW and BB Mass Flow ###########

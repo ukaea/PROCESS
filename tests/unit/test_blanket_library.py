@@ -506,7 +506,7 @@ class DshapedComponentParam(NamedTuple):
     dz_vv_lower: Any = None
     volblkti: Any = None
     volblkto: Any = None
-    volblkt: Any = None
+    vol_blkt_total: Any = None
     volshld: Any = None
     vdewin: Any = None
     rminor: Any = None
@@ -563,7 +563,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=0,
             volblkto=0,
-            volblkt=0,
+            vol_blkt_total=0,
             volshld=0,
             vdewin=0,
             rminor=2.5,
@@ -616,7 +616,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=0,
             volblkto=691.06561956756764,
-            volblkt=691.06561956756764,
+            vol_blkt_total=691.06561956756764,
             volshld=0,
             vdewin=0,
             rminor=2.5,
@@ -669,7 +669,7 @@ class DshapedComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=0,
             volblkto=691.06561956756764,
-            volblkt=691.06561956756764,
+            vol_blkt_total=691.06561956756764,
             volshld=450.46122947809488,
             vdewin=0,
             rminor=2.5,
@@ -767,7 +767,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     )
     monkeypatch.setattr(fwbs_variables, "volblkti", dshapedcomponentparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", dshapedcomponentparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "volblkt", dshapedcomponentparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", dshapedcomponentparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vdewin", dshapedcomponentparam.vdewin)
     monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
@@ -793,7 +795,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     assert fwbs_variables.volblkto == pytest.approx(
         dshapedcomponentparam.expected_volblkto
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         dshapedcomponentparam.expected_volblkt
     )
 
@@ -819,7 +821,7 @@ class EllipticalComponentParam(NamedTuple):
     dz_vv_lower: Any = None
     volblkti: Any = None
     volblkto: Any = None
-    volblkt: Any = None
+    vol_blkt_total: Any = None
     volshld: Any = None
     vdewin: Any = None
     rmajor: Any = None
@@ -875,7 +877,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=0,
             volblkto=0,
-            volblkt=0,
+            vol_blkt_total=0,
             volshld=0,
             vdewin=0,
             rmajor=8,
@@ -927,7 +929,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=315.83946385183026,
             volblkto=1020.3677420460117,
-            volblkt=1336.207205897842,
+            vol_blkt_total=1336.207205897842,
             volshld=0,
             vdewin=0,
             rmajor=8,
@@ -979,7 +981,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_vv_lower=0.30000000000000004,
             volblkti=315.83946385183026,
             volblkto=1020.3677420460117,
-            volblkt=1336.207205897842,
+            vol_blkt_total=1336.207205897842,
             volshld=1124.4621612595051,
             vdewin=0,
             rmajor=8,
@@ -1066,7 +1068,9 @@ def test_elliptical_component(
     )
     monkeypatch.setattr(fwbs_variables, "volblkti", ellipticalcomponentparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", ellipticalcomponentparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "volblkt", ellipticalcomponentparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", ellipticalcomponentparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vdewin", ellipticalcomponentparam.vdewin)
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
@@ -1106,7 +1110,7 @@ def test_elliptical_component(
     assert fwbs_variables.volblkto == pytest.approx(
         ellipticalcomponentparam.expected_volblkto
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         ellipticalcomponentparam.expected_volblkt
     )
     assert fwbs_variables.volshld == pytest.approx(
@@ -1140,7 +1144,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     fhcd: Any = None
     volblkto: Any = None
     volblkti: Any = None
-    volblkt: Any = None
+    vol_blkt_total: Any = None
     fvolsi: Any = None
     fvolso: Any = None
     volshld: Any = None
@@ -1174,7 +1178,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             fhcd=0,
             volblkto=1020.3677420460117,
             volblkti=315.83946385183026,
-            volblkt=1336.207205897842,
+            vol_blkt_total=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
             volshld=1124.4621612595051,
@@ -1219,7 +1223,9 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(fwbs_variables, "fhcd", applycoveragefactorsparam.fhcd)
     monkeypatch.setattr(fwbs_variables, "volblkto", applycoveragefactorsparam.volblkto)
     monkeypatch.setattr(fwbs_variables, "volblkti", applycoveragefactorsparam.volblkti)
-    monkeypatch.setattr(fwbs_variables, "volblkt", applycoveragefactorsparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", applycoveragefactorsparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
     monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
@@ -1246,7 +1252,7 @@ def test_apply_coverage_factors(
     assert fwbs_variables.volblkto == pytest.approx(
         applycoveragefactorsparam.expected_volblkto
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         applycoveragefactorsparam.expected_volblkt
     )
     assert fwbs_variables.volshld == pytest.approx(
