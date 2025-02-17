@@ -631,7 +631,7 @@ module fwbs_variables
   real(dp) :: visc_fw_coolant
   !! Viscosity of the FW primary coolant
 
-  real(dp) :: rhof_bl
+  real(dp) :: den_blkt_coolant
   !! Density of the blanket primary coolant
 
   real(dp) :: visc_bl
@@ -838,7 +838,7 @@ module fwbs_variables
     outlet_temp_liq = 720.0D0
     den_fw_coolant = 0.0D0
     visc_fw_coolant = 0.0D0
-    rhof_bl = 0.0D0
+    den_blkt_coolant = 0.0D0
     visc_bl = 0.0D0
     cp_fw = 0.0D0
     cv_fw = 0.0D0

@@ -472,7 +472,7 @@ class BlanketLibrary:
             fwbs_variables.cv_fw = fw_bb_fluid_properties.specific_heat_const_v
             fwbs_variables.visc_fw_coolant = fw_bb_fluid_properties.viscosity
 
-            fwbs_variables.rhof_bl = fwbs_variables.den_fw_coolant
+            fwbs_variables.den_blkt_coolant = fwbs_variables.den_fw_coolant
             fwbs_variables.visc_bl = fwbs_variables.visc_fw_coolant
             fwbs_variables.cp_bl = fwbs_variables.cp_fw
             fwbs_variables.cv_bl = fwbs_variables.cv_fw
@@ -503,7 +503,7 @@ class BlanketLibrary:
                 temperature=mid_temp_bl,
                 pressure=fwbs_variables.pres_blkt_coolant,
             )
-            fwbs_variables.rhof_bl = bb_fluid_properties.density
+            fwbs_variables.den_blkt_coolant = bb_fluid_properties.density
             fwbs_variables.cp_bl = bb_fluid_properties.specific_heat_const_p
             fwbs_variables.cv_bl = bb_fluid_properties.specific_heat_const_v
             fwbs_variables.visc_bl = bb_fluid_properties.viscosity
@@ -517,12 +517,12 @@ class BlanketLibrary:
                 f"Error in primary_coolant_properties. {fwbs_variables.den_fw_coolant = }"
             )
         if (
-            fwbs_variables.rhof_bl > 1e9
-            or fwbs_variables.rhof_bl <= 0
-            or np.isnan(fwbs_variables.rhof_bl)
+            fwbs_variables.den_blkt_coolant > 1e9
+            or fwbs_variables.den_blkt_coolant <= 0
+            or np.isnan(fwbs_variables.den_blkt_coolant)
         ):
             raise RuntimeError(
-                f"Error in primary_coolant_properties. {fwbs_variables.rhof_bl = }"
+                f"Error in primary_coolant_properties. {fwbs_variables.den_blkt_coolant = }"
             )
 
         if output:
@@ -599,8 +599,8 @@ class BlanketLibrary:
                 po.ovarrf(
                     self.outfile,
                     "Density (kg m-3)",
-                    "(rhof_bl)",
-                    fwbs_variables.rhof_bl,
+                    "(den_blkt_coolant)",
+                    fwbs_variables.den_blkt_coolant,
                     "OP ",
                 )
                 po.ovarrf(
@@ -816,7 +816,7 @@ class BlanketLibrary:
             blanket_library.velblkto = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
-                flow_density=fwbs_variables.rhof_bl,
+                flow_density=fwbs_variables.den_blkt_coolant,
             )
             velblkto_liq = self.flow_velocity(
                 i_channel_shape=2,
@@ -854,7 +854,7 @@ class BlanketLibrary:
                 blanket_library.velblkti = self.flow_velocity(
                     i_channel_shape=1,
                     mass_flow_rate=blanket_library.mfblktpi,
-                    flow_density=fwbs_variables.rhof_bl,
+                    flow_density=fwbs_variables.den_blkt_coolant,
                 )
                 velblkti_liq = self.flow_velocity(
                     i_channel_shape=2,
@@ -889,7 +889,7 @@ class BlanketLibrary:
             blanket_library.velblkto = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
-                flow_density=fwbs_variables.rhof_bl,
+                flow_density=fwbs_variables.den_blkt_coolant,
             )
 
             # Get mass flow rate etc. for inboard blanket breeder flow for tritium extraction
@@ -934,7 +934,7 @@ class BlanketLibrary:
                 blanket_library.velblkti = self.flow_velocity(
                     i_channel_shape=1,
                     mass_flow_rate=blanket_library.mfblktpi,
-                    flow_density=fwbs_variables.rhof_bl,
+                    flow_density=fwbs_variables.den_blkt_coolant,
                 )
 
                 # Get mass flow rate etc. for inboard blanket breeder flow for tritium extraction
@@ -971,7 +971,7 @@ class BlanketLibrary:
             blanket_library.velblkto = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
-                flow_density=fwbs_variables.rhof_bl,
+                flow_density=fwbs_variables.den_blkt_coolant,
             )
 
             if fwbs_variables.i_blkt_inboard == 1:
@@ -997,7 +997,7 @@ class BlanketLibrary:
                 blanket_library.velblkti = self.flow_velocity(
                     i_channel_shape=1,
                     mass_flow_rate=blanket_library.mfblktpi,
-                    flow_density=fwbs_variables.rhof_bl,
+                    flow_density=fwbs_variables.den_blkt_coolant,
                 )
 
         # FW Presure Drops ###############
@@ -1046,7 +1046,7 @@ class BlanketLibrary:
             flleng=blanket_library.bzfllengo,
             no90=no90bz,
             no180=no180bz,
-            coolant_density=fwbs_variables.rhof_bl,
+            coolant_density=fwbs_variables.den_blkt_coolant,
             coolant_dynamic_viscosity=fwbs_variables.visc_bl,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
@@ -1062,7 +1062,7 @@ class BlanketLibrary:
                 flleng=blanket_library.bzfllengi,
                 no90=no90bz,
                 no180=no180bz,
-                coolant_density=fwbs_variables.rhof_bl,
+                coolant_density=fwbs_variables.den_blkt_coolant,
                 coolant_dynamic_viscosity=fwbs_variables.visc_bl,
                 coolant_electrical_conductivity=0.0e0,
                 pol_channel_length=pollengi,
@@ -1941,7 +1941,7 @@ class BlanketLibrary:
                 primary_coolant_switch=(
                     "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                 ),
-                coolant_density=blanket_library.rhof_bl,
+                coolant_density=blanket_library.den_blkt_coolant,
                 label="Blanket",
             )
 
