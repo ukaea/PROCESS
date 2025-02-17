@@ -217,7 +217,7 @@ contains
       npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
-      li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
+      li6enrich, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
@@ -2008,8 +2008,8 @@ contains
        case ('n_blkt_inboard_modules_poloidal')
           call parse_int_variable('n_blkt_inboard_modules_poloidal', n_blkt_inboard_modules_poloidal, 1, 16, &
                'No of i/b blanket modules in poloidal direction')
-       case ('nblktmodto')
-          call parse_int_variable('nblktmodto', nblktmodto, 8, 96, &
+       case ('n_blkt_outboard_modules_toroidal')
+          call parse_int_variable('n_blkt_outboard_modules_toroidal', n_blkt_outboard_modules_toroidal, 8, 96, &
                'No of o/b blanket modules in toroidal direction')
        case ('n_blkt_inboard_modules_toroidal')
           call parse_int_variable('n_blkt_inboard_modules_toroidal', n_blkt_inboard_modules_toroidal, 8, 96, &

@@ -2401,7 +2401,7 @@ i_blkt_inboard = 0
 * DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 8)
 * JUSTIFICATION: Not set as not used
 
-*nblktmodto = 
+*n_blkt_outboard_modules_toroidal = 
 * DESCRIPTION:   Number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)(default =48)
 * JUSTIFICATION: Not set as not used
 

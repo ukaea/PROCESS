@@ -749,7 +749,7 @@ class DCLL:
                 * fwbs_variables.fw_armour_thickness
                 / fwbs_variables.fw_armour_vol
             )
-        ) / fwbs_variables.nblktmodto
+        ) / fwbs_variables.n_blkt_outboard_modules_toroidal
 
         # Total FW/Structure Coolant Mass
         dcll_module.mass_cool_blanket = (

@@ -1553,8 +1553,8 @@ class CCFE_HCPB:
         po.ovarin(
             self.outfile,
             "No of outboard blanket modules toroidally",
-            "(nblktmodto)",
-            fwbs_variables.nblktmodto,
+            "(n_blkt_outboard_modules_toroidal)",
+            fwbs_variables.n_blkt_outboard_modules_toroidal,
         )
         po.ovarre(
             self.outfile,
