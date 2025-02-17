@@ -705,7 +705,7 @@ contains
                'For backwards compatibility only, q95 can be entered using the symbol q.')
       case ('q95')
          call parse_real_variable('q', q, 1.00D0, 50.0D0, &
-               'Safety factor at 95% flux surface')        
+               'Safety factor at 95% flux surface')
        case ('q0')
           call parse_real_variable('q0', q0, 0.01D0, 20.0D0, &
                'Safety factor on axis')
