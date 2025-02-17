@@ -50,7 +50,7 @@ class CCFE_HCPB:
         build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 
         # Coolant type
-        fwbs_variables.coolwh = 1
+        fwbs_variables.i_blkt_coolant_type = 1
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
@@ -674,7 +674,7 @@ class CCFE_HCPB:
 
         # If we have chosen pressurised water as the blanket coolant, set the
         # coolant outlet temperature as 20 deg C below the boiling point
-        if fwbs_variables.coolwh == 2:
+        if fwbs_variables.i_blkt_coolant_type == 2:
             outlet_saturated_fluid_properties = FluidProperties.of(
                 "Water", pressure=fwbs_variables.blpressure * 1.0e6, vapor_quality=0
             )
