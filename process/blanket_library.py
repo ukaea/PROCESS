@@ -1543,12 +1543,12 @@ class BlanketLibrary:
         ######################################################
         # IB/OB FW (MW)
         blanket_library.pnucfwi = (
-            fwbs_variables.p_fw_nuclear_mw
+            fwbs_variables.p_fw_nuclear_heat_total_mw
             * build_variables.a_fw_inboard
             / build_variables.a_fw_total
         )
         blanket_library.pnucfwo = (
-            fwbs_variables.p_fw_nuclear_mw
+            fwbs_variables.p_fw_nuclear_heat_total_mw
             * build_variables.a_fw_outboard
             / build_variables.a_fw_total
         )

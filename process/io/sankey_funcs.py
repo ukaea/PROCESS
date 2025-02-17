@@ -56,7 +56,7 @@ def plot_full_sankey(
     pnucdiv = m_file.data["pnucdiv"].get_scan(
         -1
     )  # Nuclear heating in the divertor (MW)
-    p_fw_nuclear_mw = m_file.data["p_fw_nuclear_mw"].get_scan(
+    p_fw_nuclear_heat_total_mw = m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(
         -1
     )  # Nuclear heating in the first wall (MW)
     pnucshld = m_file.data["pnucshld"].get_scan(
@@ -159,7 +159,7 @@ def plot_full_sankey(
         neutrons = [
             neutron_power_total,
             -pnucdiv,
-            -p_fw_nuclear_mw,
+            -p_fw_nuclear_heat_total_mw,
             -pnucshld,
             -ptfnuc,
             -pnucemblkt,
@@ -291,7 +291,7 @@ def plot_full_sankey(
         # ---------------------------------------- 1ST WALL - 5 ---------------------------------------
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
-        first_wall = [palpfwmw, p_fw_nuclear_mw, pradfw, htpmwfw, -pthermfw]
+        first_wall = [palpfwmw, p_fw_nuclear_heat_total_mw, pradfw, htpmwfw, -pthermfw]
         sankey.add(
             flows=first_wall,
             orientations=[0, -1, 1, -1, 0],
@@ -512,7 +512,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pnucdiv = m_file.data["pnucdiv"].get_scan(
         -1
     )  # nuclear heating in the divertor (MW)
-    p_fw_nuclear_mw = m_file.data["p_fw_nuclear_mw"].get_scan(
+    p_fw_nuclear_heat_total_mw = m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(
         -1
     )  # nuclear heating in the first wall (MW)
     pnucblkt = m_file.data["pnucblkt"].get_scan(
@@ -541,7 +541,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on divertor (MW)
     totaldivetc = pdivt + pnucdiv + praddiv
     # Power deposited on Blanket (MW)
-    totalblktetc = p_fw_nuclear_mw + pnucblkt + pnucshld + pradfw + palpfwmw - emultmw
+    totalblktetc = (
+        p_fw_nuclear_heat_total_mw + pnucblkt + pnucshld + pradfw + palpfwmw - emultmw
+    )
 
     if itart == 0:
         # Power deposited in CP (MW) (None here)

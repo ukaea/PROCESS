@@ -969,7 +969,7 @@
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4498E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      7.9388E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      2.5118E-02 OP 
- Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_mw)______________________      1.6315E+02 OP 
+ Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      1.6315E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.2901E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4138E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4906E+02 OP 

@@ -122,7 +122,7 @@ module fwbs_variables
   real(dp) :: pnucdiv
   !! nuclear heating in the divertor [MW]
 
-  real(dp) :: p_fw_nuclear_mw
+  real(dp) :: p_fw_nuclear_heat_total_mw
   !! nuclear heating in the first wall [MW]
 
   real(dp) :: pnuchcd
@@ -690,7 +690,7 @@ module fwbs_variables
     li6enrich = 30.0D0
     pnucblkt = 0.0D0
     pnucdiv = 0.0D0
-    p_fw_nuclear_mw = 0.0D0
+    p_fw_nuclear_heat_total_mw = 0.0D0
     pnuchcd = 0.0D0
     pnucloss = 0.0D0
     pnucvvplus = 0.0D0
