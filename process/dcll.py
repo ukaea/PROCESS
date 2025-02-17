@@ -508,7 +508,7 @@ class DCLL:
 
             # BZ
             dcll_module.vol_bz_struct = (
-                fwbs_variables.volblkti
+                fwbs_variables.vol_blkt_inboard
                 * dcll_module.bz_r_ib
                 * (1 - fwbs_variables.r_f_liq_ib)
                 / build_variables.dr_blkt_inboard
@@ -523,7 +523,7 @@ class DCLL:
                 ) / fwbs_variables.vol_blkt_total
 
             dcll_module.vol_bz_liq = (
-                fwbs_variables.volblkti
+                fwbs_variables.vol_blkt_inboard
                 * dcll_module.bz_r_ib
                 * fwbs_variables.r_f_liq_ib
                 / build_variables.dr_blkt_inboard
@@ -534,7 +534,7 @@ class DCLL:
                 / build_variables.dr_blkt_outboard
             )
             dcll_module.vol_bz_liq_ib = (
-                fwbs_variables.volblkti
+                fwbs_variables.vol_blkt_inboard
                 * dcll_module.bz_r_ib
                 * fwbs_variables.r_f_liq_ib
                 / build_variables.dr_blkt_inboard
@@ -548,7 +548,7 @@ class DCLL:
 
             if fwbs_variables.ifci > 0:
                 dcll_module.vol_fci = (
-                    fwbs_variables.volblkti
+                    fwbs_variables.vol_blkt_inboard
                     * dcll_module.r_fci
                     / build_variables.dr_blkt_inboard
                 ) + (
@@ -559,7 +559,7 @@ class DCLL:
 
             # Back Wall
             dcll_module.vol_bw = (
-                fwbs_variables.volblkti
+                fwbs_variables.vol_blkt_inboard
                 * dcll_module.r_backwall
                 / build_variables.dr_blkt_inboard
             ) + (
@@ -570,7 +570,7 @@ class DCLL:
 
             # Manifold/BSS
             dcll_module.vol_bss = (
-                fwbs_variables.volblkti
+                fwbs_variables.vol_blkt_inboard
                 * build_variables.blbmith
                 / build_variables.dr_blkt_inboard
             ) + (
@@ -715,7 +715,7 @@ class DCLL:
         if fwbs_variables.i_blkt_inboard == 1:
             dcll_module.mass_segm_ib = (
                 fwbs_variables.whtblkt
-                * (fwbs_variables.volblkti / fwbs_variables.vol_blkt_total)
+                * (fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total)
                 + fwbs_variables.m_fw_total
                 * (
                     build_variables.a_fw_inboard
