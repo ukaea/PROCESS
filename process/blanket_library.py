@@ -496,7 +496,9 @@ class BlanketLibrary:
             fwbs_variables.visc_fw_coolant = fw_fluid_properties.viscosity
 
             # BB
-            mid_temp_bl = (fwbs_variables.inlet_temp + fwbs_variables.outlet_temp) * 0.5
+            mid_temp_bl = (
+                fwbs_variables.temp_blkt_coolant_in + fwbs_variables.outlet_temp
+            ) * 0.5
             bb_fluid_properties = FluidProperties.of(
                 "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water",
                 temperature=mid_temp_bl,
@@ -613,8 +615,8 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "Inlet Temperature (Celcius)",
-                    "(inlet_temp)",
-                    fwbs_variables.inlet_temp,
+                    "(temp_blkt_coolant_in)",
+                    fwbs_variables.temp_blkt_coolant_in,
                     "OP ",
                 )
                 po.ovarre(
@@ -1543,7 +1545,7 @@ class BlanketLibrary:
 
             primary coolant switch      i_fw_coolant_type               i_blkt_coolant_type              ---
             secondary coolant switch    ---                     ---                 i_bb_liq
-            inlet temp (K)              temp_fw_coolant_in                 inlet_temp          inlet_temp_liq
+            inlet temp (K)              temp_fw_coolant_in                 temp_blkt_coolant_in          inlet_temp_liq
             outlet temp (K)             temp_fw_coolant_out                outlet_temp         outlet_temp_liq
             pressure (Pa)               pres_fw_coolant              pres_blkt_coolant          blpressure_liq
         """
@@ -1658,9 +1660,9 @@ class BlanketLibrary:
 
         elif fwbs_variables.ipump == 1:
             fwoutleti = fwbs_variables.temp_fw_coolant_out
-            inlet_tempi = fwbs_variables.inlet_temp
+            inlet_tempi = fwbs_variables.temp_blkt_coolant_in
             fwoutleto = fwbs_variables.temp_fw_coolant_out
-            inlet_tempo = fwbs_variables.inlet_temp
+            inlet_tempo = fwbs_variables.temp_blkt_coolant_in
 
         # Maximum FW temperature. (27/11/2015) Issue #348
         # First wall flow is just along the first wall, with no allowance for radial
@@ -1914,7 +1916,7 @@ class BlanketLibrary:
             heat_transport_variables.htpmw_blkt = self.pumppower(
                 output=output,
                 icoolpump=1,
-                temp_in=fwbs_variables.inlet_temp.item(),
+                temp_in=fwbs_variables.temp_blkt_coolant_in.item(),
                 temp_out=fwbs_variables.outlet_temp.item(),
                 pressure=fwbs_variables.pres_blkt_coolant.item(),
                 pdrop=deltap_blkt.item(),
@@ -2051,8 +2053,8 @@ class BlanketLibrary:
             po.ovarrf(
                 self.outfile,
                 "Inlet temperature of blanket coolant (K)",
-                "(inlet_temp)",
-                fwbs_variables.inlet_temp,
+                "(temp_blkt_coolant_in)",
+                fwbs_variables.temp_blkt_coolant_in,
             )
             po.ovarrf(
                 self.outfile,

@@ -350,7 +350,7 @@ module fwbs_variables
   real(dp) :: pres_blkt_coolant
   !! blanket coolant pressure [Pa] (`secondary_cycle>1`)
 
-  real(dp) :: inlet_temp
+  real(dp) :: temp_blkt_coolant_in
   !! inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
 
   real(dp) :: outlet_temp
@@ -750,7 +750,7 @@ module fwbs_variables
     len_fw_channel = 4.0D0
     f_fw_peak = 1.0D0
     pres_blkt_coolant = 15.50D6
-    inlet_temp = 573.0D0
+    temp_blkt_coolant_in = 573.0D0
     outlet_temp = 823.0D0
     coolp = 15.5D6
     nblktmodpo = 8
