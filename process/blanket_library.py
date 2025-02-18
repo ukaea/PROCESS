@@ -726,7 +726,7 @@ class BlanketLibrary:
 
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
-        blanket_library.bzfllengi = (
+        blanket_library.len_blkt_inboard_channel_total = (
             fwbs_variables.bzfllengi_n_rad * blanket_library.bldepti
             + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
         )
@@ -838,7 +838,7 @@ class BlanketLibrary:
                     np.pi
                     * fwbs_variables.radius_fw_channel
                     * fwbs_variables.radius_fw_channel
-                    * blanket_library.bzfllengi
+                    * blanket_library.len_blkt_inboard_channel_total
                 )
                 # Have DEMO DCLL set here for now
                 npblkti_liq = (
@@ -921,7 +921,7 @@ class BlanketLibrary:
                     np.pi
                     * fwbs_variables.radius_fw_channel
                     * fwbs_variables.radius_fw_channel
-                    * blanket_library.bzfllengi
+                    * blanket_library.len_blkt_inboard_channel_total
                 )
                 # Have DEMO DCLL set here for now
                 npblkti_liq = (
@@ -992,7 +992,7 @@ class BlanketLibrary:
                     np.pi
                     * fwbs_variables.radius_fw_channel
                     * fwbs_variables.radius_fw_channel
-                    * blanket_library.bzfllengi
+                    * blanket_library.len_blkt_inboard_channel_total
                 )
 
                 # Mass flow rate per coolant pipe
@@ -1067,7 +1067,7 @@ class BlanketLibrary:
                 output,
                 icoolpump=1,
                 flow_velocity=blanket_library.velblkti,
-                flleng=blanket_library.bzfllengi,
+                flleng=blanket_library.len_blkt_inboard_channel_total,
                 no90=no90bz,
                 no180=no180bz,
                 coolant_density=fwbs_variables.den_blkt_coolant,

@@ -57,7 +57,7 @@ module blanket_library
     real(dp) :: bllengi, bllengo
     !! Inboard/outboard blanket segment poloidal length (m)
 
-    real(dp) :: bzfllengi, bzfllengo
+    real(dp) :: len_blkt_inboard_channel_total, bzfllengo
     !! Inboard/outboard primary blanket flow lengths (m)
 
     real(dp) :: bzfllengi_liq, bzfllengo_liq
@@ -141,7 +141,7 @@ contains
         blwidto = 0.0D0
         bllengi = 0.0D0
         bllengo = 0.0D0
-        bzfllengi = 0.0D0
+        len_blkt_inboard_channel_total = 0.0D0
         bzfllengi_liq = 0.0D0
         bzfllengo_liq = 0.0D0
         bzfllengo = 0.0D0
