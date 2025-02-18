@@ -1616,11 +1616,11 @@ class Stellarator:
                 fwbs_variables.wtbllipb = (
                     fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
                 )
-                fwbs_variables.whtblli = (
+                fwbs_variables.m_blkt_lithium = (
                     fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
                 )
                 fwbs_variables.m_blkt_total = (
-                    fwbs_variables.wtbllipb + fwbs_variables.whtblli
+                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
                 )
             else:  # solid breeder (HCPB); always for ipowerflow=0
                 fwbs_variables.m_blkt_li2o = (
@@ -2213,7 +2213,7 @@ class Stellarator:
 
             #     if (fwbs_variables.blktmodel == 0) :
             #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, m_blkt_lithium,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
             #         else:  #  (also if ipowerflow=0)
             #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fblbe, m_blkt_beryllium, fblli2o, m_blkt_li2o,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
 

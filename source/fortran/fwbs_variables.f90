@@ -484,7 +484,7 @@ module fwbs_variables
   real(dp) :: m_blkt_vanadium
   !! mass of blanket - vanadium part [kg]
 
-  real(dp) :: whtblli
+  real(dp) :: m_blkt_lithium
   !! mass of blanket - lithium part [kg]
 
   real(dp) :: vfblkt
@@ -792,7 +792,7 @@ module fwbs_variables
     m_blkt_li2o = 0.0D0
     wtbllipb = 0.0D0
     m_blkt_vanadium = 0.0D0
-    whtblli = 0.0D0
+    m_blkt_lithium = 0.0D0
     vfblkt = 0.25D0
     blktmodel = 0
     declblkt = 0.075D0
