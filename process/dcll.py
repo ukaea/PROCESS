@@ -163,7 +163,7 @@ class DCLL:
                 physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = (
+            fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw * 2 * fwbs_variables.fdiv
             )
         else:
@@ -173,7 +173,7 @@ class DCLL:
                 physics_variables.neutron_power_total * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
-            fwbs_variables.praddiv = (
+            fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
             )
 
@@ -191,7 +191,7 @@ class DCLL:
         # Radiation power incident on first wall (MW)
         fwbs_variables.p_fw_rad_total_mw = (
             physics_variables.p_plasma_rad_mw
-            - fwbs_variables.praddiv
+            - fwbs_variables.p_div_rad_total_mw
             - fwbs_variables.p_fw_hcd_rad_total_mw
         )
 
@@ -276,8 +276,8 @@ class DCLL:
             po.ovarrf(
                 self.outfile,
                 "Radiation heating power into the divertor (MW)",
-                "(praddiv)",
-                fwbs_variables.praddiv,
+                "(p_div_rad_total_mw)",
+                fwbs_variables.p_div_rad_total_mw,
                 "OP ",
             )
             po.ovarrf(
@@ -316,7 +316,7 @@ class DCLL:
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
                 + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.praddiv
+                + fwbs_variables.p_div_rad_total_mw
             )
 
         elif fwbs_variables.i_coolant_pumping in [2, 3]:
@@ -326,7 +326,7 @@ class DCLL:
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
                 + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.praddiv
+                + fwbs_variables.p_div_rad_total_mw
             )
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield

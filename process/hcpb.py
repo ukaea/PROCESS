@@ -658,12 +658,12 @@ class CCFE_HCPB:
         # Radiation power incident on divertor (MW)
         if physics_variables.idivrt == 2:
             # Double null configuration
-            fwbs_variables.praddiv = (
+            fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw * 2.0 * fwbs_variables.fdiv
             )
         else:
             # single null configuration
-            fwbs_variables.praddiv = (
+            fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
             )
 
@@ -675,7 +675,7 @@ class CCFE_HCPB:
         # Radiation power incident on first wall (MW)
         fwbs_variables.p_fw_rad_total_mw = (
             physics_variables.p_plasma_rad_mw
-            - fwbs_variables.praddiv
+            - fwbs_variables.p_div_rad_total_mw
             - fwbs_variables.p_fw_hcd_rad_total_mw
         )
 
@@ -725,7 +725,7 @@ class CCFE_HCPB:
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
                 + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.praddiv
+                + fwbs_variables.p_div_rad_total_mw
             )
 
         elif fwbs_variables.i_coolant_pumping == 2:
@@ -742,7 +742,7 @@ class CCFE_HCPB:
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
                 + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.praddiv
+                + fwbs_variables.p_div_rad_total_mw
             )
 
         elif fwbs_variables.i_coolant_pumping == 3:
@@ -785,7 +785,7 @@ class CCFE_HCPB:
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
                 + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.praddiv
+                + fwbs_variables.p_div_rad_total_mw
             )
             if output:
                 po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
