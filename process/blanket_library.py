@@ -809,7 +809,9 @@ class BlanketLibrary:
             )
 
             # Mass flow rate per coolant pipe
-            blanket_library.mfblktpo = blanket_library.mfblkto / blanket_library.npblkto
+            blanket_library.mfblktpo = (
+                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+            )
             mfblktpo_liq = blanket_library.mfblkto_liq / npblkto_liq
             # Coolant velocites in blanket (m/s)
             # Assume BZ structure has same channel width as FW
@@ -882,7 +884,9 @@ class BlanketLibrary:
             )
 
             # Mass flow rate per coolant pipe
-            blanket_library.mfblktpo = blanket_library.mfblkto / blanket_library.npblkto
+            blanket_library.mfblktpo = (
+                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+            )
 
             # Coolant velocity in blanket (m/s)
             # Assume BZ structure has same channel width as FW
@@ -964,7 +968,9 @@ class BlanketLibrary:
             )
 
             # Mass flow rate per coolant pipe
-            blanket_library.mfblktpo = blanket_library.mfblkto / blanket_library.npblkto
+            blanket_library.mfblktpo = (
+                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+            )
 
             # Coolant velocity in blanket (m/s)
             # Assume BZ structure has same channel width as FW
@@ -1741,7 +1747,7 @@ class BlanketLibrary:
         # If the blanket is dual-coolant...
         if fwbs_variables.icooldual == 2:
             # Mass flow rates for outboard blanket coolants (kg/s)
-            blanket_library.mfblkto = (
+            blanket_library.mflow_blkt_outboard_coolant = (
                 1.0e6
                 * (pnucblkto_struct)
                 / (
@@ -1784,7 +1790,7 @@ class BlanketLibrary:
         # If the blanket is single-coolant with liquid metal breeder...
         elif fwbs_variables.icooldual == 1:
             # Mass flow rate for outboard blanket coolant (kg/s)
-            blanket_library.mfblkto = (
+            blanket_library.mflow_blkt_outboard_coolant = (
                 1.0e6
                 * (blanket_library.p_blkt_nuclear_heat_outboard_mw)
                 / (
@@ -1819,7 +1825,7 @@ class BlanketLibrary:
         # If the blanket is single-coolant with solid breeder...
         else:
             # Mass flow rate for inboard blanket coolant (kg/s)
-            blanket_library.mfblkto = (
+            blanket_library.mflow_blkt_outboard_coolant = (
                 1.0e6
                 * (blanket_library.p_blkt_nuclear_heat_outboard_mw)
                 / (
@@ -1911,7 +1917,9 @@ class BlanketLibrary:
             # Total coolant mass flow rate in the first wall (kg/s)
             blanket_library.mffw = blanket_library.mffwi + blanket_library.mffwo
             # Total coolant mass flow rate in the blanket (kg/s)
-            blanket_library.mfblkt = blanket_library.mfblkti + blanket_library.mfblkto
+            blanket_library.mfblkt = (
+                blanket_library.mfblkti + blanket_library.mflow_blkt_outboard_coolant
+            )
 
             # Mechanical pumping power for the first wall (MW)
             heat_transport_variables.htpmw_fw = self.pumppower(
