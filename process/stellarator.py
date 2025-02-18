@@ -1212,7 +1212,7 @@ class Stellarator:
                 fwbs_variables.pradloss = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
                 )
-                fwbs_variables.praddiv = (
+                fwbs_variables.p_div_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
                 )
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
@@ -1220,7 +1220,7 @@ class Stellarator:
                 )
                 fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_rad_total_mw
                     - fwbs_variables.pradloss
                     - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
@@ -1242,7 +1242,7 @@ class Stellarator:
                     * (
                         physics_variables.pdivt
                         + fwbs_variables.p_div_nuclear_heat_total_mw
-                        + fwbs_variables.praddiv
+                        + fwbs_variables.p_div_rad_total_mw
                     )
                 )
 
@@ -1343,7 +1343,7 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.praddiv = (
+                fwbs_variables.p_div_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
                 )
 
@@ -1363,7 +1363,7 @@ class Stellarator:
 
                 fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_rad_total_mw
                     - fwbs_variables.pradloss
                     - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
@@ -1565,7 +1565,7 @@ class Stellarator:
                         * (
                             physics_variables.pdivt
                             + fwbs_variables.p_div_nuclear_heat_total_mw
-                            + fwbs_variables.praddiv
+                            + fwbs_variables.p_div_rad_total_mw
                         )
                     )
 
