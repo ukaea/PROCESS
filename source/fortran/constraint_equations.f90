@@ -1981,14 +1981,14 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
-      !! q : safety factor 'near' plasma edge: equal to q95
+      !! q95 : safety factor 'near' plasma edge
       !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
       !! q95_min : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use constraint_variables, only: fq
-      use physics_variables, only: q, q95_min, itart
+      use physics_variables, only: q95, q95_min, itart
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1998,7 +1998,7 @@ contains
 
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(9)
-      tmp_cc =   1.0D0 - fq * q/q95_min
+      tmp_cc =   1.0D0 - fq * q95/q95_min
       tmp_con = q95_min * (1.0D0 - tmp_cc)
       tmp_err = q95_min * tmp_cc
       tmp_symbol = '<'

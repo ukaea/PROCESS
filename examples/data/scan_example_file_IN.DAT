@@ -226,10 +226,10 @@ ixc = 16
 boundl(16) = 0.3
 dr_cs = 0.5
 
-* Safety factor near plasma edge
+* Safety factor at 95% flux surface 
 ixc = 18
 boundl(18) = 3.0
-q = 3.5
+q95 = 3.5
 
 * Machine dr_bore [m]
 ixc = 29
