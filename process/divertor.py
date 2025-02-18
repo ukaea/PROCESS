@@ -116,7 +116,10 @@ class Divertor:
         #  (2.5 factor comes from normalization to ITER 1990)
 
         tconl = (
-            2.5e0 * pv.rmajor * pv.q95 * (1.0e0 + 1.0e0 / (pv.q95 * pv.aspect) ** 2) ** 0.5
+            2.5e0
+            * pv.rmajor
+            * pv.q95
+            * (1.0e0 + 1.0e0 / (pv.q95 * pv.aspect) ** 2) ** 0.5
         )
         dtheta = plsep / pv.rminor
         dconl = (
