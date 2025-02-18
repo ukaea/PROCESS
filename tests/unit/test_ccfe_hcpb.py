@@ -810,7 +810,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_fw_hcd_rad_total_mw: Any = None
 
-    fhcd: Any = None
+    f_a_fw_hcd: Any = None
 
     p_fw_rad_total_mw: Any = None
 
@@ -903,7 +903,7 @@ class PowerflowCalcParam(NamedTuple):
             fdiv=0.115,
             p_div_rad_total_mw=0,
             p_fw_hcd_rad_total_mw=0,
-            fhcd=0,
+            f_a_fw_hcd=0,
             p_fw_rad_total_mw=0,
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
@@ -952,7 +952,7 @@ class PowerflowCalcParam(NamedTuple):
             fdiv=0.115,
             p_div_rad_total_mw=33.056596978820579,
             p_fw_hcd_rad_total_mw=0,
-            fhcd=0,
+            f_a_fw_hcd=0,
             p_fw_rad_total_mw=254.39207240222791,
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
@@ -1031,7 +1031,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_hcd_rad_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
+    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", powerflowcalcparam.f_a_fw_hcd)
 
     monkeypatch.setattr(
         fwbs_variables, "p_fw_rad_total_mw", powerflowcalcparam.p_fw_rad_total_mw

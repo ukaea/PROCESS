@@ -1076,8 +1076,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "H/CD apparatus + diagnostics area fraction",
-            "(fhcd)",
-            fwbs_variables.fhcd,
+            "(f_a_fw_hcd)",
+            fwbs_variables.f_a_fw_hcd,
         )
 
         if physics_variables.idivrt == 2:
@@ -1085,16 +1085,16 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "First wall area fraction ",
-                "(1-2fdiv-fhcd)",
-                1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd,
+                "(1-2fdiv-f_a_fw_hcd)",
+                1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd,
             )
         else:
             # Single null configuration
             po.ovarre(
                 self.outfile,
                 "First wall area fraction ",
-                "(1-fdiv-fhcd)",
-                1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd,
+                "(1-fdiv-f_a_fw_hcd)",
+                1.0e0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd,
             )
 
         po.ovarin(
