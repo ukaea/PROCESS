@@ -721,7 +721,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    pnuchcd: Any = None
+    p_fw_hcd_nuclear_heat_mw: Any = None
 
     idivrt: Any = None
 
@@ -738,7 +738,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
         NuclearHeatingDivertorParam(
             fdiv=0.115,
             p_div_nuclear_heat_total_mw=0,
-            pnuchcd=0,
+            p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1986.0623241661431,
             ip=0,
@@ -747,7 +747,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
         NuclearHeatingDivertorParam(
             fdiv=0.115,
             p_div_nuclear_heat_total_mw=182.71773382328519,
-            pnuchcd=0,
+            p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1985.4423932312809,
             ip=0,
@@ -776,7 +776,11 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
         nuclearheatingdivertorparam.p_div_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnuchcd", nuclearheatingdivertorparam.pnuchcd)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_hcd_nuclear_heat_mw",
+        nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 

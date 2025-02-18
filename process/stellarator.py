@@ -1200,14 +1200,14 @@ class Stellarator:
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
-                fwbs_variables.pnuchcd = (
+                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fhcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
                 )
 
                 fwbs_variables.pradloss = (
@@ -1317,7 +1317,7 @@ class Stellarator:
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.pnuchcd = (
+                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fhcd
                 )
 
@@ -1328,7 +1328,7 @@ class Stellarator:
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
                 )
 
                 #  Split between inboard and outboard by first wall area fractions

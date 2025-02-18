@@ -771,7 +771,8 @@ class Power:
 
         #  Secondary thermal power lost to HCD apparatus and diagnostics
         heat_transport_variables.psechcd = (
-            fwbs_variables.pnuchcd + fwbs_variables.p_fw_hcd_rad_total_mw
+            fwbs_variables.p_fw_hcd_nuclear_heat_mw
+            + fwbs_variables.p_fw_hcd_rad_total_mw
         )
 
         #  Number of primary heat exchangers
@@ -1478,7 +1479,12 @@ class Power:
 
         po.oblnkl(self.outfile)
         po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
-        po.dblcol(self.outfile, "pnuchcd", 0.0e0, fwbs_variables.pnuchcd)
+        po.dblcol(
+            self.outfile,
+            "p_fw_hcd_nuclear_heat_mw",
+            0.0e0,
+            fwbs_variables.p_fw_hcd_nuclear_heat_mw,
+        )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
             self.outfile,
@@ -1489,7 +1495,11 @@ class Power:
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
 
         primsum = primsum
-        secsum = secsum + fwbs_variables.pnuchcd + fwbs_variables.p_fw_hcd_rad_total_mw
+        secsum = (
+            secsum
+            + fwbs_variables.p_fw_hcd_nuclear_heat_mw
+            + fwbs_variables.p_fw_hcd_rad_total_mw
+        )
 
         po.oblnkl(self.outfile)
         #     write(self.outfile,'(t10,a)') repeat('-',88)

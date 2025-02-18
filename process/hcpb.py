@@ -648,7 +648,7 @@ class CCFE_HCPB:
             )
 
         # No heating of the H & CD
-        fwbs_variables.pnuchcd = 0.0
+        fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
 
     def powerflow_calc(self, output: bool):
         """Calculations for powerflow
