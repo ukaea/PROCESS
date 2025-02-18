@@ -33,7 +33,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     fdiv: Any = None
 
-    praddiv: Any = None
+    p_div_rad_total_mw: Any = None
 
     p_div_nuclear_heat_total_mw: Any = None
 
@@ -73,7 +73,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_fw_alpha_mw: Any = None
 
-    expected_praddiv: Any = None
+    expected_p_div_rad_total_mw: Any = None
 
     expected_p_div_nuclear_heat_total_mw: Any = None
 
@@ -94,7 +94,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             a_fw_total=1601.1595634509963,
             porbitlossmw=0,
             fdiv=0.115,
-            praddiv=0,
+            p_div_rad_total_mw=0,
             p_div_nuclear_heat_total_mw=0,
             fhcd=0,
             p_fw_hcd_rad_total_mw=0,
@@ -114,7 +114,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             neutron_power_total=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
-            expected_praddiv=33.056596978820579,
+            expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_div_nuclear_heat_total_mw=182.58994516305046,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
@@ -126,7 +126,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             a_fw_total=1891.2865102700493,
             porbitlossmw=0,
             fdiv=0.115,
-            praddiv=33.056596978820579,
+            p_div_rad_total_mw=33.056596978820579,
             p_div_nuclear_heat_total_mw=182.58994516305046,
             fhcd=0,
             p_fw_hcd_rad_total_mw=0,
@@ -146,7 +146,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             neutron_power_total=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
-            expected_praddiv=33.056596978820579,
+            expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_div_nuclear_heat_total_mw=182.53295140508826,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
@@ -184,7 +184,11 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     monkeypatch.setattr(fwbs_variables, "fdiv", dcllneutronicsandpowerparam.fdiv)
 
-    monkeypatch.setattr(fwbs_variables, "praddiv", dcllneutronicsandpowerparam.praddiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_rad_total_mw",
+        dcllneutronicsandpowerparam.p_div_rad_total_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -270,8 +274,8 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     dcll.dcll_neutronics_and_power(False)
 
-    assert fwbs_variables.praddiv == pytest.approx(
-        dcllneutronicsandpowerparam.expected_praddiv
+    assert fwbs_variables.p_div_rad_total_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_div_rad_total_mw
     )
 
     assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
