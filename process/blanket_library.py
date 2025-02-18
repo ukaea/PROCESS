@@ -847,7 +847,7 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mfblkti / blanket_library.npblkti
+                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.npblkti
                 )
                 blanket_library.mfblktpi_liq = blanket_library.mfblkti_liq / npblkti_liq
 
@@ -930,7 +930,7 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mfblkti / blanket_library.npblkti
+                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.npblkti
                 )
 
                 # Coolant velocity in blanket (m/s)
@@ -995,7 +995,7 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mfblkti / blanket_library.npblkti
+                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.npblkti
                 )
 
                 # Coolant velocity in blanket (m/s)
@@ -1767,7 +1767,7 @@ class BlanketLibrary:
             # If there is an IB blanket...
             if fwbs_variables.i_blkt_inboard == 1:
                 # Mass flow rates for inboard blanket coolants (kg/s)
-                blanket_library.mfblkti = (
+                blanket_library.mflow_blkt_inboard_coolant = (
                     1.0e6
                     * (pnucblkti_struct)
                     / (
@@ -1809,7 +1809,7 @@ class BlanketLibrary:
             # If there is an IB blanket...
             if fwbs_variables.i_blkt_inboard == 1:
                 # Mass flow rate for inboard blanket coolant (kg/s)
-                blanket_library.mfblkti = (
+                blanket_library.mflow_blkt_inboard_coolant = (
                     1.0e6
                     * (blanket_library.p_blkt_nuclear_heat_inboard_mw)
                     / (
@@ -1837,7 +1837,7 @@ class BlanketLibrary:
             # If there is an IB blanket...
             # Mass flow rate for inboard blanket coolant (kg/s)
             if fwbs_variables.i_blkt_inboard == 1:
-                blanket_library.mfblkti = (
+                blanket_library.mflow_blkt_inboard_coolant = (
                     1.0e6
                     * (blanket_library.p_blkt_nuclear_heat_inboard_mw)
                     / (
@@ -1918,7 +1918,8 @@ class BlanketLibrary:
             blanket_library.mffw = blanket_library.mffwi + blanket_library.mffwo
             # Total coolant mass flow rate in the blanket (kg/s)
             blanket_library.mfblkt = (
-                blanket_library.mfblkti + blanket_library.mflow_blkt_outboard_coolant
+                blanket_library.mflow_blkt_inboard_coolant
+                + blanket_library.mflow_blkt_outboard_coolant
             )
 
             # Mechanical pumping power for the first wall (MW)
