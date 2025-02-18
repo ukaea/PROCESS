@@ -977,7 +977,7 @@ def test_acc21(acc21param, monkeypatch, costs):
 
 
 class Acc2211Param(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     ucblss: Any = None
 
@@ -1010,7 +1010,7 @@ class Acc2211Param(NamedTuple):
     "acc2211param",
     (
         Acc2211Param(
-            fwarea=1601.1595634509963,
+            a_fw_total=1601.1595634509963,
             ucblss=90,
             fkind=1,
             fwallcst=0,
@@ -1039,7 +1039,7 @@ class Acc2211Param(NamedTuple):
             expected_fwallcst=143.19827300247195,
         ),
         Acc2211Param(
-            fwarea=1891.2865102700493,
+            a_fw_total=1891.2865102700493,
             ucblss=90,
             fkind=1,
             fwallcst=143.19827300247195,
@@ -1082,7 +1082,7 @@ def test_acc2211(acc2211param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwarea", acc2211param.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", acc2211param.a_fw_total)
 
     monkeypatch.setattr(cost_variables, "ucblss", acc2211param.ucblss)
 
@@ -1136,7 +1136,7 @@ class Acc2212Param(NamedTuple):
 
     fkind: Any = None
 
-    iblanket: Any = None
+    i_blanket_type: Any = None
 
     whtblli: Any = None
 
@@ -1208,7 +1208,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1258110.2710352642,
             whtblbreed=0,
@@ -1262,7 +1262,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1260437.468838267,
             whtblbreed=0,
@@ -1341,7 +1341,7 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2212param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "iblanket", acc2212param.iblanket)
+    monkeypatch.setattr(fwbs_variables, "i_blanket_type", acc2212param.i_blanket_type)
 
     monkeypatch.setattr(fwbs_variables, "whtblli", acc2212param.whtblli)
 

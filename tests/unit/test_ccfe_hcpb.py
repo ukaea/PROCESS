@@ -47,9 +47,9 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     dr_shld_outboard: Any = None
 
-    afw: Any = None
+    radius_fw_channel: Any = None
 
-    pitch: Any = None
+    dx_fw_module: Any = None
 
     denstl: Any = None
 
@@ -69,11 +69,9 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     ptfnuc: Any = None
 
-    denw: Any = None
+    f_a_fw_coolant_inboard: Any = None
 
-    vffwi: Any = None
-
-    vffwo: Any = None
+    f_a_fw_coolant_outboard: Any = None
 
     fusion_power: Any = None
 
@@ -107,9 +105,9 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     expected_ptfnuc: Any = None
 
-    expected_vffwi: Any = None
+    expected_f_a_fw_coolant_inboard: Any = None
 
-    expected_vffwo: Any = None
+    expected_f_a_fw_coolant_outboard: Any = None
 
     expected_armour_density: Any = None
 
@@ -140,8 +138,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_blkt_outboard=0.98199999999999998,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
-            afw=0.0060000000000000001,
-            pitch=0.02,
+            radius_fw_channel=0.0060000000000000001,
+            dx_fw_module=0.02,
             denstl=7800,
             whtblkt=3501027.3252278985,
             volblkt=1397.9003011502937,
@@ -151,9 +149,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vdewin=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0,
-            denw=19250,
-            vffwi=0,
-            vffwo=0,
+            f_a_fw_coolant_inboard=0,
+            f_a_fw_coolant_outboard=0,
             fusion_power=1986.0623241661431,
             itart=0,
             whttf=19649856.627845347,
@@ -170,8 +167,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_shield=0,
             tfc_nuc_heating=0,
             expected_ptfnuc=0.044541749095475737,
-            expected_vffwi=0.31415926535897931,
-            expected_vffwo=0.31415926535897931,
+            expected_f_a_fw_coolant_inboard=0.31415926535897931,
+            expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
             expected_fw_density=5349.557730199961,
             expected_blanket_density=2504.4899999999998,
@@ -190,8 +187,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_blkt_outboard=0.98199999999999998,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
-            afw=0.0060000000000000001,
-            pitch=0.02,
+            radius_fw_channel=0.0060000000000000001,
+            dx_fw_module=0.02,
             denstl=7800,
             whtblkt=3507503.3737008357,
             volblkt=1400.4860764869636,
@@ -201,9 +198,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vdewin=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0.044184461825198453,
-            denw=19250,
-            vffwi=0.31415926535897931,
-            vffwo=0.31415926535897931,
+            f_a_fw_coolant_inboard=0.31415926535897931,
+            f_a_fw_coolant_outboard=0.31415926535897931,
             fusion_power=1985.4423932312809,
             itart=0,
             whttf=19662548.210142396,
@@ -220,8 +216,8 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_shield=4.056,
             tfc_nuc_heating=22427.165831352642,
             expected_ptfnuc=0.044556605747797934,
-            expected_vffwi=0.31415926535897931,
-            expected_vffwo=0.31415926535897931,
+            expected_f_a_fw_coolant_inboard=0.31415926535897931,
+            expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
             expected_fw_density=5349.557730199961,
             expected_blanket_density=2504.4900000000002,
@@ -278,9 +274,15 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         build_variables, "dr_shld_outboard", nuclearheatingmagnetsparam.dr_shld_outboard
     )
 
-    monkeypatch.setattr(fwbs_variables, "afw", nuclearheatingmagnetsparam.afw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "radius_fw_channel",
+        nuclearheatingmagnetsparam.radius_fw_channel,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pitch", nuclearheatingmagnetsparam.pitch)
+    monkeypatch.setattr(
+        fwbs_variables, "dx_fw_module", nuclearheatingmagnetsparam.dx_fw_module
+    )
 
     monkeypatch.setattr(fwbs_variables, "denstl", nuclearheatingmagnetsparam.denstl)
 
@@ -304,11 +306,17 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
 
-    monkeypatch.setattr(fwbs_variables, "denw", nuclearheatingmagnetsparam.denw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_fw_coolant_inboard",
+        nuclearheatingmagnetsparam.f_a_fw_coolant_inboard,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "vffwi", nuclearheatingmagnetsparam.vffwi)
-
-    monkeypatch.setattr(fwbs_variables, "vffwo", nuclearheatingmagnetsparam.vffwo)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_fw_coolant_outboard",
+        nuclearheatingmagnetsparam.f_a_fw_coolant_outboard,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingmagnetsparam.fusion_power
@@ -366,12 +374,12 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         nuclearheatingmagnetsparam.expected_ptfnuc
     )
 
-    assert fwbs_variables.vffwi == pytest.approx(
-        nuclearheatingmagnetsparam.expected_vffwi
+    assert fwbs_variables.f_a_fw_coolant_inboard == pytest.approx(
+        nuclearheatingmagnetsparam.expected_f_a_fw_coolant_inboard
     )
 
-    assert fwbs_variables.vffwo == pytest.approx(
-        nuclearheatingmagnetsparam.expected_vffwo
+    assert fwbs_variables.f_a_fw_coolant_outboard == pytest.approx(
+        nuclearheatingmagnetsparam.expected_f_a_fw_coolant_outboard
     )
 
     assert ccfe_hcpb_module.armour_density == pytest.approx(
@@ -408,15 +416,15 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
 
 class NuclearHeatingFwParam(NamedTuple):
-    pnucfw: Any = None
+    p_fw_nuclear_heat_total_mw: Any = None
 
-    fwmass: Any = None
+    m_fw_total: Any = None
 
     fusion_power: Any = None
 
     fw_armour_u_nuc_heating: Any = None
 
-    expected_pnucfw: Any = None
+    expected_p_fw_nuclear_heat_total_mw: Any = None
 
     expected_fw_armour_u_nuc_heating: Any = None
 
@@ -425,19 +433,19 @@ class NuclearHeatingFwParam(NamedTuple):
     "nuclearheatingfwparam",
     (
         NuclearHeatingFwParam(
-            pnucfw=0,
-            fwmass=224802.80270851994,
+            p_fw_nuclear_heat_total_mw=0,
+            m_fw_total=224802.80270851994,
             fusion_power=1986.0623241661431,
             fw_armour_u_nuc_heating=0,
-            expected_pnucfw=279.04523551646628,
+            expected_p_fw_nuclear_heat_total_mw=279.04523551646628,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
         NuclearHeatingFwParam(
-            pnucfw=276.80690153753221,
-            fwmass=182115.83467868491,
+            p_fw_nuclear_heat_total_mw=276.80690153753221,
+            m_fw_total=182115.83467868491,
             fusion_power=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
-            expected_pnucfw=225.98781165610032,
+            expected_p_fw_nuclear_heat_total_mw=225.98781165610032,
             expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
     ),
@@ -455,9 +463,13 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", nuclearheatingfwparam.pnucfw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_total_mw",
+        nuclearheatingfwparam.p_fw_nuclear_heat_total_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "fwmass", nuclearheatingfwparam.fwmass)
+    monkeypatch.setattr(fwbs_variables, "m_fw_total", nuclearheatingfwparam.m_fw_total)
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingfwparam.fusion_power
@@ -471,7 +483,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.nuclear_heating_fw()
 
-    assert fwbs_variables.pnucfw == pytest.approx(nuclearheatingfwparam.expected_pnucfw)
+    assert fwbs_variables.p_fw_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingfwparam.expected_p_fw_nuclear_heat_total_mw
+    )
 
     assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
         nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
@@ -766,9 +780,9 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
 
 class PowerflowCalcParam(NamedTuple):
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
 
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     porbitlossmw: Any = None
 
@@ -790,7 +804,7 @@ class PowerflowCalcParam(NamedTuple):
 
     primary_pumping: Any = None
 
-    pnucfw: Any = None
+    p_fw_nuclear_heat_total_mw: Any = None
 
     pnucblkt: Any = None
 
@@ -865,8 +879,8 @@ class PowerflowCalcParam(NamedTuple):
     "powerflowcalcparam",
     (
         PowerflowCalcParam(
-            fwareaob=988.92586580655245,
-            fwarea=1601.1595634509963,
+            a_fw_outboard=988.92586580655245,
+            a_fw_total=1601.1595634509963,
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=0,
@@ -877,7 +891,7 @@ class PowerflowCalcParam(NamedTuple):
             outlet_temp=823,
             blpressure=15500000,
             primary_pumping=3,
-            pnucfw=276.80690153753221,
+            p_fw_nuclear_heat_total_mw=276.80690153753221,
             pnucblkt=1504.9215740808861,
             pnucdiv=182.71773382328519,
             pnucshld=1.3611259588044891,
@@ -914,8 +928,8 @@ class PowerflowCalcParam(NamedTuple):
             expected_htpmw_fw_blkt=202.00455086503842,
         ),
         PowerflowCalcParam(
-            fwareaob=1168.1172772224481,
-            fwarea=1891.2865102700493,
+            a_fw_outboard=1168.1172772224481,
+            a_fw_total=1891.2865102700493,
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=33.056596978820579,
@@ -926,7 +940,7 @@ class PowerflowCalcParam(NamedTuple):
             outlet_temp=823,
             blpressure=15500000,
             primary_pumping=3,
-            pnucfw=230.98304919926957,
+            p_fw_nuclear_heat_total_mw=230.98304919926957,
             pnucblkt=1550.1447895848396,
             pnucdiv=182.66070017727785,
             pnucshld=1.4038170956592293,
@@ -977,9 +991,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwareaob", powerflowcalcparam.fwareaob)
+    monkeypatch.setattr(
+        build_variables, "a_fw_outboard", powerflowcalcparam.a_fw_outboard
+    )
 
-    monkeypatch.setattr(build_variables, "fwarea", powerflowcalcparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", powerflowcalcparam.a_fw_total)
 
     monkeypatch.setattr(
         current_drive_variables, "porbitlossmw", powerflowcalcparam.porbitlossmw
@@ -1005,7 +1021,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", powerflowcalcparam.pnucfw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_total_mw",
+        powerflowcalcparam.p_fw_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucblkt", powerflowcalcparam.pnucblkt)
 
@@ -1402,11 +1422,11 @@ class ComponentMassesParam(NamedTuple):
     blbuoth: Any = None
     blbmoth: Any = None
     blbpoth: Any = None
-    fwareaib: Any = None
+    a_fw_inboard: Any = None
     dr_fw_inboard: Any = None
-    fwareaob: Any = None
+    a_fw_outboard: Any = None
     dr_fw_outboard: Any = None
-    fwarea: Any = None
+    a_fw_total: Any = None
     volblkt: Any = None
     vfblkt: Any = None
     whtblbe: Any = None
@@ -1426,7 +1446,7 @@ class ComponentMassesParam(NamedTuple):
     vfpblkt: Any = None
     whtshld: Any = None
     wpenshld: Any = None
-    fwmass: Any = None
+    m_fw_total: Any = None
     fw_armour_vol: Any = None
     fw_armour_thickness: Any = None
     fw_armour_mass: Any = None
@@ -1443,11 +1463,10 @@ class ComponentMassesParam(NamedTuple):
     whtblbreed: Any = None
     densbreed: Any = None
     fblbreed: Any = None
-    iblanket: Any = None
-    denw: Any = None
-    vffwi: Any = None
-    vffwo: Any = None
-    volfw: Any = None
+    i_blanket_type: Any = None
+    f_a_fw_coolant_inboard: Any = None
+    f_a_fw_coolant_outboard: Any = None
+    vol_fw_total: Any = None
     fblss_ccfe: Any = None
     fblli2sio4: Any = None
     fbltibe12: Any = None
@@ -1463,7 +1482,7 @@ class ComponentMassesParam(NamedTuple):
     expected_wtblli2o: Any = None
     expected_whtshld: Any = None
     expected_wpenshld: Any = None
-    expected_fwmass: Any = None
+    expected_m_fw_total: Any = None
     expected_fw_armour_vol: Any = None
     expected_fw_armour_mass: Any = None
     expected_armour_fw_bl_mass: Any = None
@@ -1494,11 +1513,11 @@ class ComponentMassesParam(NamedTuple):
             blbuoth=0.46500000000000002,
             blbmoth=0.27000000000000002,
             blbpoth=0.34999999999999998,
-            fwareaib=505.96109565204046,
+            a_fw_inboard=505.96109565204046,
             dr_fw_inboard=0.018000000000000002,
-            fwareaob=838.00728058362097,
+            a_fw_outboard=838.00728058362097,
             dr_fw_outboard=0.018000000000000002,
-            fwarea=1343.9683762356615,
+            a_fw_total=1343.9683762356615,
             volblkt=1182.5433772195902,
             vfblkt=0.25,
             whtblbe=0,
@@ -1518,7 +1537,7 @@ class ComponentMassesParam(NamedTuple):
             vfpblkt=0.10000000000000001,
             whtshld=0,
             wpenshld=0,
-            fwmass=0,
+            m_fw_total=0,
             fw_armour_vol=0,
             fw_armour_thickness=0.0050000000000000001,
             fw_armour_mass=0,
@@ -1535,11 +1554,10 @@ class ComponentMassesParam(NamedTuple):
             whtblbreed=0,
             densbreed=0,
             fblbreed=0.154,
-            iblanket=1,
-            denw=19250,
-            vffwi=0,
-            vffwo=0,
-            volfw=0,
+            i_blanket_type=1,
+            f_a_fw_coolant_inboard=0,
+            f_a_fw_coolant_outboard=0,
+            vol_fw_total=0,
             fblss_ccfe=0,
             fblli2sio4=0,
             fbltibe12=0,
@@ -1555,7 +1573,7 @@ class ComponentMassesParam(NamedTuple):
             expected_wtblli2o=1064289.0394976311,
             expected_whtshld=2445141.3347883238,
             expected_wpenshld=2445141.3347883238,
-            expected_fwmass=188693.16002348688,
+            expected_m_fw_total=188693.16002348688,
             expected_fw_armour_vol=5.8692138856227967,
             expected_fw_armour_mass=112982.36729823884,
             expected_armour_fw_bl_mass=3263343.5901344167,
@@ -1601,15 +1619,19 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "blbuoth", componentmassesparam.blbuoth)
     monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
     monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
-    monkeypatch.setattr(build_variables, "fwareaib", componentmassesparam.fwareaib)
+    monkeypatch.setattr(
+        build_variables, "a_fw_inboard", componentmassesparam.a_fw_inboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
     )
-    monkeypatch.setattr(build_variables, "fwareaob", componentmassesparam.fwareaob)
+    monkeypatch.setattr(
+        build_variables, "a_fw_outboard", componentmassesparam.a_fw_outboard
+    )
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )
-    monkeypatch.setattr(build_variables, "fwarea", componentmassesparam.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", componentmassesparam.a_fw_total)
     monkeypatch.setattr(fwbs_variables, "volblkt", componentmassesparam.volblkt)
     monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
     monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
@@ -1633,7 +1655,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "vfpblkt", componentmassesparam.vfpblkt)
     monkeypatch.setattr(fwbs_variables, "whtshld", componentmassesparam.whtshld)
     monkeypatch.setattr(fwbs_variables, "wpenshld", componentmassesparam.wpenshld)
-    monkeypatch.setattr(fwbs_variables, "fwmass", componentmassesparam.fwmass)
+    monkeypatch.setattr(fwbs_variables, "m_fw_total", componentmassesparam.m_fw_total)
     monkeypatch.setattr(
         fwbs_variables, "fw_armour_vol", componentmassesparam.fw_armour_vol
     )
@@ -1660,11 +1682,22 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(fwbs_variables, "whtblbreed", componentmassesparam.whtblbreed)
     monkeypatch.setattr(fwbs_variables, "densbreed", componentmassesparam.densbreed)
     monkeypatch.setattr(fwbs_variables, "fblbreed", componentmassesparam.fblbreed)
-    monkeypatch.setattr(fwbs_variables, "iblanket", componentmassesparam.iblanket)
-    monkeypatch.setattr(fwbs_variables, "denw", componentmassesparam.denw)
-    monkeypatch.setattr(fwbs_variables, "vffwi", componentmassesparam.vffwi)
-    monkeypatch.setattr(fwbs_variables, "vffwo", componentmassesparam.vffwo)
-    monkeypatch.setattr(fwbs_variables, "volfw", componentmassesparam.volfw)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blanket_type", componentmassesparam.i_blanket_type
+    )
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_fw_coolant_inboard",
+        componentmassesparam.f_a_fw_coolant_inboard,
+    )
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_fw_coolant_outboard",
+        componentmassesparam.f_a_fw_coolant_outboard,
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_fw_total", componentmassesparam.vol_fw_total
+    )
     monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
     monkeypatch.setattr(fwbs_variables, "fblli2sio4", componentmassesparam.fblli2sio4)
     monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)
@@ -1705,7 +1738,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.wpenshld == pytest.approx(
         componentmassesparam.expected_wpenshld
     )
-    assert fwbs_variables.fwmass == pytest.approx(componentmassesparam.expected_fwmass)
+    assert fwbs_variables.m_fw_total == pytest.approx(
+        componentmassesparam.expected_m_fw_total
+    )
     assert fwbs_variables.fw_armour_vol == pytest.approx(
         componentmassesparam.expected_fw_armour_vol
     )

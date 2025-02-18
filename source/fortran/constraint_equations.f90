@@ -1752,14 +1752,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for first wall temperature upper limit
       !! #=# fwbs
-      !! #=#=# ftpeak, tfwmatmax
+      !! #=#=# ftpeak, temp_fw_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftpeak : input real : f-value for first wall peak temperature
-      !! tfwmatmax : input real : maximum temperature of first wall material (K) (secondary_cycle>1)
-      !! tpeak : input real : peak first wall temperature (K)
+      !! temp_fw_max : input real : maximum temperature of first wall material (K) (secondary_cycle>1)
+      !! temp_fw_peak : input real : peak first wall temperature (K)
       use constraint_variables, only: ftpeak
-      use fwbs_variables, only: tfwmatmax, tpeak
+      use fwbs_variables, only: temp_fw_max, temp_fw_peak
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1768,10 +1768,10 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! If the temperature peak == 0 then report an error
-      if (tpeak < 1.0D0) call report_error(5)
-      tmp_cc =  1.0D0 - ftpeak * tfwmatmax/tpeak
-      tmp_con = tfwmatmax * (1.0D0 - tmp_cc)
-      tmp_err = tpeak * tmp_cc
+      if (temp_fw_peak < 1.0D0) call report_error(5)
+      tmp_cc =  1.0D0 - ftpeak * temp_fw_max/temp_fw_peak
+      tmp_con = temp_fw_max * (1.0D0 - tmp_cc)
+      tmp_err = temp_fw_peak * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'K'
 
@@ -2189,8 +2189,8 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftbr : input real : f-value for minimum tritium breeding ratio
-      !! tbr : input real :  tritium breeding ratio (iblanket=2,3 (KIT HCPB/HCLL))
-      !! tbrmin : input real :  minimum tritium breeding ratio (If iblanket=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
+      !! tbr : input real :  tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
+      !! tbrmin : input real :  minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
       use constraint_variables, only: ftbr, tbrmin
       use fwbs_variables, only: tbr
       implicit none

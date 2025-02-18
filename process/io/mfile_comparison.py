@@ -198,13 +198,13 @@ BLANKET_COMPARE_PARAMS = [
     "dr_blkt_outboard",
     "fusion_power",
     "pnucblkt",
-    "pnucfw",
+    "p_fw_nuclear_heat_total_mw",
     "ptfnuc",
     "pnucshld",
     "pnucdiv",
     "tbr",
     "li6enrich",
-    "fwarea",
+    "a_fw_total",
     "emult",
 ]
 

@@ -1962,7 +1962,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
+        # a_fw_total = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -2003,9 +2003,9 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
             ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
@@ -2036,33 +2036,35 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
             ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
         else:
             # Single null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = build_variables.fwareaib + build_variables.fwareaob
+        build_variables.a_fw_total = (
+            build_variables.a_fw_inboard + build_variables.a_fw_outboard
+        )
 
-        if build_variables.fwareaob <= 0.0e0:
+        if build_variables.a_fw_outboard <= 0.0e0:
             error_handling.fdiags[0] = fwbs_variables.fdiv
             error_handling.fdiags[1] = fwbs_variables.fhcd
             error_handling.report_error(61)

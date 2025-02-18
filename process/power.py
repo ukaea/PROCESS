@@ -623,7 +623,7 @@ class Power:
             if fwbs_variables.icooldual == 2:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
-                    + fwbs_variables.pnucfw
+                    + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + (fwbs_variables.pnucblkt * (1 - fwbs_variables.f_nuc_pow_bz_liq))
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -634,7 +634,7 @@ class Power:
             elif fwbs_variables.icooldual == 1:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
-                    + fwbs_variables.pnucfw
+                    + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -644,7 +644,7 @@ class Power:
                 )
             else:
                 self.pthermfw_blkt = (
-                    fwbs_variables.pnucfw
+                    fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -656,7 +656,7 @@ class Power:
         elif fwbs_variables.primary_pumping == 3:
             # First wall and blanket coolant combined
             self.pthermfw_blkt = (
-                fwbs_variables.pnucfw
+                fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.pradfw
                 + fwbs_variables.pnucblkt
                 + primary_pumping_variables.htpmw_fw_blkt
@@ -668,7 +668,7 @@ class Power:
         else:
             #  Total power deposited in first wall coolant (MW)
             self.pthermfw = (
-                fwbs_variables.pnucfw
+                fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.pradfw
                 + heat_transport_variables.htpmw_fw
                 + current_drive_variables.porbitlossmw
@@ -1316,14 +1316,19 @@ class Power:
         po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
 
         po.write(self.outfile, "First wall:")
-        po.dblcol(self.outfile, "pnucfw", 0.0e0, fwbs_variables.pnucfw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_nuclear_heat_total_mw",
+            0.0e0,
+            fwbs_variables.p_fw_nuclear_heat_total_mw,
+        )
         po.dblcol(self.outfile, "palpfwmw", 0.0e0, physics_variables.palpfwmw)
         po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
         po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
 
         primsum = (
             primsum
-            + fwbs_variables.pnucfw
+            + fwbs_variables.p_fw_nuclear_heat_total_mw
             + physics_variables.palpfwmw
             + fwbs_variables.pradfw
             + heat_transport_variables.htpmw_fw
@@ -2334,9 +2339,9 @@ class Power:
         if fwbs_variables.secondary_cycle == 0:
             #  CCFE HCPB Model (with or without TBR)
             if (
-                (fwbs_variables.iblanket == 1)
-                or (fwbs_variables.iblanket == 3)
-                or fwbs_variables.iblanket == 2
+                (fwbs_variables.i_blanket_type == 1)
+                or (fwbs_variables.i_blanket_type == 3)
+                or fwbs_variables.i_blanket_type == 2
             ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -2344,12 +2349,14 @@ class Power:
                 # Feedheat & reheat cycle assumed
                 etath = 0.411e0
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.secondary_cycle == 1:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
+            if (fwbs_variables.i_blanket_type == 1) or (
+                fwbs_variables.i_blanket_type == 3
+            ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2357,10 +2364,10 @@ class Power:
                 etath = 0.411e0 - self.delta_eta
 
                 #  KIT HCPB model
-            elif fwbs_variables.iblanket == 2:
+            elif fwbs_variables.i_blanket_type == 2:
                 etath = 0.411e0 - self.delta_eta
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  User input used, etath not changed
         elif fwbs_variables.secondary_cycle == 2:
@@ -2370,7 +2377,9 @@ class Power:
             #  Steam Rankine cycle to be used
         elif fwbs_variables.secondary_cycle == 3:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
+            if (fwbs_variables.i_blanket_type == 1) or (
+                fwbs_variables.i_blanket_type == 3
+            ):
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature
                 #  is assumed to be 20 degrees below the primary coolant outlet
@@ -2396,8 +2405,8 @@ class Power:
                 )
 
                 #  KIT HCPB Model
-            elif fwbs_variables.iblanket == 2:
-                #  Same as fwbs_variables.iblanket = 1
+            elif fwbs_variables.i_blanket_type == 2:
+                #  Same as fwbs_variables.i_blanket_type = 1
                 heat_transport_variables.tturb = fwbs_variables.outlet_temp - 20.0e0
                 if (heat_transport_variables.tturb < 657.0e0) or (
                     heat_transport_variables.tturb > 915.0e0
@@ -2412,7 +2421,7 @@ class Power:
                     - self.delta_eta
                 )
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Supercritical CO2 cycle to be used
         elif fwbs_variables.secondary_cycle == 4:
