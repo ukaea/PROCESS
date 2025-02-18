@@ -771,13 +771,13 @@ class BlanketLibrary:
         blanket_library.npfwi = build_variables.a_fw_inboard / (
             fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
         )
-        blanket_library.npfwo = build_variables.a_fw_outboard / (
+        blanket_library.n_fw_outboard_channels = build_variables.a_fw_outboard / (
             fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
         blanket_library.mffwpi = blanket_library.mffwi / blanket_library.npfwi
-        blanket_library.mffwpo = blanket_library.mffwo / blanket_library.npfwo
+        blanket_library.mffwpo = blanket_library.mffwo / blanket_library.n_fw_outboard_channels
 
         # Coolant velocite in FW (m/s)
         velfwi = self.flow_velocity(

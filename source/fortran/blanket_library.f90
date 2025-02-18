@@ -72,7 +72,7 @@ module blanket_library
     real(dp) :: mffwi, mffwo, mffw
     !! Inboard/outboard total mass flow rate to remove inboard FW power (kg/s)
 
-    real(dp) :: npfwi, npfwo
+    real(dp) :: npfwi, n_fw_outboard_channels
     !! Inboard/utboard total number of pipes
 
     real(dp) :: mffwpi, mffwpo
@@ -153,7 +153,7 @@ contains
         mffwo = 0.0D0
         mffw = 0.0D0
         npfwi = 0.0D0
-        npfwo = 0.0D0
+        n_fw_outboard_channels = 0.0D0
         mffwpi = 0.0D0
         mffwpo = 0.0D0
         p_blkt_nuclear_heat_inboard_mw = 0.0D0
