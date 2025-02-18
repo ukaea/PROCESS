@@ -29,7 +29,7 @@ class TestStructure:
         dvrtmass: float = 43563.275828777645
         pfmass: float = 5446188.2481440185
         tfmass: float = 21234909.756419446
-        fwmass: float = 224802.80270851994
+        m_fw_total: float = 224802.80270851994
         blmass: float = 3501027.3252278985
         coolmass: float = 1199.6389920083477
         dewmass: float = 16426726.727684354
@@ -56,7 +56,7 @@ class TestStructure:
             dvrtmass,
             pfmass,
             tfmass,
-            fwmass,
+            m_fw_total,
             blmass,
             coolmass,
             dewmass,

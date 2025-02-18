@@ -202,6 +202,18 @@ OBS_VARS = {
     "gamma": "ejima_coeff",
     "lpulse": "i_pulsed_plant",
     "q": "q95",
+    "fwcoolant": "i_fw_coolant_type",
+    "pitch": "dx_fw_module",
+    "iblanket": "i_blanket_type",
+    "fw_wall": "dr_fw_wall",
+    "fwpressure": "pres_fw_coolant",
+    "fwoutlet": "temp_fw_coolant_outlet",
+    "afw": "radius_fw_channel",
+    "peaking_factor": "f_fw_peak",
+    "fwinlet": "temp_fw_coolant_in",
+    "tfwmatmax": "temp_fw_max",
+    "fw_channel_length": "len_fw_channel",
+    "denw": None,
 }
 
 OBS_VARS_HELP = {

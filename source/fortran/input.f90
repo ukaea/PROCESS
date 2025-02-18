@@ -267,18 +267,18 @@ contains
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, divfix, c3div, &
       hldiv, i_hldiv
-    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, fwcoolant, &
-      pitch, iblanket, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
+    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
+      dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      denw, f_neut_shield, fw_th_conductivity, nblktmodti, fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, fwpressure, emult, fwoutlet, nblktmodpi, &
+      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
+      fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
       fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
-      declblkt, fblhebmo, blkttype, afw, inuclear, declshld, hcdportsize, &
-      npdiv, peaking_factor, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
-      denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, fwinlet, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, tfwmatmax, irefprop, fw_channel_length, &
+      declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
+      npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
+      denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
+      fhole, fwbsshape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
       coolwh, emult
@@ -1288,7 +1288,7 @@ contains
           call parse_real_variable('blbuoth', blbuoth, 0.0D0, 2.0D0, &
                'Outboard blanket breeding unit thickness (m)')
        case ('dr_blkt_inboard')
-          if (iblanket == 3) then
+          if (i_blanket_type == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
             write(outfile,*) 'ERROR. BLNKITH input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
@@ -1304,7 +1304,7 @@ contains
             end if
           end if
        case ('dr_blkt_outboard')
-           if (iblanket == 3) then
+           if (i_blanket_type == 3) then
             !CCFE HCPB model with Tritium Breeding Ratio calculation
             write(outfile,*) '**********'
             write(outfile,*) 'ERROR. dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation -'
@@ -1931,36 +1931,36 @@ contains
           call parse_real_array('zref', zref, isub1, ngrpmx, &
                'height of location 3 and 4 coil groups / minor radius', icode)
 
-       case ('afw')
-          call parse_real_variable('afw', afw, 1.0D-3, 0.5D0, &
+       case ('radius_fw_channel')
+          call parse_real_variable('radius_fw_channel', radius_fw_channel, 1.0D-3, 0.5D0, &
                'Inner radius of first wall coolant channel (m)')
 
-       case ('fw_wall')
-          call parse_real_variable('fw_wall', fw_wall, 0.5D-3, 0.1D0, &
+       case ('dr_fw_wall')
+          call parse_real_variable('dr_fw_wall', dr_fw_wall, 0.5D-3, 0.1D0, &
                'wall thickness of first wall coolant channels (m)')
-       case ('pitch')
-          call parse_real_variable('pitch', pitch, 0.5D-3, 0.1D0, &
-               'pitch of first wall cooling channels (m)')
-       case ('fwinlet')
-          call parse_real_variable('fwinlet', fwinlet, 300.0d0, 1500.0D0, &
+       case ('dx_fw_module')
+          call parse_real_variable('dx_fw_module', dx_fw_module, 0.5D-3, 0.1D0, &
+               'Width of a FW module containing a cooling channel [m]')
+       case ('temp_fw_coolant_in')
+          call parse_real_variable('temp_fw_coolant_in', temp_fw_coolant_in, 300.0d0, 1500.0D0, &
                'inlet temperature of first wall coolant (K)')
-       case ('fwoutlet')
-          call parse_real_variable('fwoutlet', fwoutlet, 300.0d0, 1500.0D0, &
+       case ('temp_fw_coolant_out')
+          call parse_real_variable('temp_fw_coolant_out', temp_fw_coolant_out, 300.0d0, 1500.0D0, &
                'outlet temperature of first wall coolant (K)')
-       case ('fwpressure')
-          call parse_real_variable('fwpressure', fwpressure, 1.0d5, 1.0D8, &
+       case ('pres_fw_coolant')
+          call parse_real_variable('pres_fw_coolant', pres_fw_coolant, 1.0d5, 1.0D8, &
                'first wall coolant pressure (Pa)')
-       case ('fwcoolant')
-          call parse_string_variable('fwcoolant', fwcoolant, 'first wall coolant')
-          call lower_case(fwcoolant)
+       case ('i_fw_coolant_type')
+          call parse_string_variable('i_fw_coolant_type', i_fw_coolant_type, 'first wall coolant')
+          call lower_case(i_fw_coolant_type)
        case ('roughness')
           call parse_real_variable('roughness', roughness, 0.0d0, 1.0D-2, &
                'first wall channel roughness epsilon')
-       case ('fw_channel_length')
-          call parse_real_variable('fw_channel_length', fw_channel_length, 1.0D-3, 1.0D3, &
+       case ('len_fw_channel')
+          call parse_real_variable('len_fw_channel', len_fw_channel, 1.0D-3, 1.0D3, &
                'first wall channel length')
-       case ('peaking_factor')
-          call parse_real_variable('peaking_factor', peaking_factor, 1.0d0, 100.0D0, &
+       case ('f_fw_peak')
+          call parse_real_variable('f_fw_peak', f_fw_peak, 1.0d0, 100.0D0, &
                'peaking factor for first wall heat loads')
 
 
@@ -2092,8 +2092,8 @@ contains
        case ('nblktmodti')
           call parse_int_variable('nblktmodti', nblktmodti, 8, 96, &
                'No of i/b blanket modules in toroidal direction')
-       case ('tfwmatmax')
-          call parse_real_variable('tfwmatmax', tfwmatmax, 500.0D0, 2000.0D0, &
+       case ('temp_fw_max')
+          call parse_real_variable('temp_fw_max', temp_fw_max, 500.0D0, 2000.0D0, &
                'Max temperature of first wall material (K)')
        case ('fw_th_conductivity')
           call parse_real_variable('fw_th_conductivity', fw_th_conductivity, 1.0D0, 100.0D0, &
@@ -2123,9 +2123,6 @@ contains
        case ('denstl')
           call parse_real_variable('denstl', denstl, 5.0D3, 1.0D4, &
                'Density of steel (kg/m3)')
-       case ('denw')
-          call parse_real_variable('denw', denw, 1.0D4, 5.0D4, &
-               'Density of tungsten (kg/m3)')
        case ('emult')
           call parse_real_variable('emult', emult, 1.0D0, 2.0D0, &
                'Energy multip. in blanket and shield')
@@ -2194,19 +2191,19 @@ contains
        case ('hcdportsize')
           call parse_int_variable('hcdportsize', hcdportsize, 1, 2, &
                'H/CD port size')
-       case ('iblanket')
-          call parse_int_variable('iblanket', iblanket, 1, 5, 'Switch for blanket model')
-          if ((iblanket == 2).or.(iblanket == 4)) then
+       case ('i_blanket_type')
+          call parse_int_variable('i_blanket_type', i_blanket_type, 1, 5, 'Switch for blanket model')
+          if ((i_blanket_type == 2).or.(i_blanket_type == 4)) then
             write(outfile,*) ' '
             write(outfile,*) '**********'
-            write(outfile,*) 'iblanket = 2/4, KIT HCPB/HCLL model has been removed -'
+            write(outfile,*) 'i_blanket_type = 2/4, KIT HCPB/HCLL model has been removed -'
             write(outfile,*) 'please select a different blanket model.'
             write(outfile,*) '**********'
             write(outfile,*) ' '
             obsolete_var = .true.
           endif
 
-          if (iblanket == 3) then
+          if (i_blanket_type == 3) then
               dr_fw_inboard = 0.03D0
               dr_fw_outboard = 0.03D0
               fw_armour_thickness = 0.003D0

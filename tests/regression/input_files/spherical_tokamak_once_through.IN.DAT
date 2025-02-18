@@ -229,12 +229,12 @@ divfix   = 1.0 * divertor structure vertical thickness (m)
 
 fwbsshape = 1 * switch for first wall; blanket; shield and vacuum vessel shape;
 fw_armour_thickness = 0.003 * first wall armour thickness [m]
-iblanket = 1 * switch for blanket model;
+i_blanket_type = 1 * switch for blanket model;
 i_blkt_inboard = 0 * switch for inboard blanket;
 inuclear = 0 * switch for nuclear heating in the coils;
 primary_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 secondary_cycle = 2 * Switch for power conversion cycle;
-fwcoolant = helium * switch for first wall coolant (can be different from blanket coolant);
+i_fw_coolant_type = helium * switch for first wall coolant (can be different from blanket coolant);
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
 etahtp   = 0.87 * electrical efficiency of primary coolant pumps
 ipump    = 0 * Switch for whether the FW and BB are on the same pump system

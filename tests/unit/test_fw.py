@@ -19,27 +19,27 @@ def fw():
 class FwTempParam(NamedTuple):
     fw_th_conductivity: Any = None
 
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
-    fwinlet: Any = None
+    temp_fw_coolant_in: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_coolant_out: Any = None
 
-    pitch: Any = None
+    dx_fw_module: Any = None
 
-    fw_channel_length: Any = None
+    len_fw_channel: Any = None
 
-    tpeak: Any = None
+    temp_fw_peak: Any = None
 
-    peaking_factor: Any = None
+    f_fw_peak: Any = None
 
-    fw_wall: Any = None
+    dr_fw_wall: Any = None
 
     pnuc_deposited: Any = None
 
-    afw: Any = None
+    radius_fw_channel: Any = None
 
     thickness: Any = None
 
@@ -63,17 +63,17 @@ class FwTempParam(NamedTuple):
     (
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
-            fwinlet=573,
-            fwpressure=8000000,
-            fwoutlet=773,
-            pitch=0.005000000000000001,
-            fw_channel_length=4,
-            tpeak=873,
-            peaking_factor=1,
-            fw_wall=0.0030000000000000001,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            pres_fw_coolant=8000000,
+            temp_fw_coolant_out=773,
+            dx_fw_module=0.005000000000000001,
+            len_fw_channel=4,
+            temp_fw_peak=873,
+            f_fw_peak=1,
+            dr_fw_wall=0.0030000000000000001,
             pnuc_deposited=75.219932653459054,
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             thickness=0.018000000000000002,
             area=612.23369764444396,
             prad_incident=97.271629070225231,
@@ -85,17 +85,17 @@ class FwTempParam(NamedTuple):
         ),
         FwTempParam(
             fw_th_conductivity=28.34,
-            fwcoolant="helium",
-            fwinlet=573,
-            fwpressure=8000000,
-            fwoutlet=773,
-            pitch=0.005000000000000001,
-            fw_channel_length=4,
-            tpeak=873,
-            peaking_factor=1,
-            fw_wall=0.0030000000000000001,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            pres_fw_coolant=8000000,
+            temp_fw_coolant_out=773,
+            dx_fw_module=0.005000000000000001,
+            len_fw_channel=4,
+            temp_fw_peak=873,
+            f_fw_peak=1,
+            dr_fw_wall=0.0030000000000000001,
             pnuc_deposited=121.50088652655793,
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             thickness=0.018000000000000002,
             area=988.92586580655245,
             prad_incident=176.95628839065773,
@@ -125,32 +125,34 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
     # monkeypatch doesnt work for strings
     # but helium is the default
-    # monkeypatch.setattr(fwbs_variables, "fwcoolant", fwtempparam.fwcoolant)
-
-    monkeypatch.setattr(fwbs_variables, "fwinlet", fwtempparam.fwinlet)
-
-    monkeypatch.setattr(fwbs_variables, "fwpressure", fwtempparam.fwpressure)
-
-    monkeypatch.setattr(fwbs_variables, "fwoutlet", fwtempparam.fwoutlet)
-
-    monkeypatch.setattr(fwbs_variables, "pitch", fwtempparam.pitch)
+    # monkeypatch.setattr(fwbs_variables, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_channel_length", fwtempparam.fw_channel_length
+        fwbs_variables, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
     )
 
-    monkeypatch.setattr(fwbs_variables, "tpeak", fwtempparam.tpeak)
+    monkeypatch.setattr(fwbs_variables, "pres_fw_coolant", fwtempparam.pres_fw_coolant)
 
-    monkeypatch.setattr(fwbs_variables, "peaking_factor", fwtempparam.peaking_factor)
+    monkeypatch.setattr(
+        fwbs_variables, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
+    )
 
-    monkeypatch.setattr(fwbs_variables, "fw_wall", fwtempparam.fw_wall)
+    monkeypatch.setattr(fwbs_variables, "dx_fw_module", fwtempparam.dx_fw_module)
+
+    monkeypatch.setattr(fwbs_variables, "len_fw_channel", fwtempparam.len_fw_channel)
+
+    monkeypatch.setattr(fwbs_variables, "temp_fw_peak", fwtempparam.temp_fw_peak)
+
+    monkeypatch.setattr(fwbs_variables, "f_fw_peak", fwtempparam.f_fw_peak)
+
+    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", fwtempparam.dr_fw_wall)
 
     tpeakfw, cfmean, rhofmean, massrate = fw.fw_temp(
         False,
         pnuc_deposited=fwtempparam.pnuc_deposited,
-        afw=fwtempparam.afw,
-        thickness=fwtempparam.thickness,
-        area=fwtempparam.area,
+        radius_fw_channel=fwtempparam.radius_fw_channel,
+        dr_fw=fwtempparam.thickness,
+        a_fw=fwtempparam.area,
         prad_incident=fwtempparam.prad_incident,
         label=fwtempparam.label,
     )
@@ -165,7 +167,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
 
 def test_friction(monkeypatch, fw):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.1)
+    monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.1)
     monkeypatch.setattr(fwbs_variables, "roughness", 1e-6)
 
     assert fw.friction(5500) == pytest.approx(0.0366668931278784)

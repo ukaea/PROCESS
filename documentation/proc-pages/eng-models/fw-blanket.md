@@ -37,7 +37,7 @@ The models used for the thermoydraulics of the first wall, the profile of
 deposition of the neutron energy, tritium breeding, and conversion of heat to 
 electricity have been revised extensively.
 
-`iblanket` -- This switch selects between different types of blanket.
+`i_blanket_type` -- This switch selects between different types of blanket.
 
 - `== 1` -- CCFE HCPB (helium-cooled pebble bed) model. The energy 
     deposition in the armour and first wall, blanket and shield are calculated 
@@ -75,20 +75,20 @@ Summary of key variables and switches:
 |                          |       First Wall        | Breeding Blanket Primary | Liquid Breeder/Coolant               |
 | :----------------------: | :---------------------: | ------------------------ | ------------------------------------ |
 |     Coolant Channels     |      :-----------:      | ------------------------ | --------------------------           |
-|        length (m)        |   `fw_channel_length`   | ---                      | ---                                  |
-|        width (m)         | `afw` (radius, cicular) | `afw`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
-|    wall thickness (m)    |        `fw_wall`        | fw_wall                  | `th_wall_secondary`                  |
-|        pitch (m)         |         `pitch`         | ---                      | ---                                  |
+|        length (m)        |   `len_fw_channel`   | ---                      | ---                                  |
+|        width (m)         | `radius_fw_channel` (radius, cicular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
+|    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
+|        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
-|     peak FW temp (K)     |         `tpeak`         | ---                      | ---                                  |
-|     maximum temp (K)     |       `tfwmatmax`       | ---                      | ---                                  |
+|     peak FW temp (K)     |         `temp_fw_peak`         | ---                      | ---                                  |
+|     maximum temp (K)     |       `temp_fw_max`       | ---                      | ---                                  |
 |        FCI switch        |           ---           | ---                      | `ifci`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
-|  primary coolant switch  |       `fwcoolant`       | `coolwh`                 | ---                                  |
+|  primary coolant switch  |       `i_fw_coolant_type`       | `coolwh`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
-|      inlet temp (K)      |        `fwinlet`        | `inlet_temp`             | `inlet_temp_liq`                     |
-|     outlet temp (K)      |       `fwoutlet`        | `outlet_temp`            | `outlet_temp_liq`                    |
-|      pressure (Pa)       |      `fwpressure`       | `blpressure`             | `blpressure_liq`                     |
+|      inlet temp (K)      |        `temp_fw_coolant_in`        | `inlet_temp`             | `inlet_temp_liq`                     |
+|     outlet temp (K)      |       `temp_fw_coolant_out`        | `outlet_temp`            | `outlet_temp_liq`                    |
+|      pressure (Pa)       |      `pres_fw_coolant`       | `blpressure`             | `blpressure_liq`                     |
 
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
 This can be changed using the switches detailed in the following subsection. 
@@ -110,7 +110,7 @@ Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
 Maximum distance travelled by surface heat load = $\texttt{diagonal}$
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
+\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
 $$
 
 Typical distance travelled by surface heat load:
@@ -121,15 +121,15 @@ $$
 
 
 $$
-\texttt{diagonal}=\sqrt{(\texttt{afw}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{pitch}}{2}-\texttt{afw}\right)^2 }
+\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
 $$
 
-The energy travels over a cross-section which is initially $= \texttt{pitch}$
+The energy travels over a cross-section which is initially $= \texttt{dx_fw_module}$
 It spreads out, arriving at the coolant pipe over an area of half the circumference.
 We use the mean of these values:
 
 $$ 
-\texttt{mean} \_ \texttt{width} = \frac{\texttt{pitch} + \pi \times \texttt{afw}}{2}
+\texttt{mean} \_ \texttt{width} = \frac{\texttt{dx_fw_module} + \pi \times \texttt{radius_fw_channel}}{2}
 $$
 
 The temperature difference between the plasma-facing surface and the coolant is then:
@@ -159,8 +159,8 @@ There are three blanket model options, chosen by the user to match their selecte
 The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
 It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated seperately. 
 The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'ipump' (default=0): 
-    0.   Same coolant for FW and BB ('fwcoolant`=`coolwh`)
-    1.   Different coolant for FW and BB ('fwcoolant`/=`coolwh`) 
+    0.   Same coolant for FW and BB ('i_fw_coolant_type`=`coolwh`)
+    1.   Different coolant for FW and BB ('i_fw_coolant_type`/=`coolwh`) 
 
 !!! Note "Note" 
     For the dual-coolant blanket the 'ipump' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
@@ -190,8 +190,8 @@ The Hartmann number is also calculated (using the magnetic feild strength in the
 |   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant     |
 |   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant    |
 |    `n_liq_recirc`     |  ---  | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
-| `f_nuc_pow_bz_struct` |  ---  | 73       | iblanket=5    | 0.34    | FW nuclear power as fraction of total                 |
-|  `f_nuc_pow_bz_liq`   |  ---  | 74       | iblanket=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
+| `f_nuc_pow_bz_struct` |  ---  | 73       | i_blanket_type=5    | 0.34    | FW nuclear power as fraction of total                 |
+|  `f_nuc_pow_bz_liq`   |  ---  | 74       | i_blanket_type=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
 
 #### Flow Channel Inserts for Liquid Metal Breeder
 

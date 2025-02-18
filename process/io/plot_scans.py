@@ -270,7 +270,7 @@ def main(args=None):
         72: "bz_channel_conduct_liq",
         73: "pnuc_fw_ratio_dcll",
         74: "f_nuc_pow_bz_struct",
-        75: "pitch",
+        75: "dx_fw_module",
         76: "etath",
         77: "startupratio",
         78: "fkind",

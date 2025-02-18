@@ -27,15 +27,15 @@ def blanket_library_fixture():
 
 
 class PrimaryCoolantPropertiesParam(NamedTuple):
-    fwcoolant: Any = None
+    i_fw_coolant_type: Any = None
 
-    fwinlet: Any = None
+    temp_fw_coolant_in: Any = None
 
-    fwoutlet: Any = None
+    temp_fw_coolant_out: Any = None
 
-    fwpressure: Any = None
+    pres_fw_coolant: Any = None
 
-    rhof_fw: Any = None
+    den_fw_coolant: Any = None
 
     cp_fw: Any = None
 
@@ -59,11 +59,11 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     cv_bl: Any = None
 
-    visc_fw: Any = None
+    visc_fw_coolant: Any = None
 
     ipump: Any = None
 
-    expected_rhof_fw: Any = None
+    expected_den_fw_coolant: Any = None
 
     expected_cp_fw: Any = None
 
@@ -77,18 +77,18 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     expected_cv_bl: Any = None
 
-    expected_visc_fw: Any = None
+    expected_visc_fw_coolant: Any = None
 
 
 @pytest.mark.parametrize(
     "primarycoolantpropertiesparam",
     (
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
-            rhof_fw=0,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
+            den_fw_coolant=0,
             cp_fw=0,
             cv_fw=0,
             coolwh=1,
@@ -100,23 +100,23 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             visc_bl=0,
             cp_bl=0,
             cv_bl=0,
-            visc_fw=0,
+            visc_fw_coolant=0,
             ipump=0,
-            expected_rhof_fw=5.6389735407435868,
+            expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_rhof_bl=5.6389735407435868,
             expected_visc_bl=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
-            expected_visc_fw=3.5036293160410249e-05,
+            expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            fwcoolant="helium",
-            fwinlet=573,
-            fwoutlet=773,
-            fwpressure=8000000,
-            rhof_fw=5.6389735407435868,
+            i_fw_coolant_type="helium",
+            temp_fw_coolant_in=573,
+            temp_fw_coolant_out=773,
+            pres_fw_coolant=8000000,
+            den_fw_coolant=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
             coolwh=1,
@@ -128,16 +128,16 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             visc_bl=3.5036293160410249e-05,
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
-            visc_fw=3.5036293160410249e-05,
+            visc_fw_coolant=3.5036293160410249e-05,
             ipump=0,
-            expected_rhof_fw=5.6389735407435868,
+            expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
             expected_rhof_bl=5.6389735407435868,
             expected_visc_bl=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
-            expected_visc_fw=3.5036293160410249e-05,
+            expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
     ),
 )
@@ -159,23 +159,27 @@ def test_primary_coolant_properties(
     # monkeypatch doesnt work for strings
     # but helium is the default
     # monkeypatch.setattr(
-    #     fwbs_variables, "fwcoolant", primarycoolantpropertiesparam.fwcoolant
+    #     fwbs_variables, "i_fw_coolant_type", primarycoolantpropertiesparam.i_fw_coolant_type
     # )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwinlet", primarycoolantpropertiesparam.fwinlet
+        fwbs_variables,
+        "temp_fw_coolant_in",
+        primarycoolantpropertiesparam.temp_fw_coolant_in,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwoutlet", primarycoolantpropertiesparam.fwoutlet
+        fwbs_variables,
+        "temp_fw_coolant_out",
+        primarycoolantpropertiesparam.temp_fw_coolant_out,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "fwpressure", primarycoolantpropertiesparam.fwpressure
+        fwbs_variables, "pres_fw_coolant", primarycoolantpropertiesparam.pres_fw_coolant
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "rhof_fw", primarycoolantpropertiesparam.rhof_fw
+        fwbs_variables, "den_fw_coolant", primarycoolantpropertiesparam.den_fw_coolant
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_fw", primarycoolantpropertiesparam.cp_fw)
@@ -213,15 +217,15 @@ def test_primary_coolant_properties(
     monkeypatch.setattr(fwbs_variables, "cv_bl", primarycoolantpropertiesparam.cv_bl)
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_fw", primarycoolantpropertiesparam.visc_fw
+        fwbs_variables, "visc_fw_coolant", primarycoolantpropertiesparam.visc_fw_coolant
     )
 
     monkeypatch.setattr(fwbs_variables, "ipump", primarycoolantpropertiesparam.ipump)
 
     blanket_library_fixture.primary_coolant_properties(output=False)
 
-    assert fwbs_variables.rhof_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_rhof_fw, rel=1e-4
+    assert fwbs_variables.den_fw_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_den_fw_coolant, rel=1e-4
     )
 
     assert fwbs_variables.cp_fw == pytest.approx(
@@ -248,13 +252,13 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_cv_bl, rel=1e-4
     )
 
-    assert fwbs_variables.visc_fw == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_fw, rel=1e-4
+    assert fwbs_variables.visc_fw_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_visc_fw_coolant, rel=1e-4
     )
 
 
 def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
 
     data = {
@@ -280,7 +284,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
 def test_deltap_tot_outboard_blanket_breeder_liquid(
     monkeypatch, blanket_library_fixture
 ):
-    monkeypatch.setattr(fwbs_variables, "afw", 0.006)
+    monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
     monkeypatch.setattr(fwbs_variables, "ifci", 1)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", 0.11625)
@@ -1735,7 +1739,7 @@ def test_liquid_breeder_properties(
 
 
 class PressureDropParam(NamedTuple):
-    afw: Any = None
+    radius_fw_channel: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
     roughness: Any = None
@@ -1756,7 +1760,7 @@ class PressureDropParam(NamedTuple):
     "pressuredropparam",
     (
         PressureDropParam(
-            afw=0.0060000000000000001,
+            radius_fw_channel=0.0060000000000000001,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
             roughness=9.9999999999999995e-07,
@@ -1786,7 +1790,9 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "afw", pressuredropparam.afw)
+    monkeypatch.setattr(
+        fwbs_variables, "radius_fw_channel", pressuredropparam.radius_fw_channel
+    )
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", pressuredropparam.a_bz_liq)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", pressuredropparam.b_bz_liq)
     monkeypatch.setattr(fwbs_variables, "roughness", pressuredropparam.roughness)

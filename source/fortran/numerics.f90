@@ -155,7 +155,7 @@ module numerics
   !!  <LI> (52) Tritium breeding ratio lower limit (itv 89,90,91)
   !!  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
   !!  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
-  !!  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)
+  !!  <LI> (55) Vacuum vessel helium concentration upper limit i_blanket_type =2 (itv 96,93,94)
   !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
   !!  <LI> (57) NOT USED
   !!  <LI> (58) NOT USED
@@ -315,7 +315,7 @@ module numerics
   !! <LI> (111) fniterpump: f-value for constraint that number
   !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
-  !! <LI> (114) fw_channel_length: Length of a single first wall channel
+  !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
   !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)

@@ -96,8 +96,8 @@ class Availability:
 
             # First wall / blanket lifetime (years)
             # TODO MDK Do this calculation whatever the value of blktmodel (whatever that is)
-            # For some reason fwlife is not always calculated, so ignore it if it is still zero.
-            if fwbsv.fwlife < 0.0001e0:
+            # For some reason life_fw_fpy is not always calculated, so ignore it if it is still zero.
+            if fwbsv.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
@@ -106,10 +106,12 @@ class Availability:
                     fwbsv.bktlife = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
             else:
                 if cv.ibkt_life == 0:
-                    fwbsv.bktlife = min(fwbsv.fwlife, cv.abktflnc / pv.wallmw, cv.tlife)
+                    fwbsv.bktlife = min(
+                        fwbsv.life_fw_fpy, cv.abktflnc / pv.wallmw, cv.tlife
+                    )
                 else:
                     fwbsv.bktlife = min(
-                        fwbsv.fwlife, cv.life_dpa / dpa_fpy, cv.tlife
+                        fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.tlife
                     )  # DEMO
 
             # TODO Issue #834
