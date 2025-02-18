@@ -1204,7 +1204,9 @@ class Costs:
             if fwbs_variables.i_blanket_type == 4:
                 #  Liquid blanket (LiPb + Li)
                 self.c22121 = 1.0e-6 * fwbs_variables.wtbllipb * cost_variables.ucbllipb
-                self.c22122 = 1.0e-6 * fwbs_variables.whtblli * cost_variables.ucblli
+                self.c22122 = (
+                    1.0e-6 * fwbs_variables.m_blkt_lithium * cost_variables.ucblli
+                )
             else:
                 #  Solid blanket (Li2O + Be)
                 self.c22121 = (
@@ -1260,7 +1262,7 @@ class Costs:
                 )
             )
             self.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
-            self.c22128 = 1.0e-6 * cost_variables.ucblli * fwbs_variables.whtblli
+            self.c22128 = 1.0e-6 * cost_variables.ucblli * fwbs_variables.m_blkt_lithium
 
         self.c22121 = cost_variables.fkind * self.c22121 * cmlsa[cost_variables.lsa - 1]
         self.c22122 = cost_variables.fkind * self.c22122 * cmlsa[cost_variables.lsa - 1]
