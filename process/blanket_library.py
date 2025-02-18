@@ -777,7 +777,8 @@ class BlanketLibrary:
 
         # Mass flow rate per FW coolant pipe (kg/s):
         blanket_library.mffwpi = (
-            blanket_library.mffwi / blanket_library.n_fw_inboard_channels
+            blanket_library.mflow_fw_inboard_coolant_total
+            / blanket_library.n_fw_inboard_channels
         )
         blanket_library.mffwpo = (
             blanket_library.mffwo / blanket_library.n_fw_outboard_channels
@@ -1744,7 +1745,7 @@ class BlanketLibrary:
         )
 
         # Total mass flow rate to remove inboard FW power (kg/s)
-        blanket_library.mffwi = (
+        blanket_library.mflow_fw_inboard_coolant_total = (
             1.0e6
             * (blanket_library.pnucfwi + fwbs_variables.psurffwi)
             / (fwbs_variables.cp_fw * (fwoutleti - fwbs_variables.temp_fw_coolant_in))
@@ -1893,7 +1894,9 @@ class BlanketLibrary:
             elif fwbs_variables.i_coolant_pumping == 3:
                 deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
             # Total coolant mass flow rate in the first wall/blanket (kg/s)
-            blanket_library.mftotal = blanket_library.mffwi + blanket_library.mffwo
+            blanket_library.mftotal = (
+                blanket_library.mflow_fw_inboard_coolant_total + blanket_library.mffwo
+            )
 
             # Total mechanical pumping power (MW)
             primary_pumping_variables.htpmw_fw_blkt = self.pumppower(
@@ -1927,7 +1930,9 @@ class BlanketLibrary:
                 deltap_blkt = primary_pumping_variables.dp_blkt
 
             # Total coolant mass flow rate in the first wall (kg/s)
-            blanket_library.mffw = blanket_library.mffwi + blanket_library.mffwo
+            blanket_library.mffw = (
+                blanket_library.mflow_fw_inboard_coolant_total + blanket_library.mffwo
+            )
             # Total coolant mass flow rate in the blanket (kg/s)
             blanket_library.mflow_blkt_coolant_total = (
                 blanket_library.mflow_blkt_inboard_coolant
