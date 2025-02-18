@@ -123,10 +123,10 @@ class DCLL:
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            covf = 1 - (2 * fwbs_variables.fdiv) - fwbs_variables.fhcd
+            covf = 1 - (2 * fwbs_variables.fdiv) - fwbs_variables.f_a_fw_hcd
         else:
             # Single null configuration
-            covf = 1 - fwbs_variables.fdiv - fwbs_variables.fhcd
+            covf = 1 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
@@ -183,7 +183,7 @@ class DCLL:
         fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
         )
 
         # FW

@@ -331,14 +331,14 @@ class BlanketLibrary:
             # double null configuration
             build_variables.blareaob = (
                 build_variables.blarea
-                * (1.0 - 2.0 * fwbs_variables.fdiv - fwbs_variables.fhcd)
+                * (1.0 - 2.0 * fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
                 - build_variables.blareaib
             )
         else:
             # single null configuration
             build_variables.blareaob = (
                 build_variables.blarea
-                * (1.0 - fwbs_variables.fdiv - fwbs_variables.fhcd)
+                * (1.0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
                 - build_variables.blareaib
             )
 
@@ -346,7 +346,7 @@ class BlanketLibrary:
 
         fwbs_variables.vol_blkt_outboard = (
             fwbs_variables.vol_blkt_total
-            * (1.0 - fwbs_variables.fdiv - fwbs_variables.fhcd)
+            * (1.0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
             - fwbs_variables.vol_blkt_inboard
         )
         fwbs_variables.vol_blkt_total = (
