@@ -1486,7 +1486,7 @@ class ComponentMassesParam(NamedTuple):
     breeder_f: Any = None
     breeder_multiplier: Any = None
     m_blkt_tibe12: Any = None
-    whtblli4sio4: Any = None
+    m_blkt_li4sio4: Any = None
     wtblli2o: Any = None
     vfcblkt: Any = None
     vfpblkt: Any = None
@@ -1577,7 +1577,7 @@ class ComponentMassesParam(NamedTuple):
             breeder_f=0.5,
             breeder_multiplier=0.75,
             m_blkt_tibe12=0,
-            whtblli4sio4=0,
+            m_blkt_li4sio4=0,
             wtblli2o=0,
             vfcblkt=0.052949999999999997,
             vfpblkt=0.10000000000000001,
@@ -1704,7 +1704,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     )
     monkeypatch.setattr(fwbs_variables, "m_blkt_tibe12", componentmassesparam.m_blkt_tibe12)
     monkeypatch.setattr(
-        fwbs_variables, "whtblli4sio4", componentmassesparam.whtblli4sio4
+        fwbs_variables, "m_blkt_li4sio4", componentmassesparam.m_blkt_li4sio4
     )
     monkeypatch.setattr(fwbs_variables, "wtblli2o", componentmassesparam.wtblli2o)
     monkeypatch.setattr(fwbs_variables, "vfcblkt", componentmassesparam.vfcblkt)
@@ -1792,7 +1792,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.m_blkt_tibe12 == pytest.approx(
         componentmassesparam.expected_m_blkt_tibe12
     )
-    assert fwbs_variables.whtblli4sio4 == pytest.approx(
+    assert fwbs_variables.m_blkt_li4sio4 == pytest.approx(
         componentmassesparam.expected_whtblli4sio4
     )
     assert fwbs_variables.wtblli2o == pytest.approx(
