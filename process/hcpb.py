@@ -1117,11 +1117,13 @@ class CCFE_HCPB:
 
         return pnuc_cp_tf, pnuc_cp_sh, pnuc_cp
 
-    def tbr_shimwell(self, breeder_f, li6enrich, iblanket_thickness, output: bool):
+    def tbr_shimwell(
+        self, breeder_f, f_blkt_li6_enrichment, iblanket_thickness, output: bool
+    ):
         """Calculates TBR
         author: Michael Kovari
         breeder_f   : input real : Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
-        li6enrich   : input real : lithium-6 enrichment (%)
+        f_blkt_li6_enrichment   : input real : lithium-6 enrichment (%)
         iblanket_thickness   : input integer : blanket thickness switch
         tbr         : output real : 5-year time-averaged tritium breeding ratio
         """
@@ -1149,7 +1151,7 @@ class CCFE_HCPB:
         v18 = [0.18795823903, 0.198976219881, 0.190845918447]
         v19 = [-0.0256707269253, -0.0192924115968, -0.0257699008284]
 
-        y = li6enrich / 100
+        y = f_blkt_li6_enrichment / 100
         tbr = (
             v1[iblanket_thickness - 1]
             + v2[iblanket_thickness - 1] * breeder_f
@@ -1174,7 +1176,10 @@ class CCFE_HCPB:
 
         if output:
             po.ovarrf(
-                self.outfile, "Lithium-6 enrichment (%)", "(li6enrich)", li6enrich
+                self.outfile,
+                "Lithium-6 enrichment (%)",
+                "(f_blkt_li6_enrichment)",
+                f_blkt_li6_enrichment,
             )
             po.ovarrf(
                 self.outfile,

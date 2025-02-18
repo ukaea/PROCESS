@@ -217,7 +217,7 @@ contains
       npdiv, f_fw_peak, i_coolant_pumping, dr_pf_cryostat, i_thermal_electric_conversion, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
-      li6enrich, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
+      f_blkt_li6_enrichment, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
       icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
       i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
@@ -2140,8 +2140,8 @@ contains
           call parse_real_variable('qnuc', qnuc, 0.0D0, 1.0D6, &
                'nuclear heating in the coils (W)')
 
-       case ('li6enrich')
-          call parse_real_variable('li6enrich', li6enrich, 7.40D0, 100.0D0, &
+       case ('f_blkt_li6_enrichment')
+          call parse_real_variable('f_blkt_li6_enrichment', f_blkt_li6_enrichment, 7.40D0, 100.0D0, &
                'Li-6 enrichment')
 
        ! CCFE hcpb BB module (also includes the CP shielding for ST)

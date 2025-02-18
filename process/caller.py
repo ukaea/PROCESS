@@ -291,7 +291,7 @@ class Caller:
             self.models.ccfe_hcpb.run(output=False)
             ft.fwbs_variables.tbr = self.models.ccfe_hcpb.tbr_shimwell(
                 ft.fwbs_variables.breeder_f,
-                ft.fwbs_variables.li6enrich,
+                ft.fwbs_variables.f_blkt_li6_enrichment,
                 ft.fwbs_variables.iblanket_thickness,
                 output=False,
             )

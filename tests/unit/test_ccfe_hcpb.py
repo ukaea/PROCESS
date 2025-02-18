@@ -1395,7 +1395,7 @@ class TbrShimwellParam(NamedTuple):
 
     breeder_f: Any = None
 
-    li6enrich: Any = None
+    f_blkt_li6_enrichment: Any = None
 
     expected_tbr: Any = None
 
@@ -1413,7 +1413,7 @@ class TbrShimwellParam(NamedTuple):
             outfile=11,
             iblanket_thickness=1,
             breeder_f=0.56366688384345121,
-            li6enrich=82.131743925121199,
+            f_blkt_li6_enrichment=82.131743925121199,
             expected_tbr=1.1284864235692258,
         ),
     ),
@@ -1450,7 +1450,7 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     tbr = ccfe_hcpb.tbr_shimwell(
         iblanket_thickness=tbrshimwellparam.iblanket_thickness,
         breeder_f=tbrshimwellparam.breeder_f,
-        li6enrich=tbrshimwellparam.li6enrich,
+        f_blkt_li6_enrichment=tbrshimwellparam.f_blkt_li6_enrichment,
         output=False,
     )
 
