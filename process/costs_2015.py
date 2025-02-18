@@ -331,7 +331,7 @@ class Costs2015:
         #  Reference cost of titanium beryllide pebble manufacture (2014 $)
         self.s_cref[23] = 450.0e6
         #  Scale with mass of titanium beryllide pebbles (kg)
-        self.s_k[23] = fwbs_variables.whtblbe
+        self.s_k[23] = fwbs_variables.m_blkt_beryllium
         self.s_kref[23] = 1.0e5
         self.s_cost[23] = (
             self.s_cost_factor[23]
