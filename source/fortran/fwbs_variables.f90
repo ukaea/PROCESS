@@ -475,7 +475,7 @@ module fwbs_variables
   real(dp) :: fblvd
   !! vanadium fraction of blanket by volume (stellarator only)
 
-  real(dp) :: wtblli2o
+  real(dp) :: m_blkt_li2o
   !! mass of blanket - Li_2O part [kg]
 
   real(dp) :: wtbllipb
@@ -789,7 +789,7 @@ module fwbs_variables
     fblli2o = 0.08D0
     fbllipb = 0.68D0
     fblvd = 0.0D0
-    wtblli2o = 0.0D0
+    m_blkt_li2o = 0.0D0
     wtbllipb = 0.0D0
     whtblvd = 0.0D0
     whtblli = 0.0D0

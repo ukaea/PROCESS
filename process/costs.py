@@ -1218,7 +1218,7 @@ class Costs:
                 else:
                     # CCFE model
                     self.c22122 = (
-                        1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
+                        1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
                     )
 
             self.c22123 = (
@@ -1234,7 +1234,7 @@ class Costs:
             #  FLiBe and lithium
 
             self.c22121 = 0.0e0
-            self.c22122 = 1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
+            self.c22122 = 1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
             self.c22123 = (
                 1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
             )

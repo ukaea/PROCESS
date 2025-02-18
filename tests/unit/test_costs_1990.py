@@ -1143,7 +1143,7 @@ class Acc2212Param(NamedTuple):
 
     whtblli: Any = None
 
-    wtblli2o: Any = None
+    m_blkt_li2o: Any = None
 
     whtblbreed: Any = None
 
@@ -1213,7 +1213,7 @@ class Acc2212Param(NamedTuple):
             fkind=1,
             i_blanket_type=1,
             whtblli=0,
-            wtblli2o=1258110.2710352642,
+            m_blkt_li2o=1258110.2710352642,
             whtblbreed=0,
             whtblvd=0,
             m_blkt_beryllium=1184720.5052248738,
@@ -1267,7 +1267,7 @@ class Acc2212Param(NamedTuple):
             fkind=1,
             i_blanket_type=1,
             whtblli=0,
-            wtblli2o=1260437.468838267,
+            m_blkt_li2o=1260437.468838267,
             whtblbreed=0,
             whtblvd=0,
             m_blkt_beryllium=1186911.9498227015,
@@ -1348,7 +1348,7 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "whtblli", acc2212param.whtblli)
 
-    monkeypatch.setattr(fwbs_variables, "wtblli2o", acc2212param.wtblli2o)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", acc2212param.m_blkt_li2o)
 
     monkeypatch.setattr(fwbs_variables, "whtblbreed", acc2212param.whtblbreed)
 

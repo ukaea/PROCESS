@@ -350,7 +350,7 @@ class CCFE_HCPB:
         # TODO sort this out so that costs model uses new variables.
         # #327 For backwards compatibility, set the old blanket masses the same:
         fwbs_variables.m_blkt_beryllium = fwbs_variables.m_blkt_tibe12
-        fwbs_variables.wtblli2o = fwbs_variables.m_blkt_li4sio4
+        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li4sio4
 
         # Steel fraction by volume is the remainder:
         fwbs_variables.f_vol_blkt_steel = (
