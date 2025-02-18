@@ -69,7 +69,7 @@ module blanket_library
     real(dp) :: tpeakfwi, tpeakfwo
     !! Inboard/outboard first wall peak temperature (K)
 
-    real(dp) :: mflow_fw_inboard_coolant_total, mffwo, mffw
+    real(dp) :: mflow_fw_inboard_coolant_total, mflow_fw_outboard_coolant_total, mffw
     !! Inboard/outboard total mass flow rate to remove inboard FW power (kg/s)
 
     real(dp) :: n_fw_inboard_channels, n_fw_outboard_channels
@@ -150,7 +150,7 @@ contains
         tpeakfwi = 0.0D0
         tpeakfwo = 0.0D0
         mflow_fw_inboard_coolant_total = 0.0D0
-        mffwo = 0.0D0
+        mflow_fw_outboard_coolant_total = 0.0D0
         mffw = 0.0D0
         n_fw_inboard_channels = 0.0D0
         n_fw_outboard_channels = 0.0D0
