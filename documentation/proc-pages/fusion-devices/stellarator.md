@@ -263,7 +263,7 @@ fblli2o = 0.07 *Lithium oxide fraction of blanket by volume (only relevant for m
 fbllipb = 0. *Lithium lead fraction of blanket by volume (only relevant for mass calculations)
 fblss = 0.13 *Stainless steel fraction of blanket by volume (only relevant for mass calculations)
 fblvd = 0. *Vanadium fraction of blanket by volume (only relevant for mass calculations)
-fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and fhcd when ipowerflow=1)
+fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and f_a_fw_hcd when ipowerflow=1)
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
 i_coolant_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
 htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)

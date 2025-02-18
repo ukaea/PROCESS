@@ -1171,7 +1171,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     shareaob: Any = None
     sharea: Any = None
     fdiv: Any = None
-    fhcd: Any = None
+    f_a_fw_hcd: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_inboard: Any = None
     vol_blkt_total: Any = None
@@ -1205,7 +1205,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
             fdiv=0.115,
-            fhcd=0,
+            f_a_fw_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_total=1336.207205897842,
@@ -1250,7 +1250,9 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(build_variables, "shareaob", applycoveragefactorsparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", applycoveragefactorsparam.sharea)
     monkeypatch.setattr(fwbs_variables, "fdiv", applycoveragefactorsparam.fdiv)
-    monkeypatch.setattr(fwbs_variables, "fhcd", applycoveragefactorsparam.fhcd)
+    monkeypatch.setattr(
+        fwbs_variables, "f_a_fw_hcd", applycoveragefactorsparam.f_a_fw_hcd
+    )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_outboard", applycoveragefactorsparam.vol_blkt_outboard
     )

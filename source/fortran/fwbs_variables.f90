@@ -50,8 +50,8 @@ module fwbs_variables
   real(dp) :: fdiv
   !! Solid angle fraction taken by one divertor
 
-  real(dp) :: fhcd
-  !! area fraction covered by heating/current drive apparatus plus diagnostics
+  real(dp) :: f_a_fw_hcd
+  !! area fraction of first wall covered by heating/current drive apparatus plus diagnostics
 
   real(dp) :: fhole
   !! area fraction taken up by other holes (IFE)
@@ -674,7 +674,7 @@ module fwbs_variables
     emultmw = 0.0D0
     fblss = 0.09705D0
     fdiv = 0.115D0
-    fhcd = 0.0D0
+    f_a_fw_hcd = 0.0D0
     fhole = 0.0D0
     i_fw_blkt_vv_shape = 2
     life_fw_fpy = 0.0D0

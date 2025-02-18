@@ -1938,7 +1938,7 @@
         "fgrosbop": 0.0,
         "fgwped": 0.85,
         "fgwsep": 0.5,
-        "fhcd": 0.0,
+        "f_a_fw_hcd": 0.0,
         "f_helium3": 0.0,
         "fhldiv": 1.0,
         "fhole": 0.0,
@@ -9545,7 +9545,7 @@
         "fgrosbop": "scaled fraction of gross power to balance-of-plant",
         "fgwped": "fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top\n density set manually using neped (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 145`)",
         "fgwsep": "fraction of Greenwald density to set as separatrix density. If `<0`, separatrix\n density set manually using nesep (`ipedestal>=1`). Needs to be `>0` if `ipedestal = 3`.\n (`iteration variable 152`)",
-        "fhcd": "area fraction covered by heating/current drive apparatus plus diagnostics",
+        "f_a_fw_hcd": "area fraction covered by heating/current drive apparatus plus diagnostics",
         "f_helium3": "helium-3 fuel fraction",
         "fhldiv": "f-value for divertor heat load (`constraint equation 18`, `iteration variable 27`)",
         "fhole": "area fraction taken up by other holes (IFE)",
@@ -12673,7 +12673,7 @@
             "lb": -1.0,
             "ub": 1.0
         },
-        "fhcd": {
+        "f_a_fw_hcd": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18022,7 +18022,7 @@
             "emultmw",
             "fblss",
             "fdiv",
-            "fhcd",
+            "f_a_fw_hcd",
             "fhole",
             "i_fw_blkt_vv_shape",
             "life_fw_fpy",
@@ -20276,7 +20276,7 @@
         "fgamcd": "real_variable",
         "fgwped": "real_variable",
         "fgwsep": "real_variable",
-        "fhcd": "real_variable",
+        "f_a_fw_hcd": "real_variable",
         "f_helium3": "real_variable",
         "fhldiv": "real_variable",
         "fhole": "real_variable",

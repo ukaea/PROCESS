@@ -476,7 +476,10 @@ class Stellarator:
             ) * build_variables.a_fw_total
         else:
             build_variables.a_fw_total = (
-                1.0e0 - fwbs_variables.fhole - fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0
+                - fwbs_variables.fhole
+                - fwbs_variables.fdiv
+                - fwbs_variables.f_a_fw_hcd
             ) * build_variables.a_fw_total
 
         if output:
@@ -1143,7 +1146,7 @@ class Stellarator:
                     1.0e0
                     - fwbs_variables.fhole
                     - fwbs_variables.fdiv
-                    - fwbs_variables.fhcd
+                    - fwbs_variables.f_a_fw_hcd
                 )
             )
 
@@ -1201,7 +1204,7 @@ class Stellarator:
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total
@@ -1217,7 +1220,7 @@ class Stellarator:
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
                 )
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
                 )
                 fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
@@ -1318,7 +1321,7 @@ class Stellarator:
                 #  Neutron power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
@@ -1351,7 +1354,7 @@ class Stellarator:
                 #  Radiation power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
@@ -4302,7 +4305,7 @@ class Stellarator:
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
+                        - fwbs_variables.f_a_fw_hcd
                         - fwbs_variables.fdiv
                     )
                     * physics_variables.neutron_power_total
@@ -4429,7 +4432,7 @@ class Stellarator:
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
+                        - fwbs_variables.f_a_fw_hcd
                         - fwbs_variables.fdiv
                     )
                     * physics_variables.p_plasma_rad_mw

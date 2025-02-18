@@ -208,7 +208,7 @@ contains
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
-      iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
+      iblanket_thickness, vfcblkt, breeder_f, fbllipb, f_a_fw_hcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, n_blkt_inboard_modules_toroidal, dr_fw_wall, afwo, &
       fvolsi, etahtp, n_blkt_outboard_modules_poloidal, pres_fw_coolant, emult, temp_fw_coolant_out, n_blkt_inboard_modules_poloidal, &
       fblhebpi, fblss, temp_blkt_coolant_in, temp_blkt_coolant_out, fblbreed, qnuc, pres_blkt_coolant, &
@@ -2084,8 +2084,8 @@ contains
        case ('fdiv')
           call parse_real_variable('fdiv', fdiv, 0.0D0, 1.0D0, &
                'Divertor area fraction')
-       case ('fhcd')
-          call parse_real_variable('fhcd', fhcd, 0.0D0, 1.0D0, &
+       case ('f_a_fw_hcd')
+          call parse_real_variable('f_a_fw_hcd', f_a_fw_hcd, 0.0D0, 1.0D0, &
                'HCD + diagnostics area fraction')
        case ('fhole')
           call parse_real_variable('fhole', fhole, 0.0D0, 1.0D0, &

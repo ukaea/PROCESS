@@ -669,7 +669,7 @@ class CCFE_HCPB:
 
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
         )
 
         # Radiation power incident on first wall (MW)
