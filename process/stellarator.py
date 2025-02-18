@@ -1219,7 +1219,7 @@ class Stellarator:
                 fwbs_variables.pradhcd = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
                 )
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
@@ -1228,7 +1228,7 @@ class Stellarator:
 
                 heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.pradfw
+                    + fwbs_variables.p_fw_rad_total_mw
                     + current_drive_variables.porbitlossmw
                 )
                 heat_transport_variables.htpmw_blkt = (
@@ -1362,7 +1362,7 @@ class Stellarator:
 
                 #  Radiation power incident on first wall (MW)
 
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
@@ -1412,15 +1412,15 @@ class Stellarator:
                 decayfwi = fwbs_variables.declfw
                 decayfwo = fwbs_variables.declfw
 
-                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.pradfw)
+                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.p_fw_rad_total_mw)
 
                 psurffwi = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_rad_total_mw
                     * build_variables.a_fw_inboard
                     / build_variables.a_fw_total
                 )
                 psurffwo = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_rad_total_mw
                     * build_variables.a_fw_outboard
                     / build_variables.a_fw_total
                 )

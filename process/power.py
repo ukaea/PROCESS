@@ -640,7 +640,7 @@ class Power:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.pradfw
+                    + fwbs_variables.p_fw_rad_total_mw
                     + (
                         fwbs_variables.p_blkt_nuclear_heat_total_mw
                         * (1 - fwbs_variables.f_nuc_pow_bz_liq)
@@ -654,7 +654,7 @@ class Power:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.pradfw
+                    + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
@@ -664,7 +664,7 @@ class Power:
             else:
                 self.pthermfw_blkt = (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.pradfw
+                    + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
                     + current_drive_variables.porbitlossmw
@@ -676,7 +676,7 @@ class Power:
             # First wall and blanket coolant combined
             self.pthermfw_blkt = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
-                + fwbs_variables.pradfw
+                + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + primary_pumping_variables.htpmw_fw_blkt
                 + current_drive_variables.porbitlossmw
@@ -688,7 +688,7 @@ class Power:
             #  Total power deposited in first wall coolant (MW)
             self.pthermfw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
-                + fwbs_variables.pradfw
+                + fwbs_variables.p_fw_rad_total_mw
                 + heat_transport_variables.htpmw_fw
                 + current_drive_variables.porbitlossmw
                 + physics_variables.p_fw_alpha_mw
@@ -1343,14 +1343,14 @@ class Power:
             fwbs_variables.p_fw_nuclear_heat_total_mw,
         )
         po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
-        po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
+        po.dblcol(self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw)
         po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
 
         primsum = (
             primsum
             + fwbs_variables.p_fw_nuclear_heat_total_mw
             + physics_variables.p_fw_alpha_mw
-            + fwbs_variables.pradfw
+            + fwbs_variables.p_fw_rad_total_mw
             + heat_transport_variables.htpmw_fw
         )
         secsum = secsum

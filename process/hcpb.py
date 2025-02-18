@@ -671,7 +671,7 @@ class CCFE_HCPB:
         fwbs_variables.pradhcd = physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
 
         # Radiation power incident on first wall (MW)
-        fwbs_variables.pradfw = (
+        fwbs_variables.p_fw_rad_total_mw = (
             physics_variables.p_plasma_rad_mw
             - fwbs_variables.praddiv
             - fwbs_variables.pradhcd
@@ -692,13 +692,13 @@ class CCFE_HCPB:
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
-            fwbs_variables.pradfw
+            fwbs_variables.p_fw_rad_total_mw
             * build_variables.a_fw_outboard
             / build_variables.a_fw_total
             + current_drive_variables.porbitlossmw
             + physics_variables.p_fw_alpha_mw
         )
-        fwbs_variables.psurffwi = fwbs_variables.pradfw * (
+        fwbs_variables.psurffwi = fwbs_variables.p_fw_rad_total_mw * (
             1 - build_variables.a_fw_outboard / build_variables.a_fw_total
         )
 
