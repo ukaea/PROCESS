@@ -73,7 +73,7 @@ module blanket_library
     !! Inboard/outboard total mass flow rate to remove inboard FW power (kg/s)
 
     real(dp) :: n_fw_inboard_channels, n_fw_outboard_channels
-    !! Inboard/utboard total number of pipes
+    !! Inboard / outboard total number of first wall coolant channels
 
     real(dp) :: mffwpi, mffwpo
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
@@ -90,8 +90,8 @@ module blanket_library
     real(dp) :: mftotal
     !! Total mass flow rate for coolant (kg/s)
 
-    real(dp) :: npblkti, npblkto
-    !! Inboard/outboard total num of pipes
+    real(dp) :: n_blkt_inboard_channels, npblkto
+    !! Inboard/outboard total number of blanket coolant pipes
 
     real(dp) :: mfblktpi, mfblktpo
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
@@ -165,7 +165,7 @@ contains
         mfblkt_liq = 0.0D0
         mflow_blkt_coolant_total = 0.0D0
         mftotal = 0.0D0
-        npblkti = 0.0D0
+        n_blkt_inboard_channels = 0.0D0
         npblkto = 0.0D0
         mfblktpi = 0.0D0
         mfblktpo = 0.0D0
