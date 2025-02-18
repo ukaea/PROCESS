@@ -1790,7 +1790,7 @@ class IFE:
                 )
 
         # Other masses
-        fwbs_variables.whtblbe = 0.0
+        fwbs_variables.m_blkt_beryllium = 0.0
         fwbs_variables.whtblvd = 0.0
         fwbs_variables.m_blkt_steel_total = 0.0
         fwbs_variables.wtblli2o = 0.0

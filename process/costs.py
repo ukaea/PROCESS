@@ -1207,7 +1207,9 @@ class Costs:
                 self.c22122 = 1.0e-6 * fwbs_variables.whtblli * cost_variables.ucblli
             else:
                 #  Solid blanket (Li2O + Be)
-                self.c22121 = 1.0e-6 * fwbs_variables.whtblbe * cost_variables.ucblbe
+                self.c22121 = (
+                    1.0e-6 * fwbs_variables.m_blkt_beryllium * cost_variables.ucblbe
+                )
                 if fwbs_variables.i_blanket_type == 2:
                     # KIT model
                     self.c22122 = (
