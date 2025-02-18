@@ -180,7 +180,7 @@ module fwbs_variables
   !! Inboard/outboard FW coolant cross-sectional area void fraction
 
   real(dp) :: psurffwi, psurffwo
-  !! Surface heat flux on first wall [MW] (sum = pradfw)
+  !! Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)
 
   real(dp) :: vol_fw_total
   !! First wall volume [m3]
@@ -396,7 +396,7 @@ module fwbs_variables
   real(dp) :: praddiv
   !! Radiation power incident on the divertor (MW)
 
-  real(dp) :: pradfw
+  real(dp) :: p_fw_rad_total_mw
   !! Radiation power incident on the first wall (MW)
 
   real(dp) :: pradhcd
@@ -764,7 +764,7 @@ module fwbs_variables
     fvolso = 0.64D0
     fwclfr = 0.15D0
     praddiv = 0.0D0
-    pradfw = 0.0D0
+    p_fw_rad_total_mw = 0.0D0
     pradhcd = 0.0D0
     pradloss = 0.0D0
     ptfnuc = 0.0D0
