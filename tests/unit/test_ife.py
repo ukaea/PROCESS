@@ -1216,7 +1216,7 @@ class IfefbsParam(NamedTuple):
     m_blkt_total: Any = None
     whtshld: Any = None
     m_blkt_beryllium: Any = None
-    whtblvd: Any = None
+    m_blkt_vanadium: Any = None
     m_blkt_steel_total: Any = None
     m_blkt_li2o: Any = None
     whtblli: Any = None
@@ -1266,7 +1266,7 @@ class IfefbsParam(NamedTuple):
             m_blkt_total=0,
             whtshld=0,
             m_blkt_beryllium=0,
-            whtblvd=0,
+            m_blkt_vanadium=0,
             m_blkt_steel_total=0,
             m_blkt_li2o=0,
             whtblli=0,
@@ -1553,7 +1553,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium
     )
-    monkeypatch.setattr(fwbs_variables, "whtblvd", ifefbsparam.whtblvd)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
     )

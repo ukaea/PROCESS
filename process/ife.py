@@ -1791,7 +1791,7 @@ class IFE:
 
         # Other masses
         fwbs_variables.m_blkt_beryllium = 0.0
-        fwbs_variables.whtblvd = 0.0
+        fwbs_variables.m_blkt_vanadium = 0.0
         fwbs_variables.m_blkt_steel_total = 0.0
         fwbs_variables.m_blkt_li2o = 0.0
         fwbs_variables.whtblli = 0.0
@@ -1827,7 +1827,9 @@ class IFE:
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
         ife_variables.mflibe = ife_variables.mflibe / (1.0 - ife_variables.fbreed)
-        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li2o / (1.0 - ife_variables.fbreed)
+        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li2o / (
+            1.0 - ife_variables.fbreed
+        )
         fwbs_variables.whtblli = fwbs_variables.whtblli / (1.0 - ife_variables.fbreed)
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
