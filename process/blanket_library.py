@@ -776,8 +776,12 @@ class BlanketLibrary:
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
-        blanket_library.mffwpi = blanket_library.mffwi / blanket_library.n_fw_inboard_channels
-        blanket_library.mffwpo = blanket_library.mffwo / blanket_library.n_fw_outboard_channels
+        blanket_library.mffwpi = (
+            blanket_library.mffwi / blanket_library.n_fw_inboard_channels
+        )
+        blanket_library.mffwpo = (
+            blanket_library.mffwo / blanket_library.n_fw_outboard_channels
+        )
 
         # Coolant velocite in FW (m/s)
         velfwi = self.flow_velocity(
@@ -796,7 +800,7 @@ class BlanketLibrary:
             # Calc total num of pipes (in all inboard modules) from
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
-            blanket_library.npblkto = (
+            blanket_library.n_blkt_outboard_channels = (
                 fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
@@ -812,7 +816,8 @@ class BlanketLibrary:
 
             # Mass flow rate per coolant pipe
             blanket_library.mfblktpo = (
-                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+                blanket_library.mflow_blkt_outboard_coolant
+                / blanket_library.n_blkt_outboard_channels
             )
             mfblktpo_liq = blanket_library.mfblkto_liq / npblkto_liq
             # Coolant velocites in blanket (m/s)
@@ -849,7 +854,8 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.n_blkt_inboard_channels
+                    blanket_library.mflow_blkt_inboard_coolant
+                    / blanket_library.n_blkt_inboard_channels
                 )
                 blanket_library.mfblktpi_liq = blanket_library.mfblkti_liq / npblkti_liq
 
@@ -871,7 +877,7 @@ class BlanketLibrary:
             # Calc total num of pipes (in all inboard modules) from
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
-            blanket_library.npblkto = (
+            blanket_library.n_blkt_outboard_channels = (
                 fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
@@ -887,7 +893,8 @@ class BlanketLibrary:
 
             # Mass flow rate per coolant pipe
             blanket_library.mfblktpo = (
-                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+                blanket_library.mflow_blkt_outboard_coolant
+                / blanket_library.n_blkt_outboard_channels
             )
 
             # Coolant velocity in blanket (m/s)
@@ -932,7 +939,8 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.n_blkt_inboard_channels
+                    blanket_library.mflow_blkt_inboard_coolant
+                    / blanket_library.n_blkt_inboard_channels
                 )
 
                 # Coolant velocity in blanket (m/s)
@@ -960,7 +968,7 @@ class BlanketLibrary:
         else:
             # Calculate total number of pipes (in all outboard modules) from coolant fraction and
             # channel dimensions (assumes up/down flow, two 90 deg bends per length)
-            blanket_library.npblkto = (
+            blanket_library.n_blkt_outboard_channels = (
                 fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
@@ -971,7 +979,8 @@ class BlanketLibrary:
 
             # Mass flow rate per coolant pipe
             blanket_library.mfblktpo = (
-                blanket_library.mflow_blkt_outboard_coolant / blanket_library.npblkto
+                blanket_library.mflow_blkt_outboard_coolant
+                / blanket_library.n_blkt_outboard_channels
             )
 
             # Coolant velocity in blanket (m/s)
@@ -997,7 +1006,8 @@ class BlanketLibrary:
 
                 # Mass flow rate per coolant pipe
                 blanket_library.mfblktpi = (
-                    blanket_library.mflow_blkt_inboard_coolant / blanket_library.n_blkt_inboard_channels
+                    blanket_library.mflow_blkt_inboard_coolant
+                    / blanket_library.n_blkt_inboard_channels
                 )
 
                 # Coolant velocity in blanket (m/s)

@@ -90,7 +90,7 @@ module blanket_library
     real(dp) :: mftotal
     !! Total mass flow rate for coolant (kg/s)
 
-    real(dp) :: n_blkt_inboard_channels, npblkto
+    real(dp) :: n_blkt_inboard_channels, n_blkt_outboard_channels
     !! Inboard/outboard total number of blanket coolant pipes
 
     real(dp) :: mfblktpi, mfblktpo
@@ -166,7 +166,7 @@ contains
         mflow_blkt_coolant_total = 0.0D0
         mftotal = 0.0D0
         n_blkt_inboard_channels = 0.0D0
-        npblkto = 0.0D0
+        n_blkt_outboard_channels = 0.0D0
         mfblktpi = 0.0D0
         mfblktpo = 0.0D0
         vel_blkt_inboard_coolant = 0.0D0
