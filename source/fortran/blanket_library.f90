@@ -96,7 +96,7 @@ module blanket_library
     real(dp) :: mfblktpi, mfblktpo
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
 
-    real(dp) :: vel_blkt_inboard_coolant, velblkto
+    real(dp) :: vel_blkt_inboard_coolant, vel_blkt_outboard_coolant
     !! Inboard/outboard coolant velocity in blanket (m/s)
 
     real(dp) :: htpmw_fwi, htpmw_fwo
@@ -170,7 +170,7 @@ contains
         mfblktpi = 0.0D0
         mfblktpo = 0.0D0
         vel_blkt_inboard_coolant = 0.0D0
-        velblkto = 0.0D0
+        vel_blkt_outboard_coolant = 0.0D0
         htpmw_fwi = 0.0D0
         htpmw_fwo = 0.0D0
         htpmw_blkti = 0.0D0
