@@ -1878,7 +1878,7 @@
         "fblhebpo": 0.6713,
         "fblli": 0.0,
         "fblli2o": 0.08,
-        "fblli2sio4": 0.0,
+        "f_vol_blkt_li4sio4": 0.0,
         "fbllipb": 0.68,
         "fblss": 0.09705,
         "fblss_ccfe": 0.0,
@@ -9494,7 +9494,7 @@
         "fblhebpo": "helium fraction of outboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))",
         "fblli": "lithium fraction of blanket by volume (stellarator only)",
         "fblli2o": "lithium oxide fraction of blanket by volume (stellarator only)",
-        "fblli2sio4": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
+        "f_vol_blkt_li4sio4": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
         "fbllipb": "lithium lead fraction of blanket by volume (stellarator only)",
         "fblss": "KIT blanket model: steel fraction of breeding zone",
         "fblss_ccfe": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
@@ -17296,7 +17296,7 @@
             "exp_shield1",
             "exp_shield2",
             "fblss_ccfe",
-            "fblli2sio4",
+            "f_vol_blkt_li4sio4",
             "fbltibe12"
         ],
         "const_and_precisions": [

@@ -779,7 +779,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -1774,7 +1774,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -2769,7 +2769,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -3764,7 +3764,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -4759,7 +4759,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -5754,7 +5754,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -6749,7 +6749,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -7744,7 +7744,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
@@ -8739,7 +8739,7 @@
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.4423E-03 OP 
  # First wall and blanket : CCFE HCPB model #
  Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
  Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
