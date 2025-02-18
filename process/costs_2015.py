@@ -299,7 +299,7 @@ class Costs2015:
             )
 
             # Mass of lithium (kg).  Lithium orthosilicate is 22% lithium by mass.
-            mass_li = fwbs_variables.wtblli2o * 0.22
+            mass_li = fwbs_variables.m_blkt_li2o * 0.22
 
             # Total swu for lithium in blanket
             total_swu = swu * mass_li
@@ -319,7 +319,7 @@ class Costs2015:
         # Reference cost of lithium pebble manufacture (2014 $)
         self.s_cref[22] = 6.5e4
         # Scale with mass of pebbles (kg)
-        self.s_k[22] = fwbs_variables.wtblli2o
+        self.s_k[22] = fwbs_variables.m_blkt_li2o
         self.s_kref[22] = 10.0e0
         self.s_cost[22] = (
             self.s_cost_factor[22]
