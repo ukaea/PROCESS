@@ -81,7 +81,7 @@ def plot_full_sankey(
     )  # Total radiation Power (MW)
 
     # Used in [RADIATION]
-    p_div_rad_total_mw = p_plasma_rad_mw * m_file.data["fdiv"].get_scan(
+    p_div_rad_total_mw = p_plasma_rad_mw * m_file.data["f_ster_div_single"].get_scan(
         -1
     )  # Radiation deposited on the divertor (MW)
     p_fw_hcd_rad_total_mw = p_plasma_rad_mw * m_file.data["f_a_fw_hcd"].get_scan(
@@ -519,16 +519,18 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(
         -1
     )  # Total radiation Power (MW)
-    fdiv = m_file.data["fdiv"].get_scan(-1)  # Area fraction taken up by divertor
-    fdiv_2 = m_file.data["2*fdiv"].get_scan(
+    f_ster_div_single = m_file.data["f_ster_div_single"].get_scan(
+        -1
+    )  # Area fraction taken up by divertor
+    fdiv_2 = m_file.data["2*f_ster_div_single"].get_scan(
         -1
     )  # Area fraction taken up by double null divertor
     if (
         fdiv_2 > 0
     ):  # Takes into account old MFILE representation of double null divertor
-        fdiv = fdiv_2
+        f_ster_div_single = fdiv_2
     p_div_rad_total_mw = (
-        p_plasma_rad_mw * fdiv
+        p_plasma_rad_mw * f_ster_div_single
     )  # Radiation deposited on the divertor (MW)
     f_a_fw_hcd = m_file.data["f_a_fw_hcd"].get_scan(
         -1

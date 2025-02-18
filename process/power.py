@@ -1061,16 +1061,16 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Double Null Divertor area fraction of whole toroid surface",
-                "(2*fdiv)",
-                2.0e0 * fwbs_variables.fdiv,
+                "(2*f_ster_div_single)",
+                2.0e0 * fwbs_variables.f_ster_div_single,
             )
         else:
             # Single null configuration
             po.ovarre(
                 self.outfile,
                 "Divertor area fraction of whole toroid surface",
-                "(fdiv)",
-                fwbs_variables.fdiv,
+                "(f_ster_div_single)",
+                fwbs_variables.f_ster_div_single,
             )
 
         po.ovarre(
@@ -1086,15 +1086,17 @@ class Power:
                 self.outfile,
                 "First wall area fraction ",
                 "(1-2fdiv-f_a_fw_hcd)",
-                1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd,
+                1.0e0
+                - 2.0e0 * fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_hcd,
             )
         else:
             # Single null configuration
             po.ovarre(
                 self.outfile,
                 "First wall area fraction ",
-                "(1-fdiv-f_a_fw_hcd)",
-                1.0e0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd,
+                "(1-f_ster_div_single-f_a_fw_hcd)",
+                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd,
             )
 
         po.ovarin(

@@ -1920,7 +1920,7 @@
             "FLT_DEFAULT",
             "FLT_DEFAULT"
         ],
-        "fdiv": 0.115,
+        "f_ster_div_single": 0.115,
         "fdiva": 1.11,
         "fdivcol": 1.0,
         "fdivwet": 0.333333333333333,
@@ -9527,7 +9527,7 @@
         "f_deuterium": "deuterium fuel fraction",
         "fdfs": "radial gradient ratio",
         "fdiags": "",
-        "fdiv": "Solid angle fraction taken by one divertor",
+        "f_ster_div_single": "Solid angle fraction taken by one divertor",
         "fdiva": "divertor area fudge factor (for ITER, Sept 1990)",
         "fdivcol": "f-value for divertor collisionality (`constraint equation 22`, `iteration variable 34`)",
         "fdivwet": "wetted fraction of the divertor area",
@@ -12621,7 +12621,7 @@
             "lb": 0.0,
             "ub": 20.0
         },
-        "fdiv": {
+        "f_ster_div_single": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -18021,7 +18021,7 @@
             "emult",
             "emultmw",
             "fblss",
-            "fdiv",
+            "f_ster_div_single",
             "f_a_fw_hcd",
             "fhole",
             "i_fw_blkt_vv_shape",
@@ -20263,7 +20263,7 @@
         "fdene": "real_variable",
         "f_deuterium": "real_variable",
         "fdfs": "real_variable",
-        "fdiv": "real_variable",
+        "f_ster_div_single": "real_variable",
         "fdiva": "real_variable",
         "fdivcol": "real_variable",
         "fdivwet": "real_variable",

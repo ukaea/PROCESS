@@ -717,7 +717,7 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
 
 class NuclearHeatingDivertorParam(NamedTuple):
-    fdiv: Any = None
+    f_ster_div_single: Any = None
 
     p_div_nuclear_heat_total_mw: Any = None
 
@@ -736,7 +736,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
     "nuclearheatingdivertorparam",
     (
         NuclearHeatingDivertorParam(
-            fdiv=0.115,
+            f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
@@ -745,7 +745,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             expected_p_div_nuclear_heat_total_mw=182.71773382328519,
         ),
         NuclearHeatingDivertorParam(
-            fdiv=0.115,
+            f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=182.71773382328519,
             p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
@@ -768,7 +768,11 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "fdiv", nuclearheatingdivertorparam.fdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_ster_div_single",
+        nuclearheatingdivertorparam.f_ster_div_single,
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -804,7 +808,7 @@ class PowerflowCalcParam(NamedTuple):
 
     porbitlossmw: Any = None
 
-    fdiv: Any = None
+    f_ster_div_single: Any = None
 
     p_div_rad_total_mw: Any = None
 
@@ -900,7 +904,7 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
             porbitlossmw=0,
-            fdiv=0.115,
+            f_ster_div_single=0.115,
             p_div_rad_total_mw=0,
             p_fw_hcd_rad_total_mw=0,
             f_a_fw_hcd=0,
@@ -949,7 +953,7 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_outboard=1168.1172772224481,
             a_fw_total=1891.2865102700493,
             porbitlossmw=0,
-            fdiv=0.115,
+            f_ster_div_single=0.115,
             p_div_rad_total_mw=33.056596978820579,
             p_fw_hcd_rad_total_mw=0,
             f_a_fw_hcd=0,
@@ -1019,7 +1023,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         current_drive_variables, "porbitlossmw", powerflowcalcparam.porbitlossmw
     )
 
-    monkeypatch.setattr(fwbs_variables, "fdiv", powerflowcalcparam.fdiv)
+    monkeypatch.setattr(
+        fwbs_variables, "f_ster_div_single", powerflowcalcparam.f_ster_div_single
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "p_div_rad_total_mw", powerflowcalcparam.p_div_rad_total_mw

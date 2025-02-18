@@ -313,7 +313,7 @@
     {
       "no": 61,
       "level": 3,
-      "message": "RADIALB: fhole+fdiv+f_a_fw_hcd is too high for a credible outboard wall area"
+      "message": "RADIALB: fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area"
     },
     {
       "no": 62,

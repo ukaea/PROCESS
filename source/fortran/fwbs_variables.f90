@@ -47,7 +47,7 @@ module fwbs_variables
   real(dp) :: fblss
   !! KIT blanket model: steel fraction of breeding zone
 
-  real(dp) :: fdiv
+  real(dp) :: f_ster_div_single
   !! Solid angle fraction taken by one divertor
 
   real(dp) :: f_a_fw_hcd
@@ -673,7 +673,7 @@ module fwbs_variables
     emult = 1.269D0
     emultmw = 0.0D0
     fblss = 0.09705D0
-    fdiv = 0.115D0
+    f_ster_div_single = 0.115D0
     f_a_fw_hcd = 0.0D0
     fhole = 0.0D0
     i_fw_blkt_vv_shape = 2

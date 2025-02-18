@@ -205,7 +205,7 @@ contains
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, dz_divertor, c3div, &
       hldiv, i_hldiv
-    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
+    use fwbs_variables, only: fblhebpo, vfblkt, f_ster_div_single, fvolso, i_fw_coolant_type, &
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, f_a_fw_hcd, vfshld, fblhebmi, &
@@ -2081,8 +2081,8 @@ contains
        case ('fblvd')
           call parse_real_variable('fblvd', fblvd, 0.0D0, 1.0D0, &
                'Vanadium fraction of blanket')
-       case ('fdiv')
-          call parse_real_variable('fdiv', fdiv, 0.0D0, 1.0D0, &
+       case ('f_ster_div_single')
+          call parse_real_variable('f_ster_div_single', f_ster_div_single, 0.0D0, 1.0D0, &
                'Divertor area fraction')
        case ('f_a_fw_hcd')
           call parse_real_variable('f_a_fw_hcd', f_a_fw_hcd, 0.0D0, 1.0D0, &

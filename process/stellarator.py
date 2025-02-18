@@ -478,7 +478,7 @@ class Stellarator:
             build_variables.a_fw_total = (
                 1.0e0
                 - fwbs_variables.fhole
-                - fwbs_variables.fdiv
+                - fwbs_variables.f_ster_div_single
                 - fwbs_variables.f_a_fw_hcd
             ) * build_variables.a_fw_total
 
@@ -920,7 +920,7 @@ class Stellarator:
         divertor_variables.hldiv = q_div
         divertor_variables.divsur = darea
 
-        fwbs_variables.fdiv = darea / build_variables.a_fw_total
+        fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
         if output:
             po.oheadr(self.outfile, "Divertor")
@@ -1145,7 +1145,7 @@ class Stellarator:
                 * (
                     1.0e0
                     - fwbs_variables.fhole
-                    - fwbs_variables.fdiv
+                    - fwbs_variables.f_ster_div_single
                     - fwbs_variables.f_a_fw_hcd
                 )
             )
@@ -1201,7 +1201,8 @@ class Stellarator:
 
             if heat_transport_variables.ipowerflow == 1:
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                    physics_variables.neutron_power_total
+                    * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
@@ -1217,7 +1218,7 @@ class Stellarator:
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
                 )
                 fwbs_variables.p_div_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
@@ -1315,7 +1316,8 @@ class Stellarator:
                 #  Neutron power incident on divertor (MW)
 
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                    physics_variables.neutron_power_total
+                    * fwbs_variables.f_ster_div_single
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
@@ -1348,7 +1350,7 @@ class Stellarator:
                 #  Radiation power incident on divertor (MW)
 
                 fwbs_variables.p_div_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
                 )
 
                 #  Radiation power incident on HCD apparatus (MW)
@@ -4306,7 +4308,7 @@ class Stellarator:
                         1.0e0
                         - fwbs_variables.fhole
                         - fwbs_variables.f_a_fw_hcd
-                        - fwbs_variables.fdiv
+                        - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
@@ -4433,7 +4435,7 @@ class Stellarator:
                         1.0e0
                         - fwbs_variables.fhole
                         - fwbs_variables.f_a_fw_hcd
-                        - fwbs_variables.fdiv
+                        - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.a_fw_total

@@ -123,10 +123,12 @@ class DCLL:
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            covf = 1 - (2 * fwbs_variables.fdiv) - fwbs_variables.f_a_fw_hcd
+            covf = (
+                1 - (2 * fwbs_variables.f_ster_div_single) - fwbs_variables.f_a_fw_hcd
+            )
         else:
             # Single null configuration
-            covf = 1 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd
+            covf = 1 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
@@ -158,23 +160,25 @@ class DCLL:
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            # Nuclear heating in the divertor (MW), neutron power times fdiv
+            # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
+                physics_variables.neutron_power_total
+                * 2
+                * fwbs_variables.f_ster_div_single
             )
             # Radiation power incident on divertor (MW)
             fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * 2 * fwbs_variables.fdiv
+                physics_variables.p_plasma_rad_mw * 2 * fwbs_variables.f_ster_div_single
             )
         else:
             # Single null configuration
-            # Nuclear heating in the divertor (MW), neutron power times fdiv
+            # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.neutron_power_total * fwbs_variables.fdiv
+                physics_variables.neutron_power_total * fwbs_variables.f_ster_div_single
             )
             # Radiation power incident on divertor (MW)
             fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
             )
 
         # HCD Apperatus
@@ -218,8 +222,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Solid angle fraction taken by on divertor",
-                "(fdiv)",
-                fwbs_variables.fdiv,
+                "(f_ster_div_single)",
+                fwbs_variables.f_ster_div_single,
             )
             po.ovarre(self.outfile, "Blanket coverage factor", "(covf)", covf)
 
