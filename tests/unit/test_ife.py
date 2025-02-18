@@ -1219,7 +1219,7 @@ class IfefbsParam(NamedTuple):
     m_blkt_vanadium: Any = None
     m_blkt_steel_total: Any = None
     m_blkt_li2o: Any = None
-    whtblli: Any = None
+    m_blkt_lithium: Any = None
     life_blkt_fpy: Any = None
     life_fw_fpy: Any = None
     chmatm: Any = None
@@ -1269,7 +1269,7 @@ class IfefbsParam(NamedTuple):
             m_blkt_vanadium=0,
             m_blkt_steel_total=0,
             m_blkt_li2o=0,
-            whtblli=0,
+            m_blkt_lithium=0,
             life_blkt_fpy=0,
             life_fw_fpy=0,
             chmatm=np.array(
@@ -1558,7 +1558,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
         fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
     )
     monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", ifefbsparam.m_blkt_li2o)
-    monkeypatch.setattr(fwbs_variables, "whtblli", ifefbsparam.whtblli)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_lithium", ifefbsparam.m_blkt_lithium)
     monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", ifefbsparam.life_blkt_fpy)
     monkeypatch.setattr(fwbs_variables, "life_fw_fpy", ifefbsparam.life_fw_fpy)
     monkeypatch.setattr(ife_variables, "chmatm", ifefbsparam.chmatm)
