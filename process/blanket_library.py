@@ -216,7 +216,7 @@ class BlanketLibrary:
             )
         elif icomponent == 2:
             (
-                blanket_library.volvvi,
+                blanket_library.vol_vv_inboard,
                 blanket_library.volvvo,
                 fwbs_variables.vol_vv,
             ) = dshellvol(
@@ -308,7 +308,7 @@ class BlanketLibrary:
             )
         if icomponent == 2:
             (
-                blanket_library.volvvi,
+                blanket_library.vol_vv_inboard,
                 blanket_library.volvvo,
                 fwbs_variables.vol_vv,
             ) = eshellvol(
