@@ -1517,7 +1517,7 @@ class ComponentMassesParam(NamedTuple):
     vol_fw_total: Any = None
     fblss_ccfe: Any = None
     f_vol_blkt_li4sio4: Any = None
-    fbltibe12: Any = None
+    f_vol_blkt_tibe12: Any = None
     expected_divsur: Any = None
     expected_divmas: Any = None
     expected_whtblbe: Any = None
@@ -1536,7 +1536,7 @@ class ComponentMassesParam(NamedTuple):
     expected_armour_fw_bl_mass: Any = None
     expected_fblss_ccfe: Any = None
     expected_f_vol_blkt_li4sio4: Any = None
-    expected_fbltibe12: Any = None
+    expected_f_vol_blkt_tibe12: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1608,7 +1608,7 @@ class ComponentMassesParam(NamedTuple):
             vol_fw_total=0,
             fblss_ccfe=0,
             f_vol_blkt_li4sio4=0,
-            fbltibe12=0,
+            f_vol_blkt_tibe12=0,
             expected_divsur=148.78582807401261,
             expected_divmas=36452.527878133093,
             expected_whtblbe=1002205.5121936026,
@@ -1627,7 +1627,7 @@ class ComponentMassesParam(NamedTuple):
             expected_armour_fw_bl_mass=3263343.5901344167,
             expected_fblss_ccfe=0.097049999999999997,
             expected_f_vol_blkt_li4sio4=0.375,
-            expected_fbltibe12=0.375,
+            expected_f_vol_blkt_tibe12=0.375,
         ),
     ),
 )
@@ -1764,7 +1764,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "f_vol_blkt_li4sio4", componentmassesparam.f_vol_blkt_li4sio4
     )
-    monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_tibe12", componentmassesparam.f_vol_blkt_tibe12
+    )
 
     ccfe_hcpb.component_masses()
 
@@ -1820,6 +1822,6 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.f_vol_blkt_li4sio4 == pytest.approx(
         componentmassesparam.expected_f_vol_blkt_li4sio4
     )
-    assert fwbs_variables.fbltibe12 == pytest.approx(
-        componentmassesparam.expected_fbltibe12
+    assert fwbs_variables.f_vol_blkt_tibe12 == pytest.approx(
+        componentmassesparam.expected_f_vol_blkt_tibe12
     )

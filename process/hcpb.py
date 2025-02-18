@@ -326,7 +326,7 @@ class CCFE_HCPB:
         if fwbs_variables.breeder_f > 1.0:
             fwbs_variables.breeder_f = 1.0
 
-        # fbltibe12 = f_vol_blkt_li4sio4 * (1 - breeder_f)/breeder_f
+        # f_vol_blkt_tibe12 = f_vol_blkt_li4sio4 * (1 - breeder_f)/breeder_f
         # New combined variable breeder_multiplier
         # Lithium orthosilicate fraction:
         fwbs_variables.f_vol_blkt_li4sio4 = (
@@ -334,11 +334,11 @@ class CCFE_HCPB:
         )
 
         # Titanium beryllide fraction, and mass (kg):
-        fwbs_variables.fbltibe12 = (
+        fwbs_variables.f_vol_blkt_tibe12 = (
             fwbs_variables.breeder_multiplier - fwbs_variables.f_vol_blkt_li4sio4
         )
         fwbs_variables.whtbltibe12 = (
-            fwbs_variables.vol_blkt_total * fwbs_variables.fbltibe12 * 2260.0
+            fwbs_variables.vol_blkt_total * fwbs_variables.f_vol_blkt_tibe12 * 2260.0
         )
 
         # Blanket Lithium orthosilicate mass (kg)
@@ -356,7 +356,7 @@ class CCFE_HCPB:
         fwbs_variables.fblss_ccfe = (
             1.0
             - fwbs_variables.f_vol_blkt_li4sio4
-            - fwbs_variables.fbltibe12
+            - fwbs_variables.f_vol_blkt_tibe12
             - fwbs_variables.vfcblkt
             - fwbs_variables.vfpblkt
         )
@@ -1243,8 +1243,8 @@ class CCFE_HCPB:
         po.ovarrf(
             self.outfile,
             "Titanium beryllide fraction",
-            "(fbltibe12)",
-            fwbs_variables.fbltibe12,
+            "(f_vol_blkt_tibe12)",
+            fwbs_variables.f_vol_blkt_tibe12,
             "OP ",
         )
         po.ovarrf(
