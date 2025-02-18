@@ -1919,7 +1919,7 @@ class BlanketLibrary:
             # Total coolant mass flow rate in the first wall (kg/s)
             blanket_library.mffw = blanket_library.mffwi + blanket_library.mffwo
             # Total coolant mass flow rate in the blanket (kg/s)
-            blanket_library.mfblkt = (
+            blanket_library.mflow_blkt_coolant_total = (
                 blanket_library.mflow_blkt_inboard_coolant
                 + blanket_library.mflow_blkt_outboard_coolant
             )
@@ -1948,7 +1948,7 @@ class BlanketLibrary:
                 temp_out=fwbs_variables.temp_blkt_coolant_out.item(),
                 pressure=fwbs_variables.pres_blkt_coolant.item(),
                 pdrop=deltap_blkt.item(),
-                mf=blanket_library.mfblkt,
+                mf=blanket_library.mflow_blkt_coolant_total,
                 primary_coolant_switch=(
                     "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                 ),
@@ -2100,8 +2100,8 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "Blanket coolant mass flow rate (kg/s)",
-                    "(mfblkt)",
-                    fwbs_variables.mfblkt,
+                    "(mflow_blkt_coolant_total)",
+                    fwbs_variables.mflow_blkt_coolant_total,
                     "OP ",
                 )
 
