@@ -103,7 +103,7 @@ module fwbs_variables
   real(dp) :: qnuc
   !! nuclear heating in the coils (W) (`inuclear=1`)
 
-  real(dp) :: li6enrich
+  real(dp) :: f_blkt_li6_enrichment
   !! lithium-6 enrichment of breeding material (%)
 
   real(dp) :: p_blkt_nuclear_heat_total_mw
@@ -686,7 +686,7 @@ module fwbs_variables
     i_blkt_inboard = 1
     inuclear = 0
     qnuc = 0.0D0
-    li6enrich = 30.0D0
+    f_blkt_li6_enrichment = 30.0D0
     p_blkt_nuclear_heat_total_mw = 0.0D0
     p_div_nuclear_heat_total_mw = 0.0D0
     p_fw_nuclear_heat_total_mw = 0.0D0

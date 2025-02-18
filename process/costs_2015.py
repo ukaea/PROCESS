@@ -269,11 +269,11 @@ class Costs2015:
         self.s_label[21] = "Lithium enrichment"
 
         # Zero cost for natural enrichment
-        if fwbs_variables.li6enrich <= 7.42e0:
+        if fwbs_variables.f_blkt_li6_enrichment <= 7.42e0:
             self.s_cost[21] = 0.0e0
         else:
             # Percentage of lithium 6 in the product
-            product_li6 = min(fwbs_variables.li6enrich, 99.99e0) / 100.0e0
+            product_li6 = min(fwbs_variables.f_blkt_li6_enrichment, 99.99e0) / 100.0e0
             # SWU will be calculated for a unit mass of product (P=1)
 
             # Feed to product mass ratio

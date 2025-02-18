@@ -2475,7 +2475,7 @@ inuclear = 0
 * DESCRIPTION: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
 * JUSTIFICATION: 
 
-*li6enrich = 
+*f_blkt_li6_enrichment = 
 * DESCRIPTION:   Lithium-6 enrichment of breeding material (%) (HCPB)
 * JUSTIFICATION: Not using HCPB model 
 

@@ -1066,7 +1066,10 @@ class Stellarator:
 
         # Tritium breeding ratio
         fwbs_variables.tbr = self.hcpb.tbr_shimwell(
-            fwbs_variables.vol_blkt_total, fwbs_variables.li6enrich, 1, output=False
+            fwbs_variables.vol_blkt_total,
+            fwbs_variables.f_blkt_li6_enrichment,
+            1,
+            output=False,
         )
 
         # Use older model to calculate neutron fluence since it
@@ -2121,8 +2124,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Lithium-6 enrichment (%)",
-                    "(li6enrich)",
-                    fwbs_variables.li6enrich,
+                    "(f_blkt_li6_enrichment)",
+                    fwbs_variables.f_blkt_li6_enrichment,
                 )
                 po.ovarre(
                     self.outfile, "Tritium breeding ratio", "(tbr)", fwbs_variables.tbr
