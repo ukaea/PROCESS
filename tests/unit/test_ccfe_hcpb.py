@@ -1489,7 +1489,7 @@ class ComponentMassesParam(NamedTuple):
     breeder_multiplier: Any = None
     m_blkt_tibe12: Any = None
     m_blkt_li4sio4: Any = None
-    wtblli2o: Any = None
+    m_blkt_li2o: Any = None
     vfcblkt: Any = None
     vfpblkt: Any = None
     whtshld: Any = None
@@ -1527,7 +1527,7 @@ class ComponentMassesParam(NamedTuple):
     expected_fwclfr: Any = None
     expected_m_blkt_tibe12: Any = None
     expected_whtblli4sio4: Any = None
-    expected_wtblli2o: Any = None
+    expected_m_blkt_li2o: Any = None
     expected_whtshld: Any = None
     expected_wpenshld: Any = None
     expected_m_fw_total: Any = None
@@ -1580,7 +1580,7 @@ class ComponentMassesParam(NamedTuple):
             breeder_multiplier=0.75,
             m_blkt_tibe12=0,
             m_blkt_li4sio4=0,
-            wtblli2o=0,
+            m_blkt_li2o=0,
             vfcblkt=0.052949999999999997,
             vfpblkt=0.10000000000000001,
             whtshld=0,
@@ -1618,7 +1618,7 @@ class ComponentMassesParam(NamedTuple):
             expected_fwclfr=0,
             expected_m_blkt_tibe12=1002205.5121936026,
             expected_whtblli4sio4=1064289.0394976311,
-            expected_wtblli2o=1064289.0394976311,
+            expected_m_blkt_li2o=1064289.0394976311,
             expected_whtshld=2445141.3347883238,
             expected_wpenshld=2445141.3347883238,
             expected_m_fw_total=188693.16002348688,
@@ -1712,7 +1712,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_li4sio4", componentmassesparam.m_blkt_li4sio4
     )
-    monkeypatch.setattr(fwbs_variables, "wtblli2o", componentmassesparam.wtblli2o)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", componentmassesparam.m_blkt_li2o)
     monkeypatch.setattr(fwbs_variables, "vfcblkt", componentmassesparam.vfcblkt)
     monkeypatch.setattr(fwbs_variables, "vfpblkt", componentmassesparam.vfpblkt)
     monkeypatch.setattr(fwbs_variables, "whtshld", componentmassesparam.whtshld)
@@ -1801,8 +1801,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.m_blkt_li4sio4 == pytest.approx(
         componentmassesparam.expected_whtblli4sio4
     )
-    assert fwbs_variables.wtblli2o == pytest.approx(
-        componentmassesparam.expected_wtblli2o
+    assert fwbs_variables.m_blkt_li2o == pytest.approx(
+        componentmassesparam.expected_m_blkt_li2o
     )
     assert fwbs_variables.whtshld == pytest.approx(
         componentmassesparam.expected_whtshld
