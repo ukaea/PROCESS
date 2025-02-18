@@ -1932,7 +1932,7 @@ class BlanketLibrary:
                 deltap_blkt = primary_pumping_variables.dp_blkt
 
             # Total coolant mass flow rate in the first wall (kg/s)
-            blanket_library.mffw = (
+            blanket_library.mflow_fw_coolant_total = (
                 blanket_library.mflow_fw_inboard_coolant_total
                 + blanket_library.mflow_fw_outboard_coolant_total
             )
@@ -1950,7 +1950,7 @@ class BlanketLibrary:
                 temp_out=fwbs_variables.temp_fw_coolant_out.item(),
                 pressure=fwbs_variables.pres_fw_coolant.item(),
                 pdrop=deltap_fw.item(),
-                mf=blanket_library.mffw,
+                mf=blanket_library.mflow_fw_coolant_total,
                 primary_coolant_switch=f2py_compatible_to_string(
                     fwbs_variables.i_fw_coolant_type
                 ),
@@ -2069,8 +2069,8 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "First wall coolant mass flow rate (kg/s)",
-                    "(mffw)",
-                    fwbs_variables.mffw,
+                    "(mflow_fw_coolant_total)",
+                    fwbs_variables.mflow_fw_coolant_total,
                     "OP ",
                 )
             po.ovarrf(
