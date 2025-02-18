@@ -353,7 +353,7 @@ class CCFE_HCPB:
         fwbs_variables.wtblli2o = fwbs_variables.whtblli4sio4
 
         # Steel fraction by volume is the remainder:
-        fwbs_variables.fblss_ccfe = (
+        fwbs_variables.f_vol_blkt_steel = (
             1.0
             - fwbs_variables.f_vol_blkt_li4sio4
             - fwbs_variables.f_vol_blkt_tibe12
@@ -364,7 +364,7 @@ class CCFE_HCPB:
         # Steel mass (kg)
         fwbs_variables.m_blkt_steel_total = (
             fwbs_variables.vol_blkt_total
-            * fwbs_variables.fblss_ccfe
+            * fwbs_variables.f_vol_blkt_steel
             * fwbs_variables.denstl
         )
 
@@ -1257,8 +1257,8 @@ class CCFE_HCPB:
         po.ovarrf(
             self.outfile,
             "Steel fraction",
-            "(fblss_ccfe)",
-            fwbs_variables.fblss_ccfe,
+            "(f_vol_blkt_steel)",
+            fwbs_variables.f_vol_blkt_steel,
             "OP ",
         )
         po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", fwbs_variables.vfcblkt)

@@ -1515,7 +1515,7 @@ class ComponentMassesParam(NamedTuple):
     f_a_fw_coolant_inboard: Any = None
     f_a_fw_coolant_outboard: Any = None
     vol_fw_total: Any = None
-    fblss_ccfe: Any = None
+    f_vol_blkt_steel: Any = None
     f_vol_blkt_li4sio4: Any = None
     f_vol_blkt_tibe12: Any = None
     expected_divsur: Any = None
@@ -1606,7 +1606,7 @@ class ComponentMassesParam(NamedTuple):
             f_a_fw_coolant_inboard=0,
             f_a_fw_coolant_outboard=0,
             vol_fw_total=0,
-            fblss_ccfe=0,
+            f_vol_blkt_steel=0,
             f_vol_blkt_li4sio4=0,
             f_vol_blkt_tibe12=0,
             expected_divsur=148.78582807401261,
@@ -1760,7 +1760,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "vol_fw_total", componentmassesparam.vol_fw_total
     )
-    monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_steel", componentmassesparam.f_vol_blkt_steel
+    )
     monkeypatch.setattr(
         fwbs_variables, "f_vol_blkt_li4sio4", componentmassesparam.f_vol_blkt_li4sio4
     )
@@ -1816,7 +1818,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.armour_fw_bl_mass == pytest.approx(
         componentmassesparam.expected_armour_fw_bl_mass
     )
-    assert fwbs_variables.fblss_ccfe == pytest.approx(
+    assert fwbs_variables.f_vol_blkt_steel == pytest.approx(
         componentmassesparam.expected_fblss_ccfe
     )
     assert fwbs_variables.f_vol_blkt_li4sio4 == pytest.approx(

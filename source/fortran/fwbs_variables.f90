@@ -185,7 +185,7 @@ module fwbs_variables
   real(dp) :: vol_fw_total
   !! First wall volume [m3]
 
-  real(dp) :: fblss_ccfe, f_vol_blkt_li4sio4, f_vol_blkt_tibe12
+  real(dp) :: f_vol_blkt_steel, f_vol_blkt_li4sio4, f_vol_blkt_tibe12
   !! Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide
 
   !  KIT HCPB blanket model (i_blanket_type = 2)
@@ -709,7 +709,7 @@ module fwbs_variables
     psurffwi = 0.0D0
     psurffwo = 0.0D0
     vol_fw_total = 0.0D0
-    fblss_ccfe = 0.0D0
+    f_vol_blkt_steel = 0.0D0
     f_vol_blkt_li4sio4 = 0.0D0
     f_vol_blkt_tibe12 = 0.0D0
     breedmat = 1
