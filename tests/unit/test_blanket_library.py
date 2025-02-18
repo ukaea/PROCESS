@@ -509,7 +509,7 @@ class DshapedComponentParam(NamedTuple):
     volshldi: Any = None
     volshldo: Any = None
     vol_vv_inboard: Any = None
-    volvvo: Any = None
+    vol_vv_outboard: Any = None
     hblnkt: Any = None
     hshld: Any = None
     hvv: Any = None
@@ -527,7 +527,7 @@ class DshapedComponentParam(NamedTuple):
     expected_volshldi: Any = None
     expected_volshldo: Any = None
     expected_vol_vv_inboard: Any = None
-    expected_volvvo: Any = None
+    expected_vol_vv_outboard: Any = None
     expected_icomponent: Any = None
 
 
@@ -566,7 +566,7 @@ class DshapedComponentParam(NamedTuple):
             volshldi=0,
             volshldo=0,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -584,7 +584,7 @@ class DshapedComponentParam(NamedTuple):
             expected_volshldi=0,
             expected_volshldo=0,
             expected_vol_vv_inboard=0,
-            expected_volvvo=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=0,
         ),
         DshapedComponentParam(
@@ -619,7 +619,7 @@ class DshapedComponentParam(NamedTuple):
             volshldi=0,
             volshldo=0,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -637,7 +637,7 @@ class DshapedComponentParam(NamedTuple):
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
             expected_vol_vv_inboard=0,
-            expected_volvvo=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=1,
         ),
         DshapedComponentParam(
@@ -672,7 +672,7 @@ class DshapedComponentParam(NamedTuple):
             volshldi=79.896984366095609,
             volshldo=370.5642451119993,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -690,7 +690,7 @@ class DshapedComponentParam(NamedTuple):
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
             expected_vol_vv_inboard=34.253413020620215,
-            expected_volvvo=306.20028292282814,
+            expected_vol_vv_outboard=306.20028292282814,
             expected_icomponent=2,
         ),
     ),
@@ -770,7 +770,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         blanket_library, "vol_vv_inboard", dshapedcomponentparam.vol_vv_inboard
     )
-    monkeypatch.setattr(blanket_library, "volvvo", dshapedcomponentparam.volvvo)
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_outboard", dshapedcomponentparam.vol_vv_outboard
+    )
     monkeypatch.setattr(blanket_library, "hblnkt", dshapedcomponentparam.hblnkt)
     monkeypatch.setattr(blanket_library, "hshld", dshapedcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", dshapedcomponentparam.hvv)
@@ -824,7 +826,7 @@ class EllipticalComponentParam(NamedTuple):
     volshldi: Any = None
     volshldo: Any = None
     vol_vv_inboard: Any = None
-    volvvo: Any = None
+    vol_vv_outboard: Any = None
     hblnkt: Any = None
     hshld: Any = None
     hvv: Any = None
@@ -843,7 +845,7 @@ class EllipticalComponentParam(NamedTuple):
     expected_volshldi: Any = None
     expected_volshldo: Any = None
     expected_vol_vv_inboard: Any = None
-    expected_volvvo: Any = None
+    expected_vol_vv_outboard: Any = None
     expected_icomponent: Any = None
 
 
@@ -880,7 +882,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldi=0,
             volshldo=0,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -899,7 +901,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_volshldi=0,
             expected_volshldo=0,
             expected_vol_vv_inboard=0,
-            expected_volvvo=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=0,
         ),
         EllipticalComponentParam(
@@ -932,7 +934,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldi=0,
             volshldo=0,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -951,7 +953,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
             expected_vol_vv_inboard=0,
-            expected_volvvo=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=1,
         ),
         EllipticalComponentParam(
@@ -984,7 +986,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldi=177.89822933168091,
             volshldo=946.56393192782434,
             vol_vv_inboard=0,
-            volvvo=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -1003,7 +1005,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
             expected_vol_vv_inboard=143.03162449152501,
-            expected_volvvo=441.04172325889158,
+            expected_vol_vv_outboard=441.04172325889158,
             expected_icomponent=2,
         ),
     ),
@@ -1071,7 +1073,9 @@ def test_elliptical_component(
     monkeypatch.setattr(
         blanket_library, "vol_vv_inboard", ellipticalcomponentparam.vol_vv_inboard
     )
-    monkeypatch.setattr(blanket_library, "volvvo", ellipticalcomponentparam.volvvo)
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_outboard", ellipticalcomponentparam.vol_vv_outboard
+    )
     monkeypatch.setattr(blanket_library, "hblnkt", ellipticalcomponentparam.hblnkt)
     monkeypatch.setattr(blanket_library, "hshld", ellipticalcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", ellipticalcomponentparam.hvv)
@@ -1120,8 +1124,8 @@ def test_elliptical_component(
     assert blanket_library.vol_vv_inboard == pytest.approx(
         ellipticalcomponentparam.expected_vol_vv_inboard
     )
-    assert blanket_library.volvvo == pytest.approx(
-        ellipticalcomponentparam.expected_volvvo
+    assert blanket_library.vol_vv_outboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_vv_outboard
     )
 
 
