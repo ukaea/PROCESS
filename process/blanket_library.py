@@ -1585,7 +1585,7 @@ class BlanketLibrary:
             )
 
         # Neutron power deposited in outboard blanket (MW)
-        blanket_library.pnucblkto = (
+        blanket_library.p_blkt_nuclear_heat_outboard_mw = (
             fwbs_variables.p_blkt_nuclear_heat_total_mw
             * fwbs_variables.vol_blkt_outboard
             / fwbs_variables.vol_blkt_total
@@ -1651,7 +1651,7 @@ class BlanketLibrary:
                 f_nuc_fwo = (blanket_library.pnucfwo + fwbs_variables.psurffwo) / (
                     blanket_library.pnucfwo
                     + fwbs_variables.psurffwo
-                    + blanket_library.pnucblkto
+                    + blanket_library.p_blkt_nuclear_heat_outboard_mw
                 )
 
             # Outlet FW/inlet BB temp (mass flow FW = mass flow BB)
@@ -1788,7 +1788,7 @@ class BlanketLibrary:
             # Mass flow rate for outboard blanket coolant (kg/s)
             blanket_library.mfblkto = (
                 1.0e6
-                * (blanket_library.pnucblkto)
+                * (blanket_library.p_blkt_nuclear_heat_outboard_mw)
                 / (
                     fwbs_variables.cp_bl
                     * (fwbs_variables.temp_blkt_coolant_out - inlet_tempo)
@@ -1823,7 +1823,7 @@ class BlanketLibrary:
             # Mass flow rate for inboard blanket coolant (kg/s)
             blanket_library.mfblkto = (
                 1.0e6
-                * (blanket_library.pnucblkto)
+                * (blanket_library.p_blkt_nuclear_heat_outboard_mw)
                 / (
                     fwbs_variables.cp_bl
                     * (fwbs_variables.temp_blkt_coolant_out - inlet_tempo)
