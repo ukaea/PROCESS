@@ -331,14 +331,18 @@ class BlanketLibrary:
             # double null configuration
             build_variables.blareaob = (
                 build_variables.blarea
-                * (1.0 - 2.0 * fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
+                * (
+                    1.0
+                    - 2.0 * fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_hcd
+                )
                 - build_variables.blareaib
             )
         else:
             # single null configuration
             build_variables.blareaob = (
                 build_variables.blarea
-                * (1.0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
+                * (1.0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd)
                 - build_variables.blareaib
             )
 
@@ -346,7 +350,7 @@ class BlanketLibrary:
 
         fwbs_variables.vol_blkt_outboard = (
             fwbs_variables.vol_blkt_total
-            * (1.0 - fwbs_variables.fdiv - fwbs_variables.f_a_fw_hcd)
+            * (1.0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd)
             - fwbs_variables.vol_blkt_inboard
         )
         fwbs_variables.vol_blkt_total = (
@@ -1170,7 +1174,7 @@ class BlanketLibrary:
                 blanket_library.bllengo = (
                     0.5
                     * ptor
-                    * (1.0 - 2.0 * fwbs_variables.fdiv)
+                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
             else:
@@ -1178,7 +1182,7 @@ class BlanketLibrary:
                 blanket_library.bllengo = (
                     0.5
                     * ptor
-                    * (1.0 - fwbs_variables.fdiv)
+                    * (1.0 - fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 
@@ -1204,7 +1208,7 @@ class BlanketLibrary:
             ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
 
             # Calculate inboard blanket poloidal length and segment, subtracting divertor length (m)
-            # Assume divertor lies between the two ellipses, so fraction fdiv still applies
+            # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
 
             # kit hcll version only had the single null option
             if physics_variables.idivrt == 2:
@@ -1212,7 +1216,7 @@ class BlanketLibrary:
                 blanket_library.bllengi = (
                     0.5
                     * ptor
-                    * (1.0 - 2.0 * fwbs_variables.fdiv)
+                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
             else:
@@ -1220,7 +1224,7 @@ class BlanketLibrary:
                 blanket_library.bllengi = (
                     0.5
                     * ptor
-                    * (1.0 - fwbs_variables.fdiv)
+                    * (1.0 - fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_inboard_modules_poloidal
                 )
 
@@ -1242,7 +1246,7 @@ class BlanketLibrary:
                 blanket_library.bllengo = (
                     0.5
                     * ptor
-                    * (1.0 - 2.0 * fwbs_variables.fdiv)
+                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
             else:
@@ -1250,7 +1254,7 @@ class BlanketLibrary:
                 blanket_library.bllengo = (
                     0.5
                     * ptor
-                    * (1.0 - fwbs_variables.fdiv)
+                    * (1.0 - fwbs_variables.f_ster_div_single)
                     / fwbs_variables.n_blkt_outboard_modules_poloidal
                 )
 

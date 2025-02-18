@@ -140,7 +140,9 @@ class CCFE_HCPB:
         # end if
 
         # Solid angle fraction taken by the breeding blankets/shields
-        f_geom_blanket = 1 - physics_variables.idivrt * fwbs_variables.fdiv - f_geom_cp
+        f_geom_blanket = (
+            1 - physics_variables.idivrt * fwbs_variables.f_ster_div_single - f_geom_cp
+        )
 
         # Power to the first wall (MW)
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
@@ -632,19 +634,22 @@ class CCFE_HCPB:
         # coils. It turns out that emult is also approx constant, but this is not used. No energy
         # multiplication in the divertor
 
-        # Overwrite global variable for fdiv 07/11/18 SIM: Removed having spoken to JM
-        # fdiv = 0.115D0
+        # Overwrite global variable for f_ster_div_single 07/11/18 SIM: Removed having spoken to JM
+        # f_ster_div_single = 0.115D0
 
-        # Nuclear heating in the divertor just the neutron power times fdiv
+        # Nuclear heating in the divertor just the neutron power times f_ster_div_single
         if physics_variables.idivrt == 2:
             # Double null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8 * physics_variables.fusion_power * 2 * fwbs_variables.fdiv
+                0.8
+                * physics_variables.fusion_power
+                * 2
+                * fwbs_variables.f_ster_div_single
             )
         else:
             # single null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8 * physics_variables.fusion_power * fwbs_variables.fdiv
+                0.8 * physics_variables.fusion_power * fwbs_variables.f_ster_div_single
             )
 
         # No heating of the H & CD
@@ -659,12 +664,14 @@ class CCFE_HCPB:
         if physics_variables.idivrt == 2:
             # Double null configuration
             fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * 2.0 * fwbs_variables.fdiv
+                physics_variables.p_plasma_rad_mw
+                * 2.0
+                * fwbs_variables.f_ster_div_single
             )
         else:
             # single null configuration
             fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
             )
 
         # Radiation power incident on HCD apparatus (MW)
@@ -1468,8 +1475,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Solid angle fraction taken by on divertor",
-            "(fdiv)",
-            fwbs_variables.fdiv,
+            "(f_ster_div_single)",
+            fwbs_variables.f_ster_div_single,
         )
 
         po.ovarin(

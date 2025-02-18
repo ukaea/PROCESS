@@ -2306,7 +2306,7 @@ etaiso = 0.9
 * DESCRIPTION:   Isentropic efficiency of FW and blanket coolant pumps (default = 0.85)
 * JUSTIFICATION: Not set as not used
 
-*fdiv = 
+*f_ster_div_single = 
 * DESCRIPTION:   Solid angle fraction taken by one divertor
 * JUSTIFICATION: Not yet set
 
