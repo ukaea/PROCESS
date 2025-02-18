@@ -312,7 +312,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Magnetic field strengths
 
-- Magnetic field strengths should start with the `b_`
+- Magnetic field strengths should start with the `b_` prefix
 
 ---------------------
 
@@ -334,6 +334,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 ##### Angles
 
 - Angles should start with the `deg_` or `rad_` depending on the units used
+
+---------------------
+
+##### Solid Angles
+
+- Solid angles should start with the `ster_` prefix. Short for steradians.
 
 ---------------------
 
