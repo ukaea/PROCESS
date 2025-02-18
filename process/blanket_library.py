@@ -768,7 +768,7 @@ class BlanketLibrary:
         # FW Pipe Flow and Velocity ######
 
         # Total number of first wall pipes from channel length and dx_fw_module (02/12/2015)
-        blanket_library.npfwi = build_variables.a_fw_inboard / (
+        blanket_library.n_fw_inboard_channels = build_variables.a_fw_inboard / (
             fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
         )
         blanket_library.n_fw_outboard_channels = build_variables.a_fw_outboard / (
@@ -776,7 +776,7 @@ class BlanketLibrary:
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
-        blanket_library.mffwpi = blanket_library.mffwi / blanket_library.npfwi
+        blanket_library.mffwpi = blanket_library.mffwi / blanket_library.n_fw_inboard_channels
         blanket_library.mffwpo = blanket_library.mffwo / blanket_library.n_fw_outboard_channels
 
         # Coolant velocite in FW (m/s)
