@@ -159,7 +159,7 @@ class DCLL:
         if physics_variables.idivrt == 2:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = (
+            fwbs_variables.p_div_nuclear_heat_total_mw = (
                 physics_variables.neutron_power_total * 2 * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
@@ -169,7 +169,7 @@ class DCLL:
         else:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times fdiv
-            fwbs_variables.pnucdiv = (
+            fwbs_variables.p_div_nuclear_heat_total_mw = (
                 physics_variables.neutron_power_total * fwbs_variables.fdiv
             )
             # Radiation power incident on divertor (MW)
@@ -257,8 +257,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in the divertor (MW)",
-                "(pnucdiv)",
-                fwbs_variables.pnucdiv,
+                "(p_div_nuclear_heat_total_mw)",
+                fwbs_variables.p_div_nuclear_heat_total_mw,
                 "OP ",
             )
             po.ovarre(
@@ -313,7 +313,7 @@ class DCLL:
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
-                + fwbs_variables.pnucdiv
+                + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.praddiv
             )
 
@@ -323,7 +323,7 @@ class DCLL:
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
                 physics_variables.pdivt
-                + fwbs_variables.pnucdiv
+                + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.praddiv
             )
 

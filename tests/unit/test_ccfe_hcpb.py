@@ -719,7 +719,7 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 class NuclearHeatingDivertorParam(NamedTuple):
     fdiv: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_total_mw: Any = None
 
     pnuchcd: Any = None
 
@@ -729,7 +729,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     ip: Any = None
 
-    expected_pnucdiv: Any = None
+    expected_p_div_nuclear_heat_total_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -737,21 +737,21 @@ class NuclearHeatingDivertorParam(NamedTuple):
     (
         NuclearHeatingDivertorParam(
             fdiv=0.115,
-            pnucdiv=0,
+            p_div_nuclear_heat_total_mw=0,
             pnuchcd=0,
             idivrt=1,
             fusion_power=1986.0623241661431,
             ip=0,
-            expected_pnucdiv=182.71773382328519,
+            expected_p_div_nuclear_heat_total_mw=182.71773382328519,
         ),
         NuclearHeatingDivertorParam(
             fdiv=0.115,
-            pnucdiv=182.71773382328519,
+            p_div_nuclear_heat_total_mw=182.71773382328519,
             pnuchcd=0,
             idivrt=1,
             fusion_power=1985.4423932312809,
             ip=0,
-            expected_pnucdiv=182.66070017727785,
+            expected_p_div_nuclear_heat_total_mw=182.66070017727785,
         ),
     ),
 )
@@ -770,7 +770,11 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     monkeypatch.setattr(fwbs_variables, "fdiv", nuclearheatingdivertorparam.fdiv)
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", nuclearheatingdivertorparam.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_total_mw",
+        nuclearheatingdivertorparam.p_div_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnuchcd", nuclearheatingdivertorparam.pnuchcd)
 
@@ -784,8 +788,8 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     ccfe_hcpb.nuclear_heating_divertor()
 
-    assert fwbs_variables.pnucdiv == pytest.approx(
-        nuclearheatingdivertorparam.expected_pnucdiv
+    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingdivertorparam.expected_p_div_nuclear_heat_total_mw
     )
 
 
@@ -818,7 +822,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_blkt_nuclear_heat_total_mw: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_total_mw: Any = None
 
     pnucshld: Any = None
 
@@ -903,7 +907,7 @@ class PowerflowCalcParam(NamedTuple):
             i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
-            pnucdiv=182.71773382328519,
+            p_div_nuclear_heat_total_mw=182.71773382328519,
             pnucshld=1.3611259588044891,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
@@ -952,7 +956,7 @@ class PowerflowCalcParam(NamedTuple):
             i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
             p_blkt_nuclear_heat_total_mw=1550.1447895848396,
-            pnucdiv=182.66070017727785,
+            p_div_nuclear_heat_total_mw=182.66070017727785,
             pnucshld=1.4038170956592293,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
@@ -1051,7 +1055,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_blkt_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", powerflowcalcparam.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_total_mw",
+        powerflowcalcparam.p_div_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", powerflowcalcparam.pnucshld)
 

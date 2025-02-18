@@ -1197,7 +1197,7 @@ class Stellarator:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.pnucdiv = (
+                fwbs_variables.p_div_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
                 fwbs_variables.pnuchcd = (
@@ -1205,7 +1205,7 @@ class Stellarator:
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuchcd
                 )
@@ -1242,7 +1242,7 @@ class Stellarator:
                     heat_transport_variables.fpumpdiv
                     * (
                         physics_variables.pdivt
-                        + fwbs_variables.pnucdiv
+                        + fwbs_variables.p_div_nuclear_heat_total_mw
                         + fwbs_variables.praddiv
                     )
                 )
@@ -1311,7 +1311,7 @@ class Stellarator:
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.pnucdiv = (
+                fwbs_variables.p_div_nuclear_heat_total_mw = (
                     physics_variables.neutron_power_total * fwbs_variables.fdiv
                 )
 
@@ -1325,7 +1325,7 @@ class Stellarator:
 
                 pnucfwbs = (
                     physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                     - fwbs_variables.pnuchcd
@@ -1565,7 +1565,7 @@ class Stellarator:
                         heat_transport_variables.fpumpdiv
                         * (
                             physics_variables.pdivt
-                            + fwbs_variables.pnucdiv
+                            + fwbs_variables.p_div_nuclear_heat_total_mw
                             + fwbs_variables.praddiv
                         )
                     )

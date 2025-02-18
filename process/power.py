@@ -713,7 +713,7 @@ class Power:
         #  using physics_variables.pdivt as calculated in physics.f90
         self.pthermdiv = (
             physics_variables.pdivt
-            + (fwbs_variables.pnucdiv + fwbs_variables.praddiv)
+            + (fwbs_variables.p_div_nuclear_heat_total_mw + fwbs_variables.praddiv)
             + heat_transport_variables.htpmw_div
         )
 
@@ -1413,7 +1413,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.pnucdiv * self.iprimdiv} {fwbs_variables.pnucdiv * (1 - self.iprimdiv)} {fwbs_variables.pnucdiv}"
+                f"{fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
             ),
         )
         po.write(
@@ -1437,14 +1437,14 @@ class Power:
 
         primsum = (
             primsum
-            + fwbs_variables.pnucdiv * self.iprimdiv
+            + fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv
             + physics_variables.pdivt * self.iprimdiv
             + fwbs_variables.praddiv * self.iprimdiv
             + heat_transport_variables.htpmw_div * self.iprimdiv
         )
         secsum = (
             secsum
-            + fwbs_variables.pnucdiv * (1 - self.iprimdiv)
+            + fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)
             + physics_variables.pdivt * (1 - self.iprimdiv)
             + fwbs_variables.praddiv * (1 - self.iprimdiv)
             + heat_transport_variables.htpmw_div * (1 - self.iprimdiv)
