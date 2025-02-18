@@ -804,7 +804,7 @@ class PowerflowCalcParam(NamedTuple):
 
     praddiv: Any = None
 
-    pradhcd: Any = None
+    p_fw_hcd_rad_total_mw: Any = None
 
     fhcd: Any = None
 
@@ -898,7 +898,7 @@ class PowerflowCalcParam(NamedTuple):
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=0,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             fhcd=0,
             p_fw_rad_total_mw=0,
             i_blkt_coolant_type=1,
@@ -947,7 +947,7 @@ class PowerflowCalcParam(NamedTuple):
             porbitlossmw=0,
             fdiv=0.115,
             praddiv=33.056596978820579,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             fhcd=0,
             p_fw_rad_total_mw=254.39207240222791,
             i_blkt_coolant_type=1,
@@ -1019,11 +1019,17 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(fwbs_variables, "praddiv", powerflowcalcparam.praddiv)
 
-    monkeypatch.setattr(fwbs_variables, "pradhcd", powerflowcalcparam.pradhcd)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_hcd_rad_total_mw",
+        powerflowcalcparam.p_fw_hcd_rad_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_rad_total_mw", powerflowcalcparam.p_fw_rad_total_mw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_rad_total_mw", powerflowcalcparam.p_fw_rad_total_mw
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "i_blkt_coolant_type", powerflowcalcparam.i_blkt_coolant_type
@@ -1141,7 +1147,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     assert fwbs_variables.praddiv == pytest.approx(powerflowcalcparam.expected_praddiv)
 
-    assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(powerflowcalcparam.expected_p_fw_rad_total_mw)
+    assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
+        powerflowcalcparam.expected_p_fw_rad_total_mw
+    )
 
     assert fwbs_variables.psurffwi == pytest.approx(
         powerflowcalcparam.expected_psurffwi

@@ -84,10 +84,12 @@ def plot_full_sankey(
     praddiv = p_plasma_rad_mw * m_file.data["fdiv"].get_scan(
         -1
     )  # Radiation deposited on the divertor (MW)
-    pradhcd = p_plasma_rad_mw * m_file.data["fhcd"].get_scan(
+    p_fw_hcd_rad_total_mw = p_plasma_rad_mw * m_file.data["fhcd"].get_scan(
         -1
     )  # Radiation deposited on HCD (MW)
-    p_fw_rad_total_mw = p_plasma_rad_mw - praddiv - pradhcd  # Radiation deposited in the FW (MW)
+    p_fw_rad_total_mw = (
+        p_plasma_rad_mw - praddiv - p_fw_hcd_rad_total_mw
+    )  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
     htpmw_div = m_file.data["htpmw_div"].get_scan(-1)  # Divertor coolant pumping power
@@ -230,7 +232,12 @@ def plot_full_sankey(
         # ------------------------------------- RADIATION - 3 -------------------------------------
 
         # Photons, -1st Wall, -Divertor, -H&CD
-        radiation = [p_plasma_rad_mw, -p_fw_rad_total_mw, -praddiv, -pradhcd]
+        radiation = [
+            p_plasma_rad_mw,
+            -p_fw_rad_total_mw,
+            -praddiv,
+            -p_fw_hcd_rad_total_mw,
+        ]
         sankey.add(
             flows=radiation,
             # right(in), up(out), up(out), up(out)
@@ -296,11 +303,17 @@ def plot_full_sankey(
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
         first_wall = [
+            
             p_fw_alpha_mw,
+           
             p_fw_nuclear_heat_total_mw,
+           
             p_fw_rad_total_mw,
+           
             htpmwfw,
+           
             -pthermfw,
+        ,
         ]
         sankey.add(
             flows=first_wall,
@@ -512,9 +525,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     fhcd = m_file.data["fhcd"].get_scan(
         -1
     )  # Area fraction covered by HCD and diagnostics
-    pradhcd = p_plasma_rad_mw * fhcd  # Radiation deposited on HCD and diagnostics (MW)
+    p_fw_hcd_rad_total_mw = (
+        p_plasma_rad_mw * fhcd
+    )  # Radiation deposited on HCD and diagnostics (MW)
     p_fw_rad_total_mw = (
-        p_plasma_rad_mw - praddiv - pradhcd
+        p_plasma_rad_mw - praddiv - p_fw_hcd_rad_total_mw
     )  # Radiation deposited in the blanket (MW)
     pdivt = m_file.data["pdivt"].get_scan(
         -1

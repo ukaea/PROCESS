@@ -1216,14 +1216,14 @@ class Stellarator:
                 fwbs_variables.praddiv = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
                 )
-                fwbs_variables.pradhcd = (
+                fwbs_variables.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
                 )
                 fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
                 heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
@@ -1350,7 +1350,7 @@ class Stellarator:
 
                 #  Radiation power incident on HCD apparatus (MW)
 
-                fwbs_variables.pradhcd = (
+                fwbs_variables.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
                 )
 
@@ -1366,7 +1366,7 @@ class Stellarator:
                     physics_variables.p_plasma_rad_mw
                     - fwbs_variables.praddiv
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
                 #  Calculate the power deposited in the first wall, blanket and shield,
