@@ -11,6 +11,25 @@ from process.fortran import (
     times_variables,
 )
 
+OBJECTIVE_NAMES = {
+    1: "Plasma major radius",
+    3: "neutron wall load",
+    4: "total TF + PF coil power",
+    5: "ratio fusion power:injection power",
+    6: "cost of electricity",
+    7: "constructed cost",
+    8: "aspect ratio",
+    9: "divertor heat load",
+    10: "toroidal field on axis",
+    11: "injection power",
+    14: "pulse length",
+    15: "plant availability factor",
+    16: "Major radius/burn time",
+    17: "net electrical output",
+    18: "NULL",
+    19: "Major radius/burn time",
+}
+
 
 def objective_function(minmax: int) -> float:
     """Calculate the specified objective function
