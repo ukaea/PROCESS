@@ -13,7 +13,7 @@ turbines. Figure 1 shows the power flow.
 
 All of the charged particle transport power leaving the plasma (excluding the `1-f_alpha_plasma` portion of 
 the alpha power that escapes directly to the first wall) is assumed to be absorbed in the divertor, 
-along with a proportion `fdiv` of the radiation power and the neutron power.
+along with a proportion `f_ster_div_single` of the radiation power and the neutron power.
 
 Switch `iprimdiv` may be used to specify whether the thermal power deposited in the divertor becomes 
 high-grade thermal power (`iprimdiv` = 1) or low-grade waste heat (see Figure 1).
