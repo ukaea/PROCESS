@@ -124,8 +124,8 @@ module fwbs_variables
   real(dp) :: p_fw_nuclear_heat_total_mw
   !! nuclear heating in the first wall [MW]
 
-  real(dp) :: pnuchcd
-  !! nuclear heating in the HCD apparatus and diagnostics [MW]
+  real(dp) :: p_fw_hcd_nuclear_heat_mw
+  !! Nuclear heating in the HCD apparatus and diagnostics on the first wall [MW]
 
   real(dp) :: pnucloss
   !! nuclear heating lost via holes [MW]
@@ -690,7 +690,7 @@ module fwbs_variables
     p_blkt_nuclear_heat_total_mw = 0.0D0
     p_div_nuclear_heat_total_mw = 0.0D0
     p_fw_nuclear_heat_total_mw = 0.0D0
-    pnuchcd = 0.0D0
+    p_fw_hcd_nuclear_heat_mw = 0.0D0
     pnucloss = 0.0D0
     pnucvvplus = 0.0D0
     pnucshld = 0.0D0
