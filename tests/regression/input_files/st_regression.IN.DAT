@@ -379,7 +379,7 @@ beta_norm_max = 5.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 ixc = 18
-q = 6.0 
+q95 = 6.0 
 boundl(18) = 3.0
 boundu(18) = 20.0
 * DESCRIPTION:   Safety factor at 95% flux surface

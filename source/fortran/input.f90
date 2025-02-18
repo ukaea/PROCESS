@@ -309,7 +309,7 @@ contains
       fpdivlim, beta_poloidal_eps_max, i_confinement_time, kappa95, aspect, f_r_conducting_wall, nesep, c_beta, csawth, dene, &
       ftar, plasma_res_factor, f_sync_reflect, f_nd_beam_electron, beta, neped, hfact, beta_norm_max, &
       fgwsep, rhopedn, tratio, q0, i_plasma_geometry, i_plasma_shape, fne0, ignite, f_tritium, &
-      i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q, ti, tesep, ind_plasma_internal_norm, triang, &
+      i_beta_fast_alpha, tauee_in, alphaj, alphat, i_plasma_current, q95, ti, tesep, ind_plasma_internal_norm, triang, &
       itart, f_nd_alpha_electron, iprofile, triang95, rad_fraction_sol, betbm0, f_nd_protium_electrons, &
       teped, f_helium3, iwalld, ejima_coeff, f_alpha_plasma, fgwped, tbeta, i_bootstrap_current, &
       i_rad_loss, te, alphan, rmajor, plasma_square, kappa, fkzohm, beamfus0, &
@@ -701,9 +701,9 @@ contains
        case ('plasma_res_factor')
           call parse_real_variable('plasma_res_factor', plasma_res_factor, 0.0D0, 1.0D0, &
                'Plasma resistivity pre-factor')
-       case ('q')
-          call parse_real_variable('q', q, 1.00D0, 50.0D0, &
-               'Safety factor near plasma edge')
+      case ('q95')
+         call parse_real_variable('q95', q95, 1.00D0, 50.0D0, &
+               'Safety factor at 95% flux surface')
        case ('q0')
           call parse_real_variable('q0', q0, 0.01D0, 20.0D0, &
                'Safety factor on axis')

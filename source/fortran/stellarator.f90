@@ -54,7 +54,7 @@ contains
     use build_variables, only: dr_cs_tf_gap, iohcl, dr_cs, tfootfi
     use current_drive_variables, only: irfcd
     use pfcoil_variables, only: ohhghf
-    use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q, rmajor, &
+    use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q95, rmajor, &
       triang, hfac, labels_confinement_scalings
     use numerics, only: boundl, boundu
     use stellarator_variables, only: istell
@@ -101,7 +101,7 @@ contains
     beta_norm_max = 0.0D0
     kappa95 = 1.0D0
     triang = 0.0D0
-    q = 1.03D0
+    q95 = 1.03D0
 
     !  Turn off current drive
 

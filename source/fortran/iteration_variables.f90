@@ -437,25 +437,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_18
-    !! <LI> (18) q
+    !! <LI> (18) q95
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(18) = 'q             '
+    lablxc(18) = 'q95             '
     boundl(18) = 2.000D0
     boundu(18) = 50.00D0
   end subroutine init_itv_18
 
   real(kind(1.d0)) function itv_18()
-    use physics_variables, only: q
+    use physics_variables, only: q95
     implicit none
-    itv_18 = q
+    itv_18 = q95
   end function itv_18
 
   subroutine set_itv_18(ratio)
-    use physics_variables, only: q
+    use physics_variables, only: q95
     implicit none
     real(kind(1.d0)) :: ratio
-    q = ratio
+    q95 = ratio
   end subroutine set_itv_18
 
   !---------------------------------

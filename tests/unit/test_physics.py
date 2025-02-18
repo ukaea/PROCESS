@@ -339,7 +339,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     rmajor: Any = None
 
-    q: Any = None
+    q95: Any = None
 
     nesep: Any = None
 
@@ -381,7 +381,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             dene=8.016748468651018e19,
             te=12.570861186498382,
             rmajor=8,
-            q=3.5,
+            q95=3.5,
             nesep=3.6992211545476006e19,
             te0=25.986118047669795,
             neped=6.2886759627309195e19,
@@ -461,7 +461,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor
     )
 
-    monkeypatch.setattr(physics_variables, "q", bootstrapfractionsauterparam.q)
+    monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsauterparam.q95)
 
     monkeypatch.setattr(physics_variables, "nesep", bootstrapfractionsauterparam.nesep)
 
@@ -2246,7 +2246,7 @@ class ConfinementTimeParam(NamedTuple):
 
     pcoreradpv: Any = None
 
-    q: Any = None
+    q95: Any = None
 
     qstar: Any = None
 
@@ -2310,7 +2310,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2352,7 +2352,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2394,7 +2394,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2436,7 +2436,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2478,7 +2478,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2520,7 +2520,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2562,7 +2562,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2604,7 +2604,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2646,7 +2646,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2688,7 +2688,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2730,7 +2730,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2772,7 +2772,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2814,7 +2814,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2856,7 +2856,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2898,7 +2898,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -2940,7 +2940,7 @@ class ConfinementTimeParam(NamedTuple):
             pinjmw=75.397788712812741,
             plasma_current=16616203.759182997,
             pcoreradpv=0.047757569353246924,
-            q=3.5610139569387185,
+            q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -3018,7 +3018,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         pinjmw=confinementtimeparam.pinjmw,
         plasma_current=confinementtimeparam.plasma_current,
         pcoreradpv=confinementtimeparam.pcoreradpv,
-        q=confinementtimeparam.q,
+        q95=confinementtimeparam.q95,
         qstar=confinementtimeparam.qstar,
         rmajor=confinementtimeparam.rmajor,
         rminor=confinementtimeparam.rminor,

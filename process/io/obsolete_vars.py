@@ -201,6 +201,7 @@ OBS_VARS = {
     "rli": "ind_plasma_internal_norm",
     "gamma": "ejima_coeff",
     "lpulse": "i_pulsed_plant",
+    "q": "q95",
 }
 
 OBS_VARS_HELP = {
