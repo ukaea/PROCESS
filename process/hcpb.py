@@ -337,7 +337,7 @@ class CCFE_HCPB:
         fwbs_variables.f_vol_blkt_tibe12 = (
             fwbs_variables.breeder_multiplier - fwbs_variables.f_vol_blkt_li4sio4
         )
-        fwbs_variables.whtbltibe12 = (
+        fwbs_variables.m_blkt_tibe12 = (
             fwbs_variables.vol_blkt_total * fwbs_variables.f_vol_blkt_tibe12 * 2260.0
         )
 
@@ -349,7 +349,7 @@ class CCFE_HCPB:
 
         # TODO sort this out so that costs model uses new variables.
         # #327 For backwards compatibility, set the old blanket masses the same:
-        fwbs_variables.whtblbe = fwbs_variables.whtbltibe12
+        fwbs_variables.whtblbe = fwbs_variables.m_blkt_tibe12
         fwbs_variables.wtblli2o = fwbs_variables.whtblli4sio4
 
         # Steel fraction by volume is the remainder:
@@ -370,7 +370,7 @@ class CCFE_HCPB:
 
         # Total blanket mass (kg)
         fwbs_variables.m_blkt_total = (
-            fwbs_variables.whtbltibe12
+            fwbs_variables.m_blkt_tibe12
             + fwbs_variables.whtblli4sio4
             + fwbs_variables.m_blkt_steel_total
         )
@@ -1330,8 +1330,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "    Blanket Mass - TiBe12 (kg)",
-            "(whtbltibe12)",
-            fwbs_variables.whtbltibe12,
+            "(m_blkt_tibe12)",
+            fwbs_variables.m_blkt_tibe12,
             "OP ",
         )
         po.ovarre(

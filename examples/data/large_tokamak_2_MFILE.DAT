@@ -962,7 +962,7 @@
  First_Wall_Armour_Mass_(kg)_____________________________________________ (fw_armour_mass)______________      1.1298E+05 OP 
  First_Wall_Mass,_excluding_armour_(kg)__________________________________ (m_fw_total)______________________      1.5449E+05 OP 
  Blanket_Mass_-_Total(kg)________________________________________________ (m_blkt_total)_____________________      2.9676E+06 OP 
- ____Blanket_Mass_-_TiBe12_(kg)__________________________________________ (whtbltibe12)_________________      1.0042E+06 OP 
+ ____Blanket_Mass_-_TiBe12_(kg)__________________________________________ (m_blkt_tibe12)_________________      1.0042E+06 OP 
  ____Blanket_Mass_-_Li4SiO4_(kg)_________________________________________ (whtblli4sio4)________________      1.0664E+06 OP 
  ____Blanket_Mass_-_Steel_(kg)___________________________________________ (m_blkt_steel_total)_____________________      8.9696E+05 OP 
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      3.2350E+06 OP 

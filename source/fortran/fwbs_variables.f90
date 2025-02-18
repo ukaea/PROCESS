@@ -163,7 +163,7 @@ module fwbs_variables
   real(dp) :: whtblli4sio4
   !! mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))
 
-  real(dp) :: whtbltibe12
+  real(dp) :: m_blkt_tibe12
   !! mass of titanium beryllide in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))
 
   real(dp) :: neut_flux_cp
@@ -702,7 +702,7 @@ module fwbs_variables
     vfcblkt = 0.05295D0
     vfpblkt = 0.1D0
     whtblli4sio4 = 0.0D0
-    whtbltibe12 = 0.0D0
+    m_blkt_tibe12 = 0.0D0
     f_neut_shield = -1.0D0
     f_a_fw_coolant_inboard = 0.0D0
     f_a_fw_coolant_outboard = 0.0D0
