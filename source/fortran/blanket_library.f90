@@ -39,7 +39,7 @@ module blanket_library
     real(dp) :: volshldi, volshldo
     !! Volume of inboard and outboard shield (m3)
 
-    real(dp) :: vol_vv_inboard, volvvo
+    real(dp) :: vol_vv_inboard, vol_vv_outboard
     !! Volume of inboard and outboard Vacuum Vessel (m3)
 
     real(dp) :: dz_pf_cryostat
@@ -134,7 +134,7 @@ contains
         volshldi = 0.0D0
         volshldo = 0.0D0
         vol_vv_inboard = 0.0D0
-        volvvo = 0.0D0
+        vol_vv_outboard = 0.0D0
         bldepti = 0.0D0
         bldepto = 0.0D0
         blwidti = 0.0D0
