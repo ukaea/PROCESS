@@ -7326,9 +7326,8 @@ class Physics:
 
         # ISS95 stellarator scaling
         elif i_confinement_time == 37:
-            iotabar = (
-                q95  # dummy argument q95 is actual argument iotabar for stellarators
-            )
+            # dummy argument q95 is actual argument iotabar for stellarators
+            iotabar = q95
             t_electron_confinement = confinement.iss95_stellarator_confinement_time(
                 rminor,
                 rmajor,
@@ -7342,9 +7341,8 @@ class Physics:
 
         # ISS04 stellarator scaling
         elif i_confinement_time == 38:
-            iotabar = (
-                q95  # dummy argument q95 is actual argument iotabar for stellarators
-            )
+            # dummy argument q95 is actual argument iotabar for stellarators
+            iotabar = q95
             t_electron_confinement = confinement.iss04_stellarator_confinement_time(
                 rminor,
                 rmajor,
