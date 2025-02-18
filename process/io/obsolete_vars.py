@@ -213,6 +213,7 @@ OBS_VARS = {
     "fwinlet": "temp_fw_coolant_in",
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
+    "denw": None,
 }
 
 OBS_VARS_HELP = {
