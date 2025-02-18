@@ -203,7 +203,7 @@ BLANKET_COMPARE_PARAMS = [
     "pnucshld",
     "p_div_nuclear_heat_total_mw",
     "tbr",
-    "li6enrich",
+    "f_blkt_li6_enrichment",
     "a_fw_total",
     "emult",
 ]
