@@ -2049,7 +2049,7 @@ class Power2Param(NamedTuple):
 
     pnucshld: Any = None
 
-    pradhcd: Any = None
+    p_fw_hcd_rad_total_mw: Any = None
 
     p_fw_nuclear_heat_total_mw: Any = None
 
@@ -2233,7 +2233,7 @@ class Power2Param(NamedTuple):
             ptfnuc=0.044178296011112193,
             pnuchcd=0,
             pnucshld=1.3609360176065353,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=276.76827393356979,
             htpmw_shld=0.0068046800880326762,
             htpmw_blkt=0,
@@ -2335,7 +2335,7 @@ class Power2Param(NamedTuple):
             ptfnuc=0.045535131445547841,
             pnuchcd=0,
             pnucshld=1.4036212304705389,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=230.95082168283884,
             htpmw_shld=0.0070181061523526943,
             htpmw_blkt=0,
@@ -2448,7 +2448,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_blkt_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "p_fw_rad_total_mw", power2param.p_fw_rad_total_mw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_rad_total_mw", power2param.p_fw_rad_total_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 
@@ -2486,7 +2488,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", power2param.pnucshld)
 
-    monkeypatch.setattr(fwbs_variables, "pradhcd", power2param.pradhcd)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_hcd_rad_total_mw", power2param.p_fw_hcd_rad_total_mw
+    )
 
     monkeypatch.setattr(
         fwbs_variables,

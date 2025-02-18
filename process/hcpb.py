@@ -668,13 +668,15 @@ class CCFE_HCPB:
             )
 
         # Radiation power incident on HCD apparatus (MW)
-        fwbs_variables.pradhcd = physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+        fwbs_variables.p_fw_hcd_rad_total_mw = (
+            physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+        )
 
         # Radiation power incident on first wall (MW)
         fwbs_variables.p_fw_rad_total_mw = (
             physics_variables.p_plasma_rad_mw
             - fwbs_variables.praddiv
-            - fwbs_variables.pradhcd
+            - fwbs_variables.p_fw_hcd_rad_total_mw
         )
 
         # If we have chosen pressurised water as the blanket coolant, set the
