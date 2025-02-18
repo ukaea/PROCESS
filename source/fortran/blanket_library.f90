@@ -81,7 +81,7 @@ module blanket_library
     real(dp) :: p_blkt_nuclear_heat_inboard_mw, p_blkt_nuclear_heat_outboard_mw
     !! Neutron power deposited inboard/outboard blanket blanket (MW)
 
-    real(dp) :: mfblkti, mflow_blkt_outboard_coolant, mfblkt
+    real(dp) :: mflow_blkt_inboard_coolant, mflow_blkt_outboard_coolant, mfblkt
     !! Inboard/outboard blanket mass flow rate for coolant (kg/s)
 
     real(dp):: mfblkti_liq, mfblkto_liq, mfblkt_liq
@@ -158,7 +158,7 @@ contains
         mffwpo = 0.0D0
         p_blkt_nuclear_heat_inboard_mw = 0.0D0
         p_blkt_nuclear_heat_outboard_mw = 0.0D0
-        mfblkti = 0.0D0
+        mflow_blkt_inboard_coolant = 0.0D0
         mflow_blkt_outboard_coolant = 0.0D0
         mfblkti_liq = 0.0D0
         mfblkto_liq = 0.0D0
