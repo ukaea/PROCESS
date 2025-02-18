@@ -250,7 +250,7 @@ module fwbs_variables
   real(dp) :: whtblbreed
   !! mass of blanket - breeder part [kg] (`i_blanket_type=2` (KIT HCPB))
 
-  real(dp) :: whtblbe
+  real(dp) :: m_blkt_beryllium
   !! mass of blanket - beryllium part [kg]
 
   ! CCFE HCPB model with Tritium Breeding Ratio calculation (i_blanket_type=3)
@@ -729,7 +729,7 @@ module fwbs_variables
     tritprate = 0.0D0
     wallpf = 1.21D0
     whtblbreed = 0.0D0
-    whtblbe = 0.0D0
+    m_blkt_beryllium = 0.0D0
     iblanket_thickness = 2
     i_coolant_pumping = 2
     i_shield_mat = 0
