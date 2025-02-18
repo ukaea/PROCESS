@@ -1882,7 +1882,7 @@
         "fbllipb": 0.68,
         "fblss": 0.09705,
         "fblss_ccfe": 0.0,
-        "fbltibe12": 0.0,
+        "f_vol_blkt_tibe12": 0.0,
         "fblvd": 0.0,
         "fb_cs_limit_max": 13.0,
         "fbreed": 0.51,
@@ -9498,7 +9498,7 @@
         "fbllipb": "lithium lead fraction of blanket by volume (stellarator only)",
         "fblss": "KIT blanket model: steel fraction of breeding zone",
         "fblss_ccfe": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
-        "fbltibe12": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
+        "f_vol_blkt_tibe12": "Fractions of blanket by volume: steel, lithium orthosilicate, titanium beryllide",
         "fblvd": "vanadium fraction of blanket by volume (stellarator only)",
         "fb_cs_limit_max": "F-value for CS mmax field (`cons. 79`, `itvar 149`)",
         "fbreed": "fraction of breeder external to device core",
@@ -17297,7 +17297,7 @@
             "exp_shield2",
             "fblss_ccfe",
             "f_vol_blkt_li4sio4",
-            "fbltibe12"
+            "f_vol_blkt_tibe12"
         ],
         "const_and_precisions": [
             "sp_",
