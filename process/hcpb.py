@@ -343,14 +343,14 @@ class CCFE_HCPB:
 
         # Blanket Lithium orthosilicate mass (kg)
         # Ref: www.rockwoodlithium.com...
-        fwbs_variables.whtblli4sio4 = (
+        fwbs_variables.m_blkt_li4sio4 = (
             fwbs_variables.vol_blkt_total * fwbs_variables.f_vol_blkt_li4sio4 * 2400.0
         )
 
         # TODO sort this out so that costs model uses new variables.
         # #327 For backwards compatibility, set the old blanket masses the same:
         fwbs_variables.whtblbe = fwbs_variables.m_blkt_tibe12
-        fwbs_variables.wtblli2o = fwbs_variables.whtblli4sio4
+        fwbs_variables.wtblli2o = fwbs_variables.m_blkt_li4sio4
 
         # Steel fraction by volume is the remainder:
         fwbs_variables.f_vol_blkt_steel = (
@@ -371,7 +371,7 @@ class CCFE_HCPB:
         # Total blanket mass (kg)
         fwbs_variables.m_blkt_total = (
             fwbs_variables.m_blkt_tibe12
-            + fwbs_variables.whtblli4sio4
+            + fwbs_variables.m_blkt_li4sio4
             + fwbs_variables.m_blkt_steel_total
         )
 
@@ -1337,8 +1337,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "    Blanket Mass - Li4SiO4 (kg)",
-            "(whtblli4sio4)",
-            fwbs_variables.whtblli4sio4,
+            "(m_blkt_li4sio4)",
+            fwbs_variables.m_blkt_li4sio4,
             "OP ",
         )
         po.ovarre(

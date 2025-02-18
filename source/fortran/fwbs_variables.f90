@@ -160,7 +160,7 @@ module fwbs_variables
   real(dp) :: vfpblkt
   !! He purge gas fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))
 
-  real(dp) :: whtblli4sio4
+  real(dp) :: m_blkt_li4sio4
   !! mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))
 
   real(dp) :: m_blkt_tibe12
@@ -701,7 +701,7 @@ module fwbs_variables
     breeder_multiplier = 0.75D0
     vfcblkt = 0.05295D0
     vfpblkt = 0.1D0
-    whtblli4sio4 = 0.0D0
+    m_blkt_li4sio4 = 0.0D0
     m_blkt_tibe12 = 0.0D0
     f_neut_shield = -1.0D0
     f_a_fw_coolant_inboard = 0.0D0
