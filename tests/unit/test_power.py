@@ -2488,13 +2488,19 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "fhcd", power2param.fhcd)
 
-    monkeypatch.setattr(fwbs_variables, "i_thermal_electric_conversion", power2param.i_thermal_electric_conversion)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_thermal_electric_conversion",
+        power2param.i_thermal_electric_conversion,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnuc_cp", power2param.pnuc_cp)
 
     monkeypatch.setattr(fwbs_variables, "pnucdiv", power2param.pnucdiv)
 
-    monkeypatch.setattr(fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping)
+    monkeypatch.setattr(
+        fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
+    )
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", power2param.ptfnuc)
 
