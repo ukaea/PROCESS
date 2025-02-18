@@ -563,7 +563,10 @@ class Power:
         and plant power balance constituents.
         None
         """
-        if fwbs_variables.i_coolant_pumping != 2 and fwbs_variables.i_coolant_pumping != 3:
+        if (
+            fwbs_variables.i_coolant_pumping != 2
+            and fwbs_variables.i_coolant_pumping != 3
+        ):
             primary_pumping_variables.htpmw_fw_blkt = (
                 heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
             )
