@@ -1516,7 +1516,7 @@ class ComponentMassesParam(NamedTuple):
     f_a_fw_coolant_outboard: Any = None
     vol_fw_total: Any = None
     fblss_ccfe: Any = None
-    fblli2sio4: Any = None
+    f_vol_blkt_li4sio4: Any = None
     fbltibe12: Any = None
     expected_divsur: Any = None
     expected_divmas: Any = None
@@ -1535,7 +1535,7 @@ class ComponentMassesParam(NamedTuple):
     expected_fw_armour_mass: Any = None
     expected_armour_fw_bl_mass: Any = None
     expected_fblss_ccfe: Any = None
-    expected_fblli2sio4: Any = None
+    expected_f_vol_blkt_li4sio4: Any = None
     expected_fbltibe12: Any = None
 
 
@@ -1607,7 +1607,7 @@ class ComponentMassesParam(NamedTuple):
             f_a_fw_coolant_outboard=0,
             vol_fw_total=0,
             fblss_ccfe=0,
-            fblli2sio4=0,
+            f_vol_blkt_li4sio4=0,
             fbltibe12=0,
             expected_divsur=148.78582807401261,
             expected_divmas=36452.527878133093,
@@ -1626,7 +1626,7 @@ class ComponentMassesParam(NamedTuple):
             expected_fw_armour_mass=112982.36729823884,
             expected_armour_fw_bl_mass=3263343.5901344167,
             expected_fblss_ccfe=0.097049999999999997,
-            expected_fblli2sio4=0.375,
+            expected_f_vol_blkt_li4sio4=0.375,
             expected_fbltibe12=0.375,
         ),
     ),
@@ -1761,7 +1761,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         fwbs_variables, "vol_fw_total", componentmassesparam.vol_fw_total
     )
     monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
-    monkeypatch.setattr(fwbs_variables, "fblli2sio4", componentmassesparam.fblli2sio4)
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_li4sio4", componentmassesparam.f_vol_blkt_li4sio4
+    )
     monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)
 
     ccfe_hcpb.component_masses()
@@ -1815,8 +1817,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.fblss_ccfe == pytest.approx(
         componentmassesparam.expected_fblss_ccfe
     )
-    assert fwbs_variables.fblli2sio4 == pytest.approx(
-        componentmassesparam.expected_fblli2sio4
+    assert fwbs_variables.f_vol_blkt_li4sio4 == pytest.approx(
+        componentmassesparam.expected_f_vol_blkt_li4sio4
     )
     assert fwbs_variables.fbltibe12 == pytest.approx(
         componentmassesparam.expected_fbltibe12
