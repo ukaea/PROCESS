@@ -815,7 +815,7 @@ class BlanketLibrary:
             mfblktpo_liq = blanket_library.mfblkto_liq / npblkto_liq
             # Coolant velocites in blanket (m/s)
             # Assume BZ structure has same channel width as FW
-            blanket_library.velblkto = self.flow_velocity(
+            blanket_library.vel_blkt_outboard_coolant = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
                 flow_density=fwbs_variables.den_blkt_coolant,
@@ -890,7 +890,7 @@ class BlanketLibrary:
 
             # Coolant velocity in blanket (m/s)
             # Assume BZ structure has same channel width as FW
-            blanket_library.velblkto = self.flow_velocity(
+            blanket_library.vel_blkt_outboard_coolant = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
                 flow_density=fwbs_variables.den_blkt_coolant,
@@ -974,7 +974,7 @@ class BlanketLibrary:
 
             # Coolant velocity in blanket (m/s)
             # Assume BZ structure has same channel width as FW
-            blanket_library.velblkto = self.flow_velocity(
+            blanket_library.vel_blkt_outboard_coolant = self.flow_velocity(
                 i_channel_shape=1,
                 mass_flow_rate=blanket_library.mfblktpo,
                 flow_density=fwbs_variables.den_blkt_coolant,
@@ -1048,7 +1048,7 @@ class BlanketLibrary:
         deltap_blo = self.deltap_tot(
             output,
             icoolpump=1,
-            flow_velocity=blanket_library.velblkto,
+            flow_velocity=blanket_library.vel_blkt_outboard_coolant,
             flleng=blanket_library.len_blkt_outboard_channel_total,
             no90=no90bz,
             no180=no180bz,
