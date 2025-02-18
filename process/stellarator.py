@@ -4121,8 +4121,6 @@ class Stellarator:
             * physics_variables.rmajor
         )
 
-        physics_variables.q95 = physics_variables.q
-
         #  Calculate poloidal field using rotation transform
         physics_variables.bp = (
             physics_variables.rminor

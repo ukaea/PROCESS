@@ -1545,8 +1545,6 @@ class Physics:
           https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
         """
 
-        physics_variables.q95 = physics_variables.q
-
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
@@ -1583,7 +1581,7 @@ class Physics:
             physics_variables.p0,
             physics_variables.len_plasma_poloidal,
             physics_variables.q0,
-            physics_variables.q,
+            physics_variables.q95,
             physics_variables.ind_plasma_internal_norm,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -3215,7 +3213,7 @@ class Physics:
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
                 0: Use input values for alphaj, ind_plasma_internal_norm, beta_norm_max.
-                1: Make these consistent with input q, q_0 values.
+                1: Make these consistent with input q95, q_0 values.
                 2: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling).
                 3: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling).
                 4: Use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling).
@@ -3679,12 +3677,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
+                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
+                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3769,7 +3767,10 @@ class Physics:
 
             if physics_variables.i_plasma_current == 2:
                 po.ovarrf(
-                    self.outfile, "Mean edge safety factor", "(q)", physics_variables.q
+                    self.outfile,
+                    "Mean edge safety factor",
+                    "(q95)",
+                    physics_variables.q95,
                 )
 
             po.ovarrf(
@@ -3790,7 +3791,7 @@ class Physics:
             if physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
-                    "Lower limit for edge safety factor q",
+                    "Lower limit for edge safety factor q95",
                     "(q95_min)",
                     physics_variables.q95_min,
                     "OP ",
@@ -5891,7 +5892,7 @@ class Physics:
                 physics_variables.rminor,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.q,
+                physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
@@ -6210,7 +6211,8 @@ class Physics:
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
+            physics_variables.q0
+            + (physics_variables.q95 - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
         amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
@@ -6690,7 +6692,7 @@ class Physics:
                 physics_variables.rminor,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.q,
+                physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
@@ -6745,7 +6747,7 @@ class Physics:
         rminor: float,
         ten: float,
         tin: float,
-        q: float,
+        q95: float,
         qstar: float,
         vol_plasma: float,
         zeff: float,
@@ -6770,7 +6772,7 @@ class Physics:
         :param pinjmw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
         :param pcoreradpv: Total core radiation power (MW/m3)
-        :param q: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+        :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
         :param rminor: Plasma minor radius (m)
@@ -7129,7 +7131,7 @@ class Physics:
                     dnla20,
                     bt,
                     p_plasma_loss_mw,
-                    q,
+                    q95,
                 )
             )
 
@@ -7324,7 +7326,9 @@ class Physics:
 
         # ISS95 stellarator scaling
         elif i_confinement_time == 37:
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
+            iotabar = (
+                q95  # dummy argument q95 is actual argument iotabar for stellarators
+            )
             t_electron_confinement = confinement.iss95_stellarator_confinement_time(
                 rminor,
                 rmajor,
@@ -7338,7 +7342,9 @@ class Physics:
 
         # ISS04 stellarator scaling
         elif i_confinement_time == 38:
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
+            iotabar = (
+                q95  # dummy argument q95 is actual argument iotabar for stellarators
+            )
             t_electron_confinement = confinement.iss04_stellarator_confinement_time(
                 rminor,
                 rmajor,
@@ -7401,7 +7407,7 @@ class Physics:
                 p_plasma_loss_mw,
                 rmajor,
                 rminor,
-                q,
+                q95,
                 qstar,
                 aspect,
                 m_fuel_amu,

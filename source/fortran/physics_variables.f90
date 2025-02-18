@@ -400,7 +400,7 @@ module physics_variables
   !! switch for current profile consistency:
   !!
   !! - =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max
-  !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
+  !! - =1 make these consistent with input q95, q_0 values (recommend `i_plasma_current=4` with this option)
   !! - =2 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling)
   !! - =3 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling)
   !! - =4 use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling)
@@ -727,9 +727,6 @@ module physics_variables
 
   real(dp) :: pden_ion_transport_loss_mw
   !! ion transport power per volume (MW/m3)
-
-  real(dp) :: q
-  !! For backwards compatibility only, q95 can be entered using the symbol q.
 
   real(dp) :: q0
   !! Safety factor on axis
@@ -1072,7 +1069,6 @@ module physics_variables
     p_ion_transport_loss_mw = 0.0D0
     pscalingmw = 0.0D0
     pden_ion_transport_loss_mw = 0.0D0
-    q = 3.0D0
     q0 = 1.0D0
     q95 = 0.0D0
     qfuel = 0.0D0

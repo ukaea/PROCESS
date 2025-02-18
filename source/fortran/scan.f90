@@ -195,7 +195,7 @@ contains
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf_coils, &
       dr_tf_wp, b_crit_upper_nbti
     use fwbs_variables, only: tpeak
-    use physics_variables, only: q, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
+    use physics_variables, only: q95, aspect, p_plasma_rad_mw, dene, fusion_power, btot, tesep, &
       pdivt, f_nd_alpha_electron, ten, beta_poloidal, hfac, teped, alpha_power_beams, q95_min, rmajor, wallmw, &
       beta, beta_max, bt, plasma_current
     use global_variables, only: verbose, maxcal, runtitle, run_tests
@@ -226,7 +226,7 @@ contains
     outvar(12,iscan) = 1.0D-6 * plasma_current
     outvar(13,iscan) = bt
     outvar(14,iscan) = btot
-    outvar(15,iscan) = q
+    outvar(15,iscan) = q95
     outvar(16,iscan) = q95_min
     outvar(17,iscan) = beta
     outvar(18,iscan) = beta_max
