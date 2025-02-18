@@ -399,8 +399,8 @@ module fwbs_variables
   real(dp) :: p_fw_rad_total_mw
   !! Radiation power incident on the first wall (MW)
 
-  real(dp) :: pradhcd
-  !! Radiation power incident on the heating and current drive system (MW)
+  real(dp) :: p_fw_hcd_rad_total_mw
+  !! Radiation power incident on the heating and current drive systems on the first wall (MW)
 
   real(dp) :: pradloss
   !! Radiation power lost through holes (eventually hits shield) (MW)
@@ -765,7 +765,7 @@ module fwbs_variables
     fwclfr = 0.15D0
     praddiv = 0.0D0
     p_fw_rad_total_mw = 0.0D0
-    pradhcd = 0.0D0
+    p_fw_hcd_rad_total_mw = 0.0D0
     pradloss = 0.0D0
     ptfnuc = 0.0D0
     ptfnucpm3 = 0.0D0
