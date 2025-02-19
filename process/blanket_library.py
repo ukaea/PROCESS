@@ -1585,7 +1585,7 @@ class BlanketLibrary:
         # Pre calculations needed for thermo-hydraulic model #
         ######################################################
         # IB/OB FW (MW)
-        blanket_library.pnucfwi = (
+        blanket_library.p_fw_inboard_nuclear_heat_mw = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
             * build_variables.a_fw_inboard
             / build_variables.a_fw_total
@@ -1658,19 +1658,35 @@ class BlanketLibrary:
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Fraction of heat to be removed by IB/OB FW
             if fwbs_variables.icooldual == 2:
-                f_nuc_fwi = (blanket_library.pnucfwi + fwbs_variables.psurffwi) / (
-                    blanket_library.pnucfwi + fwbs_variables.psurffwi + pnucblkti_struct
+                f_nuc_fwi = (
+                    blanket_library.p_fw_inboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwi
+                ) / (
+                    blanket_library.p_fw_inboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwi
+                    + pnucblkti_struct
                 )
-                f_nuc_fwo = (blanket_library.p_fw_outboard_nuclear_heat_mw + fwbs_variables.psurffwo) / (
-                    blanket_library.p_fw_outboard_nuclear_heat_mw + fwbs_variables.psurffwo + pnucblkto_struct
+                f_nuc_fwo = (
+                    blanket_library.p_fw_outboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwo
+                ) / (
+                    blanket_library.p_fw_outboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwo
+                    + pnucblkto_struct
                 )
             else:
-                f_nuc_fwi = (blanket_library.pnucfwi + fwbs_variables.psurffwi) / (
-                    blanket_library.pnucfwi
+                f_nuc_fwi = (
+                    blanket_library.p_fw_inboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwi
+                ) / (
+                    blanket_library.p_fw_inboard_nuclear_heat_mw
                     + fwbs_variables.psurffwi
                     + blanket_library.p_blkt_nuclear_heat_inboard_mw
                 )
-                f_nuc_fwo = (blanket_library.p_fw_outboard_nuclear_heat_mw + fwbs_variables.psurffwo) / (
+                f_nuc_fwo = (
+                    blanket_library.p_fw_outboard_nuclear_heat_mw
+                    + fwbs_variables.psurffwo
+                ) / (
                     blanket_library.p_fw_outboard_nuclear_heat_mw
                     + fwbs_variables.psurffwo
                     + blanket_library.p_blkt_nuclear_heat_outboard_mw
@@ -1706,7 +1722,7 @@ class BlanketLibrary:
             build_variables.dr_fw_inboard,
             build_variables.a_fw_inboard,
             fwbs_variables.psurffwi,
-            blanket_library.pnucfwi,
+            blanket_library.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
         )
         # (
@@ -1721,7 +1737,7 @@ class BlanketLibrary:
         #     build_variables.dr_fw_inboard,
         #     build_variables.a_fw_inboard,
         #     fwbs_variables.psurffwi,
-        #     blanket_library.pnucfwi,
+        #     blanket_library.p_fw_inboard_nuclear_heat_mw,
         #     "Inboard first wall",
         # )
         (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = self.fw.fw_temp(
@@ -1752,7 +1768,7 @@ class BlanketLibrary:
         # Total mass flow rate to remove inboard FW power (kg/s)
         blanket_library.mflow_fw_inboard_coolant_total = (
             1.0e6
-            * (blanket_library.pnucfwi + fwbs_variables.psurffwi)
+            * (blanket_library.p_fw_inboard_nuclear_heat_mw + fwbs_variables.psurffwi)
             / (fwbs_variables.cp_fw * (fwoutleti - fwbs_variables.temp_fw_coolant_in))
         )
         # Total mass flow rate to remove outboard FW power (kg/s)
