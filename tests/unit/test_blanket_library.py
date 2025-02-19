@@ -51,7 +51,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     den_blkt_coolant: Any = None
 
-    icooldual: Any = None
+    i_blkt_dual_coolant: Any = None
 
     visc_blkt_coolant: Any = None
 
@@ -96,7 +96,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
             den_blkt_coolant=0,
-            icooldual=2,
+            i_blkt_dual_coolant=2,
             visc_blkt_coolant=0,
             cp_bl=0,
             cv_bl=0,
@@ -124,7 +124,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
             den_blkt_coolant=5.6389735407435868,
-            icooldual=2,
+            i_blkt_dual_coolant=2,
             visc_blkt_coolant=3.5036293160410249e-05,
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
@@ -217,7 +217,7 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", primarycoolantpropertiesparam.icooldual
+        fwbs_variables, "i_blkt_dual_coolant", primarycoolantpropertiesparam.i_blkt_dual_coolant
     )
 
     monkeypatch.setattr(
@@ -1637,7 +1637,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     hartmann_liq: Any = None
     b_mag_blkt: Any = None
     i_blkt_inboard: Any = None
-    icooldual: Any = None
+    i_blkt_dual_coolant: Any = None
     bt: Any = None
     aspect: Any = None
     rmajor: Any = None
@@ -1671,7 +1671,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
-            icooldual=0,
+            i_blkt_dual_coolant=0,
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
@@ -1708,7 +1708,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
-            icooldual=0,
+            i_blkt_dual_coolant=0,
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
@@ -1791,7 +1791,7 @@ def test_liquid_breeder_properties(
         fwbs_variables, "i_blkt_inboard", liquidbreederpropertiesparam.i_blkt_inboard
     )
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", liquidbreederpropertiesparam.icooldual
+        fwbs_variables, "i_blkt_dual_coolant", liquidbreederpropertiesparam.i_blkt_dual_coolant
     )
     monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
     monkeypatch.setattr(
