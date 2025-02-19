@@ -24,7 +24,7 @@ module fwbs_variables
   real(dp) :: m_fw_blkt_div_coolant_total
   !! mass of water coolant (in shield, blanket, first wall, divertor) [kg]
 
-  real(dp) :: vvmass
+  real(dp) :: m_vv
   !! vacuum vessel mass [kg]
 
   real(dp) :: denstl
@@ -666,7 +666,7 @@ module fwbs_variables
     life_blkt_fpy = 0.0D0
     life_blkt = 0.0D0
     m_fw_blkt_div_coolant_total = 0.0D0
-    vvmass = 0.0D0
+    m_vv = 0.0D0
     denstl = 7800.0D0
     denwc = 15630.0D0
     dewmkg = 0.0D0

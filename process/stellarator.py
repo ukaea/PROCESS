@@ -1890,7 +1890,7 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.vvmass = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
@@ -2283,7 +2283,7 @@ class Stellarator:
                 self.outfile,
                 "External cryostat mass (kg)",
                 "",
-                fwbs_variables.dewmkg - fwbs_variables.vvmass,
+                fwbs_variables.dewmkg - fwbs_variables.m_vv,
             )
             po.ovarre(
                 self.outfile,
@@ -2294,8 +2294,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Vacuum vessel mass (kg)",
-                "(vvmass)",
-                fwbs_variables.vvmass,
+                "(m_vv)",
+                fwbs_variables.m_vv,
             )
             po.ovarre(
                 self.outfile,

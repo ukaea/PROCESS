@@ -217,7 +217,9 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_dual_coolant", primarycoolantpropertiesparam.i_blkt_dual_coolant
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        primarycoolantpropertiesparam.i_blkt_dual_coolant,
     )
 
     monkeypatch.setattr(
@@ -1279,7 +1281,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     dr_pf_cryostat: Any = None
     z_cryostat_half_inside: Any = None
     vol_cryostat: Any = None
-    vvmass: Any = None
+    m_vv: Any = None
     vol_vv: Any = None
     denstl: Any = None
     dewmkg: Any = None
@@ -1290,7 +1292,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     expected_r_cryostat_inboard: Any = None
     expected_z_cryostat_half_inside: Any = None
     expected_vol_cryostat: Any = None
-    expected_vvmass: Any = None
+    expected_m_vv: Any = None
     expected_dewmkg: Any = None
     expected_dz_tf_cryostat: Any = None
     expected_dz_pf_cryostat: Any = None
@@ -1308,7 +1310,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             dr_pf_cryostat=0.5,
             z_cryostat_half_inside=0,
             vol_cryostat=0,
-            vvmass=0,
+            m_vv=0,
             vol_vv=1016.2876250857248,
             denstl=7800,
             dewmkg=0,
@@ -1377,7 +1379,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             expected_r_cryostat_inboard=17.805470903073743,
             expected_z_cryostat_half_inside=15.259637557000296,
             expected_vol_cryostat=818.1630389343372,
-            expected_vvmass=7927043.4756686538,
+            expected_m_vv=7927043.4756686538,
             expected_dewmkg=14308715.179356484,
             expected_dz_tf_cryostat=5.514694530398824,
             expected_dz_pf_cryostat=5.3441455565624985,
@@ -1424,7 +1426,7 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(
         fwbs_variables, "vol_cryostat", externalcryogeometryparam.vol_cryostat
     )
-    monkeypatch.setattr(fwbs_variables, "vvmass", externalcryogeometryparam.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", externalcryogeometryparam.m_vv)
     monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
@@ -1448,9 +1450,7 @@ def test_external_cryo_geometry(
     assert fwbs_variables.vol_cryostat == pytest.approx(
         externalcryogeometryparam.expected_vol_cryostat
     )
-    assert fwbs_variables.vvmass == pytest.approx(
-        externalcryogeometryparam.expected_vvmass
-    )
+    assert fwbs_variables.m_vv == pytest.approx(externalcryogeometryparam.expected_m_vv)
     assert fwbs_variables.dewmkg == pytest.approx(
         externalcryogeometryparam.expected_dewmkg
     )
@@ -1753,7 +1753,9 @@ def test_liquid_breeder_properties(
         fwbs_variables, "i_blkt_inboard", liquidbreederpropertiesparam.i_blkt_inboard
     )
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_dual_coolant", liquidbreederpropertiesparam.i_blkt_dual_coolant
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        liquidbreederpropertiesparam.i_blkt_dual_coolant,
     )
     monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
     monkeypatch.setattr(

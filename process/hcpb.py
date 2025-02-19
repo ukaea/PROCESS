@@ -429,7 +429,7 @@ class CCFE_HCPB:
             d_vv_all = build_variables.dr_vv_outboard
 
         if d_vv_all > 1.0e-6:
-            ccfe_hcpb_module.vv_density = fwbs_variables.vvmass / fwbs_variables.vol_vv
+            ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
         else:
             ccfe_hcpb_module.vv_density = 0.0
 
@@ -1373,8 +1373,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Vacuum vessel mass (kg)",
-            "(vvmass)",
-            fwbs_variables.vvmass,
+            "(m_vv)",
+            fwbs_variables.m_vv,
             "OP ",
         )
 
