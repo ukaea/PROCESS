@@ -770,7 +770,7 @@ contains
             vlab = 'rad_fraction_sol' ; xlab = 'SoL radiation fraction'
         case (53)
             boundu(157) = swp(iscn)
-            vlab = 'boundu(157)' ; xlab = 'Max allowable fvssu'
+            vlab = 'boundu(157)' ; xlab = 'Max allowable fvs_cs_pf_total_ramp'
         case (54)
             b_crit_upper_nbti = swp(iscn)
             vlab = 'Bc2(0K)' ; xlab = 'GL_NbTi Bc2(0K)'

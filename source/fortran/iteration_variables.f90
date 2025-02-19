@@ -3476,25 +3476,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_157
-    !! <LI> (157) fvssu : F-value for available to required start up flux (con. 51)
+    !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(157) = 'fvssu         '
+    lablxc(157) = 'fvs_cs_pf_total_ramp         '
     boundl(157) = 1.00d-3
     boundu(157) = 1.000d1
   end subroutine init_itv_157
 
   real(kind(1.d0)) function itv_157()
-    use pfcoil_variables, only: fvssu
+    use pfcoil_variables, only: fvs_cs_pf_total_ramp
     implicit none
-    itv_157 = fvssu
+    itv_157 = fvs_cs_pf_total_ramp
   end function itv_157
 
   subroutine set_itv_157(ratio)
-    use pfcoil_variables, only: fvssu
+    use pfcoil_variables, only: fvs_cs_pf_total_ramp
     implicit none
     real(kind(1.d0)) :: ratio
-    fvssu = ratio
+    fvs_cs_pf_total_ramp = ratio
   end subroutine set_itv_157
 
   !---------------------------------
