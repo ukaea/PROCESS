@@ -103,22 +103,6 @@ contains
     error_message = ""
   end subroutine init_input
 
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine devtyp
-    !! Set icase description based on device type
-    use global_variables, only: icase
-    use ife_variables, only: ife
-    use stellarator_variables, only: istell
-    implicit none
-
-    if (ife == 1) then
-        icase = 'Inertial Fusion model'
-    else if (istell /= 0) then
-        icase = 'Stellarator model'
-    end if
-  end subroutine devtyp
-
   subroutine parse_input_file(in_file,out_file,show_changes)
 
     !! Routine that parses the contents of the input file

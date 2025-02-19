@@ -36,7 +36,7 @@ def init_process():
     set_active_constraints()
 
     # set the device type (icase)
-    fortran.process_input.devtyp()
+    set_device_type()
 
     # Initialise the Stellarator
     fortran.stellarator_module.stinit()
@@ -1274,3 +1274,10 @@ def set_active_constraints():
         if fortran.numerics.icc[i] != 0:
             fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
             fortran.process_input.constraints_exist = True
+
+
+def set_device_type():
+    if fortran.ife_variables.ife == 1:
+        fortran.global_variables.icase = "Inertial Fusion model"
+    elif fortran.stellarator_variables.istell != 0:
+        fortran.global_variables.icase = "Stellarator model"
