@@ -927,7 +927,7 @@ class Costs2015:
         #  Cost of ITER VV in-wall shielding, ports and in-vessel coils
         self.s_cref[36] = 211.0e6
         #  Scale with vacuum vessel mass (kg)
-        self.s_k[36] = fwbs_variables.vvmass
+        self.s_k[36] = fwbs_variables.m_vv
         self.s_kref[36] = 5.2360e6
         self.s_cost[36] = (
             self.s_cost_factor[36]

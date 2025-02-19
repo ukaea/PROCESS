@@ -429,7 +429,7 @@ class BlanketLibrary:
         ) - (fwbs_variables.vol_cryostat_internal)
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.vvmass = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
@@ -760,7 +760,10 @@ class BlanketLibrary:
         no180fw = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.i_blkt_dual_coolant == 2 or fwbs_variables.i_blkt_dual_coolant == 1:
+        if (
+            fwbs_variables.i_blkt_dual_coolant == 2
+            or fwbs_variables.i_blkt_dual_coolant == 1
+        ):
             no90bz = 4
             no180bz = 1
             no90bz_liq = 2

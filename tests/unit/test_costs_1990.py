@@ -2802,7 +2802,7 @@ class Acc2223Param(NamedTuple):
 
     fkind: Any = None
 
-    vvmass: Any = None
+    m_vv: Any = None
 
     c22: Any = None
 
@@ -2818,7 +2818,7 @@ class Acc2223Param(NamedTuple):
             uccryo=32,
             lsa=2,
             fkind=1,
-            vvmass=9043937.8018644415,
+            m_vv=9043937.8018644415,
             c22=0,
             c2223=0,
             expected_c2223=244.54807816241447,
@@ -2827,7 +2827,7 @@ class Acc2223Param(NamedTuple):
             uccryo=32,
             lsa=2,
             fkind=1,
-            vvmass=9056931.558219457,
+            m_vv=9056931.558219457,
             c22=3474.7391916096453,
             c2223=244.54807816241447,
             expected_c2223=244.89942933425411,
@@ -2853,7 +2853,7 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2223param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "vvmass", acc2223param.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", acc2223param.m_vv)
 
     monkeypatch.setattr(costs, "c22", acc2223param.c22)
 
