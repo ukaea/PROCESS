@@ -2563,7 +2563,7 @@ inuclear = 0
 *  =1   Li 
 * JUSTIFICATION: Not yet set assuming default = 0
 
-*icooldual = 
+*i_blkt_dual_coolant = 
 * DESCRIPTION: Switch to specify whether breeding blanket is single-cooled or dual-coolant.
 * =0    Single coolant used for FW and Blanket (H2O or He). Solid Breeder.
 * =1    Single coolant used for FW and Blanket (H2O or He). Liquid metal breeder
@@ -2603,7 +2603,7 @@ outlet_temp_liq = 873.0
 * JUSTIFICATION: Not yet set
 
 *n_liq_recirc = 
-* DESCRIPTION:   Number of liquid metal breeder recirculations per day, for use with icooldual=1 (default = 10)
+* DESCRIPTION:   Number of liquid metal breeder recirculations per day, for use with i_blkt_dual_coolant=1 (default = 10)
 * JUSTIFICATION: Not yet set
 
 *pnuc_fw_ratio_dcll = 
