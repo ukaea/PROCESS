@@ -551,7 +551,7 @@ module fwbs_variables
   !!  - =2    Dual coolant: primary coolant (H2O or He) for FW and blanket structure;
   !!          secondary coolant is self-cooled liquid metal breeder.
 
-  integer :: ifci
+  integer :: i_blkt_liquid_breeder_channel_type
   !! Switch for Flow Channel Insert (FCI) type if liquid metal breeder blanket.
   !!  - =0    Thin conducting walls, default electrical conductivity (bz_channel_conduct_liq) is Eurofer
   !!  - =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
@@ -808,7 +808,7 @@ module fwbs_variables
     i_fw_blkt_shared_coolant = 0
     i_bb_liq = 0
     i_blkt_dual_coolant = 0
-    ifci = 0
+    i_blkt_liquid_breeder_channel_type = 0
     ims = 0
     n_liq_recirc = 10
     r_f_liq_ib=0.5
