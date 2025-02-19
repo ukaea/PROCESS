@@ -217,7 +217,7 @@ contains
       npdiv, f_fw_peak, i_coolant_pumping, dr_pf_cryostat, i_thermal_electric_conversion, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
-      f_blkt_li6_enrichment, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
+      f_blkt_li6_enrichment, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_blkt_liquid_breeder_type, &
       i_blkt_dual_coolant, i_blkt_liquid_breeder_channel_type, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
       i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
@@ -1954,8 +1954,8 @@ contains
        case ('i_shield_mat')
          call parse_int_variable('i_shield_mat', i_shield_mat, 0, 1, &
                'Switch for shield material)')
-       case ('i_bb_liq')
-         call parse_int_variable('i_bb_liq', i_bb_liq, 0, 1, &
+       case ('i_blkt_liquid_breeder_type')
+         call parse_int_variable('i_blkt_liquid_breeder_type', i_blkt_liquid_breeder_type, 0, 1, &
                'Switch for breeding blaket liquid metal')
        case ('i_blkt_dual_coolant')
          call parse_int_variable('i_blkt_dual_coolant', i_blkt_dual_coolant, 0, 2, &

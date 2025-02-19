@@ -877,7 +877,11 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "den_liq", dcllmassesparam.den_liq)
 
-    monkeypatch.setattr(fwbs_variables, "i_blkt_liquid_breeder_channel_type", dcllmassesparam.i_blkt_liquid_breeder_channel_type)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_blkt_liquid_breeder_channel_type",
+        dcllmassesparam.i_blkt_liquid_breeder_channel_type,
+    )
 
     monkeypatch.setattr(fwbs_variables, "den_ceramic", dcllmassesparam.den_ceramic)
 

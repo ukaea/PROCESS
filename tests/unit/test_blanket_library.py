@@ -1633,7 +1633,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     thermal_conductivity_liq: Any = None
     dynamic_viscosity_liq: Any = None
     electrical_conductivity_liq: Any = None
-    i_bb_liq: Any = None
+    i_blkt_liquid_breeder_type: Any = None
     hartmann_liq: Any = None
     b_mag_blkt: Any = None
     i_blkt_inboard: Any = None
@@ -1667,7 +1667,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             thermal_conductivity_liq=30,
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
-            i_bb_liq=0,
+            i_blkt_liquid_breeder_type=0,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
@@ -1701,10 +1701,10 @@ class LiquidBreederPropertiesParam(NamedTuple):
             den_liq=9500,
             specific_heat_liq=190,
             thermal_conductivity_liq=30,
-            expected_thermal_conductivity_liq=30,  # doesn't change when i_bb_liq=1
+            expected_thermal_conductivity_liq=30,  # doesn't change when i_blkt_liquid_breeder_type=1
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
-            i_bb_liq=1,
+            i_blkt_liquid_breeder_type=1,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
@@ -1779,7 +1779,9 @@ def test_liquid_breeder_properties(
         liquidbreederpropertiesparam.electrical_conductivity_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "i_bb_liq", liquidbreederpropertiesparam.i_bb_liq
+        fwbs_variables,
+        "i_blkt_liquid_breeder_type",
+        liquidbreederpropertiesparam.i_blkt_liquid_breeder_type,
     )
     monkeypatch.setattr(
         fwbs_variables, "hartmann_liq", liquidbreederpropertiesparam.hartmann_liq
@@ -2028,7 +2030,11 @@ def test_liquid_breeder_pressure_drop_mhd(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "i_blkt_liquid_breeder_channel_type", liquidbreederpressuredropmhdparam.i_blkt_liquid_breeder_channel_type)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_blkt_liquid_breeder_channel_type",
+        liquidbreederpressuredropmhdparam.i_blkt_liquid_breeder_channel_type,
+    )
     monkeypatch.setattr(
         fwbs_variables, "a_bz_liq", liquidbreederpressuredropmhdparam.a_bz_liq
     )

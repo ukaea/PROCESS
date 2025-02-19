@@ -538,7 +538,7 @@ module fwbs_variables
   !!  - =0    FW and BB have the same primary coolant, flow = FWin->FWout->BBin->BBout
   !!  - =1    FW and BB have the different primary coolant and are on different pump systems
 
-  integer :: i_bb_liq
+  integer :: i_blkt_liquid_breeder_type
   !! Switch for Liquid Metal Breeder Material
   !!  - =0   PbLi
   !!  - =1   Li
@@ -806,7 +806,7 @@ module fwbs_variables
     pnuc_cp_tf = 0.0D0
     neut_flux_cp = 0.0D0
     i_fw_blkt_shared_coolant = 0
-    i_bb_liq = 0
+    i_blkt_liquid_breeder_type = 0
     i_blkt_dual_coolant = 0
     i_blkt_liquid_breeder_channel_type = 0
     ims = 0
