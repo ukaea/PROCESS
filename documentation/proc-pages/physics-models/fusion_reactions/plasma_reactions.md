@@ -11,7 +11,7 @@ $$
 
 Roughly 20% of the energy produced is given to the alpha particles (\(^4\)He). The remaining 80% is carried
 away by the neutrons, which deposit their energy within the blanket and shield and other reactor components.
-The fraction of the alpha energy deposited in the plasma is [`f_alpha_plasma`](#coupled-alpha-particle-power). 
+The fraction of the alpha energy deposited in the plasma is [`f_alpha_plasma`](#coupled-alpha-particle-power).
 **`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
 
 PROCESS can also model D-\(^3\)He power plants, which utilise the following
@@ -38,11 +38,11 @@ $$\begin{aligned}
 \mathrm{D + D}  & \Longrightarrow \mathrm{T + p + 4.03 \,MeV}
 \end{aligned}$$
 
-Also, as tritium is produced by the latter reaction, D-T fusion also occurs. 
+Also, as tritium is produced by the latter reaction, D-T fusion also occurs.
 As a result, there is still a small amount of neutron power
 extracted from the plasma.
 
-Pure D-\(^3\)He tokamak power plants do not include breeding blankets, because 
+Pure D-\(^3\)He tokamak power plants do not include breeding blankets, because
 no tritium needs to be produced for fuel.
 
 The contributions from all four of the above fusion reactions are included in
@@ -56,7 +56,7 @@ profiles
 
 The fractional composition of the 'fuel' ions ($\text{D}$, $\text{T}$ and $^3\text{He}$) is
 controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively.
-More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md)
+More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md). `f_tritium` can be used as an iteration variable (ixc = 173) and must be constrained with constraint equation 92, to ensure the fuel fractions sum to 1.0.
 
 !!! note "Reactions not calculated"
 
