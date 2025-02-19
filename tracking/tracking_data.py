@@ -153,7 +153,7 @@ class ProcessTracker:
         "tftmp",
         "n_tf_coils",
         "bmaxtf",
-        "vstot",
+        "vs_cs_pf_total_pulse",
         "nd_ions_total",
         "t_burn",
         "divlife",

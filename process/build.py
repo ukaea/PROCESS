@@ -701,8 +701,8 @@ class Build:
             po.ovarre(
                 self.mfile,
                 "Ratio of Central Solenoid height to TF coil internal height",
-                "(ohhghf)",
-                pfcoil_variables.ohhghf,
+                "(f_z_cs_tf_internal)",
+                pfcoil_variables.f_z_cs_tf_internal,
             )
             po.ocmmnt(
                 self.outfile,

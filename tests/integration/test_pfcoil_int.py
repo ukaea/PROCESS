@@ -57,58 +57,60 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(eh, "idiags", np.full(8, -999999))
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(pfv, "rpf1", 0.0)
-    monkeypatch.setattr(pfv, "whtpfs", 0.0)
-    monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "nohc", 0)
-    monkeypatch.setattr(pfv, "pfrmax", 0.0)
-    monkeypatch.setattr(pfv, "fcohbop", 1.0)
-    monkeypatch.setattr(pfv, "rjconpf", np.full(22, 1.1e7))
-    monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "rohc", 3.0)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-    monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
+    monkeypatch.setattr(pfv, "m_pf_coil_structure_total", 0.0)
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 0)
+    monkeypatch.setattr(pfv, "r_pf_coil_outer_max", 0.0)
+    monkeypatch.setattr(pfv, "f_j_cs_start_pulse_end_flat_top", 1.0)
+    monkeypatch.setattr(pfv, "j_pf_coil_wp_peak", np.full(22, 1.1e7))
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
+    monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    )
+    monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "c_pf_coil_turn_peak_input", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "itr_sum", 0.0)
     monkeypatch.setattr(pfv, "sigpfcf", 6.66e-1)
-    monkeypatch.setattr(pfv, "ohhghf", 9.0e-1)
-    monkeypatch.setattr(pfv, "ipfloc", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
-    monkeypatch.setattr(pfv, "wts", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "powpfres", 0.0)
-    monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 9.0e-1)
+    monkeypatch.setattr(pfv, "i_pf_location", np.array([2, 2, 3, 3, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "p_pf_coil_resistive_total_flat_top", 0.0)
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "routr", 1.5)
-    monkeypatch.setattr(pfv, "ric", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "fcohbof", 2.654e-1)
+    monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfv, "rpf2", -1.825)
     monkeypatch.setattr(pfv, "nfxfh", 7)
-    monkeypatch.setattr(pfv, "bpf", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "zl", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "wtc", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "vf", np.full(22, 3.0e-1))
-    monkeypatch.setattr(pfv, "turns", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "curpfs", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rpf", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "m_pf_coil_conductor", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "f_a_pf_coil_void", np.full(22, 3.0e-1))
+    monkeypatch.setattr(pfv, "n_pf_coil_turns", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_end_ma", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "zref", [3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    monkeypatch.setattr(pfv, "pfmmax", 0.0)
-    monkeypatch.setattr(pfv, "ipfres", 0)
+    monkeypatch.setattr(pfv, "m_pf_coil_max", 0.0)
+    monkeypatch.setattr(pfv, "i_pf_conductor", 0)
     monkeypatch.setattr(pfv, "alfapf", 5.0e-10)
-    monkeypatch.setattr(pfv, "ncirt", 8)
-    monkeypatch.setattr(pfv, "pfclres", 2.5e-8)
-    monkeypatch.setattr(pfv, "cpt", np.full([22, 6], 0.0))
+    monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
+    monkeypatch.setattr(pfv, "rho_pf_coil", 2.5e-8)
+    monkeypatch.setattr(pfv, "c_pf_coil_turn", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfv, "sxlg", np.full([22, 22], 0.0))
+    monkeypatch.setattr(pfv, "ind_pf_cs_plasma_mutual", np.full([22, 22], 0.0))
     monkeypatch.setattr(pfv, "sigpfcalw", 5.0e2)
-    monkeypatch.setattr(pfv, "coheof", 1.6932e7)
-    monkeypatch.setattr(pfv, "zh", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "fcohbof", 2.654e-1)
-    monkeypatch.setattr(pfv, "ra", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rb", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "isumatpf", 3)
-    monkeypatch.setattr(pfv, "isumatoh", 1)
-    monkeypatch.setattr(pfv, "whtpf", 0.0)
+    monkeypatch.setattr(pfv, "j_cs_flat_top_end", 1.6932e7)
+    monkeypatch.setattr(pfv, "z_pf_coil_upper", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "f_j_cs_start_end_flat_top", 2.654e-1)
+    monkeypatch.setattr(pfv, "r_pf_coil_inner", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "i_pf_superconductor", 3)
+    monkeypatch.setattr(pfv, "i_cs_superconductor", 1)
+    monkeypatch.setattr(pfv, "m_pf_coil_conductor_total", 0.0)
     monkeypatch.setattr(pfv, "fcupfsu", 6.900e-1)
-    monkeypatch.setattr(pfv, "cohbop", 1.693e7)
-    monkeypatch.setattr(pfv, "rjpfalw", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "j_cs_pulse_start", 1.693e7)
+    monkeypatch.setattr(pfv, "j_pf_wp_critical", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "i_sup_pf_shape", 0)
     monkeypatch.setattr(pfv, "rref", np.full(10, 7.0))
     monkeypatch.setattr(pfv, "i_pf_current", 1)
@@ -148,7 +150,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     pfcoil.pfcoil()
 
     assert pytest.approx(pv.bvert) == -0.65121393
-    assert pytest.approx(pfv.zpf) == np.array([
+    assert pytest.approx(pfv.z_pf_coil_middle) == np.array([
         4.86,
         -4.86,
         7.2075,
@@ -189,48 +191,48 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(eh, "idiags", np.full(8, 0))
-    monkeypatch.setattr(pfv, "nohc", 5)
-    monkeypatch.setattr(pfv, "bmaxoh", 1.4e1)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 5)
+    monkeypatch.setattr(pfv, "b_cs_peak_flat_top_end", 1.4e1)
     monkeypatch.setattr(pfv, "i_cs_stress", 0)
-    monkeypatch.setattr(pfv, "coheof", 1.693e7)
-    monkeypatch.setattr(pfv, "rohc", 3.0)
-    monkeypatch.setattr(pfv, "vfohc", 3.0e-1)
+    monkeypatch.setattr(pfv, "j_cs_flat_top_end", 1.693e7)
+    monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
+    monkeypatch.setattr(pfv, "f_a_cs_void", 3.0e-1)
     monkeypatch.setattr(pfv, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(pfv, "fcuohsu", 7.000e-1)
-    monkeypatch.setattr(pfv, "isumatoh", 5)
-    monkeypatch.setattr(pfv, "ohhghf", 0.9)
-    monkeypatch.setattr(pfv, "areaoh", 1.039e1)
-    monkeypatch.setattr(pfv, "powpfres", 0.0)
+    monkeypatch.setattr(pfv, "i_cs_superconductor", 5)
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 0.9)
+    monkeypatch.setattr(pfv, "a_cs_poloidal", 1.039e1)
+    monkeypatch.setattr(pfv, "p_pf_coil_resistive_total_flat_top", 0.0)
     monkeypatch.setattr(pfv, "jcableoh_eof", 1.427e8)
-    monkeypatch.setattr(pfv, "powohres", 0.0)
-    monkeypatch.setattr(pfv, "rjohc0", 3.048e7)
+    monkeypatch.setattr(pfv, "p_cs_resistive_flat_top", 0.0)
+    monkeypatch.setattr(pfv, "j_cs_critical_pulse_start", 3.048e7)
     monkeypatch.setattr(pfv, "s_tresca_oh", 5.718e8)
     monkeypatch.setattr(pfv, "awpoh", 4.232)
-    monkeypatch.setattr(pfv, "oh_steel_frac", 5.926e-1)
-    monkeypatch.setattr(pfv, "bmaxoh0", 1.4e1)
-    monkeypatch.setattr(pfv, "rjohc", 4.070e7)
-    monkeypatch.setattr(pfv, "tmargoh", 1.5)
-    monkeypatch.setattr(pfv, "ipfres", 0)
-    monkeypatch.setattr(pfv, "rjpfalw", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "pfclres", 2.8e-8)
-    monkeypatch.setattr(pfv, "vf", np.full(22, 0.3))
-    monkeypatch.setattr(pfv, "ric", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "bpf", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "jscoh_eof", 4.758e8)
-    monkeypatch.setattr(pfv, "zpf", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rb", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "ra", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "jscoh_bop", 3.562e8)
-    monkeypatch.setattr(pfv, "cptdin", np.full(22, 4.22e4))
+    monkeypatch.setattr(pfv, "f_a_cs_steel", 5.926e-1)
+    monkeypatch.setattr(pfv, "b_cs_peak_pulse_start", 1.4e1)
+    monkeypatch.setattr(pfv, "j_cs_critical_flat_top_end", 4.070e7)
+    monkeypatch.setattr(pfv, "temp_cs_margin", 1.5)
+    monkeypatch.setattr(pfv, "i_pf_conductor", 0)
+    monkeypatch.setattr(pfv, "j_pf_wp_critical", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "rho_pf_coil", 2.8e-8)
+    monkeypatch.setattr(pfv, "f_a_pf_coil_void", np.full(22, 0.3))
+    monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "j_cs_conductor_critical_flat_top_end", 4.758e8)
+    monkeypatch.setattr(pfv, "z_pf_coil_middle", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_outer", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "r_pf_coil_inner", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "j_cs_conductor_critical_pulse_start", 3.562e8)
+    monkeypatch.setattr(pfv, "c_pf_coil_turn_peak_input", np.full(22, 4.22e4))
     monkeypatch.setattr(pfv, "pfcaseth", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "rpf", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "cohbop", 1.693e7)
-    monkeypatch.setattr(pfv, "zh", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "wtc", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "zl", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "turns", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "wts", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "a_oh_turn", 0.0)
+    monkeypatch.setattr(pfv, "r_pf_coil_middle", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "j_cs_pulse_start", 1.693e7)
+    monkeypatch.setattr(pfv, "z_pf_coil_upper", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "m_pf_coil_conductor", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "z_pf_coil_lower", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "n_pf_coil_turns", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "m_pf_coil_structure", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "a_cs_turn", 0.0)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
     monkeypatch.setattr(tfv, "tftmp", 4.750)
     monkeypatch.setattr(tfv, "tcritsc", 1.6e1)
@@ -244,11 +246,15 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     # Mocks for peakb()
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfv, "waves", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-    monkeypatch.setattr(pfv, "curpfb", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "curpff", np.full(22, 0.0))
-    monkeypatch.setattr(pfv, "curpfs", np.full(22, -175.84911993600002))
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    )
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0))
+    monkeypatch.setattr(pfv, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
+    monkeypatch.setattr(
+        pfv, "c_pf_cs_coil_pulse_end_ma", np.full(22, -175.84911993600002)
+    )
     monkeypatch.setattr(pv, "rmajor", 8.938)
     monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
 
@@ -264,8 +270,8 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
 
     pfcoil.ohcalc()
 
-    assert pytest.approx(pfv.bpf[4]) == 13.073958753751993
-    assert pytest.approx(pfv.rjohc) == 54101481.7685945
+    assert pytest.approx(pfv.b_pf_coil_peak[4]) == 13.073958753751993
+    assert pytest.approx(pfv.j_cs_critical_flat_top_end) == 54101481.7685945
 
 
 def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
@@ -280,11 +286,11 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch
     """
-    ngrpmx = 10
+    n_pf_groups_max = 10
     nptsmx = 32
     nfixmx = 64
-    lrow1 = 2 * nptsmx + ngrpmx
-    lcol1 = ngrpmx
+    lrow1 = 2 * nptsmx + n_pf_groups_max
+    lcol1 = n_pf_groups_max
     npts = 32
     rpts = np.array([
         6.0547741935483881,
@@ -345,8 +351,8 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     ]
     cfix = np.full(nfixmx, 0.0)
     cfix[0:14] = 12547065.315963898
-    ngrp = 4
-    ncls = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    n_pf_coil_groups = 4
+    n_pf_coils_in_group = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     # This 2D array argument discovered via gdb prints as a 1D array, therefore
     # needs to be reshaped into its original 2D. Fortran ordering is essential
@@ -418,8 +424,8 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         rfix,
         zfix,
         cfix,
-        ngrp,
-        ncls,
+        n_pf_coil_groups,
+        n_pf_coils_in_group,
         rcls,
         zcls,
         alfa,
@@ -490,8 +496,8 @@ def test_mtrx(pfcoil: PFCoil):
     zpts = np.zeros(nptsmx)
     brin = np.zeros(nptsmx)
     bzin = np.zeros(nptsmx)
-    ngrp = 4
-    ncls = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    n_pf_coil_groups = 4
+    n_pf_coils_in_group = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
     rcls = np.reshape(
         [
             0,
@@ -630,13 +636,13 @@ def test_mtrx(pfcoil: PFCoil):
         zpts,
         brin,
         bzin,
-        ngrp,
-        ncls,
+        n_pf_coil_groups,
+        n_pf_coils_in_group,
         rcls,
         zcls,
         alfa,
         bfix,
-        int(pfv.nclsmx),
+        int(pfv.n_pf_coils_in_group_max),
     )
 
     gmat_exp = np.array([
@@ -1621,13 +1627,13 @@ def test_solv(pfcoil: PFCoil):
     :param pfcoil: a PFCoil instance
     :type pfcoil: process.pfcoil.PFCoil
     """
-    ngrpmx = 3
-    ngrp = 3
+    n_pf_groups_max = 3
+    n_pf_coil_groups = 3
     nrws = 3
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
+    ccls = pfcoil.solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec)
 
     assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
 
@@ -2207,7 +2213,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "ra",
+        "r_pf_coil_inner",
         np.array([
             5.6944236847973242,
             5.5985055619292972,
@@ -2233,10 +2239,10 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
-        "ric",
+        "c_pf_cs_coils_peak_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
@@ -2262,10 +2268,10 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ohhghf", 0.90000000000000002)
+    monkeypatch.setattr(pfv, "f_z_cs_tf_internal", 0.90000000000000002)
     monkeypatch.setattr(
         pfv,
-        "rb",
+        "r_pf_coil_outer",
         np.array([
             6.8520884119768697,
             6.9480065348448967,
@@ -2293,7 +2299,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "rpf",
+        "r_pf_coil_middle",
         np.array([
             6.2732560483870969,
             6.2732560483870969,
@@ -2350,12 +2356,12 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             order="F",
         ),
     )
-    monkeypatch.setattr(pfv, "coheof", 20726000)
-    monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "bpf", np.zeros(22, dtype=int))  # maybe
+    monkeypatch.setattr(pfv, "j_cs_flat_top_end", 20726000)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
+    monkeypatch.setattr(pfv, "b_pf_coil_peak", np.zeros(22, dtype=int))  # maybe
     monkeypatch.setattr(
         pfv,
-        "zpf",
+        "z_pf_coil_middle",
         np.array([
             9.606146709677418,
             -11.141090021562032,
@@ -2381,10 +2387,12 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(
         pfv,
-        "zl",
+        "z_pf_coil_lower",
         np.array([
             9.0273143460876444,
             -10.466339535104233,
@@ -2412,7 +2420,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpfb",
+        "c_pf_cs_coil_pulse_start_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
@@ -2440,7 +2448,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpff",
+        "c_pf_cs_coil_flat_top_ma",
         np.array([
             0.067422231232391661,
             -2.9167273287450968,
@@ -2468,7 +2476,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpfs",
+        "c_pf_cs_coil_pulse_end_ma",
         np.array([
             0.067422231232391661,
             -2.9167273287450968,
@@ -2494,10 +2502,10 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "cohbop", 19311657.760000002)
+    monkeypatch.setattr(pfv, "j_cs_pulse_start", 19311657.760000002)
     monkeypatch.setattr(
         pfv,
-        "zh",
+        "z_pf_coil_upper",
         np.array([
             10.184979073267192,
             -11.815840508019832,
@@ -2601,11 +2609,11 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "f_a_cs_steel", 0.57874999999999999)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
-        "rb",
+        "r_pf_coil_outer",
         np.array([
             6.8520884119768697,
             6.9480065348448967,
@@ -2633,7 +2641,7 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "ra",
+        "r_pf_coil_inner",
         np.array([
             5.6944236847973242,
             5.5985055619292972,
@@ -2661,7 +2669,7 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "ric",
+        "c_pf_cs_coils_peak_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
@@ -2689,7 +2697,7 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "zh",
+        "z_pf_coil_upper",
         np.array([
             10.184979073267192,
             -11.815840508019832,
@@ -2766,10 +2774,10 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             -999999,
         ]),
     )
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
-        "turns",
+        "n_pf_coil_turns",
         np.array([
             349.33800535811901,
             474.70809561378354,
@@ -2797,7 +2805,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "zpf",
+        "z_pf_coil_middle",
         np.array([
             9.606146709677418,
             -11.141090021562032,
@@ -2825,7 +2833,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "rpf",
+        "r_pf_coil_middle",
         np.array([
             6.2732560483870969,
             6.2732560483870969,
@@ -2851,13 +2859,15 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "sxlg", np.ones((22, 22), dtype=int))
-    monkeypatch.setattr(pfv, "rohc", 2.6084100000000001)
-    monkeypatch.setattr(pfv, "ngrp", 4)
-    monkeypatch.setattr(pfv, "ncls", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0]))
+    monkeypatch.setattr(pfv, "ind_pf_cs_plasma_mutual", np.ones((22, 22), dtype=int))
+    monkeypatch.setattr(pfv, "r_cs_middle", 2.6084100000000001)
+    monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
+    monkeypatch.setattr(
+        pfv, "n_pf_coils_in_group", np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
+    )
     monkeypatch.setattr(
         pfv,
-        "zl",
+        "z_pf_coil_lower",
         np.array([
             9.0273143460876444,
             -10.466339535104233,
@@ -2883,10 +2893,10 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             0,
         ]),
     )
-    monkeypatch.setattr(pfv, "ncirt", 8)
+    monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(
         pfv,
-        "ra",
+        "r_pf_coil_inner",
         np.array([
             5.6944236847973242,
             5.5985055619292972,
@@ -2914,7 +2924,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "zh",
+        "z_pf_coil_upper",
         np.array([
             10.184979073267192,
             -11.815840508019832,
@@ -2942,7 +2952,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     )
     monkeypatch.setattr(
         pfv,
-        "rb",
+        "r_pf_coil_outer",
         np.array([
             6.8520884119768697,
             6.9480065348448967,
@@ -2971,7 +2981,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
     monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
 
-    sxlg_exp = np.array([
+    ind_pf_cs_plasma_mutual_exp = np.array([
         [
             2.49332453e00,
             4.46286166e-02,
@@ -3502,4 +3512,4 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ],
     ])
     pfcoil.induct(False)
-    assert_array_almost_equal(pfv.sxlg, sxlg_exp)
+    assert_array_almost_equal(pfv.ind_pf_cs_plasma_mutual, ind_pf_cs_plasma_mutual_exp)
