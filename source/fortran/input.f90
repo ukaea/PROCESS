@@ -4971,14 +4971,3 @@ contains
  end subroutine lower_case
 
 end module process_input
-
-#ifdef unit_test
-program test
- use process_input
- implicit none
-
- open(unit=1,file='IN.DAT',status='old')
- call parse_input_file(1,6,1)
- close(unit=1)
-end program test
-#endif
