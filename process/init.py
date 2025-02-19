@@ -32,8 +32,7 @@ def init_process():
     fortran.init_module.open_files()
 
     # Input any desired new initial values
-    parse_input_file()
-    fortran.process_input.parse_input_file(10, fortran.constants.nout, 0)
+    inputs = parse_input_file()
 
     # Set active constraints
     set_active_constraints()
@@ -45,7 +44,7 @@ def init_process():
     fortran.stellarator_module.stinit()
 
     # Check input data for errors/ambiguities
-    check_process()
+    check_process(inputs)
 
     run_summary()
 
@@ -209,7 +208,6 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     fortran.numerics.init_numerics()
-    fortran.process_input.init_input()
     fortran.buildings_variables.init_buildings_variables()
     fortran.cost_variables.init_cost_variables()
     fortran.divertor_variables.init_divertor_variables()
@@ -421,7 +419,7 @@ def initialise_iterative_variables():
     fortran.define_iteration_variables.init_itv_175()
 
 
-def check_process():
+def check_process(inputs):
     """Routine to reset specific variables if certain options are
     being used
     author: P J Knight, CCFE, Culham Science Centre
@@ -429,7 +427,37 @@ def check_process():
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-    # error_handling.errors_on = True
+    # Inboard blanket does not exist if the thickness is below a certain limit.
+    if "dr_blkt_inboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
+        warn(
+            "dr_blkt_inboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
+            stacklevel=1,
+        )
+
+    if "dr_blkt_outboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
+        warn(
+            "dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
+            stacklevel=1,
+        )
+
+    if fortran.fwbs_variables.i_blanket_type == 3:
+        fortran.build_variables.dr_fw_inboard = 0.03
+        fortran.build_variables.dr_fw_outboard = 0.03
+        fortran.fwbs_variables.fw_armour_thickness = 0.003
+
+    if 0 <= fortran.build_variables.dr_blkt_inboard <= 1e-3:
+        fortran.build_variables.dr_blkt_inboard = 0.0
+        fortran.fwbs_variables.i_blkt_inboard = 0
+
+    if fortran.fwbs_variables.iblanket_thickness == 1:
+        fortran.build_variables.dr_blkt_inboard = 0.53
+        fortran.build_variables.dr_blkt_outboard = 0.91
+    elif fortran.fwbs_variables.iblanket_thickness == 2:
+        fortran.build_variables.dr_blkt_inboard = 0.64
+        fortran.build_variables.dr_blkt_outboard = 1.11
+    elif fortran.fwbs_variables.iblanket_thickness == 3:
+        fortran.build_variables.dr_blkt_inboard = 0.75
+        fortran.build_variables.dr_blkt_outboard = 1.30
 
     # Check that there are sufficient iteration variables
     if fortran.numerics.nvar < fortran.numerics.neqns:
@@ -1269,10 +1297,17 @@ def check_process():
 
 def set_active_constraints():
     """Set constraints provided in the input file as 'active'"""
+    num_constraints = 0
     for i in range(fortran.numerics.ipeqns):
         if fortran.numerics.icc[i] != 0:
             fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
-            fortran.process_input.constraints_exist = True
+            num_constraints += 1
+
+    if fortran.numerics.neqns == 0:
+        # The value of neqns has not been set in the input file.  Default = 0.
+        fortran.numerics.neqns = num_constraints - fortran.numerics.nineqns
+    else:
+        fortran.numerics.nineqns = num_constraints - fortran.numerics.neqns
 
 
 def set_device_type():

@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 import process.init as init
@@ -145,3 +146,14 @@ def test_input_float_when_int(tmp_path):
 
     with pytest.raises(ProcessValidationError):
         init.init_process()
+
+
+def test_input_array(tmp_path):
+    fortran.global_variables.fileprefix = string_to_f2py_compatible(
+        fortran.global_variables.fileprefix,
+        _create_input_file(tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")),
+    )
+    init.init_process()
+    np.testing.assert_array_equal(
+        fortran.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
+    )
