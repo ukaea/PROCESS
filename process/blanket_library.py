@@ -1574,7 +1574,7 @@ class BlanketLibrary:
             roughness epsilon           roughness
             peak FW temp (K)            temp_fw_peak
             maximum temp (K)            temp_fw_max
-            FCI switch                  ---                     ---                 ifci
+            FCI switch                  ---                     ---                 i_blkt_liquid_breeder_channel_type
 
             Coolant                     FW                      BB primary          BB secondary
 
@@ -2396,7 +2396,7 @@ class BlanketLibrary:
         half_wth_b = fwbs_variables.b_bz_liq * 0.5
 
         # If have thin conducting walls...
-        if fwbs_variables.ifci != 1:
+        if fwbs_variables.i_blkt_liquid_breeder_channel_type != 1:
             # Caculate resistances of fluid and walls
             r_i = half_wth_b / (conduct_liq * half_wth_a)
             r_w = half_wth_b / (
@@ -2423,9 +2423,9 @@ class BlanketLibrary:
                 f"Liquid metal breeder/coolant MHD pressure drop for {label}",
             )
 
-            if fwbs_variables.ifci == 0:
+            if fwbs_variables.i_blkt_liquid_breeder_channel_type == 0:
                 po.ocmmnt(
-                    self.outfile, "Flow channels have thin conducting walls (ifci==0)"
+                    self.outfile, "Flow channels have thin conducting walls (i_blkt_liquid_breeder_channel_type==0)"
                 )
                 po.ovarre(
                     self.outfile,
@@ -2434,8 +2434,8 @@ class BlanketLibrary:
                     fwbs_variables.bz_channel_conduct_liq,
                     "OP ",
                 )
-            elif fwbs_variables.ifci == 2:
-                po.ocmmnt(self.outfile, "Flow Channel Inserts (FCIs) used (ifci==2)")
+            elif fwbs_variables.i_blkt_liquid_breeder_channel_type == 2:
+                po.ocmmnt(self.outfile, "Flow Channel Inserts (FCIs) used (i_blkt_liquid_breeder_channel_type==2)")
                 po.ovarre(
                     self.outfile,
                     "FCI conductance (A V-1 m-1)",
@@ -2446,7 +2446,7 @@ class BlanketLibrary:
             else:
                 po.ocmmnt(
                     self.outfile,
-                    "Flow Channel Inserts - assumed perfect insulator (ifci==1)",
+                    "Flow Channel Inserts - assumed perfect insulator (i_blkt_liquid_breeder_channel_type==1)",
                 )
 
             po.ovarre(

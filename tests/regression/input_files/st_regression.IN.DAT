@@ -2572,7 +2572,7 @@ inuclear = 0
 *       secondary coolant is self-cooled liquid metal breeder. 
 * JUSTIFICATION: Not yet set assuming default = 0
 
-*ifci = 
+*i_blkt_liquid_breeder_channel_type = 
 * DESCRIPTION:Switch for Flow Channel Insert (FCI) type if liquid metal breeder blanket.
 * =0    Thin conducting walls, default electrical conductivity (bz_channel_conduct_liq) is Eurofer
 * =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
