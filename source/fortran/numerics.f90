@@ -19,7 +19,7 @@ module numerics
   integer, parameter :: ipnvars = 175
   !!  ipnvars FIX : total number of variables available for iteration
 
-  integer, parameter :: ipeqns = 91
+  integer, parameter :: ipeqns = 92
   !!  ipeqns  FIX : number of constraint equations available
 
   integer, parameter :: ipnfoms = 19
@@ -193,7 +193,9 @@ module numerics
   !!  <LI> (88) Constraint for TF coil strain absolute value
   !!  <LI> (89) Constraint for CS coil quench protection
   !!  <LI> (90) Lower Limit on number of stress load cycles for CS (itr 167 fncycle)
-  !!  <LI> (91) Checking if the design point is ECRH ignitable (itv 168 fecrh_ignition) </UL>
+  !!  <LI> (91) Checking if the design point is ECRH ignitable (itv 168 fecrh_ignition)
+  !!  <LI> (92) D/T/He3 ratio in fuel sums to 1 </UL>
+
 
   integer, dimension(ipnvars) :: ixc
   !!  ixc(ipnvars) /0/ :
@@ -374,7 +376,7 @@ module numerics
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) casths : TF side case thickness [m]
-  !! <LI> (173) EMPTY : Description
+  !! <LI> (173) f_deuterium : Deutterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
@@ -545,7 +547,9 @@ contains
       'TF coil strain absolute value    ', &
       'CS current/copper area < Max     ', &
       'CS stress load cycles            ', &
-      'ECRH ignitability                '  &
+      'ECRH ignitability                ', &
+      'D/T ratio = 1                        ' &
+
       /)
 
     ! Please note: All strings between '...' above must be exactly 33 chars long
