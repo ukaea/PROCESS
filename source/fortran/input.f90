@@ -130,7 +130,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: dcopper, dalu
-    use global_variables, only: run_tests, verbose, maxcal, runtitle
+    use global_variables, only: run_tests, verbose, maxcal
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
       shldtth, shldlth, vgap_vv_thermalshield, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, thshield_vb, i_cs_precomp, &
@@ -234,8 +234,8 @@ contains
       blmatf, ife
     use impurity_radiation_module, only: coreradius, n_impurities, &
       coreradiationfraction, fimp
-    use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
-      epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
+    use numerics, only: factor, minmax, neqns, nvar, epsfcn, ixc, &
+      ftol, ipnvars, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
       coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
       fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, ngrpmx, ngc2, rpf1, &
@@ -390,10 +390,7 @@ contains
        variable: select case (varnam(1:varlen))
 
           !  General settings
-
        case ('runtitle')
-          call parse_string_variable('runtitle', runtitle, &
-               'title of run')
        case ('verbose')
           call parse_int_variable('verbose', verbose, 0, 1, &
                'Switch for diagnostic output')
@@ -403,8 +400,6 @@ contains
 
           !  Numerical solver settings
        case ('boundl')
-          call parse_real_array('boundl', boundl, isub1, ipnvars, &
-               'Iteration variable lower bound', icode)
        case ('boundu')
           call parse_real_array('boundu', boundu, isub1, ipnvars, &
                'Iteration variable upper bound', icode)
@@ -412,8 +407,6 @@ contains
           call parse_real_variable('epsfcn', epsfcn, 0.0D0, 1.0D0, &
                'HYBRD/VMCON derivative step length')
        case ('epsvmc')
-          call parse_real_variable('epsvmc', epsvmc, 0.0D0, 1.0D0, &
-               'VMCON error tolerance')
        case ('factor')
           call parse_real_variable('factor', factor, 0.0D0, 10.0D0, &
                'HYBRD initial step size')
@@ -433,10 +426,7 @@ contains
           call parse_int_array('ixc', ixc, isub1, ipnvars, &
                    'Iteration variable', icode,no_iteration)
           no_iteration = isub1
-
        case ('ioptimz')
-          call parse_int_variable('ioptimz', ioptimz, -2, 1, &
-               'Switch for solver method')
        case ('maxcal')
           call parse_int_variable('maxcal', maxcal, 0, 10000, &
                'Max no of VMCON iterations')
