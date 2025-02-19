@@ -101,7 +101,7 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "outlet_temp_liq", 1.0)
 
     # PbLi - see [Fer2020] for relavent equations
-    monkeypatch.setattr(fwbs, "i_bb_liq", 0)
+    monkeypatch.setattr(fwbs, "i_blkt_liquid_breeder_type", 0)
 
     blanket_library_fixture.liquid_breeder_properties()
 
@@ -115,7 +115,7 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library_fixture):
     assert pytest.approx(fwbs.hartmann_liq, rel=1e-3) == (7.189e3, 3.528e3)
 
     # Li - see [Lyublinski et al., 2009] for relavent equations
-    monkeypatch.setattr(fwbs, "i_bb_liq", 1)
+    monkeypatch.setattr(fwbs, "i_blkt_liquid_breeder_type", 1)
 
     blanket_library_fixture.liquid_breeder_properties()
 
@@ -142,7 +142,7 @@ def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(bv, "dr_blkt_inboard", 0.0)
     monkeypatch.setattr(bv, "dr_blkt_outboard", 0.2)
     monkeypatch.setattr(fwbs, "i_blkt_inboard", 0)
-    monkeypatch.setattr(fwbs, "i_bb_liq", 0)
+    monkeypatch.setattr(fwbs, "i_blkt_liquid_breeder_type", 0)
     monkeypatch.setattr(fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(fwbs, "outlet_temp_liq", 0.0)
 
@@ -168,12 +168,12 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "outlet_temp_liq", 1.0)
 
     # PbLi - see [Fer2020] for relavent equations
-    monkeypatch.setattr(fwbs, "i_bb_liq", 0)
+    monkeypatch.setattr(fwbs, "i_blkt_liquid_breeder_type", 0)
 
     blanket_library_fixture.liquid_breeder_properties()
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 1.052e4
     # Li - see [Lyublinski et al., 2009] for relavent equations
-    monkeypatch.setattr(fwbs, "i_bb_liq", 1)
+    monkeypatch.setattr(fwbs, "i_blkt_liquid_breeder_type", 1)
 
     blanket_library_fixture.liquid_breeder_properties()
     assert pytest.approx(fwbs.den_liq, rel=1e-3) == 504.0

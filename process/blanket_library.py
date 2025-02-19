@@ -1292,7 +1292,7 @@ class BlanketLibrary:
             ) * 0.5
 
         # If the liquid metal is PbLi...
-        if fwbs_variables.i_bb_liq == 0:
+        if fwbs_variables.i_blkt_liquid_breeder_type == 0:
             # PbLi from [Mar2019]
             # Constant pressure ~ 17 atmospheres ~ 1.7D6 Pa
             # Li content is ~ 17%
@@ -1336,7 +1336,7 @@ class BlanketLibrary:
             t_ranges[4, 1] = 800.0
 
         # If the liquid metal is Li...
-        elif fwbs_variables.i_bb_liq == 1:
+        elif fwbs_variables.i_blkt_liquid_breeder_type == 1:
             # Temporary - should be updated with information from Li reviews conducted at CCFE once completed
             # Li Properties from [Mal1995] at 300 Celcius
             # den_liq = 505                            kg/m3
@@ -1414,7 +1414,7 @@ class BlanketLibrary:
         )
 
         # Error for temperature range of breeder property realtions
-        if fwbs_variables.i_bb_liq == 0 and (
+        if fwbs_variables.i_blkt_liquid_breeder_type == 0 and (
             (t_ranges[:, 0] > mid_temp_liq).any()
             or (t_ranges[:, 1] < mid_temp_liq).any()
         ):
@@ -1458,12 +1458,15 @@ class BlanketLibrary:
         if fwbs_variables.i_blkt_dual_coolant == 2:
             po.ocmmnt(self.outfile, "Dual coolant: self-cooled liquid metal breeder.")
 
-        if fwbs_variables.i_bb_liq == 0:
+        if fwbs_variables.i_blkt_liquid_breeder_type == 0:
             po.ocmmnt(
-                self.outfile, "Blanket breeder type (i_bb_liq=0), PbLi (~ 17% Li)"
+                self.outfile,
+                "Blanket breeder type (i_blkt_liquid_breeder_type=0), PbLi (~ 17% Li)",
             )
-        if fwbs_variables.i_bb_liq == 1:
-            po.ocmmnt(self.outfile, "Blanket breeder type (i_bb_liq=1), Li")
+        if fwbs_variables.i_blkt_liquid_breeder_type == 1:
+            po.ocmmnt(
+                self.outfile, "Blanket breeder type (i_blkt_liquid_breeder_type=1), Li"
+            )
 
         po.ovarrf(
             self.outfile, "Density (kg m-3)", "(den_liq)", fwbs_variables.den_liq, "OP "
@@ -1579,7 +1582,7 @@ class BlanketLibrary:
             Coolant                     FW                      BB primary          BB secondary
 
             primary coolant switch      i_fw_coolant_type               i_blkt_coolant_type              ---
-            secondary coolant switch    ---                     ---                 i_bb_liq
+            secondary coolant switch    ---                     ---                 i_blkt_liquid_breeder_type
             inlet temp (K)              temp_fw_coolant_in                 temp_blkt_coolant_in          inlet_temp_liq
             outlet temp (K)             temp_fw_coolant_out                temp_blkt_coolant_out         outlet_temp_liq
             pressure (Pa)               pres_fw_coolant              pres_blkt_coolant          blpressure_liq
@@ -2163,8 +2166,8 @@ class BlanketLibrary:
                 po.ovarin(
                     self.outfile,
                     "Blanket liquid breeder type (0=PbLi, 1=Li)",
-                    "(i_bb_liq)",
-                    fwbs_variables.i_bb_liq,
+                    "(i_blkt_liquid_breeder_type)",
+                    fwbs_variables.i_blkt_liquid_breeder_type,
                 )
                 if fwbs_variables.i_blkt_dual_coolant == 2:
                     po.ocmmnt(
@@ -2425,7 +2428,8 @@ class BlanketLibrary:
 
             if fwbs_variables.i_blkt_liquid_breeder_channel_type == 0:
                 po.ocmmnt(
-                    self.outfile, "Flow channels have thin conducting walls (i_blkt_liquid_breeder_channel_type==0)"
+                    self.outfile,
+                    "Flow channels have thin conducting walls (i_blkt_liquid_breeder_channel_type==0)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -2435,7 +2439,10 @@ class BlanketLibrary:
                     "OP ",
                 )
             elif fwbs_variables.i_blkt_liquid_breeder_channel_type == 2:
-                po.ocmmnt(self.outfile, "Flow Channel Inserts (FCIs) used (i_blkt_liquid_breeder_channel_type==2)")
+                po.ocmmnt(
+                    self.outfile,
+                    "Flow Channel Inserts (FCIs) used (i_blkt_liquid_breeder_channel_type==2)",
+                )
                 po.ovarre(
                     self.outfile,
                     "FCI conductance (A V-1 m-1)",
