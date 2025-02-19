@@ -579,12 +579,18 @@ class Power:
         )
         self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
         self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.i_coolant_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.i_coolant_pumping == 2
+        ):
             self.htpmwe_blkt_liq = (
                 heat_transport_variables.htpmw_blkt_liq / fwbs_variables.etahtp
             )
 
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.i_coolant_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.i_coolant_pumping == 2
+        ):
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.htpmw_fw_blkt
@@ -919,7 +925,10 @@ class Power:
         if cost_variables.ireactor == 1:
             #  Gross electric power
             # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
-            if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.i_coolant_pumping == 2:
+            if (
+                fwbs_variables.i_blkt_dual_coolant > 0
+                and fwbs_variables.i_coolant_pumping == 2
+            ):
                 heat_transport_variables.pgrossmw = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
@@ -1865,7 +1874,10 @@ class Power:
             )
 
         # Heat rejected by main power conversion circuit
-        if fwbs_variables.i_blkt_dual_coolant > 0 and fwbs_variables.i_coolant_pumping == 2:
+        if (
+            fwbs_variables.i_blkt_dual_coolant > 0
+            and fwbs_variables.i_coolant_pumping == 2
+        ):
             self.rejected_main = (
                 heat_transport_variables.pthermmw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (

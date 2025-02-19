@@ -13751,7 +13751,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     helpow: Any = None
 
-    vvmass: Any = None
+    m_vv: Any = None
 
     r_cryostat_inboard: Any = None
 
@@ -13795,7 +13795,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             pthermmw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
-            vvmass=8957118.946216708,
+            m_vv=8957118.946216708,
             r_cryostat_inboard=18.314040399601147,
             z_cryostat_half_inside=15.118436894660423,
             cost_factor_misc=1,
@@ -14891,7 +14891,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             pthermmw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
-            vvmass=8948002.9350915737,
+            m_vv=8948002.9350915737,
             r_cryostat_inboard=18.31462428923539,
             z_cryostat_half_inside=15.165858901796364,
             cost_factor_misc=1,
@@ -16030,7 +16030,7 @@ def test_calc_remaining_subsystems(
         heat_transport_variables, "helpow", calcremainingsubsystemsparam.helpow
     )
 
-    monkeypatch.setattr(fwbs_variables, "vvmass", calcremainingsubsystemsparam.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", calcremainingsubsystemsparam.m_vv)
 
     monkeypatch.setattr(
         fwbs_variables,

@@ -970,7 +970,7 @@
  ____Blanket_Mass_-_Steel_(kg)___________________________________________ (m_blkt_steel_total)_____________________      8.9696E+05 OP 
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      3.2350E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4498E+06 OP 
- Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      7.9388E+06 OP 
+ Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      7.9388E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      2.5460E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      1.6290E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.2880E+03 OP 

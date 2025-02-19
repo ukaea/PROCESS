@@ -61,7 +61,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     volshld: Any = None
 
-    vvmass: Any = None
+    m_vv: Any = None
 
     vol_vv: Any = None
 
@@ -145,7 +145,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vol_blkt_total=1397.9003011502937,
             whtshld=2294873.8131476045,
             volshld=735.53647857295027,
-            vvmass=9043937.8018644415,
+            m_vv=9043937.8018644415,
             vol_vv=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0,
@@ -194,7 +194,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             vol_blkt_total=1400.4860764869636,
             whtshld=2297808.3935174854,
             volshld=736.47704920432227,
-            vvmass=9056931.558219457,
+            m_vv=9056931.558219457,
             vol_vv=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0.044184461825198453,
@@ -298,7 +298,7 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "volshld", nuclearheatingmagnetsparam.volshld)
 
-    monkeypatch.setattr(fwbs_variables, "vvmass", nuclearheatingmagnetsparam.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", nuclearheatingmagnetsparam.m_vv)
 
     monkeypatch.setattr(fwbs_variables, "vol_vv", nuclearheatingmagnetsparam.vol_vv)
 

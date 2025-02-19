@@ -1779,7 +1779,7 @@ class Costs:
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
-        self.c2223 = 1.0e-6 * fwbs_variables.vvmass * cost_variables.uccryo
+        self.c2223 = 1.0e-6 * fwbs_variables.m_vv * cost_variables.uccryo
         self.c2223 = cost_variables.fkind * self.c2223 * cmlsa[cost_variables.lsa - 1]
 
     def acc223(self):
