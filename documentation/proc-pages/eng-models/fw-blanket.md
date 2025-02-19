@@ -85,7 +85,7 @@ Summary of key variables and switches:
 |        FCI switch        |           ---           | ---                      | `i_blkt_liquid_breeder_channel_type`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
 |  primary coolant switch  |       `i_fw_coolant_type`       | `i_blkt_coolant_type`                 | ---                                  |
-| secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
+| secondary coolant switch |           ---           | ---                      | `i_blkt_liquid_breeder_type`                           |
 |      inlet temp (K)      |        `temp_fw_coolant_in`        | `temp_blkt_coolant_in`             | `inlet_temp_liq`                     |
 |     outlet temp (K)      |       `temp_fw_coolant_out`        | `temp_blkt_coolant_out`            | `outlet_temp_liq`                    |
 |      pressure (Pa)       |      `pres_fw_coolant`       | `pres_blkt_coolant`             | `blpressure_liq`                     |
@@ -178,7 +178,7 @@ The user can select the number poloidal and toroidal modules for the IB and OB B
 
 #### Liquid Breeder or Dual Coolant
 
-There are two material options for the liquid breeder/coolant, chosen by the user to match their selected blanket design using the switch 'i_bb_liq' (default=0):
+There are two material options for the liquid breeder/coolant, chosen by the user to match their selected blanket design using the switch 'i_blkt_liquid_breeder_type' (default=0):
     0.  Lead-Lithium 
     1.  Lithium (needs testing)    
 Both options use the mid-temperature of the metal to find the following properties: density, specific heat, thermal conductivity, dynamic viscosity and electrical conductivity. 

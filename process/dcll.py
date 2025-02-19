@@ -39,7 +39,7 @@ class DCLL:
              i_blanket_type = 5 * DCLL
 
          Liquid Metal Breeder Material = PbLi
-             i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi
+             i_blkt_liquid_breeder_type = 0 * Liquid Metal Breeder Material = PbLi
 
          Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
              i_blkt_dual_coolant = 2

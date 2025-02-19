@@ -2557,7 +2557,7 @@ inuclear = 0
 * DCLL *   * Set i_blanket_type = 5 *
 *------*
 
-*i_bb_liq = 
+*i_blkt_liquid_breeder_type = 
 * DESCRIPTION: Switch for Liquid Metal Breeder Material
 *  =0   PbLi
 *  =1   Li 
