@@ -871,7 +871,7 @@
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -5.8000E+02 OP 
  # Waveforms #
  Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      9.4380E-01 ITV
- Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________     -1.4083E-01 OP 
+ Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________     -1.4083E-01 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_0_Time_point_0_(A)___________________________________________ (pfc0t0)______________________      0.0000E+00    

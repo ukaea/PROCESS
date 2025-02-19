@@ -483,13 +483,13 @@ class PFCoil:
             )
             dics = csflux / ddics
 
-            pfv.fcohbof = ((-ioheof * pfv.fcohbop) + dics) / ioheof
-            pfv.fcohbof = min(pfv.fcohbof, 1.0e0)  # constrains abs(fcohbof) <= 1.0;
-            pfv.fcohbof = max(pfv.fcohbof, -1.0e0)  # probably un-necessary
+            pfv.f_j_cs_start_end_flat_top = ((-ioheof * pfv.fcohbop) + dics) / ioheof
+            pfv.f_j_cs_start_end_flat_top = min(pfv.f_j_cs_start_end_flat_top, 1.0e0)  # constrains abs(f_j_cs_start_end_flat_top) <= 1.0;
+            pfv.f_j_cs_start_end_flat_top = max(pfv.f_j_cs_start_end_flat_top, -1.0e0)  # probably un-necessary
 
         else:
             dics = 0.0e0
-            pfv.fcohbof = 1.0e0
+            pfv.f_j_cs_start_end_flat_top = 1.0e0
             eh.report_error(71)
 
         # Split groups of coils into one set containing ncl coils
@@ -516,7 +516,7 @@ class PFCoil:
 
                 # Beginning of flat-top: t = tv.t_precharge+tv.t_current_ramp_up
                 pfv.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * (
-                    pf.ccls[nng] - (pf.ccl0[nng] * pfv.fcohbof / pfv.fcohbop)
+                    pf.ccls[nng] - (pf.ccl0[nng] * pfv.f_j_cs_start_end_flat_top / pfv.fcohbop)
                 )
 
                 # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
@@ -529,7 +529,7 @@ class PFCoil:
         # Current in Central Solenoid as a function of time
         # N.B. If the Central Solenoid is not present then ioheof is zero.
         pfv.c_pf_cs_coil_pulse_start_ma[ncl] = -1.0e-6 * ioheof * pfv.fcohbop
-        pfv.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * ioheof * pfv.fcohbof
+        pfv.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * ioheof * pfv.f_j_cs_start_end_flat_top
         pfv.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * ioheof
 
         # Set up coil current waveforms, normalised to the peak current in
@@ -819,7 +819,7 @@ class PFCoil:
         pfv.n_pf_coil_turns[pfv.n_cs_pf_coils] = 1.0e0
 
         # Generate coil currents as a function of time using
-        # user-provided waveforms etc. (c_pf_coil_turn_peak_input, fcohbop, fcohbof)
+        # user-provided waveforms etc. (c_pf_coil_turn_peak_input, fcohbop, f_j_cs_start_end_flat_top)
         for k in range(6):  # time points
             for i in range(pfv.n_pf_cs_plasma_circuits - 1):
                 pfv.c_pf_coil_turn[i, k] = pfv.waves[i, k] * math.copysign(
@@ -2775,8 +2775,8 @@ class PFCoil:
                 (
                     f"{k}\t\t\t{pfv.c_pf_coil_turn[k, 0] * pfv.n_pf_coil_turns[k]:.3e}\t"
                     f"{pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k]:.3e}\t"
-                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
-                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.fcohbof / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.f_j_cs_start_end_flat_top / pfv.fcohbop):.3e}\t"
+                    f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (pfv.f_j_cs_start_end_flat_top / pfv.fcohbop):.3e}\t"
                     f"{-pfv.c_pf_coil_turn[k, 1] * pfv.n_pf_coil_turns[k] * (1.0e0 / pfv.fcohbop):.3e}\t"
                     f"{pfv.c_pf_coil_turn[k, 5] * pfv.n_pf_coil_turns[k]:.3e}"
                 ),
@@ -2789,8 +2789,8 @@ class PFCoil:
                 self.outfile,
                 (
                     f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfv.c_pf_coil_turn[k, 2] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
-                    f"{(pfv.c_pf_coil_turn[k, 3] + pfv.c_pf_coil_turn[k, 1] * pfv.fcohbof / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 2] + pfv.c_pf_coil_turn[k, 1] * pfv.f_j_cs_start_end_flat_top / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
+                    f"{(pfv.c_pf_coil_turn[k, 3] + pfv.c_pf_coil_turn[k, 1] * pfv.f_j_cs_start_end_flat_top / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
                     f"{(pfv.c_pf_coil_turn[k, 4] + pfv.c_pf_coil_turn[k, 1] * 1.0e0 / pfv.fcohbop) * pfv.n_pf_coil_turns[k]:.3e}\t"
                     "0.0e0"
                 ),
@@ -2806,8 +2806,8 @@ class PFCoil:
         op.ovarre(
             self.outfile,
             "Ratio of central solenoid current at beginning of Flat-top / end of flat-top",
-            "(fcohbof)",
-            pfv.fcohbof,
+            "(f_j_cs_start_end_flat_top)",
+            pfv.f_j_cs_start_end_flat_top,
             "OP ",
         )
 

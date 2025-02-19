@@ -98,7 +98,7 @@ module pfcoil_variables
   real(dp) :: etapsu
   !! Efficiency of transfer of PF stored energy into or out of storage.
 
-  real(dp) :: fcohbof
+  real(dp) :: f_j_cs_start_end_flat_top
   !! ratio of central solenoid overall current density at beginning of flat-top / end of flat-top
 
   real(dp) :: fcohbop
@@ -438,7 +438,7 @@ module pfcoil_variables
     c_pf_cs_coil_flat_top_ma = 0.0D0
     c_pf_cs_coil_pulse_end_ma = 0.0D0
     etapsu = 0.9D0
-    fcohbof = 0.0D0
+    f_j_cs_start_end_flat_top = 0.0D0
     fcohbop = 0.9D0
     fcuohsu = 0.7D0
     fcupfsu = 0.69D0
