@@ -28,7 +28,7 @@ module dcll_module
     !!          i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi
     !!
     !!      Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
-    !!          icooldual = 2
+    !!          i_blkt_dual_coolant = 2
     !!
     !!      FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
     !!          ifci = 0, 1, or 2
