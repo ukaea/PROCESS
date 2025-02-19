@@ -72,8 +72,6 @@ module process_input
 #ifdef unit_test
   public :: parse_input_file
 #endif
-!  public :: upper_case
-
   integer, parameter :: maxlen = 2000  !  maximum line length
   character(len=maxlen) :: line  !  current line of text from input file
   integer :: linelen, lineno  !  current line length, line number
