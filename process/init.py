@@ -7,7 +7,9 @@ from warnings import warn
 
 import process
 import process.fortran as fortran
+import process.process_output as process_output
 from process.exceptions import ProcessValidationError
+from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -30,6 +32,7 @@ def init_process():
     fortran.init_module.open_files()
 
     # Input any desired new initial values
+    parse_input_file()
     fortran.process_input.parse_input_file(10, fortran.constants.nout, 0)
 
     # Set active constraints
@@ -85,71 +88,71 @@ def run_summary():
     # Outfile and terminal #
     for outfile in [fortran.constants.nout, fortran.constants.iotty]:
         # PROCESS code header
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.ocentr(outfile, "PROCESS", 110)
-        process.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.ocentr(outfile, "PROCESS", 110)
+        process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
         # Run execution details
         version = process.__version__
-        process.process_output.ocmmnt(outfile, f"Version : {version}")
+        process_output.ocmmnt(outfile, f"Version : {version}")
 
         git_branch, git_tag = get_git_summary()
 
-        process.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
-        process.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
+        process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
+        process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
         date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
             "%d/%m/%Y %Z"
         )
         time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
 
-        process.process_output.ocmmnt(outfile, f"Date : {date_string}")
-        process.process_output.ocmmnt(outfile, f"Time : {time_string}")
+        process_output.ocmmnt(outfile, f"Date : {date_string}")
+        process_output.ocmmnt(outfile, f"Time : {time_string}")
 
         user = getpass.getuser()
         machine = socket.gethostname()
 
-        process.process_output.ocmmnt(outfile, f"User : {user}")
-        process.process_output.ocmmnt(outfile, f"Computer : {machine}")
-        process.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
+        process_output.ocmmnt(outfile, f"User : {user}")
+        process_output.ocmmnt(outfile, f"Computer : {machine}")
+        process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
         fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
         runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
         )
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
         )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
         )
 
@@ -163,41 +166,37 @@ def run_summary():
         fom_string = f2py_compatible_to_string(
             fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Convergence parameter : {fortran.numerics.epsvmc}",
         )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
 
     # MFile #
     mfile = fortran.constants.mfile
 
-    process.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process.process_output.ovarst(
-        mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"'
-    )
-    process.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process.process_output.ovarst(
+    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarst(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process.process_output.ovarst(
-        mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"'
-    )
+    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process.process_output.ovarin(
+    process_output.ovarin(
         mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
     )
     if fortran.numerics.ioptimz == -2:
-        process.process_output.ovarin(
+        process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
         )
 
