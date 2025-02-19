@@ -63,7 +63,7 @@ module blanket_library
     real(dp) :: bzfllengi_liq, bzfllengo_liq
     !! Inboard/outboard secondary blanket flow lengths (m)
 
-    real(dp) :: pnucfwi, pnucfwo
+    real(dp) :: pnucfwi, p_fw_outboard_nuclear_heat_mw
     !! Inboard/outboard first wall nuclear heating (MW)
 
     real(dp) :: tpeakfwi, tpeakfwo
@@ -146,7 +146,7 @@ contains
         bzfllengo_liq = 0.0D0
         len_blkt_outboard_channel_total = 0.0D0
         pnucfwi = 0.0D0
-        pnucfwo = 0.0D0
+        p_fw_outboard_nuclear_heat_mw = 0.0D0
         tpeakfwi = 0.0D0
         tpeakfwo = 0.0D0
         mflow_fw_inboard_coolant_total = 0.0D0

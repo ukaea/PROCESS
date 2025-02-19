@@ -1443,12 +1443,12 @@ class Stellarator:
                 #  coolant.
 
                 pnucfwi = pnucfwbsi * (1.0e0 - np.exp(-2.0e0 * bfwi / decayfwi))
-                pnucfwo = pnucfwbso * (1.0e0 - np.exp(-2.0e0 * bfwo / decayfwo))
+                p_fw_outboard_nuclear_heat_mw = pnucfwbso * (1.0e0 - np.exp(-2.0e0 * bfwo / decayfwo))
 
                 #  Neutron power reaching blanket and shield (MW)
 
                 pnucbsi = pnucfwbsi - pnucfwi
-                pnucbso = pnucfwbso - pnucfwo
+                pnucbso = pnucfwbso - p_fw_outboard_nuclear_heat_mw
 
                 #  Blanket decay length (m) - improved calculation required
 
@@ -1480,7 +1480,7 @@ class Stellarator:
                         heat_transport_variables.fpumpfw
                         * (
                             pnucfwi
-                            + pnucfwo
+                            + p_fw_outboard_nuclear_heat_mw
                             + psurffwi
                             + psurffwo
                             + current_drive_variables.porbitlossmw
@@ -1504,7 +1504,7 @@ class Stellarator:
 
                 #  Total nuclear heating of first wall (MW)
 
-                fwbs_variables.p_fw_nuclear_heat_total_mw = pnucfwi + pnucfwo
+                fwbs_variables.p_fw_nuclear_heat_total_mw = pnucfwi + p_fw_outboard_nuclear_heat_mw
 
                 #  Total nuclear heating of blanket (MW)
 
