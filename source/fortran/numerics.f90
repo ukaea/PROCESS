@@ -548,7 +548,7 @@ contains
       'CS current/copper area < Max     ', &
       'CS stress load cycles            ', &
       'ECRH ignitability                ', &
-      'D/T ratio = 1                        ' &
+      'D/T ratio = 1                    ' &
 
       /)
 
