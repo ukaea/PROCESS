@@ -65,13 +65,8 @@ module process_input
 #endif
   implicit none
 
-  private
-  public :: input, check_range_int, check_range_real, lower_case, init_input
-  integer, public, parameter :: nin = 10
+  integer, parameter :: nin = 10
 
-#ifdef unit_test
-  public :: parse_input_file
-#endif
   integer, parameter :: maxlen = 2000  !  maximum line length
   character(len=maxlen) :: line  !  current line of text from input file
   integer :: linelen, lineno  !  current line length, line number
@@ -107,44 +102,6 @@ contains
     subscript_present = .false.
     error_message = ""
   end subroutine init_input
-
-  subroutine input
-
-    !! Routine that calls the main input file parsing routines
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! None
-    !! This routine provides the interface between the input file
-    !! reading routines and the rest of PROCESS.
-    !! A User's Guide to the PROCESS Systems Code, P. J. Knight,
-    !! AEA Fusion Report AEA FUS 251, 1993
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use constants, only: nout
-    use numerics, only: ipeqns, icc, active_constraints
-    implicit none
-
-    !  Arguments
-
-    !  Local variables
-
-    integer :: i
-    !     j
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    call parse_input_file(nin,nout,show_changes)
-
-    ! Set all the values of the active_constraints array
-    do i = 1, ipeqns
-        if (icc(i) /= 0) then
-            active_constraints(icc(i)) = .true.
-            constraints_exist = .true.
-        end if
-    end do
-
-    ! Set the device type based on the input file's switches
-    call devtyp
-  end subroutine input
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

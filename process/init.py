@@ -30,7 +30,13 @@ def init_process():
     fortran.init_module.open_files()
 
     # Input any desired new initial values
-    fortran.process_input.input()
+    fortran.process_input.parse_input_file(10, fortran.constants.nout, 0)
+
+    # Set active constraints
+    set_active_constraints()
+
+    # set the device type (icase)
+    fortran.process_input.devtyp()
 
     # Initialise the Stellarator
     fortran.stellarator_module.stinit()
@@ -1260,3 +1266,11 @@ def check_process():
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 88
     ).any() and fortran.tfcoil_variables.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
+
+
+def set_active_constraints():
+    """Set constraints provided in the input file as 'active'"""
+    for i in range(fortran.numerics.ipeqns):
+        if fortran.numerics.icc[i] != 0:
+            fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
+            fortran.process_input.constraints_exist = True
