@@ -1,5 +1,8 @@
 import numpy as np
 
+from process import (
+    process_output as po,
+)
 from process.fortran import (
     constants,
     cost_variables,
@@ -9,9 +12,6 @@ from process.fortran import (
 )
 from process.fortran import (
     error_handling as eh,
-)
-from process.fortran import (
-    process_output as po,
 )
 from process.plasma_profiles import PlasmaProfile
 
