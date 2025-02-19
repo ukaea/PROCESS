@@ -826,8 +826,6 @@ class Build:
         determine the maximum height.
         TART option: Peng SOFT paper
         """
-        if physics_variables.itart == 1:
-            return 1.75e0 * physics_variables.rminor
         #  Conventional tokamak divertor model
         #  options for seperate upper and lower physics_variables.triangularity
 
@@ -1478,7 +1476,9 @@ class Build:
                     self.outfile,
                     "ERROR: null value not supported, check i_single_null value.",
                 )
-        return divht
+        return (
+            1.75e0 * physics_variables.rminor if physics_variables.itart == 1 else divht
+        )
 
     def ripple_amplitude(self, ripmax: float, r_tf_outboard_mid: float) -> float:
         """
