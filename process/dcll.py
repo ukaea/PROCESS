@@ -1,3 +1,6 @@
+from process import (
+    process_output as po,
+)
 from process.fortran import (
     build_variables,
     constants,
@@ -7,9 +10,6 @@ from process.fortran import (
     heat_transport_variables,
     physics_variables,
     primary_pumping_variables,
-)
-from process.fortran import (
-    process_output as po,
 )
 
 

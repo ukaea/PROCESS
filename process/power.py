@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 
+from process import process_output as po
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -22,7 +23,6 @@ from process.fortran import (
     tfcoil_variables,
     times_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
@@ -971,7 +971,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (tfcoil_variables.tmpcry & tfcoil_variables.tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (tmpcry & tcoolin) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,

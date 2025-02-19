@@ -3,13 +3,13 @@ import math
 
 import numpy as np
 
+from process import process_output as po
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import divertor_variables as divv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import process_output as po
 from process.fortran import structure_variables as stv
 from process.fortran import tfcoil_variables as tfv
 

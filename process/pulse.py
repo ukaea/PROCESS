@@ -1,3 +1,4 @@
+from process import process_output as po
 from process.fortran import (
     constants,
     constraint_variables,
@@ -9,7 +10,6 @@ from process.fortran import (
     pulse_variables,
     times_variables,
 )
-from process.fortran import process_output as po
 
 
 class Pulse:
