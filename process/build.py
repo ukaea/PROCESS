@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
     blanket_library,
@@ -17,7 +18,6 @@ from process.fortran import (
     physics_variables,
     tfcoil_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
@@ -973,7 +973,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma geometric centre, radial (m)",
-                    "(physics_variables.rmajor.)",
+                    "(rmajor.)",
                     physics_variables.rmajor,
                     "OP ",
                 )
@@ -986,7 +986,7 @@ class Build:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma lower physics_variables.triangularity",
+                    "Plasma lower triangularity",
                     "(tril)",
                     tril,
                     "OP ",
@@ -994,7 +994,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma elongation",
-                    "(physics_variables.kappa.)",
+                    "(kappa.)",
                     kap,
                     "OP ",
                 )

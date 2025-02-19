@@ -150,7 +150,7 @@ contains
   subroutine scan_1d_write_point_header(iscan)
     use global_variables, only: iscan_global, xlabel, vlabel
     use constants, only: mfile, nout
-    use process_output, only: ovarin, ostars, oblnkl
+    use process_output_fortran, only: ovarin, ostars, oblnkl
     implicit none
     integer, intent(in) :: iscan
     !! Scan point number
@@ -189,7 +189,7 @@ contains
     use impurity_radiation_module, only: fimp
     use pfcoil_variables, only: whtpf
     use pf_power_variables, only: srcktpm
-    use process_output, only: oblnkl
+    use process_output_fortran, only: oblnkl
     use numerics, only: sqsumsq
     use tfcoil_variables, only: tfareain, wwp2, sig_tf_wp, tfcmw, tcpmax, oacdcp, &
       tfcpmw, fcutfsu, acond, fcoolcp, rcool, whttf, ppump, vcool, wwp1, n_tf_coils, &
@@ -296,7 +296,7 @@ contains
   subroutine scan_1d_write_plot(iscan, outvar)
     use global_variables, only: icase, xlabel
     use constants, only: nplot, mfile
-    use process_output, only: ovarin
+    use process_output_fortran, only: ovarin
     implicit none
 
     integer, intent(inout) :: iscan
@@ -408,7 +408,7 @@ contains
     !! author: J Morris, UKAEA, Culham Science Centre
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     use constants, only: mfile
-    use process_output, only: ovarin
+    use process_output_fortran, only: ovarin
     implicit none
 
     !  Set up labels for plotting output
@@ -422,7 +422,7 @@ contains
   end subroutine scan_2d_init
 
   subroutine scan_2d_write_point_header(iscan, iscan_1, iscan_2, iscan_R)
-    use process_output, only: oblnkl, ostars, ovarin
+    use process_output_fortran, only: oblnkl, ostars, ovarin
     use global_variables, only: vlabel, vlabel_2, xlabel, xlabel_2, iscan_global
     use constants, only: nout, mfile
     implicit none
@@ -870,7 +870,7 @@ contains
   use constraints
   use error_handling
   use numerics
-  use process_output
+  use process_output_fortran
   use utilities, only:upper_case
   ! for ipedestal = 2 option
   use global_variables, only: convergence_parameter
@@ -1128,7 +1128,7 @@ subroutine verror(ifail)
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   use constants, only: nout, iotty
-  use process_output, only: ocmmnt, oblnkl
+  use process_output_fortran, only: ocmmnt, oblnkl
   implicit none
 
   !  Arguments
