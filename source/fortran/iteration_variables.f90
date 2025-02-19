@@ -3981,6 +3981,10 @@ contains
     !  Local variables
     integer :: i
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (allocated(name_xc)) deallocate(name_xc)
+    allocate(name_xc(nvar))
+    name_xc = ""
+
     do i = 1,nvar
 
        select case (ixc(i))
