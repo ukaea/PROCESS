@@ -84,7 +84,7 @@ fjohc = 1.0
 *--------------------------------------------------*
 icc = 27
 fjohc0 = 1.0
-fcohbop = 1.0
+f_j_cs_start_pulse_end_flat_top = 1.0
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*

@@ -113,10 +113,10 @@ fjohc = 0.6
 *--------------------------------------------------*
 icc = 27
 ixc = 39 * fjohc0
-ixc = 41 * fcohbop
+ixc = 41 * f_j_cs_start_pulse_end_flat_top
 boundu(39) = 1.0
 fjohc0 = 0.6
-fcohbop = 0.9
+f_j_cs_start_pulse_end_flat_top = 0.9
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*

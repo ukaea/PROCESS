@@ -297,7 +297,7 @@ contains
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, f_a_pf_coil_void, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fb_cs_limit_max, ngc, rpf2, fcohbop, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
+      fb_cs_limit_max, ngc, rpf2, f_j_cs_start_pulse_end_flat_top, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
       n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
@@ -1840,8 +1840,8 @@ contains
        case ('etapsu')
           call parse_real_variable('etapsu', etapsu, 0.0D0, 1.0D0, &
                'Efficiency of ohmic heating')
-       case ('fcohbop')
-          call parse_real_variable('fcohbop', fcohbop, 0.0D0, 1.0D0, &
+       case ('f_j_cs_start_pulse_end_flat_top')
+          call parse_real_variable('f_j_cs_start_pulse_end_flat_top', f_j_cs_start_pulse_end_flat_top, 0.0D0, 1.0D0, &
                'Central Solenoid J ratio : BOP/EOF')
        case ('fcuohsu')
           call parse_real_variable('fcuohsu', fcuohsu, 0.0D0, 1.0D0, &

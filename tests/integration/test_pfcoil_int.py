@@ -61,7 +61,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfv, "n_cs_pf_coils", 0)
     monkeypatch.setattr(pfv, "r_pf_coil_outer_max", 0.0)
-    monkeypatch.setattr(pfv, "fcohbop", 1.0)
+    monkeypatch.setattr(pfv, "f_j_cs_start_pulse_end_flat_top", 1.0)
     monkeypatch.setattr(pfv, "j_pf_coil_wp_peak", np.full(22, 1.1e7))
     monkeypatch.setattr(pfv, "n_pf_coil_groups", 4)
     monkeypatch.setattr(pfv, "r_cs_middle", 3.0)
@@ -287,7 +287,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: MonkeyPatch
     """
     n_pf_groups_max = 10
-    n_pf_coils_in_group_max = 2
     nptsmx = 32
     nfixmx = 64
     lrow1 = 2 * nptsmx + n_pf_groups_max
@@ -414,14 +413,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
-    rc = np.full(n_pf_coils_in_group_max, 0.0)
-    zc = np.full(n_pf_coils_in_group_max, 0.0)
-    cc = np.full(n_pf_coils_in_group_max, 0.0)
-    xc = np.full(n_pf_coils_in_group_max, 0.0)
-    umat = np.full([lrow1, lcol1], 0.0, order="F")
-    vmat = np.full([lrow1, lcol1], 0.0, order="F")
-    sigma = np.full(n_pf_groups_max, 0.0)
-    work2 = np.full(n_pf_groups_max, 0.0)
 
     ssq, ccls = pfcoil.efc(
         npts,
@@ -1642,9 +1633,7 @@ def test_solv(pfcoil: PFCoil):
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls = pfcoil.solv(
-        n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec
-    )
+    ccls = pfcoil.solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec)
 
     assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
 

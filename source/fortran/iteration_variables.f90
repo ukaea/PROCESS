@@ -957,25 +957,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_41
-    !! <LI> (41) fcohbop
+    !! <LI> (41) f_j_cs_start_pulse_end_flat_top
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(41) = 'fcohbop       '
+    lablxc(41) = 'f_j_cs_start_pulse_end_flat_top       '
     boundl(41) = 0.001D0
     boundu(41) = 1.000D0
   end subroutine init_itv_41
 
   real(kind(1.d0)) function itv_41()
-    use pfcoil_variables, only: fcohbop
+    use pfcoil_variables, only: f_j_cs_start_pulse_end_flat_top
     implicit none
-    itv_41 = fcohbop
+    itv_41 = f_j_cs_start_pulse_end_flat_top
   end function itv_41
 
   subroutine set_itv_41(ratio)
-    use pfcoil_variables, only: fcohbop
+    use pfcoil_variables, only: f_j_cs_start_pulse_end_flat_top
     implicit none
     real(kind(1.d0)) :: ratio
-    fcohbop = ratio
+    f_j_cs_start_pulse_end_flat_top = ratio
   end subroutine set_itv_41
 
   !---------------------------------
