@@ -111,7 +111,7 @@ module pfcoil_variables
   real(dp) :: fcupfsu
   !! copper fraction of cable conductor (PF coils)
 
-  real(dp) :: fvssu
+  real(dp) :: fvs_cs_pf_total_ramp
   !! F-value for `constraint equation 51`
 
   integer, dimension(n_pf_groups_max) :: i_pf_location
@@ -442,7 +442,7 @@ module pfcoil_variables
     f_j_cs_start_pulse_end_flat_top = 0.9D0
     fcuohsu = 0.7D0
     fcupfsu = 0.69D0
-    fvssu = 1.0
+    fvs_cs_pf_total_ramp = 1.0
     i_pf_location = (/2,2,3,0,0,0,0,0,0,0/)
     i_pf_conductor = 0
     itr_sum = 0.0D0

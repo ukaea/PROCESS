@@ -360,7 +360,7 @@ module numerics
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
   !! <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
   !! <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
-  !! <LI> (157) fvssu : F-value for available to required start up flux (con. 51)
+  !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
   !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)

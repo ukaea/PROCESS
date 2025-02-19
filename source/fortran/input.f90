@@ -296,7 +296,7 @@ contains
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, f_a_pf_coil_void, &
-      j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvssu, etapsu, i_cs_stress, &
+      j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvs_cs_pf_total_ramp, etapsu, i_cs_stress, &
       fb_cs_limit_max, ngc, rpf2, f_j_cs_start_pulse_end_flat_top, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
       n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
       n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
@@ -951,8 +951,8 @@ contains
        case ('fvs')
           call parse_real_variable('fvs', fvs, 0.001D0, 10.0D0, &
                'F-value for startup V-s requirement')
-       case ('fvssu')
-         call parse_real_variable('fvssu', fvssu, 0.001D0, 10.0D0, &
+       case ('fvs_cs_pf_total_ramp')
+         call parse_real_variable('fvs_cs_pf_total_ramp', fvs_cs_pf_total_ramp, 0.001D0, 10.0D0, &
                'F-value for start up V-s requirement and availability equality')
        case ('fvvhe')
           call parse_real_variable('fvvhe', fvvhe, 0.001D0, 10.0D0, &

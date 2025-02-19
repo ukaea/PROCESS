@@ -2163,7 +2163,7 @@ contains
       !! vs_plasma_ind_ramp : input real :  internal and external plasma inductance V-s (Wb))
       !! vs_cs_pf_total_ramp : input real :  total flux swing for startup (Wb)
       use physics_variables, only: vs_plasma_res_ramp, vs_plasma_ind_ramp
-      use pfcoil_variables, only: vs_cs_pf_total_ramp, fvssu
+      use pfcoil_variables, only: vs_cs_pf_total_ramp, fvs_cs_pf_total_ramp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2171,7 +2171,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fvssu * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vs_cs_pf_total_ramp)
+      tmp_cc =  1.0D0 - fvs_cs_pf_total_ramp * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vs_cs_pf_total_ramp)
       tmp_con = vs_cs_pf_total_ramp * (1.0D0 - tmp_cc)
       tmp_err = vs_cs_pf_total_ramp * tmp_cc
       tmp_symbol = '='
