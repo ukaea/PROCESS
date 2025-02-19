@@ -68,9 +68,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      2.5776E-01    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0732E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0732E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -706,7 +706,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -1063,9 +1063,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -1701,7 +1701,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -2058,9 +2058,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -2696,7 +2696,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -3053,9 +3053,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -3691,7 +3691,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -4048,9 +4048,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -4686,7 +4686,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -5043,9 +5043,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -5681,7 +5681,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -6038,9 +6038,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -6676,7 +6676,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -7033,9 +7033,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -7671,7 +7671,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -8028,9 +8028,9 @@
  fjohc0__________________________________________________________________ (itvar015)____________________      1.3899E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm015)______________________      1.0000E+00    
  fjohc0_(range_normalised)_______________________________________________ (nitvar015)___________________      1.3813E-01    
- fcohbop_________________________________________________________________ (itvar016)____________________      1.0000E+00    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar016)____________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm016)______________________      1.0000E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar016)___________________      1.0000E+00    
  gapoh___________________________________________________________________ (itvar017)____________________      5.0000E-02    
  gapoh_(final_value/initial_value)_______________________________________ (xcm017)______________________      1.0000E+00    
  gapoh_(range_normalised)________________________________________________ (nitvar017)___________________      0.0000E+00    
@@ -8666,7 +8666,7 @@
  # Volt Second Consumption #
  Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -6.2115E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      1.0000E+00 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      1.0000E+00 ITV
  Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________      4.6908E-02 OP 
  # PF Circuit Waveform Data #
  Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
@@ -9029,7 +9029,7 @@ ixc = 38 * fjohc
 boundu(38) = 1.0
 ixc = 39 * fjohc0
 boundu(39) = 1.0
-ixc = 41 * fcohbop
+ixc = 41 * f_j_cs_start_pulse_end_flat_top
 ixc = 42 * dr_cs_tf_gap
 boundl(42) = 0.05
 boundu(42) = 0.1
@@ -9204,7 +9204,7 @@ epsvmc   = 1.0e-8 * Error tolerance for vmcon
 
 j_cs_flat_top_end   = 13540000.0 * Central solenoid overall current density at end of flat-top (a/m2)
 c_pf_coil_turn_peak_input   = 4.22d4, 4.22d4, 4.22d4, 4.22d4, 4.3d4, 4.3d4,  4.3d4, 4.3d4, * Peak current per turn input for pf coil i (a)
-fcohbop  = 0.9362 * Ratio of central solenoid overall current density at
+f_j_cs_start_pulse_end_flat_top  = 0.9362 * Ratio of central solenoid overall current density at
 i_pf_location   = 2,2,3,3 * Switch for locating scheme of pf coil group i;
 i_pf_superconductor = 3 * Switch for superconductor material in pf coils;
 n_pf_coils_in_group     = 1,1,2,2, * Number of pf coils in group j
@@ -9329,7 +9329,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      j_cs_flat_top_end         =  2.0726E+07
                      fjohc          =  5.7941E-01
                      fjohc0         =  5.3923E-01
-                     fcohbop        =  9.3176E-01
+                     f_j_cs_start_pulse_end_flat_top        =  9.3176E-01
                      dr_cs_tf_gap          =  5.0000E-02
                      fvsbrnni       =  3.9566E-01
                      fstrcase       =  1.0000E+00
