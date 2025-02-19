@@ -82,7 +82,7 @@ Summary of key variables and switches:
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
 |     peak FW temp (K)     |         `temp_fw_peak`         | ---                      | ---                                  |
 |     maximum temp (K)     |       `temp_fw_max`       | ---                      | ---                                  |
-|        FCI switch        |           ---           | ---                      | `ifci`                               |
+|        FCI switch        |           ---           | ---                      | `i_blkt_liquid_breeder_channel_type`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
 |  primary coolant switch  |       `i_fw_coolant_type`       | `i_blkt_coolant_type`                 | ---                                  |
 | secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
@@ -195,11 +195,11 @@ The Hartmann number is also calculated (using the magnetic feild strength in the
 
 #### Flow Channel Inserts for Liquid Metal Breeder
 
-There are three model options, chosen by the user to match their selected blanket design using the switch 'ifci' (default=0):
+There are three model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_liquid_breeder_channel_type' (default=0):
     0.   No FCIs used. Conductivity of Eurofer steel is assumed for MHD pressure drop calculations in the liquid metal breeder.
     1.   FCIs used, assumed to be perfectly electrically insulating.  
     2.   FCIs used, with conductivity chosen by the user (`bz_channel_conduct_liq`).
 
 |         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
 | :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
-| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
+| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | i_blkt_liquid_breeder_channel_type = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |

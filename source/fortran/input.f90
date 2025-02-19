@@ -218,7 +218,7 @@ contains
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
       fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
       f_blkt_li6_enrichment, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_bb_liq, &
-      i_blkt_dual_coolant, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
+      i_blkt_dual_coolant, i_blkt_liquid_breeder_channel_type, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
       i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
@@ -1960,8 +1960,8 @@ contains
        case ('i_blkt_dual_coolant')
          call parse_int_variable('i_blkt_dual_coolant', i_blkt_dual_coolant, 0, 2, &
                'Switch for single or dual-coolant blanket)')
-       case ('ifci')
-         call parse_int_variable('ifci', ifci, 0, 2, &
+       case ('i_blkt_liquid_breeder_channel_type')
+         call parse_int_variable('i_blkt_liquid_breeder_channel_type', i_blkt_liquid_breeder_channel_type, 0, 2, &
                'Switch for blanket FCIs)')
        case ('inlet_temp_liq')
          call parse_real_variable('inlet_temp_liq', inlet_temp_liq, 508.D0, 1.5D3, &

@@ -306,7 +306,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
 ):
     monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
-    monkeypatch.setattr(fwbs_variables, "ifci", 1)
+    monkeypatch.setattr(fwbs_variables, "i_blkt_liquid_breeder_channel_type", 1)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", 0.11625)
     monkeypatch.setattr(fwbs_variables, "b_mag_blkt", [8.393, 3.868])
     monkeypatch.setattr(fwbs_variables, "bz_channel_conduct_liq", 833000)
@@ -1912,7 +1912,7 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
 
 
 class LiquidBreederPressureDropMhdParam(NamedTuple):
-    ifci: Any = None
+    i_blkt_liquid_breeder_channel_type: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
     b_mag_blkt: Any = None
@@ -1933,7 +1933,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
     "liquidbreederpressuredropmhdparam",
     (
         LiquidBreederPressureDropMhdParam(
-            ifci=0,
+            i_blkt_liquid_breeder_channel_type=0,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1953,7 +1953,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=282697824.60502106,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=1,
+            i_blkt_liquid_breeder_channel_type=1,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1973,7 +1973,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=160029.28473931071,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=2,
+            i_blkt_liquid_breeder_channel_type=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1993,7 +1993,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=282697824.60502106,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=2,
+            i_blkt_liquid_breeder_channel_type=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -2028,7 +2028,7 @@ def test_liquid_breeder_pressure_drop_mhd(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "ifci", liquidbreederpressuredropmhdparam.ifci)
+    monkeypatch.setattr(fwbs_variables, "i_blkt_liquid_breeder_channel_type", liquidbreederpressuredropmhdparam.i_blkt_liquid_breeder_channel_type)
     monkeypatch.setattr(
         fwbs_variables, "a_bz_liq", liquidbreederpressuredropmhdparam.a_bz_liq
     )

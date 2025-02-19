@@ -31,9 +31,9 @@ module dcll_module
     !!          i_blkt_dual_coolant = 2
     !!
     !!      FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
-    !!          ifci = 0, 1, or 2
+    !!          i_blkt_liquid_breeder_channel_type = 0, 1, or 2
     !!
-    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for ifci = 0 or 2
+    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
     !!          (bz_channel_conduct_liq)
     !!
     !!      Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT

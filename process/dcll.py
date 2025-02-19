@@ -45,9 +45,9 @@ class DCLL:
              i_blkt_dual_coolant = 2
 
          FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
-             ifci = 0, 1, or 2
+             i_blkt_liquid_breeder_channel_type = 0, 1, or 2
 
-         Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for ifci = 0 or 2
+         Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
              (bz_channel_conduct_liq)
 
          Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
@@ -467,7 +467,7 @@ class DCLL:
                  Bottom walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
         """
         # If there are FCIs then how much of the radial build is FCI?
-        if fwbs_variables.ifci > 0:
+        if fwbs_variables.i_blkt_liquid_breeder_channel_type > 0:
             dcll_module.r_fci = (
                 2 * fwbs_variables.nopol * fwbs_variables.th_wall_secondary
             )
@@ -553,7 +553,7 @@ class DCLL:
                 / build_variables.dr_blkt_outboard
             )
 
-            if fwbs_variables.ifci > 0:
+            if fwbs_variables.i_blkt_liquid_breeder_channel_type > 0:
                 dcll_module.vol_fci = (
                     fwbs_variables.vol_blkt_inboard
                     * dcll_module.r_fci
@@ -613,7 +613,7 @@ class DCLL:
                 * fwbs_variables.r_f_liq_ob
                 / build_variables.dr_blkt_outboard
             )
-            if fwbs_variables.ifci > 0:
+            if fwbs_variables.i_blkt_liquid_breeder_channel_type > 0:
                 dcll_module.vol_fci = (
                     fwbs_variables.vol_blkt_outboard
                     * dcll_module.r_fci
@@ -808,7 +808,7 @@ class DCLL:
                 fwbs_variables.m_blkt_total,
                 "OP ",
             )
-            if fwbs_variables.ifci == 1:
+            if fwbs_variables.i_blkt_liquid_breeder_channel_type == 1:
                 po.ovarre(
                     self.outfile,
                     "Blanket FCI Mass (kg)",
