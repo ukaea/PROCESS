@@ -218,6 +218,16 @@ OBS_VARS = {
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
     "denw": None,
+    "tf_in_cs": "i_tf_inside_cs",
+    "shldtth": "dz_shld_upper",
+    "shldlth": "dz_shld_lower",
+    "vgap_vv_thermalshield": "dz_shld_vv_gap",
+    "thshield_vb": "dz_shld_thermal",
+    "vgaptop": "dz_fw_plasma_gap",
+    "vgap_xpoint_divertor": "dz_xpoint_divertor",
+    "d_vv_top": "dz_vv_upper",
+    "d_vv_bot": "dz_vv_lower",
+    "divfix": "dz_divertor",
 }
 
 OBS_VARS_HELP = {
