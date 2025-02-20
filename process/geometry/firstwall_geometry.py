@@ -55,7 +55,7 @@ def first_wall_geometry_single_null(
     :rtype: ArbitraryGeometry
     """
     # Upper first wall: outer surface
-    kapx = cumulative_upper["fwtth"] / rminx_outer
+    kapx = cumulative_upper["dz_fw_upper"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
         radx_outer, rminx_outer, triang, kapx
     )

@@ -541,17 +541,19 @@ class Build:
                 )
                 vbuild = vbuild - build_variables.dz_blkt_top
 
-                fwtth = 0.5e0 * (
+                dz_fw_upper = 0.5e0 * (
                     build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
                 )
-                po.obuild(self.outfile, "Top first wall", fwtth, vbuild, "(fwtth)")
+                po.obuild(
+                    self.outfile, "Top first wall", dz_fw_upper, vbuild, "(dz_fw_upper)"
+                )
                 po.ovarre(
                     self.mfile,
                     "Top first wall vertical thickness (m)",
-                    "(fwtth)",
-                    fwtth,
+                    "(dz_fw_upper)",
+                    dz_fw_upper,
                 )
-                vbuild = vbuild - fwtth
+                vbuild = vbuild - dz_fw_upper
 
                 po.obuild(
                     self.outfile,

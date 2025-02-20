@@ -58,7 +58,7 @@ def blanket_geometry_single_null(
     )
 
     # Upper blanket inner surface
-    kapx = cumulative_upper["fwtth"] / rminx_inner
+    kapx = cumulative_upper["dz_fw_upper"] / rminx_inner
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
         radx_inner, rminx_inner, triang, kapx
     )
