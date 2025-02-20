@@ -77,7 +77,7 @@ case the machine is not symmetric about the midplane.
  Plasma bottom                                6.029          -6.029   (z_plasma_xpoint_upper)      
  Lower scrape-off                             2.002          -8.031   (vgap)              
  Divertor structure                           0.621          -8.652   (dz_divertor)            
- Vacuum vessel (and shielding)                1.000          -9.652   (d_vv_bot+dz_shld_lower)  
+ Vacuum vessel (and shielding)                1.000          -9.652   (dz_vv_lower+dz_shld_lower)  
  Gap                                          0.050          -9.702   (dz_shld_vv_gap)             
  Thermal shield                               0.050          -9.752   (thshield)          
  Gap                                          0.050          -9.802   (dr_tf_shld_gap)           

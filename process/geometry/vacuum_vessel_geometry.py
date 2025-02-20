@@ -117,13 +117,13 @@ def vacuum_vessel_geometry_lower(
     :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the vacuum vessel geometry below the midplane
     :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
-    kapx = cumulative_lower["d_vv_bot"] / rminx_outer
+    kapx = cumulative_lower["dz_vv_lower"] / rminx_outer
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
         radx_outer, rminx_outer, triang, kapx
     )
 
     kapx = (
-        float(cumulative_lower["d_vv_bot"]) + float(lower["d_vv_bot"])
+        float(cumulative_lower["dz_vv_lower"]) + float(lower["dz_vv_lower"])
     ) / rminx_inner
     rs_lower_inboard, zs_lower_inboard = dh_vertices(
         radx_inner, rminx_inner, triang, kapx
