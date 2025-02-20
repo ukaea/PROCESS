@@ -376,7 +376,7 @@ module numerics
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) casths : TF side case thickness [m]
-  !! <LI> (173) f_deuterium : Deutterium fraction in fuel
+  !! <LI> (173) f_deuterium : Deuterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
