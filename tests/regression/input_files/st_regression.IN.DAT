@@ -2184,7 +2184,7 @@ dz_vv_upper = 0.3
 * DESCRIPTION:   top vaccum vessel thickness(m)
 * JUSTIFICATION: Set to match outboard build
 
-d_vv_bot = 0.3
+dz_vv_lower = 0.3
 * DESCRIPTION:   Bottom (and top for double null) vaccum vessel thickness
 * JUSTIFICATION: 
 

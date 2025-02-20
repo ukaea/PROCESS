@@ -113,7 +113,7 @@ class BlanketLibrary:
             hbot = (
                 build_variables.hmax
                 - build_variables.dz_shld_vv_gap
-                - build_variables.d_vv_bot
+                - build_variables.dz_vv_lower
             )
         else:
             raise ValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
@@ -227,7 +227,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
             )
 
     def elliptical_component(self, icomponent: int):
@@ -320,7 +320,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
             )
 
     def apply_coverage_factors(self):

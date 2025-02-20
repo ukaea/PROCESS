@@ -85,7 +85,7 @@ class Buildings:
                 build_variables.rsldi,
                 2.0e0 * (build_variables.hmax - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
-                - build_variables.d_vv_bot,
+                - build_variables.dz_vv_lower,
                 fwbs_variables.whtshld,
                 fwbs_variables.r_cryostat_inboard,
                 heat_transport_variables.helpow,

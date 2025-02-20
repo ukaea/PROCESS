@@ -156,7 +156,7 @@ BASELINE_LIST = [
     "dr_vv_inboard",
     "dr_vv_outboard",
     "dz_vv_upper",
-    "d_vv_bot",
+    "dz_vv_lower",
     "dr_shld_inboard",
     "dr_shld_blkt_gap",
     "dr_blkt_inboard",
@@ -262,7 +262,7 @@ GENERIC_LIST = [
     "dr_tf_outboard",
     "dz_xpoint_divertor",
     "dz_divertor",
-    "d_vv_bot",
+    "dz_vv_lower",
     "dz_shld_lower",
     "dz_shld_vv_gap",
 ]

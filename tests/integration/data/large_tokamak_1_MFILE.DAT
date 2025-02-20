@@ -599,7 +599,7 @@
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0019E+00    
  Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2000E-01    
  Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -1495,7 +1495,7 @@ dr_vv_outboard = 0.3
 dz_vv_upper = 0.3
 
 * Underside vacuum vessel radial thickness [m]
-d_vv_bot = 0.3
+dz_vv_lower = 0.3
 
 * Inboard vacuum vessel thickness [m]
 dr_shld_inboard = 0.3

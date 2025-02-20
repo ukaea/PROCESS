@@ -1583,7 +1583,7 @@
         "f_vol_plasma": 1.0,
         "f_r_conducting_wall": 1.35,
         "czero": "(0.0_wp_, 0.0_wp_)",
-        "d_vv_bot": 0.07,
+        "dz_vv_lower": 0.07,
         "dr_vv_inboard": 0.07,
         "dr_vv_outboard": 0.07,
         "dz_vv_upper": 0.07,
@@ -9245,10 +9245,10 @@
         "f_vol_plasma": "multiplying factor times plasma volume (normally=1)",
         "f_r_conducting_wall": "maximum ratio of conducting wall distance to plasma minor radius for\n vertical stability (`constraint equation 23`)",
         "czero": "",
-        "d_vv_bot": "vacuum vessel underside thickness (TF coil / shield) (m)",
+        "dz_vv_lower": "vacuum vessel underside thickness (TF coil / shield) (m)",
         "dr_vv_inboard": "vacuum vessel inboard thickness (TF coil / shield) (m)",
         "dr_vv_outboard": "vacuum vessel outboard thickness (TF coil / shield) (m)",
-        "dz_vv_upper": "vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)",
+        "dz_vv_upper": "vacuum vessel topside thickness (TF coil / shield) (m) (= dz_vv_lower if double-null)",
         "dalu": "density of aluminium (kg/m3)",
         "data_lz": "",
         "data_qz": "",
@@ -12117,7 +12117,7 @@
             "lb": 1.0,
             "ub": 3.0
         },
-        "d_vv_bot": {
+        "dz_vv_lower": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17012,7 +17012,7 @@
             "dr_vv_inboard",
             "dr_vv_outboard",
             "dz_vv_upper",
-            "d_vv_bot",
+            "dz_vv_lower",
             "f_avspace",
             "fcspc",
             "fseppc",
@@ -20135,7 +20135,7 @@
         "cturbb": "real_variable",
         "f_vol_plasma": "real_variable",
         "f_r_conducting_wall": "real_variable",
-        "d_vv_bot": "real_variable",
+        "dz_vv_lower": "real_variable",
         "dr_vv_inboard": "real_variable",
         "dr_vv_outboard": "real_variable",
         "dz_vv_upper": "real_variable",

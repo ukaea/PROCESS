@@ -73,9 +73,9 @@ module build_variables
   !! vacuum vessel outboard thickness (TF coil / shield) (m)
 
   real(dp) :: dz_vv_upper
-  !! vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)
+  !! vacuum vessel topside thickness (TF coil / shield) (m) (= dz_vv_lower if double-null)
 
-  real(dp) :: d_vv_bot
+  real(dp) :: dz_vv_lower
   !! vacuum vessel underside thickness (TF coil / shield) (m)
 
   real(dp) :: f_avspace
@@ -326,7 +326,7 @@ module build_variables
     dr_vv_inboard = 0.07D0
     dr_vv_outboard = 0.07D0
     dz_vv_upper = 0.07D0
-    d_vv_bot = 0.07D0
+    dz_vv_lower = 0.07D0
     f_avspace = 1.0D0
     fcspc = 0.6D0
     fseppc = 3.5D8
