@@ -263,7 +263,7 @@ GENERIC_LIST = [
     "dz_xpoint_divertor",
     "dz_divertor",
     "d_vv_bot",
-    "shldlth",
+    "dz_shld_lower",
     "dz_shld_vv_gap",
 ]
 

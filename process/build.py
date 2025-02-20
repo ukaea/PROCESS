@@ -328,21 +328,21 @@ class Build:
                     divertor_variables.dz_divertor,
                 )
 
-                vbuild = vbuild - build_variables.shldlth
+                vbuild = vbuild - build_variables.dz_shld_lower
 
                 vbuild = vbuild - build_variables.d_vv_bot
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.d_vv_bot + build_variables.shldlth,
+                    build_variables.d_vv_bot + build_variables.dz_shld_lower,
                     vbuild,
-                    "(d_vv_bot+shldlth)",
+                    "(d_vv_bot+dz_shld_lower)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom radiation shield thickness (m)",
-                    "(shldlth)",
-                    build_variables.shldlth,
+                    "(dz_shld_lower)",
+                    build_variables.dz_shld_lower,
                 )
                 po.ovarre(
                     self.mfile,
@@ -626,21 +626,21 @@ class Build:
                     divertor_variables.dz_divertor,
                 )
 
-                vbuild = vbuild - build_variables.shldlth
+                vbuild = vbuild - build_variables.dz_shld_lower
 
                 vbuild = vbuild - build_variables.d_vv_bot
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.d_vv_bot + build_variables.shldlth,
+                    build_variables.d_vv_bot + build_variables.dz_shld_lower,
                     vbuild,
-                    "(d_vv_bot+shldlth)",
+                    "(d_vv_bot+dz_shld_lower)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Bottom radiation shield thickness (m)",
-                    "(shldlth)",
-                    build_variables.shldlth,
+                    "(dz_shld_lower)",
+                    build_variables.dz_shld_lower,
                 )
                 po.ovarre(
                     self.mfile,
@@ -737,7 +737,7 @@ class Build:
             build_variables.z_plasma_xpoint_upper
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
-            + build_variables.shldlth
+            + build_variables.dz_shld_lower
             + build_variables.d_vv_bot
             + build_variables.dz_shld_vv_gap
             + build_variables.dz_shld_thermal

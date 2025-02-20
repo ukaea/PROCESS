@@ -132,9 +132,9 @@ i_r_cp_top = 2 * Switch selecting the he parametrization of the outer radius of 
 dr_fw_plasma_gap_inboard  = 0.1 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
 dr_fw_plasma_gap_outboard  = 0.1 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
 dr_shld_inboard  = 0.39314459807893426 * inboard shield thickness (m) (`iteration variable 93`)
-shldlth  = 0.6 * lower (under divertor) shield thickness (m)
+dz_shld_lower  = 0.6 * lower (under divertor) shield thickness (m)
 dr_shld_outboard  = 0.3 * outboard shield thickness (m) (`iteration variable 94`)
-shldtth  = 0.3 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)
+shldtth  = 0.3 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)
 tfootfi  = 1.0 * TF coil outboard leg / inboard leg radial thickness
 dr_tf_shld_gap  = 0.01 * Minimum metal-to-metal gap between TF coil and thermal shield (m)
 dr_shld_thermal_inboard = 0.05 * TF-VV thermal shield thickness; inboard (m)
