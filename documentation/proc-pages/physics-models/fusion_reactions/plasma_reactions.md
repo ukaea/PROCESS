@@ -56,10 +56,9 @@ profiles
 
 The fractional composition of the 'fuel' ions ($\text{D}$, $\text{T}$ and $^3\text{He}$) is
 controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively.
-More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md). 
+More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md).
 
 It is also possible to optimise on the deuterium-tritium fuel mixture ratio. For this, `f_tritium` **must** be set as an iteration variable with `ixc = 173`. More info can be found [here](#fuel-ions-mixture-self-consistency).
-
 
 !!! note "Reactions not calculated"
 
@@ -235,7 +234,6 @@ This constraint can be activated by stating `icc = 28` in the input file.
 
 The value of `bigqmin` can be set to the minimum desired $Q_{\text{plasma}}$ value. The scaling value `fqval` can be varied also.
 
-
 -------------------------
 
 ### Fuel ions mixture self-consistency
@@ -243,7 +241,6 @@ The value of `bigqmin` can be set to the minimum desired $Q_{\text{plasma}}$ val
 This constraint can be activated by stating `icc = 92` in the input file.
 
 This constraint should be activated if the user wishes to allow the ratio of the fuel ions to be iterated upon. For this, `f_tritium` has to be set as an iteration variable with `ixc = 173`. This constraint ensure that the summation of the fuel fractions always sums to 1.0 and will modify the other compositions depending on the value of `f_tritium`.
-
 
 [^1]: H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611–631, Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 [^2]: I. P. E. G. on E. Drive and I. P. B. Editors, “Chapter 5: Physics of energetic ions,” Nuclear Fusion, vol. 39, no. 12, pp. 2471–2495, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/305.
