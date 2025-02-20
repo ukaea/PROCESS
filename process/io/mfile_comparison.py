@@ -155,7 +155,7 @@ BASELINE_LIST = [
     "dr_shld_vv_gap_inboard",
     "dr_vv_inboard",
     "dr_vv_outboard",
-    "d_vv_top",
+    "dz_vv_upper",
     "d_vv_bot",
     "dr_shld_inboard",
     "dr_shld_blkt_gap",

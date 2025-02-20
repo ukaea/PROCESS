@@ -14125,7 +14125,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
-    monkeypatch.setattr(build_variables, "d_vv_top", 0.06)  # Section 3
+    monkeypatch.setattr(build_variables, "dz_vv_upper", 0.06)  # Section 3
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_coil", 51.1)  # Table 2
     monkeypatch.setattr(

@@ -43,13 +43,13 @@ def vacuum_vessel_geometry_single_null(
     :rtype: ArbitraryGeometry
     """
     # Upper vacuum vessel
-    kapx = cumulative_upper["d_vv_top"] / rminx_outer
+    kapx = cumulative_upper["dz_vv_upper"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
         radx_outer, rminx_outer, triang, kapx
     )
 
     kapx = (
-        float(cumulative_upper["d_vv_top"]) - float(upper["d_vv_top"])
+        float(cumulative_upper["dz_vv_upper"]) - float(upper["dz_vv_upper"])
     ) / rminx_inner
     rs_upper_inboard, zs_upper_inboard = dh_vertices(
         radx_inner, rminx_inner, triang, kapx
