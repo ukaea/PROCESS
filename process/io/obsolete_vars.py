@@ -113,7 +113,7 @@ OBS_VARS = {
     "fvolbo": "fhole",
     "fvolcry": None,
     "idhe3": "f_helium3",
-    "dz_blkt_top": None,
+    "dz_blkt_upper": None,
     "theat": "t_fusion_ramp",
     "ieped": None,
     "eped_sf": None,
@@ -245,7 +245,7 @@ OBS_VARS = {
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
-    "dz_blkt_top": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
+    "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
 }
 
 kallenbach_list = [

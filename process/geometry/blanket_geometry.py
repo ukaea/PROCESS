@@ -16,7 +16,7 @@ def blanket_geometry_single_null(
     cumulative_upper: dict,
     triang: float,
     cumulative_lower: dict,
-    dz_blkt_top: float,
+    dz_blkt_upper: float,
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
@@ -38,8 +38,8 @@ def blanket_geometry_single_null(
     :type triang: float
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
     :type cumulative_lower: dict
-    :param dz_blkt_top: top blanket vertical thickness
-    :type dz_blkt_top: float
+    :param dz_blkt_upper: top blanket vertical thickness
+    :type dz_blkt_upper: float
     :param c_shldith: inboard shield thickness
     :type c_shldith: float
     :param c_blnkoth: outboard blanket radial thickness
@@ -52,7 +52,7 @@ def blanket_geometry_single_null(
     :rtype: ArbitraryGeometry
     """
     # Upper blanket outer surface
-    kapx = cumulative_upper["dz_blkt_top"] / rminx_outer
+    kapx = cumulative_upper["dz_blkt_upper"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
         radx_outer, rminx_outer, triang, kapx
     )
@@ -73,7 +73,7 @@ def blanket_geometry_single_null(
         zs_lower_inboard,
     ) = blanket_geometry_lower(
         triang=triang,
-        dz_blkt_top=dz_blkt_top,
+        dz_blkt_upper=dz_blkt_upper,
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,
@@ -99,7 +99,7 @@ def blanket_geometry_single_null(
 
 def blanket_geometry_lower(
     triang: float,
-    dz_blkt_top: float,
+    dz_blkt_upper: float,
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
@@ -110,8 +110,8 @@ def blanket_geometry_lower(
 
     :param triang: plasma triangularity
     :type triang: float
-    :param dz_blkt_top: top blanket vertical thickness
-    :type dz_blkt_top: float
+    :param dz_blkt_upper: top blanket vertical thickness
+    :type dz_blkt_upper: float
     :param c_shldith: inboard shield thickness
     :type c_shldith: float
     :param c_blnkoth: outboard blanket radial thickness
@@ -132,7 +132,7 @@ def blanket_geometry_lower(
         dr_blkt_inboard,
         dr_blkt_outboard,
         divgap,
-        -dz_blkt_top,
+        -dz_blkt_upper,
         triang,
     )
     # outboard radial and vertical coordinates
@@ -148,7 +148,7 @@ def blanket_geometry_lower(
 def blanket_geometry_double_null(
     cumulative_lower: dict,
     triang: float,
-    dz_blkt_top: float,
+    dz_blkt_upper: float,
     c_shldith: float,
     c_blnkoth: float,
     dr_blkt_inboard: float,
@@ -161,8 +161,8 @@ def blanket_geometry_double_null(
     :type cumulative_lower: dict
     :param triang: plasma triangularity
     :type triang: float
-    :param dz_blkt_top: top blanket vertical thickness
-    :type dz_blkt_top: float
+    :param dz_blkt_upper: top blanket vertical thickness
+    :type dz_blkt_upper: float
     :param c_shldith: inboard shield thickness
     :type c_shldith: float
     :param c_blnkoth: outboard blanket radial thickness
@@ -184,7 +184,7 @@ def blanket_geometry_double_null(
         zs_lower_inboard,
     ) = blanket_geometry_lower(
         triang=triang,
-        dz_blkt_top=dz_blkt_top,
+        dz_blkt_upper=dz_blkt_upper,
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,
@@ -202,7 +202,7 @@ def blanket_geometry_double_null(
         zs_upper_inboard,
     ) = blanket_geometry_lower(
         triang=triang,
-        dz_blkt_top=dz_blkt_top,
+        dz_blkt_upper=dz_blkt_upper,
         c_shldith=c_shldith,
         c_blnkoth=c_blnkoth,
         dr_blkt_inboard=dr_blkt_inboard,

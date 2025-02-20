@@ -1376,9 +1376,9 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
-        dz_blkt_top = mfile_data.data["dz_blkt_top"].get_scan(scan)
+        dz_blkt_upper = mfile_data.data["dz_blkt_upper"].get_scan(scan)
     else:
-        dz_blkt_top = 0.0
+        dz_blkt_upper = 0.0
 
     c_shldith = cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
     c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
@@ -1411,7 +1411,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             cumulative_upper=cumulative_upper,
             triang=triang_95,
             cumulative_lower=cumulative_lower,
-            dz_blkt_top=dz_blkt_top,
+            dz_blkt_upper=dz_blkt_upper,
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
@@ -1437,7 +1437,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
         bg_double_null = blanket_geometry_double_null(
             cumulative_lower=cumulative_lower,
             triang=triang_95,
-            dz_blkt_top=dz_blkt_top,
+            dz_blkt_upper=dz_blkt_upper,
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
@@ -1478,10 +1478,10 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
-        dz_blkt_top = mfile_data.data["dz_blkt_top"].get_scan(scan)
+        dz_blkt_upper = mfile_data.data["dz_blkt_upper"].get_scan(scan)
         tfwvt = mfile_data.data["dz_fw_upper"].get_scan(scan)
     else:
-        dz_blkt_top = tfwvt = 0.0
+        dz_blkt_upper = tfwvt = 0.0
 
     c_blnkith = cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
     c_fwoth = cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
@@ -1515,7 +1515,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
             cumulative_upper=cumulative_upper,
             triang=triang_95,
             cumulative_lower=cumulative_lower,
-            dz_blkt_top=dz_blkt_top,
+            dz_blkt_upper=dz_blkt_upper,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
             dr_fw_inboard=dr_fw_inboard,
@@ -1536,7 +1536,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         fwg_double_null = first_wall_geometry_double_null(
             cumulative_lower=cumulative_lower,
             triang=triang_95,
-            dz_blkt_top=dz_blkt_top,
+            dz_blkt_upper=dz_blkt_upper,
             c_blnkith=c_blnkith,
             c_fwoth=c_fwoth,
             dr_fw_inboard=dr_fw_inboard,
@@ -3658,7 +3658,7 @@ def main(args=None):
             "z_plasma_xpoint_upper",
             "dz_fw_plasma_gap",
             "dz_fw_upper",
-            "dz_blkt_top",
+            "dz_blkt_upper",
             "dr_shld_blkt_gap",
             "dz_shld_upper",
             "dz_vv_upper",

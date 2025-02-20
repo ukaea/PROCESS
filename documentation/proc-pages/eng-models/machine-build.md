@@ -69,7 +69,7 @@ case the machine is not symmetric about the midplane.
  Gap                                          0.050           8.186   (dz_shld_vv_gap)             
  Vacuum vessel (and shielding)                0.600           8.136   (dz_vv_upper+dz_shld_upper)  
  Gap                                          0.020           7.536   (dr_shld_blkt_gap)           
- Top blanket                                  0.869           7.516   (dz_blkt_top)           
+ Top blanket                                  0.869           7.516   (dz_blkt_upper)           
  Top first wall                               0.018           6.647   (dz_fw_upper)             
  Top scrape-off                               0.600           6.629   (dz_fw_plasma_gap)           
  Plasma top                                   6.029           6.029   (z_plasma_xpoint_upper)      

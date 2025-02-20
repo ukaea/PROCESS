@@ -99,7 +99,7 @@ class BlanketLibrary:
                 build_variables.z_plasma_xpoint_lower
                 + build_variables.dz_xpoint_divertor
                 + divertor_variables.dz_divertor
-                - build_variables.dz_blkt_top
+                - build_variables.dz_blkt_upper
             )
         # Sheild
         elif icomponent == 1:
@@ -132,11 +132,11 @@ class BlanketLibrary:
             )
             # Shield
             if icomponent == 1:
-                htop = htop + build_variables.dz_blkt_top
+                htop = htop + build_variables.dz_blkt_upper
             # Vacuum Vessel
             if icomponent == 2:
                 htop = (
-                    htop + build_variables.dz_blkt_top + build_variables.dz_shld_upper
+                    htop + build_variables.dz_blkt_upper + build_variables.dz_shld_upper
                 )
 
         # Average of top and bottom (m)
@@ -201,7 +201,7 @@ class BlanketLibrary:
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_top,
+                build_variables.dz_blkt_upper,
             )
         elif icomponent == 1:
             (
@@ -292,7 +292,7 @@ class BlanketLibrary:
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_top,
+                build_variables.dz_blkt_upper,
             )
         if icomponent == 1:
             (
