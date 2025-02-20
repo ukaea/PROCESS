@@ -5276,7 +5276,7 @@
         "shield_density": 0.0,
         "shld_u_nuc_heating": 0.0,
         "dr_shld_inboard": 0.69,
-        "shldlth": 0.7,
+        "dz_shld_lower": 0.7,
         "dr_shld_outboard": 1.05,
         "shldtth": 0.6,
         "shmatf": [
@@ -10614,9 +10614,9 @@
         "shield_density": "Shield density [kg/m3]",
         "shld_u_nuc_heating": "Unit nuclear heating in shield (W per W of fusion power)",
         "dr_shld_inboard": "inboard shield thickness (m) (`iteration variable 93`)",
-        "shldlth": "lower (under divertor) shield thickness (m)",
+        "dz_shld_lower": "lower (under divertor) shield thickness (m)",
         "dr_shld_outboard": "outboard shield thickness (m) (`iteration variable 94`)",
-        "shldtth": "upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)",
+        "shldtth": "upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)",
         "shmatf": "IFE shield material fractions",
         "shmatm": "IFE shield material masses (kg)",
         "shmatv": "IFE shield material volumes (kg)",
@@ -14257,7 +14257,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "shldlth": {
+        "dz_shld_lower": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17056,7 +17056,7 @@
             "shareaib",
             "shareaob",
             "dr_shld_inboard",
-            "shldlth",
+            "dz_shld_lower",
             "dr_shld_outboard",
             "shldtth",
             "sigallpc",
@@ -20692,7 +20692,7 @@
         "shdzu": "real_variable",
         "shear": "real_variable",
         "dr_shld_inboard": "real_variable",
-        "shldlth": "real_variable",
+        "dz_shld_lower": "real_variable",
         "dr_shld_outboard": "real_variable",
         "shldtth": "real_variable",
         "shmatf": "real_array",

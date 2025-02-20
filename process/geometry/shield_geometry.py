@@ -108,7 +108,7 @@ def shield_geometry_lower(
     :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
     """
     # Side furthest from plasma
-    kapx = cumulative_lower["shldlth"] / rminx_far
+    kapx = cumulative_lower["dz_shld_lower"] / rminx_far
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
         radx_far, rminx_far, triang, kapx
     )

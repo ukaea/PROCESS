@@ -2164,7 +2164,7 @@ shldtth = 0.3
 * DESCRIPTION:   Top shield thickness (m)
 * JUSTIFICATION: Set to match outboard build
 
-shldlth = 0.6
+dz_shld_lower = 0.6
 * DESCRIPTION:   Lower (under divertor) Shield Thickness (m)
 * JUSTIFICATION: 
 

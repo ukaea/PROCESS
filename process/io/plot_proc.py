@@ -155,7 +155,7 @@ vertical_lower = [
     "z_plasma_xpoint_lower",
     "dz_xpoint_divertor",
     "dz_divertor",
-    "shldlth",
+    "dz_shld_lower",
     "d_vv_bot",
     "dz_shld_vv_gap",
     "dz_shld_thermal",

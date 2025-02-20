@@ -191,7 +191,7 @@ contains
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
     use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
-      shldtth, shldlth, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
+      shldtth, dz_shld_lower, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
       iohcl, dr_tf_shld_gap, f_z_cryostat, dr_bore, plleno, dr_fw_plasma_gap_inboard, gapomin, dr_cryostat, &
@@ -1389,8 +1389,8 @@ contains
        case ('dr_shld_inboard')
           call parse_real_variable('dr_shld_inboard', dr_shld_inboard, 0.0D0, 10.0D0, &
                'Inboard shield thickness (m)')
-       case ('shldlth')
-          call parse_real_variable('shldlth', shldlth, 0.0D0, 10.0D0, &
+       case ('dz_shld_lower')
+          call parse_real_variable('dz_shld_lower', dz_shld_lower, 0.0D0, 10.0D0, &
                'Lower (divertor) shield thickness (m)')
        case ('dr_shld_outboard')
           call parse_real_variable('dr_shld_outboard', dr_shld_outboard, 0.0D0, 10.0D0, &
