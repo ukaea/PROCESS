@@ -1479,7 +1479,7 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
     if int(i_single_null) == 1:
         dz_blkt_top = mfile_data.data["dz_blkt_top"].get_scan(scan)
-        tfwvt = mfile_data.data["fwtth"].get_scan(scan)
+        tfwvt = mfile_data.data["dz_fw_upper"].get_scan(scan)
     else:
         dz_blkt_top = tfwvt = 0.0
 
@@ -3657,7 +3657,7 @@ def main(args=None):
         vertical_upper = [
             "z_plasma_xpoint_upper",
             "dz_fw_plasma_gap",
-            "fwtth",
+            "dz_fw_upper",
             "dz_blkt_top",
             "dr_shld_blkt_gap",
             "shldtth",
