@@ -2180,7 +2180,7 @@ dz_shld_vv_gap = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 
-d_vv_top = 0.3
+dz_vv_upper = 0.3
 * DESCRIPTION:   top vaccum vessel thickness(m)
 * JUSTIFICATION: Set to match outboard build
 

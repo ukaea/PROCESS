@@ -367,7 +367,7 @@ class ComponentHalfHeightParam(NamedTuple):
     dr_fw_inboard: Any = None
     dr_fw_outboard: Any = None
     d_vv_bot: Any = None
-    d_vv_top: Any = None
+    dz_vv_upper: Any = None
     z_plasma_xpoint_lower: Any = None
     z_plasma_xpoint_upper: Any = None
     idivrt: Any = None
@@ -391,7 +391,7 @@ class ComponentHalfHeightParam(NamedTuple):
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
             d_vv_bot=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             z_plasma_xpoint_lower=4.93333333333333333,
             z_plasma_xpoint_upper=4.93333333333333333,
             idivrt=1,
@@ -450,7 +450,9 @@ def test_component_half_height(
         build_variables, "dr_fw_outboard", componenthalfheightparam.dr_fw_outboard
     )
     monkeypatch.setattr(build_variables, "d_vv_bot", componenthalfheightparam.d_vv_bot)
-    monkeypatch.setattr(build_variables, "d_vv_top", componenthalfheightparam.d_vv_top)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", componenthalfheightparam.dz_vv_upper
+    )
     monkeypatch.setattr(
         build_variables,
         "z_plasma_xpoint_lower",
@@ -494,7 +496,7 @@ class DshapedComponentParam(NamedTuple):
     rsldo: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
-    d_vv_top: Any = None
+    dz_vv_upper: Any = None
     d_vv_bot: Any = None
     volblkti: Any = None
     volblkto: Any = None
@@ -551,7 +553,7 @@ class DshapedComponentParam(NamedTuple):
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=0,
             volblkto=0,
@@ -604,7 +606,7 @@ class DshapedComponentParam(NamedTuple):
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=0,
             volblkto=691.06561956756764,
@@ -657,7 +659,7 @@ class DshapedComponentParam(NamedTuple):
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=0,
             volblkto=691.06561956756764,
@@ -751,7 +753,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", dshapedcomponentparam.dr_vv_outboard
     )
-    monkeypatch.setattr(build_variables, "d_vv_top", dshapedcomponentparam.d_vv_top)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", dshapedcomponentparam.dz_vv_upper
+    )
     monkeypatch.setattr(build_variables, "d_vv_bot", dshapedcomponentparam.d_vv_bot)
     monkeypatch.setattr(fwbs_variables, "volblkti", dshapedcomponentparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", dshapedcomponentparam.volblkto)
@@ -803,7 +807,7 @@ class EllipticalComponentParam(NamedTuple):
     dz_shld_upper: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
-    d_vv_top: Any = None
+    dz_vv_upper: Any = None
     d_vv_bot: Any = None
     volblkti: Any = None
     volblkto: Any = None
@@ -859,7 +863,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=0,
             volblkto=0,
@@ -911,7 +915,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=315.83946385183026,
             volblkto=1020.3677420460117,
@@ -963,7 +967,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
             d_vv_bot=0.30000000000000004,
             volblkti=315.83946385183026,
             volblkto=1020.3677420460117,
@@ -1046,7 +1050,9 @@ def test_elliptical_component(
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", ellipticalcomponentparam.dr_vv_outboard
     )
-    monkeypatch.setattr(build_variables, "d_vv_top", ellipticalcomponentparam.d_vv_top)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", ellipticalcomponentparam.dz_vv_upper
+    )
     monkeypatch.setattr(build_variables, "d_vv_bot", ellipticalcomponentparam.d_vv_bot)
     monkeypatch.setattr(fwbs_variables, "volblkti", ellipticalcomponentparam.volblkti)
     monkeypatch.setattr(fwbs_variables, "volblkto", ellipticalcomponentparam.volblkto)

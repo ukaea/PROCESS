@@ -67,7 +67,7 @@ case the machine is not symmetric about the midplane.
  Gap                                          0.050           8.286   (dr_tf_shld_gap)           
  Thermal shield                               0.050           8.236   (thshield)          
  Gap                                          0.050           8.186   (dz_shld_vv_gap)             
- Vacuum vessel (and shielding)                0.600           8.136   (d_vv_top+dz_shld_upper)  
+ Vacuum vessel (and shielding)                0.600           8.136   (dz_vv_upper+dz_shld_upper)  
  Gap                                          0.020           7.536   (dr_shld_blkt_gap)           
  Top blanket                                  0.869           7.516   (dz_blkt_top)           
  Top first wall                               0.018           6.647   (dz_fw_upper)             

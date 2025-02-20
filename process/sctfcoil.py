@@ -2325,7 +2325,7 @@ class Sctfcoil:
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
             + build_variables.dz_shld_upper
-            + (build_variables.d_vv_top / 2)
+            + (build_variables.dz_vv_upper / 2)
         )
         # ri and ro for VV dont consider the shield widths
         # because it is assumed the shield is on the plasma side

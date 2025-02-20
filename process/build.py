@@ -144,7 +144,7 @@ class Build:
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
                     + build_variables.dz_shld_vv_gap
-                    + build_variables.d_vv_top
+                    + build_variables.dz_vv_upper
                     + build_variables.dz_shld_upper
                     + divertor_variables.dz_divertor
                     + build_variables.dz_fw_plasma_gap
@@ -224,18 +224,18 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.d_vv_top + build_variables.dz_shld_upper,
+                    build_variables.dz_vv_upper + build_variables.dz_shld_upper,
                     vbuild,
-                    "(d_vv_top+dz_shld_upper)",
+                    "(dz_vv_upper+dz_shld_upper)",
                 )
                 vbuild = (
-                    vbuild - build_variables.d_vv_top - build_variables.dz_shld_upper
+                    vbuild - build_variables.dz_vv_upper - build_variables.dz_shld_upper
                 )
                 po.ovarre(
                     self.mfile,
                     "Topside vacuum vessel radial thickness (m)",
-                    "(d_vv_top)",
-                    build_variables.d_vv_top,
+                    "(dz_vv_upper)",
+                    build_variables.dz_vv_upper,
                 )
                 po.ovarre(
                     self.mfile,
@@ -419,7 +419,7 @@ class Build:
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
                     + build_variables.dz_shld_vv_gap
-                    + 0.5e0 * (build_variables.d_vv_top + build_variables.d_vv_bot)
+                    + 0.5e0 * (build_variables.dz_vv_upper + build_variables.d_vv_bot)
                     + build_variables.dr_shld_blkt_gap
                     + build_variables.dz_shld_upper
                     + build_variables.dz_blkt_top
@@ -501,18 +501,18 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.d_vv_top + build_variables.dz_shld_upper,
+                    build_variables.dz_vv_upper + build_variables.dz_shld_upper,
                     vbuild,
-                    "(d_vv_top+dz_shld_upper)",
+                    "(dz_vv_upper+dz_shld_upper)",
                 )
                 vbuild = (
-                    vbuild - build_variables.d_vv_top - build_variables.dz_shld_upper
+                    vbuild - build_variables.dz_vv_upper - build_variables.dz_shld_upper
                 )
                 po.ovarre(
                     self.mfile,
                     "Topside vacuum vessel radial thickness (m)",
-                    "(d_vv_top)",
-                    build_variables.d_vv_top,
+                    "(dz_vv_upper)",
+                    build_variables.dz_vv_upper,
                 )
                 po.ovarre(
                     self.mfile,
@@ -758,7 +758,7 @@ class Build:
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dz_shld_thermal
                 + build_variables.dz_shld_vv_gap
-                + build_variables.d_vv_top
+                + build_variables.dz_vv_upper
                 + build_variables.dz_shld_upper
                 + build_variables.dr_shld_blkt_gap
                 + build_variables.dz_blkt_top

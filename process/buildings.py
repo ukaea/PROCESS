@@ -84,7 +84,7 @@ class Buildings:
                 build_variables.rsldo,
                 build_variables.rsldi,
                 2.0e0 * (build_variables.hmax - build_variables.dz_shld_vv_gap)
-                - build_variables.d_vv_top
+                - build_variables.dz_vv_upper
                 - build_variables.d_vv_bot,
                 fwbs_variables.whtshld,
                 fwbs_variables.r_cryostat_inboard,

@@ -1586,7 +1586,7 @@
         "d_vv_bot": 0.07,
         "dr_vv_inboard": 0.07,
         "dr_vv_outboard": 0.07,
-        "d_vv_top": 0.07,
+        "dz_vv_upper": 0.07,
         "dalu": 2700.0,
         "data_lz": 0.0,
         "data_qz": 0.0,
@@ -9248,7 +9248,7 @@
         "d_vv_bot": "vacuum vessel underside thickness (TF coil / shield) (m)",
         "dr_vv_inboard": "vacuum vessel inboard thickness (TF coil / shield) (m)",
         "dr_vv_outboard": "vacuum vessel outboard thickness (TF coil / shield) (m)",
-        "d_vv_top": "vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)",
+        "dz_vv_upper": "vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)",
         "dalu": "density of aluminium (kg/m3)",
         "data_lz": "",
         "data_qz": "",
@@ -12129,7 +12129,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "d_vv_top": {
+        "dz_vv_upper": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17011,7 +17011,7 @@
             "dr_cryostat",
             "dr_vv_inboard",
             "dr_vv_outboard",
-            "d_vv_top",
+            "dz_vv_upper",
             "d_vv_bot",
             "f_avspace",
             "fcspc",
@@ -20138,7 +20138,7 @@
         "d_vv_bot": "real_variable",
         "dr_vv_inboard": "real_variable",
         "dr_vv_outboard": "real_variable",
-        "d_vv_top": "real_variable",
+        "dz_vv_upper": "real_variable",
         "dalu": "real_variable",
         "dcase": "real_variable",
         "dcdrv0": "real_variable",

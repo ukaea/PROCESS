@@ -227,7 +227,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.d_vv_bot) / 2,
             )
 
     def elliptical_component(self, icomponent: int):
@@ -320,7 +320,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.d_vv_bot) / 2,
             )
 
     def apply_coverage_factors(self):
