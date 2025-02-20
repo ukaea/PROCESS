@@ -96,24 +96,24 @@ class BlanketLibrary:
         # Blanket
         if icomponent == 0:
             hbot = (
-                physics_variables.rminor * physics_variables.kappa
-                + build_variables.vgap_xpoint_divertor
-                + divertor_variables.divfix
-                - build_variables.blnktth
+                build_variables.z_plasma_xpoint_lower
+                + build_variables.dz_xpoint_divertor
+                + divertor_variables.dz_divertor
+                - build_variables.dz_blkt_upper
             )
         # Sheild
         elif icomponent == 1:
             hbot = (
-                physics_variables.rminor * physics_variables.kappa
-                + build_variables.vgap_xpoint_divertor
-                + divertor_variables.divfix
+                build_variables.z_plasma_xpoint_lower
+                + build_variables.dz_xpoint_divertor
+                + divertor_variables.dz_divertor
             )
         # Vacuum vessel
         elif icomponent == 2:
             hbot = (
                 build_variables.hmax
-                - build_variables.vgap_vv_thermalshield
-                - build_variables.d_vv_bot
+                - build_variables.dz_shld_vv_gap
+                - build_variables.dz_vv_lower
             )
         else:
             raise ValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
@@ -124,7 +124,7 @@ class BlanketLibrary:
             htop = hbot
         else:
             # Blanket
-            htop = physics_variables.rminor * physics_variables.kappa + 0.5 * (
+            htop = build_variables.z_plasma_xpoint_upper + 0.5 * (
                 build_variables.dr_fw_plasma_gap_inboard
                 + build_variables.dr_fw_plasma_gap_outboard
                 + build_variables.dr_fw_inboard
@@ -132,10 +132,12 @@ class BlanketLibrary:
             )
             # Shield
             if icomponent == 1:
-                htop = htop + build_variables.blnktth
+                htop = htop + build_variables.dz_blkt_upper
             # Vacuum Vessel
             if icomponent == 2:
-                htop = htop + build_variables.blnktth + build_variables.shldtth
+                htop = (
+                    htop + build_variables.dz_blkt_upper + build_variables.dz_shld_upper
+                )
 
         # Average of top and bottom (m)
         return 0.5 * (htop + hbot)
@@ -199,7 +201,7 @@ class BlanketLibrary:
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
-                build_variables.blnktth,
+                build_variables.dz_blkt_upper,
             )
         elif icomponent == 1:
             (
@@ -212,7 +214,7 @@ class BlanketLibrary:
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
-                build_variables.shldtth,
+                build_variables.dz_shld_upper,
             )
         elif icomponent == 2:
             (
@@ -225,7 +227,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
             )
 
     def elliptical_component(self, icomponent: int):
@@ -290,7 +292,7 @@ class BlanketLibrary:
                 blanket_library.hblnkt,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
-                build_variables.blnktth,
+                build_variables.dz_blkt_upper,
             )
         if icomponent == 1:
             (
@@ -304,7 +306,7 @@ class BlanketLibrary:
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
-                build_variables.shldtth,
+                build_variables.dz_shld_upper,
             )
         if icomponent == 2:
             (
@@ -318,7 +320,7 @@ class BlanketLibrary:
                 blanket_library.hvv,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
-                (build_variables.d_vv_top + build_variables.d_vv_bot) / 2,
+                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
             )
 
     def apply_coverage_factors(self):

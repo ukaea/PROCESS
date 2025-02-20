@@ -16,7 +16,7 @@ def first_wall_geometry_single_null(
     cumulative_upper: dict,
     triang: float,
     cumulative_lower: dict,
-    blnktth: float,
+    dz_blkt_upper: float,
     c_blnkith: float,
     c_fwoth: float,
     dr_fw_inboard: float,
@@ -39,8 +39,8 @@ def first_wall_geometry_single_null(
     :type triang: float
     :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
     :type cumulative_lower: dict
-    :param blnktth: top blanket vertical thickness
-    :type blnktth: float
+    :param dz_blkt_upper: top blanket vertical thickness
+    :type dz_blkt_upper: float
     :param c_blnkith: inboard blanket vertical thickness
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
@@ -55,7 +55,7 @@ def first_wall_geometry_single_null(
     :rtype: ArbitraryGeometry
     """
     # Upper first wall: outer surface
-    kapx = cumulative_upper["fwtth"] / rminx_outer
+    kapx = cumulative_upper["dz_fw_upper"] / rminx_outer
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
         radx_outer, rminx_outer, triang, kapx
     )
@@ -66,8 +66,8 @@ def first_wall_geometry_single_null(
     )
 
     # Lower first wall
-    divgap = cumulative_lower["divfix"]
-    top_point = divgap + blnktth
+    divgap = cumulative_lower["dz_divertor"]
+    top_point = divgap + dz_blkt_upper
     (
         rs_lower_outboard,
         zs_lower_outboard,
@@ -150,7 +150,7 @@ def first_wall_geometry_lower(
 def first_wall_geometry_double_null(
     cumulative_lower: dict,
     triang: float,
-    blnktth: float,
+    dz_blkt_upper: float,
     c_blnkith: float,
     c_fwoth: float,
     dr_fw_inboard: float,
@@ -164,8 +164,8 @@ def first_wall_geometry_double_null(
     :type cumulative_lower: dict
     :param triang: plasma triangularity
     :type triang: float
-    :param blnktth: top blanket vertical thickness
-    :type blnktth: float
+    :param dz_blkt_upper: top blanket vertical thickness
+    :type dz_blkt_upper: float
     :param c_blnkith: inboard blanket vertical thickness
     :type c_blnkith: float
     :param c_fwoth: outboard first wall vertical thickness
@@ -180,8 +180,8 @@ def first_wall_geometry_double_null(
     :rtype: ArbitraryGeometry
     """
     # Lower first wall
-    divgap = cumulative_lower["divfix"]
-    top_point = divgap + blnktth
+    divgap = cumulative_lower["dz_divertor"]
+    top_point = divgap + dz_blkt_upper
     (
         rs_lower_outboard,
         zs_lower_outboard,

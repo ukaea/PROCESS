@@ -333,13 +333,13 @@ class Stellarator:
                 + build_variables.blbmoth
                 + build_variables.blbpoth
             )
-            build_variables.shldtth = 0.5e0 * (
+            build_variables.dz_shld_upper = 0.5e0 * (
                 build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
             )
 
         #  Top/bottom blanket thickness
 
-        build_variables.blnktth = 0.5e0 * (
+        build_variables.dz_blkt_upper = 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
@@ -1911,8 +1911,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top shield thickness (m)",
-                "(shldtth)",
-                build_variables.shldtth,
+                "(dz_shld_upper)",
+                build_variables.dz_shld_upper,
             )
 
             if fwbs_variables.blktmodel > 0:
@@ -1970,8 +1970,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top blanket thickness (m)",
-                "(blnktth)",
-                build_variables.blnktth,
+                "(dz_blkt_upper)",
+                build_variables.dz_blkt_upper,
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
