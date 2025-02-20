@@ -139,7 +139,7 @@ module build_variables
   !! - =0 no pre-compression structure
   !! - =1 calculated pre-compression structure
 
-  integer :: tf_in_cs
+  integer :: i_tf_inside_cs
   !! Switch for placing the TF coil inside the CS
   !!
   !! - = 0 TF coil is outside the CS (default)
@@ -345,7 +345,7 @@ module build_variables
     hr1 = 0.0D0
     iohcl = 1
     i_cs_precomp = 1
-    tf_in_cs = 0
+    i_tf_inside_cs = 0
     dr_cs = 0.811D0
     dr_cs_precomp = 0.0D0
     rbld = 0.0D0

@@ -99,4 +99,4 @@ these two possibilities is set using input parameter `fwbsshape`, which should b
 
 !!! Info "TF coil placement"
     The radial build can vary from the figures above dependant on the placement of the inboard TF
-    coil leg when using the `tf_in_cs` switch. See [TF coil page](tf-coil.md)**
+    coil leg when using the `i_tf_inside_cs` switch. See [TF coil page](tf-coil.md)**

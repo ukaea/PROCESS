@@ -109,7 +109,7 @@ def get_radial_build(m_file):
         "dr_tf_shld_gap",
         "dr_tf_outboard",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "dr_tf_inboard"
         radial_labels[2] = "dr_cs_tf_gap"
         radial_labels[3] = "dr_cs"
@@ -264,7 +264,7 @@ def main(args=None):
         "Gap",
         "TF Coil Outboard Leg",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "TF Coil Inboard Leg"
         radial_labels[2] = "CS Coil gap"
         radial_labels[3] = "Central Solenoid"
@@ -297,7 +297,7 @@ def main(args=None):
         "white",
         "blue",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_color[1] = "blue"
         radial_color[2] = "white"
         radial_color[3] = "green"

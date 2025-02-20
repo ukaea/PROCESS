@@ -1413,7 +1413,7 @@
     {
       "no": 281,
       "level": 3,
-      "message": "CHECK: Cannot have i_tf_bucking >= 2 when tf_in_cs = 1"
+      "message": "CHECK: Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
     },
     {
       "no": 282,
