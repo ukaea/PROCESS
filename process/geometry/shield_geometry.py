@@ -38,7 +38,7 @@ def shield_geometry_single_null(
     """
     # Upper shield
     # Side furthest from plasma
-    kapx = cumulative_upper["shldtth"] / rminx_far
+    kapx = cumulative_upper["dz_shld_upper"] / rminx_far
     rs_upper_outboard, zs_upper_outboard = dh_vertices(
         radx_far, rminx_far, triang, kapx
     )

@@ -661,7 +661,7 @@ def check_process():
         fortran.build_variables.dz_fw_plasma_gap = (
             fortran.build_variables.dz_xpoint_divertor
         )
-        fortran.build_variables.shldtth = fortran.build_variables.dz_shld_lower
+        fortran.build_variables.dz_shld_upper = fortran.build_variables.dz_shld_lower
         fortran.build_variables.d_vv_top = fortran.build_variables.d_vv_bot
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1

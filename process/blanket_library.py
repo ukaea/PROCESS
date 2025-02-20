@@ -135,7 +135,9 @@ class BlanketLibrary:
                 htop = htop + build_variables.dz_blkt_top
             # Vacuum Vessel
             if icomponent == 2:
-                htop = htop + build_variables.dz_blkt_top + build_variables.shldtth
+                htop = (
+                    htop + build_variables.dz_blkt_top + build_variables.dz_shld_upper
+                )
 
         # Average of top and bottom (m)
         return 0.5 * (htop + hbot)
@@ -212,7 +214,7 @@ class BlanketLibrary:
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
-                build_variables.shldtth,
+                build_variables.dz_shld_upper,
             )
         elif icomponent == 2:
             (
@@ -304,7 +306,7 @@ class BlanketLibrary:
                 blanket_library.hshld,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
-                build_variables.shldtth,
+                build_variables.dz_shld_upper,
             )
         if icomponent == 2:
             (
