@@ -3855,7 +3855,7 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(173) = 'f_tritium   '
-    boundl(173) = 0.001
+    boundl(173) = 0.000
     boundu(173) = 1.000
   end subroutine init_itv_173
 
