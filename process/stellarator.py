@@ -339,7 +339,7 @@ class Stellarator:
 
         #  Top/bottom blanket thickness
 
-        build_variables.dz_blkt_top = 0.5e0 * (
+        build_variables.dz_blkt_upper = 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
@@ -1970,8 +1970,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top blanket thickness (m)",
-                "(dz_blkt_top)",
-                build_variables.dz_blkt_top,
+                "(dz_blkt_upper)",
+                build_variables.dz_blkt_upper,
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (

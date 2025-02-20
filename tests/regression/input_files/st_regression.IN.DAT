@@ -2168,7 +2168,7 @@ dz_shld_lower = 0.6
 * DESCRIPTION:   Lower (under divertor) Shield Thickness (m)
 * JUSTIFICATION: 
 
-*dz_blkt_top = 
+*dz_blkt_upper = 
 * DESCRIPTION:   top blanket thickness (m)
 * JUSTIFICATION: No longer an input variable
 

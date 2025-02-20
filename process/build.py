@@ -423,7 +423,7 @@ class Build:
                     * (build_variables.dz_vv_upper + build_variables.dz_vv_lower)
                     + build_variables.dr_shld_blkt_gap
                     + build_variables.dz_shld_upper
-                    + build_variables.dz_blkt_top
+                    + build_variables.dz_blkt_upper
                     + 0.5e0
                     * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                     + build_variables.dz_fw_plasma_gap
@@ -534,17 +534,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top blanket",
-                    build_variables.dz_blkt_top,
+                    build_variables.dz_blkt_upper,
                     vbuild,
-                    "(dz_blkt_top)",
+                    "(dz_blkt_upper)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top blanket vertical thickness (m)",
-                    "(dz_blkt_top)",
-                    build_variables.dz_blkt_top,
+                    "(dz_blkt_upper)",
+                    build_variables.dz_blkt_upper,
                 )
-                vbuild = vbuild - build_variables.dz_blkt_top
+                vbuild = vbuild - build_variables.dz_blkt_upper
 
                 dz_fw_upper = 0.5e0 * (
                     build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
@@ -762,7 +762,7 @@ class Build:
                 + build_variables.dz_vv_upper
                 + build_variables.dz_shld_upper
                 + build_variables.dr_shld_blkt_gap
-                + build_variables.dz_blkt_top
+                + build_variables.dz_blkt_upper
                 + 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 + build_variables.dz_fw_plasma_gap
@@ -1677,7 +1677,7 @@ class Build:
             )
 
         #  Top/bottom blanket thickness
-        build_variables.dz_blkt_top = 0.5e0 * (
+        build_variables.dz_blkt_upper = 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
@@ -1983,7 +1983,7 @@ class Build:
             build_variables.z_plasma_xpoint_lower
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
-            - build_variables.dz_blkt_top
+            - build_variables.dz_blkt_upper
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if physics_variables.idivrt == 2:  # (i.e. physics_variables.i_single_null=0)
