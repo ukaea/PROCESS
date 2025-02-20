@@ -188,10 +188,10 @@ vfshld   = 0.60 * Coolant void fraction in shield
 *-------------Heat Transport Variables-------------*
 
 ipowerflow = 0 * Switch for power flow model;  HAS NO EFFECT?
-primary_pumping = 3 * Switch for pumping power for primary coolant
+i_coolant_pumping = 3 * Switch for pumping power for primary coolant
 etahtp = 0.87 * electrical efficiency of FW and blanket coolant pumps
 etaiso = 0.9  * isentropic efficiency of FW and blanket coolant pumps
-secondary_cycle = 2  * user input thermal-electric efficiency (etath)
+i_thermal_electric_conversion = 2  * user input thermal-electric efficiency (etath)
 iprimshld = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle
 etath = 0.375D0  * thermal to electric conversion efficiency
 

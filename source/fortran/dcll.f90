@@ -25,19 +25,19 @@ module dcll_module
     !!          i_blanket_type = 5 * DCLL
     !!
     !!      Liquid Metal Breeder Material = PbLi
-    !!          i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi
+    !!          i_blkt_liquid_breeder_type = 0 * Liquid Metal Breeder Material = PbLi
     !!
     !!      Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
-    !!          icooldual = 2
+    !!          i_blkt_dual_coolant = 2
     !!
     !!      FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
-    !!          ifci = 0, 1, or 2
+    !!          i_blkt_liquid_breeder_channel_type = 0, 1, or 2
     !!
-    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for ifci = 0 or 2
+    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
     !!          (bz_channel_conduct_liq)
     !!
     !!      Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
-    !!          (ipump)
+    !!          (i_fw_blkt_shared_coolant)
     !!
     !!      Can set inlet and oulet temperature for liquid metal breeder
     !!          (inlet_temp_liq)

@@ -13,7 +13,7 @@ turbines. Figure 1 shows the power flow.
 
 All of the charged particle transport power leaving the plasma (excluding the `1-f_alpha_plasma` portion of 
 the alpha power that escapes directly to the first wall) is assumed to be absorbed in the divertor, 
-along with a proportion `fdiv` of the radiation power and the neutron power.
+along with a proportion `f_ster_div_single` of the radiation power and the neutron power.
 
 Switch `iprimdiv` may be used to specify whether the thermal power deposited in the divertor becomes 
 high-grade thermal power (`iprimdiv` = 1) or low-grade waste heat (see Figure 1).
@@ -39,12 +39,12 @@ The primary coolant (less any thermal power required to produce hydrogen in a hy
 plant) is used to heat the secondary coolant to turn the turbines, which power the generator. The 
 remainder is dumped to the environment. All of the low-grade heat is dumped to the environment.
 
-`primary_pumping` : This switch controls the calculation of the mechanical pumping power required 
+`i_coolant_pumping` : This switch controls the calculation of the mechanical pumping power required 
 for the primary coolant.
 
-  - If `primary_pumping` = 0, the user sets mechanical pumping directly
-  - If `primary_pumping` = 1, the user sets mechanical pumping power as a fraction of thermal power removed by coolant.
-  - If `primary_pumping` = 2, the mechanical pumping power is calculated, as follows:
+  - If `i_coolant_pumping` = 0, the user sets mechanical pumping directly
+  - If `i_coolant_pumping` = 1, the user sets mechanical pumping power as a fraction of thermal power removed by coolant.
+  - If `i_coolant_pumping` = 2, the mechanical pumping power is calculated, as follows:
     - User inputs for the coolant outlets temperature (which may be used as an iteration variable), 
       the coolant channel diameter, and the segmentation of the blanket are used. The peak temperature 
       in the first wall material (underneath the armour) is derived. The user can apply an upper limit 
@@ -62,7 +62,7 @@ for the primary coolant.
       mechanical power used) is specified by the parameter `etaiso`. Note that the mechanical pumping 
       power for the shield and divertor are still calculated using the simplified method (a fixed 
       fraction of the heat transported).
-  - If `primary_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
+  - If `i_coolant_pumping` = 3, the mechanical pumping power is calculated using specified pressure drop. 
     The pressures and temperatures are set by the user.
       - When used with the DCLL model a different set of pressure drop variables are used, which are outlined below:
 
@@ -75,19 +75,19 @@ for the primary coolant.
 
      - The defaults for these variables are geared towards a WCLL concept, so different values should be used with Helium cooling.
 
-`secondary_cycle` : This switch controls the calculation of the thermal to electric conversion 
+`i_thermal_electric_conversion` : This switch controls the calculation of the thermal to electric conversion 
 efficiency in the secondary cycle.
 
-  - If `secondary_cycle` = 0, the efficiency of the power generation cycle is set to a single value 
+  - If `i_thermal_electric_conversion` = 0, the efficiency of the power generation cycle is set to a single value 
     obtained from previous cycle modelling studies. The heat deposited in the Toroidal Field coils 
     divertor coolant is assumed to be at such low temperature that it cannot be used for power 
     generation and is dumped to the environment.
-  - In the remaining options (`secondary_cycle` = 1, 2 or 3), the heat deposited in the divertor 
+  - In the remaining options (`i_thermal_electric_conversion` = 1, 2 or 3), the heat deposited in the divertor 
     coolant is used for power generation
   - If `secondary cycle` = 1, the efficiency of the power generation cycle is set as above, but the 
     divertor heat is used for electricity generation.
-  - If `secondary_cycle` = 2, the efficiency of the power generation cycle is input by the user.
-  - If `secondary_cycle` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
+  - If `i_thermal_electric_conversion` = 2, the efficiency of the power generation cycle is input by the user.
+  - If `i_thermal_electric_conversion` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
     efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency[^1]:
 
@@ -96,7 +96,7 @@ efficiency in the secondary cycle.
     \eta & = & -0.8002 + 0.1802 \, \mathrm{ln}(T) \,\, \mathrm{(helium \, coolant; superheated \, steam \, Rankine \, cycle)}
     \end{eqnarray*}$
 
-  - If `secondary_cycle` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
+  - If `i_thermal_electric_conversion` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
     efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency from [^1]:
 

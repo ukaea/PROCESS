@@ -2185,25 +2185,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_98
-    !! <LI> (98) li6enrich
+    !! <LI> (98) f_blkt_li6_enrichment
     use numerics, only: lablxc, boundl, boundu
     implicit none
-      lablxc(98) = 'li6enrich     '
+      lablxc(98) = 'f_blkt_li6_enrichment     '
     boundl(98) = 10.00D0
     boundu(98) = 100.0D0
   end subroutine init_itv_98
 
   real(kind(1.d0)) function itv_98()
-    use fwbs_variables, only: li6enrich
+    use fwbs_variables, only: f_blkt_li6_enrichment
     implicit none
-    itv_98 = li6enrich
+    itv_98 = f_blkt_li6_enrichment
   end function itv_98
 
   subroutine set_itv_98(ratio)
-    use fwbs_variables, only: li6enrich
+    use fwbs_variables, only: f_blkt_li6_enrichment
     implicit none
     real(kind(1.d0)) :: ratio
-    li6enrich = ratio
+    f_blkt_li6_enrichment = ratio
   end subroutine set_itv_98
 
   !! <LI> (99) NOT USED
