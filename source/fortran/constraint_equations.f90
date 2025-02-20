@@ -286,6 +286,8 @@ contains
         case (90); call constraint_eqn_090(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
          ! Constraint for indication of ECRH ignitability
         case (91); call constraint_eqn_091(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+         ! Constraint for D/T ratio
+        case (92); call constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
        case default
 
         idiags(1) = icc(i)
@@ -3387,6 +3389,32 @@ contains
       tmp_units = 'MW'
    end subroutine constraint_eqn_091
 
+   subroutine constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+      !! Equation for checking is D/T ratio is consistent, and sums to 1.
+      !! author: G Turkington, UKAEA
+      !! args : output structure : residual error; constraint value;
+      !! residual error in physical units; output string; units string
+      !! f_deuterium : input : fraction of deuterium ions
+      !! f_tritium  : input : fraction of tritium ions
+      !! f_helium3  : input : fraction of helium-3 ions
+      use physics_variables, only: f_deuterium, f_tritium, f_helium3
+      implicit none
+      real(dp), intent(out) :: tmp_cc
+      real(dp), intent(out) :: tmp_con
+      real(dp), intent(out) :: tmp_err
+      character(len=1), intent(out) :: tmp_symbol
+      character(len=10), intent(out) :: tmp_units
+
+
+      ! Iterate over f_tritium and calculate f_deuterium
+      f_deuterium = 1.0D0 - (f_tritium + f_helium3)
+      tmp_cc = 1.0D0 - (f_deuterium + f_tritium + f_helium3)
+      tmp_con = 1.0D0
+      tmp_err = tmp_con * tmp_cc
+      tmp_symbol = '='
+      tmp_units = 'fraction'
+
+   end subroutine constraint_eqn_092
 
 
 end module constraints

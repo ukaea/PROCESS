@@ -3850,31 +3850,28 @@ contains
     casths = ratio
   end subroutine set_itv_172
 
-  !---------------------------------
-  ! DUMMY variables below here
-  !---------------------------------
-  !---------------------------------
-
   subroutine init_itv_173
-    !! <LI> (173) DUMMY : Description
+    !! <LI> (173) f_tritium : Tritium fraction in fuel
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(173) = 'DUMMY         '
-    boundl(173) = 1.0d-99
-    boundu(173) = 1.0d99
+    lablxc(173) = 'f_tritium   '
+    boundl(173) = 0.000
+    boundu(173) = 1.000
   end subroutine init_itv_173
 
   real(kind(1.d0)) function itv_173()
-    implicit none
-    itv_173 = DUMMY
+    use physics_variables, only: f_tritium
+    itv_173 = f_tritium
   end function itv_173
 
   subroutine set_itv_173(ratio)
-    implicit none
+    use physics_variables, only: f_tritium
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    f_tritium = ratio
   end subroutine set_itv_173
 
+  !---------------------------------
+  ! DUMMY variables below here
   !---------------------------------
 
   subroutine init_itv_174
@@ -4117,8 +4114,8 @@ contains
            case (170);  xcm(i) = itv_170()
            case (171);  xcm(i) = itv_171()
            case (172);  xcm(i) = itv_172()
-            ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
+            ! DUMMY Cases
            case (174);  xcm(i) = itv_174()
            case (175);  xcm(i) = itv_175()
 
