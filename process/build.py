@@ -1708,7 +1708,7 @@ class Build:
         else:
             build_variables.dr_cs_precomp = 0.0e0
 
-        if build_variables.tf_in_cs == 1:
+        if build_variables.i_tf_inside_cs == 1:
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
                 - build_variables.dr_tf_inboard
@@ -1851,7 +1851,7 @@ class Build:
         ):
             error_handling.fdiags[0] = build_variables.r_cp_top
             error_handling.report_error(256)
-        if build_variables.tf_in_cs == 1:
+        if build_variables.i_tf_inside_cs == 1:
             #  Radial position of vacuum vessel [m]
             build_variables.r_vv_inboard_out = (
                 build_variables.r_tf_inboard_out
@@ -2118,8 +2118,8 @@ class Build:
             po.ovarin(
                 self.outfile,
                 "TF coil radial placement switch",
-                "(tf_in_cs)",
-                build_variables.tf_in_cs,
+                "(i_tf_inside_cs)",
+                build_variables.i_tf_inside_cs,
             )
             po.ovarrf(
                 self.outfile,
@@ -2129,7 +2129,7 @@ class Build:
                 "OP ",
             )
 
-            if build_variables.tf_in_cs == 1:
+            if build_variables.i_tf_inside_cs == 1:
                 po.ocmmnt(
                     self.outfile,
                     (
@@ -2142,7 +2142,10 @@ class Build:
                         "the true dr_bore size used for calculations is dr_bore + dr_tf_inboard + dr_cs_tf_gap)\n"
                     ),
                 )
-            if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
+            if (
+                build_variables.i_tf_inside_cs == 1
+                and tfcoil_variables.i_tf_bucking >= 2
+            ):
                 po.ocmmnt(
                     self.outfile,
                     "(Bore hollow space has been filled with a solid metal cyclinder to act as wedge support)\n",
@@ -2154,7 +2157,10 @@ class Build:
 
             radius = 0.0e0
             radial_build_data.append(["Device centreline", None, 0.0, radius])
-            if build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking >= 2:
+            if (
+                build_variables.i_tf_inside_cs == 1
+                and tfcoil_variables.i_tf_bucking >= 2
+            ):
                 radius = (
                     radius
                     + build_variables.dr_bore
@@ -2170,7 +2176,10 @@ class Build:
                     - build_variables.dr_cs_tf_gap,
                     radius,
                 ])
-            elif build_variables.tf_in_cs == 1 and tfcoil_variables.i_tf_bucking < 2:
+            elif (
+                build_variables.i_tf_inside_cs == 1
+                and tfcoil_variables.i_tf_bucking < 2
+            ):
                 radius = (
                     radius
                     + build_variables.dr_bore
@@ -2193,7 +2202,7 @@ class Build:
                     build_variables.dr_bore,
                     radius,
                 ])
-            if build_variables.tf_in_cs == 1:
+            if build_variables.i_tf_inside_cs == 1:
                 radius += build_variables.dr_tf_inboard
                 radial_build_data.append([
                     "TF coil inboard leg (in dr_bore)",
@@ -2225,7 +2234,7 @@ class Build:
                 build_variables.dr_cs_precomp,
                 radius,
             ])
-            if build_variables.tf_in_cs == 0:
+            if build_variables.i_tf_inside_cs == 0:
                 radius = radius + build_variables.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",

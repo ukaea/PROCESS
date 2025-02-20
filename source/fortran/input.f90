@@ -190,7 +190,7 @@ contains
 
     use constants, only: dcopper, dalu
     use global_variables, only: run_tests, verbose, maxcal, runtitle
-    use build_variables, only: tf_in_cs, blbmoth, blbuith, dr_shld_outboard, &
+    use build_variables, only: i_tf_inside_cs, blbmoth, blbuith, dr_shld_outboard, &
       dz_shld_upper, dz_shld_lower, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
       blbpith, aplasmin, blbuoth, dr_tf_inboard, &
@@ -1359,8 +1359,8 @@ contains
        case ('i_cs_precomp')
           call parse_int_variable('i_cs_precomp', i_cs_precomp, 0, 1, &
                'Switch for existence of Central Solenoid pre-compression structure')
-       case ('tf_in_cs')
-          call parse_int_variable('tf_in_cs', tf_in_cs, 0, 1, &
+       case ('i_tf_inside_cs')
+          call parse_int_variable('i_tf_inside_cs', i_tf_inside_cs, 0, 1, &
                'Switch for placing TF coils inside of the CS')
        case ('dr_cs')
           call parse_real_variable('dr_cs', dr_cs, 0.0D0, 10.0D0, &

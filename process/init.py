@@ -932,9 +932,11 @@ def check_process():
     # CS which is now outside it
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.tf_in_cs == 1
+        and fortran.build_variables.i_tf_inside_cs == 1
     ):
-        raise ProcessValidationError("Cannot have i_tf_bucking >= 2 when tf_in_cs = 1")
+        raise ProcessValidationError(
+            "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
+        )
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design

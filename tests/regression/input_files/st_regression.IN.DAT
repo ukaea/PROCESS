@@ -918,7 +918,7 @@ ripmax = 1.0
 * DESCRIPTION:   Maximum Allowable Toroidal Field Ripple Amplitude at Plasma Edge (%) 
 * JUSTIFICATION: Default
 
-*tf_in_cs switch is found in the radial build section*
+*i_tf_inside_cs switch is found in the radial build section*
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Conductor Type ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -1970,7 +1970,7 @@ icc = 11
 * JUSTIFICATION: Consistency equations should always be on
 * VARIABLES:     rmajor, Rest calculated in-situ
 
-tf_in_cs = 0 
+i_tf_inside_cs = 0 
 * DESCRIPTION:  Switch for placing TF coils inside of the CS
 * JUSTIFICATION: TF placed in CS as design choice
 
