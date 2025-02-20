@@ -5278,7 +5278,7 @@
         "dr_shld_inboard": 0.69,
         "dz_shld_lower": 0.7,
         "dr_shld_outboard": 1.05,
-        "shldtth": 0.6,
+        "dz_shld_upper": 0.6,
         "shmatf": [
             0.05,
             0.05,
@@ -10616,7 +10616,7 @@
         "dr_shld_inboard": "inboard shield thickness (m) (`iteration variable 93`)",
         "dz_shld_lower": "lower (under divertor) shield thickness (m)",
         "dr_shld_outboard": "outboard shield thickness (m) (`iteration variable 94`)",
-        "shldtth": "upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)",
+        "dz_shld_upper": "upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)",
         "shmatf": "IFE shield material fractions",
         "shmatm": "IFE shield material masses (kg)",
         "shmatv": "IFE shield material volumes (kg)",
@@ -14265,7 +14265,7 @@
             "lb": 0.0,
             "ub": 10.0
         },
-        "shldtth": {
+        "dz_shld_upper": {
             "lb": 0.0,
             "ub": 10.0
         },
@@ -17058,7 +17058,7 @@
             "dr_shld_inboard",
             "dz_shld_lower",
             "dr_shld_outboard",
-            "shldtth",
+            "dz_shld_upper",
             "sigallpc",
             "dr_tf_inboard",
             "tfoffset",
@@ -20694,7 +20694,7 @@
         "dr_shld_inboard": "real_variable",
         "dz_shld_lower": "real_variable",
         "dr_shld_outboard": "real_variable",
-        "shldtth": "real_variable",
+        "dz_shld_upper": "real_variable",
         "shmatf": "real_array",
         "shmf": "real_variable",
         "shov": "real_variable",

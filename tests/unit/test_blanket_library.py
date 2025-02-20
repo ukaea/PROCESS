@@ -361,7 +361,7 @@ class ComponentHalfHeightParam(NamedTuple):
     dz_xpoint_divertor: Any = None
     dz_shld_vv_gap: Any = None
     dz_blkt_top: Any = None
-    shldtth: Any = None
+    dz_shld_upper: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
     dr_fw_inboard: Any = None
@@ -385,7 +385,7 @@ class ComponentHalfHeightParam(NamedTuple):
             dz_xpoint_divertor=2.0018838307941582,
             dz_shld_vv_gap=0.16300000000000001,
             dz_blkt_top=0.85000000000000009,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
             dr_fw_inboard=0.018000000000000002,
@@ -430,7 +430,9 @@ def test_component_half_height(
     monkeypatch.setattr(
         build_variables, "dz_blkt_top", componenthalfheightparam.dz_blkt_top
     )
-    monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", componenthalfheightparam.dz_shld_upper
+    )
     monkeypatch.setattr(
         build_variables,
         "dr_fw_plasma_gap_inboard",
@@ -488,7 +490,7 @@ class DshapedComponentParam(NamedTuple):
     shareaob: Any = None
     sharea: Any = None
     dr_shld_outboard: Any = None
-    shldtth: Any = None
+    dz_shld_upper: Any = None
     rsldo: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
@@ -545,7 +547,7 @@ class DshapedComponentParam(NamedTuple):
             shareaob=0,
             sharea=0,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
@@ -598,7 +600,7 @@ class DshapedComponentParam(NamedTuple):
             shareaob=0,
             sharea=0,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
@@ -651,7 +653,7 @@ class DshapedComponentParam(NamedTuple):
             shareaob=1013.8483589087293,
             sharea=1222.7642703724505,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
@@ -739,7 +741,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_shld_outboard", dshapedcomponentparam.dr_shld_outboard
     )
-    monkeypatch.setattr(build_variables, "shldtth", dshapedcomponentparam.shldtth)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", dshapedcomponentparam.dz_shld_upper
+    )
     monkeypatch.setattr(build_variables, "rsldo", dshapedcomponentparam.rsldo)
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
@@ -796,7 +800,7 @@ class EllipticalComponentParam(NamedTuple):
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
-    shldtth: Any = None
+    dz_shld_upper: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
     d_vv_top: Any = None
@@ -852,7 +856,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
             d_vv_top=0.30000000000000004,
@@ -904,7 +908,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
             d_vv_top=0.30000000000000004,
@@ -956,7 +960,7 @@ class EllipticalComponentParam(NamedTuple):
             shareaib=700.06731267447844,
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
             d_vv_top=0.30000000000000004,
@@ -1033,7 +1037,9 @@ def test_elliptical_component(
     monkeypatch.setattr(build_variables, "shareaib", ellipticalcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", ellipticalcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)
-    monkeypatch.setattr(build_variables, "shldtth", ellipticalcomponentparam.shldtth)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", ellipticalcomponentparam.dz_shld_upper
+    )
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", ellipticalcomponentparam.dr_vv_inboard
     )

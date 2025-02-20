@@ -234,7 +234,7 @@ module build_variables
   real(dp) :: dr_shld_outboard
   !! outboard shield thickness (m) (`iteration variable 94`)
 
-  real(dp) :: shldtth
+  real(dp) :: dz_shld_upper
   !! upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)
 
   real(dp) :: sigallpc
@@ -372,7 +372,7 @@ module build_variables
     dr_shld_inboard = 0.69D0
     dz_shld_lower = 0.7D0
     dr_shld_outboard = 1.05D0
-    shldtth = 0.6D0
+    dz_shld_upper = 0.6D0
     sigallpc = 3.0D8
     dr_tf_inboard = 0.0D0
     tfoffset = 0.0D0

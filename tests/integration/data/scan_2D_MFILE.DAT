@@ -593,7 +593,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -1756,7 +1756,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -2919,7 +2919,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -4082,7 +4082,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -5245,7 +5245,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -6408,7 +6408,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -7571,7 +7571,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -8734,7 +8734,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -9897,7 +9897,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -11060,7 +11060,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -12223,7 +12223,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -13386,7 +13386,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -14549,7 +14549,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -15712,7 +15712,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
@@ -16875,7 +16875,7 @@
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
  Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
  Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_top)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    

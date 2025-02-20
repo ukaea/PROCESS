@@ -333,7 +333,7 @@ class Stellarator:
                 + build_variables.blbmoth
                 + build_variables.blbpoth
             )
-            build_variables.shldtth = 0.5e0 * (
+            build_variables.dz_shld_upper = 0.5e0 * (
                 build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
             )
 
@@ -1911,8 +1911,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top shield thickness (m)",
-                "(shldtth)",
-                build_variables.shldtth,
+                "(dz_shld_upper)",
+                build_variables.dz_shld_upper,
             )
 
             if fwbs_variables.blktmodel > 0:

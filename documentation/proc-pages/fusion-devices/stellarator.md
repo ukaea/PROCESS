@@ -285,7 +285,7 @@ dr_fw_plasma_gap_inboard = 0.15 *Gap between plasma and first wall; inboard side
 dr_fw_plasma_gap_outboard = 0.2 *Gap between plasma and first wall; outboard side (m)
 dr_shld_inboard = 0.2 *Inboard shield thickness (m)
 dr_shld_outboard = 0.2 *Outboard shield thickness (m)
-shldtth = 0.2 *Upper/lower shield thickness (m)
+dz_shld_upper = 0.2 *Upper/lower shield thickness (m)
 vgap = 0. *Vertical gap between x-point and divertor (m)
 ```
 
