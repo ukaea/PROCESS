@@ -1722,17 +1722,19 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.tpeakfwi, _, _, blanket_library.mffwpi) = self.fw.fw_temp(
-            output,
-            fwbs_variables.radius_fw_channel,
-            build_variables.dr_fw_inboard,
-            build_variables.a_fw_inboard,
-            fwbs_variables.psurffwi,
-            blanket_library.p_fw_inboard_nuclear_heat_mw,
-            "Inboard first wall",
+        (blanket_library.temp_fw_inboard_peak, _, _, blanket_library.mffwpi) = (
+            self.fw.fw_temp(
+                output,
+                fwbs_variables.radius_fw_channel,
+                build_variables.dr_fw_inboard,
+                build_variables.a_fw_inboard,
+                fwbs_variables.psurffwi,
+                blanket_library.p_fw_inboard_nuclear_heat_mw,
+                "Inboard first wall",
+            )
         )
         # (
-        #     blanket_library.tpeakfwi,
+        #     blanket_library.temp_fw_inboard_peak,
         #     cf,
         #     rhof,
         #     blanket_library.mffwpi,
@@ -1770,7 +1772,7 @@ class BlanketLibrary:
 
         # Peak first wall temperature (K)
         fwbs_variables.temp_fw_peak = max(
-            blanket_library.tpeakfwi, blanket_library.temp_fw_outboard_peak
+            blanket_library.temp_fw_inboard_peak, blanket_library.temp_fw_outboard_peak
         )
 
         # Total mass flow rate to remove inboard FW power (kg/s)
