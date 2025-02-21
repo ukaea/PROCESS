@@ -272,6 +272,9 @@ class Caller:
         # Pulsed reactor model
         self.models.pulse.run(output=False)
 
+        # First wall model
+        self.models.fw.run()
+
         # Blanket model
         """Blanket switch values
         No.  |  model
