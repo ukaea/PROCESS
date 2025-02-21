@@ -1464,6 +1464,106 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             )
 
 
+def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
+    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan)
+    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
+    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
+
+    # Flot first module
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(0, 0),
+            width=dx_fw_module,
+            height=2 * (dr_fw_wall + radius_fw_channel),
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot cooling channel in first module
+    axis.add_patch(
+        patches.Circle(
+            xy=(dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
+            radius=radius_fw_channel,
+            edgecolor="black",
+            facecolor="white",
+        )
+    )
+
+    # Plot second module
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dx_fw_module, 0),
+            width=dx_fw_module,
+            height=2 * (dr_fw_wall + radius_fw_channel),
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot cooling channel in second module
+    axis.add_patch(
+        patches.Circle(
+            xy=(dx_fw_module + dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
+            radius=radius_fw_channel,
+            edgecolor="black",
+            facecolor="white",
+        )
+    )
+
+    axis.set_xlabel("X [m]")
+    axis.set_ylabel("R [m]")
+    axis.set_title("First Wall Top-Down Cross Section")
+    axis.set_xlim([-0.01, 2 * dx_fw_module + 0.01])
+    axis.set_ylim([-0.01, 2 * (dr_fw_wall + radius_fw_channel) + 0.01])
+
+
+def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
+    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan)
+    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
+    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
+    len_fw_channel = mfile_data.data["len_fw_channel"].get_scan(scan)
+
+    # Plot first wall structure facing plasma
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(0, 0),
+            width=dr_fw_wall,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot the cooling channel
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dr_fw_wall, 0),
+            width=2 * radius_fw_channel,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="#b87333",  # Copper color
+        )
+    )
+
+    # Plot the back wall of the first wall
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dr_fw_wall + 2 * radius_fw_channel, 0),
+            width=dr_fw_wall,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="grey",
+        )
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("First Wall Poloidal Cross Section")
+    axis.set_xlim([-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01])
+    axis.set_ylim([-0.2, len_fw_channel + 0.2])
+
+
 def plot_firstwall(axis, mfile_data, scan, colour_scheme):
     """Function to plot first wall
 
@@ -3331,6 +3431,7 @@ def main_plot(
     fig5,
     fig6,
     fig7,
+    fig8,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3453,6 +3554,12 @@ def main_plot(
 
     plot_12 = fig7.add_subplot(111)
     plot_current_profiles_over_time(plot_12, m_file_data, scan)
+
+    plot_13 = fig8.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_13, m_file_data, scan)
+
+    plot_14 = fig8.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_14, m_file_data, scan)
 
 
 def main(args=None):
@@ -3723,6 +3830,7 @@ def main(args=None):
     page5 = plt.figure(figsize=(12, 9), dpi=80)
     page6 = plt.figure(figsize=(12, 9), dpi=80)
     page7 = plt.figure(figsize=(12, 9), dpi=80)
+    page8 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3733,6 +3841,7 @@ def main(args=None):
         page5,
         page6,
         page7,
+        page8,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3748,6 +3857,7 @@ def main(args=None):
         pdf.savefig(page5)
         pdf.savefig(page6)
         pdf.savefig(page7)
+        pdf.savefig(page8)
 
     # show fig if option used
     if args.show:
@@ -3760,6 +3870,7 @@ def main(args=None):
     plt.close(page5)
     plt.close(page6)
     plt.close(page7)
+    plt.close(page8)
 
 
 if __name__ == "__main__":

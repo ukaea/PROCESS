@@ -5,6 +5,7 @@ from process import (
 )
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
+    build_variables,
     constants,
     error_handling,
     fwbs_variables,
@@ -415,3 +416,55 @@ class Fw:
 
         # Calculate Darcy friction factor
         return (1.8 * np.log10(bracket)) ** (-2)
+
+    def output_fw_geometry(self):
+        """
+        Outputs the first wall geometry details to the output file.
+
+        Returns:
+            None
+        """
+        po.oheadr(self.outfile, "First wall build")
+
+        po.ovarrf(
+            self.outfile,
+            "Radius of first wall cooling channels (m)",
+            "(radius_fw_channel)",
+            fwbs_variables.radius_fw_channel,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial wall thickness surrounding first wall coolant channel (m)",
+            "(dr_fw_wall)",
+            fwbs_variables.dr_fw_wall,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Toroidal width of each first wall module (m)",
+            "(dx_fw_module)",
+            fwbs_variables.dx_fw_module,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Length of each first wall channel (m)",
+            "(len_fw_channel)",
+            fwbs_variables.len_fw_channel,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial thickness off inboard first wall (m)",
+            "(dr_fw_inboard)",
+            build_variables.dr_fw_inboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial thickness off outboard first wall (m)",
+            "(dr_fw_outboard)",
+            build_variables.dr_fw_outboard,
+            "OP ",
+        )

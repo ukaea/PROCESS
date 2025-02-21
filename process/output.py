@@ -92,6 +92,10 @@ def write(models, _outfile):
     # 3    |  CCFE HCPB model with Tritium Breeding Ratio calculation
     # 4    |  KIT HCLL model
     # 5    |  DCLL model
+
+    # First wall geometry
+    models.fw.output_fw_geometry()
+
     if ft.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
