@@ -468,3 +468,47 @@ class Fw:
             build_variables.dr_fw_outboard,
             "OP ",
         )
+
+    def output_fw_pumping(self):
+        """
+        Outputs the first wall pumping details to the output file.
+
+        Returns:
+            None
+        """
+        po.oheadr(self.outfile, "First wall pumping")
+
+        po.ovarst(
+            self.outfile,
+            "First wall coolant type",
+            "(i_fw_coolant_type)",
+            f'"{fwbs_variables.i_fw_coolant_type}"',
+        )
+        po.ovarrf(
+            self.outfile,
+            "Outlet temperature of first wall coolant [K]",
+            "(temp_fw_coolant_out)",
+            fwbs_variables.temp_fw_coolant_out,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inlet temperature of first wall coolant [K]",
+            "(temp_fw_coolant_in)",
+            fwbs_variables.temp_fw_coolant_in,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Pressure of first wall coolant [Pa]",
+            "(pres_fw_coolant)",
+            fwbs_variables.pres_fw_coolant,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Peak temperature of first wall [K]",
+            "(temp_fw_peak)",
+            fwbs_variables.temp_fw_peak,
+            "OP ",
+        )
