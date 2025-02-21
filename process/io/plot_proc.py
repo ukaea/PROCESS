@@ -335,6 +335,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     plot_shield(axis, mfile_data, scan, colour_scheme)
     plot_blanket(axis, mfile_data, scan, colour_scheme)
     plot_firstwall(axis, mfile_data, scan, colour_scheme)
+    plot_divertor(axis, mfile_data, scan)
 
     plot_plasma(axis, mfile_data, scan, colour_scheme)
     plot_centre_cross(axis, mfile_data, scan)
@@ -2010,6 +2011,98 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
         axis.legend(bbox_to_anchor=(1.05, 1.0), loc="upper left")
+
+
+def plot_divertor(axis, mfile_data, scan: int) -> None:
+    """
+    Plots inboard and outboard divertor plates and strike points.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes object
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+    # Plot the outboard divertor
+    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+
+    r_outer_plate_top = mfile_data.data["rplto"].get_scan(scan)
+    z_outer_plate_top = mfile_data.data["zplto"].get_scan(scan)
+    r_outer_plate_bottom = mfile_data.data["rplbo"].get_scan(scan)
+    z_outer_plate_bottom = mfile_data.data["zplbo"].get_scan(scan)
+
+    # Plot the outboard lower plate
+    axis.plot(
+        [r_outer_plate_top, r_outer_plate_bottom],
+        [z_outer_plate_top, z_outer_plate_bottom],
+        color="black",
+    )
+
+    r_inner_plate_top = mfile_data.data["rplti"].get_scan(scan)
+    z_inner_plate_top = mfile_data.data["zplti"].get_scan(scan)
+    r_inner_plate_bottom = mfile_data.data["rplbi"].get_scan(scan)
+    z_inner_plate_bottom = mfile_data.data["zplbi"].get_scan(scan)
+
+    # Plot the inboard lower plate
+    axis.plot(
+        [r_inner_plate_top, r_inner_plate_bottom],
+        [z_inner_plate_top, z_inner_plate_bottom],
+        color="black",
+    )
+
+    r_outer_strike = mfile_data.data["rspo"].get_scan(scan)
+    z_outer_strike = mfile_data.data["zspo"].get_scan(scan)
+
+    r_inner_strike = mfile_data.data["rspi"].get_scan(scan)
+    z_inner_strike = mfile_data.data["zspi"].get_scan(scan)
+
+    # Plot the outer strike point
+    axis.plot(
+        r_outer_strike,
+        z_outer_strike,
+        "ro",
+        markersize=2.5,
+    )  # Plot outer strike point as red dot
+
+    # Plot the inner strike point
+    axis.plot(
+        r_inner_strike,
+        z_inner_strike,
+        "ro",
+        markersize=2.5,
+    )  # Plot inner strike point as red dot
+
+    # If their is 2 divertors
+    if i_single_null == 0:
+        # Plot the outer top plate
+        axis.plot(
+            [r_outer_plate_top, r_outer_plate_bottom],
+            [-z_outer_plate_top, -z_outer_plate_bottom],
+            color="black",
+        )
+
+        # Plot the inner top plate
+        axis.plot(
+            [r_inner_plate_top, r_inner_plate_bottom],
+            [-z_inner_plate_top, -z_inner_plate_bottom],
+            color="black",
+        )
+
+        # Plot the outer strike point
+        axis.plot(
+            r_outer_strike, -z_outer_strike, "ro", markersize=2.5
+        )  # Plot outer strike point as red dot
+
+        # Plot the inner strike point
+        axis.plot(r_inner_strike, -z_inner_strike, "ro", markersize=2.5)
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
