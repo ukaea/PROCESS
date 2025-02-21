@@ -75,7 +75,7 @@ module blanket_library
     real(dp) :: n_fw_inboard_channels, n_fw_outboard_channels
     !! Inboard / outboard total number of first wall coolant channels
 
-    real(dp) :: mflow_fw_inboard_coolant_channel, mffwpo
+    real(dp) :: mflow_fw_inboard_coolant_channel, mflow_fw_outboard_coolant_channel
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
 
     real(dp) :: p_blkt_nuclear_heat_inboard_mw, p_blkt_nuclear_heat_outboard_mw
@@ -155,7 +155,7 @@ contains
         n_fw_inboard_channels = 0.0D0
         n_fw_outboard_channels = 0.0D0
         mflow_fw_inboard_coolant_channel = 0.0D0
-        mffwpo = 0.0D0
+        mflow_fw_outboard_coolant_channel = 0.0D0
         p_blkt_nuclear_heat_inboard_mw = 0.0D0
         p_blkt_nuclear_heat_outboard_mw = 0.0D0
         mflow_blkt_inboard_coolant = 0.0D0
