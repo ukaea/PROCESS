@@ -571,14 +571,12 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     totaldivetc = pdivt + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
     # Power deposited on Blanket (MW)
     totalblktetc = (
-        (
         p_fw_nuclear_heat_total_mw
         + p_blkt_nuclear_heat_total_mw
         + pnucshld
         + p_fw_rad_total_mw
         + palpfwmw
         - emultmw
-    )
     )
 
     if itart == 0:

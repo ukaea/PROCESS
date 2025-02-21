@@ -1746,16 +1746,18 @@ class BlanketLibrary:
         #     blanket_library.p_fw_inboard_nuclear_heat_mw,
         #     "Inboard first wall",
         # )
-        (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = self.fw.fw_temp(
-            output,
-            fwbs_variables.radius_fw_channel,
-            build_variables.dr_fw_outboard,
-            build_variables.a_fw_outboard,
-            fwbs_variables.psurffwo,
-            blanket_library.p_fw_outboard_nuclear_heat_mw,
-            "Outboard first wall",
+        (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mffwpo) = (
+            self.fw.fw_temp(
+                output,
+                fwbs_variables.radius_fw_channel,
+                build_variables.dr_fw_outboard,
+                build_variables.a_fw_outboard,
+                fwbs_variables.psurffwo,
+                blanket_library.p_fw_outboard_nuclear_heat_mw,
+                "Outboard first wall",
+            )
         )
-        # (fwbs_variables.tpeakfwo, cf, rhof, fwbs_variables.mffwpo) = fw_module.fw_temp(
+        # (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mffwpo) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
         #     fwbs_variables.radius_fw_channel,
@@ -1768,7 +1770,7 @@ class BlanketLibrary:
 
         # Peak first wall temperature (K)
         fwbs_variables.temp_fw_peak = max(
-            blanket_library.tpeakfwi, blanket_library.tpeakfwo
+            blanket_library.tpeakfwi, blanket_library.temp_fw_outboard_peak
         )
 
         # Total mass flow rate to remove inboard FW power (kg/s)
