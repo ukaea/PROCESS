@@ -1579,6 +1579,11 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
     dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
     dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
     len_fw_channel = mfile_data.data["len_fw_channel"].get_scan(scan)
+    temp_fw_coolant_in = mfile_data.data["temp_fw_coolant_in"].get_scan(scan)
+    temp_fw_coolant_out = mfile_data.data["temp_fw_coolant_out"].get_scan(scan)
+    i_fw_coolant_type = mfile_data.data["i_fw_coolant_type"].get_scan(scan)
+    temp_fw_peak = mfile_data.data["temp_fw_peak"].get_scan(scan)
+    pres_fw_coolant = mfile_data.data["pres_fw_coolant"].get_scan(scan)
 
     # Plot first wall structure facing plasma
     axis.add_patch(
@@ -1611,6 +1616,71 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
             edgecolor="black",
             facecolor="grey",
         )
+    )
+
+    # Draw an upward pointing arrow
+    axis.arrow(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        dr_fw_wall + radius_fw_channel,
+        0,
+        len_fw_channel / 6,
+        head_width=dr_fw_wall,
+        head_length=len_fw_channel / 20,
+        fc="black",
+        ec="black",
+    )
+
+    # Add the inlet temperature beside the arrow
+    axis.text(
+        dx_fw_module + 2 * dr_fw_wall,
+        dr_fw_wall + radius_fw_channel + len_fw_channel / 6,
+        f"$T_{{inlet}} = ${temp_fw_coolant_in:.2f} K",
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        color="black",
+    )
+
+    # Draw a right pointing arrow
+    axis.arrow(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        len_fw_channel,
+        2 * dr_fw_wall,
+        0,
+        head_width=len_fw_channel / 30,
+        head_length=dr_fw_wall,
+        fc="black",
+        ec="black",
+        linewidth=5,  # Thicker stem
+    )
+
+    # Add the outlet temperature beside the arrow
+    axis.text(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        len_fw_channel * 0.9,
+        f"$T_{{outlet}} = ${temp_fw_coolant_out:.2f} K",
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        color="black",
+    )
+
+    textstr_fw = "\n".join((
+        rf"Coolant type: {i_fw_coolant_type}",
+        rf"$T_{{FW,peak}}$: {temp_fw_peak:.3f} K",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:.3f} kPa",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:.3f} bar",
+    ))
+
+    props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    axis.text(
+        -0.7,
+        0.05,
+        textstr_fw,
+        transform=axis.transAxes,
+        fontsize=11,
+        verticalalignment="bottom",
+        bbox=props_fw,
     )
 
     axis.set_xlabel("R [m]")

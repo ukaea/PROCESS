@@ -96,6 +96,9 @@ def write(models, _outfile):
     # First wall geometry
     models.fw.output_fw_geometry()
 
+    # First wall pumping
+    models.fw.output_fw_pumping()
+
     if ft.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
