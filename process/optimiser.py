@@ -33,8 +33,8 @@ class Optimiser:
         # Trim maximum size arrays down to actually used size
         n = numerics.nvar
         x = numerics.xcm[:n]
-        bndl = numerics.bondl[:n]
-        bndu = numerics.bondu[:n]
+        bndl = numerics.itv_scaled_lower_bounds[:n]
+        bndu = numerics.itv_scaled_upper_bounds[:n]
 
         # Define total number of constraints and equality constraints
         m = numerics.neqns + numerics.nineqns

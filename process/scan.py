@@ -335,8 +335,8 @@ class Scan:
             name = f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1])
             solution_vector_table.append([name, numerics.xcs[i], numerics.xcm[i]])
 
-            xminn = 1.01 * numerics.bondl[i]
-            xmaxx = 0.99 * numerics.bondu[i]
+            xminn = 1.01 * numerics.itv_scaled_lower_bounds[i]
+            xmaxx = 0.99 * numerics.itv_scaled_upper_bounds[i]
 
             if numerics.xcm[i] < xminn or numerics.xcm[i] > xmaxx:
                 if not written_warning:
@@ -359,7 +359,7 @@ class Scan:
                 process_output.write(
                     constants.nout,
                     f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
-                    f" {numerics.bondu[i] * numerics.scafc[i]}",
+                    f" {numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i]}",
                 )
 
             process_output.ovarre(
@@ -374,8 +374,11 @@ class Scan:
             else:
                 xnorm = min(
                     max(
-                        (numerics.xcm[i] - numerics.bondl[i])
-                        / (numerics.bondu[i] - numerics.bondl[i]),
+                        (numerics.xcm[i] - numerics.itv_scaled_lower_bounds[i])
+                        / (
+                            numerics.itv_scaled_upper_bounds[i]
+                            - numerics.itv_scaled_lower_bounds[i]
+                        ),
                         0.0,
                     ),
                     1.0,
