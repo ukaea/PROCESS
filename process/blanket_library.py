@@ -783,7 +783,7 @@ class BlanketLibrary:
         )
 
         # Mass flow rate per FW coolant pipe (kg/s):
-        blanket_library.mffwpi = (
+        blanket_library.mflow_fw_inboard_coolant_channel = (
             blanket_library.mflow_fw_inboard_coolant_total
             / blanket_library.n_fw_inboard_channels
         )
@@ -795,7 +795,7 @@ class BlanketLibrary:
         # Coolant velocite in FW (m/s)
         velfwi = self.flow_velocity(
             i_channel_shape=1,
-            mass_flow_rate=blanket_library.mffwpi,
+            mass_flow_rate=blanket_library.mflow_fw_inboard_coolant_channel,
             flow_density=fwbs_variables.den_fw_coolant,
         )
         velfwo = self.flow_velocity(
@@ -1722,22 +1722,25 @@ class BlanketLibrary:
         # First wall flow is just along the first wall, with no allowance for radial
         # pipes, manifolds etc. The outputs are mid quantities of inlet and outlet.
         # This subroutine recalculates cp and rhof.
-        (blanket_library.temp_fw_inboard_peak, _, _, blanket_library.mffwpi) = (
-            self.fw.fw_temp(
-                output,
-                fwbs_variables.radius_fw_channel,
-                build_variables.dr_fw_inboard,
-                build_variables.a_fw_inboard,
-                fwbs_variables.psurffwi,
-                blanket_library.p_fw_inboard_nuclear_heat_mw,
-                "Inboard first wall",
-            )
+        (
+            blanket_library.temp_fw_inboard_peak,
+            _,
+            _,
+            blanket_library.mflow_fw_inboard_coolant_channel,
+        ) = self.fw.fw_temp(
+            output,
+            fwbs_variables.radius_fw_channel,
+            build_variables.dr_fw_inboard,
+            build_variables.a_fw_inboard,
+            fwbs_variables.psurffwi,
+            blanket_library.p_fw_inboard_nuclear_heat_mw,
+            "Inboard first wall",
         )
         # (
         #     blanket_library.temp_fw_inboard_peak,
         #     cf,
         #     rhof,
-        #     blanket_library.mffwpi,
+        #     blanket_library.mflow_fw_inboard_coolant_channel,
         # ) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
