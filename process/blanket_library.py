@@ -787,7 +787,7 @@ class BlanketLibrary:
             blanket_library.mflow_fw_inboard_coolant_total
             / blanket_library.n_fw_inboard_channels
         )
-        blanket_library.mffwpo = (
+        blanket_library.mflow_fw_outboard_coolant_channel = (
             blanket_library.mflow_fw_outboard_coolant_total
             / blanket_library.n_fw_outboard_channels
         )
@@ -800,7 +800,7 @@ class BlanketLibrary:
         )
         velfwo = self.flow_velocity(
             i_channel_shape=1,
-            mass_flow_rate=blanket_library.mffwpo,
+            mass_flow_rate=blanket_library.mflow_fw_outboard_coolant_channel,
             flow_density=fwbs_variables.den_fw_coolant,
         )
 
@@ -1751,18 +1751,21 @@ class BlanketLibrary:
         #     blanket_library.p_fw_inboard_nuclear_heat_mw,
         #     "Inboard first wall",
         # )
-        (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mffwpo) = (
-            self.fw.fw_temp(
-                output,
-                fwbs_variables.radius_fw_channel,
-                build_variables.dr_fw_outboard,
-                build_variables.a_fw_outboard,
-                fwbs_variables.psurffwo,
-                blanket_library.p_fw_outboard_nuclear_heat_mw,
-                "Outboard first wall",
-            )
+        (
+            fwbs_variables.temp_fw_outboard_peak,
+            cf,
+            rhof,
+            fwbs_variables.mflow_fw_outboard_coolant_channel,
+        ) = self.fw.fw_temp(
+            output,
+            fwbs_variables.radius_fw_channel,
+            build_variables.dr_fw_outboard,
+            build_variables.a_fw_outboard,
+            fwbs_variables.psurffwo,
+            blanket_library.p_fw_outboard_nuclear_heat_mw,
+            "Outboard first wall",
         )
-        # (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mffwpo) = fw_module.fw_temp(
+        # (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mflow_fw_outboard_coolant_channel) = fw_module.fw_temp(
         #     int(output),
         #     self.outfile,
         #     fwbs_variables.radius_fw_channel,
