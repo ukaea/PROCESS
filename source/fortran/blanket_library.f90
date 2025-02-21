@@ -66,7 +66,7 @@ module blanket_library
     real(dp) :: p_fw_inboard_nuclear_heat_mw, p_fw_outboard_nuclear_heat_mw
     !! Inboard/outboard first wall nuclear heating (MW)
 
-    real(dp) :: tpeakfwi, temp_fw_outboard_peak
+    real(dp) :: temp_fw_inboard_peak, temp_fw_outboard_peak
     !! Inboard/outboard first wall peak temperature (K)
 
     real(dp) :: mflow_fw_inboard_coolant_total, mflow_fw_outboard_coolant_total, mflow_fw_coolant_total
@@ -147,7 +147,7 @@ contains
         len_blkt_outboard_channel_total = 0.0D0
         p_fw_inboard_nuclear_heat_mw = 0.0D0
         p_fw_outboard_nuclear_heat_mw = 0.0D0
-        tpeakfwi = 0.0D0
+        temp_fw_inboard_peak = 0.0D0
         temp_fw_outboard_peak = 0.0D0
         mflow_fw_inboard_coolant_total = 0.0D0
         mflow_fw_outboard_coolant_total = 0.0D0
