@@ -21,6 +21,17 @@ class Fw:
     def __init__(self) -> None:
         self.outfile = constants.nout
 
+    def run(self):
+        (
+            blanket_library.n_fw_inboard_channels,
+            blanket_library.n_fw_outboard_channels,
+        ) = self.calculate_total_fw_channels(
+            build_variables.a_fw_inboard,
+            build_variables.a_fw_outboard,
+            fwbs_variables.len_fw_channel,
+            fwbs_variables.dx_fw_module,
+        )
+
     def fw_temp(
         self,
         output: bool,
@@ -78,6 +89,7 @@ class Fw:
             temperature=fwbs_variables.temp_fw_coolant_in.item(),
             pressure=fwbs_variables.pres_fw_coolant.item(),
         )
+        print(inlet_coolant_properties)
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
@@ -417,6 +429,29 @@ class Fw:
 
         # Calculate Darcy friction factor
         return (1.8 * np.log10(bracket)) ** (-2)
+
+    @staticmethod
+    def calculate_total_fw_channels(
+        a_fw_inboard: float,
+        a_fw_outboard: float,
+        len_fw_channel: float,
+        dx_fw_module: float,
+    ) -> tuple[int, int]:
+        """
+        Calculate the total number of first wall channels for inboard and outboard sections.
+
+        Args:
+            a_fw_inboard (float): Area of the inboard first wall section (m^2).
+            a_fw_outboard (float): Area of the outboard first wall section (m^2).
+            len_fw_channel (float): Length of each first wall channel (m).
+            dx_fw_module (float): Toroidal width of each first wall module (m).
+
+        Returns:
+            tuple: Number of inboard and outboard first wall channels.
+        """
+        n_fw_inboard_channels = a_fw_inboard / (len_fw_channel * dx_fw_module)
+        n_fw_outboard_channels = a_fw_outboard / (len_fw_channel * dx_fw_module)
+        return int(n_fw_inboard_channels), int(n_fw_outboard_channels)
 
     def output_fw_geometry(self):
         """
