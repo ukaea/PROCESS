@@ -1465,9 +1465,9 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
 
 
 def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
-    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan)
-    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
-    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
+    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan) * 100
+    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan) * 100
+    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan) * 100
 
     # Flot first module
     axis.add_patch(
@@ -1486,7 +1486,7 @@ def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
             xy=(dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
             radius=radius_fw_channel,
             edgecolor="black",
-            facecolor="white",
+            facecolor="#b87333",
         )
     )
 
@@ -1507,15 +1507,71 @@ def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
             xy=(dx_fw_module + dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
             radius=radius_fw_channel,
             edgecolor="black",
-            facecolor="white",
+            facecolor="#b87333",
         )
     )
 
-    axis.set_xlabel("X [m]")
-    axis.set_ylabel("R [m]")
+    # Draw radius line in the second circle
+    axis.plot(
+        [
+            dx_fw_module + dx_fw_module / 2,
+            dx_fw_module + dx_fw_module / 2 + radius_fw_channel * np.cos(np.pi / 4),
+        ],
+        [
+            dr_fw_wall + radius_fw_channel,
+            dr_fw_wall + radius_fw_channel + radius_fw_channel * np.sin(np.pi / 4),
+        ],
+        color="black",
+        linestyle="--",
+        label=f"$r_{{channel}}$ = {radius_fw_channel:.3f} cm",
+    )
+
+    # Draw width line below the second module
+    axis.plot(
+        [0, 0],
+        [0, 0],
+        color="black",
+        label=f"$w_{{module}}$ = {dx_fw_module:.3f} cm",
+    )
+    axis.annotate(
+        "",
+        xy=(dx_fw_module, -0.2),
+        xytext=(2 * dx_fw_module, -0.2),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Draw dotted line above the channel
+    axis.plot(
+        [dx_fw_module * 1.5, dx_fw_module * 1.5],
+        [2 * radius_fw_channel + dr_fw_wall, 2 * (radius_fw_channel + dr_fw_wall)],
+        color="black",
+        linestyle="dotted",
+        label=rf"$\Delta r_{{wall}}$ = {dr_fw_wall:.3f} cm",
+    )
+
+    # Draw dotted line below the channel
+    axis.plot(
+        [dx_fw_module * 1.5, dx_fw_module * 1.5],
+        [0, dr_fw_wall],
+        color="black",
+        linestyle="dotted",
+    )
+    # Plot a dot in the center of the second channel
+    axis.plot(
+        dx_fw_module + dx_fw_module / 2,
+        dr_fw_wall + radius_fw_channel,
+        marker="o",
+        color="black",
+    )
+
+    # Add the legend to the plot
+    axis.legend()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.set_xlabel("X [cm]")
+    axis.set_ylabel("R [cm]")
     axis.set_title("First Wall Top-Down Cross Section")
-    axis.set_xlim([-0.01, 2 * dx_fw_module + 0.01])
-    axis.set_ylim([-0.01, 2 * (dr_fw_wall + radius_fw_channel) + 0.01])
+    axis.set_xlim([-1, 2 * dx_fw_module + 1])
+    axis.set_ylim([-1, 2 * (dr_fw_wall + radius_fw_channel) + 1])
 
 
 def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
