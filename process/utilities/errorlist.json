@@ -313,7 +313,7 @@
     {
       "no": 61,
       "level": 3,
-      "message": "RADIALB: fhole+fdiv+fhcd is too high for a credible outboard wall area"
+      "message": "RADIALB: fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area"
     },
     {
       "no": 62,
@@ -1083,7 +1083,7 @@
     {
       "no": 215,
       "level": 3,
-      "message": "STELLARATOR: primary_pumping = 0 or 1 only"
+      "message": "STELLARATOR: i_coolant_pumping = 0 or 1 only"
     },
     {
       "no": 216,

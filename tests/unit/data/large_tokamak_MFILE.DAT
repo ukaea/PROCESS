@@ -308,7 +308,7 @@
  # Plant Availability #
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
- First_wall_/_blanket_lifetime_(years)___________________________________ (bktlife)_____________________      6.1663E+00 OP 
+ First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1663E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8258E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      6.1663E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
@@ -952,42 +952,42 @@
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6938E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0576E-03 OP 
  # First wall and blanket : CCFE HCPB model #
- Titanium_beryllide_fraction_____________________________________________ (fbltibe12)___________________      3.7500E-01    
- Lithium_orthosilicate_fraction__________________________________________ (fblli2sio4)__________________      3.7500E-01    
- Steel_fraction__________________________________________________________ (fblss_ccfe)__________________      9.7050E-02    
+ Titanium_beryllide_fraction_____________________________________________ (f_vol_blkt_tibe12)___________________      3.7500E-01    
+ Lithium_orthosilicate_fraction__________________________________________ (f_vol_blkt_li4sio4)__________________      3.7500E-01    
+ Steel_fraction__________________________________________________________ (f_vol_blkt_steel)__________________      9.7050E-02    
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
  First_Wall_Armour_Volume_(m3)___________________________________________ (fw_armour_vol)_______________      5.8692E+00    
  First_Wall_Volume_(m3)__________________________________________________ (vol_fw_total)_______________________      1.9807E+01    
- Blanket_Volume_(m3)_____________________________________________________ (volblkt)_____________________      1.1849E+03    
+ Blanket_Volume_(m3)_____________________________________________________ (vol_blkt_total)_____________________      1.1849E+03    
  Shield_Volume_(m3)______________________________________________________ (volshld)_____________________      7.8520E+02    
- Vacuum_vessel_volume_(m3)_______________________________________________ (vdewin)______________________      1.0178E+03    
+ Vacuum_vessel_volume_(m3)_______________________________________________ (vol_vv)______________________      1.0178E+03    
  First_Wall_Armour_Mass_(kg)_____________________________________________ (fw_armour_mass)______________      1.1298E+05 OP 
  First_Wall_Mass,_excluding_armour_(kg)__________________________________ (m_fw_total)______________________      1.5449E+05 OP 
- Blanket_Mass_-_Total(kg)________________________________________________ (whtblkt)_____________________      2.9676E+06 OP 
- ____Blanket_Mass_-_TiBe12_(kg)__________________________________________ (whtbltibe12)_________________      1.0042E+06 OP 
- ____Blanket_Mass_-_Li4SiO4_(kg)_________________________________________ (whtblli4sio4)________________      1.0664E+06 OP 
- ____Blanket_Mass_-_Steel_(kg)___________________________________________ (whtblss)_____________________      8.9696E+05 OP 
+ Blanket_Mass_-_Total(kg)________________________________________________ (m_blkt_total)_____________________      2.9676E+06 OP 
+ ____Blanket_Mass_-_TiBe12_(kg)__________________________________________ (m_blkt_tibe12)_________________      1.0042E+06 OP 
+ ____Blanket_Mass_-_Li4SiO4_(kg)_________________________________________ (m_blkt_li4sio4)________________      1.0664E+06 OP 
+ ____Blanket_Mass_-_Steel_(kg)___________________________________________ (m_blkt_steel_total)_____________________      8.9696E+05 OP 
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      3.2350E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4498E+06 OP 
- Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      7.9388E+06 OP 
+ Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      7.9388E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      2.5460E-02 OP 
- Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_mw)______________________      1.6290E+02 OP 
- Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.2880E+03 OP 
+ Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      1.6290E+02 OP 
+ Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.2880E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4115E+00 OP 
- Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4882E+02 OP 
+ Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.4882E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9936E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.9523E-03 OP 
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
- Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
- Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
+ Solid_angle_fraction_taken_by_on_divertor_______________________________ (f_ster_div_single)________________________      1.1500E-01    
+ Switch_for_plant_secondary_cycle________________________________________ (i_thermal_electric_conversion)_____________              2    
  First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
- Blanket_coolant_pressure_(Pa)___________________________________________ (blpressure)__________________      1.5500E+07    
+ Blanket_coolant_pressure_(Pa)___________________________________________ (pres_blkt_coolant)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
- No_of_inboard_blanket_modules_poloidally________________________________ (nblktmodpi)__________________              7    
- No_of_inboard_blanket_modules_toroidally________________________________ (nblktmodti)__________________             32    
- No_of_outboard_blanket_modules_poloidally_______________________________ (nblktmodpo)__________________              8    
- No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
+ No_of_inboard_blanket_modules_poloidally________________________________ (n_blkt_inboard_modules_poloidal)__________________              7    
+ No_of_inboard_blanket_modules_toroidally________________________________ (n_blkt_inboard_modules_toroidal)__________________             32    
+ No_of_outboard_blanket_modules_poloidally_______________________________ (n_blkt_outboard_modules_poloidal)__________________              8    
+ No_of_outboard_blanket_modules_toroidally_______________________________ (n_blkt_outboard_modules_toroidal)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
  First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7805E+01 OP 
@@ -1105,10 +1105,10 @@
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      3.6515E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
- Divertor_area_fraction_of_whole_toroid_surface__________________________ (fdiv)________________________      1.1500E-01    
- H/CD_apparatus_+_diagnostics_area_fraction______________________________ (fhcd)________________________      0.0000E+00    
- First_wall_area_fraction________________________________________________ (1-fdiv-fhcd)_________________      8.8500E-01    
- Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
+ Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
+ H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
+ First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
+ Switch_for_pumping_of_primary_coolant___________________________________ (i_coolant_pumping)_____________              3    
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (htpmw_fw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (htpmw_blkt)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6366E+02 OP 
@@ -1688,7 +1688,7 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-primary_pumping = 3
+i_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
 etahtp = 0.87
@@ -1697,7 +1697,7 @@ etahtp = 0.87
 etaiso = 0.9
 
 * Switch for secondary cycle - User input thermal-electric efficiency
-secondary_cycle = 2
+i_thermal_electric_conversion = 2
 
 * Thermal to electric conversion efficiency
 etath = 0.4
