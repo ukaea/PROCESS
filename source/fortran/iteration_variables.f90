@@ -4424,7 +4424,7 @@ contains
     !!     !
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    use numerics, only: nvar, bondl, bondu, scale, ixc, boundl, boundu
+    use numerics, only: nvar, itv_scaled_lower_bounds, itv_scaled_upper_bounds, scale, ixc, boundl, boundu
 
     implicit none
 
@@ -4435,8 +4435,8 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     do i = 1,nvar
-       bondl(i) = boundl(ixc(i))*scale(i)
-       bondu(i) = boundu(ixc(i))*scale(i)
+       itv_scaled_lower_bounds(i) = boundl(ixc(i))*scale(i)
+       itv_scaled_upper_bounds(i) = boundu(ixc(i))*scale(i)
     end do
 
   end subroutine boundxc

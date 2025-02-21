@@ -406,12 +406,12 @@ module numerics
   real(dp), dimension(ipnvars) :: boundu
   ! !!  boundu(ipnvars) /../ : upper bounds used on ixc variables
 
-  real(dp), dimension(ipnvars) :: bondl
-  !! Upper bound of the ixc variables scaled to (divided by)
+  real(dp), dimension(ipnvars) :: itv_scaled_lower_bounds
+  !! Lower bound of the ixc variables scaled to (divided by)
   !! the initial value of the corresponding ixc
 
-  real(dp), dimension(ipnvars) :: bondu
-  !! Lower bound of the ixc variables scaled to (divided by)
+  real(dp), dimension(ipnvars) :: itv_scaled_upper_bounds
+  !! Upper bound of the ixc variables scaled to (divided by)
   !! the initial value of the corresponding ixc
 
   real(dp), dimension(ipnvars) :: rcm
@@ -585,8 +585,8 @@ contains
     ! Issue #287 These bounds now defined in initial.f90
     boundu = 9.d99
 
-    bondl = 0.0D0
-    bondu = 0.0D0
+    itv_scaled_lower_bounds = 0.0D0
+    itv_scaled_upper_bounds = 0.0D0
     rcm = 0.0D0
     resdl = 0.0D0
     scafc = 0.0D0
