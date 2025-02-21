@@ -1465,6 +1465,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
 
 
 def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
+    # Import required variables
     radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan) * 100
     dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan) * 100
     dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan) * 100
@@ -1575,6 +1576,7 @@ def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
 
 
 def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
+    # Import required variables
     radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan)
     dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
     dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
@@ -1584,6 +1586,8 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
     i_fw_coolant_type = mfile_data.data["i_fw_coolant_type"].get_scan(scan)
     temp_fw_peak = mfile_data.data["temp_fw_peak"].get_scan(scan)
     pres_fw_coolant = mfile_data.data["pres_fw_coolant"].get_scan(scan)
+    n_fw_outboard_channels = mfile_data.data["n_fw_outboard_channels"].get_scan(scan)
+    n_fw_inboard_channels = mfile_data.data["n_fw_inboard_channels"].get_scan(scan)
 
     # Plot first wall structure facing plasma
     axis.add_patch(
@@ -1670,6 +1674,8 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
         rf"$T_{{FW,peak}}$: {temp_fw_peak:.3f} K",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:.3f} kPa",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:.3f} bar",
+        rf"$N_{{outboard}}$: {n_fw_outboard_channels}",
+        rf"$N_{{inboard}}$: {n_fw_inboard_channels}",
     ))
 
     props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}

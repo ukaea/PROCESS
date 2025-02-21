@@ -5,6 +5,7 @@ from process import (
 )
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
+    blanket_library,
     build_variables,
     constants,
     error_handling,
@@ -466,6 +467,20 @@ class Fw:
             "Radial thickness off outboard first wall (m)",
             "(dr_fw_outboard)",
             build_variables.dr_fw_outboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Number of inboard first wall cooling channels",
+            "(n_fw_inboard_channels)",
+            blanket_library.n_fw_inboard_channels,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Number of outboard first wall cooling channels",
+            "(n_fw_outboard_channels)",
+            blanket_library.n_fw_outboard_channels,
             "OP ",
         )
 
