@@ -249,7 +249,7 @@ class Caller:
 
         # Machine Build Model
         # Radial build
-        if ft.build_variables.tf_in_cs == 1:
+        if ft.build_variables.i_tf_inside_cs == 1:
             self.models.build.tf_in_cs_bore_calc()
         self.models.build.calculate_radial_build(output=False)
 
