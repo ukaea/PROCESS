@@ -346,7 +346,7 @@ contains
       str_wp_max, str_tf_con_res, i_str_wp, max_vv_stress, theta1_coil, theta1_vv
 
     use times_variables, only: t_current_ramp_up, pulsetimings, t_ramp_down, t_fusion_ramp, t_precharge, t_burn, &
-      t_between_pulse, tohsin
+      t_between_pulse, i_t_current_ramp_up
     use vacuum_variables, only: dwell_pump, pbase, tn, pumpspeedfactor, &
       initialpressure, outgasfactor, prdiv, pumpspeedmax, rat, outgasindex, &
       pumpareafraction, ntype, vacuum_model, pumptp
@@ -1127,8 +1127,8 @@ contains
        case ('t_current_ramp_up')
           call parse_real_variable('t_current_ramp_up', t_current_ramp_up, 0.0D0, 1.0D4, &
                'Plasma current ramp-up time for current init (s)')
-       case ('tohsin')
-          call parse_real_variable('tohsin', tohsin, 0.0D0, 1.0D4, &
+       case ('i_t_current_ramp_up')
+          call parse_int_variable('i_t_current_ramp_up', i_t_current_ramp_up, 0, 1, &
                'Switch for t_current_ramp_up calculation')
        case ('t_ramp_down')
           call parse_real_variable('t_ramp_down', t_ramp_down, 0.0D0, 1.0D4, &
