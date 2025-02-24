@@ -52,7 +52,7 @@ module times_variables
   !! (`iteration variable 65`)
 
   integer :: i_t_current_ramp_up
-  !! Switch for plasma current ramp-up time (if lpulse=0):
+  !! Switch for plasma current ramp-up time (if i_pulsed_plant=0):
   !!
   !! - = 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5
   !! - = 1, t_current_ramp_up, t_precharge, t_ramp_down are input

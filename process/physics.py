@@ -1688,7 +1688,7 @@ class Physics:
         )
 
         # Set PF coil ramp times
-        if pulse_variables.lpulse != 1:
+        if pulse_variables.i_pulsed_plant != 1:
             if times_variables.i_t_current_ramp_up == 0:
                 times_variables.t_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
