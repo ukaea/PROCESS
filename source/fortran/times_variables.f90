@@ -51,11 +51,11 @@ module times_variables
   !! time for plasma current to ramp up to approx. full value (s) (calculated if `i_pulsed_plant=0`)
   !! (`iteration variable 65`)
 
-  real(dp) :: tohsin
+  integer :: i_t_current_ramp_up
   !! Switch for plasma current ramp-up time (if i_pulsed_plant=0):
   !!
   !! - = 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5
-  !! - <>0, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input
+  !! - = 1, t_current_ramp_up, t_precharge, t_ramp_down are input
 
   real(dp) :: t_pulse_repetition
   !! pulse length = t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down
@@ -93,7 +93,7 @@ module times_variables
       't_burn             ', &
       't_ramp_down        ' /)
     t_current_ramp_up = 30.0D0
-    tohsin = 0.0D0
+    i_t_current_ramp_up = 0
     t_pulse_repetition = 0.0D0
     t_ramp_down = 15.0D0
     t_precharge = 15.0D0

@@ -1689,14 +1689,12 @@ class Physics:
 
         # Set PF coil ramp times
         if pulse_variables.i_pulsed_plant != 1:
-            if times_variables.tohsin == 0.0e0:
+            if times_variables.i_t_current_ramp_up == 0:
                 times_variables.t_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
                 )
                 times_variables.t_precharge = times_variables.t_current_ramp_up
                 times_variables.t_ramp_down = times_variables.t_current_ramp_up
-            else:
-                times_variables.t_current_ramp_up = times_variables.tohsin
 
         else:
             if times_variables.pulsetimings == 0.0e0:

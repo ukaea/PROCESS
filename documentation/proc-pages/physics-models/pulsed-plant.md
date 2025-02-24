@@ -31,9 +31,9 @@ but this is not taken ito account.
 
 In the steady-state scenario (`i_pulsed_plant` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
 
-- If `tohsin` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
+- If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
   and shutdown time `t_ramp_down` are (arbitrarily) set equal to `t_current_ramp_up`. 
-- If `tohsin` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up` = `tohsin`, and the PF coil ramp 
+- If `i_t_current_ramp_up` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up`, and the PF coil ramp 
   and shutdown times are input parameters.
 
 In the pulsed scenario, (`i_pulsed_plant` = 1), the plasma current ramp-up time `t_current_ramp_up` is an input, and it 
