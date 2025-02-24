@@ -40,9 +40,9 @@ class CalcBuildingCostsParam(NamedTuple):
 
     helpow: Any = None
 
-    ritfc: Any = None
+    c_tf_total: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     estotftgj: Any = None
 
@@ -86,8 +86,8 @@ class CalcBuildingCostsParam(NamedTuple):
             pthermmw=2112.8165753998965,
             psechtmw=311.54038043019023,
             helpow=142703.41458500578,
-            ritfc=234156150,
-            n_tf=18,
+            c_tf_total=234156150,
+            n_tf_coils=18,
             estotftgj=130.10721529398921,
             r_cryostat_inboard=18.314040399601147,
             z_cryostat_half_inside=15.118436894660423,
@@ -1186,8 +1186,8 @@ class CalcBuildingCostsParam(NamedTuple):
             pthermmw=2111.8102173541502,
             psechtmw=640.27066522894324,
             helpow=823308.59959198488,
-            ritfc=234156150,
-            n_tf=18,
+            c_tf_total=234156150,
+            n_tf_coils=18,
             estotftgj=129.99240835373195,
             r_cryostat_inboard=18.31462428923539,
             z_cryostat_half_inside=15.165858901796364,
@@ -2306,9 +2306,13 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
         heat_transport_variables, "helpow", calcbuildingcostsparam.helpow
     )
 
-    monkeypatch.setattr(tfcoil_variables, "ritfc", calcbuildingcostsparam.ritfc)
+    monkeypatch.setattr(
+        tfcoil_variables, "c_tf_total", calcbuildingcostsparam.c_tf_total
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", calcbuildingcostsparam.n_tf)
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", calcbuildingcostsparam.n_tf_coils
+    )
 
     monkeypatch.setattr(tfcoil_variables, "estotftgj", calcbuildingcostsparam.estotftgj)
 
@@ -4643,9 +4647,9 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
 
 
 class CalcTfCoilCostsParam(NamedTuple):
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
-    tfleng: Any = None
+    len_tf_coil: Any = None
 
     n_tf_turn: Any = None
 
@@ -4682,8 +4686,8 @@ class CalcTfCoilCostsParam(NamedTuple):
     "calctfcoilcostsparam",
     (
         CalcTfCoilCostsParam(
-            n_tf=18,
-            tfleng=46.64605032553105,
+            n_tf_coils=18,
+            len_tf_coil=46.64605032553105,
             n_tf_turn=200.13346153846152,
             whtconcu=31746.02769109578,
             whtconsc=10284.64237165747,
@@ -5771,8 +5775,8 @@ class CalcTfCoilCostsParam(NamedTuple):
             ).transpose(),
         ),
         CalcTfCoilCostsParam(
-            n_tf=18,
-            tfleng=46.6270502920285,
+            n_tf_coils=18,
+            len_tf_coil=46.6270502920285,
             n_tf_turn=200.13346153846155,
             whtconcu=24895.07929687943,
             whtconsc=7945.1211509981658,
@@ -6874,9 +6878,11 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", calctfcoilcostsparam.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", calctfcoilcostsparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", calctfcoilcostsparam.tfleng)
+    monkeypatch.setattr(
+        tfcoil_variables, "len_tf_coil", calctfcoilcostsparam.len_tf_coil
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", calctfcoilcostsparam.n_tf_turn)
 
@@ -13729,7 +13735,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
 
     fusion_power: Any = None
 
-    res_time: Any = None
+    t_plasma_res_diffusion: Any = None
 
     itr_sum: Any = None
 
@@ -13779,7 +13785,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             pinjmw=43.745615131519273,
             pdivt=94.203763268233445,
             fusion_power=1726.9363495105574,
-            res_time=2562.1529343276788,
+            t_plasma_res_diffusion=2562.1529343276788,
             itr_sum=687546826.85995734,
             ensxpfm=34911.529178721656,
             pthermmw=2112.8165753998965,
@@ -14875,7 +14881,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             pinjmw=43.745615131519266,
             pdivt=94.062415557688894,
             fusion_power=1726.1944723154274,
-            res_time=2562.1529343276788,
+            t_plasma_res_diffusion=2562.1529343276788,
             itr_sum=1176301401.3409874,
             ensxpfm=34908.848681194133,
             pthermmw=2111.8102173541502,
@@ -15995,7 +16001,9 @@ def test_calc_remaining_subsystems(
     )
 
     monkeypatch.setattr(
-        physics_variables, "res_time", calcremainingsubsystemsparam.res_time
+        physics_variables,
+        "t_plasma_res_diffusion",
+        calcremainingsubsystemsparam.t_plasma_res_diffusion,
     )
 
     monkeypatch.setattr(

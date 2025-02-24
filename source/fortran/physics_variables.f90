@@ -260,7 +260,7 @@ module physics_variables
   real(dp) :: fvsbrnni
   !! fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 
-  real(dp) :: gamma
+  real(dp) :: ejima_coeff
   !! Ejima coefficient for resistive startup V-s formula
 
   real(dp) :: f_beta_alpha_beam_thermal
@@ -399,13 +399,13 @@ module physics_variables
   integer :: iprofile
   !! switch for current profile consistency:
   !!
-  !! - =0 use input values for alphaj, rli, beta_norm_max
-  !! - =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set rli and beta_norm_max from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set rli from Menard and beta_norm_max from Tholerus
+  !! - =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max
+  !! - =1 make these consistent with input q95, q_0 values (recommend `i_plasma_current=4` with this option)
+  !! - =2 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling)
+  !! - =3 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling)
+  !! - =4 use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling)
+  !! - =5 use input value for alphaj.  Set ind_plasma_internal_norm and beta_norm_max from Menard scaling
+  !! - =6 use input values for alphaj, c_beta.  Set ind_plasma_internal_norm from Menard and beta_norm_max from Tholerus
 
   integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -624,7 +624,7 @@ module physics_variables
   real(dp) :: pedgeradpv
   !! edge radiation power per volume (MW/m3)
 
-  real(dp) :: phiint
+  real(dp) :: vs_plasma_internal
   !! internal plasma V-s
 
   real(dp) :: pflux_fw_rad_mw
@@ -681,14 +681,14 @@ module physics_variables
   real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
 
-  integer :: ilhthresh
-  !! switch for L-H mode power threshold scaling to use (see pthrmw for list)
+  integer :: i_l_h_threshold
+  !! switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)
 
-  real(dp) :: plhthresh
-  !! L-H mode power threshold (MW) (chosen via ilhthresh, and enforced if
+  real(dp) :: p_l_h_threshold_mw
+  !! L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if
   !! constraint equation 15 is on)
 
-  real(dp), dimension(21) :: pthrmw
+  real(dp), dimension(21) :: l_h_threshold_powers
   !! L-H power threshold for various scalings (MW)
   !!
   !! - =1 ITER 1996 scaling: nominal
@@ -728,15 +728,12 @@ module physics_variables
   real(dp) :: pden_ion_transport_loss_mw
   !! ion transport power per volume (MW/m3)
 
-  real(dp) :: q
-  !! Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
-  !! (unless `i_plasma_current=2` (ST current scaling), in which case q = mean edge safety factor qbar)
-
   real(dp) :: q0
-  !! safety factor on axis
+  !! Safety factor on axis
 
   real(dp) :: q95
-  !! safety factor at 95% surface
+  !! Safety factor at 95% flux surface (iteration variable 18) (unless icurr=2 (ST current scaling),
+  !! in which case q95 = mean edge safety factor qbar)
 
   real(dp) :: qfuel
   !! plasma fuelling rate (nucleus-pairs/s)
@@ -762,10 +759,10 @@ module physics_variables
   real(dp) :: f_nd_protium_electrons
   !! Seeded f_nd_protium_electrons density / electron density.
 
-  real(dp) :: rli
-  !! plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+  real(dp) :: ind_plasma_internal_norm
+  !! Plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
 
-  real(dp) :: rlp
+  real(dp) :: ind_plasma
   !! plasma inductance (H)
 
   real(dp) :: rmajor
@@ -789,13 +786,13 @@ module physics_variables
   real(dp) :: rnone
   !! n_oxygen / n_e
 
-  real(dp) :: rpfac
+  real(dp) :: f_res_plasma_neo
   !! neo-classical correction factor to res_plasma
 
   real(dp) :: res_plasma
   !! plasma resistance (ohm)
 
-  real(dp) :: res_time
+  real(dp) :: t_plasma_res_diffusion
   !! plasma current resistive diffusion time (s)
 
   real(dp) :: a_plasma_surface
@@ -861,19 +858,22 @@ module physics_variables
   real(dp) :: vol_plasma
   !! plasma volume (m3)
 
-  real(dp) :: vsbrn
+  real(dp) :: vs_plasma_burn_required
   !! V-s needed during flat-top (heat + burn times) (Wb)
+
+  real(dp) :: v_plasma_loop_burn
+  !! Plasma loop voltage during flat-top (V)
 
   real(dp) :: vshift
   !! plasma/device midplane vertical shift - single null
 
-  real(dp) :: vsind
-  !! internal and external plasma inductance V-s (Wb)
+  real(dp) :: vs_plasma_ind_ramp
+  !! Total plasma inductive flux consumption for plasma current ramp-up (Vs)(Wb)
 
-  real(dp) :: vsres
-  !! resistive losses in startup V-s (Wb)
+  real(dp) :: vs_plasma_res_ramp
+  !! Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)
 
-  real(dp) :: vsstt
+  real(dp) :: vs_plasma_total_required
   !! total V-s needed (Wb)
 
   real(dp) :: wallmw
@@ -973,7 +973,7 @@ module physics_variables
     fusion_rate_density_total = 0.0D0
     fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
-    gamma = 0.4D0
+    ejima_coeff = 0.4D0
     f_beta_alpha_beam_thermal = 0.0D0
     hfac = 0.0D0
     hfact = 1.0D0
@@ -1042,7 +1042,7 @@ module physics_variables
     p_plasma_outer_rad_mw = 0.0D0
     pedgeradpv = 0.0D0
     charged_particle_power = 0.0D0
-    phiint = 0.0D0
+    vs_plasma_internal = 0.0D0
     pflux_fw_rad_mw = 0.0D0
     piepv = 0.0D0
     plasma_current = 0.0D0
@@ -1061,15 +1061,14 @@ module physics_variables
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     pden_plasma_sync_mw = 0.0D0
-    ilhthresh = 19
-    plhthresh = 0.0D0
-    pthrmw = 0.0D0
+    i_l_h_threshold = 19
+    p_l_h_threshold_mw = 0.0D0
+    l_h_threshold_powers = 0.0D0
     p_electron_transport_loss_mw = 0.0D0
     pden_electron_transport_loss_mw = 0.0D0
     p_ion_transport_loss_mw = 0.0D0
     pscalingmw = 0.0D0
     pden_ion_transport_loss_mw = 0.0D0
-    q = 3.0D0
     q0 = 1.0D0
     q95 = 0.0D0
     qfuel = 0.0D0
@@ -1080,8 +1079,8 @@ module physics_variables
     rad_fraction_total = 0.0D0
     f_nd_alpha_electron = 0.10D0
     f_nd_protium_electrons = 0.0D0
-    rli = 0.9D0
-    rlp = 0.0D0
+    ind_plasma_internal_norm = 0.9D0
+    ind_plasma = 0.0D0
     rmajor = 8.14D0
     rminor = 0.0D0
     f_nd_beam_electron = 0.005D0
@@ -1089,9 +1088,9 @@ module physics_variables
     rndfuel = 0.0D0
     rnfene = 0.0D0
     rnone = 0.0D0
-    rpfac = 0.0D0
+    f_res_plasma_neo = 0.0D0
     res_plasma = 0.0D0
-    res_time = 0.0D0
+    t_plasma_res_diffusion = 0.0D0
     a_plasma_surface = 0.0D0
     a_plasma_surface_outboard = 0.0D0
     i_single_null = 1
@@ -1112,11 +1111,12 @@ module physics_variables
     triang = 0.36D0
     triang95 = 0.24D0
     vol_plasma = 0.0D0
-    vsbrn = 0.0D0
+    vs_plasma_burn_required = 0.0D0
+    v_plasma_loop_burn = 0.0D0
     vshift = 0.0D0
-    vsind = 0.0D0
-    vsres = 0.0D0
-    vsstt = 0.0D0
+    vs_plasma_ind_ramp = 0.0D0
+    vs_plasma_res_ramp = 0.0D0
+    vs_plasma_total_required = 0.0D0
     wallmw = 0.0D0
     wtgpd = 0.0D0
     a_plasma_poloidal = 0.0D0

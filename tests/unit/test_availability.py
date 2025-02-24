@@ -27,10 +27,10 @@ def availability():
 
 
 @pytest.mark.parametrize(
-    "fwlife, ibkt_life, bktlife_exp_param",
+    "life_fw_fpy, ibkt_life, bktlife_exp_param",
     ((0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)),
 )
-def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param):
+def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_param):
     """Test avail for iavail = 0
 
     :param monkeypatch: mocking fixture
@@ -42,7 +42,7 @@ def test_avail_0(monkeypatch, availability, fwlife, ibkt_life, bktlife_exp_param
     # Mock module vars
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "fusion_power", 4.0e3)
-    monkeypatch.setattr(fwbsv, "fwlife", fwlife)
+    monkeypatch.setattr(fwbsv, "life_fw_fpy", life_fw_fpy)
     monkeypatch.setattr(cv, "ibkt_life", ibkt_life)
     monkeypatch.setattr(cv, "abktflnc", 4.0)
     monkeypatch.setattr(pv, "wallmw", 10.0)

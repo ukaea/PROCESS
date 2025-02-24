@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 
+from process import process_output as po
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -22,7 +23,6 @@ from process.fortran import (
     tfcoil_variables,
     times_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
@@ -623,7 +623,7 @@ class Power:
             if fwbs_variables.icooldual == 2:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
-                    + fwbs_variables.pnucfw
+                    + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + (fwbs_variables.pnucblkt * (1 - fwbs_variables.f_nuc_pow_bz_liq))
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -634,7 +634,7 @@ class Power:
             elif fwbs_variables.icooldual == 1:
                 self.pthermfw_blkt = (
                     self.pthermblkt_liq
-                    + fwbs_variables.pnucfw
+                    + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -644,7 +644,7 @@ class Power:
                 )
             else:
                 self.pthermfw_blkt = (
-                    fwbs_variables.pnucfw
+                    fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.pradfw
                     + fwbs_variables.pnucblkt
                     + primary_pumping_variables.htpmw_fw_blkt
@@ -656,7 +656,7 @@ class Power:
         elif fwbs_variables.primary_pumping == 3:
             # First wall and blanket coolant combined
             self.pthermfw_blkt = (
-                fwbs_variables.pnucfw
+                fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.pradfw
                 + fwbs_variables.pnucblkt
                 + primary_pumping_variables.htpmw_fw_blkt
@@ -668,7 +668,7 @@ class Power:
         else:
             #  Total power deposited in first wall coolant (MW)
             self.pthermfw = (
-                fwbs_variables.pnucfw
+                fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.pradfw
                 + heat_transport_variables.htpmw_fw
                 + current_drive_variables.porbitlossmw
@@ -791,7 +791,7 @@ class Power:
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
-                tfcoil_variables.n_tf,
+                tfcoil_variables.n_tf_coils,
             )
 
             # Use 13% of ideal Carnot efficiency to fit J. Miller estimate
@@ -813,8 +813,8 @@ class Power:
         if tfcoil_variables.i_tf_sup == 2:
             # Heat removal power at cryogenic temperature tfcoil_variables.tcoolin (W)
             heat_transport_variables.helpow_cryal = (
-                tfcoil_variables.prescp
-                + tfcoil_variables.presleg
+                tfcoil_variables.p_cp_resistive
+                + tfcoil_variables.p_tf_leg_resistive
                 + tfcoil_variables.pres_joints
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
             )
@@ -971,7 +971,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (tfcoil_variables.tmpcry & tfcoil_variables.tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (tmpcry & tcoolin) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,
@@ -1316,14 +1316,19 @@ class Power:
         po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
 
         po.write(self.outfile, "First wall:")
-        po.dblcol(self.outfile, "pnucfw", 0.0e0, fwbs_variables.pnucfw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_nuclear_heat_total_mw",
+            0.0e0,
+            fwbs_variables.p_fw_nuclear_heat_total_mw,
+        )
         po.dblcol(self.outfile, "palpfwmw", 0.0e0, physics_variables.palpfwmw)
         po.dblcol(self.outfile, "pradfw", 0.0e0, fwbs_variables.pradfw)
         po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
 
         primsum = (
             primsum
-            + fwbs_variables.pnucfw
+            + fwbs_variables.p_fw_nuclear_heat_total_mw
             + physics_variables.palpfwmw
             + fwbs_variables.pradfw
             + heat_transport_variables.htpmw_fw
@@ -2268,7 +2273,7 @@ class Power:
         ensxpfm,
         t_pulse_repetition,
         cpttf,
-        n_tf,
+        n_tf_coils,
     ):
         """
         Calculates cryogenic loads
@@ -2302,7 +2307,7 @@ class Power:
 
         #  Current leads
         if i_tf_sup == 1:
-            self.qcl = 13.6e-3 * n_tf * cpttf
+            self.qcl = 13.6e-3 * n_tf_coils * cpttf
         else:
             self.qcl = 0.0e0
 
@@ -2334,9 +2339,9 @@ class Power:
         if fwbs_variables.secondary_cycle == 0:
             #  CCFE HCPB Model (with or without TBR)
             if (
-                (fwbs_variables.iblanket == 1)
-                or (fwbs_variables.iblanket == 3)
-                or fwbs_variables.iblanket == 2
+                (fwbs_variables.i_blanket_type == 1)
+                or (fwbs_variables.i_blanket_type == 3)
+                or fwbs_variables.i_blanket_type == 2
             ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -2344,12 +2349,14 @@ class Power:
                 # Feedheat & reheat cycle assumed
                 etath = 0.411e0
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.secondary_cycle == 1:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
+            if (fwbs_variables.i_blanket_type == 1) or (
+                fwbs_variables.i_blanket_type == 3
+            ):
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2357,10 +2364,10 @@ class Power:
                 etath = 0.411e0 - self.delta_eta
 
                 #  KIT HCPB model
-            elif fwbs_variables.iblanket == 2:
+            elif fwbs_variables.i_blanket_type == 2:
                 etath = 0.411e0 - self.delta_eta
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  User input used, etath not changed
         elif fwbs_variables.secondary_cycle == 2:
@@ -2370,7 +2377,9 @@ class Power:
             #  Steam Rankine cycle to be used
         elif fwbs_variables.secondary_cycle == 3:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.iblanket == 1) or (fwbs_variables.iblanket == 3):
+            if (fwbs_variables.i_blanket_type == 1) or (
+                fwbs_variables.i_blanket_type == 3
+            ):
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature
                 #  is assumed to be 20 degrees below the primary coolant outlet
@@ -2396,8 +2405,8 @@ class Power:
                 )
 
                 #  KIT HCPB Model
-            elif fwbs_variables.iblanket == 2:
-                #  Same as fwbs_variables.iblanket = 1
+            elif fwbs_variables.i_blanket_type == 2:
+                #  Same as fwbs_variables.i_blanket_type = 1
                 heat_transport_variables.tturb = fwbs_variables.outlet_temp - 20.0e0
                 if (heat_transport_variables.tturb < 657.0e0) or (
                     heat_transport_variables.tturb > 915.0e0
@@ -2412,7 +2421,7 @@ class Power:
                     - self.delta_eta
                 )
             else:
-                logger.log(f"{'iblanket does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
             #  Supercritical CO2 cycle to be used
         elif fwbs_variables.secondary_cycle == 4:
@@ -2480,43 +2489,46 @@ class Power:
         None
         """
         if tfcoil_variables.i_tf_sup != 1:
-            tfcoil_variables.tfbusl = 300.0e0
-
             # Cross-sectional area of bus
             # tfcoil_variables.cpttf  - current per TFC turn (A)
-            # tfcoil_variables.jbus   - bus current density (A/m2)
-            abus = tfcoil_variables.cpttf / tfcoil_variables.jbus
+            # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
+            a_tf_bus = tfcoil_variables.cpttf / tfcoil_variables.j_tf_bus
 
             # Bus resistance [ohm]
-            # Bus resistivity (tfcoil_variables.rhotfbus)
+            # Bus resistivity (tfcoil_variables.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
-            tfbusres = tfcoil_variables.rhotfbus * tfcoil_variables.tfbusl / abus
+            tfbusres = (
+                tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / a_tf_bus
+            )
 
             #  Bus mass (kg)
-            tfcoil_variables.tfbusmas = (
-                tfcoil_variables.tfbusl * abus * constants.dcopper
+            tfcoil_variables.m_tf_bus = (
+                tfcoil_variables.len_tf_bus * a_tf_bus * constants.dcopper
             )
 
             #  Total maximum impedance MDK actually just fixed resistance
-            ztot = (
-                tfcoil_variables.n_tf * tfcoil_variables.tflegres
-                + (tfcoil_variables.prescp / tfcoil_variables.ritfc**2)
+            res_tf_system_total = (
+                tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
+                + (tfcoil_variables.p_cp_resistive / tfcoil_variables.c_tf_total**2)
                 + tfbusres
             )
 
             #  No reactive portion of the voltage is included here - assume long ramp times
             #  MDK This is steady state voltage, not "peak" voltage
             tfcoil_variables.vtfkv = (
-                1.0e-3 * ztot * tfcoil_variables.cpttf / tfcoil_variables.n_tf
+                1.0e-3
+                * res_tf_system_total
+                * tfcoil_variables.cpttf
+                / tfcoil_variables.n_tf_coils
             )
 
             # Resistive powers (MW):
             tfcoil_variables.tfcpmw = (
-                1.0e-6 * tfcoil_variables.prescp
+                1.0e-6 * tfcoil_variables.p_cp_resistive
             )  # inboard legs (called centrepost, CP for tart design)
             tfcoil_variables.tflegmw = (
-                1.0e-6 * tfcoil_variables.presleg
+                1.0e-6 * tfcoil_variables.p_tf_leg_resistive
             )  # outboard legs
             tfcoil_variables.tfjtsmw = 1.0e-6 * tfcoil_variables.pres_joints  # Joints
             tfbusmw = (
@@ -2528,7 +2540,7 @@ class Power:
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
             #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
-            #                                 estotf(=estotftgj/tfcoil_variables.n_tf) has been removed (#199 #847)
+            #                                 estotf(=estotftgj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
             # Total power consumption (MW)
@@ -2556,27 +2568,30 @@ class Power:
         po.oheadr(self.outfile, "Resistive TF Coil Power Conversion")
         po.ovarre(self.outfile, "Bus resistance (ohm)", "(tfbusres)", tfbusres, "OP ")
         po.ovarre(
-            self.outfile, "Bus current density (A/m2)", "(jbus)", tfcoil_variables.jbus
+            self.outfile,
+            "Bus current density (A/m2)",
+            "(j_tf_bus)",
+            tfcoil_variables.j_tf_bus,
         )
         po.ovarre(
             self.outfile,
             "Bus length - all coils (m)",
-            "(tfbusl)",
-            tfcoil_variables.tfbusl,
+            "(len_tf_bus)",
+            tfcoil_variables.len_tf_bus,
         )
         po.ovarre(
             self.outfile,
             "Bus mass (kg)",
-            "(tfbusmas)",
-            tfcoil_variables.tfbusmas,
+            "(m_tf_bus)",
+            tfcoil_variables.m_tf_bus,
             "OP ",
         )
         # po.ovarre(outfile,'Maximum impedance (ohm)','(ztot)',ztot)
         po.ovarre(
             self.outfile,
             "Total resistance for TF coil set (ohm)",
-            "(ztot)",
-            ztot,
+            "(res_tf_system_total)",
+            res_tf_system_total,
             "OP ",
         )
         # po.ovarre(outfile,'Peak voltage per coil (kV)','(vtfkv)',vtfkv)
@@ -2640,7 +2655,7 @@ class Power:
         the power conversion requirements for superconducting TF coils.
         None
         """
-        ettfmj = tfcoil_variables.estotftgj / tfcoil_variables.n_tf * 1.0e3
+        ettfmj = tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e3
 
         #  TF coil current (kA)
 
@@ -2648,7 +2663,7 @@ class Power:
 
         (
             tfcoil_variables.tfckw,
-            tfcoil_variables.tfbusl,
+            tfcoil_variables.len_tf_bus,
             tfcoil_variables.drarea,
             buildings_variables.tfcbv,
             heat_transport_variables.tfacpd,
@@ -2656,10 +2671,10 @@ class Power:
             output,
             itfka,
             physics_variables.rmajor,
-            tfcoil_variables.n_tf,
+            tfcoil_variables.n_tf_coils,
             tfcoil_variables.vtfskv,
             ettfmj,
-            tfcoil_variables.tflegres,
+            tfcoil_variables.res_tf_leg,
         )
 
     def tfcpwr(self, output: bool, itfka, rmajor, ntfc, vtfskv, ettfmj, rptfc):
@@ -2710,18 +2725,18 @@ class Power:
         albusa = itfka / djmka
 
         #  Total TF system bus length, m
-        tfbusl = (
+        len_tf_bus = (
             8.0e0 * np.pi * rmajor
             + (1.0e0 + ntfbkr) * (12.0e0 * rmajor + 80.0e0)
             + 0.2e0 * itfka * np.sqrt(ntfc * rptfc * 1000.0e0)
         )
 
         #  Aluminium bus weight, tonnes
-        albuswt = 2.7e0 * albusa * tfbusl / 1.0e4
+        albuswt = 2.7e0 * albusa * len_tf_bus / 1.0e4
 
         #  Total resistance of TF bus, ohms
-        # rtfbus = 2.62e-4 * tfbusl / albusa
-        rtfbus = tfcoil_variables.rhotfbus * tfbusl / (albusa / 10000)
+        # rtfbus = 2.62e-4 * len_tf_bus / albusa
+        rtfbus = tfcoil_variables.rho_tf_bus * len_tf_bus / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus
@@ -2840,7 +2855,7 @@ class Power:
                 rcoils,
                 "OP ",
             )
-            # MDK Remove this as it leads to confusion between (a) total inductance/n_tf, or (b)
+            # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
             #     self-inductance of one single coil
             # po.ovarre(outfile,'Inductance per TF coil (H)','(lptfcs)',lptfcs, 'OP ')
             po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)
@@ -2897,8 +2912,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Total length of TF coil bussing (m)",
-                "(tfbusl)",
-                tfbusl,
+                "(len_tf_bus)",
+                len_tf_bus,
                 "OP ",
             )
             po.ovarre(
@@ -2951,4 +2966,4 @@ class Power:
                 "OP ",
             )
 
-        return (tfckw, tfbusl, drarea, tfcbv, tfacpd)
+        return (tfckw, len_tf_bus, drarea, tfcbv, tfacpd)

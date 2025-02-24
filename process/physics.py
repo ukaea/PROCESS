@@ -8,7 +8,11 @@ from scipy.optimize import root_scalar
 
 import process.confinement_time as confinement
 import process.impurity_radiation as impurity_radiation
+import process.l_h_transition as transition
 import process.physics_functions as physics_funcs
+from process import (
+    process_output as po,
+)
 from process.fortran import (
     build_variables,
     constants,
@@ -26,9 +30,6 @@ from process.fortran import (
     reinke_variables,
     stellarator_variables,
     times_variables,
-)
-from process.fortran import (
-    process_output as po,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -58,83 +59,129 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     return conie * (ti - te) / (te**1.5)
 
 
-@nb.jit(nopython=True, cache=True)
-def vscalc(
-    csawth,
-    eps,
-    inductive_current_fraction,
-    gamma,
-    kappa,
-    rmajor,
-    res_plasma,
-    plasma_current,
-    t_fusion_ramp,
-    t_burn,
-    rli,
-    rmu0,
-):
-    """Volt-second requirements
-    author: P J Knight, CCFE, Culham Science Centre
-    csawth : input real :  coefficient for sawteeth effects
-    eps    : input real :  inverse aspect ratio
-    inductive_current_fraction  : input real :  fraction of plasma current produced inductively
-    gamma  : input real :  Ejima coeff for resistive start-up V-s component
-    kappa  : input real :  plasma elongation
-    plasma_current: input real :  plasma current (A)
-    rli    : input real :  plasma normalised inductivity
-    rmajor : input real :  plasma major radius (m)
-    res_plasma  : input real :  plasma resistance (ohm)
-    t_fusion_ramp  : input real :  heating time (s)
-    t_burn  : input real :  burn time (s)
-    phiint : output real : internal plasma volt-seconds (Wb)
-    rlp    : output real : plasma inductance (H)
-    vsbrn  : output real : volt-seconds needed during flat-top (heat+burn) (Wb)
-    vsind  : output real : internal and external plasma inductance V-s (Wb)
-    vsres  : output real : resistive losses in start-up volt-seconds (Wb)
-    vsstt  : output real : total volt-seconds needed (Wb)
-    This subroutine calculates the volt-second requirements and some
-    other related items.
-    """
-    # Internal inductance
+def calculate_volt_second_requirements(
+    csawth: float,
+    eps: float,
+    inductive_current_fraction: float,
+    ejima_coeff: float,
+    kappa: float,
+    rmajor: float,
+    res_plasma: float,
+    plasma_current: float,
+    t_fusion_ramp: float,
+    t_burn: float,
+    ind_plasma_internal_norm: float,
+) -> tuple[float, float, float, float, float, float]:
+    """Calculate the volt-second requirements and related parameters for plasma physics.
 
-    rlpint = rmu0 * rmajor * rli / 2.0
-    phiint = rlpint * plasma_current
+            :param csawth: Coefficient for sawteeth effects
+            :type csawth: float
+            :param eps: Inverse aspect ratio
+            :type eps: float
+            :param inductive_current_fraction: Fraction of plasma current produced inductively
+            :type inductive_current_fraction: float
+            :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+            :type ejima_coeff: float
+            :param kappa: Plasma elongation
+            :type kappa: float
+            :param rmajor: Plasma major radius (m)
+            :type rmajor: float
+            :param res_plasma: Plasma resistance (ohm)
+            :type res_plasma: float
+            :param plasma_current: Plasma current (A)
+            :type plasma_current: float
+            :param t_fusion_ramp: Heating time (s)
+            :type t_fusion_ramp: float
+            :param t_burn: Burn time (s)
+            :type t_burn: float
+            :param ind_plasma_internal_norm: Plasma normalized internal inductance
+            :type ind_plasma_internal_norm: float
+
+            :return: A tuple containing:
+                - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+                - ind_plasma_internal: Plasma inductance (H)
+                - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+                - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+                - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
+                - vs_plasma_total_required: Total volt-seconds needed (Wb)
+            :rtype: tuple[float, float, float, float, float, float]
+
+            :notes:
+
+            :references:
+                - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+                “Volt-second analysis and consumption in Doublet III plasmas,”
+                Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+                https://doi.org/10.1088/0029-5515/22/10/006.
+    ‌
+                - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+                “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+                Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+                doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+    ‌
+                - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+                The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+                doi: https://doi.org/10.1063/1.865934.
+        ‌
+    """
+    # Plasma internal inductance
+
+    ind_plasma_internal = constants.rmu0 * rmajor * ind_plasma_internal_norm / 2.0
+
+    # Internal plasma flux (V-s) component
+    vs_plasma_internal = ind_plasma_internal * plasma_current
 
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vsres = gamma * rmu0 * plasma_current * rmajor
+    vs_res_ramp = ejima_coeff * constants.rmu0 * plasma_current * rmajor
 
-    # Hirshman, Neilson: Physics of Fluids, 29 (1986) p790
-    # fit for external inductance
+    # ======================================================================
+
+    # Hirshman and Neilson fit for external inductance
 
     aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
         2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
     )
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-    rlpext = rmajor * rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
 
-    rlp = rlpext + rlpint
+    ind_plasma_external = (
+        rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+    )
+
+    # ======================================================================
+
+    ind_plasma_total = ind_plasma_external + ind_plasma_internal
 
     # Inductive V-s component
 
-    vsind = rlp * plasma_current
-    vsstt = vsres + vsind
+    vs_self_ind_ramp = ind_plasma_total * plasma_current
+    vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
-    # Loop voltage during flat-top
+    # Plasma loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
-    vburn = plasma_current * res_plasma * inductive_current_fraction * csawth
+    v_plasma_loop_burn = plasma_current * res_plasma * inductive_current_fraction
+
+    v_burn_resistive = v_plasma_loop_burn * csawth
 
     # N.B. t_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vsbrn = vburn * (t_fusion_ramp + t_burn)
-    vsstt = vsstt + vsbrn
+    vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_plasma_total_required = vs_ramp_required + vs_plasma_burn_required
 
-    return phiint, rlp, vsbrn, vsind, vsres, vsstt
+    return (
+        vs_plasma_internal,
+        ind_plasma_total,
+        vs_plasma_burn_required,
+        vs_self_ind_ramp,
+        vs_res_ramp,
+        vs_plasma_total_required,
+        v_plasma_loop_burn,
+    )
 
 
 @nb.jit(nopython=True, cache=True)
@@ -1498,8 +1545,6 @@ class Physics:
           https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
         """
 
-        physics_variables.q95 = physics_variables.q
-
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
@@ -1520,7 +1565,7 @@ class Physics:
         # Calculate plasma current
         (
             physics_variables.alphaj,
-            physics_variables.rli,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plasma_current,
@@ -1536,8 +1581,8 @@ class Physics:
             physics_variables.p0,
             physics_variables.len_plasma_poloidal,
             physics_variables.q0,
-            physics_variables.q,
-            physics_variables.rli,
+            physics_variables.q95,
+            physics_variables.ind_plasma_internal_norm,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.triang,
@@ -1805,7 +1850,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 eps=physics_variables.eps,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
             )
         )
 
@@ -1813,7 +1858,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
-                rli=physics_variables.rli,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.ne0,
                 average_density=physics_variables.dene,
                 inverse_aspect=physics_variables.eps,
@@ -2094,7 +2139,7 @@ class Physics:
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
-        # Note that 'fwarea' excludes these, so they have been added back in.
+        # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
             physics_variables.wallmw = (
                 physics_variables.ffwal
@@ -2107,14 +2152,14 @@ class Physics:
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
                 physics_variables.wallmw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
 
         # Calculate ion/electron equilibration power
@@ -2151,7 +2196,7 @@ class Physics:
         (
             physics_variables.pden_plasma_ohmic_mw,
             physics_variables.p_plasma_ohmic_mw,
-            physics_variables.rpfac,
+            physics_variables.f_res_plasma_neo,
             physics_variables.res_plasma,
         ) = self.plasma_ohmic_heating(
             physics_variables.inductive_current_fraction,
@@ -2165,8 +2210,7 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.pthrmw = pthresh(
-            physics_variables.dene,
+        physics_variables.l_h_threshold_powers = l_h_threshold_power(
             physics_variables.dnla,
             physics_variables.bt,
             physics_variables.rmajor,
@@ -2179,8 +2223,8 @@ class Physics:
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
-        physics_variables.plhthresh = physics_variables.pthrmw[
-            physics_variables.ilhthresh - 1
+        physics_variables.p_l_h_threshold_mw = physics_variables.l_h_threshold_powers[
+            physics_variables.i_l_h_threshold - 1
         ]
 
         # Power transported to the divertor by charged particles,
@@ -2213,7 +2257,7 @@ class Physics:
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
-        physics_variables.res_time = res_diff_time(
+        physics_variables.t_plasma_res_diffusion = res_diff_time(
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.kappa95,
@@ -2291,25 +2335,25 @@ class Physics:
 
         # Calculate Volt-second requirements
         (
-            physics_variables.phiint,
-            physics_variables.rlp,
-            physics_variables.vsbrn,
-            physics_variables.vsind,
-            physics_variables.vsres,
-            physics_variables.vsstt,
-        ) = vscalc(
+            physics_variables.vs_plasma_internal,
+            physics_variables.ind_plasma,
+            physics_variables.vs_plasma_burn_required,
+            physics_variables.vs_plasma_ind_ramp,
+            physics_variables.vs_plasma_res_ramp,
+            physics_variables.vs_plasma_total_required,
+            physics_variables.v_plasma_loop_burn,
+        ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.inductive_current_fraction,
-            physics_variables.gamma,
+            physics_variables.ejima_coeff,
             physics_variables.kappa,
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
             times_variables.t_burn,
-            physics_variables.rli,
-            constants.rmu0,
+            physics_variables.ind_plasma_internal_norm,
         )
 
         # Calculate auxiliary physics related information
@@ -2350,7 +2394,9 @@ class Physics:
             # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
             # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 
-            physics_variables.beta_norm_max = 4.0e0 * physics_variables.rli
+            physics_variables.beta_norm_max = (
+                4.0e0 * physics_variables.ind_plasma_internal_norm
+            )
 
         if physics_variables.iprofile == 2:
             # Original scaling law
@@ -2389,7 +2435,7 @@ class Physics:
 
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
-        # Note that 'fwarea' excludes these, so they have been added back in.
+        # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
             physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
@@ -2401,21 +2447,21 @@ class Physics:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.pflux_fw_rad_mw = (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
-                ) * physics_variables.p_plasma_rad_mw / build_variables.fwarea + (
+                ) * physics_variables.p_plasma_rad_mw / build_variables.a_fw_total + (
                     1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
                 ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
-                    build_variables.fwarea
+                    build_variables.a_fw_total
                 )
             else:
                 # Single null configuration - including SoL radaition
                 physics_variables.pflux_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.p_plasma_rad_mw
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                     + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.rad_fraction_sol
                     * physics_variables.pdivt
-                    / build_variables.fwarea
+                    / build_variables.a_fw_total
                 )
 
         constraint_variables.pflux_fw_rad_max_mw = (
@@ -2511,7 +2557,7 @@ class Physics:
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.tesep = reinke_module.reinke_tsep(
                 physics_variables.bt,
-                constraint_variables.flhthresh,
+                constraint_variables.fl_h_threshold,
                 physics_variables.q95,
                 physics_variables.rmajor,
                 physics_variables.eps,
@@ -3072,7 +3118,7 @@ class Physics:
             Tuple[float, float, float, float]: Tuple containing:
                 - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
                 - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
-                - rpfac (float): Neo-classical resistivity enhancement factor.
+                - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
                 - res_plasma (float): Plasma resistance (ohm).
 
         Notes:
@@ -3096,8 +3142,12 @@ class Physics:
         # Neo-classical resistivity enhancement factor
         # Taken from ITER Physics Design Guidelines: 1989
         # The expression is valid for aspect ratios in the range 2.5 to 4.0
-        rpfac = 4.3 - 0.6 * rmajor / rminor
-        res_plasma = res_plasma * rpfac
+
+        f_res_plasma_neo = (
+            1.0 if 2.5 >= rmajor / rminor <= 4.0 else 4.3 - 0.6 * rmajor / rminor
+        )
+
+        res_plasma = res_plasma * f_res_plasma_neo
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
@@ -3108,6 +3158,7 @@ class Physics:
 
         # Ohmic heating power per unit volume
         # Corrected from: pden_plasma_ohmic_mw = (inductive_current_fraction*plasma_current)**2 * ...
+
         pden_plasma_ohmic_mw = (
             inductive_current_fraction
             * plasma_current**2
@@ -3119,7 +3170,7 @@ class Physics:
         # Total ohmic heating power
         p_plasma_ohmic_mw = pden_plasma_ohmic_mw * vol_plasma
 
-        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, rpfac, res_plasma
+        return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, f_res_plasma_neo, res_plasma
 
     @staticmethod
     def calculate_plasma_current(
@@ -3135,7 +3186,7 @@ class Physics:
         len_plasma_poloidal: float,
         q0: float,
         q95: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         rmajor: float,
         rminor: float,
         triang: float,
@@ -3159,26 +3210,26 @@ class Physics:
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
             iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, rli, beta_norm_max.
-                1: Make these consistent with input q, q_0 values.
-                2: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (original scaling).
-                3: Use input values for alphaj, rli. Scale beta_norm_max with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, beta_norm_max. Set rli from elongation (Menard scaling).
-                5: Use input value for alphaj. Set rli and beta_norm_max from Menard scaling.
+                0: Use input values for alphaj, ind_plasma_internal_norm, beta_norm_max.
+                1: Make these consistent with input q95, q_0 values.
+                2: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling).
+                3: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling).
+                4: Use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling).
+                5: Use input value for alphaj. Set ind_plasma_internal_norm and beta_norm_max from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            rli (float): Plasma normalised internal inductance.
+            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, rli.
+            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, ind_plasma_internal_norm.
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3301,14 +3352,14 @@ class Physics:
 
             # Tokamaks 4th Edition, Wesson, page 116
             alphaj = qstar / q0 - 1.0
-            rli = np.log(1.65 + 0.89 * alphaj)
+            ind_plasma_internal_norm = np.log(1.65 + 0.89 * alphaj)
 
         if iprofile in [4, 5, 6]:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            rli = 3.4 - kappa
+            ind_plasma_internal_norm = 3.4 - kappa
 
-        return alphaj, rli, bp, qstar, plasma_current
+        return alphaj, ind_plasma_internal_norm, bp, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -3624,12 +3675,12 @@ class Physics:
                 if physics_variables.iprofile == 1:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is enforced",
+                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
                     )
                 else:
                     po.ocmmnt(
                         self.outfile,
-                        "Consistency between q0,q,alphaj,rli,beta_norm_max is not enforced",
+                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
                     )
 
                 po.oblnkl(self.outfile)
@@ -3672,9 +3723,9 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma internal inductance, li",
-                    "(rli)",
-                    physics_variables.rli,
+                    "Plasma normalised internal inductance",
+                    "(ind_plasma_internal_norm)",
+                    physics_variables.ind_plasma_internal_norm,
                     "OP ",
                 )
                 po.ovarrf(
@@ -3714,7 +3765,10 @@ class Physics:
 
             if physics_variables.i_plasma_current == 2:
                 po.ovarrf(
-                    self.outfile, "Mean edge safety factor", "(q)", physics_variables.q
+                    self.outfile,
+                    "Mean edge safety factor",
+                    "(q95)",
+                    physics_variables.q95,
                 )
 
             po.ovarrf(
@@ -3735,7 +3789,7 @@ class Physics:
             if physics_variables.i_plasma_geometry == 1:
                 po.ovarrf(
                     self.outfile,
-                    "Lower limit for edge safety factor q",
+                    "Lower limit for edge safety factor q95",
                     "(q95_min)",
                     physics_variables.q95_min,
                     "OP ",
@@ -4940,152 +4994,152 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: nominal (MW)",
-                "(pthrmw(1))",
-                physics_variables.pthrmw[0],
+                "(l_h_threshold_powers(1))",
+                physics_variables.l_h_threshold_powers[0],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: upper bound (MW)",
-                "(pthrmw(2))",
-                physics_variables.pthrmw[1],
+                "(l_h_threshold_powers(2))",
+                physics_variables.l_h_threshold_powers[1],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1996 scaling: lower bound (MW)",
-                "(pthrmw(3))",
-                physics_variables.pthrmw[2],
+                "(l_h_threshold_powers(3))",
+                physics_variables.l_h_threshold_powers[2],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1997 scaling (1) (MW)",
-                "(pthrmw(4))",
-                physics_variables.pthrmw[3],
+                "(l_h_threshold_powers(4))",
+                physics_variables.l_h_threshold_powers[3],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ITER 1997 scaling (2) (MW)",
-                "(pthrmw(5))",
-                physics_variables.pthrmw[4],
+                "(l_h_threshold_powers(5))",
+                physics_variables.l_h_threshold_powers[4],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: nominal (MW)",
-                "(pthrmw(6))",
-                physics_variables.pthrmw[5],
+                "(l_h_threshold_powers(6))",
+                physics_variables.l_h_threshold_powers[5],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: 95% upper bound (MW)",
-                "(pthrmw(7))",
-                physics_variables.pthrmw[6],
+                "(l_h_threshold_powers(7))",
+                physics_variables.l_h_threshold_powers[6],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 scaling: 95% lower bound (MW)",
-                "(pthrmw(8))",
-                physics_variables.pthrmw[7],
+                "(l_h_threshold_powers(8))",
+                physics_variables.l_h_threshold_powers[7],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: nominal (MW)",
-                "(pthrmw(9))",
-                physics_variables.pthrmw[8],
+                "(l_h_threshold_powers(9))",
+                physics_variables.l_h_threshold_powers[8],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: upper bound (MW)",
-                "(pthrmw(10))",
-                physics_variables.pthrmw[9],
+                "(l_h_threshold_powers(10))",
+                physics_variables.l_h_threshold_powers[9],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling: lower bound (MW)",
-                "(pthrmw(11))",
-                physics_variables.pthrmw[10],
+                "(l_h_threshold_powers(11))",
+                physics_variables.l_h_threshold_powers[10],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): nominal (MW)",
-                "(pthrmw(12))",
-                physics_variables.pthrmw[11],
+                "(l_h_threshold_powers(12))",
+                physics_variables.l_h_threshold_powers[11],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): upper bound (MW)",
-                "(pthrmw(13))",
-                physics_variables.pthrmw[12],
+                "(l_h_threshold_powers(13))",
+                physics_variables.l_h_threshold_powers[12],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Snipes 2000 scaling (closed divertor): lower bound (MW)",
-                "(pthrmw(14))",
-                physics_variables.pthrmw[13],
+                "(l_h_threshold_powers(14))",
+                physics_variables.l_h_threshold_powers[13],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - nominal (MW)",
-                "(pthrmw(15))",
-                physics_variables.pthrmw[14],
+                "(l_h_threshold_powers(15))",
+                physics_variables.l_h_threshold_powers[14],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - lower bound (MW)",
-                "(pthrmw(16))",
-                physics_variables.pthrmw[15],
+                "(l_h_threshold_powers(16))",
+                physics_variables.l_h_threshold_powers[15],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2012 L-I threshold - upper bound (MW)",
-                "(pthrmw(17))",
-                physics_variables.pthrmw[16],
+                "(l_h_threshold_powers(17))",
+                physics_variables.l_h_threshold_powers[16],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hubbard 2017 L-I threshold",
-                "(pthrmw(18))",
-                physics_variables.pthrmw[17],
+                "(l_h_threshold_powers(18))",
+                physics_variables.l_h_threshold_powers[17],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: nominal (MW)",
-                "(pthrmw(19))",
-                physics_variables.pthrmw[18],
+                "(l_h_threshold_powers(19))",
+                physics_variables.l_h_threshold_powers[18],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)",
-                "(pthrmw(20))",
-                physics_variables.pthrmw[19],
+                "(l_h_threshold_powers(20))",
+                physics_variables.l_h_threshold_powers[19],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)",
-                "(pthrmw(21))",
-                physics_variables.pthrmw[20],
+                "(l_h_threshold_powers(21))",
+                physics_variables.l_h_threshold_powers[20],
                 "OP ",
             )
             po.oblnkl(self.outfile)
-            if physics_variables.ilhthresh in [9, 10, 11]:
+            if physics_variables.i_l_h_threshold in [9, 10, 11]:
                 if (physics_variables.bt < 0.78e0) or (physics_variables.bt > 7.94e0):
                     po.ocmmnt(
                         self.outfile,
@@ -5134,7 +5188,7 @@ class Physics:
 
             po.oblnkl(self.outfile)
 
-            if physics_variables.ilhthresh in [12, 13, 14]:
+            if physics_variables.i_l_h_threshold in [12, 13, 14]:
                 po.ocmmnt(
                     self.outfile,
                     "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",
@@ -5146,23 +5200,23 @@ class Physics:
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (enforced) (MW)",
-                    "(boundl(103)*plhthresh)",
-                    numerics.boundl[102] * physics_variables.plhthresh,
+                    "(boundl(103)*p_l_h_threshold_mw)",
+                    numerics.boundl[102] * physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (MW)",
-                    "(plhthresh)",
-                    physics_variables.plhthresh,
+                    "(p_l_h_threshold_mw)",
+                    physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (NOT enforced) (MW)",
-                    "(plhthresh)",
-                    physics_variables.plhthresh,
+                    "(p_l_h_threshold_mw)",
+                    physics_variables.p_l_h_threshold_mw,
                     "OP ",
                 )
 
@@ -5397,35 +5451,91 @@ class Physics:
             po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
             po.ovarre(
                 self.outfile,
-                "Total volt-second requirement (Wb)",
-                "(vsstt)",
-                physics_variables.vsstt,
+                "Total plasma volt-seconds required for pulse (Wb)",
+                "(vs_plasma_total_required)",
+                physics_variables.vs_plasma_total_required,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Inductive volt-seconds (Wb)",
-                "(vsind)",
-                physics_variables.vsind,
+                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_ind_ramp)",
+                physics_variables.vs_plasma_ind_ramp,
                 "OP ",
             )
             po.ovarrf(
-                self.outfile, "Ejima coefficient", "(gamma)", physics_variables.gamma
+                self.outfile,
+                "Ejima coefficient",
+                "(ejima_coeff)",
+                physics_variables.ejima_coeff,
             )
             po.ovarre(
                 self.outfile,
-                "Start-up resistive (Wb)",
-                "(vsres)",
-                physics_variables.vsres,
+                "Internal plasma V-s",
+                "(vs_plasma_internal)",
+                physics_variables.vs_plasma_internal,
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_res_ramp)",
+                physics_variables.vs_plasma_res_ramp,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Flat-top resistive (Wb)",
-                "(vsbrn)",
-                physics_variables.vsbrn,
+                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
+                "(vs_plasma_burn_required)",
+                physics_variables.vs_plasma_burn_required,
                 "OP ",
             )
+
+            po.ovarre(
+                self.outfile,
+                "Plasma loop voltage during burn (V)",
+                "(v_plasma_loop_burn)",
+                physics_variables.v_plasma_loop_burn,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma resistance (ohm)",
+                "(res_plasma)",
+                physics_variables.res_plasma,
+                "OP ",
+            )
+
+            po.ovarre(
+                self.outfile,
+                "Plasma resistive diffusion time (s)",
+                "(t_plasma_res_diffusion)",
+                physics_variables.t_plasma_res_diffusion,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma inductance (H)",
+                "(ind_plasma)",
+                physics_variables.ind_plasma,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Plasma normalised internal inductance",
+                "(ind_plasma_internal_norm)",
+                physics_variables.ind_plasma_internal_norm,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Coefficient for sawtooth effects on burn V-s requirement",
+                "(csawth)",
+                physics_variables.csawth,
+            )
+
+            po.oblnkl(self.outfile)
+            po.ostars(self.outfile, 110)
+            po.oblnkl(self.outfile)
 
             po.ovarrf(
                 self.outfile,
@@ -5649,44 +5759,6 @@ class Physics:
                 "OP ",
             )
 
-            po.ovarre(
-                self.outfile,
-                "Loop voltage during burn (V)",
-                "(vburn)",
-                physics_variables.plasma_current
-                * physics_variables.res_plasma
-                * physics_variables.inductive_current_fraction,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Resistive diffusion time (s)",
-                "(res_time)",
-                physics_variables.res_time,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(rlp)",
-                physics_variables.rlp,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
-            )
-
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(
             self.outfile,
@@ -5818,7 +5890,7 @@ class Physics:
                 physics_variables.rminor,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.q,
+                physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
@@ -6137,7 +6209,8 @@ class Physics:
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0 + (physics_variables.q - physics_variables.q0) * roa**2
+            physics_variables.q0
+            + (physics_variables.q95 - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
         amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
@@ -6249,7 +6322,7 @@ class Physics:
         alphan: float,
         alphat: float,
         eps: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
     ) -> float:
         """
         Calculate the bootstrap fraction using the Sakai formula.
@@ -6261,7 +6334,7 @@ class Physics:
         alphan (float): Density profile index
         alphat (float): Temperature profile index
         eps (float): Inverse aspect ratio.
-        rli (float): Internal Inductance
+        ind_plasma_internal_norm (float): Plasma normalised internal inductance
 
         Returns:
         float: The calculated bootstrap fraction.
@@ -6285,7 +6358,7 @@ class Physics:
         return (
             10 ** (0.951 * eps - 0.948)
             * beta_poloidal ** (1.226 * eps + 1.584)
-            * rli ** (-0.184 * eps - 0.282)
+            * ind_plasma_internal_norm ** (-0.184 * eps - 0.282)
             * (q95 / q0) ** (-0.042 * eps - 0.02)
             * alphan ** (0.13 * eps + 0.05)
             * alphat ** (0.502 * eps - 0.273)
@@ -6294,7 +6367,7 @@ class Physics:
     @staticmethod
     def bootstrap_fraction_aries(
         beta_poloidal: float,
-        rli: float,
+        ind_plasma_internal_norm: float,
         core_density: float,
         average_density: float,
         inverse_aspect: float,
@@ -6304,7 +6377,7 @@ class Physics:
 
         Parameters:
         beta_poloidal (float): Plasma poloidal beta.
-        rli (float): Plasma normalized internal inductance.
+        ind_plasma_internal_norm (float): Plasma normalized internal inductance.
         core_density (float): Core plasma density.
         average_density (float): Average plasma density.
         inverse_aspect (float): Inverse aspect ratio.
@@ -6322,8 +6395,14 @@ class Physics:
 
         """
         # Using the standard variable naming from the ARIES paper
-        a_1 = 1.10 - 1.165 * rli + 0.47 * rli**2
-        b_1 = 0.806 - 0.885 * rli + 0.297 * rli**2
+        a_1 = (
+            1.10 - 1.165 * ind_plasma_internal_norm + 0.47 * ind_plasma_internal_norm**2
+        )
+        b_1 = (
+            0.806
+            - 0.885 * ind_plasma_internal_norm
+            + 0.297 * ind_plasma_internal_norm**2
+        )
 
         c_bs = a_1 + b_1 * (core_density / average_density)
 
@@ -6611,7 +6690,7 @@ class Physics:
                 physics_variables.rminor,
                 physics_variables.ten,
                 physics_variables.tin,
-                physics_variables.q,
+                physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
@@ -6666,7 +6745,7 @@ class Physics:
         rminor: float,
         ten: float,
         tin: float,
-        q: float,
+        q95: float,
         qstar: float,
         vol_plasma: float,
         zeff: float,
@@ -6691,7 +6770,7 @@ class Physics:
         :param pinjmw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
         :param pcoreradpv: Total core radiation power (MW/m3)
-        :param q: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+        :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
         :param rminor: Plasma minor radius (m)
@@ -7050,7 +7129,7 @@ class Physics:
                     dnla20,
                     bt,
                     p_plasma_loss_mw,
-                    q,
+                    q95,
                 )
             )
 
@@ -7245,7 +7324,8 @@ class Physics:
 
         # ISS95 stellarator scaling
         elif i_confinement_time == 37:
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
+            # dummy argument q95 is actual argument iotabar for stellarators
+            iotabar = q95
             t_electron_confinement = confinement.iss95_stellarator_confinement_time(
                 rminor,
                 rmajor,
@@ -7259,7 +7339,8 @@ class Physics:
 
         # ISS04 stellarator scaling
         elif i_confinement_time == 38:
-            iotabar = q  # dummy argument q is actual argument iotabar for stellarators
+            # dummy argument q95 is actual argument iotabar for stellarators
+            iotabar = q95
             t_electron_confinement = confinement.iss04_stellarator_confinement_time(
                 rminor,
                 rmajor,
@@ -7322,7 +7403,7 @@ class Physics:
                 p_plasma_loss_mw,
                 rmajor,
                 rminor,
-                q,
+                q95,
                 qstar,
                 aspect,
                 m_fuel_amu,
@@ -7521,141 +7602,179 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
 
 
-def pthresh(
-    dene,
-    dnla,
-    bt,
-    rmajor,
-    rminor,
-    kappa,
-    a_plasma_surface,
-    m_ions_total_amu,
-    aspect,
-    plasma_current,
-):
-    """L-mode to H-mode power threshold calculation
+def l_h_threshold_power(
+    dnla: float,
+    bt: float,
+    rmajor: float,
+    rminor: float,
+    kappa: float,
+    a_plasma_surface: float,
+    m_ions_total_amu: float,
+    aspect: float,
+    plasma_current: float,
+) -> list[float]:
+    """
+    L-mode to H-mode power threshold calculation.
 
-    Author: P J Knight, CCFE, Culham Science Centre
+    :param dnla: Line-averaged electron density (/m3)
+    :type dnla: float
+    :param bt: Toroidal field on axis (T)
+    :type bt: float
+    :param rmajor: Plasma major radius (m)
+    :type rmajor: float
+    :param rminor: Plasma minor radius (m)
+    :type rminor: float
+    :param kappa: Plasma elongation
+    :type kappa: float
+    :param a_plasma_surface: Plasma surface area (m2)
+    :type a_plasma_surface: float
+    :param m_ions_total_amu: Average mass of all ions (amu)
+    :type m_ions_total_amu: float
+    :param aspect: Aspect ratio
+    :type aspect: float
+    :param plasma_current: Plasma current (A)
+    :type plasma_current: float
 
-    - ITER Physics Design Description Document, p.2-2
-    - ITER-FDR Plasma Performance Assessments, p.III-9
-    - Snipes, 24th EPS Conference, Berchtesgaden 1997, p.961
-    - Martin et al, 11th IAEA Tech. Meeting on H-mode Physics and
-      Transport Barriers, Journal of Physics: Conference Series
-      123 (2008) 012033
-    - J A Snipes and the International H-mode Threshold Database
-      Working Group, 2000, Plasma Phys. Control. Fusion, 42, A299
-
-    :param dene: volume-averaged electron density (/m3)
-    :param dnla: line-averaged electron density (/m3)
-    :param bt:  toroidal field on axis (T)
-    :param rmajor: plasma major radius (m)
-    :param rminor: plasma minor radius (m)
-    :param kappa: plasma elongation
-    :param a_plasma_surface: plasma surface area (m2)
-    :param m_ions_total_amu: average mass of all ions (amu)
-    :param aspect: aspect ratio
-    :param plasma_current: plasma current (A)
-
-    :returns: array of power thresholds (18 different scalings)
+    :returns: Array of power thresholds
+    :rtype: list[float]
     """
 
-    dene20 = 1e-20 * dene
     dnla20 = 1e-20 * dnla
 
-    # ITER-DDD, D.Boucher
+    # ========================================================================
+
+    # ITER-1996 H-mode power threshold database
     # Fit to 1996 H-mode power threshold database: nominal
-    iterdd = 0.45 * dene20**0.75 * bt * rmajor**2
+
+    # i_l_h_threshold = 1
+    iterdd = transition.calculate_iter1996_nominal(dnla20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: upper bound
-    iterdd_ub = 0.37 * dene20 * bt * rmajor**2.5
+    # i_l_h_threshold = 2
+    iterdd_ub = transition.calculate_iter1996_upper(dnla20, bt, rmajor)
 
     # Fit to 1996 H-mode power threshold database: lower bound
-    iterdd_lb = 0.54 * dene20**0.5 * bt * rmajor**1.5
+    # i_l_h_threshold = 3
+    iterdd_lb = transition.calculate_iter1996_lower(dnla20, bt, rmajor)
 
-    # J. A. Snipes, ITER H-mode Threshold Database Working Group,
-    # Controlled Fusion and Plasma Physics, 24th EPS Conference,
-    # Berchtesgaden, June 1997, vol.21A, part III, p.961
-    snipes_1997 = 0.65 * dnla20**0.93 * bt**0.86 * rmajor**2.15
+    # ========================================================================
 
-    pthrmw5 = 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
+    # Snipes 1997 ITER H-mode power threshold
+
+    # i_l_h_threshold = 4
+    snipes_1997 = transition.calculate_snipes1997_iter(dnla20, bt, rmajor)
+
+    # i_l_h_threshold = 5
+    snipes_1997_kappa = transition.calculate_snipes1997_kappa(dnla20, bt, rmajor, kappa)
+
+    # ========================================================================
 
     # Martin et al (2008) for recent ITER scaling, with mass correction
     # and 95% confidence limits
-    martin = (
-        0.0488
-        * dnla20**0.717
-        * bt**0.803
-        * a_plasma_surface**0.941
-        * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 6
+    martin_nominal = transition.calculate_martin08_nominal(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
-    martin_error = (
-        np.sqrt(
-            0.057**2
-            + (0.035 * np.log(dnla20)) ** 2
-            + (0.032 * np.log(bt)) ** 2
-            + (0.019 * np.log(a_plasma_surface)) ** 2
-        )
-        * martin
+
+    # i_l_h_threshold = 7
+    martin_ub = transition.calculate_martin08_upper(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
     )
-    martin_ub = martin + 2 * martin_error
-    martin_lb = martin - 2 * martin_error
+
+    # i_l_h_threshold = 8
+    martin_lb = transition.calculate_martin08_lower(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu
+    )
+
+    # ========================================================================
 
     # Snipes et al (2000) scaling with mass correction
     # Nominal, upper and lower
-    snipes_2000 = (
-        1.42
-        * dnla20**0.58
-        * bt**0.82
-        * rmajor
-        * rminor**0.81
-        * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 9
+    snipes_2000 = transition.calculate_snipes2000_nominal(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
-    snipes_2000_ub = (
-        1.547
-        * dnla20**0.615
-        * bt**0.851
-        * rmajor**1.089
-        * rminor**0.876
-        * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 10
+    snipes_2000_ub = transition.calculate_snipes2000_upper(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
-    snipes_2000_lb = (
-        1.293
-        * dnla20**0.545
-        * bt**0.789
-        * rmajor**0.911
-        * rminor**0.744
-        * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 11
+    snipes_2000_lb = transition.calculate_snipes2000_lower(
+        dnla20, bt, rmajor, rminor, m_ions_total_amu
     )
+
+    # ========================================================================
 
     # Snipes et al (2000) scaling (closed divertor) with mass correction
     # Nominal, upper and lower
 
-    snipes_2000_cd = (
-        0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+    # i_l_h_threshold = 12
+    snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
-    snipes_2000_cd_ub = (
-        0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 13
+    snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
-    snipes_2000_cd_lb = (
-        0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+
+    # i_l_h_threshold = 14
+    snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
+        dnla20, bt, rmajor, m_ions_total_amu
     )
+
+    # ========================================================================
 
     # Hubbard et al. 2012 L-I threshold scaling
-    hubbard_2012 = 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
-    hubbard_2012_lb = 2.11 * (plasma_current / 1e6) ** 0.70 * dnla20**0.47
-    hubbard_2012_ub = 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
+
+    # i_l_h_threshold = 15
+    hubbard_2012 = transition.calculate_hubbard2012_nominal(plasma_current, dnla20)
+
+    # i_l_h_threshold = 16
+    hubbard_2012_lb = transition.calculate_hubbard2012_lower(plasma_current, dnla20)
+
+    # i_l_h_threshold = 17
+    hubbard_2012_ub = transition.calculate_hubbard2012_upper(plasma_current, dnla20)
+
+    # ========================================================================
 
     # Hubbard et al. 2017 L-I threshold scaling
-    hubbard_2017 = 0.162 * dnla20 * a_plasma_surface * (bt) ** 0.26
 
-    pthrmw = [
+    # i_l_h_threshold = 18
+    hubbard_2017 = transition.calculate_hubbard2017(dnla20, a_plasma_surface, bt)
+
+    # ========================================================================
+
+    # Aspect ratio corrected Martin et al (2008)
+
+    # i_l_h_threshold = 19
+    martin_nominal_aspect = transition.calculate_martin08_aspect_nominal(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # i_l_h_threshold = 20
+    martin_ub_aspect = transition.calculate_martin08_aspect_upper(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # i_l_h_threshold = 21
+    martin_lb_aspect = transition.calculate_martin08_aspect_lower(
+        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+    )
+
+    # ========================================================================
+
+    return [
         iterdd,
         iterdd_ub,
         iterdd_lb,
         snipes_1997,
-        pthrmw5,
-        martin,
+        snipes_1997_kappa,
+        martin_nominal,
         martin_ub,
         martin_lb,
         snipes_2000,
@@ -7668,18 +7787,7 @@ def pthresh(
         hubbard_2012_lb,
         hubbard_2012_ub,
         hubbard_2017,
+        martin_nominal_aspect,
+        martin_ub_aspect,
+        martin_lb_aspect,
     ]
-
-    # Aspect ratio corrected Martin et al (2008)
-    # Correction: Takizuka 2004, Plasma Phys. Control Fusion 46 A227
-    if aspect <= 2.7:
-        takizuka_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
-        pthrmw += [
-            martin * takizuka_correction,
-            martin_ub * takizuka_correction,
-            martin_lb * takizuka_correction,
-        ]
-        return pthrmw
-
-    pthrmw += [martin, martin_ub, martin_lb]
-    return pthrmw

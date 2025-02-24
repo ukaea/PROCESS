@@ -116,14 +116,14 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfv, "ccls_ma", np.full(10, 0.0))
     monkeypatch.setattr(pv, "bvert", -6.51e-1)
     monkeypatch.setattr(pv, "kappa", 1.727)
-    monkeypatch.setattr(pv, "rli", 1.693)
+    monkeypatch.setattr(pv, "ind_plasma_internal_norm", 1.693)
     monkeypatch.setattr(pv, "itartpf", 0)
-    monkeypatch.setattr(pv, "vsres", 6.151e1)
+    monkeypatch.setattr(pv, "vs_plasma_res_ramp", 6.151e1)
     monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
     monkeypatch.setattr(pv, "triang", 0.413)
     monkeypatch.setattr(pv, "rminor", 2.883)
     monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "vsind", 3.497e2)
+    monkeypatch.setattr(pv, "vs_plasma_ind_ramp", 3.497e2)
     monkeypatch.setattr(pv, "aspect", 3.1)
     monkeypatch.setattr(pv, "itart", 0)
     monkeypatch.setattr(pv, "beta_poloidal", 6.313e-1)
@@ -281,7 +281,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :type monkeypatch: MonkeyPatch
     """
     ngrpmx = 10
-    nclsmx = 2
     nptsmx = 32
     nfixmx = 64
     lrow1 = 2 * nptsmx + ngrpmx
@@ -408,14 +407,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     bfix = np.full(lrow1, 0.0)
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
-    rc = np.full(nclsmx, 0.0)
-    zc = np.full(nclsmx, 0.0)
-    cc = np.full(nclsmx, 0.0)
-    xc = np.full(nclsmx, 0.0)
-    umat = np.full([lrow1, lcol1], 0.0, order="F")
-    vmat = np.full([lrow1, lcol1], 0.0, order="F")
-    sigma = np.full(ngrpmx, 0.0)
-    work2 = np.full(ngrpmx, 0.0)
 
     ssq, ccls = pfcoil.efc(
         npts,
@@ -435,23 +426,17 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         bfix,
         gmat,
         bvec,
-        rc,
-        zc,
-        cc,
-        xc,
-        umat,
-        vmat,
-        sigma,
-        work2,
     )
 
     assert pytest.approx(ssq) == 4.208729e-4
-    assert pytest.approx(ccls[0:4]) == np.array([
-        12846165.42893886,
-        16377261.02000236,
-        579111.6216917,
-        20660782.82356247,
-    ])
+    assert ccls[0:4] == pytest.approx(
+        np.array([
+            12846165.42893886,
+            16377261.02000236,
+            579111.6216917,
+            0.0,
+        ])
+    )
 
 
 def test_mtrx(pfcoil: PFCoil):
@@ -1642,31 +1627,9 @@ def test_solv(pfcoil: PFCoil):
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls, umat, vmat, sigma, work2 = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
+    ccls = pfcoil.solv(ngrpmx, ngrp, nrws, gmat, bvec)
 
-    assert_array_almost_equal(ccls, np.array([0.16666667, 0.37079081, -0.03745748]))
-    assert_array_almost_equal(
-        umat,
-        np.array([
-            [-0.81649658, -0.57735027, 0.0],
-            [0.40824829, -0.57735027, -0.70710678],
-            [0.40824829, -0.57735027, 0.70710678],
-        ]),
-    )
-    assert_array_almost_equal(
-        vmat,
-        np.array([
-            [-0.81649658, -0.57735027, 0.0],
-            [0.40824829, -0.57735027, -0.70710678],
-            [0.40824829, -0.57735027, 0.70710678],
-        ]),
-    )
-    assert_array_almost_equal(
-        sigma, np.array([5.1279005e-16, 6.0000000e00, 0.0000000e00])
-    )
-    assert_array_almost_equal(
-        work2, np.array([-2.22044605e-16, -1.73205081e00, 0.00000000e00])
-    )
+    assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
 
 
 def test_fixb(pfcoil: PFCoil):
@@ -3006,7 +2969,7 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         ]),
     )
     monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "rlp", 1.6039223939491056e-05)
+    monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
 
     sxlg_exp = np.array([
         [

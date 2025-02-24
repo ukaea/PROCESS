@@ -48,7 +48,7 @@ module tfcoil_variables
   ! real(dp) :: alstrtf
   !! Allowable Tresca stress in TF coil structural material (Pa)
 
-  real(dp) :: arealeg
+  real(dp) :: a_tf_leg_outboard
   !! outboard TF leg area (m2)
 
   real(dp) :: aswp
@@ -305,7 +305,7 @@ module tfcoil_variables
   !! stress analysis. This is the layers of one turn, not the entire WP.
   !! Default: 5. void, conductor, copper, conduit, insulation.
 
-  real(dp) :: jbus
+  real(dp) :: j_tf_bus
   !! bussing current density (A/m2)
 
   real(dp) :: j_crit_str_tf
@@ -381,7 +381,7 @@ module tfcoil_variables
   real(dp) :: rbmax
   !! Radius of maximum TF B-field (m)
 
-  real(dp) :: tflegres
+  real(dp) :: res_tf_leg
   !! TF coil leg resistance (ohm)
 
   real(dp) :: toroidalgap
@@ -396,7 +396,7 @@ module tfcoil_variables
   real(dp) :: ripple
   !! peak/average toroidal field ripple at plasma edge (%)
 
-  real(dp) :: ritfc
+  real(dp) :: c_tf_total
   !! total (summed) current in TF coils (A)
 
   integer, parameter :: n_radial_array = 50
@@ -502,10 +502,10 @@ module tfcoil_variables
   real(dp) :: tfareain
   !! Area of inboard midplane TF legs (m2)
 
-  real(dp) :: tfbusl
+  real(dp) :: len_tf_bus
   !! TF coil bus length (m)
 
-  real(dp) :: tfbusmas
+  real(dp) :: m_tf_bus
   !! TF coil bus mass (kg)
 
   real(dp) :: tfckw
@@ -535,15 +535,15 @@ module tfcoil_variables
   real(dp) :: tflegmw
   !! TF coil outboard leg resistive power (MW)
 
-  real(dp) :: rhocp
+  real(dp) :: rho_cp
   !! TF coil inboard leg resistivity [Ohm-m]. If `itart=0`, this variable is the
   !! average resistivity over the whole magnet
 
-  real(dp) :: rhotfleg
+  real(dp) :: rho_tf_leg
   !! Resistivity of a TF coil leg (Ohm-m)
 
-  real(dp) :: rhotfbus
-  !! Resistivity of a TF coil bus (Ohm-m). Default value takes the same res as the leg one
+  real(dp) :: rho_tf_bus
+  !! Resistivity of a TF coil bus (Ohm-m). Default values is for that of GLIDCOP AL-15 (C15715) at 293K
 
   real(dp) :: frhocp
   !! Centrepost resistivity enhancement factor. For `itart=0`, this factor
@@ -576,7 +576,7 @@ module tfcoil_variables
   real(dp) :: pres_joints
   !! Calculated TF joints resistive power losses [W]
 
-  real(dp) :: tfleng
+  real(dp) :: len_tf_coil
   !! TF coil circumference (m)
 
   real(dp) :: eff_tf_cryo
@@ -586,7 +586,7 @@ module tfcoil_variables
   !!  - i_tf_sup = 1 : SC magnet, eff_tf_cryo = 0.13 (ITER design)
   !!  - i_tf_sup = 2 : Cryo-aluminium, eff_tf_cryo = 0.4
 
-  real(dp) :: n_tf
+  real(dp) :: n_tf_coils
   !! Number of TF coils (default = 50 for stellarators). Number of TF coils outer legs for ST
 
   real(dp) :: tfocrn
@@ -686,15 +686,15 @@ module tfcoil_variables
 
   real(dp) :: whtcon
   !! TF coil conductor mass per coil (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconcu
   !! copper mass in TF coil conductor (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconal
   !! Aluminium mass in TF coil conductor (kg/coil).
-  !! For `itart=1`, coil is return limb plus centrepost/n_tf
+  !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
   real(dp) :: whtconin
   !! conduit insulation mass in TF coil conductor (kg/coil)
@@ -763,7 +763,7 @@ module tfcoil_variables
   real(dp) :: fcoolcp
   !! coolant fraction of TF coil inboard legs (`iteration variable 23`)
 
-  real(dp) :: fcoolleg
+  real(dp) :: f_a_tf_cool_outboard
   !! coolant fraction of TF coil outboard legs
 
   real(dp) :: a_cp_cool
@@ -775,11 +775,11 @@ module tfcoil_variables
   real(dp) :: ppump
   !! centrepost coolant pump power (W)
 
-  real(dp) :: prescp
+  real(dp) :: p_cp_resistive
   !! resistive power in the centrepost (itart=1) [W].
   !! If `itart=0`, this variable is the ressitive power on the whole magnet
 
-  real(dp) :: presleg
+  real(dp) :: p_tf_leg_resistive
   !! Summed resistive power in the TF coil legs [W]. Remain 0 if `itart=0`.
 
   real(dp) :: ptempalw
@@ -794,7 +794,7 @@ module tfcoil_variables
   real(dp) :: dtiocool
   !! inlet / outlet TF coil coolant temperature rise (K)
 
-  real(dp) :: tcpav
+  real(dp) :: temp_cp_average
   !! Average temperature of centrepost called CP (K). Only used for resistive coils
   !! to compute the resisitive heating. Must be an iteration variable for
   !! ST (`itart=1`) (`iteration variable 20`)
@@ -802,9 +802,9 @@ module tfcoil_variables
   real(dp) :: tcpav2
   !! Computed centrepost average temperature (K) (for consistency)
 
-  real(dp) :: tlegav
-  !! Average temperature of the TF outboard legs [K]. If `tlegav=-1.0`, the ouboard
-  !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like tcpav
+  real(dp) :: temp_tf_legs_outboard
+  !! Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
+  !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
 
   real(dp) :: tcpmax
   !! peak centrepost temperature (K)
@@ -848,7 +848,7 @@ module tfcoil_variables
     aiwp = 0.0D0
     sig_tf_case_max = 6.0D8
     sig_tf_wp_max = 6.0D8
-    arealeg = 0.0D0
+    a_tf_leg_outboard = 0.0D0
     aswp = 0.0D0
     avwp = 0.0D0
     awphec = 0.0D0
@@ -903,7 +903,7 @@ module tfcoil_variables
     n_tf_graded_layers = 1
     n_tf_stress_layers = 0
     n_tf_wp_layers = 5
-    jbus = 1.25D6
+    j_tf_bus = 1.25D6
     j_crit_str_tf = 0.0D0
     j_crit_str_0 = &
       (/596905475.80390120D0,1925501534.8512938D0,&
@@ -929,12 +929,12 @@ module tfcoil_variables
     poisson_cond_axial = 0.3
     poisson_cond_trans = 0.3
     rbmax = 0.0D0
-    tflegres = 0.0D0
+    res_tf_leg = 0.0D0
     toroidalgap = 1.0D0 ![m]
     ftoroidalgap = 1.0D0
     ripmax = 1.0D0
     ripple = 0.0D0
-    ritfc = 0.0D0
+    c_tf_total = 0.0D0
     radial_array = 0.0D0
     sig_tf_r = 0.0D0
     sig_tf_t = 0.0D0
@@ -956,8 +956,8 @@ module tfcoil_variables
     tcritsc = 16.0D0
     tdmptf = 10.0D0
     tfareain = 0.0D0
-    tfbusl = 0.0D0
-    tfbusmas = 0.0D0
+    len_tf_bus = 300.0D0
+    m_tf_bus = 0.0D0
     tfckw = 0.0D0
     tfcmw = 0.0D0
     tfcpmw = 0.0D0
@@ -967,9 +967,9 @@ module tfcoil_variables
     tfind = 0.0D0
     tfinsgap = 0.010D0
     tflegmw = 0.0D0
-    rhocp = 0.0D0
-    rhotfleg = 0.0D0
-    rhotfbus = 2.62D-8    !-1.0D0 ! 2.5D-8
+    rho_cp = 0.0D0
+    rho_tf_leg = 0.0D0
+    rho_tf_bus = 1.86D-8
     frhocp = 1.0D0
     frholeg = 1.0D0
     rho_tf_joints = 2.5D-10
@@ -977,9 +977,9 @@ module tfcoil_variables
     n_tf_joints = 4
     th_joint_contact = 0.03D0
     pres_joints = 0.0D0
-    tfleng = 0.0D0
+    len_tf_coil = 0.0D0
     eff_tf_cryo = -1.0D0
-    n_tf = 16.0D0
+    n_tf_coils = 16.0D0
     tfocrn = 0.0D0
     tfsai = 0.0D0
     tfsao = 0.0D0
@@ -1032,19 +1032,19 @@ module tfcoil_variables
     dztop = 0.0D0
     etapump = 0.8D0
     fcoolcp = 0.3D0
-    fcoolleg = 0.2D0
+    f_a_tf_cool_outboard = 0.2D0
     a_cp_cool = 0.0D0
     ncool = 0.0D0
     ppump = 0.0D0
-    prescp = 0.0D0
-    presleg = 0.0D0
+    p_cp_resistive = 0.0D0
+    p_tf_leg_resistive = 0.0D0
     ptempalw = 473.15D0   ! 200 C
     rcool = 0.005D0
     tcoolin = 313.15D0   ! 40 C
     dtiocool = 0.0D0
-    tcpav = 373.15D0     ! 100 C
+    temp_cp_average = 373.15D0     ! 100 C
     tcpav2 = 0.0D0
-    tlegav = -1.0D0
+    temp_tf_legs_outboard = -1.0D0
     tcpmax = 0.0D0
     vcool = 20.0D0
     vol_cond_cp = 0.0D0

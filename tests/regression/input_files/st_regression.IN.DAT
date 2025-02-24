@@ -379,7 +379,7 @@ beta_norm_max = 5.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 ixc = 18
-q = 6.0 
+q95 = 6.0 
 boundl(18) = 3.0
 boundu(18) = 20.0
 * DESCRIPTION:   Safety factor at 95% flux surface
@@ -417,10 +417,10 @@ boundu(10) = 1.2
 icc = 15
 * DESCRIPTION:   L-H Power Threshold Limit
 * JUSTIFICATION: Required to be in H-mode
-* VARIABLES:     plhthresh,pdivt calculated in-situ
+* VARIABLES:     p_l_h_threshold_mw,pdivt calculated in-situ
 
 ixc = 103 
-flhthresh = 1.0
+fl_h_threshold = 1.0
 *boundl(21) = 0.01
 boundu(21) = 10.0
 * DESCRIPTION:   f-value for L-H Power Threshold
@@ -436,7 +436,7 @@ boundu(21) = 10.0
 * DESCRIPTION:   Input electron energy confinement time (sec) (i_confinement_time=49 only)'
 * JUSTIFICATION: Not set, not ussing i_confinement_time = 49.
 
-*ilhthresh = 
+*i_l_h_threshold = 
 * DESCRIPTION:   Switch for L-H power threshold to enforce
 * JUSTIFICATION: Not set yet, default = 19. 
 
@@ -902,7 +902,7 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ General settings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-n_tf = 12 
+n_tf_coils = 12 
 * DESCRIPTION:   Number of TF Coils 
 * JUSTIFICATION: 
 
@@ -1484,7 +1484,7 @@ tftmp = 20.0
 * DESCRIPTION:   Max Centrepost Coolant Flow Speed (m/s)
 * JUSTIFICATION: 
 
-*fcoolleg = 
+*f_a_tf_cool_outboard = 
 * DESCRIPTION:   Coolant fraction of TF outboard leg (itart=1 only) (default = 0.2)
 * JUSTIFICATION: Not set, using default
 
@@ -1584,7 +1584,7 @@ tftmp = 20.0
 * VARIABLES:     itart.  tcpav2 calculated in-situ
 
 *ixc = 20
-*tcpav = 20.42
+*temp_cp_average = 20.42
 *boundl(20) = 20.0
 *boundu(20) = 25.0
 * DESCRIPTION:   Average temperature of centrepost
@@ -1605,11 +1605,11 @@ tftmp = 20.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Power Supplies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-* rhotfbus = 
+* rho_tf_bus = 
 * DESCRIPTION:   TF coil bus (feeders) resistivity (ohm-m) 
 * JUSTIFICATION: Unknown, assuming default
 
-* jbus =  
+* j_tf_bus =  
 * DESCRIPTION:   Bussing Current Density (A/m2) 
 * JUSTIFICATION: Unknown
 
@@ -1719,7 +1719,7 @@ ipfres = 0
 *icc = 51
 * DESCRIPTION:   Constraint equation to enforce startup flux = able startup flux
 * JUSTIFICATION: Turned off, do not care about startup flux.
-* VARIABLES:     vssu,vsind,vsres calculated in situ
+* VARIABLES:     vssu,vs_plasma_ind_ramp,vs_plasma_res_ramp calculated in situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2313,31 +2313,31 @@ etaiso = 0.9
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ First Wall ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*afw = 
+*radius_fw_channel = 
 * DESCRIPTION:   Radius of first wall cooling channels [m] (default = 0.006)
 * JUSTIFICATION: 
 
-*fw_wall = 
+*dr_fw_wall = 
 * DESCRIPTION:   Wall thickness of first wall coolant channels [m] (default = 0.003)
 * JUSTIFICATION: 
 
-*pitch = 
+*dx_fw_module = 
 * DESCRIPTION:   Pitch of first wall cooling channels [m] (default = 0.02)
 * JUSTIFICATION: 
 
-*fwinlet = 
+*temp_fw_coolant_in = 
 * DESCRIPTION:   Inlet temperature of first wall coolant [K] (default = 573.0)
 * JUSTIFICATION: Not yet set.
 
-*fwoutlet = 
+*temp_fw_coolant_out = 
 * DESCRIPTION:   Outlet temperature of first wall coolant (K) (default = 823.0)
 * JUSTIFICATION: Not yet set.
 
-*fwpressure = 
+*pres_fw_coolant = 
 * DESCRIPTION:   First wall coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set.
 
-fwcoolant = helium 
+i_fw_coolant_type = helium 
 * DESCRIPTION:   switch for first wall coolant (can be different from blanket coolant) (default = helium):
 * 'helium'
 * 'water'
@@ -2348,7 +2348,7 @@ fwcoolant = helium
 * JUSTIFICATION: Not yet set.
 
 *ixc = 114
-*fw_channel_length = 
+*len_fw_channel = 
 *boundl(114) = 
 *boundu(114) = 
 * DESCRIPTION:   Length of a single first wall channel (all in parallel) [m] (default = 4.0)
@@ -2356,7 +2356,7 @@ fwcoolant = helium
 * JUSTIFICATION: 
 
 *fwclfr = 
-* DESCRIPTION:   First wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
+* DESCRIPTION:   First wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)
 * JUSTIFICATION: Not using ipowerflow = 1
 
 *fhcd = 
@@ -2366,7 +2366,7 @@ fwcoolant = helium
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Blanket ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-iblanket = 1
+i_blanket_type = 1
 * DESCRIPTION:  Switch for blanket model:
 * =1 CCFE HCPB model
 * =2 KIT HCPB model
@@ -2378,7 +2378,7 @@ iblanket = 1
 * JUSTIFICATION: Assuming DCLL blanket
 
 *iblanket_thickness = 
-* DESCRIPTION:  Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `iblanket=3`):
+* DESCRIPTION:  Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `i_blanket_type=3`):
 *=1 thin    0.53 m inboard, 0.91 m outboard
 *=2 medium  0.64 m inboard, 1.11 m outboard
 *=3 thick   0.75 m inboard, 1.30 m outboard
@@ -2432,7 +2432,7 @@ i_blkt_inboard = 0
 *icc = 52
 * DESCRIPTION:   Constraint equation for tritium breeding ratio lower limit
 * JUSTIFICATION: Turned off, do not care about minimum TBR.
-* VARIABLES:     tbrmin minimum tritium breeding ratio (If iblanket=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio),  tbr calculated in situ
+* VARIABLES:     tbrmin minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio),  tbr calculated in situ
 
 *tbrmin = 
 * DESCRIPTION:   Minimum tritium breeding ratio (`constraint equation 52`) (default = 1.1)
@@ -2443,11 +2443,11 @@ i_blkt_inboard = 0
 *icc = 55
 * DESCRIPTION:   Constraint equation for helium concentration in vacuum vessel upper limit (iblnaket = 2 only (KIT HCPB))
 * JUSTIFICATION: Turned off, do not care He concentration.
-* VARIABLES:     iblanket,vvhealw (allowed maximum helium concentration in vacuum vessel at end of plant life (appm) (iblanket =2)),  vvhemax calculated in situ
+* VARIABLES:     i_blanket_type,vvhealw (allowed maximum helium concentration in vacuum vessel at end of plant life (appm) (i_blanket_type =2)),  vvhemax calculated in situ
 
 *vvhealw = 
 * DESCRIPTION:   Allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-*(`iblanket =2`) (`constraint equation 55`)
+*(`i_blanket_type =2`) (`constraint equation 55`)
 * JUSTIFICATION: Not using icc = 55
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2464,7 +2464,7 @@ inuclear = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *-----------*
-* CCFE HCPB *   * Set iblanket = 1 *
+* CCFE HCPB *   * Set i_blanket_type = 1 *
 *-----------*
 
 *breeder_multiplier = 
@@ -2480,19 +2480,19 @@ inuclear = 0
 * JUSTIFICATION: Not using HCPB model 
 
 *vfcblkt = 
-* DESCRIPTION: He coolant fraction of blanket by volume (`iblanket= 1,3` (CCFE HCPB))
+* DESCRIPTION: He coolant fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))
 * JUSTIFICATION: Not set as not using HCPB
 
 *vfpblkt = 
-* DESCRIPTION: He purge gas fraction of blanket by volume (`iblanket= 1,3` (CCFE HCPB))
+* DESCRIPTION: He purge gas fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))
 * JUSTIFICATION: Not set as not using HCPB
 
 *vfshld = 
 * DESCRIPTION:   Coolant void fraction in shield (HCPB only)
-* JUSTIFICATION: Not set as not using iblanket =1/3
+* JUSTIFICATION: Not set as not using i_blanket_type =1/3
 
 *vfblkt = 
-* DESCRIPTION:   Coolant void fraction in blanket (iblanket = 1), (default = 0.25)
+* DESCRIPTION:   Coolant void fraction in blanket (i_blanket_type = 1), (default = 0.25)
 * JUSTIFICATION: Not yet set
 
 *t_in_bb = 
@@ -2512,49 +2512,49 @@ inuclear = 0
 * JUSTIFICATION: Not yet set
 
 *----------*
-* KIT HCPB *   * Set iblanket = 2 *
+* KIT HCPB *   * Set i_blanket_type = 2 *
 *----------*
 
 *hcdportsize = 
-* DESCRIPTION:   switch for size of heating/current drive ports (`iblanket=2` (KIT HCPB)):
+* DESCRIPTION:   switch for size of heating/current drive ports (`i_blanket_type=2` (KIT HCPB)):
 * =1 'small'
 * =2 'large'
-* JUSTIFICATION: Not using iblanket = 2 
+* JUSTIFICATION: Not using i_blanket_type = 2 
 
 *fblbe = 
-* DESCRIPTION:   Beryllium fraction of blanket by volume (if `iblanket=2`, is Be fraction of breeding zone)
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Beryllium fraction of blanket by volume (if `i_blanket_type=2`, is Be fraction of breeding zone)
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblhebmi = 
-* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblhebmi = 
-* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Helium fraction of inboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblhebmo = 
-* DESCRIPTION:   Helium fraction of outboard blanket box manifold by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Helium fraction of outboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblhebpi = 
-* DESCRIPTION:   Helium fraction of inboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Helium fraction of inboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblhebpo = 
-* DESCRIPTION:   Helium fraction of outboard blanket back plate by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not set. Not using iblanket = 2
+* DESCRIPTION:   Helium fraction of outboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not set. Not using i_blanket_type = 2
 
 *fblbreed = 
-* DESCRIPTION:   Breeder fraction of blanket breeding zone by volume (`iblanket=2` (KIT HCPB))
-* JUSTIFICATION: Not used as iblanket is not 2
+* DESCRIPTION:   Breeder fraction of blanket breeding zone by volume (`i_blanket_type=2` (KIT HCPB))
+* JUSTIFICATION: Not used as i_blanket_type is not 2
 
 *fblss = 
 * DESCRIPTION:   KIT blanket model: steel fraction of breeding zone
 * JUSTIFICATION: Not using kit blanket, not set
 
 *------*
-* DCLL *   * Set iblanket = 5 *
+* DCLL *   * Set i_blanket_type = 5 *
 *------*
 
 *i_bb_liq = 
@@ -2628,7 +2628,7 @@ f_fw_rad_max = 1.0
 * DESCRIPTION:   Radiation wall load peacking factor
 * JUSTIFICATION: We consider an average wall load value as a limit
 
-*peaking_factor = 
+*f_fw_peak = 
 * DESCRIPTION:   peaking factor for first wall heat loads. (Applied separately to  (default = 1.0)
 *inboard and outboard loads. Applies to both neutron and surface loads. Only used to calculate peak 
 *temperature - not the coolant flow rate.) 
@@ -2685,9 +2685,9 @@ boundu(116) = 1.0
 *icc = 39
 * DESCRIPTION:   Constraint equation for first wall temperature upper limit
 * JUSTIFICATION: Turned off, do not care about FW temperature
-* VARIABLES:     tpeak (K) calculated in-situ
+* VARIABLES:     temp_fw_peak (K) calculated in-situ
 
-*tfwmatmax = 
+*temp_fw_max = 
 * DESCRIPTION:   Maximum temperature of first wall material [K] (`secondary_cycle>1`)(default = 823)
 * JUSTIFICATION: Not set as not used
 
@@ -2944,7 +2944,7 @@ i_bootstrap_current = 4
 * DESCRIPTION:   Plasma resistivity pre-factor, used to scale plasma resistance
 * JUSTIFICATION: Not used, not scaling plasma resistance for ohmic heating
 
-*gamma =
+*ejima_coeff =
 * DESCRIPTION:   Ejima coefficient for resistive startup V-s formula
 * JUSTIFICATION: Not used.
 
@@ -2971,13 +2971,13 @@ i_pfirsch_schluter_current = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 iprofile = 0
-* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj rli beta_norm_max)
-* =0 use input values for alphaj, rli, beta_norm_max (but see gtscale option)
+* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj ind_plasma_internal_norm beta_norm_max)
+* =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max (but see gtscale option)
 * =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
 * JUSTIFICATION: These consistency equations don't hold for STs
 * REFERENCE:     
 
-rli = 0.3
+ind_plasma_internal_norm = 0.3
 * DESCRIPTION:   Plasma Normalised Internal Inductance
 * JUSTIFICATION: Matched to JETTO li(3).
 
@@ -3208,8 +3208,8 @@ lsa = 2
 *---------------------------------Time-----------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-lpulse = 0
-* DESCRIPTION:   lpulse = 1 pulsed machine. lpulse = 0 steady state machine
+i_pulsed_plant = 0
+* DESCRIPTION:   i_pulsed_plant = 1 pulsed machine. i_pulsed_plant = 0 steady state machine
 * JUSTIFICATION: Default is steady state machine
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3232,7 +3232,7 @@ lpulse = 0
 
 t_burn = 1000.0 
 * DESCRIPTION:   Burn Time (s)
-* JUSTIFICATION: Default, steady-state device so input, calculates if lpulse = 1
+* JUSTIFICATION: Default, steady-state device so input, calculates if i_pulsed_plant = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3243,7 +3243,7 @@ t_between_pulse = 100.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *pulsetimings
-* DESCRIPTION:   Switch for pulse timings (if lpulse=1):
+* DESCRIPTION:   Switch for pulse timings (if i_pulsed_plant=1):
 * =0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input
 * =1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up
 * JUSTIFICATION: Assuming default, may change

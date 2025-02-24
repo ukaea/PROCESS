@@ -54,7 +54,7 @@ class TohswgParam(NamedTuple):
 
     active_constraints: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     outfile: Any = None
 
@@ -66,9 +66,9 @@ class TohswgParam(NamedTuple):
 class BurnParam(NamedTuple):
     res_plasma: Any = None
 
-    vsres: Any = None
+    vs_plasma_res_ramp: Any = None
 
-    vsind: Any = None
+    vs_plasma_ind_ramp: Any = None
 
     vsbn: Any = None
 
@@ -80,7 +80,7 @@ class BurnParam(NamedTuple):
 
     csawth: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     t_burn: Any = None
 
@@ -647,8 +647,9 @@ class BurnParam(NamedTuple):
                 False,
                 False,
                 False,
+                False,
             ),
-            lpulse=1,
+            i_pulsed_plant=1,
             outfile=11,
             iprint=0,
             expected_tohsmn=-526.67247746645455,
@@ -1204,8 +1205,9 @@ class BurnParam(NamedTuple):
                 False,
                 False,
                 False,
+                False,
             ),
-            lpulse=1,
+            i_pulsed_plant=1,
             outfile=11,
             iprint=0,
             expected_tohsmn=51.251726699574235,
@@ -1255,7 +1257,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", tohswgparam.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
 
     pulse.tohswg(output=False)
 
@@ -1269,14 +1271,14 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     (
         BurnParam(
             res_plasma=3.2347283861249307e-09,
-            vsres=59.392760827339345,
-            vsind=284.23601098215397,
+            vs_plasma_res_ramp=59.392760827339345,
+            vs_plasma_ind_ramp=284.23601098215397,
             vsbn=0,
             vstot=-718.91787876294552,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
-            lpulse=1,
+            i_pulsed_plant=1,
             t_burn=0,
             t_fusion_ramp=10,
             outfile=11,
@@ -1285,14 +1287,14 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         ),
         BurnParam(
             res_plasma=3.2347283861249307e-09,
-            vsres=59.392760827339345,
-            vsind=284.23601098215397,
+            vs_plasma_res_ramp=59.392760827339345,
+            vs_plasma_ind_ramp=284.23601098215397,
             vstot=-718.9849676846776,
             vsbn=-354.76231817639609,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
-            lpulse=1,
+            i_pulsed_plant=1,
             t_burn=10234.092022756307,
             t_fusion_ramp=10,
             outfile=11,
@@ -1316,9 +1318,13 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "res_plasma", burnparam.res_plasma)
 
-    monkeypatch.setattr(physics_variables, "vsres", burnparam.vsres)
+    monkeypatch.setattr(
+        physics_variables, "vs_plasma_res_ramp", burnparam.vs_plasma_res_ramp
+    )
 
-    monkeypatch.setattr(physics_variables, "vsind", burnparam.vsind)
+    monkeypatch.setattr(
+        physics_variables, "vs_plasma_ind_ramp", burnparam.vs_plasma_ind_ramp
+    )
 
     monkeypatch.setattr(pfcoil_variables, "vstot", burnparam.vstot)
 
@@ -1334,7 +1340,7 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", burnparam.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", burnparam.i_pulsed_plant)
 
     monkeypatch.setattr(times_variables, "t_burn", burnparam.t_burn)
 

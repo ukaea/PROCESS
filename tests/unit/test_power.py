@@ -55,7 +55,7 @@ class CryoParam(NamedTuple):
 
     ptfnuc: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     tfcryoarea: Any = None
 
@@ -87,7 +87,7 @@ class CryoParam(NamedTuple):
             cpttf=74026.751437500003,
             ensxpfm=37429.525515086898,
             ptfnuc=0.044178296011112193,
-            n_tf=16,
+            n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=10364.426139387357,
             expected_qss=20361.633927097802,
@@ -108,7 +108,7 @@ class CryoParam(NamedTuple):
             cpttf=74026.751437500003,
             ensxpfm=37427.228965055205,
             ptfnuc=0.045535131445547841,
-            n_tf=16,
+            n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=364.42613938735633,
             expected_qss=20342.863776957758,
@@ -150,7 +150,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         cpttf=cryoparam.cpttf,
         ensxpfm=cryoparam.ensxpfm,
         ptfnuc=cryoparam.ptfnuc,
-        n_tf=cryoparam.n_tf,
+        n_tf_coils=cryoparam.n_tf_coils,
         tfcryoarea=cryoparam.tfcryoarea,
         t_pulse_repetition=cryoparam.t_pulse_repetition,
     )
@@ -952,6 +952,7 @@ class PfpwrParam(NamedTuple):
                 False,
                 False,
                 False,
+                False,
             ),
             ioptimz=1,
             tim=np.array(
@@ -1694,6 +1695,7 @@ class PfpwrParam(NamedTuple):
                 False,
                 False,
                 False,
+                False,
             ),
             ioptimz=1,
             tim=np.array(
@@ -2051,7 +2053,7 @@ class Power2Param(NamedTuple):
 
     pradhcd: Any = None
 
-    pnucfw: Any = None
+    p_fw_nuclear_heat_total_mw: Any = None
 
     htpmw_shld: Any = None
 
@@ -2234,7 +2236,7 @@ class Power2Param(NamedTuple):
             pnuchcd=0,
             pnucshld=1.3609360176065353,
             pradhcd=0,
-            pnucfw=276.76827393356979,
+            p_fw_nuclear_heat_total_mw=276.76827393356979,
             htpmw_shld=0.0068046800880326762,
             htpmw_blkt=0,
             psecshld=0,
@@ -2336,7 +2338,7 @@ class Power2Param(NamedTuple):
             pnuchcd=0,
             pnucshld=1.4036212304705389,
             pradhcd=0,
-            pnucfw=230.95082168283884,
+            p_fw_nuclear_heat_total_mw=230.95082168283884,
             htpmw_shld=0.0070181061523526943,
             htpmw_blkt=0,
             psecshld=0,
@@ -2474,7 +2476,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "pradhcd", power2param.pradhcd)
 
-    monkeypatch.setattr(fwbs_variables, "pnucfw", power2param.pnucfw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_nuclear_heat_total_mw",
+        power2param.p_fw_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "htpmw_shld", power2param.htpmw_shld)
 

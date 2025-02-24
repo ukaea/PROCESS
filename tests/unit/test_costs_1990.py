@@ -977,7 +977,7 @@ def test_acc21(acc21param, monkeypatch, costs):
 
 
 class Acc2211Param(NamedTuple):
-    fwarea: Any = None
+    a_fw_total: Any = None
 
     ucblss: Any = None
 
@@ -1010,7 +1010,7 @@ class Acc2211Param(NamedTuple):
     "acc2211param",
     (
         Acc2211Param(
-            fwarea=1601.1595634509963,
+            a_fw_total=1601.1595634509963,
             ucblss=90,
             fkind=1,
             fwallcst=0,
@@ -1039,7 +1039,7 @@ class Acc2211Param(NamedTuple):
             expected_fwallcst=143.19827300247195,
         ),
         Acc2211Param(
-            fwarea=1891.2865102700493,
+            a_fw_total=1891.2865102700493,
             ucblss=90,
             fkind=1,
             fwallcst=143.19827300247195,
@@ -1082,7 +1082,7 @@ def test_acc2211(acc2211param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "fwarea", acc2211param.fwarea)
+    monkeypatch.setattr(build_variables, "a_fw_total", acc2211param.a_fw_total)
 
     monkeypatch.setattr(cost_variables, "ucblss", acc2211param.ucblss)
 
@@ -1136,7 +1136,7 @@ class Acc2212Param(NamedTuple):
 
     fkind: Any = None
 
-    iblanket: Any = None
+    i_blanket_type: Any = None
 
     whtblli: Any = None
 
@@ -1208,7 +1208,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1258110.2710352642,
             whtblbreed=0,
@@ -1262,7 +1262,7 @@ class Acc2212Param(NamedTuple):
             ifueltyp=1,
             lsa=2,
             fkind=1,
-            iblanket=1,
+            i_blanket_type=1,
             whtblli=0,
             wtblli2o=1260437.468838267,
             whtblbreed=0,
@@ -1341,7 +1341,7 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2212param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "iblanket", acc2212param.iblanket)
+    monkeypatch.setattr(fwbs_variables, "i_blanket_type", acc2212param.i_blanket_type)
 
     monkeypatch.setattr(fwbs_variables, "whtblli", acc2212param.whtblli)
 
@@ -1742,7 +1742,7 @@ class Acc2221Param(NamedTuple):
 
     whtcas: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     whttflgs: Any = None
 
@@ -1756,7 +1756,7 @@ class Acc2221Param(NamedTuple):
 
     n_tf_turn: Any = None
 
-    tfleng: Any = None
+    len_tf_coil: Any = None
 
     i_tf_sc_mat: Any = None
 
@@ -1804,14 +1804,14 @@ class Acc2221Param(NamedTuple):
             whtconcu=58744.465423173802,
             whtconsc=5802.5700395134345,
             whtcas=1034021.9996272125,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.483843027201402,
+            len_tf_coil=50.483843027201402,
             i_tf_sc_mat=5,
             c22=0,
             c2221=0,
@@ -1845,14 +1845,14 @@ class Acc2221Param(NamedTuple):
             whtconcu=58779.575542593491,
             whtconsc=5806.038092640837,
             whtcas=1034699.2182961091,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.514015976170839,
+            len_tf_coil=50.514015976170839,
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
@@ -1886,14 +1886,14 @@ class Acc2221Param(NamedTuple):
             whtconcu=58779.575542593491,
             whtconsc=5806.038092640837,
             whtcas=1034699.2182961091,
-            n_tf=16,
+            n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
             i_tf_sup=1,
             supercond_cost_model=1,
             j_crit_str_tf=300.0,
             n_tf_turn=200,
-            tfleng=50.514015976170839,
+            len_tf_coil=50.514015976170839,
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
@@ -1956,7 +1956,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "whtcas", acc2221param.whtcas)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", acc2221param.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2221param.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "whttflgs", acc2221param.whttflgs)
 
@@ -1972,7 +1972,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", acc2221param.n_tf_turn)
 
-    monkeypatch.setattr(tfcoil_variables, "tfleng", acc2221param.tfleng)
+    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", acc2221param.len_tf_coil)
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sc_mat", acc2221param.i_tf_sc_mat)
 
@@ -3234,17 +3234,17 @@ class Acc2251Param(NamedTuple):
 
     tfcmw: Any = None
 
-    tfbusl: Any = None
+    len_tf_bus: Any = None
 
     estotftgj: Any = None
 
     i_tf_sup: Any = None
 
-    tfbusmas: Any = None
+    m_tf_bus: Any = None
 
     tfckw: Any = None
 
-    n_tf: Any = None
+    n_tf_coils: Any = None
 
     cpttf: Any = None
 
@@ -3289,12 +3289,12 @@ class Acc2251Param(NamedTuple):
             uctfbus=100,
             vtfskv=9.9882637896807953,
             tfcmw=0,
-            tfbusl=3397.0129827974288,
+            len_tf_bus=3397.0129827974288,
             estotftgj=152.78343648685947,
             i_tf_sup=1,
-            tfbusmas=0,
+            m_tf_bus=0,
             tfckw=32474.753636211804,
-            n_tf=16,
+            n_tf_coils=16,
             cpttf=74026.751437500003,
             c22=0,
             c225=0,
@@ -3320,12 +3320,12 @@ class Acc2251Param(NamedTuple):
             uctfbus=100,
             vtfskv=10.001287165953382,
             tfcmw=0,
-            tfbusl=3397.0129827974288,
+            len_tf_bus=3397.0129827974288,
             estotftgj=152.98264590137683,
             i_tf_sup=1,
-            tfbusmas=0,
+            m_tf_bus=0,
             tfckw=32505.257577809778,
-            n_tf=16,
+            n_tf_coils=16,
             cpttf=74026.751437500003,
             c22=3474.7391916096453,
             c225=185.05656643685359,
@@ -3373,17 +3373,17 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc2251param.tfcmw)
 
-    monkeypatch.setattr(tfcoil_variables, "tfbusl", acc2251param.tfbusl)
+    monkeypatch.setattr(tfcoil_variables, "len_tf_bus", acc2251param.len_tf_bus)
 
     monkeypatch.setattr(tfcoil_variables, "estotftgj", acc2251param.estotftgj)
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2251param.i_tf_sup)
 
-    monkeypatch.setattr(tfcoil_variables, "tfbusmas", acc2251param.tfbusmas)
+    monkeypatch.setattr(tfcoil_variables, "m_tf_bus", acc2251param.m_tf_bus)
 
     monkeypatch.setattr(tfcoil_variables, "tfckw", acc2251param.tfckw)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf", acc2251param.n_tf)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2251param.n_tf_coils)
 
     monkeypatch.setattr(tfcoil_variables, "cpttf", acc2251param.cpttf)
 
@@ -3628,7 +3628,7 @@ class Acc2253Param(NamedTuple):
 
     pnetelmw: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     dtstor: Any = None
 
@@ -3653,7 +3653,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2620.2218111502593,
             pnetelmw=493.01760776192009,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -3667,7 +3667,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2619.4223856129224,
             pnetelmw=422.4198205312706,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -3699,7 +3699,7 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", acc2253param.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
     monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
 
@@ -5292,7 +5292,7 @@ class Acc2253Param(NamedTuple):
 
     pnetelmw: Any = None
 
-    lpulse: Any = None
+    i_pulsed_plant: Any = None
 
     dtstor: Any = None
 
@@ -5317,7 +5317,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2620.2218111502593,
             pnetelmw=493.01760776192009,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -5331,7 +5331,7 @@ class Acc2253Param(NamedTuple):
             fkind=1,
             pthermmw=2619.4223856129224,
             pnetelmw=422.4198205312706,
-            lpulse=1,
+            i_pulsed_plant=1,
             dtstor=300,
             istore=1,
             tdown=854.42613938735622,
@@ -5363,7 +5363,7 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
 
-    monkeypatch.setattr(pulse_variables, "lpulse", acc2253param.lpulse)
+    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
     monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
 

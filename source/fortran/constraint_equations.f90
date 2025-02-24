@@ -47,7 +47,6 @@ contains
     !!
     !! 1.
     use numerics, only: icc
-    use maths_library, only: variable_error
 
     implicit none
 
@@ -287,6 +286,8 @@ contains
         case (90); call constraint_eqn_090(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
          ! Constraint for indication of ECRH ignitability
         case (91); call constraint_eqn_091(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+         ! Constraint for D/T ratio
+        case (92); call constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
        case default
 
         idiags(1) = icc(i)
@@ -307,9 +308,7 @@ contains
         if (present(units))  units(i)  = tmp_units
       end if
 
-      ! Crude method of catching NaN errors
-      !if ((abs(cc(i)) > 9.99D99).or.(cc(i) /= cc(i))) then
-      if (variable_error(cc(i))) then
+      if (isnan(cc(i)).or.(abs(cc(i))>9.99D99)) then
 
         ! Add debugging lines as appropriate...
         select case (icc(i))
@@ -869,14 +868,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for volt-second capability lower limit
       !! #=# pfcoil
-      !! #=#=# fvs, vsstt
+      !! #=#=# fvs, vs_plasma_total_required
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vsstt : input real : total V-s needed (Wb)
-      !! vsstt (lower limit) is positive; vstot (available) is negative
+      !! vs_plasma_total_required : input real : total V-s needed (Wb)
+      !! vs_plasma_total_required (lower limit) is positive; vstot (available) is negative
       !! fvs : input real : f-value for flux-swing (V-s) requirement (STEADY STATE)
       !! vstot : input real :   total flux swing for pulse (Wb)
-      use physics_variables, only: vsstt
+      use physics_variables, only: vs_plasma_total_required
       use constraint_variables, only: fvs
       use pfcoil_variables, only: vstot
       implicit none
@@ -886,9 +885,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 + fvs * vstot/vsstt
-      tmp_con = vsstt * (1.0D0 - tmp_cc)
-      tmp_err = vsstt * tmp_cc
+      tmp_cc =  1.0D0 + fvs * vstot/vs_plasma_total_required
+      tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
+      tmp_err = vs_plasma_total_required * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'V.sec'
 
@@ -905,7 +904,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ft_burn : input real : f-value for minimum burn time
-      !! t_burn : input real : burn time (s) (calculated if lpulse=1)
+      !! t_burn : input real : burn time (s) (calculated if i_pulsed_plant=1)
       !! t_burn_min : input real :  minimum burn time (s)
       use constraint_variables, only: ft_burn,t_burn_min
       use times_variables, only: t_burn
@@ -960,14 +959,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for L-H power threshold limit
       !! #=# physics
-      !! #=#=# flhthresh, plhthresh
+      !! #=#=# fl_h_threshold, p_l_h_threshold_mw
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! flhthresh : input real : f-value for L-H power threshold
-      !! plhthresh : input real : L-H mode power threshold (MW)
+      !! fl_h_threshold : input real : f-value for L-H power threshold
+      !! p_l_h_threshold_mw : input real : L-H mode power threshold (MW)
       !! pdivt : input real : power to conducted to the divertor region (MW)
-      use constraint_variables, only: flhthresh
-      use physics_variables, only: plhthresh, pdivt
+      use constraint_variables, only: fl_h_threshold
+      use physics_variables, only: p_l_h_threshold_mw, pdivt
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -975,10 +974,10 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  -(1.0D0 - flhthresh * plhthresh / pdivt)
-      tmp_con = plhthresh
-      tmp_err = plhthresh - pdivt / flhthresh
-      if (flhthresh > 1.0D0) then
+      tmp_cc =  -(1.0D0 - fl_h_threshold * p_l_h_threshold_mw / pdivt)
+      tmp_con = p_l_h_threshold_mw
+      tmp_err = p_l_h_threshold_mw - pdivt / fl_h_threshold
+      if (fl_h_threshold > 1.0D0) then
          tmp_symbol = '>'
       else
          tmp_symbol = '<'
@@ -1755,14 +1754,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for first wall temperature upper limit
       !! #=# fwbs
-      !! #=#=# ftpeak, tfwmatmax
+      !! #=#=# ftpeak, temp_fw_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftpeak : input real : f-value for first wall peak temperature
-      !! tfwmatmax : input real : maximum temperature of first wall material (K) (secondary_cycle>1)
-      !! tpeak : input real : peak first wall temperature (K)
+      !! temp_fw_max : input real : maximum temperature of first wall material (K) (secondary_cycle>1)
+      !! temp_fw_peak : input real : peak first wall temperature (K)
       use constraint_variables, only: ftpeak
-      use fwbs_variables, only: tfwmatmax, tpeak
+      use fwbs_variables, only: temp_fw_max, temp_fw_peak
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1771,10 +1770,10 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! If the temperature peak == 0 then report an error
-      if (tpeak < 1.0D0) call report_error(5)
-      tmp_cc =  1.0D0 - ftpeak * tfwmatmax/tpeak
-      tmp_con = tfwmatmax * (1.0D0 - tmp_cc)
-      tmp_err = tpeak * tmp_cc
+      if (temp_fw_peak < 1.0D0) call report_error(5)
+      tmp_cc =  1.0D0 - ftpeak * temp_fw_max/temp_fw_peak
+      tmp_con = temp_fw_max * (1.0D0 - tmp_cc)
+      tmp_err = temp_fw_peak * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'K'
 
@@ -1882,12 +1881,12 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! tcpav : input real : average temp of TF coil inboard leg conductor (C)e
+      !! temp_cp_average : input real : average temp of TF coil inboard leg conductor (C)e
       !! tcpav2 : input real : centrepost average temperature (C) (for consistency)
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
-      use tfcoil_variables, only: tcpav, tcpav2
+      use tfcoil_variables, only: temp_cp_average, tcpav2
       use physics_variables, only: itart
       use tfcoil_variables, only:  i_tf_sup
 
@@ -1903,11 +1902,11 @@ contains
 
       ! For some reasons these lines are needed to make VMCON CONVERGE ....
       if ( i_tf_sup == 0 ) then ! Copper case
-         tcpav = tcpav - 273.15D0
+         temp_cp_average = temp_cp_average - 273.15D0
          tcpav2 = tcpav2 - 273.15D0
       end if
 
-      tmp_cc =   1.0D0 - tcpav/tcpav2
+      tmp_cc =   1.0D0 - temp_cp_average/tcpav2
       tmp_con = tcpav2 * (1.0D0 - tmp_cc)
       tmp_err = tcpav2 * tmp_cc
       tmp_symbol = '='
@@ -1915,7 +1914,7 @@ contains
 
       ! For some reasons these lines are needed to make VMCON CONVERGE ....
       if ( i_tf_sup == 0 ) then ! Copper case
-         tcpav = tcpav + 273.15D0
+         temp_cp_average = temp_cp_average + 273.15D0
          tcpav2 = tcpav2 + 273.15D0
       end if
 
@@ -1984,14 +1983,14 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fq : input real : f-value for edge safety factor
-      !! q : safety factor 'near' plasma edge: equal to q95
+      !! q95 : safety factor 'near' plasma edge
       !! (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
       !! q95_min : input real :  lower limit for edge safety factor
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use constraint_variables, only: fq
-      use physics_variables, only: q, q95_min, itart
+      use physics_variables, only: q95, q95_min, itart
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2001,7 +2000,7 @@ contains
 
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(9)
-      tmp_cc =   1.0D0 - fq * q/q95_min
+      tmp_cc =   1.0D0 - fq * q95/q95_min
       tmp_con = q95_min * (1.0D0 - tmp_cc)
       tmp_err = q95_min * tmp_cc
       tmp_symbol = '<'
@@ -2021,14 +2020,14 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! eps : input real :  inverse aspect ratio
       !! fipir : input real : f-value for Ip/Irod upper limit
-      !! ritfc : input real : total (summed) current in TF coils (A)
+      !! c_tf_total : input real : total (summed) current in TF coils (A)
       !! plasma_current : input real :  plasma current (A)
       !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
       !! <LI> = 0 use conventional aspect ratio models;
       !! <LI> = 1 use spherical tokamak models</UL>
       use physics_variables, only: eps, plasma_current, itart
       use constraint_variables, only: fipir
-      use tfcoil_variables, only: ritfc
+      use tfcoil_variables, only: c_tf_total
       implicit none
       ! cratmx : local real : maximum ratio of plasma current to centrepost current
       real(dp) :: cratmx
@@ -2041,9 +2040,9 @@ contains
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(10)
       cratmx = 1.0D0 + 4.91D0*(eps-0.62D0)
-      tmp_cc =  1.0D0 - fipir * cratmx * ritfc/plasma_current
+      tmp_cc =  1.0D0 - fipir * cratmx * c_tf_total/plasma_current
       tmp_con = cratmx * (1.0D0 - tmp_cc)
-      tmp_err = plasma_current/ritfc * tmp_cc
+      tmp_err = plasma_current/c_tf_total * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -2160,10 +2159,10 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vsres : input real : resistive losses in startup V-s (Wb)
-      !! vsind : input real :  internal and external plasma inductance V-s (Wb))
+      !! vs_plasma_res_ramp : input real : resistive losses in startup V-s (Wb)
+      !! vs_plasma_ind_ramp : input real :  internal and external plasma inductance V-s (Wb))
       !! vssu : input real :  total flux swing for startup (Wb)
-      use physics_variables, only: vsres, vsind
+      use physics_variables, only: vs_plasma_res_ramp, vs_plasma_ind_ramp
       use pfcoil_variables, only: vssu, fvssu
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2172,7 +2171,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fvssu * abs((vsres+vsind) / vssu)
+      tmp_cc =  1.0D0 - fvssu * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vssu)
       tmp_con = vssu * (1.0D0 - tmp_cc)
       tmp_err = vssu * tmp_cc
       tmp_symbol = '='
@@ -2192,8 +2191,8 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftbr : input real : f-value for minimum tritium breeding ratio
-      !! tbr : input real :  tritium breeding ratio (iblanket=2,3 (KIT HCPB/HCLL))
-      !! tbrmin : input real :  minimum tritium breeding ratio (If iblanket=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
+      !! tbr : input real :  tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
+      !! tbrmin : input real :  minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
       use constraint_variables, only: ftbr, tbrmin
       use fwbs_variables, only: tbr
       implicit none
@@ -2490,7 +2489,7 @@ contains
       !! tfno : input real : number of TF coils (default = 50 for stellarators)
       !! niterpump : input real : number of high vacuum pumps (real number), each with the throughput
       use constraint_variables, only: fniterpump
-      use tfcoil_variables, only: n_tf
+      use tfcoil_variables, only: n_tf_coils
       use vacuum_variables, only: niterpump
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2499,9 +2498,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - fniterpump * n_tf / niterpump
-      tmp_con = n_tf
-      tmp_err = n_tf * tmp_cc
+      tmp_cc = 1.0D0 - fniterpump * n_tf_coils / niterpump
+      tmp_con = n_tf_coils
+      tmp_err = n_tf_coils * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
 
@@ -2798,10 +2797,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fplhsep : input real : F-value for Psep >= Plh + Paux : for consistency of two values of separatrix power
-      !! plhthresh : input real : L-H mode power threshold (MW)
+      !! p_l_h_threshold_mw : input real : L-H mode power threshold (MW)
       !! pdivt : input real : power to be conducted to the divertor region (MW)
       !! pinjmw : inout real : total auxiliary injected power (MW)
-      use physics_variables, only: fplhsep, plhthresh, pdivt
+      use physics_variables, only: fplhsep, p_l_h_threshold_mw, pdivt
       use current_drive_variables, only: pinjmw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2810,7 +2809,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fplhsep * pdivt / (plhthresh+pinjmw)
+      tmp_cc = 1.0d0 - fplhsep * pdivt / (p_l_h_threshold_mw+pinjmw)
       tmp_con = pdivt
       tmp_err = pdivt * tmp_cc
       tmp_symbol = '>'
@@ -3390,6 +3389,32 @@ contains
       tmp_units = 'MW'
    end subroutine constraint_eqn_091
 
+   subroutine constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
+      !! Equation for checking is D/T ratio is consistent, and sums to 1.
+      !! author: G Turkington, UKAEA
+      !! args : output structure : residual error; constraint value;
+      !! residual error in physical units; output string; units string
+      !! f_deuterium : input : fraction of deuterium ions
+      !! f_tritium  : input : fraction of tritium ions
+      !! f_helium3  : input : fraction of helium-3 ions
+      use physics_variables, only: f_deuterium, f_tritium, f_helium3
+      implicit none
+      real(dp), intent(out) :: tmp_cc
+      real(dp), intent(out) :: tmp_con
+      real(dp), intent(out) :: tmp_err
+      character(len=1), intent(out) :: tmp_symbol
+      character(len=10), intent(out) :: tmp_units
+
+
+      ! Iterate over f_tritium and calculate f_deuterium
+      f_deuterium = 1.0D0 - (f_tritium + f_helium3)
+      tmp_cc = 1.0D0 - (f_deuterium + f_tritium + f_helium3)
+      tmp_con = 1.0D0
+      tmp_err = tmp_con * tmp_cc
+      tmp_symbol = '='
+      tmp_units = 'fraction'
+
+   end subroutine constraint_eqn_092
 
 
 end module constraints

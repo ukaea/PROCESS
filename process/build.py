@@ -2,6 +2,8 @@ import logging
 
 import numpy as np
 
+from process import process_output as po
+from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
     blanket_library,
     build_variables,
@@ -11,13 +13,11 @@ from process.fortran import (
     divertor_variables,
     error_handling,
     fwbs_variables,
-    maths_library,
     numerics,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class Build:
 
         #  Toroidal angle between adjacent TF coils
 
-        omega = constants.twopi / tfcoil_variables.n_tf
+        omega = constants.twopi / tfcoil_variables.n_tf_coils
 
         #  Half-width of outboard TF coil in toroidal direction (m)
         a = 0.5e0 * tfcoil_variables.tftort  # (previously used inboard leg width)
@@ -973,7 +973,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma geometric centre, radial (m)",
-                    "(physics_variables.rmajor.)",
+                    "(rmajor.)",
                     physics_variables.rmajor,
                     "OP ",
                 )
@@ -986,7 +986,7 @@ class Build:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma lower physics_variables.triangularity",
+                    "Plasma lower triangularity",
                     "(tril)",
                     tril,
                     "OP ",
@@ -994,7 +994,7 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Plasma elongation",
-                    "(physics_variables.kappa.)",
+                    "(kappa.)",
                     kap,
                     "OP ",
                 )
@@ -1508,7 +1508,7 @@ class Build:
         Activated when i_tf_shape == 2 (picture frame)
 
         """
-        n = float(tfcoil_variables.n_tf)
+        n = float(tfcoil_variables.n_tf_coils)
         if tfcoil_variables.i_tf_sup == 1:
             # Minimal inboard WP radius [m]
             r_wp_min = build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
@@ -1612,7 +1612,7 @@ class Build:
             flag = 0
             if (x < 0.737e0) or (x > 2.95e0):
                 flag = 1
-            if (tfcoil_variables.n_tf < 16) or (tfcoil_variables.n_tf > 20):
+            if (tfcoil_variables.n_tf_coils < 16) or (tfcoil_variables.n_tf_coils > 20):
                 flag = 2
             if (
                 (physics_variables.rmajor + physics_variables.rminor)
@@ -1720,7 +1720,7 @@ class Build:
                     + tfcoil_variables.casthi
                     + tfcoil_variables.thkcas
                 ) / np.cos(
-                    np.pi / tfcoil_variables.n_tf
+                    np.pi / tfcoil_variables.n_tf_coils
                 ) - build_variables.r_tf_inboard_in
 
             # Rounded resistive TF geometry
@@ -1747,7 +1747,7 @@ class Build:
             # SC magnets
             if tfcoil_variables.i_tf_sup == 1:
                 tfcoil_variables.dr_tf_wp = (
-                    np.cos(np.pi / tfcoil_variables.n_tf)
+                    np.cos(np.pi / tfcoil_variables.n_tf_coils)
                     * build_variables.r_tf_inboard_out
                     - build_variables.r_tf_inboard_in
                     - tfcoil_variables.casthi
@@ -1950,7 +1950,7 @@ class Build:
             build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
         #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
-        #  call rippl(tfcoil_variables.ripmax,rmajor,rminor,r_tf_outboard_mid,n_tf,ripple,r_tf_outboard_midl)
+        #  call rippl(tfcoil_variables.ripmax,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple,r_tf_outboard_midl)
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
@@ -1962,7 +1962,7 @@ class Build:
 
         #  Calculate first wall area
         #  Old calculation... includes a mysterious factor 0.875
-        # fwarea = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
+        # a_fw_total = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
 
         #  Half-height of first wall (internal surface)
         hbot = (
@@ -2001,15 +2001,12 @@ class Build:
                 + build_variables.dr_fw_plasma_gap_outboard
             ) - r1
             #  Calculate surface area, assuming 100% coverage
-            # maths_library.eshellarea was not working across
-            # the interface so has been reimplemented here
-            # as a test
 
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
-            ) = maths_library.dshellarea(r1, r2, hfw)
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
+            ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
             #  Major radius to centre of inboard and outboard ellipses
@@ -2038,38 +2035,36 @@ class Build:
 
             #  Calculate surface area, assuming 100% coverage
 
-            # maths_library.eshellarea was not working across
-            # the interface so has been reimplemented here
-            # as a test
-
             (
-                build_variables.fwareaib,
-                build_variables.fwareaob,
-                build_variables.fwarea,
-            ) = maths_library.eshellarea(r1, r2, r3, hfw)
+                build_variables.a_fw_inboard,
+                build_variables.a_fw_outboard,
+                build_variables.a_fw_total,
+            ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
         if physics_variables.idivrt == 2:
             # Double null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
             )
         else:
             # Single null configuration
-            build_variables.fwareaob = build_variables.fwareaob * (
+            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
-            build_variables.fwareaib = build_variables.fwareaib * (
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
                 1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
             )
 
-        build_variables.fwarea = build_variables.fwareaib + build_variables.fwareaob
+        build_variables.a_fw_total = (
+            build_variables.a_fw_inboard + build_variables.a_fw_outboard
+        )
 
-        if build_variables.fwareaob <= 0.0e0:
+        if build_variables.a_fw_outboard <= 0.0e0:
             error_handling.fdiags[0] = fwbs_variables.fdiv
             error_handling.fdiags[1] = fwbs_variables.fhcd
             error_handling.report_error(61)
@@ -2093,13 +2088,13 @@ class Build:
                 if self.ripflag == 1:
                     error_handling.fdiags[0] = (
                         tfcoil_variables.wwp1
-                        * tfcoil_variables.n_tf
+                        * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
                     error_handling.report_error(141)
                 elif self.ripflag == 2:
                     # Convert to integer as idiags is integer array
-                    error_handling.idiags[0] = int(tfcoil_variables.n_tf)
+                    error_handling.idiags[0] = int(tfcoil_variables.n_tf_coils)
                     error_handling.report_error(142)
                 else:
                     error_handling.fdiags[0] = (

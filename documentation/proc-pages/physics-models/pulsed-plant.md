@@ -5,8 +5,8 @@ necessary to operate the plant in a pulsed manner as the current swing in the ce
 cannot be continued indefinitely. `PROCESS` can perform a number of calculations relevant to a 
 pulsed power plant, as detailed below.
 
-Switch `lpulse` determines whether the power plant is assumed to be based on steady-state 
-(`lpulse = 0`) or pulsed (`lpulse = 1`) operation.  The current ramp calculations apply in both 
+Switch `i_pulsed_plant` determines whether the power plant is assumed to be based on steady-state 
+(`i_pulsed_plant = 0`) or pulsed (`i_pulsed_plant = 1`) operation.  The current ramp calculations apply in both 
 cases, as even a steady-state reactor has to be started up.
 
 ## Start-up power requirements
@@ -29,14 +29,14 @@ change equal to the maximum proposed in [^1], or it can be set by the user.  The
 constraint is likely to depend on whether the ramp-up is purely inductive or includes current drive, 
 but this is not taken ito account.
 
-In the steady-state scenario (`lpulse` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
+In the steady-state scenario (`i_pulsed_plant` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
 
 - If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
   and shutdown time `t_ramp_down` are (arbitrarily) set equal to `t_current_ramp_up`. 
 - If `i_t_current_ramp_up` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up`, and the PF coil ramp 
   and shutdown times are input parameters.
 
-In the pulsed scenario, (`lpulse` = 1), the plasma current ramp-up time `t_current_ramp_up` is an input, and it 
+In the pulsed scenario, (`i_pulsed_plant` = 1), the plasma current ramp-up time `t_current_ramp_up` is an input, and it 
 can be set as an iteration variable (65). The ramp-up and shutdown time in the pulsed case are set 
 equal to `t_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
 too high, as governed by the requirement to maintain plasma stability by ensuring that the induced 

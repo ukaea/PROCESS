@@ -79,71 +79,71 @@ def run_summary():
     # Outfile and terminal #
     for outfile in [fortran.constants.nout, fortran.constants.iotty]:
         # PROCESS code header
-        fortran.process_output.oblnkl(outfile)
-        fortran.process_output.ostars(outfile, 110)
-        fortran.process_output.ocentr(outfile, "PROCESS", 110)
-        fortran.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
-        fortran.process_output.ostars(outfile, 110)
-        fortran.process_output.oblnkl(outfile)
+        process.process_output.oblnkl(outfile)
+        process.process_output.ostars(outfile, 110)
+        process.process_output.ocentr(outfile, "PROCESS", 110)
+        process.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
+        process.process_output.ostars(outfile, 110)
+        process.process_output.oblnkl(outfile)
 
         # Run execution details
         version = process.__version__
-        fortran.process_output.ocmmnt(outfile, f"Version : {version}")
+        process.process_output.ocmmnt(outfile, f"Version : {version}")
 
         git_branch, git_tag = get_git_summary()
 
-        fortran.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
-        fortran.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
+        process.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
+        process.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
         date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
             "%d/%m/%Y %Z"
         )
         time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
 
-        fortran.process_output.ocmmnt(outfile, f"Date : {date_string}")
-        fortran.process_output.ocmmnt(outfile, f"Time : {time_string}")
+        process.process_output.ocmmnt(outfile, f"Date : {date_string}")
+        process.process_output.ocmmnt(outfile, f"Time : {time_string}")
 
         user = getpass.getuser()
         machine = socket.gethostname()
 
-        fortran.process_output.ocmmnt(outfile, f"User : {user}")
-        fortran.process_output.ocmmnt(outfile, f"Computer : {machine}")
-        fortran.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
+        process.process_output.ocmmnt(outfile, f"User : {user}")
+        process.process_output.ocmmnt(outfile, f"Computer : {machine}")
+        process.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
         fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
         runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
         )
 
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
         )
 
-        fortran.process_output.oblnkl(outfile)
-        fortran.process_output.ostars(outfile, 110)
-        fortran.process_output.oblnkl(outfile)
+        process.process_output.oblnkl(outfile)
+        process.process_output.ostars(outfile, 110)
+        process.process_output.oblnkl(outfile)
 
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
         )
 
@@ -157,41 +157,41 @@ def run_summary():
         fom_string = f2py_compatible_to_string(
             fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
         )
-        fortran.process_output.ocmmnt(
+        process.process_output.ocmmnt(
             outfile,
             f"Convergence parameter : {fortran.numerics.epsvmc}",
         )
 
-        fortran.process_output.oblnkl(outfile)
-        fortran.process_output.ostars(outfile, 110)
+        process.process_output.oblnkl(outfile)
+        process.process_output.ostars(outfile, 110)
 
     # MFile #
     mfile = fortran.constants.mfile
 
-    fortran.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    fortran.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    fortran.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    fortran.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    fortran.process_output.ovarst(
+    process.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
+    process.process_output.ovarst(
         mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"'
     )
-    fortran.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    fortran.process_output.ovarst(
+    process.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process.process_output.ovarst(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    fortran.process_output.ovarst(
+    process.process_output.ovarst(
         mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"'
     )
 
-    fortran.process_output.ovarin(
+    process.process_output.ovarin(
         mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
     )
     if fortran.numerics.ioptimz == -2:
-        fortran.process_output.ovarin(
+        process.process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
         )
 
@@ -642,7 +642,7 @@ def check_process():
 
         # If Reinke criterion is used need to enforce LH-threshold
         # using Martin scaling for consistency
-        if (fortran.physics_variables.ilhthresh != 6) or (
+        if (fortran.physics_variables.i_l_h_threshold != 6) or (
             not (
                 fortran.numerics.icc[
                     : fortran.numerics.neqns + fortran.numerics.nineqns
@@ -704,11 +704,11 @@ def check_process():
 
             # Temperature of the TF legs cannot be cooled down
             if (
-                fortran.tfcoil_variables.tlegav > 0
-                and fortran.tfcoil_variables.tlegav < 273.15
+                fortran.tfcoil_variables.temp_tf_legs_outboard > 0
+                and fortran.tfcoil_variables.temp_tf_legs_outboard < 273.15
             ):
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
@@ -716,7 +716,7 @@ def check_process():
                 fortran.numerics.ixc[: fortran.numerics.nvar] == 20
             ).any() and fortran.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
-                    "Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+                    "Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
@@ -737,9 +737,9 @@ def check_process():
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
-            if fortran.tfcoil_variables.tlegav > 50.0:
+            if fortran.tfcoil_variables.temp_tf_legs_outboard > 50.0:
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
@@ -747,11 +747,11 @@ def check_process():
                 fortran.numerics.ixc[: fortran.numerics.nvar] == 20
             ).any() and fortran.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
-                    "Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+                    "Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
                 )
 
             # Otherwise intitialise the average conductor temperature at
-            fortran.tfcoil_variables.tcpav = fortran.tfcoil_variables.tcoolin
+            fortran.tfcoil_variables.temp_cp_average = fortran.tfcoil_variables.tcoolin
 
         # Check if the boostrap current selection is addapted to ST
         if fortran.physics_variables.i_bootstrap_current == 1:
@@ -857,7 +857,7 @@ def check_process():
             )
 
     #  Pulsed power plant model
-    if fortran.pulse_variables.lpulse == 1:
+    if fortran.pulse_variables.i_pulsed_plant == 1:
         fortran.global_variables.icase = "Pulsed tokamak model"
     else:
         fortran.buildings_variables.esbldgm3 = 0.0
@@ -1165,7 +1165,8 @@ def check_process():
     # CCFE HCPB Model
 
     if fortran.stellarator_variables.istell == 0 and (
-        fortran.fwbs_variables.iblanket == 1 or fortran.fwbs_variables.iblanket == 3
+        fortran.fwbs_variables.i_blanket_type == 1
+        or fortran.fwbs_variables.i_blanket_type == 3
     ):
         fsum = (
             fortran.fwbs_variables.breeder_multiplier
@@ -1175,7 +1176,7 @@ def check_process():
         if fsum >= 1.0:
             raise ProcessValidationError(
                 "Blanket material fractions do not sum to 1.0",
-                iblanket=fortran.fwbs_variables.iblanket,
+                i_blanket_type=fortran.fwbs_variables.i_blanket_type,
                 breeder_multiplier=fortran.fwbs_variables.breeder_multiplier,
                 vfcblkt=fortran.fwbs_variables.vfcblkt,
                 vfpblkt=fortran.fwbs_variables.vfpblkt,

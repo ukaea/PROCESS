@@ -70,7 +70,7 @@ t_burn_min = 7200.0
 * L-H threshold scaling *
 *-----------------------*
 icc = 15
-ixc = 103 * flhthresh
+ixc = 103 * fl_h_threshold
 boundu(103) = 10.0
 
 * Injection power upper limit *
@@ -226,10 +226,10 @@ ixc = 16
 boundl(16) = 0.3
 dr_cs = 0.5
 
-* Safety factor near plasma edge
+* Safety factor at 95% flux surface 
 ixc = 18
 boundl(18) = 3.0
-q = 3.5
+q95 = 3.5
 
 * Machine dr_bore [m]
 ixc = 29
@@ -369,7 +369,7 @@ beta_norm_max = 3.0
 fkzohm = 1.02
 
 * Ejima coefficient for resistive startup V-s formula
-gamma = 0.3
+ejima_coeff = 0.3
 
 * Switch for bootstrap current scaling
 i_bootstrap_current = 4
@@ -436,7 +436,7 @@ plasma_res_factor = 0.7
 ***********
 
 * Switch for reactor model - pulsed
-lpulse = 1
+i_pulsed_plant = 1
 
 * dwell time [s]
 t_between_pulse = 1800.0
@@ -590,7 +590,7 @@ casths = 0.05
 ripmax = 0.6
 
 * Number of TF coils
-n_tf = 16
+n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
 tinstf = 0.008

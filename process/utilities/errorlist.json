@@ -33,12 +33,12 @@
     {
       "no": 5,
       "level": 3,
-      "message": "CONSTRAINTS: tpeak = 0 ==> lpulse=0; do not use constraint 39 if lpulse=0"
+      "message": "CONSTRAINTS: temp_fw_peak = 0 ==> i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
     },
     {
       "no": 6,
       "level": 3,
-      "message": "CONSTRAINTS: tcycmn = 0 ==> lpulse=0; do not use constraint 42 if lpulse=0"
+      "message": "CONSTRAINTS: tcycmn = 0 ==> i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
     },
     {
       "no": 7,
@@ -258,7 +258,7 @@
     {
       "no": 50,
       "level": 3,
-      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if lpulse /= 1"
+      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if i_pulsed_plant /= 1"
     },
     {
       "no": 51,
@@ -453,7 +453,7 @@
     {
       "no": 89,
       "level": 3,
-      "message": "ITERATE_FW: Inner pipe radius afw >= outer pipe radius bfw"
+      "message": "ITERATE_FW: Inner pipe radius radius_fw_channel >= outer pipe radius bfw"
     },
     {
       "no": 90,
@@ -493,7 +493,7 @@
     {
       "no": 97,
       "level": 2,
-      "message": "SCTFCOIL: Negative TF coil current; ritfc forced to be positive..."
+      "message": "SCTFCOIL: Negative TF coil current; c_tf_total forced to be positive..."
     },
     {
       "no": 98,
@@ -873,7 +873,7 @@
     {
       "no": 173,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 55 if iblanket != 2"
+      "message": "CONSTRAINTS: Do not use constraint 55 if i_blanket_type != 2"
     },
     {
       "no": 174,
@@ -1088,7 +1088,7 @@
     {
       "no": 216,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if iblanket=1"
+      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if i_blanket_type=1"
     },
     {
       "no": 217,
@@ -1198,22 +1198,22 @@
     {
       "no": 238,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) should be < 40 K for the cryo-al resistivity to be defined."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined."
     },
     {
       "no": 239,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (tlegav) cannot be < 0 C (273.15 K) for water cooled magents."
+      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents."
     },
     {
       "no": 240,
       "level": 3,
-      "message": "CHECK: Too large CP conductor temperature (tcpav). Upper limit for cryo-al < 50 K"
+      "message": "CHECK: Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
     },
     {
       "no": 241,
       "level": 3,
-      "message": "CHECK: Too low CP conductor temperature (tcpav). Lower limit for copper > 273.15 K"
+      "message": "CHECK: Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
     },
     {
       "no": 242,

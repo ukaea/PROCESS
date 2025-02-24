@@ -19,7 +19,7 @@ module numerics
   integer, parameter :: ipnvars = 175
   !!  ipnvars FIX : total number of variables available for iteration
 
-  integer, parameter :: ipeqns = 91
+  integer, parameter :: ipeqns = 92
   !!  ipeqns  FIX : number of constraint equations available
 
   integer, parameter :: ipnfoms = 19
@@ -155,7 +155,7 @@ module numerics
   !!  <LI> (52) Tritium breeding ratio lower limit (itv 89,90,91)
   !!  <LI> (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
   !!  <LI> (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
-  !!  <LI> (55) Vacuum vessel helium concentration upper limit iblanket =2 (itv 96,93,94)
+  !!  <LI> (55) Vacuum vessel helium concentration upper limit i_blanket_type =2 (itv 96,93,94)
   !!  <LI> (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
   !!  <LI> (57) NOT USED
   !!  <LI> (58) NOT USED
@@ -193,7 +193,9 @@ module numerics
   !!  <LI> (88) Constraint for TF coil strain absolute value
   !!  <LI> (89) Constraint for CS coil quench protection
   !!  <LI> (90) Lower Limit on number of stress load cycles for CS (itr 167 fncycle)
-  !!  <LI> (91) Checking if the design point is ECRH ignitable (itv 168 fecrh_ignition) </UL>
+  !!  <LI> (91) Checking if the design point is ECRH ignitable (itv 168 fecrh_ignition)
+  !!  <LI> (92) D/T/He3 ratio in fuel sums to 1 </UL>
+
 
   integer, dimension(ipnvars) :: ixc
   !!  ixc(ipnvars) /0/ :
@@ -221,7 +223,7 @@ module numerics
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
   !! <LI> (19) beam_energy
-  !! <LI> (20) tcpav
+  !! <LI> (20) temp_cp_average
   !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
@@ -304,7 +306,7 @@ module numerics
   !! <LI> (100) NOT USED
   !! <LI> (101) NOT USED
   !! <LI> (102) fimpvar # OBSOLETE
-  !! <LI> (103) flhthresh (f-value for equation 15)
+  !! <LI> (103) fl_h_threshold (f-value for equation 15)
   !! <LI> (104)fr_conducting_wall (f-value for equation 23)
   !! <LI> (105) fnbshinef (f-value for equation 59)
   !! <LI> (106) ftmargoh (f-value for equation 60)
@@ -315,7 +317,7 @@ module numerics
   !! <LI> (111) fniterpump: f-value for constraint that number
   !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
-  !! <LI> (114) fw_channel_length: Length of a single first wall channel
+  !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
   !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
@@ -374,7 +376,7 @@ module numerics
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) casths : TF side case thickness [m]
-  !! <LI> (173) EMPTY : Description
+  !! <LI> (173) f_deuterium : Deuterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
@@ -545,7 +547,9 @@ contains
       'TF coil strain absolute value    ', &
       'CS current/copper area < Max     ', &
       'CS stress load cycles            ', &
-      'ECRH ignitability                '  &
+      'ECRH ignitability                ', &
+      'Fuel composition consistency     ' &
+
       /)
 
     ! Please note: All strings between '...' above must be exactly 33 chars long

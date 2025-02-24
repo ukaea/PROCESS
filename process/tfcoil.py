@@ -3,12 +3,12 @@ import copy
 import numpy as np
 
 from process import fortran as ft
+from process import process_output as po
 from process.build import Build
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
-from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
 from process.sctfcoil import Sctfcoil
 
@@ -67,7 +67,7 @@ class TFcoil:
         n_tcool_it = 20
 
         # Coolant channels:
-        acool = tfv.a_cp_cool * tfv.n_tf  # Cooling cross-sectional area
+        acool = tfv.a_cp_cool * tfv.n_tf_coils  # Cooling cross-sectional area
         dcool = 2.0e0 * tfv.rcool  # Diameter
         lcool = 2.0e0 * (bv.hmax + bv.dr_tf_outboard)  # Length
         tfv.ncool = acool / (constants.pi * tfv.rcool**2)  # Number
@@ -77,7 +77,7 @@ class TFcoil:
         ro = (acpav / (constants.pi * tfv.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfv.prescp + fwbsv.pnuc_cp_tf * 1.0e6
+        ptot = tfv.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -298,14 +298,14 @@ class TFcoil:
             po.ovarre(
                 self.outfile,
                 "Average conductor resistivity (ohm.m)",
-                "(rhocp)",
-                tfv.rhocp,
+                "(rho_cp)",
+                tfv.rho_cp,
             )
             po.ovarre(
                 self.outfile,
                 "Resistive heating (MW)",
-                "(prescp/1.0e6)",
-                tfv.prescp / 1.0e6,
+                "(p_cp_resistive/1.0e6)",
+                tfv.p_cp_resistive / 1.0e6,
             )
             po.ovarre(
                 self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf

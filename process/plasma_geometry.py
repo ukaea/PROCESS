@@ -167,11 +167,11 @@ class PlasmaGeom:
 
         if (
             physics_variables.i_plasma_geometry == 9
-        ):  # Use input triang, physics_variables.rli values
+        ):  # Use input triang, physics_variables.ind_plasma_internal_norm values
             # physics_variables.kappa found from physics_variables.aspect ratio and plasma internal inductance li(3)
-            physics_variables.kappa = (1.09e0 + 0.26e0 / physics_variables.rli) * (
-                1.5e0 / physics_variables.aspect
-            ) ** 0.4e0
+            physics_variables.kappa = (
+                1.09e0 + 0.26e0 / physics_variables.ind_plasma_internal_norm
+            ) * (1.5e0 / physics_variables.aspect) ** 0.4e0
 
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0

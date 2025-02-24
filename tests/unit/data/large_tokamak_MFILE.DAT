@@ -331,7 +331,7 @@
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)_______________________              4    
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6521E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      2.0295E+00    
- Plasma_internal_inductance,_li__________________________________________ (rli)_________________________      1.2402E+00    
+ Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2402E+00    
  Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4379E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (bt)__________________________      5.3453E+00 ITV
  Average_poloidal_field_(T)______________________________________________ (bp)__________________________      8.6210E-01    
@@ -457,29 +457,29 @@
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.6412E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      2.0515E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      1.0000E+01 OP 
- ITER_1996_scaling:_nominal_(MW)_________________________________________ (pthrmw(1))___________________      1.3038E+02 OP 
- ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (pthrmw(2))___________________      2.8687E+02 OP 
- ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (pthrmw(3))___________________      5.8465E+01 OP 
- ITER_1997_scaling_(1)_(MW)______________________________________________ (pthrmw(4))___________________      2.1496E+02 OP 
- ITER_1997_scaling_(2)_(MW)______________________________________________ (pthrmw(5))___________________      1.7263E+02 OP 
- Martin_2008_scaling:_nominal_(MW)_______________________________________ (pthrmw(6))___________________      9.7733E+01 OP 
- Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (pthrmw(7))___________________      1.2813E+02 OP 
- Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (pthrmw(8))___________________      6.7340E+01 OP 
- Snipes_2000_scaling:_nominal_(MW)_______________________________________ (pthrmw(9))___________________      6.8079E+01 OP 
- Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (pthrmw(10))__________________      9.9875E+01 OP 
- Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (pthrmw(11))__________________      4.6035E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (pthrmw(12))__________________      3.1074E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (pthrmw(13))__________________      4.3244E+01 OP 
- Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (pthrmw(14))__________________      2.2173E+01 OP 
- Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (pthrmw(15))__________________      2.7259E+01 OP 
- Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (pthrmw(16))__________________      1.4208E+01 OP 
- Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (pthrmw(17))__________________      5.2299E+01 OP 
- Hubbard_2017_L-I_threshold______________________________________________ (pthrmw(18))__________________      2.6093E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (pthrmw(19))__________________      9.7733E+01 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (pthrmw(20))__________________      1.2813E+02 OP 
- Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (pthrmw(21))__________________      6.7340E+01 OP 
- L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*plhthresh)_______      9.7733E+01 OP 
- L-H_threshold_power_(MW)________________________________________________ (plhthresh)___________________      9.7733E+01 OP 
+ ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.3038E+02 OP 
+ ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      2.8687E+02 OP 
+ ITER_1996_scaling:_lower_bound_(MW)_____________________________________ (l_h_threshold_powers(3))___________________      5.8465E+01 OP 
+ ITER_1997_scaling_(1)_(MW)______________________________________________ (l_h_threshold_powers(4))___________________      2.1496E+02 OP 
+ ITER_1997_scaling_(2)_(MW)______________________________________________ (l_h_threshold_powers(5))___________________      1.7263E+02 OP 
+ Martin_2008_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(6))___________________      9.7733E+01 OP 
+ Martin_2008_scaling:_95%_upper_bound_(MW)_______________________________ (l_h_threshold_powers(7))___________________      1.2813E+02 OP 
+ Martin_2008_scaling:_95%_lower_bound_(MW)_______________________________ (l_h_threshold_powers(8))___________________      6.7340E+01 OP 
+ Snipes_2000_scaling:_nominal_(MW)_______________________________________ (l_h_threshold_powers(9))___________________      6.8079E+01 OP 
+ Snipes_2000_scaling:_upper_bound_(MW)___________________________________ (l_h_threshold_powers(10))__________________      9.9875E+01 OP 
+ Snipes_2000_scaling:_lower_bound_(MW)___________________________________ (l_h_threshold_powers(11))__________________      4.6035E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_nominal_(MW)_____________________ (l_h_threshold_powers(12))__________________      3.1074E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_upper_bound_(MW)_________________ (l_h_threshold_powers(13))__________________      4.3244E+01 OP 
+ Snipes_2000_scaling_(closed_divertor):_lower_bound_(MW)_________________ (l_h_threshold_powers(14))__________________      2.2173E+01 OP 
+ Hubbard_2012_L-I_threshold_-_nominal_(MW)_______________________________ (l_h_threshold_powers(15))__________________      2.7259E+01 OP 
+ Hubbard_2012_L-I_threshold_-_lower_bound_(MW)___________________________ (l_h_threshold_powers(16))__________________      1.4208E+01 OP 
+ Hubbard_2012_L-I_threshold_-_upper_bound_(MW)___________________________ (l_h_threshold_powers(17))__________________      5.2299E+01 OP 
+ Hubbard_2017_L-I_threshold______________________________________________ (l_h_threshold_powers(18))__________________      2.6093E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)________________ (l_h_threshold_powers(19))__________________      9.7733E+01 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)________ (l_h_threshold_powers(20))__________________      1.2813E+02 OP 
+ Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)________ (l_h_threshold_powers(21))__________________      6.7340E+01 OP 
+ L-H_threshold_power_(enforced)_(MW)_____________________________________ (boundl(103)*p_l_h_threshold_mw)_______      9.7733E+01 OP 
+ L-H_threshold_power_(MW)________________________________________________ (p_l_h_threshold_mw)___________________      9.7733E+01 OP 
  Confinement_H_factor____________________________________________________ (hfact)_______________________      1.1976E+00 ITV
  Global_thermal_energy_confinement_time_(s)______________________________ (t_energy_confinement)______________________      3.2080E+00    
  Ion_energy_confinement_time_(s)_________________________________________ (t_ion_energy_confinement)_______________________      3.2080E+00    
@@ -498,11 +498,11 @@
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9482E-03 OP 
  Normalized_collisionality_______________________________________________ (nu_star)_____________________      3.7112E-03 OP 
  Volume_measure_of_elongation____________________________________________ (kappa_ipb)__________________      1.6815E+00 OP 
- Total_volt-second_requirement_(Wb)______________________________________ (vsstt)_______________________      5.5011E+02 OP 
- Inductive_volt-seconds_(Wb)_____________________________________________ (vsind)_______________________      2.3534E+02 OP 
- Ejima_coefficient_______________________________________________________ (gamma)_______________________      3.0000E-01    
- Start-up_resistive_(Wb)_________________________________________________ (vsres)_______________________      4.9825E+01 OP 
- Flat-top_resistive_(Wb)_________________________________________________ (vsbrn)_______________________      2.6495E+02 OP 
+ Total_volt-second_requirement_(Wb)______________________________________ (vs_plasma_total_required)_______________________      5.5011E+02 OP 
+ Inductive_volt-seconds_(Wb)_____________________________________________ (vs_plasma_ind_ramp)_______________________      2.3534E+02 OP 
+ Ejima_coefficient_______________________________________________________ (ejima_coeff)_______________________      3.0000E-01    
+ Start-up_resistive_(Wb)_________________________________________________ (vs_plasma_res_ramp)_______________________      4.9825E+01 OP 
+ Flat-top_resistive_(Wb)_________________________________________________ (vs_plasma_burn_required)_______________________      2.6495E+02 OP 
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (bscf_iter89)_________________      3.7455E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      4.2290E-01    
@@ -514,10 +514,10 @@
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2290E-01    
  Diamagnetic_fraction_(enforced)_________________________________________ (diaipf.)_____________________      0.0000E+00    
  Pfirsch-Schlueter_fraction_(enforced)___________________________________ (ps_current_fraction.)______________________      0.0000E+00    
- Loop_voltage_during_burn_(V)____________________________________________ (vburn)_______________________      3.6762E-02 OP 
+ Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.6762E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      3.9470E-09 OP 
- Resistive_diffusion_time_(s)____________________________________________ (res_time)____________________      3.0839E+03 OP 
- Plasma_inductance_(H)___________________________________________________ (rlp)_________________________      1.4245E-05 OP 
+ Resistive_diffusion_time_(s)____________________________________________ (t_plasma_res_diffusion)____________________      3.0839E+03 OP 
+ Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4245E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
  Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.3577E+21 OP 
@@ -664,7 +664,7 @@
  Superconductor_material_________________________________________________ (i_tf_sc_mat)_________________              1    
  Presence_of_TF_demountable_joints_______________________________________ (itart)_______________________              0    
  TF_inboard_leg_support_strategy_________________________________________ (i_tf_bucking)________________              1    
- Number_of_TF_coils______________________________________________________ (n_tf)________________________             16    
+ Number_of_TF_coils______________________________________________________ (n_tf_coils)________________________             16    
  Inboard_leg_centre_radius_(m)___________________________________________ (r_tf_inboard_mid)____________      3.1606E+00 OP 
  Inboard_leg_inner_radius_(m)____________________________________________ (r_tf_inboard_in)_____________      2.6958E+00 OP 
  Inboard_leg_outer_radius_(m)____________________________________________ (r_tf_inboard_out)____________      3.6253E+00 OP 
@@ -676,7 +676,7 @@
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      9.2950E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (tftort)______________________      1.4145E+00 OP 
  Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
- Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (tfleng)______________________      4.7969E+01 OP 
+ Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7969E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
  TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
@@ -689,9 +689,9 @@
  TF_coil_arc_point_4_R_(m)_______________________________________________ (xarc(5))_____________________      3.6253E+00    
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (yarc(5))_____________________     -5.2909E+00    
  TF_cross-section_(total)_(m2)___________________________________________ (tfareain)____________________      1.8459E+01    
- Total_steel_cross-section_(m2)__________________________________________ (a_tf_steel*n_tf)_____________      1.3045E+01    
+ Total_steel_cross-section_(m2)__________________________________________ (a_tf_steel*n_tf_coils)_____________      1.3045E+01    
  Total_steel_TF_fraction_________________________________________________ (f_tf_steel)__________________      7.0671E-01    
- Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf)_______________      8.5858E-01    
+ Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.5858E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.6514E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.7164E-01    
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
@@ -705,7 +705,7 @@
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0872E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (tinstf)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
- Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf)___________________      3.8986E+00    
+ Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.8986E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.1865E-01    
  Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8392E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.3296E-01    
@@ -732,11 +732,11 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      9.1170E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.4319E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5648E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf)__________________      7.2486E+05 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      7.2486E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.1598E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.2296E+01 OP 
- Total_current_in_all_TF_coils_(MA)______________________________________ (ritfc/1.D6)__________________      2.1381E+02 OP 
- TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (ritfc)_______________________      2.1381E+08    
+ Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.1381E+02 OP 
+ TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.1381E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2760E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.5505E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1583E+07    
@@ -958,12 +958,12 @@
  Coolant_fraction________________________________________________________ (vfcblkt)_____________________      5.2950E-02    
  Purge_gas_fraction______________________________________________________ (vfpblkt)_____________________      1.0000E-01    
  First_Wall_Armour_Volume_(m3)___________________________________________ (fw_armour_vol)_______________      5.8692E+00    
- First_Wall_Volume_(m3)__________________________________________________ (volfw)_______________________      1.9807E+01    
+ First_Wall_Volume_(m3)__________________________________________________ (vol_fw_total)_______________________      1.9807E+01    
  Blanket_Volume_(m3)_____________________________________________________ (volblkt)_____________________      1.1849E+03    
  Shield_Volume_(m3)______________________________________________________ (volshld)_____________________      7.8520E+02    
  Vacuum_vessel_volume_(m3)_______________________________________________ (vdewin)______________________      1.0178E+03    
  First_Wall_Armour_Mass_(kg)_____________________________________________ (fw_armour_mass)______________      1.1298E+05 OP 
- First_Wall_Mass,_excluding_armour_(kg)__________________________________ (fwmass)______________________      1.5449E+05 OP 
+ First_Wall_Mass,_excluding_armour_(kg)__________________________________ (m_fw_total)______________________      1.5449E+05 OP 
  Blanket_Mass_-_Total(kg)________________________________________________ (whtblkt)_____________________      2.9676E+06 OP 
  ____Blanket_Mass_-_TiBe12_(kg)__________________________________________ (whtbltibe12)_________________      1.0042E+06 OP 
  ____Blanket_Mass_-_Li4SiO4_(kg)_________________________________________ (whtblli4sio4)________________      1.0664E+06 OP 
@@ -972,7 +972,7 @@
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4498E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (vvmass)______________________      7.9388E+06 OP 
  Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      2.5460E-02 OP 
- Total_nuclear_heating_in_FW_(MW)________________________________________ (pnucfw)______________________      1.6290E+02 OP 
+ Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_mw)______________________      1.6290E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (pnucblkt)____________________      1.2880E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4115E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (pnucdiv)_____________________      1.4882E+02 OP 
@@ -981,7 +981,7 @@
  Shield:_second_exponential______________________________________________ (exp_shield2)_________________      2.5427E-01 OP 
  Solid_angle_fraction_taken_by_on_divertor_______________________________ (fdiv)________________________      1.1500E-01    
  Switch_for_plant_secondary_cycle________________________________________ (secondary_cycle)_____________              2    
- First_wall_coolant_pressure_(Pa)________________________________________ (fwpressure)__________________      1.5500E+07    
+ First_wall_coolant_pressure_(Pa)________________________________________ (pres_fw_coolant)__________________      1.5500E+07    
  Blanket_coolant_pressure_(Pa)___________________________________________ (blpressure)__________________      1.5500E+07    
  Allowable_nominal_neutron_fluence_at_first_wall_(MW.year/m2)____________ (abktflnc)____________________      5.0000E+00    
  No_of_inboard_blanket_modules_poloidally________________________________ (nblktmodpi)__________________              7    
@@ -989,7 +989,7 @@
  No_of_outboard_blanket_modules_poloidally_______________________________ (nblktmodpo)__________________              8    
  No_of_outboard_blanket_modules_toroidally_______________________________ (nblktmodto)__________________             48    
  Isentropic_efficiency_of_first_wall_/_blanket_coolant_pumps_____________ (etaiso)______________________      9.0000E-01    
- First_wall_area_(m2)____________________________________________________ (fwarea)______________________      1.6044E+03 OP 
+ First_wall_area_(m2)____________________________________________________ (a_fw_total)______________________      1.6044E+03 OP 
  Cryostat_internal_radius_(m)____________________________________________ (r_cryostat_inboard)______________________      1.7805E+01 OP 
  Cryostat_internal_half-height_(m)_______________________________________ (z_cryostat_half_inside)______________________      1.5351E+01 OP 
  Vertical_clearance_from_TF_coil_to_cryostat_(m)_________________________ (dz_tf_cryostat)________________________      5.6032E+00 OP 
@@ -1017,7 +1017,7 @@
  TF_coil_inductive_power_(MVA)___________________________________________ (xpower)______________________      1.7235E+01 OP 
  Aluminium_bus_current_density_(kA/cm2)__________________________________ (djmka)_______________________      1.2500E-01    
  Aluminium_bus_cross-sectional_area_(cm2)________________________________ (albusa)______________________      7.0344E+02 OP 
- Total_length_of_TF_coil_bussing_(m)_____________________________________ (tfbusl)______________________      3.1931E+03 OP 
+ Total_length_of_TF_coil_bussing_(m)_____________________________________ (len_tf_bus)______________________      3.1931E+03 OP 
  Aluminium_bus_weight_(tonnes)___________________________________________ (albuswt)_____________________      6.0645E+02 OP 
  Total_TF_coil_bus_resistance_(ohm)______________________________________ (rtfbus)______________________      1.1893E-03 OP 
  TF_coil_bus_voltage_drop_(V)____________________________________________ (vtfbus)______________________      1.0457E+02 OP 
@@ -1261,7 +1261,7 @@ t_burn_min = 7200.0
 * L-H threshold scaling *
 *-----------------------*
 icc = 15
-ixc = 103 * flhthresh
+ixc = 103 * fl_h_threshold
 boundu(103) = 10.0
 
 * Injection power upper limit *
@@ -1420,7 +1420,7 @@ dr_cs = 0.5
 * q
 ixc = 18
 boundl(18) = 3.0
-q = 3.5
+q95 = 3.5
 
 * Machine dr_bore [m]
 ixc = 29
@@ -1560,7 +1560,7 @@ beta_norm_max = 3.0
 fkzohm = 1.02
 
 * Ejima coefficient for resistive startup V-s formula
-gamma = 0.3
+ejima_coeff = 0.3
 
 * Switch for bootstrap current scaling
 i_bootstrap_current = 4
@@ -1627,7 +1627,7 @@ plasma_res_factor = 0.7
 ***********
 
 * Switch for reactor model - pulsed
-lpulse = 1
+i_pulsed_plant = 1
 
 * dwell time [s]
 t_between_pulse = 1800.0
@@ -1781,7 +1781,7 @@ casths = 0.05
 ripmax = 0.6
 
 * Number of TF coils
-n_tf = 16
+n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
 tinstf = 0.008

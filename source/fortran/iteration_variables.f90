@@ -437,25 +437,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_18
-    !! <LI> (18) q
+    !! <LI> (18) q95
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(18) = 'q             '
+    lablxc(18) = 'q95             '
     boundl(18) = 2.000D0
     boundu(18) = 50.00D0
   end subroutine init_itv_18
 
   real(kind(1.d0)) function itv_18()
-    use physics_variables, only: q
+    use physics_variables, only: q95
     implicit none
-    itv_18 = q
+    itv_18 = q95
   end function itv_18
 
   subroutine set_itv_18(ratio)
-    use physics_variables, only: q
+    use physics_variables, only: q95
     implicit none
     real(kind(1.d0)) :: ratio
-    q = ratio
+    q95 = ratio
   end subroutine set_itv_18
 
   !---------------------------------
@@ -485,25 +485,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_20
-    !! <LI> (20) tcpav
+    !! <LI> (20) temp_cp_average
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(20) = 'tcpav         '
+    lablxc(20) = 'temp_cp_average         '
     boundl(20) = 40.00D0
     boundu(20) = 3.000D2
   end subroutine init_itv_20
 
   real(kind(1.d0)) function itv_20()
-    use tfcoil_variables, only: tcpav
+    use tfcoil_variables, only: temp_cp_average
     implicit none
-    itv_20 = tcpav
+    itv_20 = temp_cp_average
   end function itv_20
 
   subroutine set_itv_20(ratio)
-    use tfcoil_variables, only: tcpav
+    use tfcoil_variables, only: temp_cp_average
     implicit none
     real(kind(1.d0)) :: ratio
-    tcpav = ratio
+    temp_cp_average = ratio
   end subroutine set_itv_20
 
   !---------------------------------
@@ -1505,11 +1505,11 @@ contains
 
   real(kind(1.d0)) function itv_65()
     use error_handling, only: report_error
-    use pulse_variables, only: lpulse
+    use pulse_variables, only: i_pulsed_plant
     use times_variables, only: t_current_ramp_up
     implicit none
     itv_65 = t_current_ramp_up
-    if (lpulse /= 1) then
+    if (i_pulsed_plant /= 1) then
         call report_error(50)
     end if
   end function itv_65
@@ -2219,25 +2219,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_103
-    !! <LI> (103) flhthresh (f-value for equation 15)
+    !! <LI> (103) fl_h_threshold (f-value for equation 15)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(103) = 'flhthresh     '
+    lablxc(103) = 'fl_h_threshold     '
     boundl(103) = 1.000D0
     boundu(103) = 1.000D6
   end subroutine init_itv_103
 
   real(kind(1.d0)) function itv_103()
-    use constraint_variables, only: flhthresh
+    use constraint_variables, only: fl_h_threshold
     implicit none
-    itv_103 = flhthresh
+    itv_103 = fl_h_threshold
   end function itv_103
 
   subroutine set_itv_103(ratio)
-    use constraint_variables, only: flhthresh
+    use constraint_variables, only: fl_h_threshold
     implicit none
     real(kind(1.d0)) :: ratio
-    flhthresh = ratio
+    fl_h_threshold = ratio
   end subroutine set_itv_103
 
   !---------------------------------
@@ -2485,25 +2485,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_114
-    !! <LI> (114) fw_channel_length: Length of a single first wall channel
+    !! <LI> (114) len_fw_channel: Length of a single first wall channel
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(114) = 'fw_channel_length  '
+    lablxc(114) = 'len_fw_channel  '
     boundl(114) = 0.001D0
     boundu(114) = 1.000D3
   end subroutine init_itv_114
 
   real(kind(1.d0)) function itv_114()
-    use fwbs_variables, only: fw_channel_length
+    use fwbs_variables, only: len_fw_channel
     implicit none
-    itv_114 = fw_channel_length
+    itv_114 = len_fw_channel
   end function itv_114
 
   subroutine set_itv_114(ratio)
-    use fwbs_variables, only: fw_channel_length
+    use fwbs_variables, only: len_fw_channel
     implicit none
     real(kind(1.d0)) :: ratio
-    fw_channel_length = ratio
+    len_fw_channel = ratio
   end subroutine set_itv_114
 
   !---------------------------------
@@ -3850,31 +3850,28 @@ contains
     casths = ratio
   end subroutine set_itv_172
 
-  !---------------------------------
-  ! DUMMY variables below here
-  !---------------------------------
-  !---------------------------------
-
   subroutine init_itv_173
-    !! <LI> (173) DUMMY : Description
+    !! <LI> (173) f_tritium : Tritium fraction in fuel
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(173) = 'DUMMY         '
-    boundl(173) = 1.0d-99
-    boundu(173) = 1.0d99
+    lablxc(173) = 'f_tritium   '
+    boundl(173) = 0.000
+    boundu(173) = 1.000
   end subroutine init_itv_173
 
   real(kind(1.d0)) function itv_173()
-    implicit none
-    itv_173 = DUMMY
+    use physics_variables, only: f_tritium
+    itv_173 = f_tritium
   end function itv_173
 
   subroutine set_itv_173(ratio)
-    implicit none
+    use physics_variables, only: f_tritium
     real(kind(1.d0)) :: ratio
-    DUMMY = ratio
+    f_tritium = ratio
   end subroutine set_itv_173
 
+  !---------------------------------
+  ! DUMMY variables below here
   !---------------------------------
 
   subroutine init_itv_174
@@ -3933,7 +3930,6 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: nout
-    use maths_library, only: variable_error
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: nvar, xcm, ixc, name_xc, lablxc, scafc, scale
     use physics_variables, only: i_plasma_current
@@ -4118,8 +4114,8 @@ contains
            case (170);  xcm(i) = itv_170()
            case (171);  xcm(i) = itv_171()
            case (172);  xcm(i) = itv_172()
-            ! DUMMY Cases
            case (173);  xcm(i) = itv_173()
+            ! DUMMY Cases
            case (174);  xcm(i) = itv_174()
            case (175);  xcm(i) = itv_175()
 
@@ -4152,10 +4148,7 @@ contains
           call report_error(55)
        end if
 
-       !  Crude method of catching NaN errors
-
-       !if ( (abs(xcm(i)) > 9.99D99).or.(xcm(i) /= xcm(i)) ) then
-       if ( variable_error(xcm(i)) ) then
+       if ((isnan(xcm(i)).or.(abs(xcm(i))>9.99D99))) then
           idiags(1) = i ; idiags(2) = ixc(i) ; fdiags(1) = xcm(i)
           call report_error(56)
        end if
@@ -4190,7 +4183,6 @@ contains
 
     use error_handling, only: idiags, fdiags, report_error
     use numerics, only: ipnvars, scale, ixc, lablxc
-    use maths_library, only: variable_error
 #ifndef dp
     use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
@@ -4406,7 +4398,7 @@ contains
        !  Crude method of catching NaN errors
 
        !if ((abs(xc(i)) > 9.99D99).or.(xc(i) /= xc(i))) then
-       if(variable_error(xc(i)))then
+       if (isnan(xc(i)).or.(abs(xc(i))>9.99D99)) then
           idiags(1) = i ; idiags(2) = ixc(i) ; fdiags(1) = xc(i)
           call report_error(59)
        end if

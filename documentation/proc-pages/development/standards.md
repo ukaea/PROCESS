@@ -254,7 +254,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Inductances
 
-- Inductances should start with the `h_` prefix
+- Inductances should start with the `ind_` prefix
 
 ---------------------
 
@@ -313,6 +313,15 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Magnetic flux
+
+- Magnetic fluxes can start with the `web_` prefix representing Webers.
+
+- Since magnetic flux units are more commonly used in inductive current drive it may be more appropriate
+    to use the `vs_` prefix instead representing a $\text{Vs}$.
+
+---------------------
+
 ##### Frequencies
 
 - Frequencies should start with the `freq_`
@@ -324,6 +333,21 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 - Angles should start with the `deg_` or `rad_` depending on the units used
 
 ---------------------
+
+##### Lifetimes
+
+- Lifetimes of componenets should start with the `life_` prefix.
+
+The unit declaration `_fpy` can be used to specify that it is the full-power year lifetime.
+
+---------------------
+
+##### Viscosities
+
+- Viscosities should start with the `visc_` prefix.
+
+---------------------
+
 
 ##### Variables representing fractions
 

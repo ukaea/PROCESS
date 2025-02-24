@@ -356,6 +356,110 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_current_profiles_over_time(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Plots the current profiles over time for PF circuits, CS coil, and plasma.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_precharge,
+        t_current_ramp_up,
+        t_fusion_ramp,
+        t_burn,
+        t_ramp_down,
+    ])
+
+    # Find the number of PF circuits, ncirt includes the CS and plasma circuits
+    ncirt = mfile_data.data["ncirt"].get_scan(scan)
+
+    # Extract PF circuit times
+    # ncirt contains the CS and plasma at the end so we subtract 2
+    pf_circuits = {}
+    for i in range(int(ncirt - 2)):
+        pf_circuits[f"PF Circuit {i}"] = [
+            mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(6)
+        ]
+        # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+        axis.plot(
+            t_steps,
+            pf_circuits[f"PF Circuit {i}"],
+            label=f"PF Coil {i + 1}",
+            linestyle="--",
+        )
+
+    # Since CS may not always be present try to retireve values
+    try:
+        cs_circuit = [mfile_data.data[f"cs_t{i}"].get_scan(scan) for i in range(6)]
+        axis.plot(t_steps, cs_circuit, label="CS Coil", linestyle="--")
+    except KeyError:
+        pass
+
+    # Plasma current values
+    plasmat1 = mfile_data.data["plasmat1"].get_scan(scan)
+    plasmat2 = mfile_data.data["plasmat2"].get_scan(scan)
+    plasmat3 = mfile_data.data["plasmat3"].get_scan(scan)
+    plasmat4 = mfile_data.data["plasmat4"].get_scan(scan)
+    plasmat5 = mfile_data.data["plasmat5"].get_scan(scan)
+
+    # x-coirdinates for the plasma current
+    x_plasma = t_steps[1:]
+    # x-coirdinates for the plasma current
+    y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
+
+    # Plot the plasma current
+    axis.plot(x_plasma, y_plasma, "black", linewidth=2, label="Plasma")
+
+    # Move the x-axis to 0 on the y-axis
+    axis.spines["bottom"].set_position("zero")
+
+    # Annotate key points
+    # Create a secondary x-axis for annotations
+    secax = axis.secondary_xaxis("bottom")
+    secax.set_xticks(t_steps)
+    secax.set_xticklabels(
+        [
+            "Precharge",
+            r"$I_{\text{P}}$ Ramp-Up",
+            "Fusion Ramp",
+            "Burn",
+            "Ramp Down",
+            "Between Pulse",
+        ],
+        rotation=60,
+    )
+    secax.tick_params(axis="x", which="major")
+
+    # Add axis labels
+    axis.set_xlabel("Time [s]", fontsize=12)
+    axis.xaxis.set_label_coords(1.05, 0.5)
+    axis.set_ylabel("Current [A]", fontsize=12)
+
+    # Add a title
+    axis.set_title("Current Profiles Over Time", fontsize=14)
+
+    # Add a legend
+    axis.legend()
+
+    axis.set_yscale("symlog")
+
+    # Add a grid for better readability
+    axis.grid(True, linestyle="--", alpha=0.6)
+
+
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
@@ -497,8 +601,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
 
     # Segment the TF coil inboard
     # Calculate centrelines
-    n = int(n_tf / 4) + 1
-    spacing = 2 * np.pi / n_tf
+    n = int(n_tf_coils / 4) + 1
+    spacing = 2 * np.pi / n_tf_coils
     i = np.arange(0, n)
 
     ang = i * spacing
@@ -526,7 +630,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         TF_outboard(
             axis,
             item,
-            n_tf=n_tf,
+            n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
             w=w + nbshield,
@@ -536,7 +640,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         TF_outboard(
             axis,
             item,
-            n_tf=n_tf,
+            n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
             w=w,
@@ -583,8 +687,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def TF_outboard(axis, item, n_tf, r3, r4, w, facecolor):
-    spacing = 2 * np.pi / n_tf
+def TF_outboard(axis, item, n_tf_coils, r3, r4, w, facecolor):
+    spacing = 2 * np.pi / n_tf_coils
     ang = item * spacing
     dx = w * np.sin(ang)
     dy = w * np.cos(ang)
@@ -643,14 +747,14 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def plot_nprofile(prof, demo_ranges):
+def plot_n_profiles(prof, demo_ranges):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n_{e} $ $[10^{19} \mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
     if ipedestal == 1:
@@ -672,7 +776,7 @@ def plot_nprofile(prof, demo_ranges):
         ne = ne0 * (1 - rho**2) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
-    prof.plot(rho, ni, label="$n_{i}$", color="red")
+    prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
     prof.plot(rho, ne, label="$n_{e}$", color="blue")
     prof.legend()
 
@@ -711,12 +815,12 @@ def plot_nprofile(prof, demo_ranges):
         # Add text box with density profile parameters
         textstr_density = "\n".join((
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
-            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}\n",
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
             f"{nd_fuel_ions / dene:.3f}",
             rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}\n",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -778,14 +882,14 @@ def plot_jprofile(prof):
     )
 
 
-def plot_tprofile(prof, demo_ranges):
+def plot_t_profiles(prof, demo_ranges):
     """Function to plot temperature profile
     Arguments:
       prof --> axis object to add plot to
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel("$T_{e}$ [keV]")
+    prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
 
     if ipedestal == 1:
@@ -836,12 +940,12 @@ def plot_tprofile(prof, demo_ranges):
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
-        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}\n",
+        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}\n",
-        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV\n",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}",
+        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -2372,7 +2476,7 @@ def plot_geometry_info(axis, mfile_data, scan):
         ("a_plasma_surface", "Plasma surface area", "m$^2$"),
         ("a_plasma_poloidal", "Plasma cross-sectional area", "m$^2$"),
         ("vol_plasma", "Plasma volume", "m$^3$"),
-        ("n_tf", "No. of TF coils", ""),
+        ("n_tf_coils", "No. of TF coils", ""),
         (in_blanket_thk, "Inboard blanket+shield", "m"),
         ("dr_inboard_build", "Inboard build thickness", "m"),
         (out_blanket_thk, "Outboard blanket+shield", "m"),
@@ -2420,10 +2524,10 @@ def plot_physics_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data:
-        pthresh = mfile_data.data["plhthresh"].get_scan(scan)
+    if "p_l_h_threshold_mw" in mfile_data.data:
+        pthresh = mfile_data.data["p_l_h_threshold_mw"].get_scan(scan)
     else:
-        pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
+        pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
 
     data = [
         ("fusion_power", "Fusion power", "MW"),
@@ -2525,8 +2629,8 @@ def plot_magnetics_info(axis, mfile_data, scan):
     else:
         tftype = "Resistive Copper"
 
-    vssoft = mfile_data.data["vsres"].get_scan(scan) + mfile_data.data[
-        "vsind"
+    vssoft = mfile_data.data["vs_plasma_res_ramp"].get_scan(scan) + mfile_data.data[
+        "vs_plasma_ind_ramp"
     ].get_scan(scan)
 
     sig_case = 1.0e-6 * mfile_data.data[f"sig_tf_tresca_max({i_tf_bucking})"].get_scan(
@@ -2552,13 +2656,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("tmargoh", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("whttf/n_tf", "Mass per TF coil", "kg"),
+            ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
         ]
 
     else:
-        n_tf = mfile_data.data["n_tf"].get_scan(scan)
-        prescp = 1.0e-6 * mfile_data.data["prescp"].get_scan(scan)
-        presleg = 1.0e-6 * mfile_data.data["presleg"].get_scan(scan)
+        p_cp_resistive = 1.0e-6 * mfile_data.data["p_cp_resistive"].get_scan(scan)
+        p_tf_leg_resistive = 1.0e-6 * mfile_data.data["p_tf_leg_resistive"].get_scan(
+            scan
+        )
         pres_joints = 1.0e-6 * mfile_data.data["pres_joints"].get_scan(scan)
         fcoolcp = 100.0 * mfile_data.data["fcoolcp"].get_scan(scan)
 
@@ -2572,15 +2677,19 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
-            ("ritfc", "TF coil currents sum", "A"),
+            ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
-            (prescp, "CP Resisitive heating", "MW"),
-            (presleg * n_tf, "legs Resisitive heating (all legs)", "MW"),
+            (p_cp_resistive, "CP Resisitive heating", "MW"),
+            (
+                p_tf_leg_resistive,
+                "legs Resisitive heating (all legs)",
+                "MW",
+            ),
             (pres_joints, "TF joints resisitive heating ", "MW"),
         ]
 
@@ -2756,10 +2865,10 @@ def plot_current_drive_info(axis, mfile_data, scan):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "plhthresh" in mfile_data.data:
-        pthresh = mfile_data.data["plhthresh"].get_scan(scan)
+    if "p_l_h_threshold_mw" in mfile_data.data:
+        pthresh = mfile_data.data["p_l_h_threshold_mw"].get_scan(scan)
     else:
-        pthresh = mfile_data.data["pthrmw(6)"].get_scan(scan)
+        pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
     flh = pdivt / pthresh
 
     hstar = mfile_data.data["hstar"].get_scan(scan)
@@ -3013,27 +3122,27 @@ def plot_h_threshold_comparison(
         mfile_data (mf.MFile): MFILE data object.
         scan (int): Scan number to use.
     """
-    iter_nominal = mfile_data.data["pthrmw(1)"].get_scan(scan)
-    iter_upper = mfile_data.data["pthrmw(2)"].get_scan(scan)
-    iter_lower = mfile_data.data["pthrmw(3)"].get_scan(scan)
-    iter_1997_1 = mfile_data.data["pthrmw(4)"].get_scan(scan)
-    iter_1997_2 = mfile_data.data["pthrmw(5)"].get_scan(scan)
-    martin_nominal = mfile_data.data["pthrmw(6)"].get_scan(scan)
-    martin_upper = mfile_data.data["pthrmw(7)"].get_scan(scan)
-    martin_lower = mfile_data.data["pthrmw(8)"].get_scan(scan)
-    snipes_nominal = mfile_data.data["pthrmw(9)"].get_scan(scan)
-    snipes_upper = mfile_data.data["pthrmw(10)"].get_scan(scan)
-    snipes_lower = mfile_data.data["pthrmw(11)"].get_scan(scan)
-    snipes_closed_nominal = mfile_data.data["pthrmw(12)"].get_scan(scan)
-    snipes_closed_upper = mfile_data.data["pthrmw(13)"].get_scan(scan)
-    snipes_closed_lower = mfile_data.data["pthrmw(14)"].get_scan(scan)
-    hubbard_nominal = mfile_data.data["pthrmw(15)"].get_scan(scan)
-    hubbard_lower = mfile_data.data["pthrmw(16)"].get_scan(scan)
-    hubbard_upper = mfile_data.data["pthrmw(17)"].get_scan(scan)
-    hubbard_2017 = mfile_data.data["pthrmw(18)"].get_scan(scan)
-    martin_aspect_nominal = mfile_data.data["pthrmw(19)"].get_scan(scan)
-    martin_aspect_upper = mfile_data.data["pthrmw(20)"].get_scan(scan)
-    martin_aspect_lower = mfile_data.data["pthrmw(21)"].get_scan(scan)
+    iter_nominal = mfile_data.data["l_h_threshold_powers(1)"].get_scan(scan)
+    iter_upper = mfile_data.data["l_h_threshold_powers(2)"].get_scan(scan)
+    iter_lower = mfile_data.data["l_h_threshold_powers(3)"].get_scan(scan)
+    iter_1997_1 = mfile_data.data["l_h_threshold_powers(4)"].get_scan(scan)
+    iter_1997_2 = mfile_data.data["l_h_threshold_powers(5)"].get_scan(scan)
+    martin_nominal = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
+    martin_upper = mfile_data.data["l_h_threshold_powers(7)"].get_scan(scan)
+    martin_lower = mfile_data.data["l_h_threshold_powers(8)"].get_scan(scan)
+    snipes_nominal = mfile_data.data["l_h_threshold_powers(9)"].get_scan(scan)
+    snipes_upper = mfile_data.data["l_h_threshold_powers(10)"].get_scan(scan)
+    snipes_lower = mfile_data.data["l_h_threshold_powers(11)"].get_scan(scan)
+    snipes_closed_nominal = mfile_data.data["l_h_threshold_powers(12)"].get_scan(scan)
+    snipes_closed_upper = mfile_data.data["l_h_threshold_powers(13)"].get_scan(scan)
+    snipes_closed_lower = mfile_data.data["l_h_threshold_powers(14)"].get_scan(scan)
+    hubbard_nominal = mfile_data.data["l_h_threshold_powers(15)"].get_scan(scan)
+    hubbard_lower = mfile_data.data["l_h_threshold_powers(16)"].get_scan(scan)
+    hubbard_upper = mfile_data.data["l_h_threshold_powers(17)"].get_scan(scan)
+    hubbard_2017 = mfile_data.data["l_h_threshold_powers(18)"].get_scan(scan)
+    martin_aspect_nominal = mfile_data.data["l_h_threshold_powers(19)"].get_scan(scan)
+    martin_aspect_upper = mfile_data.data["l_h_threshold_powers(20)"].get_scan(scan)
+    martin_aspect_lower = mfile_data.data["l_h_threshold_powers(21)"].get_scan(scan)
 
     # Data for the box plot
     data = {
@@ -3225,6 +3334,7 @@ def main_plot(
     fig4,
     fig5,
     fig6,
+    fig7,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3259,29 +3369,27 @@ def main_plot(
 
     # Plot poloidal cross-section
     plot_1 = fig3.add_subplot(121, aspect="equal")
-    plot_1.set_position([0.0, 0.1, 0.5, 0.8])
     poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
     plot_2 = fig3.add_subplot(122, aspect="equal")
-    plot_2.set_position([0.425, 0.1, 0.6, 0.6])
     toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
     # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
     plot_3 = fig3.add_subplot(222)
-    plot_3.set_position([0.45, 0.5, 0.5, 0.5])
+    plot_3.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(plot_3, m_file_data, scan, colour_scheme)
 
     # Plot density profiles
     plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
     plot_4.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_nprofile(plot_4, demo_ranges)
+    plot_n_profiles(plot_4, demo_ranges)
 
     # Plot temperature profiles
     plot_5 = fig2.add_subplot(232)
     plot_5.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_tprofile(plot_5, demo_ranges)
+    plot_t_profiles(plot_5, demo_ranges)
 
     # Plot impurity profiles
     plot_8 = fig2.add_subplot(233)
@@ -3346,6 +3454,9 @@ def main_plot(
 
     plot_11 = fig6.add_subplot(221)
     plot_density_limit_comparison(plot_11, m_file_data, scan)
+
+    plot_12 = fig7.add_subplot(111)
+    plot_current_profiles_over_time(plot_12, m_file_data, scan)
 
 
 def main(args=None):
@@ -3419,7 +3530,7 @@ def main(args=None):
     j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
 
     # Magnets related
-    global n_tf
+    global n_tf_coils
     global wwp1
     global wwp2
     global dr_tf_wp
@@ -3427,7 +3538,7 @@ def main(args=None):
     global thkcas
     global casthi
 
-    n_tf = m_file.data["n_tf"].get_scan(scan)
+    n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
         wwp1 = m_file.data["wwp1"].get_scan(scan)
         if i_tf_wp_geom == 1:
@@ -3615,6 +3726,7 @@ def main(args=None):
     page4 = plt.figure(figsize=(12, 9), dpi=80)
     page5 = plt.figure(figsize=(12, 9), dpi=80)
     page6 = plt.figure(figsize=(12, 9), dpi=80)
+    page7 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3624,6 +3736,7 @@ def main(args=None):
         page4,
         page5,
         page6,
+        page7,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3638,6 +3751,7 @@ def main(args=None):
         pdf.savefig(page4)
         pdf.savefig(page5)
         pdf.savefig(page6)
+        pdf.savefig(page7)
 
     # show fig if option used
     if args.show:
@@ -3649,6 +3763,7 @@ def main(args=None):
     plt.close(page4)
     plt.close(page5)
     plt.close(page6)
+    plt.close(page7)
 
 
 if __name__ == "__main__":

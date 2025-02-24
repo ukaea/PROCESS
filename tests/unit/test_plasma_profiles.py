@@ -5,7 +5,7 @@ import pytest
 
 from process.fortran import divertor_variables, physics_variables
 from process.plasma_profiles import PlasmaProfile
-from process.profiles import NProfile, TProfile
+from process.profiles import NeProfile, TeProfile
 
 
 class ProfileParam(NamedTuple):
@@ -13,27 +13,27 @@ class ProfileParam(NamedTuple):
     expected_profile: np.array
 
 
-class NProfileParam(NamedTuple):
+class NeProfileParam(NamedTuple):
     nesep: float = 0.0
     ipedestal: float = 0.0
     ne0: float = 0.0
     neped: float = 0.0
     rhopedn: float = 0.0
     alphan: float = 0.0
-    expected_nprofile: list | None = None
+    expected_neprofile: list | None = None
 
 
 @pytest.mark.parametrize(
-    "nprofileparam",
+    "neprofileparam",
     (
-        NProfileParam(
+        NeProfileParam(
             nesep=3.6421334486704804e19,
             ipedestal=1,
             ne0=0.0,
             neped=6.1916268627398164e19,
             rhopedn=0.94000000000000006,
             alphan=1,
-            expected_nprofile=[
+            expected_neprofile=[
                 1.12500000e20,
                 1.12275191e20,
                 1.11587869e20,
@@ -49,45 +49,45 @@ class NProfileParam(NamedTuple):
     ),
     ids=["baseline_2018"],
 )
-def test_nprofile(nprofileparam: ProfileParam, monkeypatch):
-    nprofile = NProfile(10)
-    nprofile.run()
-    assert nprofile.profile_y == pytest.approx(nprofileparam.expected_nprofile)
+def test_neprofile(neprofileparam: ProfileParam, monkeypatch):
+    neprofile = NeProfile(10)
+    neprofile.run()
+    assert neprofile.profile_y == pytest.approx(neprofileparam.expected_neprofile)
 
 
 def test_ncore():
-    nprofile = NProfile(10)
+    neprofile = NeProfile(10)
     rhopedn = 0.94
     nped = 5.8300851381352219e19
     nsep = 3.4294618459618943e19
     nav = 7.4321e19
     alphan = 1.0
-    assert nprofile.ncore(rhopedn, nped, nsep, nav, alphan) == pytest.approx(
+    assert neprofile.ncore(rhopedn, nped, nsep, nav, alphan) == pytest.approx(
         9.7756974320342041e19
     )
 
 
-class TProfileParam(NamedTuple):
+class TeProfileParam(NamedTuple):
     rhopedt: float = 0.0
     tbeta: float = 0.0
     tesep: float = 0.0
     ipedestal: float = 0.0
     alphat: float = 0.0
     teped: float = 0.0
-    expected_tprofile: Any = np.array
+    expected_teprofile: Any = np.array
 
 
 @pytest.mark.parametrize(
-    "tprofileparam",
+    "teprofileparam",
     (
-        TProfileParam(
+        TeProfileParam(
             rhopedt=0.94000000000000006,
             tbeta=2,
             tesep=0.10000000000000001,
             ipedestal=1,
             alphat=1.45,
             teped=5.5,
-            expected_tprofile=[
+            expected_teprofile=[
                 18.85,
                 18.739472621498333,
                 18.403679368327712,
@@ -103,15 +103,15 @@ class TProfileParam(NamedTuple):
     ),
     ids=["baseline_2018"],
 )
-def test_tprofile(tprofileparam: ProfileParam, monkeypatch):
-    monkeypatch.setattr(physics_variables, "ipedestal", tprofileparam.ipedestal)
-    tprofile = TProfile(10)
-    tprofile.run()
-    assert tprofile.profile_y == pytest.approx(tprofileparam.expected_tprofile)
+def test_teprofile(teprofileparam: ProfileParam, monkeypatch):
+    monkeypatch.setattr(physics_variables, "ipedestal", teprofileparam.ipedestal)
+    teprofile = TeProfile(10)
+    teprofile.run()
+    assert teprofile.profile_y == pytest.approx(teprofileparam.expected_teprofile)
 
 
 def test_tcore():
-    tprofile = TProfile(10)
+    teprofile = TeProfile(10)
     rhopedt = 0.94
     tped = 3.7775374842470044
     tsep = 0.1
@@ -119,7 +119,7 @@ def test_tcore():
     alphat = 1.45
     tbeta = 2.0
 
-    assert tprofile.tcore(rhopedt, tped, tsep, tav, alphat, tbeta) == pytest.approx(
+    assert teprofile.tcore(rhopedt, tped, tsep, tav, alphat, tbeta) == pytest.approx(
         28.09093632260765
     )
 

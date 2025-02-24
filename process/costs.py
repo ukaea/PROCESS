@@ -1,5 +1,6 @@
 import numpy as np
 
+from process import process_output as po
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -20,7 +21,6 @@ from process.fortran import (
     times_variables,
     vacuum_variables,
 )
-from process.fortran import process_output as po
 from process.variables import AnnotatedVariable
 
 
@@ -292,7 +292,7 @@ class Costs:
         po.oshead(self.outfile, "Reactor Systems")
         po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.c2211)
         if ife_variables.ife != 1:
-            if fwbs_variables.iblanket == 4:
+            if fwbs_variables.i_blanket_type == 4:
                 po.ocosts(
                     self.outfile,
                     "(c22121)",
@@ -1138,7 +1138,7 @@ class Costs:
                 * cmlsa[cost_variables.lsa - 1]
                 * (
                     (cost_variables.ucfwa + cost_variables.ucfws)
-                    * build_variables.fwarea
+                    * build_variables.a_fw_total
                     + cost_variables.ucfwps
                 )
             )
@@ -1198,17 +1198,17 @@ class Costs:
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
         if ife_variables.ife != 1:
-            # iblanket=4 is used for KIT HCLL model. iblanket<4 are all
+            # i_blanket_type=4 is used for KIT HCLL model. i_blanket_type<4 are all
             # HCPB (CCFE, KIT and CCFE + Shimwell TBR calculation).
 
-            if fwbs_variables.iblanket == 4:
+            if fwbs_variables.i_blanket_type == 4:
                 #  Liquid blanket (LiPb + Li)
                 self.c22121 = 1.0e-6 * fwbs_variables.wtbllipb * cost_variables.ucbllipb
                 self.c22122 = 1.0e-6 * fwbs_variables.whtblli * cost_variables.ucblli
             else:
                 #  Solid blanket (Li2O + Be)
                 self.c22121 = 1.0e-6 * fwbs_variables.whtblbe * cost_variables.ucblbe
-                if fwbs_variables.iblanket == 2:
+                if fwbs_variables.i_blanket_type == 2:
                     # KIT model
                     self.c22122 = (
                         1.0e-6 * fwbs_variables.whtblbreed * cost_variables.ucblbreed
@@ -1451,7 +1451,7 @@ class Costs:
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
                     * tfcoil_variables.whtconsc
-                    / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                    / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
                 )
             else:
                 costtfsc = (
@@ -1465,7 +1465,7 @@ class Costs:
             costtfcu = (
                 cost_variables.uccu
                 * tfcoil_variables.whtconcu
-                / (tfcoil_variables.tfleng * tfcoil_variables.n_tf_turn)
+                / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_turn)
             )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1481,8 +1481,8 @@ class Costs:
             self.c22211 = (
                 1.0e-6
                 * ctfconpm
-                * tfcoil_variables.n_tf
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.n_tf_coils
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22211 = (
@@ -1494,8 +1494,8 @@ class Costs:
             self.c22212 = (
                 1.0e-6
                 * cost_variables.ucwindtf
-                * tfcoil_variables.n_tf
-                * tfcoil_variables.tfleng
+                * tfcoil_variables.n_tf_coils
+                * tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
             )
             self.c22212 = (
@@ -1507,7 +1507,7 @@ class Costs:
             self.c22213 = (
                 1.0e-6
                 * (tfcoil_variables.whtcas * cost_variables.uccase)
-                * tfcoil_variables.n_tf
+                * tfcoil_variables.n_tf_coils
             )
             self.c22213 = (
                 cost_variables.fkind * self.c22213 * cmlsa[cost_variables.lsa - 1]
@@ -1939,7 +1939,7 @@ class Costs:
         if tfcoil_variables.i_tf_sup == 1:
             self.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
-                * tfcoil_variables.n_tf
+                * tfcoil_variables.n_tf_coils
                 * (tfcoil_variables.cpttf * tfcoil_variables.vtfskv * 1.0e3) ** expel
                 + cost_variables.uctfsw * tfcoil_variables.cpttf
             )
@@ -1952,25 +1952,27 @@ class Costs:
 
         self.c22513 = 1.0e-6 * (
             1.0e9 * cost_variables.uctfdr * tfcoil_variables.estotftgj
-            + cost_variables.uctfgr * 0.5e0 * tfcoil_variables.n_tf
+            + cost_variables.uctfgr * 0.5e0 * tfcoil_variables.n_tf_coils
         )
         self.c22513 = cost_variables.fkind * self.c22513
 
         #  Account 225.1.4 : TF coil instrumentation and control
 
-        self.c22514 = 1.0e-6 * cost_variables.uctfic * (30.0e0 * tfcoil_variables.n_tf)
+        self.c22514 = (
+            1.0e-6 * cost_variables.uctfic * (30.0e0 * tfcoil_variables.n_tf_coils)
+        )
         self.c22514 = cost_variables.fkind * self.c22514
 
         #  Account 225.1.5 : TF coil bussing
 
         if tfcoil_variables.i_tf_sup != 1:
-            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.tfbusmas
+            self.c22515 = 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.m_tf_bus
         else:
             self.c22515 = (
                 1.0e-6
                 * cost_variables.ucbus
                 * tfcoil_variables.cpttf
-                * tfcoil_variables.tfbusl
+                * tfcoil_variables.len_tf_bus
             )
 
         self.c22515 = cost_variables.fkind * self.c22515
@@ -2479,7 +2481,7 @@ class Costs:
         #  Thermal storage options for a pulsed reactor
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008 and 0014
 
-        if pulse_variables.lpulse == 1:
+        if pulse_variables.i_pulsed_plant == 1:
             if pulse_variables.istore == 1:
                 #  Option 1 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
@@ -2756,7 +2758,7 @@ class Costs:
         #  Additional cost due to pulsed reactor thermal storage
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008
         #
-        #      if (lpulse.eq.1) :
+        #      if (i_pulsed_plant.eq.1) :
         #         if (istore.eq.1) :
         #            annoam1 = 51.0e0
         #         elif  (istore.eq.2) :

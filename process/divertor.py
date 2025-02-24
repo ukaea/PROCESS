@@ -1,11 +1,11 @@
 import math
 
+from process import process_output as po
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import divertor_variables as dv
 from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
-from process.fortran import process_output as po
 from process.fortran import tfcoil_variables as tfv
 
 
@@ -116,15 +116,18 @@ class Divertor:
         #  (2.5 factor comes from normalization to ITER 1990)
 
         tconl = (
-            2.5e0 * pv.rmajor * pv.q * (1.0e0 + 1.0e0 / (pv.q * pv.aspect) ** 2) ** 0.5
+            2.5e0
+            * pv.rmajor
+            * pv.q95
+            * (1.0e0 + 1.0e0 / (pv.q95 * pv.aspect) ** 2) ** 0.5
         )
         dtheta = plsep / pv.rminor
         dconl = (
             2.5e0
             * bv.rspo
-            * pv.q
+            * pv.q95
             * dtheta
-            * (1.0e0 + 1.0e0 / (pv.q * pv.aspect) ** 2) ** 0.5
+            * (1.0e0 + 1.0e0 / (pv.q95 * pv.aspect) ** 2) ** 0.5
         )
         rconl = dconl / tconl
 

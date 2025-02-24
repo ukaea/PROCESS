@@ -98,7 +98,7 @@ module constraint_variables
   !! f-value for TF coil winding pack current density
   !! (`constraint equation 35`, `iteration variable 53`)
 
-  real(dp) :: flhthresh
+  real(dp) :: fl_h_threshold
   !! f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)
 
   real(dp) :: fmva
@@ -209,7 +209,7 @@ module constraint_variables
   !! (`constraint equation 12`, `iteration variable 15`)
 
   real(dp) :: fvvhe
-  !! f-value for vacuum vessel He concentration limit (`iblanket = 2`)
+  !! f-value for vacuum vessel He concentration limit (`i_blanket_type = 2`)
   !! (`constraint equation 55`, `iteration variable 96`)
 
   real(dp) :: fwalld
@@ -274,7 +274,7 @@ module constraint_variables
 
   real(dp) :: vvhealw
   !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-  !! (`iblanket =2`) (`constraint equation 55`)
+  !! (`i_blanket_type =2`) (`constraint equation 55`)
 
   real(dp) :: walalw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
@@ -335,7 +335,7 @@ module constraint_variables
     fjohc = 1.0D0
     fjohc0 = 1.0D0
     fjprot = 1.0D0
-    flhthresh = 1.0D0
+    fl_h_threshold = 1.0D0
     fmva = 1.0D0
     fnbshinef = 1.0D0
     fncycle = 1.0D0

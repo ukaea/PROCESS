@@ -1,6 +1,6 @@
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-module process_output
+module process_output_fortran
 
   !! Module containing routines to produce a uniform output style
   !! author: P J Knight, CCFE, Culham Science Centre
@@ -332,75 +332,6 @@ contains
     10 format(1x,a,t75,f10.2,t100,f10.2)
   end subroutine dblcol
 
-  subroutine ovarrf(file,descr,varnam,value,output_flag)
-
-    !! Routine to print out the details of a floating-point
-    !! variable using 'F' format
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! descr : input character string : Description of the variable
-    !! varnam : input character string : Name of the variable
-    !! value : input real : Value of the variable
-    !! output_flag : optional character
-    !! This routine writes out the description, name and value of a
-    !! double precision variable in F format (e.g.
-    !! <CODE>-12345.000</CODE>).
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use numerics, only: name_xc
-		use global_variables, only: verbose
-		use constants, only: pi, mfile, nplot, electron_charge
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: descr, varnam
-    real(8), intent(in) :: value
-    character(len=3), intent(in), optional :: output_flag
-
-    !  Local variables
-
-    character(len=72) :: dum72
-    character(len=20) :: dum20
-    character(len=20) :: stripped
-    character(len=3) :: flag
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !  Replace descr and varnam with dummy strings of the correct length.
-    !  This counters problems that would occur if the two original strings
-    !  were the wrong length.
-
-    dum72 = descr
-    dum20 = varnam
-    stripped = varnam(2:len(varnam)-1)
-
-    if (present(output_flag)) then
-        flag = output_flag
-    else
-        flag = ''
-    end if
-
-    if (any(name_xc == stripped))  flag = 'ITV'
-
-    if (file /= mfile) then
-       !MDK add label if it is an iteration variable
-       ! The ITV flag overwrites the output_flag
-       if (verbose==1) then
-            write(file,10) dum72, dum20, value, flag
-       else
-            write(file,20) dum72, dum20, value, flag
-       end if
-    end if
-
-10  format(1x,a,t75,a,t100,f13.6, t115, a)
-20  format(1x,a,t75,a,t100,f10.3, t112, a)
-
-    call ovarre(mfile,descr,varnam,value)
-
-  end subroutine ovarrf
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine ovarre(file,descr,varnam,value,output_flag)
@@ -422,7 +353,6 @@ contains
     use numerics, only: name_xc
 		use global_variables, only: icase, vlabel
 		use constants, only: mfile, nout
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -502,7 +432,6 @@ contains
     use numerics, only: name_xc, icc, ioptimz
 		use global_variables, only: xlabel_2, iscan_global
 		use constants, only: mfile, nout
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -604,53 +533,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine ocosts(file,ccode,descr,value)
-
-    !! Routine to print out the code, description and value
-    !! of a cost item
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! ccode : input character string : Code number/name of the cost item
-    !! descr : input character string : Description of the cost item
-    !! value : input real : Value of the cost item
-    !! This routine writes out the cost code, description and value
-    !! of a cost item.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		use constants, only: pi, mfile, nplot, twopi
-		use maths_library, only: variable_error
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: ccode, descr
-    real(8), intent(in) :: value
-
-    !  Local variables
-
-    character(len=30) :: dum20
-    character(len=72) :: dum72
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !  Replace ccode and descr with dummy strings of the correct length.
-    !  This counters problems that would occur if the two original strings
-    !  were the wrong length.
-
-    dum20 = ccode
-    dum72 = descr
-
-    write(file,10) dum20, dum72, value
-10  format(1x,a,t22,a,t110,f10.2)
-
-    call ovarrf(mfile,descr,ccode,value)
-
-  end subroutine ocosts
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   subroutine obuild(file,descr,thick,total,variable_name)
 
     !! Routine to print out a description, the thickness and
@@ -667,7 +549,6 @@ contains
 
     use numerics, only: boundl, boundu
 		use constants, only: electron_charge
-		use maths_library, only: variable_error
     implicit none
 
     !  Arguments
@@ -864,4 +745,4 @@ contains
 
   end function int_to_string3
 
-end module process_output
+end module process_output_fortran
