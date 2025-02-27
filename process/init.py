@@ -440,24 +440,25 @@ def check_process(inputs):
             stacklevel=1,
         )
 
-    if fortran.fwbs_variables.i_blanket_type == 3:
-        fortran.build_variables.dr_fw_inboard = 0.03
-        fortran.build_variables.dr_fw_outboard = 0.03
-        fortran.fwbs_variables.fw_armour_thickness = 0.003
+    if "iblanket_thickness" in inputs:
+        if fortran.fwbs_variables.i_blanket_type == 3:
+            fortran.build_variables.dr_fw_inboard = 0.03
+            fortran.build_variables.dr_fw_outboard = 0.03
+            fortran.fwbs_variables.fw_armour_thickness = 0.003
 
-    if 0 <= fortran.build_variables.dr_blkt_inboard <= 1e-3:
-        fortran.build_variables.dr_blkt_inboard = 0.0
-        fortran.fwbs_variables.i_blkt_inboard = 0
+        if 0 <= fortran.build_variables.dr_blkt_inboard <= 1e-3:
+            fortran.build_variables.dr_blkt_inboard = 0.0
+            fortran.fwbs_variables.i_blkt_inboard = 0
 
-    if fortran.fwbs_variables.iblanket_thickness == 1:
-        fortran.build_variables.dr_blkt_inboard = 0.53
-        fortran.build_variables.dr_blkt_outboard = 0.91
-    elif fortran.fwbs_variables.iblanket_thickness == 2:
-        fortran.build_variables.dr_blkt_inboard = 0.64
-        fortran.build_variables.dr_blkt_outboard = 1.11
-    elif fortran.fwbs_variables.iblanket_thickness == 3:
-        fortran.build_variables.dr_blkt_inboard = 0.75
-        fortran.build_variables.dr_blkt_outboard = 1.30
+        if fortran.fwbs_variables.iblanket_thickness == 1:
+            fortran.build_variables.dr_blkt_inboard = 0.53
+            fortran.build_variables.dr_blkt_outboard = 0.91
+        elif fortran.fwbs_variables.iblanket_thickness == 2:
+            fortran.build_variables.dr_blkt_inboard = 0.64
+            fortran.build_variables.dr_blkt_outboard = 1.11
+        elif fortran.fwbs_variables.iblanket_thickness == 3:
+            fortran.build_variables.dr_blkt_inboard = 0.75
+            fortran.build_variables.dr_blkt_outboard = 1.30
 
     # Check that there are sufficient iteration variables
     if fortran.numerics.nvar < fortran.numerics.neqns:
