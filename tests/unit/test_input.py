@@ -71,6 +71,32 @@ def test_parse_real(epsvmc, expected, tmp_path):
     assert fortran.numerics.epsvmc == expected
 
 
+@pytest.mark.parametrize(
+    ["value"],
+    [
+        [0.546816593988753],
+        [0.13134204235647895],
+        [0.75],
+        [0.7],
+        [0.3],
+        [0.1293140904093427],
+    ],
+)
+def test_parse_real_didnt_work_in_f90(value, tmp_path):
+    """Tests the parsing of real numbers into PROCESS.
+
+    These tests failed using the old input parser and serve to show that the Python parser generally
+    produces more accurate floats and accumulates less error.
+    """
+    fortran.global_variables.fileprefix = string_to_f2py_compatible(
+        fortran.global_variables.fileprefix,
+        _create_input_file(tmp_path, f"epsvmc = {value}"),
+    )
+    init.init_process()
+
+    assert fortran.numerics.epsvmc == value
+
+
 def test_parse_input(tmp_path):
     fortran.global_variables.fileprefix = string_to_f2py_compatible(
         fortran.global_variables.fileprefix,
