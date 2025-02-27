@@ -1682,6 +1682,7 @@ def parse_input_file():
 
         # validate the variable and also clean it (cast to correct type)
         if "," in variable_value:
+            getattr(variable_config.module, variable_name)[:] = 0.0
             clean_variable_value = [
                 validate_variable(
                     variable_name,
