@@ -237,7 +237,6 @@ def init_all_module_vars():
     fortran.rebco_variables.init_rebco_variables()
     fortran.reinke_variables.init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()
-    fortran.reinke_module.init_reinke_module()
     fortran.water_usage_variables.init_watuse_variables()
     fortran.cs_fatigue_variables.init_cs_fatigue_variables()
     fortran.blanket_library.init_blanket_library()
