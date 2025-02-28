@@ -2791,13 +2791,13 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! bucked and wedged desing (see subroutine comment)
-      if ( i_tf_bucking >= 2 .and. i_tf_inside_cs == 0 ) then
-         tmp_cc = max(s_shear_cs_peak, sig_tf_cs_bucked) / alstroh - 1.0d0 * foh_stress
-         tmp_err = alstroh - max(s_shear_cs_peak, sig_tf_cs_bucked)
+      if ( i_tf_bucking >= 2 .and. tf_in_cs == 0 ) then
+         tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_shear_max_cs, sig_tf_cs_bucked)
+         tmp_err = alstroh - max(s_shear_max_cs, sig_tf_cs_bucked)
       ! Free standing CS
       else
-         tmp_cc = s_shear_cs_peak / alstroh - 1.0d0 * foh_stress
-         tmp_err = alstroh - s_shear_cs_peak
+         tmp_cc = 1.0d0 - foh_stress * alstroh / s_shear_max_cs
+         tmp_err = alstroh - s_shear_max_cs
       end if
 
       tmp_con = alstroh
