@@ -80,6 +80,7 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
+from process.iteration_variables import load_iteration_variables
 from process.pfcoil import PFCoil
 from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
@@ -480,7 +481,7 @@ class SingleRun:
         elif fortran.numerics.ioptimz == -2:
             # No optimisation: compute the output variables now
             # Get optimisation parameters x, evaluate models
-            fortran.define_iteration_variables.loadxc()
+            load_iteration_variables()
             self.ifail = 6
             write_output_files(models=self.models, ifail=self.ifail)
             self.show_errors()

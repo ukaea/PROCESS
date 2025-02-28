@@ -1,0 +1,366 @@
+from dataclasses import dataclass
+from typing import Any
+from warnings import warn
+
+import numpy as np
+
+import process.fortran as fortran
+from process.exceptions import ProcessValueError
+from process.utilities.f2py_string_patch import (
+    f2py_compatible_to_string,
+    string_to_f2py_compatible,
+)
+
+
+@dataclass
+class IterationVariable:
+    name: str
+    """The name of the variable"""
+    module: Any
+    """The Fortran module that this variable should be set on."""
+    lower_bound: float
+    """The default lower bound of the iteration variable"""
+    upper_bound: float
+    """The default upper bound of the iteration variable"""
+    target_name: str | None = None
+    """If specified, the iteration variable is set as `module.target_name`
+    rather than `module.name`.
+    """
+    array_index: int | None = None
+    """If `module.name` is an array, the iteration variable can only modify
+    `array_index` of that array.
+    """
+
+
+ITERATION_VARIABLES = {
+    1: IterationVariable("aspect", fortran.physics_variables, 1.1, 10.00),
+    2: IterationVariable("bt", fortran.physics_variables, 0.010, 30.00),
+    3: IterationVariable("rmajor", fortran.physics_variables, 0.1, 50.00),
+    4: IterationVariable("te", fortran.physics_variables, 5.0, 150.0),
+    5: IterationVariable("beta", fortran.physics_variables, 0.001, 1.0),
+    6: IterationVariable("dene", fortran.physics_variables, 2.0e19, 1.0e21),
+    7: IterationVariable("f_nd_beam_electron", fortran.physics_variables, 1.0e-6, 1.0),
+    8: IterationVariable(
+        "fbeta_poloidal_eps", fortran.constraint_variables, 0.001, 1.0
+    ),
+    9: IterationVariable("fdene", fortran.constraint_variables, 0.001, 1.0),
+    10: IterationVariable("hfact", fortran.physics_variables, 0.1, 3.0),
+    11: IterationVariable("pheat", fortran.current_drive_variables, 1.0e-3, 1.0e3),
+    12: IterationVariable("oacdcp", fortran.tfcoil_variables, 1.0e5, 1.50e8),
+    13: IterationVariable("dr_tf_inboard", fortran.build_variables, 0.1, 5.0),
+    14: IterationVariable("fwalld", fortran.constraint_variables, 0.001, 1.0),
+    15: IterationVariable("fvs", fortran.constraint_variables, 0.001, 10.000),
+    16: IterationVariable("dr_cs", fortran.build_variables, 0.010, 10.00),
+    17: IterationVariable("t_between_pulse", fortran.times_variables, 0.1, 1.0e8),
+    18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
+    19: IterationVariable("beam_energy", fortran.current_drive_variables, 1.0, 1.0e6),
+    20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
+    21: IterationVariable("ft_burn", fortran.constraint_variables, 0.001, 1.0),
+    23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),
+    25: IterationVariable("fpnetel", fortran.constraint_variables, 0.001, 1.0),
+    26: IterationVariable("ffuspow", fortran.constraint_variables, 0.001, 1.0),
+    27: IterationVariable("fhldiv", fortran.constraint_variables, 0.001, 1.0),
+    28: IterationVariable("fradpwr", fortran.constraint_variables, 0.001, 0.990),
+    29: IterationVariable("dr_bore", fortran.build_variables, 0.1, 10.00),
+    30: IterationVariable("fmva", fortran.constraint_variables, 0.010, 1.0),
+    31: IterationVariable("gapomin", fortran.build_variables, 0.001, 1.0e1),
+    32: IterationVariable("frminor", fortran.constraint_variables, 0.001, 1.0),
+    33: IterationVariable("fportsz", fortran.constraint_variables, 0.001, 1.0),
+    35: IterationVariable("fpeakb", fortran.constraint_variables, 0.001, 1.0),
+    36: IterationVariable("fbeta_max", fortran.constraint_variables, 0.001, 1.0),
+    37: IterationVariable("coheof", fortran.pfcoil_variables, 1.0e5, 1.0e8),
+    38: IterationVariable("fjohc", fortran.constraint_variables, 0.010, 1.0),
+    39: IterationVariable("fjohc0", fortran.constraint_variables, 0.001, 1.0),
+    40: IterationVariable("fgamcd", fortran.constraint_variables, 0.001, 1.0),
+    41: IterationVariable("fcohbop", fortran.pfcoil_variables, 0.001, 1.0),
+    42: IterationVariable("dr_cs_tf_gap", fortran.build_variables, 0.001, 10.00),
+    44: IterationVariable("fvsbrnni", fortran.physics_variables, 0.001, 1.0),
+    45: IterationVariable("fqval", fortran.constraint_variables, 0.001, 1.0),
+    46: IterationVariable("fpinj", fortran.constraint_variables, 0.001, 1.0),
+    47: IterationVariable("feffcd", fortran.current_drive_variables, 0.001, 1.0),
+    48: IterationVariable("fstrcase", fortran.constraint_variables, 0.001, 1.0),
+    49: IterationVariable("fstrcond", fortran.constraint_variables, 0.001, 1.0),
+    50: IterationVariable("fiooic", fortran.constraint_variables, 0.001, 1.0),
+    51: IterationVariable("fvdump", fortran.constraint_variables, 0.001, 1.0),
+    53: IterationVariable("fjprot", fortran.constraint_variables, 0.001, 1.0),
+    54: IterationVariable("ftmargtf", fortran.constraint_variables, 0.001, 1.0),
+    56: IterationVariable("tdmptf", fortran.tfcoil_variables, 0.1, 100.0),
+    57: IterationVariable("thkcas", fortran.tfcoil_variables, 0.050, 1.0),
+    58: IterationVariable("thwcndut", fortran.tfcoil_variables, 0.001, 0.1),
+    59: IterationVariable("fcutfsu", fortran.tfcoil_variables, 0.001, 1.0),
+    60: IterationVariable("cpttf", fortran.tfcoil_variables, 0.001, 4.0e4),
+    61: IterationVariable(
+        "dr_shld_vv_gap_inboard", fortran.build_variables, 0.001, 10.00
+    ),
+    62: IterationVariable("fdtmp", fortran.constraint_variables, 0.001, 1.0),
+    63: IterationVariable("ftpeak", fortran.constraint_variables, 0.001, 1.0),
+    64: IterationVariable("fauxmn", fortran.constraint_variables, 0.001, 1.0),
+    65: IterationVariable("t_current_ramp_up", fortran.times_variables, 0.1, 1.0e3),
+    66: IterationVariable(
+        "ft_current_ramp_up", fortran.constraint_variables, 0.001, 1.0
+    ),
+    67: IterationVariable("ftcycl", fortran.constraint_variables, 0.001, 1.0),
+    68: IterationVariable("fptemp", fortran.constraint_variables, 0.001, 1.0),
+    69: IterationVariable("rcool", fortran.tfcoil_variables, 0.001, 0.010),
+    70: IterationVariable("vcool", fortran.tfcoil_variables, 1.0, 1.0e2),
+    71: IterationVariable("fq", fortran.constraint_variables, 0.001, 1.0),
+    72: IterationVariable("fipir", fortran.constraint_variables, 0.001, 1.0),
+    73: IterationVariable(
+        "dr_fw_plasma_gap_inboard", fortran.build_variables, 0.001, 10.00
+    ),
+    74: IterationVariable(
+        "dr_fw_plasma_gap_outboard", fortran.build_variables, 0.001, 10.00
+    ),
+    75: IterationVariable("tfootfi", fortran.build_variables, 0.200, 5.0),
+    79: IterationVariable("fbeta_poloidal", fortran.constraint_variables, 0.001, 1.0),
+    81: IterationVariable("edrive", fortran.ife_variables, 1.0e5, 5.0e7),
+    82: IterationVariable("drveff", fortran.ife_variables, 0.010, 1.0),
+    83: IterationVariable("tgain", fortran.ife_variables, 1.0, 500.0),
+    84: IterationVariable("chrad", fortran.ife_variables, 0.1, 20.00),
+    85: IterationVariable("pdrive", fortran.ife_variables, 1.0e6, 200.0e6),
+    86: IterationVariable("frrmax", fortran.ife_variables, 0.001, 1.0),
+    89: IterationVariable("ftbr", fortran.constraint_variables, 0.001, 1.0),
+    90: IterationVariable("blbuith", fortran.build_variables, 0.001, 2.0),
+    91: IterationVariable("blbuoth", fortran.build_variables, 0.001, 2.0),
+    92: IterationVariable("fflutf", fortran.constraint_variables, 0.001, 1.0),
+    93: IterationVariable("dr_shld_inboard", fortran.build_variables, 0.001, 10.00),
+    94: IterationVariable("dr_shld_outboard", fortran.build_variables, 0.001, 10.00),
+    95: IterationVariable("fptfnuc", fortran.constraint_variables, 0.001, 1.0),
+    96: IterationVariable("fvvhe", fortran.constraint_variables, 0.001, 1.0),
+    97: IterationVariable("fpsepr", fortran.constraint_variables, 0.001, 1.0),
+    98: IterationVariable("li6enrich", fortran.fwbs_variables, 10.00, 100.0),
+    103: IterationVariable("fl_h_threshold", fortran.constraint_variables, 0.001, 1.0),
+    104: IterationVariable("fcwr", fortran.constraint_variables, 0.001, 1.0),
+    105: IterationVariable("fnbshinef", fortran.constraint_variables, 0.001, 1.0),
+    106: IterationVariable("ftmargoh", fortran.constraint_variables, 0.001, 1.0),
+    107: IterationVariable("favail", fortran.cost_variables, 0.001, 1.0),
+    108: IterationVariable("breeder_f", fortran.fwbs_variables, 0.060, 1.0),
+    109: IterationVariable(
+        "f_nd_alpha_electron", fortran.physics_variables, 0.050, 0.150
+    ),
+    110: IterationVariable(
+        "falpha_energy_confinement", fortran.constraint_variables, 0.001, 1.0
+    ),
+    111: IterationVariable("fniterpump", fortran.constraint_variables, 0.001, 1.0),
+    112: IterationVariable("fzeffmax", fortran.constraint_variables, 0.001, 1.0),
+    113: IterationVariable("fmaxvvstress", fortran.constraint_variables, 0.001, 1.0),
+    114: IterationVariable("len_fw_channel", fortran.fwbs_variables, 0.001, 1.0e3),
+    115: IterationVariable("fpoloidalpower", fortran.constraint_variables, 0.001, 1.0),
+    116: IterationVariable("fradwall", fortran.constraint_variables, 0.001, 1.0),
+    117: IterationVariable("fpsepbqar", fortran.constraint_variables, 0.001, 1.0),
+    118: IterationVariable("fpsep", fortran.constraint_variables, 0.001, 1.0),
+    119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
+    122: IterationVariable("oh_steel_frac", fortran.pfcoil_variables, 0.001, 0.950),
+    123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),
+    125: IterationVariable(
+        "fimp(03)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=2,
+    ),
+    126: IterationVariable(
+        "fimp(04)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=3,
+    ),
+    127: IterationVariable(
+        "fimp(05)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=4,
+    ),
+    128: IterationVariable(
+        "fimp(06)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=5,
+    ),
+    129: IterationVariable(
+        "fimp(07)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=6,
+    ),
+    130: IterationVariable(
+        "fimp(08)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=7,
+    ),
+    131: IterationVariable(
+        "fimp(09)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=8,
+    ),
+    132: IterationVariable(
+        "fimp(10)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=9,
+    ),
+    133: IterationVariable(
+        "fimp(11)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=10,
+    ),
+    134: IterationVariable(
+        "fimp(12)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=11,
+    ),
+    135: IterationVariable(
+        "fimp(13)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=12,
+    ),
+    136: IterationVariable(
+        "fimp(14)",
+        fortran.impurity_radiation_module,
+        1e-8,
+        0.01,
+        target_name="impurity_arr_frac",
+        array_index=13,
+    ),
+    137: IterationVariable("fplhsep", fortran.physics_variables, 0.001, 1.0),
+    138: IterationVariable(
+        "rebco_thickness", fortran.physics_variables, 0.01e-6, 100.0e-6
+    ),
+    139: IterationVariable("copper_thick", fortran.rebco_variables, 1.0e-6, 1.0e-3),
+    140: IterationVariable("dr_tf_wp", fortran.tfcoil_variables, 0.001, 2.0),
+    141: IterationVariable("fcqt", fortran.constraint_variables, 0.001, 1.0),
+    142: IterationVariable("nesep", fortran.physics_variables, 1.0e17, 1.0e20),
+    143: IterationVariable("f_coppera_m2", fortran.rebco_variables, 0.001, 1.0),
+    144: IterationVariable("fnesep", fortran.constraint_variables, 0.001, 1.0),
+    145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
+    146: IterationVariable("fcpttf", fortran.constraint_variables, 0.001, 1.0),
+    147: IterationVariable("freinke", fortran.constraint_variables, 0.001, 1.0),
+    149: IterationVariable("fbmaxcs", fortran.pfcoil_variables, 0.001, 1.0),
+    152: IterationVariable("fgwsep", fortran.physics_variables, 0.001, 0.5),
+    153: IterationVariable("fpdivlim", fortran.physics_variables, 0.001, 1.0),
+    154: IterationVariable("fne0", fortran.physics_variables, 0.001, 1.0),
+    155: IterationVariable("pfusife", fortran.ife_variables, 5.0e2, 3.0e3),
+    156: IterationVariable("rrin", fortran.ife_variables, 1.0, 1.0e1),
+    157: IterationVariable("fvssu", fortran.pfcoil_variables, 1.0e-3, 1.0e1),
+    158: IterationVariable("croco_thick", fortran.rebco_variables, 1.0e-3, 1.0e-1),
+    159: IterationVariable("ftoroidalgap", fortran.tfcoil_variables, 1.0e-4, 1.0),
+    160: IterationVariable("f_avspace", fortran.build_variables, 0.010, 1.0),
+    161: IterationVariable("fbeta_min", fortran.constraint_variables, 0.010, 1.0),
+    162: IterationVariable("r_cp_top", fortran.build_variables, 0.0010, 10.0),
+    163: IterationVariable("f_t_turn_tf", fortran.tfcoil_variables, 0.0010, 1000.0),
+    164: IterationVariable("f_crypmw", fortran.heat_transport_variables, 0.001, 1.0),
+    165: IterationVariable("fstr_wp", fortran.constraint_variables, 1.0e-9, 1.0),
+    166: IterationVariable("f_copperaoh_m2", fortran.rebco_variables, 0.001, 1.0),
+    167: IterationVariable("fncycle", fortran.constraint_variables, 1.0e-8, 1.0),
+    168: IterationVariable("fecrh_ignition", fortran.constraint_variables, 0.010, 2.0),
+    169: IterationVariable(
+        "te0_ecrh_achievable", fortran.stellarator_variables, 1.0, 1.0e3
+    ),
+    170: IterationVariable("beta_div", fortran.divertor_variables, 0.49, 5.01),
+    171: IterationVariable("casths_fraction", fortran.tfcoil_variables, 0.01, 0.99),
+    172: IterationVariable("casths", fortran.tfcoil_variables, 0.001, 1.0),
+    173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),
+    174: IterationVariable("triang", fortran.physics_variables, 0.00, 1.00),
+    175: IterationVariable("kappa", fortran.physics_variables, 0.00, 10.00),
+}
+
+
+def load_iteration_variables():
+    """Loads the physics and engineering variables into the optimisation variable array."""
+
+    for i in range(fortran.numerics.nvar):
+        variable_index = fortran.numerics.ixc[i].item()
+        iteration_variable = ITERATION_VARIABLES[variable_index]
+
+        # use ... as the default return value because None might be a valid return from Fortran?
+        iteration_variable_value = getattr(
+            iteration_variable.module,
+            iteration_variable.target_name or iteration_variable.name,
+            ...,
+        )
+
+        if iteration_variable_value is ...:
+            error_msg = (
+                f"Could not get the value for iteration variable {variable_index} "
+                f"({iteration_variable.name})"
+            )
+            raise ProcessValueError(error_msg)
+
+        # if an array index is specified, iteration_variable_value is currently
+        # the array and not the value of interest
+        if iteration_variable.array_index is not None:
+            iteration_variable_value = iteration_variable_value[
+                iteration_variable.array_index
+            ]
+
+        fortran.numerics.xcm[i] = iteration_variable_value
+        fortran.numerics.name_xc[i] = string_to_f2py_compatible(
+            fortran.numerics.name_xc[i], iteration_variable.name
+        )
+
+        # warn of the iteration variable is also a scan variable because this will cause
+        # the optimiser and scan to overwrite the same variable and conflict
+        if iteration_variable.name in (
+            f2py_compatible_to_string(fortran.global_variables.vlabel),
+            f2py_compatible_to_string(fortran.global_variables.vlabel_2),
+        ):
+            warn(
+                (
+                    "The sweep variable is also an iteration variable and will be "
+                    "overwritten by the optiomiser"
+                ),
+                stacklevel=3,
+            )
+
+        # check that the iteration variable is valid (not 0, NaN, inf, or very large)
+
+        if abs(iteration_variable_value) <= 1e-12:
+            error_msg = (
+                f"Iteration variable {variable_index} ({iteration_variable.name}) "
+                "is 0 (or very close)"
+            )
+            raise ProcessValueError(
+                error_msg, iteration_variable_value=iteration_variable_value
+            )
+
+        if np.isnan(iteration_variable_value) or np.isinf(iteration_variable_value):
+            error_msg = (
+                f"Iteration variable {variable_index} ({iteration_variable.name}) is an "
+                "invalid number"
+            )
+            raise ProcessValueError(
+                error_msg, iteration_variable_value=iteration_variable_value
+            )
+
+        fortran.numerics.scale[i] = 1.0 / iteration_variable_value
+        fortran.numerics.scafc[i] = iteration_variable_value
+
+        # xcm = xcm / scale which is equivalent to 1.0
+        # because xcm was previously set at x and scale = 1/x
+        fortran.numerics.xcm[i] = 1.0
