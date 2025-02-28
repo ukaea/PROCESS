@@ -16,7 +16,7 @@ module numerics
 
   public
 
-  integer, parameter :: ipnvars = 175
+  integer, parameter :: ipnvars = 177
   !!  ipnvars FIX : total number of variables available for iteration
 
   integer, parameter :: ipeqns = 92
