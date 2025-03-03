@@ -284,12 +284,14 @@ def test_input_file(
         scenario.scenario_name, tmp_path
     )
 
+    scenario.run(solver_name)
+
     # reference MFile cannot be found?
-    # should the file be allowed to run just to test it converges (with a warning about no comparison)?
+    # raise an error after the file is run so that any errors while running the input file
+    # are raised first.
     if reference_mfile is None:
-        pytest.skip(
-            reason=f"A reference input file cannot be found for {scenario.scenario_name}"
+        raise RuntimeError(
+            "No reference input file exists (so cannot compare results). The input file ran without any exceptions."
         )
 
-    scenario.run(solver_name)
     scenario.compare(reference_mfile, reg_tolerance, opt_params_only)
