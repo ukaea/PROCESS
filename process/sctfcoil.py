@@ -2368,13 +2368,14 @@ class Sctfcoil:
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
             s_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
-            # TODO: Does this calculation of Scc exclude the area of the case down the side?
-            s_cc=sctfcoil_module.a_case_front + sctfcoil_module.a_case_nose,
+            s_cc=sctfcoil_module.a_case_front
+            + sctfcoil_module.a_case_nose
+            + 2.0 * sctfcoil_module.t_lat_case_av,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
             i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
             # VV properties
-            d_vv=build_variables.dr_vv_inboard,
+            d_vv=build_variables.dr_vv_shell_thickness,
         )
 
     def tf_field_and_force(self):
@@ -7221,6 +7222,85 @@ def _inductance_factor(H, ri, ro, rm, theta1):
     )
 
 
+@staticmethod
+def lambda_term(tau, omega):
+    """Lambda Term
+
+    Author: Alexander Pearce, UKAEA
+
+    :param tau: tau_{s,k} = (R_{s,k} - R_{c,k}) / R_k
+    :param omega: omega_k = R_{c,k}/R_k
+
+    The lammbda fucntion used inegral in inductance calcuation found
+    in Y. Itoh et al. The full form of the functions are given in appendix A.
+    """
+    p = 1.0 - omega**2.0
+
+    if p < 0:
+        integral = (1.0 / np.sqrt(np.abs(p))) * np.arcsin(
+            (1.0 + omega * tau) / (tau + omega)
+        )
+    else:
+        integral = (1.0 / np.sqrt(np.abs(p))) * np.log(
+            (2.0 * (1.0 + tau * omega - np.sqrt(p * (1 - tau**2.0)))) / (tau + omega)
+        )
+
+    return integral
+
+
+@staticmethod
+def _theta_factor_integral(ro_vv, ri_vv, rm_vv, h_vv, theta1_vv):
+    """Theta Factor Integral
+    Author: Alexander Pearce, UKAEA
+
+    :param Ro_vv: the radius of the outboard edge of the VV CCL
+    :param Ri_vv: the radius of the inboard edge of the VV CCL
+    :param Rm_vv: the radius where the maximum height of the VV CCL occurs
+    :param H_vv: the maximum height of the VV CCL
+    :param theta1_vv: the polar angle of the point at which one circular arc is
+    joined to another circular arc in the approximation to the VV CCL
+
+    The calcuation of the theta factor found in Eq 4 of Y. Itoh et al. The
+    full form of the integral is given in appendix A.
+    """
+    theta2 = np.pi / 2.0 + theta1_vv
+    a = (ro_vv - ri_vv) / 2.0
+    rbar = (ro_vv + ri_vv) / 2.0
+    delta = (rbar - rm_vv) / a
+    kappa = h_vv / a
+    iota = (1.0 + delta) / kappa
+
+    denom = np.cos(theta1_vv) + np.sin(theta1_vv) - 1.0
+
+    r1 = h_vv * ((np.cos(theta1_vv) + iota * (np.sin(theta1_vv) - 1.0)) / denom)
+    r2 = h_vv * ((np.cos(theta1_vv) - 1.0 + iota * np.sin(theta1_vv)) / denom)
+    r3 = h_vv * (1 - delta) / kappa
+
+    rc1 = (h_vv / kappa) * ((rbar / a) + 1.0) - r1
+    rc2 = rc1 + (r1 - r2) * np.cos(theta1_vv)
+    rc3 = rc2
+    zc2 = (r1 - r2) * np.sin(theta1_vv)
+    zc3 = zc2 + r2 - r3
+
+    tau = np.array([
+        [np.cos(theta1_vv), np.cos(theta1_vv + theta2), -1.0],
+        [1.0, np.cos(theta1_vv), np.cos(theta1_vv + theta2)],
+    ])
+
+    omega = np.array([rc1 / r1, rc2 / r2, rc3 / r3])
+
+    # Assume up down symmetry and let Zc6 = - Zc3
+    chi1 = (zc3 + np.abs(-zc3)) / ri_vv
+    chi2 = 0.0
+
+    for k in range(len(omega)):
+        chi2 = chi2 + np.abs(
+            lambda_term(tau[1, k], omega[k]) - lambda_term(tau[0, k], omega[k])
+        )
+
+    return (chi1 + 2.0 * chi2) / (2.0 * np.pi)
+
+
 def vv_stress_on_quench(
     # TF shape
     H_coil,
@@ -7284,7 +7364,7 @@ def vv_stress_on_quench(
     :param taud: the discharge time of the TF coil when quench occurs
     :param i_op: the 'normal' operating current of the TF coil
 
-    :param d_vv: the thickness of the vacuum vessel
+    :param d_vv: the thickness of the vacuum vessel shell
 
     :returns: the maximum stress experienced by the vacuum vessel
 
@@ -7293,8 +7373,8 @@ def vv_stress_on_quench(
     The theta1 quantity for the TF coil and VV is not very meaningful. The
     impact of it of the inductance is rather small. Generally, the paper seems to
     suggest the TF coil is between 40 and 60, as this is the range they calculate
-    the surrogates over. No range is provided for the VV but the example using
-    JA DEMO is 1 degree suggesting the quantity will be very small.
+    the surrogates over. The thickness of the VV considers an ITER like design and
+    only the outer and inner shells that which act of conductuve structural material.
 
     References
     ----------
@@ -7302,9 +7382,13 @@ def vv_stress_on_quench(
     Empirical Formulas for Estimating Self and Mutual Inductances of Toroidal Field Coils and Structures.
     Plasma and Fusion Research. 15. 1405078-1405078. 10.1585/pfr.15.1405078.
     """
+    # Convert angles into radians
+    theta1_vv_rad = np.pi * (theta1_vv / 180.0)
+
     # Poloidal loop resistance (PLR) in ohms
+    theta_vv = _theta_factor_integral(ro_vv, ri_vv, rm_vv, H_vv, theta1_vv_rad)
     plr_coil = ((0.5 * ccl_length_coil) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
-    plr_vv = ((0.84 / d_vv) * 0.94) * 1e-6
+    plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
