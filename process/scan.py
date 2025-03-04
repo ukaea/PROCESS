@@ -364,7 +364,7 @@ class Scan:
 
             process_output.ovarre(
                 constants.mfile,
-                numerics.lablxc[numerics.ixc[i] - 1],
+                f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1]),
                 f"(itvar{i + 1:03d})",
                 numerics.xcs[i],
             )
