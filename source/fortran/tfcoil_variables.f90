@@ -421,7 +421,7 @@ module tfcoil_variables
   real(dp), dimension(2*n_radial_array) :: sig_tf_vmises
   !! TF Inboard leg Von-Mises stress in steel r distribution at mid-plane [Pa]
 
-  real(dp), dimension(2*n_radial_array) :: sig_tf_tresca
+  real(dp), dimension(2*n_radial_array) :: s_shear_tf
   !! TF Inboard leg maximum shear stress (Tresca criterion) in steel r distribution at mid-plane [Pa]
 
   real(dp) :: sig_tf_cs_bucked
@@ -941,7 +941,7 @@ module tfcoil_variables
     deflect = 0.0D0
     sig_tf_z = 0.0D0
     sig_tf_vmises = 0.0D0
-    sig_tf_tresca = 0.0D0
+    s_shear_tf = 0.0D0
     sig_tf_cs_bucked = 0.0D0
     sig_tf_case = 0.0D0
     sig_tf_wp = 0.0D0
