@@ -218,7 +218,7 @@ OBS_VARS = {
     "sig_tf_tresca_max": "s_shear_max_tf",
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
-    }
+}
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",

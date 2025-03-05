@@ -2628,9 +2628,9 @@ def plot_magnetics_info(axis, mfile_data, scan):
     sig_case = 1.0e-6 * mfile_data.data[f"s_shear_max_tf({i_tf_bucking})"].get_scan(
         scan
     )
-    sig_cond = 1.0e-6 * mfile_data.data[
-        f"s_shear_max_tf({i_tf_bucking + 1})"
-    ].get_scan(scan)
+    sig_cond = 1.0e-6 * mfile_data.data[f"s_shear_max_tf({i_tf_bucking + 1})"].get_scan(
+        scan
+    )
 
     if i_tf_sup == 1:
         data = [
