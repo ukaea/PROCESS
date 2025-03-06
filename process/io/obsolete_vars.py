@@ -113,6 +113,7 @@ OBS_VARS = {
     "fvolbo": "fhole",
     "fvolcry": None,
     "idhe3": "f_helium3",
+    "blnktth": None,
     "dz_blkt_upper": None,
     "theat": "t_fusion_ramp",
     "ieped": None,
