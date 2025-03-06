@@ -764,7 +764,6 @@ def dict_input_bounds():
     for var_name, config in INPUT_VARIABLES.items():
         lb, ub = None, None
         if config.range is not None:
-            print(var_name)
             lb, ub = config.range
 
         elif config.choices is not None and config.type in [int, float]:
