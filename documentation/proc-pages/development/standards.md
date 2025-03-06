@@ -4,7 +4,7 @@
 
 --------------------
 
-## Line Length
+##  Line Length
 
 For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
 
@@ -13,7 +13,7 @@ For optimal readability, a limit of 79 characters for maximum line length has be
 ## Double declarations
 
 PROCESS uses the Fortran 2008+ intrinsic precision module as shown in the example below. The
-use statement will need to be at the module level. See the 
+use statement will need to be at the module level. See the
 [fortran wiki](http://fortranwiki.org/fortran/show/Real+precision) for more information.
 
 ```fortran
@@ -102,7 +102,6 @@ $$
 
 This means the variable represents the fraction of the TF coil area taken up by the winding pack.
 
-
 --------------
 
 #### System designations
@@ -118,10 +117,10 @@ Below are a few shorthand designations for different systems that should be used
 - Shield: `_shld_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
-    - Electron cyclotron current drive: `_eccd_`
-    - Ion cyclotron current drive: `_iccd_`
-    - Electron Bernstein Wave: `_ebw_`
-    - Neutral Beam: `_nb_`
+  - Electron cyclotron current drive: `_eccd_`
+  - Ion cyclotron current drive: `_iccd_`
+  - Electron Bernstein Wave: `_ebw_`
+  - Neutral Beam: `_nb_`
 - Centre post: `_cp_` Should only be used for ST's
 
 If the variables are physics variables and do not belong to a system then:
@@ -220,7 +219,6 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 - Pressure changes or drops should start with the `dpres_` prefix
 
 ---------------------
-
 
 ##### Densities
 
@@ -348,7 +346,6 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
-
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
@@ -365,7 +362,7 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 ---------------------
 
-### Length
+#### Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
@@ -408,7 +405,7 @@ fusion_power_MW = 1000.0d0
 
     With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
 
----------------------    
+---------------------
 
 ### Coordinates and dimensions
 
@@ -557,15 +554,14 @@ class ExampleClass:
 
 - Comments above apply to code below.
 
-
 ## Code Documentation Using FORD
 
-PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments 
-in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well 
+PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
+in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
 as picking up "docmarked" comments in the source to create the documentation.
 
-Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into 
-the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up 
+Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
+the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 by FORD and go into the documentation.
 
 The "!!" docmark goes after the statement it documents. For example, to document variables:
@@ -582,6 +578,7 @@ real(kind(1.0D0)) :: alpha_rate_density = 0.0D0
 ```
 
 ...and to document modules:
+
 ```fortran
 module global_variables
   !! Module containing miscellaneous global variables
@@ -589,13 +586,13 @@ module global_variables
   !! well-suited to any of the other 'variables' modules.
 ```
 
-This documentation will appear in the 
-[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the 
-left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar 
-provides variable descriptions in the same manner as the original "vardes" page. 
+This documentation will appear in the
+[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
+left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
+provides variable descriptions in the same manner as the original "vardes" page.
 
-To document a statement before it occurs in the source, use "!>". However, it is encouraged to 
-use "!!" for consistency. The rationale behind this and further information is included on the 
+To document a statement before it occurs in the source, use "!>". However, it is encouraged to
+use "!!" for consistency. The rationale behind this and further information is included on the
 [FORD wiki](https://github.com/Fortran-FOSS-Programmers/ford/wiki/Writing-Documentation).
 
 The FORD project on github can be found [here](https://github.com/Fortran-FOSS-Programmers/ford).
