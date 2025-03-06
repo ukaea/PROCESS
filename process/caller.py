@@ -10,6 +10,7 @@ from tabulate import tabulate
 from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
+from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -229,7 +230,7 @@ class Caller:
         ft.numerics.ncalls = ft.numerics.ncalls + 1
 
         # Convert variables
-        ft.define_iteration_variables.convxc(xc, nvars)
+        set_scaled_iteration_variable(xc, nvars)
 
         # Perform the various function calls
         # Stellarator caller
