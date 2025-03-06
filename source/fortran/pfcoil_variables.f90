@@ -298,7 +298,7 @@ module pfcoil_variables
   !!   the coil in units of minor radii from the major radius
   !!   (r = rmajor + rref*rminor)
 
-  real(dp) :: s_shear_max_cs
+  real(dp) :: s_shear_cs_max
   !! Maximum shear stress (Tresca criterion) coils/central solenoid [MPa]
 
   real(dp) :: sigpfcalw
@@ -489,7 +489,7 @@ module pfcoil_variables
     rpf2 = -1.63D0
     rref = (/7.0D0, 7.0D0, 7.0D0, &
       7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0/)
-    s_shear_max_cs = 0.0D0
+    s_shear_cs_max = 0.0D0
     sigpfcalw = 500.0D0
     sigpfcf = 1.0D0
     sxlg = 0.0D0
