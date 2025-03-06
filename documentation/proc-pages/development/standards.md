@@ -6,6 +6,8 @@
 
 ##  Line Length
 
+##  Line Length
+
 For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
 
 --------------------
@@ -13,6 +15,7 @@ For optimal readability, a limit of 79 characters for maximum line length has be
 ## Double declarations
 
 PROCESS uses the Fortran 2008+ intrinsic precision module as shown in the example below. The
+use statement will need to be at the module level. See the
 use statement will need to be at the module level. See the
 [fortran wiki](http://fortranwiki.org/fortran/show/Real+precision) for more information.
 
@@ -102,11 +105,6 @@ $$
 
 This means the variable represents the fraction of the TF coil area taken up by the winding pack.
 
-!!! note "Naming conventions with limit variables"
-
-    For naming variables which represent either upper or lower limits the words `_max` and `_min` should be used in the variable name. Though if a variable represents the highest of a measured value then the variable name should use the word `_peak`.
-
-
 --------------
 
 #### System designations
@@ -122,6 +120,10 @@ Below are a few shorthand designations for different systems that should be used
 - Shield: `_shld_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
+  - Electron cyclotron current drive: `_eccd_`
+  - Ion cyclotron current drive: `_iccd_`
+  - Electron Bernstein Wave: `_ebw_`
+  - Neutral Beam: `_nb_`
   - Electron cyclotron current drive: `_eccd_`
   - Ion cyclotron current drive: `_iccd_`
   - Electron Bernstein Wave: `_ebw_`
@@ -359,32 +361,6 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
-##### Stress
-
-- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
-
----------------------
-
-##### Current drive efficiencies
-
-Absolute current drive efficiencies ($\eta_{\text{CD}}$) representing Amps driven per Watt of injected power start with the `eta_cd` prefix.
-
-$$
-\eta_{\text{CD}} = \frac{I_{\text{driven}}}{P_{\text{injected}}}
-$$
-
-Normalized current drive efficiecnies using major radius and volume averaged electron temperature start with the `eta_cd_norm` prefix
-
-$$
-\eta_{\text{CD,norm}} = R_0 n_{\text{e,20}} \eta_{\text{CD}}
-$$
-
-$\eta_{\text{CD,norm}}$ has the units of $\frac{1\times 10^{20} \text{A}}{\text{W} \text{m}^2}$
-
-The above is concurrent with that of general efficiencies given [below](#efficiencies).
-
---------------
-
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
@@ -403,12 +379,11 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 ---------------------
 
-### Variable Length
+#### Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
 ---------------------
-
 
 ### Physical Type
 
@@ -447,6 +422,7 @@ fusion_power_MW = 1000.0d0
 
     With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
 
+---------------------
 ---------------------
 
 ### Coordinates and dimensions
@@ -600,8 +576,12 @@ class ExampleClass:
 
 PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
 in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
+PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
+in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
 as picking up "docmarked" comments in the source to create the documentation.
 
+Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
+the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
 the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 by FORD and go into the documentation.
@@ -632,7 +612,13 @@ This documentation will appear in the
 [FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
 left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
 provides variable descriptions in the same manner as the original "vardes" page.
+This documentation will appear in the
+[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
+left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
+provides variable descriptions in the same manner as the original "vardes" page.
 
+To document a statement before it occurs in the source, use "!>". However, it is encouraged to
+use "!!" for consistency. The rationale behind this and further information is included on the
 To document a statement before it occurs in the source, use "!>". However, it is encouraged to
 use "!!" for consistency. The rationale behind this and further information is included on the
 [FORD wiki](https://github.com/Fortran-FOSS-Programmers/ford/wiki/Writing-Documentation).
