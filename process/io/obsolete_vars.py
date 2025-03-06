@@ -214,8 +214,8 @@ OBS_VARS = {
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
     "denw": None,
-    "s_tresca_oh": "s_shear_cs_max",
-    "sig_tf_tresca_max": "s_shear_tf_max",
+    "s_tresca_oh": "s_shear_cs_peak",
+    "sig_tf_tresca_max": "s_shear_tf_peak",
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
 }

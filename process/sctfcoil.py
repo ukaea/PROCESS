@@ -1228,7 +1228,7 @@ class Sctfcoil:
                 sig_tf_t_max,
                 sig_tf_z_max,
                 sig_tf_vmises_max,
-                s_shear_tf_max,
+                s_shear_tf_peak,
                 deflect,
                 eyoung_axial,
                 eyoung_trans,
@@ -1362,7 +1362,7 @@ class Sctfcoil:
                     sig_tf_t_max,
                     sig_tf_z_max,
                     sig_tf_vmises_max,
-                    s_shear_tf_max,
+                    s_shear_tf_peak,
                     deflect,
                     eyoung_axial,
                     eyoung_trans,
@@ -3711,7 +3711,7 @@ class Sctfcoil:
         sig_tf_vmises_max = np.zeros((n_tf_layer,))
         # Von-Mises stress of the point of maximum shear stress of each layer [Pa]
 
-        s_shear_tf_max = np.zeros((n_tf_layer,))
+        s_shear_tf_peak = np.zeros((n_tf_layer,))
         # Maximum shear stress, for the Tresca yield criterion of each layer [Pa]
         # If the CEA correction is addopted, the CEA corrected value is used
 
@@ -4395,19 +4395,19 @@ class Sctfcoil:
             # Maximum shear stress for the Tresca yield criterion (or CEA OOP correction)
 
             if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
-                s_shear_tf_max[ii] = s_shear_cea_tf_cond[ii_max]
+                s_shear_tf_peak[ii] = s_shear_cea_tf_cond[ii_max]
             else:
-                s_shear_tf_max[ii] = s_shear_tf[ii_max]
+                s_shear_tf_peak[ii] = s_shear_tf[ii_max]
 
         # Constraint equation for the Tresca yield criterion
 
-        sig_tf_wp = s_shear_tf_max[n_tf_bucking]
+        sig_tf_wp = s_shear_tf_peak[n_tf_bucking]
         # Maximum assumed in the first graded layer
 
         if i_tf_bucking >= 1:
-            sig_tf_case = s_shear_tf_max[n_tf_bucking - 1]
+            sig_tf_case = s_shear_tf_peak[n_tf_bucking - 1]
         if i_tf_bucking >= 2:
-            sig_tf_cs_bucked = s_shear_tf_max[0]
+            sig_tf_cs_bucked = s_shear_tf_peak[0]
         # ----------------
 
         return (
@@ -4415,7 +4415,7 @@ class Sctfcoil:
             sig_tf_t_max,
             sig_tf_z_max,
             sig_tf_vmises_max,
-            s_shear_tf_max,
+            s_shear_tf_peak,
             deflect,
             eyoung_axial,
             eyoung_trans,
@@ -5837,7 +5837,7 @@ class Sctfcoil:
         sig_tf_t_max,
         sig_tf_z_max,
         sig_tf_vmises_max,
-        s_shear_tf_max,
+        s_shear_tf_peak,
         deflect,
         eyoung_axial,
         eyoung_trans,
@@ -5978,12 +5978,12 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
             po.write(
                 self.outfile,
-                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_max, 1e-6)}",
+                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
         else:
             po.write(
                 self.outfile,
-                f"  Shear (Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_max, 1e-6)}",
+                f"  Shear (Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
 
         po.write(self.outfile, "")
@@ -6055,15 +6055,15 @@ class Sctfcoil:
                 po.ovarre(
                     constants.mfile,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
-                    f"(s_shear_tf_max({ii + 1}))",
-                    s_shear_tf_max[ii],
+                    f"(s_shear_tf_peak({ii + 1}))",
+                    s_shear_tf_peak[ii],
                 )
             else:
                 po.ovarre(
                     constants.mfile,
                     f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
-                    f"(s_shear_tf_max({ii + 1}))",
-                    s_shear_tf_max[ii],
+                    f"(s_shear_tf_peak({ii + 1}))",
+                    s_shear_tf_peak[ii],
                 )
 
         # SIG_TF.json storage
