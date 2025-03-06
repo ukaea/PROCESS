@@ -3940,36 +3940,5 @@ contains
     real(kind(1.d0)) :: ratio
     DUMMY = ratio
   end subroutine set_itv_177
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine boundxc
-
-    !! Routine to convert variable bounds to their real values
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! None
-    !! This subroutine converts the scaled iteration variable bounds
-    !! back to their real values.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use numerics, only: nvar, itv_scaled_lower_bounds, itv_scaled_upper_bounds, scale, ixc, boundl, boundu
-
-    implicit none
-
-    !  Local variables
-
-    integer :: i
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    do i = 1,nvar
-       itv_scaled_lower_bounds(i) = boundl(ixc(i))*scale(i)
-       itv_scaled_upper_bounds(i) = boundu(ixc(i))*scale(i)
-    end do
-
-  end subroutine boundxc
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 end module define_iteration_variables
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

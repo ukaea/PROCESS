@@ -410,3 +410,16 @@ def set_scaled_iteration_variable(xc, nn: int):
         check_iteration_variable(
             ratio, name=f"{variable_index} ({iteration_variable.name})"
         )
+
+
+def load_scaled_bounds():
+    """Sets the scaled bounds of the iteration variables."""
+
+    for i in range(fortran.numerics.nvar.item()):
+        variable_index = fortran.numerics.ixc[i].item() - 1
+        fortran.numerics.itv_scaled_lower_bounds[i] = (
+            fortran.numerics.boundl[variable_index] * fortran.numerics.scale[i]
+        )
+        fortran.numerics.itv_scaled_upper_bounds[i] = (
+            fortran.numerics.boundu[variable_index] * fortran.numerics.scale[i]
+        )
