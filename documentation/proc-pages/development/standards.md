@@ -354,6 +354,12 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Stress
+
+- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
+
+---------------------
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
@@ -372,17 +378,12 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 ---------------------
 
-##### Length
+### Variable Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
 ---------------------
 
-##### Stress
-
-- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
-
----------------------
 
 ### Physical Type
 
