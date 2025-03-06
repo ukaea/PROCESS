@@ -2792,12 +2792,12 @@ contains
 
       ! bucked and wedged desing (see subroutine comment)
       if ( i_tf_bucking >= 2 .and. tf_in_cs == 0 ) then
-         tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_shear_max_cs, sig_tf_cs_bucked)
-         tmp_err = alstroh - max(s_shear_max_cs, sig_tf_cs_bucked)
+         tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_shear_cs_max, sig_tf_cs_bucked)
+         tmp_err = alstroh - max(s_shear_cs_max, sig_tf_cs_bucked)
       ! Free standing CS
       else
-         tmp_cc = 1.0d0 - foh_stress * alstroh / s_shear_max_cs
-         tmp_err = alstroh - s_shear_max_cs
+         tmp_cc = 1.0d0 - foh_stress * alstroh / s_shear_cs_max
+         tmp_err = alstroh - s_shear_cs_max
       end if
 
       tmp_con = alstroh
