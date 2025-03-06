@@ -207,7 +207,7 @@ OBS_VARS = {
     "iblanket": "i_blanket_type",
     "fw_wall": "dr_fw_wall",
     "fwpressure": "pres_fw_coolant",
-    "fwoutlet": "temp_fw_coolant_outlet",
+    "fwoutlet": "temp_fw_coolant_out",
     "afw": "radius_fw_channel",
     "peaking_factor": "f_fw_peak",
     "fwinlet": "temp_fw_coolant_in",

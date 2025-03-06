@@ -1554,3 +1554,21 @@ class CCFE_HCPB:
             "(etaiso)",
             fwbs_variables.etaiso,
         )
+        po.ovarre(
+            self.outfile,
+            "First wall area (m2)",
+            "(a_fw_total)",
+            build_variables.a_fw_total,
+        )
+        po.ovarre(
+            self.outfile,
+            "Divertor area (m2)",
+            "(divsur)",
+            divertor_variables.divsur,
+        )
+        po.ovarre(
+            self.outfile,
+            "Divertor mass (kg)",
+            "(divmas)",
+            divertor_variables.divmas,
+        )
