@@ -149,7 +149,7 @@ INPUT_VARIABLES = {
     # TODO: does fimp require an additional range?
     "fimp": InputVariable(fortran.impurity_radiation_module, float, array=True),
     "fkzohm": InputVariable(fortran.physics_variables, float, range=(0.5, 2.0)),
-    "fnesep": InputVariable(fortran.physics_variables, float, range=(0.1, 20.0)),
+    "fnesep": InputVariable(fortran.constraint_variables, float, range=(0.1, 20.0)),
     "abktflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
     "admv": InputVariable(fortran.buildings_variables, float, range=(1.0e4, 1.0e6)),
@@ -1432,7 +1432,7 @@ INPUT_VARIABLES = {
     "ccls_ma": InputVariable(fortran.pfcoil_variables, float, array=True),
     "cfind": InputVariable(fortran.cost_variables, float, array=True),
     "coolwh": InputVariable(fortran.fwbs_variables, int, choices=[1, 2]),
-    "copperA_m2_max": InputVariable(
+    "coppera_m2_max": InputVariable(
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
@@ -1680,17 +1680,19 @@ def parse_input_file():
             )
             raise ProcessValidationError(error_msg)
 
-        # validate the variable and also clean it (cast to correct type)
+        # Validate the variable and also clean it (cast to correct type)
+        # If the variable value (after the = sign) contains a ',' then it
+        # defines the whole array so needs to be split down into its elements
+        # and the parsed like an array defined as 'my_array(<index>) = <value>'
         if "," in variable_value:
             getattr(variable_config.module, variable_name)[:] = 0.0
             clean_variable_value = [
                 validate_variable(
                     variable_name,
                     v.strip(),
-                    str(i),
+                    str(i + 1),
                     variable_config,
                     line_no,
-                    check_array=False,
                 )
                 for i, v in enumerate(variable_value.split(","), start=1)
             ]
@@ -1740,7 +1742,7 @@ def parse_input_file():
                 variable_config,
             )
 
-        # again its the input name not the target name
+        # add the variable to a dictionary indexed by the variable name (in the input file)
         variables[variable_name] = {
             "value": clean_variable_value,
             "index": array_index_clean,
@@ -1756,8 +1758,6 @@ def validate_variable(
     array_index: int | None,
     config: InputVariable,
     line_number: int,
-    *,
-    check_array=True,
 ) -> ValidInputTypes:
     """Validate an input.
 
@@ -1765,11 +1765,14 @@ def validate_variable(
     :param value: the value of the input variable.
     :param array_index: the array index of the variable in the input file.
     :param config: the config of the variable that describes how to validate and process it.
+    :param line_number: line number of current line being parsed for error reporting.
 
     :returns: the input value with the correct type.
     """
-    # check its an array if and only if the config says so
-    if array_index is None and config.array and check_array:
+    # check that if the variable should be an array, then an array index is provided
+    # EXCEPT for if check_array is False. This should only be the case when parsing
+    # entire arrays (e.g. my_array = 1,2,2,4,5) where there will be no array index.
+    if array_index is None and config.array:
         error_msg = f"Expected '{name}' at line {line_number} to be an array."
         raise ProcessValidationError(error_msg)
 

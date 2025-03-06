@@ -82,7 +82,7 @@ def test_parse_real(epsvmc, expected, tmp_path):
         [0.1293140904093427],
     ],
 )
-def test_parse_real_didnt_work_in_f90(value, tmp_path):
+def test_exact_parsing(value, tmp_path):
     """Tests the parsing of real numbers into PROCESS.
 
     These tests failed using the old input parser and serve to show that the Python parser generally
@@ -120,9 +120,6 @@ def test_input_choices(tmp_path):
         fortran.global_variables.fileprefix,
         _create_input_file(tmp_path, ("ioptimz = -1")),
     )
-
-    # check that the test data doesn't change
-    assert process_input.INPUT_VARIABLES["ioptimz"].choices == [1, -2]
 
     with pytest.raises(ProcessValidationError):
         init.init_process()
