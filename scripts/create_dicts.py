@@ -28,6 +28,7 @@ import numpy as np
 from python_dicts import get_python_variables
 
 from process.input import INPUT_VARIABLES
+from process.iteration_variables import ITERATION_VARIABLES
 from process.scan import SCAN_VARIABLES
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
@@ -803,57 +804,16 @@ def dict_nsweep2varname():
 
 def dict_ixc_full():
     """Function to return a dictionary matching str(ixc_no) to a dictionary
-    containing the name, lower and upper bounds of that variable. Looks in
-    numerics.f90 at !+ad_varc lines in lablxc to get ixc_no and
-    variable names, and looks at boundu and boundl for upper and
-    lower bounds.
-
-    Example of a lablxc line we are looking for:
-        lablxc(1) = 'aspect        '
-
-    Example of a boundl line we are looking for:
-        boundl(1) = 0.0D0
-
-    Example of a boundu line we are looking for:
-        boundu(1) = 1.0D0
+    containing the name, lower and upper bounds of that variable.
 
     Example dictionary entry:
         DICT_IXC_FULL['5'] = {'name' : 'beta', 'lb' : 0.001, 'ub' : 1.0}
     """
 
-    with open(SOURCEDIR + "/iteration_variables.f90") as my_file:
-        lines = my_file.readlines()
-
-    ixc_full = {}
-
-    for lline in lines:
-        if "subroutine init_itv_" in lline and "end" not in lline:
-            itv_num = lline.split("_")[-1].strip("\n").replace(" ", "")
-            ixc_full[itv_num] = {}
-
-    for line in lines:
-        if ("lablxc" in line and "=" in line) and (
-            "lablxc(i)" not in line and "lablxc(ixc(i))" not in line
-        ):
-            labl_num = line.split("(")[1].split(")")[0]
-            labl = line.split("=")[-1].strip("\n").replace(" ", "").replace("'", "")
-            ixc_full[labl_num]["name"] = labl
-
-        if ("boundl(" in line and "=" in line) and (
-            "boundl(i)" not in line and "boundl(ixc(i))" not in line
-        ):
-            boundl_num = line.split("(")[1].split(")")[0]
-            boundl_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-            ixc_full[boundl_num]["lb"] = float(boundl_val)
-
-        if ("boundu(" in line and "=" in line) and (
-            "boundu(i)" not in line and "boundu(ixc(i))" not in line
-        ):
-            boundu_num = line.split("(")[1].split(")")[0]
-            boundu_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-            ixc_full[boundu_num]["ub"] = float(boundu_val)
-
-    return ixc_full
+    return {
+        str(k): {"name": v.name, "lb": v.lower_bound, "ub": v.upper_bound}
+        for k, v in ITERATION_VARIABLES.items()
+    }
 
 
 def dict_ixc_bounds():

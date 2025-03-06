@@ -69,11 +69,13 @@ ITERATION_VARIABLES = {
     33: IterationVariable("fportsz", fortran.constraint_variables, 0.001, 1.0),
     35: IterationVariable("fpeakb", fortran.constraint_variables, 0.001, 1.0),
     36: IterationVariable("fbeta_max", fortran.constraint_variables, 0.001, 1.0),
-    37: IterationVariable("coheof", fortran.pfcoil_variables, 1.0e5, 1.0e8),
+    37: IterationVariable("j_cs_flat_top_end", fortran.pfcoil_variables, 1.0e5, 1.0e8),
     38: IterationVariable("fjohc", fortran.constraint_variables, 0.010, 1.0),
     39: IterationVariable("fjohc0", fortran.constraint_variables, 0.001, 1.0),
     40: IterationVariable("fgamcd", fortran.constraint_variables, 0.001, 1.0),
-    41: IterationVariable("fcohbop", fortran.pfcoil_variables, 0.001, 1.0),
+    41: IterationVariable(
+        "f_j_cs_start_pulse_end_flat_top", fortran.pfcoil_variables, 0.001, 1.0
+    ),
     42: IterationVariable("dr_cs_tf_gap", fortran.build_variables, 0.001, 10.00),
     44: IterationVariable("fvsbrnni", fortran.physics_variables, 0.001, 1.0),
     45: IterationVariable("fqval", fortran.constraint_variables, 0.001, 1.0),
@@ -151,7 +153,7 @@ ITERATION_VARIABLES = {
     117: IterationVariable("fpsepbqar", fortran.constraint_variables, 0.001, 1.0),
     118: IterationVariable("fpsep", fortran.constraint_variables, 0.001, 1.0),
     119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
-    122: IterationVariable("oh_steel_frac", fortran.pfcoil_variables, 0.001, 0.950),
+    122: IterationVariable("f_a_cs_steel", fortran.pfcoil_variables, 0.001, 0.950),
     123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),
     125: IterationVariable(
         "fimp(03)",
@@ -262,13 +264,15 @@ ITERATION_VARIABLES = {
     145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
     146: IterationVariable("fcpttf", fortran.constraint_variables, 0.001, 1.0),
     147: IterationVariable("freinke", fortran.constraint_variables, 0.001, 1.0),
-    149: IterationVariable("fbmaxcs", fortran.pfcoil_variables, 0.001, 1.0),
+    149: IterationVariable("fb_cs_limit_max", fortran.pfcoil_variables, 0.001, 1.0),
     152: IterationVariable("fgwsep", fortran.physics_variables, 0.001, 0.5),
     153: IterationVariable("fpdivlim", fortran.physics_variables, 0.001, 1.0),
     154: IterationVariable("fne0", fortran.physics_variables, 0.001, 1.0),
     155: IterationVariable("pfusife", fortran.ife_variables, 5.0e2, 3.0e3),
     156: IterationVariable("rrin", fortran.ife_variables, 1.0, 1.0e1),
-    157: IterationVariable("fvssu", fortran.pfcoil_variables, 1.0e-3, 1.0e1),
+    157: IterationVariable(
+        "fvs_cs_pf_total_ramp", fortran.pfcoil_variables, 1.0e-3, 1.0e1
+    ),
     158: IterationVariable("croco_thick", fortran.rebco_variables, 1.0e-3, 1.0e-1),
     159: IterationVariable("ftoroidalgap", fortran.tfcoil_variables, 1.0e-4, 1.0),
     160: IterationVariable("f_avspace", fortran.build_variables, 0.010, 1.0),
@@ -423,3 +427,14 @@ def load_scaled_bounds():
         fortran.numerics.itv_scaled_upper_bounds[i] = (
             fortran.numerics.boundu[variable_index] * fortran.numerics.scale[i]
         )
+
+
+def initialise_iteration_variables():
+    """Initialise the iteration variables (label and default bounds)"""
+    for itv_index, itv in ITERATION_VARIABLES.items():
+        fortran.numerics.lablxc[itv_index - 1] = string_to_f2py_compatible(
+            fortran.numerics.lablxc[itv_index - 1], itv.name
+        )
+
+        fortran.numerics.boundl[itv_index - 1] = itv.lower_bound
+        fortran.numerics.boundu[itv_index - 1] = itv.upper_bound
