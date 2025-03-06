@@ -202,7 +202,7 @@ module numerics
   !!               array defining which iteration variables to activate
   !!               (see lablxc for descriptions)
 
-  character*30, dimension(ipnvars) :: lablxc
+  character*50, dimension(ipnvars) :: lablxc
   !! lablxc(ipnvars) : labels describing iteration variables<UL>
   !!  <LI> ( 1) aspect
   !!  <LI> ( 2) bt
