@@ -378,6 +378,12 @@ Try to keep names to a sensible length while also keeping the name explicit and 
 
 ---------------------
 
+##### Stress
+
+- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
+
+---------------------
+
 ### Physical Type
 
 The physical type of the variable should form the first part of the variable name, e.g. for plasma resistance the variable should be named:
