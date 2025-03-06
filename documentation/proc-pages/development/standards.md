@@ -6,8 +6,6 @@
 
 ##  Line Length
 
-##  Line Length
-
 For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
 
 --------------------
@@ -15,7 +13,6 @@ For optimal readability, a limit of 79 characters for maximum line length has be
 ## Double declarations
 
 PROCESS uses the Fortran 2008+ intrinsic precision module as shown in the example below. The
-use statement will need to be at the module level. See the
 use statement will need to be at the module level. See the
 [fortran wiki](http://fortranwiki.org/fortran/show/Real+precision) for more information.
 
@@ -120,10 +117,6 @@ Below are a few shorthand designations for different systems that should be used
 - Shield: `_shld_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
-  - Electron cyclotron current drive: `_eccd_`
-  - Ion cyclotron current drive: `_iccd_`
-  - Electron Bernstein Wave: `_ebw_`
-  - Neutral Beam: `_nb_`
   - Electron cyclotron current drive: `_eccd_`
   - Ion cyclotron current drive: `_iccd_`
   - Electron Bernstein Wave: `_ebw_`
@@ -379,7 +372,7 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 ---------------------
 
-#### Length
+### Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
@@ -422,7 +415,6 @@ fusion_power_MW = 1000.0d0
 
     With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
 
----------------------
 ---------------------
 
 ### Coordinates and dimensions
@@ -576,12 +568,8 @@ class ExampleClass:
 
 PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
 in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
-PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
-in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
 as picking up "docmarked" comments in the source to create the documentation.
 
-Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
-the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
 the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 by FORD and go into the documentation.
@@ -612,13 +600,7 @@ This documentation will appear in the
 [FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
 left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
 provides variable descriptions in the same manner as the original "vardes" page.
-This documentation will appear in the
-[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
-left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
-provides variable descriptions in the same manner as the original "vardes" page.
 
-To document a statement before it occurs in the source, use "!>". However, it is encouraged to
-use "!!" for consistency. The rationale behind this and further information is included on the
 To document a statement before it occurs in the source, use "!>". However, it is encouraged to
 use "!!" for consistency. The rationale behind this and further information is included on the
 [FORD wiki](https://github.com/Fortran-FOSS-Programmers/ford/wiki/Writing-Documentation).
