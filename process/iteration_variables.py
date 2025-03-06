@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any
 from warnings import warn
@@ -291,6 +292,24 @@ ITERATION_VARIABLES = {
 }
 
 
+def check_iteration_variable(iteration_variable_value, name: str = ""):
+    """Check that the iteration variable value is valid (not a weird number or too small).
+
+    Raises an error upon encountering an invalid value, otherwise does nothing.
+    """
+    if abs(iteration_variable_value) <= 1e-12:
+        error_msg = f"Iteration variable {name} is 0 (or very close)"
+        raise ProcessValueError(
+            error_msg, iteration_variable_value=iteration_variable_value
+        )
+
+    if np.isnan(iteration_variable_value) or np.isinf(iteration_variable_value):
+        error_msg = f"Iteration variable {name} invalid number"
+        raise ProcessValueError(
+            error_msg, iteration_variable_value=iteration_variable_value
+        )
+
+
 def load_iteration_variables():
     """Loads the physics and engineering variables into the optimisation variable array."""
 
@@ -340,23 +359,10 @@ def load_iteration_variables():
 
         # check that the iteration variable is valid (not 0, NaN, inf, or very large)
 
-        if abs(iteration_variable_value) <= 1e-12:
-            error_msg = (
-                f"Iteration variable {variable_index} ({iteration_variable.name}) "
-                "is 0 (or very close)"
-            )
-            raise ProcessValueError(
-                error_msg, iteration_variable_value=iteration_variable_value
-            )
-
-        if np.isnan(iteration_variable_value) or np.isinf(iteration_variable_value):
-            error_msg = (
-                f"Iteration variable {variable_index} ({iteration_variable.name}) is an "
-                "invalid number"
-            )
-            raise ProcessValueError(
-                error_msg, iteration_variable_value=iteration_variable_value
-            )
+        check_iteration_variable(
+            iteration_variable_value,
+            name=f"{variable_index} ({iteration_variable.name})",
+        )
 
         fortran.numerics.scale[i] = 1.0 / iteration_variable_value
         fortran.numerics.scafc[i] = iteration_variable_value
@@ -364,3 +370,43 @@ def load_iteration_variables():
         # xcm = xcm / scale which is equivalent to 1.0
         # because xcm was previously set at x and scale = 1/x
         fortran.numerics.xcm[i] = 1.0
+
+
+def set_scaled_iteration_variable(xc, nn: int):
+    """Converts scaled iteration variables back to their real values and sets them in the code.
+
+    :param xc: scaled iteration variable values
+    :param nn: number of iteration variables
+    """
+
+    for i in range(nn):
+        # there is less error handling here than in load_iteration_variables
+        # because many errors will be caught in load_iteration_variables which is
+        # run first. This verifies the variables exist and the module target is correct.
+        variable_index = fortran.numerics.ixc[i].item()
+        iteration_variable = ITERATION_VARIABLES[variable_index]
+
+        ratio = xc[i] / fortran.numerics.scale[i]
+
+        if iteration_variable.array_index is None:
+            setattr(
+                iteration_variable.module,
+                iteration_variable.target_name or iteration_variable.name,
+                ratio,
+            )
+        else:
+            current_array = getattr(
+                iteration_variable.module,
+                iteration_variable.target_name or iteration_variable.name,
+            )
+            new_array = deepcopy(current_array)
+            new_array[iteration_variable.array_index] = ratio
+            setattr(
+                iteration_variable.module,
+                iteration_variable.target_name or iteration_variable.name,
+                new_array,
+            )
+
+        check_iteration_variable(
+            ratio, name=f"{variable_index} ({iteration_variable.name})"
+        )
