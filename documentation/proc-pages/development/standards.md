@@ -368,6 +368,12 @@ Try to keep names to a sensible length while also keeping the name explicit and 
 
 ---------------------
 
+##### Stress
+
+- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
+
+---------------------
+
 ### Physical Type
 
 The physical type of the variable should form the first part of the variable name, e.g. for plasma resistance the variable should be named:
@@ -468,7 +474,7 @@ ii
 | `a_plasma` | Plasma area | m2 |
 | `rad_div_target` | Divertor target angle | radians |
 | `deg_div_target` | Divertor target angle | deg |
-| `sig_tf_r` | TF radial stress  | Pa |
+| `s_shear_tf` | TF shear stress  | Pa |
 | `` |  |  |
 
 Please see issue [#940](https://github.com/ukaea/PROCESS/issues/940) to discuss new conventions.
