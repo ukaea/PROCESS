@@ -98,7 +98,7 @@ def write(models, _outfile):
         models.ccfe_hcpb.run(output=True)
         ft.fwbs_variables.tbr = models.ccfe_hcpb.tbr_shimwell(
             ft.fwbs_variables.breeder_f,
-            ft.fwbs_variables.li6enrich,
+            ft.fwbs_variables.f_blkt_li6_enrichment,
             ft.fwbs_variables.iblanket_thickness,
             output=True,
         )

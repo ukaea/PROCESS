@@ -2232,20 +2232,20 @@ i_r_cp_top = 2
 *--------------------First wall, blanket, shield settings-------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-fwbsshape = 1
+i_fw_blkt_vv_shape = 1
 * DESCRIPTION:   FW, Blanket, Shield & VV Shape (1: D-shaped (Cylinder Inboard & Ellipse Outboard))
 * JUSTIFICATION: Unknown, tapered centrepost may justify ellises (option 2)
 
-primary_pumping = 3
+i_coolant_pumping = 3
 * DESCRIPTION:   Switch for Pumping Power for Primary Coolant (mechanical power only and peak first wall
-*   temperature is only calculated if primary_pumping=2):
+*   temperature is only calculated if i_coolant_pumping=2):
 *    =0 User sets pump power directly (htpmw_blkt, htpmw_fw, htpmw_div, htpmw_shld)
 *    =1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)
 *    =2 Mechanical pumping power is calculated
 *    =3 Mechanical pumping power is calculated using specified pressure drop
 * JUSTIFICATION: Used for He cooling.  Pressure drop is default value and may be wrong
 
-ipump = 0
+i_fw_blkt_shared_coolant = 0
 * DESCRIPTION:   Switch for whether the FW and BB are on the same pump system
 * i.e. do they have the same primary coolant or not
 * =0    FW and BB have the same primary coolant, flow = FWin->FWout->BBin->BBout
@@ -2256,37 +2256,37 @@ ipump = 0
 
 *htpmw_blkt =  
 * DESCRIPTION:   Blanket coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, primary_pumping is not = 0
+* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
 
 *htpmw_div = 
 * DESCRIPTION:   Divertor coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, primary_pumping is not = 0
+* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
 
 *htpmw_fw = 
 * DESCRIPTION:   First wall coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, primary_pumping is not = 0
+* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
 
 *htpmw_shld = 
 * DESCRIPTION:   Shield and vacuum vessel coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, primary_pumping is not = 0
+* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *fpumpfw = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total first wall thermal power required to drive the FW coolant
-* JUSTIFICATION: Liquid metal pumping power (if primary_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
 
 *fpumpshld = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total shield thermal power required to drive the shield coolant
-* JUSTIFICATION: Liquid metal pumping power (if primary_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
 
 *fpumpblkt = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total blanket thermal power required to drive the blanket
-* JUSTIFICATION: Liquid metal pumping power (if primary_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
 
 *fpumpdiv = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total divertor thermal power required to drive the divertor
-* JUSTIFICATION: Liquid metal pumping power (if primary_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2306,7 +2306,7 @@ etaiso = 0.9
 * DESCRIPTION:   Isentropic efficiency of FW and blanket coolant pumps (default = 0.85)
 * JUSTIFICATION: Not set as not used
 
-*fdiv = 
+*f_ster_div_single = 
 * DESCRIPTION:   Solid angle fraction taken by one divertor
 * JUSTIFICATION: Not yet set
 
@@ -2334,7 +2334,7 @@ etaiso = 0.9
 * JUSTIFICATION: Not yet set.
 
 *pres_fw_coolant = 
-* DESCRIPTION:   First wall coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
+* DESCRIPTION:   First wall coolant pressure [Pa] (`i_thermal_electric_conversion>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set.
 
 i_fw_coolant_type = helium 
@@ -2359,7 +2359,7 @@ i_fw_coolant_type = helium
 * DESCRIPTION:   First wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)
 * JUSTIFICATION: Not using ipowerflow = 1
 
-*fhcd = 
+*f_a_fw_hcd = 
 * DESCRIPTION:   Area fraction covered by heating/current drive apparatus plus diagnostics
 * JUSTIFICATION: Not yet set
 
@@ -2374,7 +2374,7 @@ i_blanket_type = 1
 * =4 KIT HCLL model
 * =5 DCLL model -  no nutronics model included (in development) please check/choose values for
 *                  'dual-coolant blanket' fractions (provided in this file).
-*                  please use primary_pumping = 0 or 1.
+*                  please use i_coolant_pumping = 0 or 1.
 * JUSTIFICATION: Assuming DCLL blanket
 
 *iblanket_thickness = 
@@ -2397,34 +2397,34 @@ i_blkt_inboard = 0
 * =1    SMS
 * JUSTIFICATION: Not yet set.
 
-*nblktmodpo = 
-* DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 8)
+*n_blkt_outboard_modules_poloidal = 
+* DESCRIPTION:   Number of outboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)(default = 8)
 * JUSTIFICATION: Not set as not used
 
-*nblktmodto = 
-* DESCRIPTION:   Number of outboard blanket modules in toroidal direction (`secondary_cycle>1`)(default =48)
+*n_blkt_outboard_modules_toroidal = 
+* DESCRIPTION:   Number of outboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)(default =48)
 * JUSTIFICATION: Not set as not used
 
-*nblktmodpi = 
-* DESCRIPTION:   Number of inboard blanket modules in poloidal direction (`secondary_cycle>1`)(default = 7)
+*n_blkt_inboard_modules_poloidal = 
+* DESCRIPTION:   Number of inboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)(default = 7)
 * JUSTIFICATION: Not set as not used
 
-*nblktmodti = 
-* DESCRIPTION:   Number of inboard blanket modules in toroidal direction (`secondary_cycle>1`)(default = 32)
+*n_blkt_inboard_modules_toroidal = 
+* DESCRIPTION:   Number of inboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)(default = 32)
 * JUSTIFICATION: Not set as not used
 
-*inlet_temp = 
-* DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`secondary_cycle>1`)
+*temp_blkt_coolant_in = 
+* DESCRIPTION:   Inlet temperature of blanket coolant  [K] (`i_thermal_electric_conversion>1`)
 * JUSTIFICATION: Not set as not used
 
-*outlet_temp = 
-* DESCRIPTION:   Outlet temperature of blanket coolant [K] (`secondary_cycle>1`)
-* input if `coolwh=1` (helium)
-* calculated if `coolwh=2` (water)
+*temp_blkt_coolant_out = 
+* DESCRIPTION:   Outlet temperature of blanket coolant [K] (`i_thermal_electric_conversion>1`)
+* input if `i_blkt_coolant_type=1` (helium)
+* calculated if `i_blkt_coolant_type=2` (water)
 * JUSTIFICATION: Not set as not used
 
-*blpressure = 
-* DESCRIPTION:   Blanket coolant pressure [Pa] (`secondary_cycle>1`) (default = 15.5D6)
+*pres_blkt_coolant = 
+* DESCRIPTION:   Blanket coolant pressure [Pa] (`i_thermal_electric_conversion>1`) (default = 15.5D6)
 * JUSTIFICATION: Not yet set
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2475,7 +2475,7 @@ inuclear = 0
 * DESCRIPTION: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
 * JUSTIFICATION: 
 
-*li6enrich = 
+*f_blkt_li6_enrichment = 
 * DESCRIPTION:   Lithium-6 enrichment of breeding material (%) (HCPB)
 * JUSTIFICATION: Not using HCPB model 
 
@@ -2496,15 +2496,15 @@ inuclear = 0
 * JUSTIFICATION: Not yet set
 
 *t_in_bb = 
-* DESCRIPTION:   Temperature in FW and blanket coolant at blanket entrance (`primary_pumping=3`) [K] (Default value in code 573.13D0)
+* DESCRIPTION:   Temperature in FW and blanket coolant at blanket entrance (`i_coolant_pumping=3`) [K] (Default value in code 573.13D0)
 * JUSTIFICATION: Design Spec
 
 *t_out_bb = 
-* DESCRIPTION:   Temperature in FW and blanket coolant at blanket exit (`primary_pumping=3`) [K] (Default value in code 773.13D0)
+* DESCRIPTION:   Temperature in FW and blanket coolant at blanket exit (`i_coolant_pumping=3`) [K] (Default value in code 773.13D0)
 * JUSTIFICATION: Design Spec
 
 *dp_he = 
-* DESCRIPTION:   Pressure drop in FW and blanket coolant including heat exchanger and pipes (`primary_pumping=3`) [Pa] (Default value in code 5.5D5)
+* DESCRIPTION:   Pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa] (Default value in code 5.5D5)
 * JUSTIFICATION: Design Spec
 
 *p_he = 
@@ -2557,13 +2557,13 @@ inuclear = 0
 * DCLL *   * Set i_blanket_type = 5 *
 *------*
 
-*i_bb_liq = 
+*i_blkt_liquid_breeder_type = 
 * DESCRIPTION: Switch for Liquid Metal Breeder Material
 *  =0   PbLi
 *  =1   Li 
 * JUSTIFICATION: Not yet set assuming default = 0
 
-*icooldual = 
+*i_blkt_dual_coolant = 
 * DESCRIPTION: Switch to specify whether breeding blanket is single-cooled or dual-coolant.
 * =0    Single coolant used for FW and Blanket (H2O or He). Solid Breeder.
 * =1    Single coolant used for FW and Blanket (H2O or He). Liquid metal breeder
@@ -2572,7 +2572,7 @@ inuclear = 0
 *       secondary coolant is self-cooled liquid metal breeder. 
 * JUSTIFICATION: Not yet set assuming default = 0
 
-*ifci = 
+*i_blkt_liquid_breeder_channel_type = 
 * DESCRIPTION:Switch for Flow Channel Insert (FCI) type if liquid metal breeder blanket.
 * =0    Thin conducting walls, default electrical conductivity (bz_channel_conduct_liq) is Eurofer
 * =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
@@ -2603,7 +2603,7 @@ outlet_temp_liq = 873.0
 * JUSTIFICATION: Not yet set
 
 *n_liq_recirc = 
-* DESCRIPTION:   Number of liquid metal breeder recirculations per day, for use with icooldual=1 (default = 10)
+* DESCRIPTION:   Number of liquid metal breeder recirculations per day, for use with i_blkt_dual_coolant=1 (default = 10)
 * JUSTIFICATION: Not yet set
 
 *pnuc_fw_ratio_dcll = 
@@ -2688,7 +2688,7 @@ boundu(116) = 1.0
 * VARIABLES:     temp_fw_peak (K) calculated in-situ
 
 *temp_fw_max = 
-* DESCRIPTION:   Maximum temperature of first wall material [K] (`secondary_cycle>1`)(default = 823)
+* DESCRIPTION:   Maximum temperature of first wall material [K] (`i_thermal_electric_conversion>1`)(default = 823)
 * JUSTIFICATION: Not set as not used
 
 *________________________________________________________________________________________________________________________________________________________________________________________________________________*
@@ -3004,7 +3004,7 @@ fipir = 0.58
 *----------------------Heat transport / Power settings-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-secondary_cycle = 2 
+i_thermal_electric_conversion = 2 
 * DESCRIPTION:   Switch for power conversion cycle (2: User Input Thermal-Electric Efficiency) 
 *  =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
 *  =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)
@@ -3097,7 +3097,7 @@ cost_model = 0
 
 *abktflnc = 
 * DESCRIPTION:   Allowable FW/Blanket Neutron Fluence (MW-yr/m2)
-* JUSTIFICATION: Set to enforce a blanket lifetime (`bktlife`) of 5 years
+* JUSTIFICATION: Set to enforce a blanket lifetime (`life_blkt_fpy`) of 5 years
 
 *adivflnc = 
 * DESCRIPTION:   Allowable Divertor Heat Fluence (MW-yr/m2)
