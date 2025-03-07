@@ -13,7 +13,7 @@ module pfcoil_module
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
    use resistive_materials, only: volume_fractions, supercon_strand
-   use pfcoil_variables, only: nfixmx, ngrpmx, nclsmx, ngc2
+   use pfcoil_variables, only: nfixmx, n_pf_groups_max, n_pf_coils_in_group_max, ngc2
    implicit none
 
    public
@@ -27,8 +27,8 @@ module pfcoil_module
    ! with f2py if made public
    ! #TODO Temporarily hardcode dimensions in order to make public and wrap
    ! real(dp), dimension(nfixmx), private :: rfxf,zfxf,cfxf,xind
-   ! real(dp), dimension(ngrpmx,nclsmx), private :: rcls,zcls
-   ! real(dp), dimension(ngrpmx), private :: ccls,ccl0
+   ! real(dp), dimension(n_pf_groups_max,n_pf_coils_in_group_max), private :: rcls,zcls
+   ! real(dp), dimension(n_pf_groups_max), private :: ccls,ccl0
    ! real(dp), dimension(ngc2), private :: bpf2
    ! real(dp), dimension(ngc2,3), private :: vsdum
    real(dp), dimension(64) :: rfxf,zfxf,cfxf,xind

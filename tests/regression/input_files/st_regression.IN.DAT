@@ -950,7 +950,7 @@ i_tf_sc_mat = 9
 * JUSTIFICATION: Not used as not i_tf_sc_mat=4
 
 *dcond = 
-* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/isumatoh/isumatpf (kg/m3)
+* DESCRIPTION: Density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 
 *quench_model =  
@@ -1627,7 +1627,7 @@ itartpf  = 1
 * DESCRIPTION:   Switch for Spherical Tokamak PF models (1: Use regular model)
 * JUSTIFICATION: Use the regular model instead rather than Peng & Strickler (1986)
 
-ipfres = 0 
+i_pf_conductor = 0 
 * DESCRIPTION:   Switch for PF coil type  (default = 0)
 * =0 superconducting PF coils                              DOES THIS SET THE PF AND CS?
 * =1 resistive PF coils
@@ -1641,7 +1641,7 @@ ipfres = 0
 * Conductor Type *
 *----------------*
 
-*isumatoh =  
+*i_cs_superconductor =  
 * DESCRIPTION:   Central Solenoid superconductor material
 * JUSTIFICATION: Not set, resistive CS
 
@@ -1649,11 +1649,11 @@ ipfres = 0
 * DESCRIPTION:   Copper fraction of strand in central solenoid
 * JUSTIFICATION: Not yet set.
 
-*oh_steel_frac =  
+*f_a_cs_steel =  
 * DESCRIPTION:   Central solenoid steel fraction
 * JUSTIFICATION: Not used. Using default
 
-*vfohc =  
+*f_a_cs_void =  
 * DESCRIPTION:   Void fraction of central solenoid conductor for coolant
 * JUSTIFICATION: Not yet set.
 
@@ -1661,7 +1661,7 @@ ipfres = 0
 * Geometry *
 *----------*
 
-*ohhghf =  
+*f_z_cs_tf_internal =  
 * DESCRIPTION:   Central solenoid height / TF coil internal height (default = 0.71)
 * JUSTIFICATION: Not yet set.
 
@@ -1719,7 +1719,7 @@ ipfres = 0
 *icc = 51
 * DESCRIPTION:   Constraint equation to enforce startup flux = able startup flux
 * JUSTIFICATION: Turned off, do not care about startup flux.
-* VARIABLES:     vssu,vs_plasma_ind_ramp,vs_plasma_res_ramp calculated in situ
+* VARIABLES:     vs_cs_pf_total_ramp,vs_plasma_ind_ramp,vs_plasma_res_ramp calculated in situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1733,14 +1733,14 @@ ipfres = 0
 *icc = 79
 * DESCRIPTION:   Constraint equation for maximum CS field
 * JUSTIFICATION: Turned off, dont care about maximum CS field
-* VARIABLES:     bmaxcs_lim (Central solenoid max field limit [T]). bmaxoh0,bmaxoh calculated in-situ
+* VARIABLES:     b_cs_limit_max (Central solenoid max field limit [T]). b_cs_peak_pulse_start,b_cs_peak_flat_top_end calculated in-situ
 
-*bmaxcs_lim = 
+*b_cs_limit_max = 
 * DESCRIPTION:   Maximum allowed peak field on central solenoid (icc = 79)
 * JUSTIFICATION: Not using icc=79
 
 *ixc = 149
-*fbmaxcs = 
+*fb_cs_limit_max = 
 *boundl(149)
 *boundu(149)
 * DESCRIPTION:   F-value for max peak CS field (icc = 79)
@@ -1751,10 +1751,10 @@ ipfres = 0
 *icc = 26
 * DESCRIPTION:   Constraint equation for CS current density upper limit at EOF 
 * JUSTIFICATION: Turned off, dont care about CS current density limit 
-* VARIABLES:     coheof calculated in-situ
+* VARIABLES:     j_cs_flat_top_end calculated in-situ
 
 *ixc = 37
-*coheof = 
+*j_cs_flat_top_end = 
 *boundl(37) = 
 *boundu(37) = 
 * DESCRIPTION:   Central solenoid overall current density at end of flat-top (A/m2) (icc = 26)
@@ -1765,7 +1765,7 @@ ipfres = 0
 *icc = 27
 * DESCRIPTION:   Constraint equation for CS current density upper limit at BOP 
 * JUSTIFICATION: Turned off, dont care about CS current density limit 
-* VARIABLES:     cohbop calculated in-situ
+* VARIABLES:     j_cs_pulse_start calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1793,7 +1793,7 @@ ipfres = 0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *ixc = 41
-*fcohbop = 
+*f_j_cs_start_pulse_end_flat_top = 
 *boundl(41) = 
 *boundu(41) = 
 * DESCRIPTION:   Ratio of central solenoid overall current density at beginning of pulse / end of flat-top
@@ -1824,7 +1824,7 @@ ipfres = 0
 * Conductor Type *
 *----------------*
 
-isumatpf = 9 
+i_pf_superconductor = 9 
 * DESCRIPTION:   Switch for Superconductor Material in PF Coils (9: REBCO)
 *  =1 ITER Nb3Sn critical surface model with standard
 *     ITER parameters
@@ -1839,11 +1839,11 @@ isumatpf = 9
 *  =9 Hazelton experimental data + Zhai conceptual model for REBCO
 * JUSTIFICATION: Design choice, superconducting PF coils
 
-*pfclres =  
-* DESCRIPTION:  PF coil resistivity (if ipfres=1) (Ohm-m) 
+*rho_pf_coil =  
+* DESCRIPTION:  PF coil resistivity (if i_pf_conductor=1) (Ohm-m) 
 * JUSTIFICATION: Not used, superconducting PF coil
 
-*vf =  
+*f_a_pf_coil_void =  
 * DESCRIPTION:   Winding pack void fraction of PF coil i for coolant (default = 0.3)
 * JUSTIFICATION: Not yet set
 
@@ -1862,12 +1862,12 @@ isumatpf = 9
 
 *sigpfcalw =  
 * DESCRIPTION: maximum permissible tensile stress (MPa) in steel coil cases for superconducting
-* PF coils (ipfres=0) (default = 500)
+* PF coils (i_pf_conductor=0) (default = 500)
 * JUSTIFICATION: Not yet set
 
 *sigpfcf =  
 * DESCRIPTION: fraction of JxB hoop force supported by steel case for superconducting PF 
-*coils (`ipfres=0`) (default = 0.66)
+*coils (`i_pf_conductor=0`) (default = 0.66)
 * JUSTIFICATION: Not yet set
 
 
@@ -1887,7 +1887,7 @@ isumatpf = 9
 
 *i_pf_current = 
 * DESCRIPTION:   Switch for controlling the current of the PF coils:  (default = 1)
-*  =0 Input via the variables curpfb, curpff, curpfs
+*  =0 Input via the variables c_pf_cs_coil_pulse_start_ma, c_pf_cs_coil_flat_top_ma, c_pf_cs_coil_pulse_end_ma
 *  =1 SVD targets zero field across midplane (flux swing
 *  coils) and the correct vertical field at the plasma
 *  center (equilibrium coils)
@@ -1909,7 +1909,7 @@ isumatpf = 9
 * Positioning *
 *-------------*
 
-ipfloc = 2,3,3,4
+i_pf_location = 2,3,3,4
 * DESCRIPTION:   Switch for Locating Scheme of PF Coil Group i
 * =1 PF coil on top of central solenoid (flux ramp only)
 * =2 PF coil on top of TF coil (flux ramp only)
@@ -1919,46 +1919,46 @@ ipfloc = 2,3,3,4
 
 
 i_sup_pf_shape = 1
-* DESCRIPTION:   Switch for the placement of ipfloc = 3 (outboard) PF coils
+* DESCRIPTION:   Switch for the placement of i_pf_location = 3 (outboard) PF coils
 *  when the TF coils are superconducting (i_tf_sup = 1)
 *  =0 (Default) Outboard PF coils follow TF shape
 *  in an ellipsoidal winding surface
 *  =1 Outboard PF coils all have same radius, cylindrical
 *  winding surface
-* JUSTIFICATION: Not used, no ipfloc = 3 coils
+* JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
 *routr =  
-* DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of ipfloc=3 PF coils
+* DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of i_pf_location=3 PF coils
 * (default = 1.5) 
-* JUSTIFICATION: Not used, no ipfloc = 3 coils
+* JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
 *rpf1 =  
-* DESCRIPTION:  offset (m) of radial position of ipfloc=1 PF coils from being directly above
+* DESCRIPTION:  offset (m) of radial position of i_pf_location=1 PF coils from being directly above
 * the central solenoid
-* JUSTIFICATION: Not used, no ipfloc = 1 coils
+* JUSTIFICATION: Not used, no i_pf_location = 1 coils
 
 *rpf2 =  
-* DESCRIPTION:  offset (m) of radial position of ipfloc=2 PF coils from being at
+* DESCRIPTION:  offset (m) of radial position of i_pf_location=2 PF coils from being at
 *rmajor (offset = rpf2*triang*rminor)
-* JUSTIFICATION: Not used, no ipfloc = 2 coils
+* JUSTIFICATION: Not used, no i_pf_location = 2 coils
 
-ncls = 2,2,2,2
+n_pf_coils_in_group = 2,2,2,2
 * DESCRIPTION:   Number of PF Coils in Group j
 * JUSTIFICATION: Design choice, symmetric top and bottom
 
-ngrp = 4
+n_pf_coil_groups = 4
 * DESCRIPTION:   Number of Groups of PF Coils
 * JUSTIFICATION: Design choice, symmetric top and bottom
 
 rref(4) = 2.0
 zref(4) = 5.2
-* DESCRIPTION:   Offset (rminor's) of Radial Position of ipfloc=4 PF coils From Being at Rmajor
+* DESCRIPTION:   Offset (rminor's) of Radial Position of i_pf_location=4 PF coils From Being at Rmajor
 * JUSTIFICATION: Position coils inside and in the middle of TF coil
 
-*cptdin: Current per turn for PF coil
-*rjconpf: Current per turn for PF coil resistivity (ohm-m)
-*rref: Radius of ipfloc = 4 coil groups. Number of minor radii from major radius
-*zref: Height of ipfloc 3/4 coil groups. Units of minor radius
+*c_pf_coil_turn_peak_input: Current per turn for PF coil
+*j_pf_coil_wp_peak: Current per turn for PF coil resistivity (ohm-m)
+*rref: Radius of i_pf_location = 4 coil groups. Number of minor radii from major radius
+*zref: Height of i_pf_location 3/4 coil groups. Units of minor radius
 
 
 *______________________________________________________________________________________________________________________________________________________________________________________________________________________*
@@ -2224,7 +2224,7 @@ i_r_cp_top = 2
 * JUSTIFICATION: Not scaling cryostat height.
 
 *dr_pf_cryostat = 
-* DESCRIPTION:   radial distance between outer edge of largest (`ipfloc=3`) PF coil (or stellarator
+* DESCRIPTION:   radial distance between outer edge of largest (`i_pf_location=3`) PF coil (or stellarator
 * modular coil) and cryostat [m])
 * JUSTIFICATION: Not scaling cryostat distance.
 
@@ -3412,7 +3412,7 @@ iavail = 0
 *icc = 61
 * DESCRIPTION:   Constraint equation for availability limit
 * JUSTIFICATION: Turned off, do not care about availability limit 
-* VARIABLES:     tmargmin_cs (Minimum allowable temperature margin in CS (K)), tmargoh calculated in-situ
+* VARIABLES:     tmargmin_cs (Minimum allowable temperature margin in CS (K)), temp_cs_margin calculated in-situ
 
 *avail_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)

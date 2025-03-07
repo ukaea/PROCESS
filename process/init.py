@@ -689,9 +689,9 @@ def check_process():
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if fortran.physics_variables.itartpf == 0:
-            fortran.pfcoil_variables.ipfloc[0] = 2
-            fortran.pfcoil_variables.ipfloc[1] = 3
-            fortran.pfcoil_variables.ipfloc[2] = 3
+            fortran.pfcoil_variables.i_pf_location[0] = 2
+            fortran.pfcoil_variables.i_pf_location[1] = 3
+            fortran.pfcoil_variables.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
         if fortran.tfcoil_variables.i_tf_sup == 0:
@@ -821,30 +821,30 @@ def check_process():
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(fortran.pfcoil_variables.ngrp):
+        for i in range(fortran.pfcoil_variables.n_pf_coil_groups):
             if (
-                fortran.pfcoil_variables.ipfloc[i] != 2
-                and fortran.pfcoil_variables.ncls[i] != 2
+                fortran.pfcoil_variables.i_pf_location[i] != 2
+                and fortran.pfcoil_variables.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
-                    "ncls(i) .ne. 2 is not a valid option except for (ipfloc = 2)"
+                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if fortran.pfcoil_variables.ipfloc[i] == 2:
+            if fortran.pfcoil_variables.i_pf_location[i] == 2:
                 j = j + 1
-                k = k + fortran.pfcoil_variables.ncls[i]
+                k = k + fortran.pfcoil_variables.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
-                "Only 1 divertor coil (ipfloc = 2) is not a valid configuration"
+                "Only 1 divertor coil (i_pf_location = 2) is not a valid configuration"
             )
         if k > 2:
             raise ProcessValidationError(
-                "More than 2 divertor coils (ipfloc = 2) is not a valid configuration"
+                "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
             )
         if fortran.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
-                "If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints
@@ -1143,8 +1143,8 @@ def check_process():
         )
 
     # PF coil resistivity is zero if superconducting
-    if fortran.pfcoil_variables.ipfres == 0:
-        fortran.pfcoil_variables.pfclres = 0.0
+    if fortran.pfcoil_variables.i_pf_conductor == 0:
+        fortran.pfcoil_variables.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
     if fortran.current_drive_variables.irfcd == 1:
@@ -1243,7 +1243,7 @@ def check_process():
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 60
-    ).any() and fortran.pfcoil_variables.isumatoh == 8:
+    ).any() and fortran.pfcoil_variables.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )

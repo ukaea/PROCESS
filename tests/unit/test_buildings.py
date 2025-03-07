@@ -133,7 +133,7 @@ class BldgsSizesParam(NamedTuple):
     iefrf: Any
     n_tf_coils: Any
     i_tf_sup: Any
-    pfrmax: Any
+    r_pf_coil_outer_max: Any
     tlife: Any
     cplife: Any
     divlife: Any
@@ -276,7 +276,7 @@ class BldgsSizesParam(NamedTuple):
             iefrf=10,
             n_tf_coils=16,
             i_tf_sup=1,
-            pfrmax=18.98258241468535,
+            r_pf_coil_outer_max=18.98258241468535,
             tlife=40,
             cplife=0,
             divlife=0,
@@ -415,7 +415,7 @@ class BldgsSizesParam(NamedTuple):
             iefrf=10,
             n_tf_coils=16,
             i_tf_sup=1,
-            pfrmax=18.982980877139834,
+            r_pf_coil_outer_max=18.982980877139834,
             tlife=40,
             cplife=0,
             divlife=6.1337250397740126,
@@ -674,7 +674,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(current_drive_variables, "iefrf", bldgssizesparam.iefrf)
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
-    monkeypatch.setattr(pfcoil_variables, "pfrmax", bldgssizesparam.pfrmax)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_outer_max", bldgssizesparam.r_pf_coil_outer_max
+    )
     monkeypatch.setattr(cost_variables, "tlife", bldgssizesparam.tlife)
     monkeypatch.setattr(cost_variables, "cplife", bldgssizesparam.cplife)
     monkeypatch.setattr(cost_variables, "divlife", bldgssizesparam.divlife)

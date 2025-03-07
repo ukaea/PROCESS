@@ -578,7 +578,7 @@ class Costs2015:
         self.s_label[4] = "PF Coil winding building"
         self.s_cref[4] = 190000.0e0 * cost_variables.light_build_cost_per_vol
         # Scale with the radius of the largest PF coil squared (m^2)
-        self.s_k[4] = pfcoil_variables.pfrmax**2
+        self.s_k[4] = pfcoil_variables.r_pf_coil_outer_max**2
         self.s_kref[4] = 12.4e0**2
         self.s_cost[4] = (
             self.s_cost_factor[4] * self.s_cref[4] * (self.s_k[4] / self.s_kref[4])

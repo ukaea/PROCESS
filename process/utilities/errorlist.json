@@ -213,22 +213,22 @@
     {
       "no": 41,
       "level": 3,
-      "message": "CHECK: ncls(i) .ne. 2 is not a valid option except for (ipfloc = 2)"
+      "message": "CHECK: n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
     },
     {
       "no": 42,
       "level": 3,
-      "message": "CHECK: Only 1 divertor coil (ipfloc = 2) is not a valid configuration"
+      "message": "CHECK: Only 1 divertor coil (i_pf_location = 2) is not a valid configuration"
     },
     {
       "no": 43,
       "level": 3,
-      "message": "CHECK: More than 2 divertor coils (ipfloc = 2) is not a valid configuration"
+      "message": "CHECK: More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
     },
     {
       "no": 44,
       "level": 3,
-      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
     },
     {
       "no": 45,
@@ -328,7 +328,7 @@
     {
       "no": 64,
       "level": 3,
-      "message": "PFCOIL: ngrp is larger than ngrpmx"
+      "message": "PFCOIL: n_pf_coil_groups is larger than n_pf_groups_max"
     },
     {
       "no": 65,
@@ -343,7 +343,7 @@
     {
       "no": 67,
       "level": 3,
-      "message": "PFCOIL: Illegal ipfloc value"
+      "message": "PFCOIL: Illegal i_pf_location value"
     },
     {
       "no": 68,
@@ -353,12 +353,12 @@
     {
       "no": 69,
       "level": 3,
-      "message": "PFCOIL: ipfloc(i) should not be 1 if itart=1"
+      "message": "PFCOIL: i_pf_location(i) should not be 1 if itart=1"
     },
     {
       "no": 70,
       "level": 3,
-      "message": "PFCOIL: Illegal value of ipfloc(i)"
+      "message": "PFCOIL: Illegal value of i_pf_location(i)"
     },
     {
       "no": 71,
@@ -788,7 +788,7 @@
     {
       "no": 156,
       "level": 3,
-      "message": "SUPERCONPF: Illegal value for isumatpf"
+      "message": "SUPERCONPF: Illegal value for i_pf_superconductor"
     },
     {
       "no": 157,
@@ -1448,7 +1448,7 @@
     {
       "no": 288,
       "level": 3,
-      "message": "PFCOIL: ipfloc(i) should not be 1 if iohcl=0"
+      "message": "PFCOIL: i_pf_location(i) should not be 1 if iohcl=0"
     }
   ]
 }

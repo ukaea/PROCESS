@@ -92,7 +92,7 @@ class Power:
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
-        ngrpt = pfcoil_variables.ngrp
+        ngrpt = pfcoil_variables.n_pf_coil_groups
         if build_variables.iohcl != 0:
             ngrpt = ngrpt + 1
 
@@ -100,11 +100,11 @@ class Power:
         pfbuspwr = 0.0e0
 
         for ig in range(ngrpt):
-            ic = ic + pfcoil_variables.ncls[ig]
+            ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
 
             #  Section area of aluminium bussing for circuit (cm**2)
-            #  pfcoil_variables.cptdin : max current per turn of coil (A)
-            albusa[ig] = abs(pfcoil_variables.cptdin[ic]) / 100.0e0
+            #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of coil (A)
+            albusa[ig] = abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
 
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
@@ -113,29 +113,29 @@ class Power:
             pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
 
             #  Total PF coil resistance (during burn)
-            #  pfcoil_variables.ric : maximum current in coil (A)
+            #  pfcoil_variables.c_pf_cs_coils_peak_ma : maximum current in coil (A)
             pfcr[ig] = (
-                pfcoil_variables.pfclres
+                pfcoil_variables.rho_pf_coil
                 * 2.0e0
                 * np.pi
-                * pfcoil_variables.rpf[ic]
+                * pfcoil_variables.r_pf_coil_middle[ic]
                 * abs(
-                    pfcoil_variables.rjconpf[ic]
+                    pfcoil_variables.j_pf_coil_wp_peak[ic]
                     / (
-                        (1.0e0 - pfcoil_variables.vf[ic])
+                        (1.0e0 - pfcoil_variables.f_a_pf_coil_void[ic])
                         * 1.0e6
-                        * pfcoil_variables.ric[ic]
+                        * pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
                     )
                 )
-                * pfcoil_variables.turns[ic] ** 2
-                * pfcoil_variables.ncls[ig]
+                * pfcoil_variables.n_pf_coil_turns[ic] ** 2
+                * pfcoil_variables.n_pf_coils_in_group[ig]
             )
 
             cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
             cptburn = (
-                pfcoil_variables.cptdin[ic]
-                * pfcoil_variables.curpfs[ic]
-                / pfcoil_variables.ric[ic]
+                pfcoil_variables.c_pf_coil_turn_peak_input[ic]
+                * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
+                / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
             rcktvm[ig] = abs(cptburn) * cktr[ig]  # peak resistive voltage (V)
             rcktpm[ig] = 1.0e-6 * rcktvm[ig] * abs(cptburn)  # peak resistive power (MW)
@@ -148,15 +148,15 @@ class Power:
         delktim = times_variables.t_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
-        #  pfcoil_variables.cpt(i,j) : current per turn of coil i at (end) time period j (A)
+        #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end) time period j (A)
         powpfi = 0.0e0
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
-        #  pfcoil_variables.ncirt : total number of PF coils (including Central Solenoid and plasma)
-        #          plasma is #ncirt, and Central Solenoid is #(pfcoil_variables.ncirt-1)
-        #  pfcoil_variables.sxlg(i,j) : mutual inductance between coil i and j
-        for i in range(pfcoil_variables.ncirt):
+        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
+        #          plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
+        #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
+        for i in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[i] = 0.0e0
             vpfi[i] = 0.0e0
 
@@ -164,15 +164,18 @@ class Power:
         poloidalenergy[:] = 0.0e0
         for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
             for _jjpf2 in range(
-                pfcoil_variables.ncls[jjpf]
+                pfcoil_variables.n_pf_coils_in_group[jjpf]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
-                for ipf in range(pfcoil_variables.ncirt):
+                for ipf in range(pfcoil_variables.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
-                        pfcoil_variables.sxlg[jpf, ipf]
-                        * (pfcoil_variables.cpt[ipf, 2] - pfcoil_variables.cpt[ipf, 1])
+                        pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
+                        * (
+                            pfcoil_variables.c_pf_coil_turn[ipf, 2]
+                            - pfcoil_variables.c_pf_coil_turn[ipf, 1]
+                        )
                         / delktim
                     )
 
@@ -181,25 +184,28 @@ class Power:
 
                     #  MVA in circuit jpf at time, times_variables.tim(3) due to changes in current
                     powpfii[jpf] = (
-                        powpfii[jpf] + vpfij * pfcoil_variables.cpt[jpf, 2] / 1.0e6
+                        powpfii[jpf]
+                        + vpfij * pfcoil_variables.c_pf_coil_turn[jpf, 2] / 1.0e6
                     )
 
                     # Term used for calculating stored energy at each time
                     for time in range(6):
                         inductxcurrent[time] = (
                             inductxcurrent[time]
-                            + pfcoil_variables.sxlg[jpf, ipf]
-                            * pfcoil_variables.cpt[ipf, time]
+                            + pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
+                            * pfcoil_variables.c_pf_coil_turn[ipf, time]
                         )
 
-                    # engx = engx + pfcoil_variables.sxlg(jpf,ipf)*pfcoil_variables.cpt(ipf,5)
+                    # engx = engx + pfcoil_variables.ind_pf_cs_plasma_mutual(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # 'time' is the time INDEX.  'tim' is the time.
                 for time in range(6):
                     poloidalenergy[time] = (
                         poloidalenergy[time]
-                        + 0.5e0 * inductxcurrent[time] * pfcoil_variables.cpt[jpf, time]
+                        + 0.5e0
+                        * inductxcurrent[time]
+                        * pfcoil_variables.c_pf_coil_turn[jpf, time]
                     )
 
                 #   do time = 1,5
@@ -212,21 +218,21 @@ class Power:
                 #
 
                 #   end do
-                #   #engxpc = 0.5e0 * engx * pfcoil_variables.cpt(jpf,5)
+                #   #engxpc = 0.5e0 * engx * pfcoil_variables.c_pf_coil_turn(jpf,5)
                 #   #ensxpf = ensxpf + engxpc
 
                 #  Resistive power in circuits at times times_variables.tim(3) and times_variables.tim(5) respectively (MW)
                 powpfr = (
                     powpfr
-                    + pfcoil_variables.turns[jpf]
-                    * pfcoil_variables.cpt[jpf, 2]
+                    + pfcoil_variables.n_pf_coil_turns[jpf]
+                    * pfcoil_variables.c_pf_coil_turn[jpf, 2]
                     * cktr[jjpf]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
-                    + pfcoil_variables.turns[jpf]
-                    * pfcoil_variables.cpt[jpf, 4]
+                    + pfcoil_variables.n_pf_coil_turns[jpf]
+                    * pfcoil_variables.c_pf_coil_turn[jpf, 4]
                     * cktr[jjpf]
                     / 1.0e6
                 )
@@ -278,14 +284,18 @@ class Power:
         heat_transport_variables.peakmva = max((powpfr + powpfi), powpfr2)
 
         pf_power_variables.vpfskv = 20.0e0
-        pf_power_variables.pfckts = (pfcoil_variables.ncirt - 2) + 6.0e0
+        pf_power_variables.pfckts = (
+            pfcoil_variables.n_pf_cs_plasma_circuits - 2
+        ) + 6.0e0
         pf_power_variables.spfbusl = pfbusl * pf_power_variables.pfckts
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for jpf in range(pfcoil_variables.ncirt - 1):
+        for jpf in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
-            psmva[jpf] = 1.0e-6 * abs(vpfi[jpf] * pfcoil_variables.cptdin[jpf])
+            psmva[jpf] = 1.0e-6 * abs(
+                vpfi[jpf] * pfcoil_variables.c_pf_coil_turn_peak_input[jpf]
+            )
 
             #  Sum of the power supply MVA of the PF circuits
             pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[jpf]
@@ -293,7 +303,9 @@ class Power:
             #  Average of the maximum currents in the PF circuits, kA
             pf_power_variables.acptmax = (
                 pf_power_variables.acptmax
-                + 1.0e-3 * abs(pfcoil_variables.cptdin[jpf]) / pf_power_variables.pfckts
+                + 1.0e-3
+                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[jpf])
+                / pf_power_variables.pfckts
             )
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
@@ -781,7 +793,7 @@ class Power:
         tfcoil_variables.cryo_cool_req = 0.0e0
 
         # Superconductors TF/PF cryogenic cooling
-        if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.ipfres == 0:
+        if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.i_pf_conductor == 0:
             # heat_transport_variables.helpow calculation
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
