@@ -488,13 +488,11 @@ class PFCoil:
             pfv.f_j_cs_start_end_flat_top = (
                 (-ioheof * pfv.f_j_cs_start_pulse_end_flat_top) + dics
             ) / ioheof
-            pfv.f_j_cs_start_end_flat_top = min(
-                pfv.f_j_cs_start_end_flat_top, 1.0e0
-            )  # constrains abs(f_j_cs_start_end_flat_top) <= 1.0;
-            pfv.f_j_cs_start_end_flat_top = max(
-                pfv.f_j_cs_start_end_flat_top, -1.0e0
-            )  # probably un-necessary
-
+            if np.abs(pfv.f_j_cs_start_end_flat_top) > 1.0:
+                logger.warning(
+                    "Ratio of central solenoid overall current density at "
+                    "beginning of flat-top / end of flat-top > 1 (|f_j_cs_start_end_flat_top| > 1)"
+                )
         else:
             dics = 0.0e0
             pfv.f_j_cs_start_end_flat_top = 1.0e0
