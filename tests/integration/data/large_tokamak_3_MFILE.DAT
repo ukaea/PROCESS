@@ -62,9 +62,9 @@
  fjohc0__________________________________________________________________ (itvar013)____________________      5.4190E-01    
  fjohc0_(final_value/initial_value)______________________________________ (xcm013)______________________      9.0316E-01    
  fjohc0_(range_normalised)_______________________________________________ (nitvar013)___________________      5.4144E-01    
- fcohbop_________________________________________________________________ (itvar014)____________________      9.4380E-01    
- fcohbop_(final_value/initial_value)_____________________________________ (xcm014)______________________      1.0487E+00    
- fcohbop_(range_normalised)______________________________________________ (nitvar014)___________________      9.4374E-01    
+ f_j_cs_start_pulse_end_flat_top_________________________________________________________________ (itvar014)____________________      9.4380E-01    
+ f_j_cs_start_pulse_end_flat_top_(final_value/initial_value)_____________________________________ (xcm014)______________________      1.0487E+00    
+ f_j_cs_start_pulse_end_flat_top_(range_normalised)______________________________________________ (nitvar014)___________________      9.4374E-01    
  fiooic__________________________________________________________________ (itvar015)____________________      7.1737E-01    
  fiooic_(final_value/initial_value)______________________________________ (xcm015)______________________      1.1036E+00    
  fiooic_(range_normalised)_______________________________________________ (nitvar015)___________________      6.1709E-01    
@@ -551,7 +551,7 @@
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      5.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.6029E+02 OP 
- Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vstot))__________________      5.7728E+02    
+ Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.7728E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8601E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.7014E+02    
  # Times #
@@ -602,7 +602,7 @@
  Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
- Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (ohhghf)______________________      9.0000E-01    
+ Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
@@ -768,26 +768,26 @@
  Actual_current_(A)______________________________________________________ (cpttf)_______________________      8.9795E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.1737E-01 OP 
  # Central Solenoid and PF Coils #
- Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              1    
- Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (bmaxoh0)_____________________      1.4050E+01 OP 
- Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (jscoh_bop)___________________      3.4918E+08 OP 
+ Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
+ Maximum_field_at_Beginning_Of_Pulse_(T)_________________________________ (b_cs_peak_pulse_start)_____________________      1.4050E+01 OP 
+ Critical_superconductor_current_density_at_BOP_(A/m2)___________________ (j_cs_conductor_critical_pulse_start)___________________      3.4918E+08 OP 
  Critical_cable_current_density_at_BOP_(A/m2)___________________________ (jcableoh_bop)_______________      1.0475E+08 OP 
- Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (rjohc0)______________________      3.5294E+07 OP 
- Actual_overall_current_density_at_BOP_(A/m2)____________________________ (cohbop)______________________      1.9126E+07 OP 
- Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (bmaxoh)______________________      1.3920E+01 OP 
- Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (jscoh_eof)___________________      3.6097E+08 OP 
+ Allowable_overall_current_density_at_BOP_(A/m2)_________________________ (j_cs_critical_pulse_start)______________________      3.5294E+07 OP 
+ Actual_overall_current_density_at_BOP_(A/m2)____________________________ (j_cs_pulse_start)______________________      1.9126E+07 OP 
+ Maximum_field_at_End_Of_Flattop_(T)_____________________________________ (b_cs_peak_flat_top_end)______________________      1.3920E+01 OP 
+ Critical_superconductor_current_density_at_EOF_(A/m2)___________________ (j_cs_conductor_critical_flat_top_end)___________________      3.6097E+08 OP 
  Critical_cable_current_density_at_EOF_(A/m2)___________________________ (jcableoh_eof)_______________      1.0829E+08 OP 
- Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (rjohc)_______________________      3.6485E+07 OP 
- Actual_overall_current_density_at_EOF_(A/m2)____________________________ (coheof)______________________      2.0264E+07 ITV
+ Allowable_overall_current_density_at_EOF_(A/m2)_________________________ (j_cs_critical_flat_top_end)_______________________      3.6485E+07 OP 
+ Actual_overall_current_density_at_EOF_(A/m2)____________________________ (j_cs_flat_top_end)______________________      2.0264E+07 ITV
  CS_inside_radius_(m)____________________________________________________ (dr_bore)________________________      1.9854E+00 ITV
  CS_thickness_(m)________________________________________________________ (dr_cs)_______________________      5.7587E-01 ITV
  Gap_between_central_solenoid_and_TF_coil_(m)____________________________ (dr_cs_tf_gap)_______________________      8.0000E-02    
- CS_overall_cross-sectional_area_(m2)____________________________________ (areaoh)______________________      9.1407E+00 OP 
+ CS_overall_cross-sectional_area_(m2)____________________________________ (a_cs_poloidal)______________________      9.1407E+00 OP 
  CS_conductor+void_cross-sectional_area_(m2)_____________________________ (awpoh)_______________________      4.3996E+00 OP 
- ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-vfohc))_____________      3.0797E+00 OP 
- ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*vfohc)_________________      1.3199E+00 OP 
- CS_steel_cross-sectional_area_(m2)______________________________________ (areaoh-awpoh)________________      4.7411E+00 OP 
- CS_steel_area_fraction__________________________________________________ (oh_steel_frac)_______________      5.1868E-01 ITV
+ ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0797E+00 OP 
+ ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3199E+00 OP 
+ CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.7411E+00 OP 
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      5.1868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.7569E+08 OP 
@@ -796,15 +796,15 @@
  Axial_force_in_CS_(N)___________________________________________________ (axial_force)_________________     -1.6256E+09 OP 
  Residual_manufacturing_strain_in_CS_superconductor_material_____________ (tfcoil_variables.str_cs_con_r     -5.0000E-03    
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
- Void_(coolant)_fraction_in_conductor____________________________________ (vfohc)_______________________      3.0000E-01    
+ Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (tmargoh)_____________________      1.5052E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5052E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
  Residual_hoop_stress_in_CS_Steel_(Pa)___________________________________ (residual_sig_hoop)___________      2.4000E+08    
  Minimum_burn_time_(s)___________________________________________________ (t_burn_min)______________________      7.2000E+03    
  Initial_vertical_crack_size_(m)_________________________________________ (t_crack_vertical)____________      8.9000E-04    
  Initial_radial_crack_size_(m)___________________________________________ (t_crack_radial)______________      2.6700E-03    
- CS_turn_area_(m)________________________________________________________ (a_oh_turn)___________________      1.9739E-03    
+ CS_turn_area_(m)________________________________________________________ (a_cs_turn)___________________      1.9739E-03    
  CS_turn_length_(m)______________________________________________________ (l_cond_cst)__________________      7.6953E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (r_in_cst)____________________      7.4740E-03    
  CS_turn_width_(m)_______________________________________________________ (d_cond_cst)__________________      2.5651E-02    
@@ -812,68 +812,68 @@
  CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      5.3514E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      1.3378E+02 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
- PF_coil_superconductor_material_________________________________________ (isumatpf)____________________              3    
+ PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
  Maximum_permissible_tensile_stress_(MPa)________________________________ (sigpfcalw)___________________      5.0000E+02    
  JxB_hoop_force_fraction_supported_by_case_______________________________ (sigpfcf)_____________________      6.6600E-01    
- PF_coil_0_radius_(m)____________________________________________________ (rpf[0]_______________________      5.5667E+00    
- PF_coil_0_vertical_position_(m)_________________________________________ (zpf[0])______________________      9.3603E+00    
+ PF_coil_0_radius_(m)____________________________________________________ (r_pf_coil_middle[0]_______________________      5.5667E+00    
+ PF_coil_0_vertical_position_(m)_________________________________________ (z_pf_coil_middle[0])______________________      9.3603E+00    
  PF_coil_0_radial_thickness_(m)__________________________________________ (pfdr(0))_____________________      1.2727E+00    
  PF_coil_0_vertical_thickness_(m)________________________________________ (pfdz(0))_____________________      1.2727E+00    
- PF_coil_0_turns_________________________________________________________ (turns[0])____________________      4.4541E+02    
+ PF_coil_0_turns_________________________________________________________ (n_pf_coil_turns[0])____________________      4.4541E+02    
  PF_coil_0_current_(MA)__________________________________________________ (ric[0])______________________      1.7816E+01    
- PF_coil_0_field_(T)_____________________________________________________ (bpf[0])______________________      6.2280E+00    
- PF_coil_1_radius_(m)____________________________________________________ (rpf[1]_______________________      5.5667E+00    
- PF_coil_1_vertical_position_(m)_________________________________________ (zpf[1])______________________     -1.0594E+01    
+ PF_coil_0_field_(T)_____________________________________________________ (b_pf_coil_peak[0])______________________      6.2280E+00    
+ PF_coil_1_radius_(m)____________________________________________________ (r_pf_coil_middle[1]_______________________      5.5667E+00    
+ PF_coil_1_vertical_position_(m)_________________________________________ (z_pf_coil_middle[1])______________________     -1.0594E+01    
  PF_coil_1_radial_thickness_(m)__________________________________________ (pfdr(1))_____________________      1.3651E+00    
  PF_coil_1_vertical_thickness_(m)________________________________________ (pfdz(1))_____________________     -1.3651E+00    
- PF_coil_1_turns_________________________________________________________ (turns[1])____________________      5.1248E+02    
+ PF_coil_1_turns_________________________________________________________ (n_pf_coil_turns[1])____________________      5.1248E+02    
  PF_coil_1_current_(MA)__________________________________________________ (ric[1])______________________      2.0499E+01    
- PF_coil_1_field_(T)_____________________________________________________ (bpf[1])______________________      6.6990E+00    
- PF_coil_2_radius_(m)____________________________________________________ (rpf[2]_______________________      1.6731E+01    
- PF_coil_2_vertical_position_(m)_________________________________________ (zpf[2])______________________      2.6667E+00    
+ PF_coil_1_field_(T)_____________________________________________________ (b_pf_coil_peak[1])______________________      6.6990E+00    
+ PF_coil_2_radius_(m)____________________________________________________ (r_pf_coil_middle[2]_______________________      1.6731E+01    
+ PF_coil_2_vertical_position_(m)_________________________________________ (z_pf_coil_middle[2])______________________      2.6667E+00    
  PF_coil_2_radial_thickness_(m)__________________________________________ (pfdr(2))_____________________      1.1332E+00    
  PF_coil_2_vertical_thickness_(m)________________________________________ (pfdz(2))_____________________      1.1332E+00    
- PF_coil_2_turns_________________________________________________________ (turns[2])____________________      1.9262E+02    
+ PF_coil_2_turns_________________________________________________________ (n_pf_coil_turns[2])____________________      1.9262E+02    
  PF_coil_2_current_(MA)__________________________________________________ (ric[2])______________________     -7.7049E+00    
- PF_coil_2_field_(T)_____________________________________________________ (bpf[2])______________________      2.6389E+00    
- PF_coil_3_radius_(m)____________________________________________________ (rpf[3]_______________________      1.6731E+01    
- PF_coil_3_vertical_position_(m)_________________________________________ (zpf[3])______________________     -2.6667E+00    
+ PF_coil_2_field_(T)_____________________________________________________ (b_pf_coil_peak[2])______________________      2.6389E+00    
+ PF_coil_3_radius_(m)____________________________________________________ (r_pf_coil_middle[3]_______________________      1.6731E+01    
+ PF_coil_3_vertical_position_(m)_________________________________________ (z_pf_coil_middle[3])______________________     -2.6667E+00    
  PF_coil_3_radial_thickness_(m)__________________________________________ (pfdr(3))_____________________      1.1332E+00    
  PF_coil_3_vertical_thickness_(m)________________________________________ (pfdz(3))_____________________     -1.1332E+00    
- PF_coil_3_turns_________________________________________________________ (turns[3])____________________      1.9262E+02    
+ PF_coil_3_turns_________________________________________________________ (n_pf_coil_turns[3])____________________      1.9262E+02    
  PF_coil_3_current_(MA)__________________________________________________ (ric[3])______________________     -7.7049E+00    
- PF_coil_3_field_(T)_____________________________________________________ (bpf[3])______________________      2.6389E+00    
- PF_coil_4_radius_(m)____________________________________________________ (rpf[4]_______________________      1.5209E+01    
- PF_coil_4_vertical_position_(m)_________________________________________ (zpf[4])______________________      7.4667E+00    
+ PF_coil_3_field_(T)_____________________________________________________ (b_pf_coil_peak[3])______________________      2.6389E+00    
+ PF_coil_4_radius_(m)____________________________________________________ (r_pf_coil_middle[4]_______________________      1.5209E+01    
+ PF_coil_4_vertical_position_(m)_________________________________________ (z_pf_coil_middle[4])______________________      7.4667E+00    
  PF_coil_4_radial_thickness_(m)__________________________________________ (pfdr(4))_____________________      8.0773E-01    
  PF_coil_4_vertical_thickness_(m)________________________________________ (pfdz(4))_____________________      8.0773E-01    
- PF_coil_4_turns_________________________________________________________ (turns[4])____________________      1.3049E+02    
+ PF_coil_4_turns_________________________________________________________ (n_pf_coil_turns[4])____________________      1.3049E+02    
  PF_coil_4_current_(MA)__________________________________________________ (ric[4])______________________     -5.2194E+00    
- PF_coil_4_field_(T)_____________________________________________________ (bpf[4])______________________      2.5737E+00    
- PF_coil_5_radius_(m)____________________________________________________ (rpf[5]_______________________      1.5209E+01    
- PF_coil_5_vertical_position_(m)_________________________________________ (zpf[5])______________________     -7.4667E+00    
+ PF_coil_4_field_(T)_____________________________________________________ (b_pf_coil_peak[4])______________________      2.5737E+00    
+ PF_coil_5_radius_(m)____________________________________________________ (r_pf_coil_middle[5]_______________________      1.5209E+01    
+ PF_coil_5_vertical_position_(m)_________________________________________ (z_pf_coil_middle[5])______________________     -7.4667E+00    
  PF_coil_5_radial_thickness_(m)__________________________________________ (pfdr(5))_____________________      8.0773E-01    
  PF_coil_5_vertical_thickness_(m)________________________________________ (pfdz(5))_____________________     -8.0773E-01    
- PF_coil_5_turns_________________________________________________________ (turns[5])____________________      1.3049E+02    
+ PF_coil_5_turns_________________________________________________________ (n_pf_coil_turns[5])____________________      1.3049E+02    
  PF_coil_5_current_(MA)__________________________________________________ (ric[5])______________________     -5.2194E+00    
- PF_coil_5_field_(T)_____________________________________________________ (bpf[5])______________________      2.5737E+00    
- Central_solenoid_radius_(m)_____________________________________________ (rpf[nohc-1])_________________      2.2734E+00    
- Central_solenoid_vertical_position_(m)__________________________________ (zpf[nohc-1])_________________      0.0000E+00    
+ PF_coil_5_field_(T)_____________________________________________________ (b_pf_coil_peak[5])______________________      2.5737E+00    
+ Central_solenoid_radius_(m)_____________________________________________ (r_pf_coil_middle[n_cs_pf_coils-1])_________________      2.2734E+00    
+ Central_solenoid_vertical_position_(m)__________________________________ (z_pf_coil_middle[n_cs_pf_coils-1])_________________      0.0000E+00    
  Central_solenoid_radial_thickness_(m)___________________________________ (ohdr)________________________      5.7587E-01    
  Central_solenoid_vertical_thickness_(m)_________________________________ (ohdz)________________________      1.5873E+01    
- Central_solenoid_turns__________________________________________________ (turns[nohc-1])_______________      4.6308E+03    
- Central_solenoid_current_(MA)___________________________________________ (ric[nohc-1])_________________     -1.8523E+02    
- Central_solenoid_field_(T)______________________________________________ (bpf[nohc-1])_________________      1.4050E+01    
+ Central_solenoid_turns__________________________________________________ (n_pf_coil_turns[n_cs_pf_coils-1])_______________      4.6308E+03    
+ Central_solenoid_current_(MA)___________________________________________ (ric[n_cs_pf_coils-1])_________________     -1.8523E+02    
+ Central_solenoid_field_(T)______________________________________________ (b_pf_coil_peak[n_cs_pf_coils-1])_________________      1.4050E+01    
  Sum_of_squares_of_residuals_____________________________________________ (ssq0)________________________      3.5207E-04 OP 
  Smoothing_parameter_____________________________________________________ (alfapf)______________________      5.0000E-10    
  # Volt Second Consumption #
- Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vstot)_______________________     -5.8000E+02 OP 
+ Total_volt-second_consumption_by_coils_(Wb)_____________________________ (vs_cs_pf_total_pulse)_______________________     -5.8000E+02 OP 
  # Waveforms #
- Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (fcohbop)_____________________      9.4380E-01 ITV
- Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (fcohbof)_____________________     -1.4083E-01 OP 
+ Ratio_of_central_solenoid_current_at_beginning_of_Pulse_/_end_of_flat-to (f_j_cs_start_pulse_end_flat_top)_____________________      9.4380E-01 ITV
+ Ratio_of_central_solenoid_current_at_beginning_of_Flat-top_/_end_of_flat (f_j_cs_start_end_flat_top)_____________________     -1.4083E-01 OP 
  # PF Circuit Waveform Data #
- Number_of_PF_circuits_including_CS_and_plasma___________________________ (ncirt)_______________________              8    
+ Number_of_PF_circuits_including_CS_and_plasma___________________________ (n_pf_cs_plasma_circuits)_______________________              8    
  PF_Circuit_0_Time_point_0_(A)___________________________________________ (pfc0t0)______________________      0.0000E+00    
  PF_Circuit_0_Time_point_1_(A)___________________________________________ (pfc0t1)______________________      1.3971E+07    
  PF_Circuit_0_Time_point_2_(A)___________________________________________ (pfc0t2)______________________      1.7816E+07    
@@ -1291,20 +1291,20 @@ bmxlim = 14.0
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * coheof [A/m2]
+ixc = 37 * j_cs_flat_top_end [A/m2]
 ixc = 38 * fjohc
 boundu(38) = 1.0
-coheof = 1.5E7
+j_cs_flat_top_end = 1.5E7
 fjohc = 0.6
 
 * Central solenoid BOP current density upper limit *
 *--------------------------------------------------*
 icc = 27
 ixc = 39 * fjohc0
-ixc = 41 * fcohbop
+ixc = 41 * f_j_cs_start_pulse_end_flat_top
 boundu(39) = 1.0
 fjohc0 = 0.6
-fcohbop = 0.9
+f_j_cs_start_pulse_end_flat_top = 0.9
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*
@@ -1459,9 +1459,9 @@ cpttf = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, oh_steel_frac
+* CS steel fraction, f_a_cs_steel
 ixc = 122
-oh_steel_frac = 0.8
+f_a_cs_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135
@@ -1728,27 +1728,27 @@ iavail = 0
 ************
 
 * Peak current per turn input for PF coil i [A]
-cptdin = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
+c_pf_coil_turn_peak_input = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
 
 * Switch for locating scheme of pf coil group i
-ipfloc = 2,2,3,3
+i_pf_location = 2,2,3,3
 
 * Switch for superconductor material in pf coils
-isumatpf = 3
+i_pf_superconductor = 3
 
 * Number of pf coils in group j
-ncls = 1,1,2,2
+n_pf_coils_in_group = 1,1,2,2
 
 * Number of groups of PF coils
-ngrp = 4
+n_pf_coil_groups = 4
 
 * Central solenoid height / TF coil internal height
-ohhghf = 0.9
+f_z_cs_tf_internal = 0.9
 
 * Average winding pack current density of PF coil i [A/m2]
-rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
+j_pf_coil_wp_peak  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
 
-* Offset of radial position of ipfloc=2 pf coils [m]
+* Offset of radial position of i_pf_location=2 pf coils [m]
 rpf2 = -1.825 
 
 zref(1) = 3.6
@@ -1764,7 +1764,7 @@ zref(8) = 1.0
 fcuohsu = 0.70
 
 * ITER Nb3Sn parameterisation
-isumatoh = 1
+i_cs_superconductor = 1
 
 * TF Coil *
 ***********

@@ -872,12 +872,12 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! vs_plasma_total_required : input real : total V-s needed (Wb)
-      !! vs_plasma_total_required (lower limit) is positive; vstot (available) is negative
+      !! vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
       !! fvs : input real : f-value for flux-swing (V-s) requirement (STEADY STATE)
-      !! vstot : input real :   total flux swing for pulse (Wb)
+      !! vs_cs_pf_total_pulse : input real :   total flux swing for pulse (Wb)
       use physics_variables, only: vs_plasma_total_required
       use constraint_variables, only: fvs
-      use pfcoil_variables, only: vstot
+      use pfcoil_variables, only: vs_cs_pf_total_pulse
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -885,7 +885,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 + fvs * vstot/vs_plasma_total_required
+      tmp_cc =  1.0D0 + fvs * vs_cs_pf_total_pulse/vs_plasma_total_required
       tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
       tmp_err = vs_plasma_total_required * tmp_cc
       tmp_symbol = '>'
@@ -1352,14 +1352,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for Central Solenoid current density upper limit at EOF
       !! #=# pfcoil
-      !! #=#=# fjohc, rjohc
+      !! #=#=# fjohc, j_cs_critical_flat_top_end
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjohc : input real : f-value for central solenoid current at end-of-flattop
-      !! rjohc : input real : allowable central solenoid current density at end of flat-top (A/m2)
-      !! coheof : input real : central solenoid overall current density at end of flat-top (A/m2)
+      !! j_cs_critical_flat_top_end : input real : allowable central solenoid current density at end of flat-top (A/m2)
+      !! j_cs_flat_top_end : input real : central solenoid overall current density at end of flat-top (A/m2)
       use constraint_variables, only: fjohc
-      use pfcoil_variables, only: rjohc, coheof
+      use pfcoil_variables, only: j_cs_critical_flat_top_end, j_cs_flat_top_end
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1367,9 +1367,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjohc * rjohc/coheof
-      tmp_con = rjohc
-      tmp_err = rjohc - coheof / fjohc
+      tmp_cc =  1.0D0 - fjohc * j_cs_critical_flat_top_end/j_cs_flat_top_end
+      tmp_con = j_cs_critical_flat_top_end
+      tmp_err = j_cs_critical_flat_top_end - j_cs_flat_top_end / fjohc
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
@@ -1382,14 +1382,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for Central Solenoid current density upper limit at BOP
       !! #=# pfcoil
-      !! #=#=# fjohc0, rjohc0
+      !! #=#=# fjohc0, j_cs_critical_pulse_start
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjohc0 : input real : f-value for central solenoid current at beginning of pulse
-      !! rjohc0 : input real : allowable central solenoid current density at beginning of pulse (A/m2)
-      !! cohbop : input real : central solenoid overall current density at beginning of pulse (A/m2)
+      !! j_cs_critical_pulse_start : input real : allowable central solenoid current density at beginning of pulse (A/m2)
+      !! j_cs_pulse_start : input real : central solenoid overall current density at beginning of pulse (A/m2)
       use constraint_variables, only: fjohc0
-      use pfcoil_variables, only: rjohc0, cohbop
+      use pfcoil_variables, only: j_cs_critical_pulse_start, j_cs_pulse_start
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1397,9 +1397,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjohc0 * rjohc0/cohbop
-      tmp_con = rjohc0
-      tmp_err = rjohc0 - cohbop / fjohc0
+      tmp_cc =  1.0D0 - fjohc0 * j_cs_critical_pulse_start/j_cs_pulse_start
+      tmp_con = j_cs_critical_pulse_start
+      tmp_err = j_cs_critical_pulse_start - j_cs_pulse_start / fjohc0
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
@@ -2161,9 +2161,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! vs_plasma_res_ramp : input real : resistive losses in startup V-s (Wb)
       !! vs_plasma_ind_ramp : input real :  internal and external plasma inductance V-s (Wb))
-      !! vssu : input real :  total flux swing for startup (Wb)
+      !! vs_cs_pf_total_ramp : input real :  total flux swing for startup (Wb)
       use physics_variables, only: vs_plasma_res_ramp, vs_plasma_ind_ramp
-      use pfcoil_variables, only: vssu, fvssu
+      use pfcoil_variables, only: vs_cs_pf_total_ramp, fvs_cs_pf_total_ramp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2171,9 +2171,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fvssu * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vssu)
-      tmp_con = vssu * (1.0D0 - tmp_cc)
-      tmp_err = vssu * tmp_cc
+      tmp_cc =  1.0D0 - fvs_cs_pf_total_ramp * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vs_cs_pf_total_ramp)
+      tmp_con = vs_cs_pf_total_ramp * (1.0D0 - tmp_cc)
+      tmp_err = vs_cs_pf_total_ramp * tmp_cc
       tmp_symbol = '='
       tmp_units = 'V.s'
 
@@ -2395,10 +2395,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ftmargoh : input real :  f-value for central solenoid temperature margin
-      !! tmargoh : input real :  Central solenoid temperature margin (K)
+      !! temp_cs_margin : input real :  Central solenoid temperature margin (K)
       !! tmargmin_cs : input real :  Minimum allowable temperature margin : CS (K)
       use constraint_variables, only: ftmargoh
-      use pfcoil_variables, only: tmargoh
+      use pfcoil_variables, only: temp_cs_margin
       use tfcoil_variables, only: tmargmin_cs
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2407,9 +2407,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - ftmargoh * tmargoh/tmargmin_cs
+      tmp_cc = 1.0D0 - ftmargoh * temp_cs_margin/tmargmin_cs
       tmp_con = tmargmin_cs
-      tmp_err = tmargmin_cs - tmargoh
+      tmp_err = tmargmin_cs - temp_cs_margin
       tmp_symbol = '>'
       tmp_units = 'K'
 
@@ -2987,15 +2987,15 @@ contains
       !! args : output structure : residual error; constraint value; residual error in physical units; output string; units string
       !! Equation for maximum CS field
       !! #=# pfcoil
-      !! #=#=# fbmaxcs, bmaxoh, bmaxoh0, bmaxcs_lim
+      !! #=#=# fb_cs_limit_max, b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_limit_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fbmaxcs : input : F-value for CS mmax field (cons. 79, itvar 149)
-      !! bmaxcs_lim : input : Central solenoid max field limit [T]
-      !! bmaxoh0 : input : maximum field in central solenoid at beginning of pulse (T)
-      !! bmaxoh : input real : maximum field in central solenoid at end of flat-top (EoF) (T)
-      !! (Note: original code has "bmaxoh/bmaxoh0 |  peak CS field [T]".)
-      use pfcoil_variables, only: fbmaxcs, bmaxcs_lim, bmaxoh0, bmaxoh
+      !! fb_cs_limit_max : input : F-value for CS mmax field (cons. 79, itvar 149)
+      !! b_cs_limit_max : input : Central solenoid max field limit [T]
+      !! b_cs_peak_pulse_start : input : maximum field in central solenoid at beginning of pulse (T)
+      !! b_cs_peak_flat_top_end : input real : maximum field in central solenoid at end of flat-top (EoF) (T)
+      !! (Note: original code has "b_cs_peak_flat_top_end/b_cs_peak_pulse_start |  peak CS field [T]".)
+      use pfcoil_variables, only: fb_cs_limit_max, b_cs_limit_max, b_cs_peak_pulse_start, b_cs_peak_flat_top_end
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3003,9 +3003,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc     = 1.0D0 - fbmaxcs * bmaxcs_lim/max(bmaxoh, bmaxoh0)
-      tmp_con    = bmaxcs_lim
-      tmp_err    = max(bmaxoh, bmaxoh0) * tmp_cc
+      tmp_cc     = 1.0D0 - fb_cs_limit_max * b_cs_limit_max/max(b_cs_peak_flat_top_end, b_cs_peak_pulse_start)
+      tmp_con    = b_cs_limit_max
+      tmp_err    = max(b_cs_peak_flat_top_end, b_cs_peak_pulse_start) * tmp_cc
       tmp_symbol = '<'
       tmp_units  = 'A/turn'
 

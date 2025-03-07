@@ -123,9 +123,9 @@ module numerics
   !!            (itv 104,1,74)
   !!  <LI> (24) Beta upper limit (itv 36,1,2,3,4,6,18)
   !!  <LI> (25) Peak toroidal field upper limit (itv 35,3,13,29)
-  !!  <LI> (26) Central solenoid EOF current density upper limit (ipfres=0)
+  !!  <LI> (26) Central solenoid EOF current density upper limit (i_pf_conductor=0)
   !!            (itv 38,37,41,12)
-  !!  <LI> (27) Central solenoid BOP current density upper limit (ipfres=0)
+  !!  <LI> (27) Central solenoid BOP current density upper limit (i_pf_conductor=0)
   !!            (itv 39,37,41,12)
   !!  <LI> (28) Fusion gain Q lower limit (itv 45,47,40)
   !!  <LI> (29) Inboard radial build consistency (itv 3,1,13,16,29,42,61)
@@ -181,7 +181,7 @@ module numerics
   !!  <LI> (76) Eich critical separatrix density
   !!  <LI> (77) TF coil current per turn upper limit
   !!  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)
-  !!  <LI> (79) Peak CS field upper limit (itv  149 fbmaxcs)
+  !!  <LI> (79) Peak CS field upper limit (itv  149 fb_cs_limit_max)
   !!  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
@@ -202,7 +202,7 @@ module numerics
   !!               array defining which iteration variables to activate
   !!               (see lablxc for descriptions)
 
-  character*30, dimension(ipnvars) :: lablxc
+  character*50, dimension(ipnvars) :: lablxc
   !! lablxc(ipnvars) : labels describing iteration variables<UL>
   !!  <LI> ( 1) aspect
   !!  <LI> ( 2) bt
@@ -240,11 +240,11 @@ module numerics
   !! <LI> (34) fdivcol (f-value for equation 22)
   !! <LI> (35) fpeakb (f-value for equation 25)
   !! <LI> (36) fbeta_max (f-value for equation 24)
-  !! <LI> (37) coheof
+  !! <LI> (37) j_cs_flat_top_end
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
   !! <LI> (40) fgamcd (f-value for equation 37)
-  !! <LI> (41) fcohbop
+  !! <LI> (41) f_j_cs_start_pulse_end_flat_top
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
   !! <LI> (44) fvsbrnni
@@ -325,7 +325,7 @@ module numerics
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
   !! <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
   !! <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
-  !! <LI> (122) oh_steel_frac : streel fraction of Central Solenoid
+  !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
   !! <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
   !! <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]
   !! <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density
@@ -352,7 +352,7 @@ module numerics
   !! <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
-  !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
+  !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
   !! <LI> (150) REMOVED
   !! <LI> (151) REMOVED
   !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
@@ -360,7 +360,7 @@ module numerics
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
   !! <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
   !! <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
-  !! <LI> (157) fvssu : F-value for available to required start up flux (con. 51)
+  !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
   !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)

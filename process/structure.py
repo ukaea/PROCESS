@@ -39,7 +39,7 @@ class Structure:
         """
 
         # Total weight of the PF coil conductor and its structure
-        total_weight_pf = pfv.whtpf + pfv.whtpfs
+        total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
 
         (
             stv.fncmass,
@@ -54,7 +54,7 @@ class Structure:
             pv.kappa,
             pv.bt,
             tfv.i_tf_sup,
-            pfv.ipfres,
+            pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
             bv.hmax,
             fwbsv.whtshld,
@@ -76,7 +76,7 @@ class Structure:
         akappa,
         b0,
         i_tf_sup,
-        ipfres,
+        i_pf_conductor,
         tf_h_width,
         tfhmax,
         shldmass,
@@ -112,8 +112,8 @@ class Structure:
         :param itfsup: switch denoting whether TF coils are superconducting
         :type itfsup: integer
 
-        :param ipfres: switch denoting whether PF & CS coils are resistive
-        :type ipfres: integer
+        :param i_pf_conductor: switch denoting whether PF & CS coils are resistive
+        :type i_pf_conductor: integer
 
         :param tf_h_width: TF coil horizontal dr_bore (m)
         :type tf_h_width: float
@@ -175,7 +175,7 @@ class Structure:
         coldmass = 0.0e0
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
-        if ipfres != 1:
+        if i_pf_conductor != 1:
             coldmass = coldmass + pfmass
 
         #  Coil gravity support mass

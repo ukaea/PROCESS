@@ -52,7 +52,7 @@ def test_rsid(pfcoil):
     brin = np.zeros(nptsmx)
     bzin = np.zeros(nptsmx)
     nfix = 14
-    ngrp = 4
+    n_pf_coil_groups = 4
     ccls = np.array([
         14742063.826112622,
         20032681.634901665,
@@ -901,7 +901,7 @@ def test_rsid(pfcoil):
     ssq_exp = 0.0006400910095285954
 
     brssq, brnrm, bzssq, bznrm, ssq = rsid(
-        npts, brin, bzin, nfix, ngrp, ccls, bfix, gmat
+        npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat
     )
 
     assert brssq == pytest.approx(brssq_exp)
@@ -1054,7 +1054,7 @@ def test_waveform(monkeypatch, pfcoil):
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    waveform() alters both ric and waves in the pfcoil_variables module, so
+    waveform() alters both c_pf_cs_coils_peak_ma and waves in the pfcoil_variables module, so
     these are asserted on.
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
@@ -1062,12 +1062,12 @@ def test_waveform(monkeypatch, pfcoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
     ngc2 = 22
-    monkeypatch.setattr(pfv, "ric", np.zeros(ngc2, dtype=int))
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "c_pf_cs_coils_peak_ma", np.zeros(ngc2, dtype=int))
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(pfv, "waves", np.zeros((ngc2, 6), order="F"))
     monkeypatch.setattr(
         pfv,
-        "curpfb",
+        "c_pf_cs_coil_pulse_start_ma",
         np.array([
             0.067422231232391661,
             -2.9167273287450968,
@@ -1095,7 +1095,7 @@ def test_waveform(monkeypatch, pfcoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpff",
+        "c_pf_cs_coil_flat_top_ma",
         np.array([
             0.067422231232391661,
             -2.9167273287450968,
@@ -1123,7 +1123,7 @@ def test_waveform(monkeypatch, pfcoil):
     )
     monkeypatch.setattr(
         pfv,
-        "curpfs",
+        "c_pf_cs_coil_pulse_end_ma",
         np.array([
             14.742063826112622,
             20.032681634901664,
@@ -1203,7 +1203,7 @@ def test_waveform(monkeypatch, pfcoil):
 
     pfcoil.waveform()
 
-    assert_array_almost_equal(pfv.ric, ric_exp)
+    assert_array_almost_equal(pfv.c_pf_cs_coils_peak_ma, ric_exp)
     assert_array_almost_equal(pfv.waves, waves_exp)
 
 
@@ -1221,13 +1221,13 @@ def test_vsec(pfcoil, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(pfv, "vsefsu", 0)
-    monkeypatch.setattr(pfv, "vsbn", 0)
-    monkeypatch.setattr(pfv, "nohc", 7)
-    monkeypatch.setattr(pfv, "vsohbn", 0)
+    monkeypatch.setattr(pfv, "vs_pf_coils_total_ramp", 0)
+    monkeypatch.setattr(pfv, "vs_cs_pf_total_burn", 0)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
+    monkeypatch.setattr(pfv, "vs_cs_burn", 0)
     monkeypatch.setattr(
         pfv,
-        "cpt",
+        "c_pf_coil_turn",
         np.array(
             [
                 [
@@ -1410,16 +1410,16 @@ def test_vsec(pfcoil, monkeypatch):
             order="F",
         ),
     )
-    monkeypatch.setattr(pfv, "vsefbn", 0)
-    monkeypatch.setattr(pfv, "vsohsu", 0)
-    monkeypatch.setattr(pfv, "vseft", 0)
-    monkeypatch.setattr(pfv, "vsoh", 0)
-    monkeypatch.setattr(pfv, "vssu", 0)
-    monkeypatch.setattr(pfv, "vstot", 0)
-    monkeypatch.setattr(pfv, "ncirt", 8)
+    monkeypatch.setattr(pfv, "vs_pf_coils_total_burn", 0)
+    monkeypatch.setattr(pfv, "vs_cs_ramp", 0)
+    monkeypatch.setattr(pfv, "vs_pf_coils_total_pulse", 0)
+    monkeypatch.setattr(pfv, "vs_cs_total_pulse", 0)
+    monkeypatch.setattr(pfv, "vs_cs_pf_total_ramp", 0)
+    monkeypatch.setattr(pfv, "vs_cs_pf_total_pulse", 0)
+    monkeypatch.setattr(pfv, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(
         pfv,
-        "sxlg",
+        "ind_pf_cs_plasma_mutual",
         np.array(
             [
                 [
@@ -1960,8 +1960,8 @@ def test_vsec(pfcoil, monkeypatch):
 
     pfcoil.vsec()
 
-    assert_array_almost_equal(pfv.vsbn, vsbn_exp)
-    assert_array_almost_equal(pfv.vsoh, vsoh_exp)
+    assert_array_almost_equal(pfv.vs_cs_pf_total_burn, vsbn_exp)
+    assert_array_almost_equal(pfv.vs_cs_total_pulse, vsoh_exp)
 
 
 def test_hoop_stress(pfcoil, monkeypatch):
@@ -1976,13 +1976,13 @@ def test_hoop_stress(pfcoil, monkeypatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(pfv, "oh_steel_frac", 0.57874999999999999)
-    monkeypatch.setattr(pfv, "bmaxoh0", 13.522197474024983)
-    monkeypatch.setattr(pfv, "cohbop", 19311657.760000002)
-    monkeypatch.setattr(pfv, "nohc", 7)
+    monkeypatch.setattr(pfv, "f_a_cs_steel", 0.57874999999999999)
+    monkeypatch.setattr(pfv, "b_cs_peak_pulse_start", 13.522197474024983)
+    monkeypatch.setattr(pfv, "j_cs_pulse_start", 19311657.760000002)
+    monkeypatch.setattr(pfv, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfv,
-        "rb",
+        "r_pf_coil_outer",
         np.array([
             6.8520884119768697,
             6.9480065348448967,
@@ -2010,7 +2010,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
     )
     monkeypatch.setattr(
         pfv,
-        "ra",
+        "r_pf_coil_inner",
         np.array([
             5.6944236847973242,
             5.5985055619292972,

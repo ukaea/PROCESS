@@ -30,23 +30,23 @@ class TohswgParam(NamedTuple):
 
     vpfskv: Any = None
 
-    ncirt: Any = None
+    n_pf_cs_plasma_circuits: Any = None
 
-    ipfres: Any = None
+    i_pf_conductor: Any = None
 
-    nohc: Any = None
+    n_cs_pf_coils: Any = None
 
-    powohres: Any = None
+    p_cs_resistive_flat_top: Any = None
 
-    sxlg: Any = None
+    ind_pf_cs_plasma_mutual: Any = None
 
-    cpt: Any = None
+    c_pf_coil_turn: Any = None
 
-    ric: Any = None
+    c_pf_cs_coils_peak_ma: Any = None
 
-    turns: Any = None
+    n_pf_coil_turns: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
     plasma_current: Any = None
 
@@ -70,9 +70,9 @@ class BurnParam(NamedTuple):
 
     vs_plasma_ind_ramp: Any = None
 
-    vsbn: Any = None
+    vs_cs_pf_total_burn: Any = None
 
-    vstot: Any = None
+    vs_cs_pf_total_pulse: Any = None
 
     plasma_current: Any = None
 
@@ -99,11 +99,11 @@ class BurnParam(NamedTuple):
         TohswgParam(
             t_current_ramp_up_min=0,
             vpfskv=0,
-            ncirt=8,
-            ipfres=0,
-            nohc=7,
-            powohres=0,
-            sxlg=np.array(
+            n_pf_cs_plasma_circuits=8,
+            i_pf_conductor=0,
+            n_cs_pf_coils=7,
+            p_cs_resistive_flat_top=0,
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         2.4933245328128733,
@@ -314,7 +314,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -463,7 +463,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         14.742063826112572,
@@ -493,7 +493,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         349.33800535811781,
@@ -523,7 +523,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -657,11 +657,11 @@ class BurnParam(NamedTuple):
         TohswgParam(
             t_current_ramp_up_min=-526.67247746645455,
             vpfskv=20,
-            ncirt=8,
-            ipfres=0,
-            nohc=7,
-            powohres=0,
-            sxlg=np.array(
+            n_pf_cs_plasma_circuits=8,
+            i_pf_conductor=0,
+            n_cs_pf_coils=7,
+            p_cs_resistive_flat_top=0,
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         3.7857701742128254,
@@ -872,7 +872,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1021,7 +1021,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.585545191033798,
@@ -1051,7 +1051,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.41576282070616,
@@ -1081,7 +1081,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1233,23 +1233,37 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
 
-    monkeypatch.setattr(pfcoil_variables, "ncirt", tohswgparam.ncirt)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_cs_plasma_circuits", tohswgparam.n_pf_cs_plasma_circuits
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "ipfres", tohswgparam.ipfres)
+    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", tohswgparam.i_pf_conductor)
 
-    monkeypatch.setattr(pfcoil_variables, "nohc", tohswgparam.nohc)
+    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
 
-    monkeypatch.setattr(pfcoil_variables, "powohres", tohswgparam.powohres)
+    monkeypatch.setattr(
+        pfcoil_variables, "p_cs_resistive_flat_top", tohswgparam.p_cs_resistive_flat_top
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "sxlg", tohswgparam.sxlg)
+    monkeypatch.setattr(
+        pfcoil_variables, "ind_pf_cs_plasma_mutual", tohswgparam.ind_pf_cs_plasma_mutual
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "cpt", tohswgparam.cpt)
+    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
 
-    monkeypatch.setattr(pfcoil_variables, "ric", tohswgparam.ric)
+    monkeypatch.setattr(
+        pfcoil_variables, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "turns", tohswgparam.turns)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "cptdin", tohswgparam.cptdin)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_coil_turn_peak_input",
+        tohswgparam.c_pf_coil_turn_peak_input,
+    )
 
     monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
 
@@ -1273,8 +1287,8 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             res_plasma=3.2347283861249307e-09,
             vs_plasma_res_ramp=59.392760827339345,
             vs_plasma_ind_ramp=284.23601098215397,
-            vsbn=0,
-            vstot=-718.91787876294552,
+            vs_cs_pf_total_burn=0,
+            vs_cs_pf_total_pulse=-718.91787876294552,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
@@ -1289,8 +1303,8 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             res_plasma=3.2347283861249307e-09,
             vs_plasma_res_ramp=59.392760827339345,
             vs_plasma_ind_ramp=284.23601098215397,
-            vstot=-718.9849676846776,
-            vsbn=-354.76231817639609,
+            vs_cs_pf_total_pulse=-718.9849676846776,
+            vs_cs_pf_total_burn=-354.76231817639609,
             plasma_current=17721306.969367817,
             inductive_current_fraction=0.60433999999999999,
             csawth=1,
@@ -1326,9 +1340,13 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
         physics_variables, "vs_plasma_ind_ramp", burnparam.vs_plasma_ind_ramp
     )
 
-    monkeypatch.setattr(pfcoil_variables, "vstot", burnparam.vstot)
+    monkeypatch.setattr(
+        pfcoil_variables, "vs_cs_pf_total_pulse", burnparam.vs_cs_pf_total_pulse
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "vsbn", burnparam.vsbn)
+    monkeypatch.setattr(
+        pfcoil_variables, "vs_cs_pf_total_burn", burnparam.vs_cs_pf_total_burn
+    )
 
     monkeypatch.setattr(physics_variables, "plasma_current", burnparam.plasma_current)
 
