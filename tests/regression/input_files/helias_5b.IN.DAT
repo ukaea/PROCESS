@@ -94,7 +94,7 @@ dr_fw_plasma_gap_outboard  = 0.3          *Gap between plasma and first wall; ou
 dr_shld_inboard  = 0.4          *Inboard shield thickness (m)
 dr_shld_outboard  = 0.7          *Outboard shield thickness (m)
 dz_shld_upper  = 0.7          *Upper/lower shield thickness (m)
-vgap_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor (m)
+dz_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor (m)
 
 *---------------Constraint Variables---------------*
 
