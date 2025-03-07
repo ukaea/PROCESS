@@ -107,9 +107,9 @@ class Availability:
             else:
                 if cv.ibkt_life == 0:
                     fwbsv.bktlife = min(
-                        
-                        fwbsv.life_fw_fpy, cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
-                    
+                        fwbsv.life_fw_fpy,
+                        cv.abktflnc / pv.pflux_fw_neutron_mw,
+                        cv.tlife,
                     )
                 else:
                     fwbsv.bktlife = min(
