@@ -2755,12 +2755,12 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! foh_stress : input real : f-value for Tresca yield criterion in Central Solenoid
       !! alstroh : input real :  allowable hoop stress in Central Solenoid structural material (Pa)
-      !! s_tresca_oh : input real : Maximum shear stress coils/central solenoid (Pa)
+      !! s_shear_cs_peak : input real : Maximum shear stress coils/central solenoid (Pa)
       !! sig_tf_cs_bucked : input real : Maximum shear stress in CS case at flux swing (no current in CS)
       !!                       can be significant for the bucked and weged design
       !! i_tf_bucking : input integer : switch for TF structure design
       use constraint_variables, only: foh_stress
-      use pfcoil_variables, only: alstroh, s_tresca_oh
+      use pfcoil_variables, only: alstroh, s_shear_cs_peak
       use tfcoil_variables, only: sig_tf_cs_bucked, i_tf_bucking
       use build_variables, only: tf_in_cs
       implicit none
@@ -2772,12 +2772,12 @@ contains
 
       ! bucked and wedged desing (see subroutine comment)
       if ( i_tf_bucking >= 2 .and. tf_in_cs == 0 ) then
-         tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_tresca_oh, sig_tf_cs_bucked)
-         tmp_err = alstroh - max(s_tresca_oh, sig_tf_cs_bucked)
+         tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_shear_cs_peak, sig_tf_cs_bucked)
+         tmp_err = alstroh - max(s_shear_cs_peak, sig_tf_cs_bucked)
       ! Free standing CS
       else
-         tmp_cc = 1.0d0 - foh_stress * alstroh / s_tresca_oh
-         tmp_err = alstroh - s_tresca_oh
+         tmp_cc = 1.0d0 - foh_stress * alstroh / s_shear_cs_peak
+         tmp_err = alstroh - s_shear_cs_peak
       end if
 
       tmp_con = alstroh

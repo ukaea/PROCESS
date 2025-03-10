@@ -1228,7 +1228,7 @@ class Sctfcoil:
                 sig_tf_t_max,
                 sig_tf_z_max,
                 sig_tf_vmises_max,
-                sig_tf_tresca_max,
+                s_shear_tf_peak,
                 deflect,
                 eyoung_axial,
                 eyoung_trans,
@@ -1236,14 +1236,14 @@ class Sctfcoil:
                 eyoung_wp_trans,
                 poisson_wp_trans,
                 radial_array,
-                s_tresca_cond_cea,
+                s_shear_cea_tf_cond,
                 poisson_wp_axial,
                 sig_tf_r,
                 sig_tf_smeared_r,
                 sig_tf_smeared_t,
                 sig_tf_smeared_z,
                 sig_tf_t,
-                sig_tf_tresca,
+                s_shear_tf,
                 sig_tf_vmises,
                 sig_tf_z,
                 str_tf_r,
@@ -1362,7 +1362,7 @@ class Sctfcoil:
                     sig_tf_t_max,
                     sig_tf_z_max,
                     sig_tf_vmises_max,
-                    sig_tf_tresca_max,
+                    s_shear_tf_peak,
                     deflect,
                     eyoung_axial,
                     eyoung_trans,
@@ -1370,14 +1370,14 @@ class Sctfcoil:
                     eyoung_wp_trans,
                     poisson_wp_trans,
                     radial_array,
-                    s_tresca_cond_cea,
+                    s_shear_cea_tf_cond,
                     poisson_wp_axial,
                     sig_tf_r,
                     sig_tf_smeared_r,
                     sig_tf_smeared_t,
                     sig_tf_smeared_z,
                     sig_tf_t,
-                    sig_tf_tresca,
+                    s_shear_tf,
                     sig_tf_vmises,
                     sig_tf_z,
                     str_tf_r,
@@ -3711,7 +3711,7 @@ class Sctfcoil:
         sig_tf_vmises_max = np.zeros((n_tf_layer,))
         # Von-Mises stress of the point of maximum shear stress of each layer [Pa]
 
-        sig_tf_tresca_max = np.zeros((n_tf_layer,))
+        s_shear_tf_peak = np.zeros((n_tf_layer,))
         # Maximum shear stress, for the Tresca yield criterion of each layer [Pa]
         # If the CEA correction is addopted, the CEA corrected value is used
 
@@ -4331,7 +4331,7 @@ class Sctfcoil:
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        sig_tf_tresca = np.maximum(
+        s_shear_tf = np.maximum(
             np.absolute(sig_tf_r - sig_tf_z), np.absolute(sig_tf_z - sig_tf_t)
         )
 
@@ -4347,7 +4347,7 @@ class Sctfcoil:
         )
 
         # Array equation
-        s_tresca_cond_cea = sig_tf_tresca.copy()
+        s_shear_cea_tf_cond = s_shear_tf.copy()
 
         # SC conducting layer stress distribution corrections
         # ---
@@ -4365,7 +4365,7 @@ class Sctfcoil:
                 sig_tf_vmises[ii] = max(svmxz, svmyz)
 
                 # Maximum shear stress for the Tresca yield criterion using CEA calculation [Pa]
-                s_tresca_cond_cea[ii] = (
+                s_shear_cea_tf_cond[ii] = (
                     1.02e0 * abs(sig_tf_r[ii]) + 1.6e0 * sig_tf_z[ii]
                 )
 
@@ -4381,14 +4381,14 @@ class Sctfcoil:
             for jj in range(ii * n_radial_array, (ii + 1) * n_radial_array):
                 # CEA out of plane approximation
                 if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
-                    if sig_max < s_tresca_cond_cea[jj]:
-                        sig_max = s_tresca_cond_cea[jj]
+                    if sig_max < s_shear_cea_tf_cond[jj]:
+                        sig_max = s_shear_cea_tf_cond[jj]
                         ii_max = jj
 
                 # Conventional Tresca
                 else:
-                    if sig_max < sig_tf_tresca[jj]:
-                        sig_max = sig_tf_tresca[jj]
+                    if sig_max < s_shear_tf[jj]:
+                        sig_max = s_shear_tf[jj]
                         ii_max = jj
 
             # OUT.DAT output
@@ -4401,19 +4401,19 @@ class Sctfcoil:
             # Maximum shear stress for the Tresca yield criterion (or CEA OOP correction)
 
             if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
-                sig_tf_tresca_max[ii] = s_tresca_cond_cea[ii_max]
+                s_shear_tf_peak[ii] = s_shear_cea_tf_cond[ii_max]
             else:
-                sig_tf_tresca_max[ii] = sig_tf_tresca[ii_max]
+                s_shear_tf_peak[ii] = s_shear_tf[ii_max]
 
         # Constraint equation for the Tresca yield criterion
 
-        sig_tf_wp = sig_tf_tresca_max[n_tf_bucking]
+        sig_tf_wp = s_shear_tf_peak[n_tf_bucking]
         # Maximum assumed in the first graded layer
 
         if i_tf_bucking >= 1:
-            sig_tf_case = sig_tf_tresca_max[n_tf_bucking - 1]
+            sig_tf_case = s_shear_tf_peak[n_tf_bucking - 1]
         if i_tf_bucking >= 2:
-            sig_tf_cs_bucked = sig_tf_tresca_max[0]
+            sig_tf_cs_bucked = s_shear_tf_peak[0]
         # ----------------
 
         return (
@@ -4421,7 +4421,7 @@ class Sctfcoil:
             sig_tf_t_max,
             sig_tf_z_max,
             sig_tf_vmises_max,
-            sig_tf_tresca_max,
+            s_shear_tf_peak,
             deflect,
             eyoung_axial,
             eyoung_trans,
@@ -4429,14 +4429,14 @@ class Sctfcoil:
             eyoung_wp_trans,
             poisson_wp_trans,
             radial_array,
-            s_tresca_cond_cea,
+            s_shear_cea_tf_cond,
             poisson_wp_axial,
             sig_tf_r,
             sig_tf_smeared_r,
             sig_tf_smeared_t,
             sig_tf_smeared_z,
             sig_tf_t,
-            sig_tf_tresca,
+            s_shear_tf,
             sig_tf_vmises,
             sig_tf_z,
             str_tf_r,
@@ -5843,7 +5843,7 @@ class Sctfcoil:
         sig_tf_t_max,
         sig_tf_z_max,
         sig_tf_vmises_max,
-        sig_tf_tresca_max,
+        s_shear_tf_peak,
         deflect,
         eyoung_axial,
         eyoung_trans,
@@ -5851,14 +5851,14 @@ class Sctfcoil:
         eyoung_wp_trans,
         poisson_wp_trans,
         radial_array,
-        s_tresca_cond_cea,
+        s_shear_cea_tf_cond,
         poisson_wp_axial,
         sig_tf_r,
         sig_tf_smeared_r,
         sig_tf_smeared_t,
         sig_tf_smeared_z,
         sig_tf_t,
-        sig_tf_tresca,
+        s_shear_tf,
         sig_tf_vmises,
         sig_tf_z,
         str_tf_r,
@@ -5984,12 +5984,12 @@ class Sctfcoil:
         if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
             po.write(
                 self.outfile,
-                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_tresca_max, 1e-6)}",
+                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
         else:
             po.write(
                 self.outfile,
-                f"  Shear (Tresca) \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_tresca_max, 1e-6)}",
+                f"  Shear (Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
 
         po.write(self.outfile, "")
@@ -6061,15 +6061,15 @@ class Sctfcoil:
                 po.ovarre(
                     constants.mfile,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
-                    f"(sig_tf_tresca_max({ii + 1}))",
-                    sig_tf_tresca_max[ii],
+                    f"(s_shear_tf_peak({ii + 1}))",
+                    s_shear_tf_peak[ii],
                 )
             else:
                 po.ovarre(
                     constants.mfile,
                     f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
-                    f"(sig_tf_tresca_max({ii + 1}))",
-                    sig_tf_tresca_max[ii],
+                    f"(s_shear_tf_peak({ii + 1}))",
+                    s_shear_tf_peak[ii],
                 )
 
         # SIG_TF.json storage
@@ -6084,9 +6084,9 @@ class Sctfcoil:
             "Vertical smear stress (MPa)": sig_tf_smeared_z * 1e-6,
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
             "CEA Tresca stress (MPa)": (
-                s_tresca_cond_cea * 1e-6
+                s_shear_cea_tf_cond * 1e-6
                 if tfcoil_variables.i_tf_sup == 1
-                else sig_tf_tresca * 1e-6
+                else s_shear_tf * 1e-6
             ),
             "rad. displacement (mm)": deflect * 1e3,
         }

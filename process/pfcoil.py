@@ -1216,13 +1216,13 @@ class PFCoil:
             areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
 
             if pfv.i_cs_stress == 1:
-                pfv.s_tresca_oh = max(
+                pfv.s_shear_cs_peak = max(
                     abs(pf.sig_hoop - pf.sig_axial),
                     abs(pf.sig_axial - 0.0e0),
                     abs(0.0e0 - pf.sig_hoop),
                 )
             else:
-                pfv.s_tresca_oh = max(
+                pfv.s_shear_cs_peak = max(
                     abs(pf.sig_hoop - 0.0e0),
                     abs(0.0e0 - 0.0e0),
                     abs(0.0e0 - pf.sig_hoop),
@@ -2245,8 +2245,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Maximum shear stress in CS steel for the Tresca criterion (Pa)",
-                    "(s_tresca_oh)",
-                    pfv.s_tresca_oh,
+                    "(s_shear_cs_peak)",
+                    pfv.s_shear_cs_peak,
                     "OP ",
                 )
                 op.ovarre(
