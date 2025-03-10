@@ -43,7 +43,7 @@ Radiation is calculated separately for the core and edge regions, except for syn
 
 ## Synchrotron radiation | `psync_albajar_fidone()`
 
-The formula below is the current syncrotorn radiation loss power implemented in `PROCESS`. It is a combination of the general form given by Albajar et al. [^8] and a wall reflectivity correction given then by Fidone et al. [^9]
+The formula below is the current synchrotron radiation loss power implemented in `PROCESS`. It is a combination of the general form given by Albajar et al. [^8] and a wall reflectivity correction given by Fidone et al. [^9]
 
 $$
 \begin{aligned}
