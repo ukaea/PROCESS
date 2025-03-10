@@ -14,10 +14,10 @@ module pfcoil_variables
 
   public
 
-  integer, parameter :: ngrpmx = 10
+  integer, parameter :: n_pf_groups_max = 10
   !! maximum number of groups of PF coils
 
-  integer, parameter :: nclsmx = 2
+  integer, parameter :: n_pf_coils_in_group_max = 2
   !! maximum number of PF coils in a given group
 
   integer, parameter :: nptsmx = 32
@@ -27,7 +27,7 @@ module pfcoil_variables
   integer, parameter :: nfixmx = 64
   !! maximum number of fixed current PF coils
 
-  integer, parameter :: ngc = ngrpmx*nclsmx
+  integer, parameter :: ngc = n_pf_groups_max*n_pf_coils_in_group_max
   !! maximum total number of coils across all groups
 
   integer, parameter :: ngc2 = ngc+2
@@ -45,63 +45,63 @@ module pfcoil_variables
   !! - =0 Hoop stress only
   !! - =1 Hoop + Axial stress
 
-  real(dp) :: areaoh
+  real(dp) :: a_cs_poloidal
   !! Central solenoid vertical cross-sectional area (m2)
 
-  real(dp) :: a_oh_turn
+  real(dp) :: a_cs_turn
   !! Central solenoid (OH) trun cross-sectional area (m2)
 
   real(dp) :: awpoh
   !! central solenoid conductor+void area with area of steel subtracted (m2)
 
-  real(dp) :: bmaxoh
+  real(dp) :: b_cs_peak_flat_top_end
   !! maximum field in central solenoid at end of flat-top (EoF) (T)
 
-  real(dp) :: bmaxoh0
+  real(dp) :: b_cs_peak_pulse_start
   !! maximum field in central solenoid at beginning of pulse (T)
 
-  real(dp), dimension(ngc2) :: bpf
+  real(dp), dimension(ngc2) :: b_pf_coil_peak
   !! peak field at coil i (T)
 
-  real(dp), dimension(ngrpmx) :: ccl0_ma
+  real(dp), dimension(n_pf_groups_max) :: ccl0_ma
   !! PF group current array, flux-swing cancellation current (MA)
   !! Input if i_pf_current=0, computed otherwise
 
-  real(dp), dimension(ngrpmx) :: ccls_ma
+  real(dp), dimension(n_pf_groups_max) :: ccls_ma
   !! PF group current array, equilibrium current (MA)
   !! Input if i_pf_current=0, computed otherwise
 
-  real(dp) :: cohbop
+  real(dp) :: j_cs_pulse_start
   !! Central solenoid overall current density at beginning of pulse (A/m2)
 
-  real(dp) :: coheof
+  real(dp) :: j_cs_flat_top_end
   !! Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)
 
-  real(dp), dimension(ngc2,6) :: cpt
+  real(dp), dimension(ngc2,6) :: c_pf_coil_turn
   !! current per turn in coil i at time j (A)
 
-  real(dp), dimension(ngc2) :: cptdin
+  real(dp), dimension(ngc2) :: c_pf_coil_turn_peak_input
   !! peak current per turn input for PF coil i (A)
 
-  real(dp), dimension(ngc2) :: curpfb
+  real(dp), dimension(ngc2) :: c_pf_cs_coil_pulse_start_ma
   !! PF coil current array, at beginning of pulse (MA)
   !! Indexed by coil number, not group number
 
-  real(dp), dimension(ngc2) :: curpff
+  real(dp), dimension(ngc2) :: c_pf_cs_coil_flat_top_ma
   !! PF coil current array, at flat top (MA)
   !! Indexed by coil number, not group number
 
-  real(dp), dimension(ngc2) :: curpfs
+  real(dp), dimension(ngc2) :: c_pf_cs_coil_pulse_end_ma
   !! PF coil current array, at end of pulse (MA)
   !! Indexed by coil number, not group number
 
   real(dp) :: etapsu
   !! Efficiency of transfer of PF stored energy into or out of storage.
 
-  real(dp) :: fcohbof
+  real(dp) :: f_j_cs_start_end_flat_top
   !! ratio of central solenoid overall current density at beginning of flat-top / end of flat-top
 
-  real(dp) :: fcohbop
+  real(dp) :: f_j_cs_start_pulse_end_flat_top
   !! ratio of central solenoid overall current density at beginning of pulse / end of flat-top
   !! (`iteration variable 41`)
 
@@ -111,10 +111,10 @@ module pfcoil_variables
   real(dp) :: fcupfsu
   !! copper fraction of cable conductor (PF coils)
 
-  real(dp) :: fvssu
+  real(dp) :: fvs_cs_pf_total_ramp
   !! F-value for `constraint equation 51`
 
-  integer, dimension(ngrpmx) :: ipfloc
+  integer, dimension(n_pf_groups_max) :: i_pf_location
   !! Switch for location of PF coil group i:
   !!
   !! - =1 PF coil on top of central solenoid (flux ramp only)
@@ -122,7 +122,7 @@ module pfcoil_variables
   !! - =3 PF coil outside of TF coil (equilibrium coil)
   !! - =4 PF coil, general location (equilibrium coil)
 
-  integer :: ipfres
+  integer :: i_pf_conductor
   !! switch for PF & CS coil conductor type:
   !!
   !! - =0 superconducting PF coils
@@ -131,7 +131,7 @@ module pfcoil_variables
   real(dp) :: itr_sum
   !! total sum of I x turns x radius for all PF coils and CS (Am)
 
-  integer :: isumatoh
+  integer :: i_cs_superconductor
   !! switch for superconductor material in central solenoid:
   !!
   !! - =1 ITER Nb3Sn critical surface model with standard
@@ -146,7 +146,7 @@ module pfcoil_variables
   !! - =8 Durham Ginzburg-Landau critical surface model for REBCO
   !! - =9 Hazelton experimental data + Zhai conceptual model for REBCO
 
-  integer :: isumatpf
+  integer :: i_pf_superconductor
   !! switch for superconductor material in PF coils:
   !!
   !! - =1 ITER Nb3Sn critical surface model with standard
@@ -172,7 +172,7 @@ module pfcoil_variables
   integer :: i_pf_current
   !! Switch for controlling the current of the PF coils:
   !!
-  !! - =0 Input via the variables curpfb, curpff, curpfs
+  !! - =0 Input via the variables c_pf_cs_coil_pulse_start_ma, c_pf_cs_coil_flat_top_ma, c_pf_cs_coil_pulse_end_ma
   !! - =1 SVD targets zero field across midplane (flux swing
   !!   coils) and the correct vertical field at the plasma
   !!   center (equilibrium coils)
@@ -186,10 +186,10 @@ module pfcoil_variables
   !! - =1 Outboard PF coils all have same radius, cylindrical
   !!   winding surface
 
-  real(dp) :: jscoh_bop
+  real(dp) :: j_cs_conductor_critical_pulse_start
   !! central solenoid superconductor critical current density (A/m2) at beginning-of-pulse
 
-  real(dp) :: jscoh_eof
+  real(dp) :: j_cs_conductor_critical_flat_top_end
   !! central solenoid superconductor critical current density (A/m2) at end-of-flattop
 
   real(dp) :: jcableoh_bop
@@ -198,26 +198,26 @@ module pfcoil_variables
   real(dp) :: jcableoh_eof
   !! central solenoid cable critical current density (A/m2) at end-of-flattop
 
-  integer :: ncirt
+  integer :: n_pf_cs_plasma_circuits
   !! number of PF circuits (including central solenoid and plasma)
 
-  integer, dimension(ngrpmx+2) :: ncls
+  integer, dimension(n_pf_groups_max+2) :: n_pf_coils_in_group
   !! number of PF coils in group j
 
   integer :: nfxfh
   !! number of filaments the top and bottom of the central solenoid should be broken
   !! into during scaling (5 - 10 is good)
 
-  integer :: ngrp
+  integer :: n_pf_coil_groups
   !! number of groups of PF coils. Symmetric coil pairs should all be in the same group
 
-  integer :: nohc
+  integer :: n_cs_pf_coils
   !! number of PF coils (excluding the central solenoid) + 1
 
-  real(dp) :: ohhghf
+  real(dp) :: f_z_cs_tf_internal
   !! Central solenoid height / TF coil internal height
 
-  real(dp) :: oh_steel_frac
+  real(dp) :: f_a_cs_steel
   !! central solenoid steel fraction (`iteration variable 122`)
 
   real(dp) :: pf_current_safety_factor
@@ -227,74 +227,74 @@ module pfcoil_variables
   real(dp), dimension(ngc2) :: pfcaseth
   !! steel case thickness for PF coil i (m)
 
-  real(dp) :: pfclres
-  !! PF coil resistivity (if ipfres=1) (Ohm-m)
+  real(dp) :: rho_pf_coil
+  !! PF coil resistivity (if i_pf_conductor=1) (Ohm-m)
 
   real(dp) :: rhopfbus
   !! Resistivity of CS and PF coil bus bars (irrespective of
   !! whether the coils themselves are superconducting or resistive) (Ohm-m)
 
-  real(dp) :: pfmmax
+  real(dp) :: m_pf_coil_max
   !! mass of heaviest PF coil (tonnes)
 
-  real(dp) :: pfrmax
+  real(dp) :: r_pf_coil_outer_max
   !! radius of largest PF coil (m)
 
   real(dp) :: pfwpmw
   !! Total mean wall plug power dissipated in PFC and CS power supplies (MW) (issue #713)
 
-  real(dp) :: powohres
+  real(dp) :: p_cs_resistive_flat_top
   !! central solenoid resistive power during flattop (W)
 
-  real(dp) :: powpfres
+  real(dp) :: p_pf_coil_resistive_total_flat_top
   !! total PF coil resistive losses during flattop (W)
 
-  real(dp), dimension(ngc2) :: ra
+  real(dp), dimension(ngc2) :: r_pf_coil_inner
   !! inner radius of coil i (m)
 
-  real(dp), dimension(ngc2) :: rb
+  real(dp), dimension(ngc2) :: r_pf_coil_outer
   !! outer radius of coil i (m)
 
-  real(dp), dimension(ngc2) :: ric
+  real(dp), dimension(ngc2) :: c_pf_cs_coils_peak_ma
   !! peak current in coil i (MA-turns)
 
-  real(dp), dimension(ngc2) :: rjconpf
+  real(dp), dimension(ngc2) :: j_pf_coil_wp_peak
   !! average winding pack current density of PF coil i (A/m2) at time of peak
-  !! current in that coil (calculated for `ipfloc=1` coils)
+  !! current in that coil (calculated for `i_pf_location=1` coils)
 
-  real(dp) :: rjohc
+  real(dp) :: j_cs_critical_flat_top_end
   !! allowable central solenoid current density at end of flat-top (A/m2)
 
-  real(dp) :: rjohc0
+  real(dp) :: j_cs_critical_pulse_start
   !! allowable central solenoid current density at beginning of pulse (A/m2)
 
-  real(dp), dimension(ngc2) :: rjpfalw
+  real(dp), dimension(ngc2) :: j_pf_wp_critical
   !! allowable winding pack current density of PF coil i (A/m2)
 
-  real(dp) :: rohc
+  real(dp) :: r_cs_middle
   !! radius to the centre of the central solenoid (m)
 
   real(dp) :: routr
-  !! radial distance (m) from outboard TF coil leg to centre of `ipfloc=3` PF coils
+  !! radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils
 
-  real(dp), dimension(ngc2) :: rpf
+  real(dp), dimension(ngc2) :: r_pf_coil_middle
   !! radius of PF coil i (m)
 
   real(dp) :: rpf1
-  !! offset (m) of radial position of `ipfloc=1` PF coils from being directly above
+  !! offset (m) of radial position of `i_pf_location=1` PF coils from being directly above
   !! the central solenoid
 
   real(dp) :: rpf2
-  !! offset (m) of radial position of `ipfloc=2` PF coils from being at
+  !! offset (m) of radial position of `i_pf_location=2` PF coils from being at
   !! rmajor (offset = rpf2*triang*rminor)
 
-  real(dp), dimension(ngrpmx) :: rref
+  real(dp), dimension(n_pf_groups_max) :: rref
   !! PF coil radial positioning adjuster:
   !!
-  !! - for groups j with ipfloc(j) = 1; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 2; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 3; rref(j) is ignored
-  !! - for groups j with ipfloc(j) = 4; rref(j) is radius of
+  !! - for groups j with i_pf_location(j) = 1; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 2; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 3; rref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 4; rref(j) is radius of
   !!   the coil in units of minor radii from the major radius
   !!   (r = rmajor + rref*rminor)
 
@@ -303,94 +303,94 @@ module pfcoil_variables
 
   real(dp) :: sigpfcalw
   !! maximum permissible tensile stress (MPa) in steel coil cases for superconducting
-  !! PF coils (`ipfres=0`)
+  !! PF coils (`i_pf_conductor=0`)
 
   real(dp) :: sigpfcf
-  !! fraction of JxB hoop force supported by steel case for superconducting PF coils (`ipfres=0`)
+  !! fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)
 
-  real(dp), dimension(ngc2,ngc2) :: sxlg
+  real(dp), dimension(ngc2,ngc2) :: ind_pf_cs_plasma_mutual
   !! mutual inductance matrix (H)
 
-  real(dp) :: tmargoh
+  real(dp) :: temp_cs_margin
   !! Central solenoid temperature margin (K)
 
-  real(dp), dimension(ngc2) :: turns
+  real(dp), dimension(ngc2) :: n_pf_coil_turns
   !! number of turns in PF coil i
 
-  real(dp), dimension(ngc2) :: vf
+  real(dp), dimension(ngc2) :: f_a_pf_coil_void
   !! winding pack void fraction of PF coil i for coolant
 
-  real(dp) :: vfohc
+  real(dp) :: f_a_cs_void
   !! void fraction of central solenoid conductor for coolant
 
-  real(dp) :: vsbn
+  real(dp) :: vs_cs_pf_total_burn
   !! total flux swing available for burn (Wb)
 
-  real(dp) :: vsefbn
+  real(dp) :: vs_pf_coils_total_burn
   !! flux swing from PF coils for burn (Wb)
 
-  real(dp) :: vsefsu
+  real(dp) :: vs_pf_coils_total_ramp
   !! flux swing from PF coils for startup (Wb)
 
-  real(dp) :: vseft
+  real(dp) :: vs_pf_coils_total_pulse
   !! total flux swing from PF coils (Wb)
 
-  real(dp) :: vsoh
+  real(dp) :: vs_cs_total_pulse
   !! total flux swing from the central solenoid (Wb)
 
-  real(dp) :: vsohbn
+  real(dp) :: vs_cs_burn
   !! central solenoid flux swing for burn (Wb)
 
-  real(dp) :: vsohsu
+  real(dp) :: vs_cs_ramp
   !! central solenoid flux swing for startup (Wb)
 
-  real(dp) :: vssu
-  !! total flux swing for startup (`constraint eqn 51` to enforce vssu=vs_plasma_res_ramp+vs_plasma_ind_ramp) (Wb)
+  real(dp) :: vs_cs_pf_total_ramp
+  !! total flux swing for startup (`constraint eqn 51` to enforce vs_cs_pf_total_ramp=vs_plasma_res_ramp+vs_plasma_ind_ramp) (Wb)
 
-  real(dp) :: vstot
+  real(dp) :: vs_cs_pf_total_pulse
   !! total flux swing for pulse (Wb)
 
   real(dp), dimension(ngc2,6) :: waves
   !! used in current waveform of PF coils/central solenoid
 
-  real(dp) :: whtpf
+  real(dp) :: m_pf_coil_conductor_total
   !! total mass of the PF coil conductor (kg)
 
-  real(dp) :: whtpfs
+  real(dp) :: m_pf_coil_structure_total
   !! total mass of the PF coil structure (kg)
 
-  real(dp), dimension(ngc2) :: wtc
+  real(dp), dimension(ngc2) :: m_pf_coil_conductor
   !! conductor mass for PF coil i (kg)
 
-  real(dp), dimension(ngc2) :: wts
+  real(dp), dimension(ngc2) :: m_pf_coil_structure
   !! structure mass for PF coil i (kg)
 
-  real(dp), dimension(ngc2) :: zh
+  real(dp), dimension(ngc2) :: z_pf_coil_upper
   !! upper point of PF coil i (m)
 
-  real(dp), dimension(ngc2) :: zl
+  real(dp), dimension(ngc2) :: z_pf_coil_lower
   !! lower point of PF coil i (m)
 
-  real(dp), dimension(ngc2) :: zpf
+  real(dp), dimension(ngc2) :: z_pf_coil_middle
   !! z (height) location of PF coil i (m)
 
-  real(dp), dimension(ngrpmx) :: zref
+  real(dp), dimension(n_pf_groups_max) :: zref
   !! PF coil vertical positioning adjuster:
   !!
-  !! - for groups j with ipfloc(j) = 1; zref(j) is ignored
-  !! - for groups j with ipfloc(j) = 2 AND itart=1 (only);
+  !! - for groups j with i_pf_location(j) = 1; zref(j) is ignored
+  !! - for groups j with i_pf_location(j) = 2 AND itart=1 (only);
   !!   zref(j) is distance of centre of PF coil from inside
   !!   edge of TF coil (remember that PF coils for STs lie
   !!   within the TF coil)
-  !! - for groups j with ipfloc(j) = 3; zref(j) = ratio of
+  !! - for groups j with i_pf_location(j) = 3; zref(j) = ratio of
   !!   height of coil group j to plasma minor radius</UL>
-  !! - for groups j with ipfloc(j) = 4; zref(j) = ratio of
+  !! - for groups j with i_pf_location(j) = 4; zref(j) = ratio of
   !!   height of coil group j to plasma minor radius</UL>
 
-  real(dp) :: bmaxcs_lim
+  real(dp) :: b_cs_limit_max
   !! Central solenoid max field limit [T]
 
-  real(dp) :: fbmaxcs
+  real(dp) :: fb_cs_limit_max
   !! F-value for CS mmax field (`cons. 79`, `itvar 149`)
 
   real(dp) :: ld_ratio_cst
@@ -417,74 +417,74 @@ module pfcoil_variables
     alfapf = 5.0D-10
     alstroh = 4.0D8
     i_cs_stress = 0
-    areaoh = 0.0D0
-    a_oh_turn = 0.0D0
+    a_cs_poloidal = 0.0D0
+    a_cs_turn = 0.0D0
     awpoh = 0.0D0
-    bmaxoh = 0.0D0
-    bmaxoh0 = 0.0D0
-    bpf = 0.0D0
+    b_cs_peak_flat_top_end = 0.0D0
+    b_cs_peak_pulse_start = 0.0D0
+    b_pf_coil_peak = 0.0D0
     ccl0_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
     ccls_ma = (/0.0D0, 0.0D0, 0.0D0, &
       0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0/)
-    cohbop = 0.0D0
-    coheof = 1.85D7
-    cpt = 0.0D0
-    cptdin = (/4.0D4, 4.0D4, 4.0D4, &
+    j_cs_pulse_start = 0.0D0
+    j_cs_flat_top_end = 1.85D7
+    c_pf_coil_turn = 0.0D0
+    c_pf_coil_turn_peak_input = (/4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4, &
     4.0D4, 4.0D4, 4.0D4, 4.0D4, 4.0D4/)
-    curpfb = 0.0D0
-    curpff = 0.0D0
-    curpfs = 0.0D0
+    c_pf_cs_coil_pulse_start_ma = 0.0D0
+    c_pf_cs_coil_flat_top_ma = 0.0D0
+    c_pf_cs_coil_pulse_end_ma = 0.0D0
     etapsu = 0.9D0
-    fcohbof = 0.0D0
-    fcohbop = 0.9D0
+    f_j_cs_start_end_flat_top = 0.0D0
+    f_j_cs_start_pulse_end_flat_top = 0.9D0
     fcuohsu = 0.7D0
     fcupfsu = 0.69D0
-    fvssu = 1.0
-    ipfloc = (/2,2,3,0,0,0,0,0,0,0/)
-    ipfres = 0
+    fvs_cs_pf_total_ramp = 1.0
+    i_pf_location = (/2,2,3,0,0,0,0,0,0,0/)
+    i_pf_conductor = 0
     itr_sum = 0.0D0
-    isumatoh = 1
-    isumatpf = 1
+    i_cs_superconductor = 1
+    i_pf_superconductor = 1
     j_crit_str_cs = 0.0D0
     j_crit_str_pf = 0.0D0
     i_pf_current = 1
     i_sup_pf_shape = 0
-    jscoh_bop = 0.0D0
-    jscoh_eof = 0.0D0
+    j_cs_conductor_critical_pulse_start = 0.0D0
+    j_cs_conductor_critical_flat_top_end = 0.0D0
     jcableoh_bop = 0.0D0
     jcableoh_eof = 0.0D0
-    ncirt = 0
-    ncls = (/1,1,2,0,0,0,0,0,0,0,0,0/)
+    n_pf_cs_plasma_circuits = 0
+    n_pf_coils_in_group = (/1,1,2,0,0,0,0,0,0,0,0,0/)
     nfxfh = 7
-    ngrp = 3
-    nohc = 0
-    ohhghf = 0.71D0
-    oh_steel_frac = 0.5D0
+    n_pf_coil_groups = 3
+    n_cs_pf_coils = 0
+    f_z_cs_tf_internal = 0.71D0
+    f_a_cs_steel = 0.5D0
     pf_current_safety_factor = 1.0D0
     pfcaseth = 0.0D0
-    pfclres = 2.5D-8
+    rho_pf_coil = 2.5D-8
     rhopfbus = 3.93D-8
-    pfmmax = 0.0D0
-    pfrmax = 0.0D0
+    m_pf_coil_max = 0.0D0
+    r_pf_coil_outer_max = 0.0D0
     pfwpmw = 0.0D0
-    powohres = 0.0D0
-    powpfres = 0.0D0
-    ra = 0.0D0
-    rb = 0.0D0
-    ric = 0.0D0
-    rjconpf = (/3.0D7, 3.0D7, 3.0D7, &
+    p_cs_resistive_flat_top = 0.0D0
+    p_pf_coil_resistive_total_flat_top = 0.0D0
+    r_pf_coil_inner = 0.0D0
+    r_pf_coil_outer = 0.0D0
+    c_pf_cs_coils_peak_ma = 0.0D0
+    j_pf_coil_wp_peak = (/3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7, &
       3.0D7, 3.0D7, 3.0D7, 3.0D7, 3.0D7/)
-    rjohc = 0.0D0
-    rjohc0 = 0.0D0
-    rjpfalw = 0.0D0
-    rohc = 0.0D0
+    j_cs_critical_flat_top_end = 0.0D0
+    j_cs_critical_pulse_start = 0.0D0
+    j_pf_wp_critical = 0.0D0
+    r_cs_middle = 0.0D0
     routr = 1.5D0
-    rpf = 0.0D0
+    r_pf_coil_middle = 0.0D0
     rpf1 = 0.0D0
     rpf2 = -1.63D0
     rref = (/7.0D0, 7.0D0, 7.0D0, &
@@ -492,32 +492,32 @@ module pfcoil_variables
     s_shear_cs_peak = 0.0D0
     sigpfcalw = 500.0D0
     sigpfcf = 1.0D0
-    sxlg = 0.0D0
-    tmargoh = 0.0D0
-    turns = 0.0D0
-    vf = 0.3D0
-    vfohc = 0.3D0
-    vsbn = 0.0D0
-    vsefbn = 0.0D0
-    vsefsu = 0.0D0
-    vseft = 0.0D0
-    vsoh = 0.0D0
-    vsohbn = 0.0D0
-    vsohsu = 0.0D0
-    vssu = 0.0D0
-    vstot = 0.0D0
+    ind_pf_cs_plasma_mutual = 0.0D0
+    temp_cs_margin = 0.0D0
+    n_pf_coil_turns = 0.0D0
+    f_a_pf_coil_void = 0.3D0
+    f_a_cs_void = 0.3D0
+    vs_cs_pf_total_burn = 0.0D0
+    vs_pf_coils_total_burn = 0.0D0
+    vs_pf_coils_total_ramp = 0.0D0
+    vs_pf_coils_total_pulse = 0.0D0
+    vs_cs_total_pulse = 0.0D0
+    vs_cs_burn = 0.0D0
+    vs_cs_ramp = 0.0D0
+    vs_cs_pf_total_ramp = 0.0D0
+    vs_cs_pf_total_pulse = 0.0D0
     waves = 0.0D0
-    whtpf = 0.0D0
-    whtpfs = 0.0D0
-    wtc = 0.0D0
-    wts = 0.0D0
-    zh = 0.0D0
-    zl = 0.0D0
-    zpf = 0.0D0
+    m_pf_coil_conductor_total = 0.0D0
+    m_pf_coil_structure_total = 0.0D0
+    m_pf_coil_conductor = 0.0D0
+    m_pf_coil_structure = 0.0D0
+    z_pf_coil_upper = 0.0D0
+    z_pf_coil_lower = 0.0D0
+    z_pf_coil_middle = 0.0D0
     zref = (/3.6D0, 1.2D0, 2.5D0, &
       1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0, 1.0D0/)
-    bmaxcs_lim = 13.0
-    fbmaxcs = 1.0
+    b_cs_limit_max = 13.0
+    fb_cs_limit_max = 1.0
     ld_ratio_cst = 70/22
     l_cond_cst = 0.0D0
     d_cond_cst = 0.0D0

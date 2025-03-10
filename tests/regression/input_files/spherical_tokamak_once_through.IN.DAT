@@ -299,12 +299,12 @@ epsvmc   = 1.0e-11 * epsvmc /1;0e-6/ ; error tolerance for VMCON
 
 *-----------------Pfcoil Variables-----------------*
 
-ipfloc   = 2,3,3,4 * Switch for location of PF coil group i;
-ipfres   = 0 * switch for PF &amp; CS coil conductor type;
-isumatpf = 9 * switch for superconductor material in PF coils;
+i_pf_location   = 2,3,3,4 * Switch for location of PF coil group i;
+i_pf_conductor   = 0 * switch for PF &amp; CS coil conductor type;
+i_pf_superconductor = 9 * switch for superconductor material in PF coils;
 i_sup_pf_shape = 1 * Switch for the placement of Location 3 (outboard) PF coils
-ncls     = 2,2,2,2 * number of PF coils in group j
-ngrp     = 4 * number of groups of PF coils; Symmetric coil pairs should all be in the same group
+n_pf_coils_in_group     = 2,2,2,2 * number of PF coils in group j
+n_pf_coil_groups     = 4 * number of groups of PF coils; Symmetric coil pairs should all be in the same group
 rref     = 7.0D0, 7.0D0, 7.0D0, 2.0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0, 7.0D0 * PF coil radial positioning adjuster;
 zref(1) = 3.6
 zref(2) = 1.2

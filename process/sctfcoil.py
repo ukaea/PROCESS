@@ -1266,19 +1266,19 @@ class Sctfcoil:
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
                 build_variables.hmax,
-                pfcoil_variables.ohhghf,
+                pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.tf_in_cs,
                 build_variables.dr_tf_inboard,
                 build_variables.dr_cs_tf_gap,
-                pfcoil_variables.ipfres,
-                pfcoil_variables.coheof,
-                pfcoil_variables.cohbop,
-                pfcoil_variables.cptdin,
-                pfcoil_variables.ncls,
+                pfcoil_variables.i_pf_conductor,
+                pfcoil_variables.j_cs_flat_top_end,
+                pfcoil_variables.j_cs_pulse_start,
+                pfcoil_variables.c_pf_coil_turn_peak_input,
+                pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.ld_ratio_cst,
                 pfcoil_variables.r_out_cst,
-                pfcoil_variables.oh_steel_frac,
+                pfcoil_variables.f_a_cs_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,
                 tfcoil_variables.eyoung_cond_axial,
@@ -3581,19 +3581,19 @@ class Sctfcoil:
         r_tf_inboard_in,
         dr_bore,
         hmax,
-        ohhghf,
+        f_z_cs_tf_internal,
         dr_cs,
         tf_in_cs,
         dr_tf_inboard,
         dr_cs_tf_gap,
-        ipfres,
-        coheof,
-        cohbop,
-        cptdin,
-        ncls,
+        i_pf_conductor,
+        j_cs_flat_top_end,
+        j_cs_pulse_start,
+        c_pf_coil_turn_peak_input,
+        n_pf_coils_in_group,
         ld_ratio_cst,
         r_out_cst,
-        oh_steel_frac,
+        f_a_cs_steel,
         eyoung_steel,
         poisson_steel,
         eyoung_cond_axial,
@@ -3772,31 +3772,37 @@ class Sctfcoil:
                 radtf[0] = dr_bore
 
             # Superconducting CS
-            if ipfres == 0:
+            if i_pf_conductor == 0:
                 # Getting the turn dimention from scratch
                 # as the TF is called before CS in caller.f90
                 # -#
 
                 # CS vertical cross-section area [m2]
                 if tf_in_cs == 1:
-                    a_oh = 2.0e0 * hmax * ohhghf * (dr_bore - dr_tf_inboard)
+                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * (dr_bore - dr_tf_inboard)
                 else:
-                    a_oh = 2.0e0 * hmax * ohhghf * dr_cs
+                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * dr_cs
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
-                curr_oh_max = 1.0e-6 * np.maximum(coheof, cohbop) * a_oh
+                curr_oh_max = (
+                    1.0e-6 * np.maximum(j_cs_flat_top_end, j_cs_pulse_start) * a_oh
+                )
 
                 #  Number of turns
-                n_oh_turns = 1.0e6 * curr_oh_max / cptdin[sum(ncls)]
+                n_oh_turns = (
+                    1.0e6
+                    * curr_oh_max
+                    / c_pf_coil_turn_peak_input[sum(n_pf_coils_in_group)]
+                )
 
                 # CS Turn vertical cross-sectionnal area
-                a_oh_turn = a_oh / n_oh_turns
+                a_cs_turn = a_oh / n_oh_turns
 
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
                 d_cond_cst = (
-                    a_oh_turn / ld_ratio_cst
+                    a_cs_turn / ld_ratio_cst
                 ) ** 0.5  # width of cs turn conduit
                 l_cond_cst = ld_ratio_cst * d_cond_cst  # length of cs turn conduit
                 # Radius of turn space = r_in_cst
@@ -3806,7 +3812,7 @@ class Sctfcoil:
                 p2 = (
                     (l_cond_cst * d_cond_cst)
                     - (4 - np.pi) * (r_out_cst**2)
-                    - (a_oh_turn * oh_steel_frac)
+                    - (a_cs_turn * f_a_cs_steel)
                 ) / np.pi
                 r_in_cst = -((l_cond_cst - d_cond_cst) / np.pi) + np.sqrt(p1 + p2)
                 t_cond_oh = (
@@ -3831,10 +3837,10 @@ class Sctfcoil:
                 # Get transverse properties
                 (eyoung_trans[0], a_working, poisson_trans[0]) = eyoung_parallel(
                     eyoung_steel,
-                    oh_steel_frac,
+                    f_a_cs_steel,
                     poisson_steel,
                     eyoung_cond_axial,
-                    1e0 - oh_steel_frac,
+                    1e0 - f_a_cs_steel,
                     poisson_cond_axial,
                 )
 
@@ -4241,7 +4247,7 @@ class Sctfcoil:
         # --------------------------------
         # SC central solenoid coil stress unsmearing (bucked and wedged only)
         # ---
-        if i_tf_bucking >= 2 and ipfres == 0:
+        if i_tf_bucking >= 2 and i_pf_conductor == 0:
             # Central Solenoid (OH) steel conduit stress unsmearing factors
             for ii in range(n_radial_array):
                 sig_tf_r[ii] = sig_tf_r[ii] * eyoung_cs_stiffest_leg / eyoung_axial[0]

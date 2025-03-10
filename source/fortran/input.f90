@@ -295,11 +295,11 @@ contains
       coreradiationfraction, fimp
     use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
       epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
-    use pfcoil_variables, only: rhopfbus, rjconpf, zref, fcuohsu, oh_steel_frac, vf, &
-      coheof, sigpfcalw, alstroh, ipfres, fcupfsu, fvssu, etapsu, i_cs_stress, &
-      fbmaxcs, ngc, rpf2, fcohbop, ohhghf, vfohc, isumatoh, ngrpmx, ngc2, rpf1, &
-      ngrp, isumatpf, nfxfh, alfapf, routr, sigpfcf, pfclres, bmaxcs_lim, &
-      ncls, nfixmx, cptdin, ipfloc, i_sup_pf_shape, rref, i_pf_current, &
+    use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, f_a_pf_coil_void, &
+      j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvs_cs_pf_total_ramp, etapsu, i_cs_stress, &
+      fb_cs_limit_max, ngc, rpf2, f_j_cs_start_pulse_end_flat_top, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
+      n_pf_coil_groups, i_pf_superconductor, nfxfh, alfapf, routr, sigpfcf, rho_pf_coil, b_cs_limit_max, &
+      n_pf_coils_in_group, nfixmx, c_pf_coil_turn_peak_input, i_pf_location, i_sup_pf_shape, rref, i_pf_current, &
       ccl0_ma, ccls_ma, ld_ratio_cst
     use physics_variables, only: ipedestal, taumax, i_single_null, fvsbrnni, &
       rhopedt, f_vol_plasma, f_deuterium, ffwal, i_beta_component, itartpf, i_l_h_threshold, &
@@ -951,8 +951,8 @@ contains
        case ('fvs')
           call parse_real_variable('fvs', fvs, 0.001D0, 10.0D0, &
                'F-value for startup V-s requirement')
-       case ('fvssu')
-         call parse_real_variable('fvssu', fvssu, 0.001D0, 10.0D0, &
+       case ('fvs_cs_pf_total_ramp')
+         call parse_real_variable('fvs_cs_pf_total_ramp', fvs_cs_pf_total_ramp, 0.001D0, 10.0D0, &
                'F-value for start up V-s requirement and availability equality')
        case ('fvvhe')
           call parse_real_variable('fvvhe', fvvhe, 0.001D0, 10.0D0, &
@@ -1332,8 +1332,8 @@ contains
        case ('fseppc')
           call parse_real_variable('fseppc', fseppc, 1.0D6, 1.0D9, &
                'CS separation force held by CS pre-comp structure')
-       case ('oh_steel_frac')
-          call parse_real_variable('oh_steel_frac', oh_steel_frac, 1.0D-3, 0.999D0, &
+       case ('f_a_cs_steel')
+          call parse_real_variable('f_a_cs_steel', f_a_cs_steel, 1.0D-3, 0.999D0, &
                'Central solenoid steel fraction')
        case ('foh_stress')
           call parse_real_variable('foh_stress', foh_stress, 1.0D-3, 1.0D0, &
@@ -1816,11 +1816,11 @@ contains
        case ('rhopfbus')
           call parse_real_variable('rhopfbus', rhopfbus, 0.0D0, 1.0D-5, &
                'CS and PF coil bus (feeders) resistivity (ohm-m)')
-       case ('bmaxcs_lim')
-         call parse_real_variable('bmaxcs_lim', bmaxcs_lim, 0.01D0, 100.0D0, &
+       case ('b_cs_limit_max')
+         call parse_real_variable('b_cs_limit_max', b_cs_limit_max, 0.01D0, 100.0D0, &
                'Maximum allowed peak field on central solenoid')
-       case ('fbmaxcs')
-         call parse_real_variable('fbmaxcs', fbmaxcs, 0.01D0, 1.0D0, &
+       case ('fb_cs_limit_max')
+         call parse_real_variable('fb_cs_limit_max', fb_cs_limit_max, 0.01D0, 1.0D0, &
                'F-value for max peak CS field (con. 79, itvar 149)')
        case ('alstroh')
                call parse_real_variable('alstroh', alstroh, 1.0D6, 1.0D11, &
@@ -1831,17 +1831,17 @@ contains
        case ('alfapf')
           call parse_real_variable('alfapf', alfapf, 1.0D-12, 1.0D0, &
                'PF coil current smoothing parameter')
-       case ('coheof')
-          call parse_real_variable('coheof', coheof, 1.0D4, 5.0D8, &
+       case ('j_cs_flat_top_end')
+          call parse_real_variable('j_cs_flat_top_end', j_cs_flat_top_end, 1.0D4, 5.0D8, &
                'Central Solenoid current density at EOF')
-       case ('cptdin')
-          call parse_real_array('cptdin', cptdin, isub1, ngc2, &
+       case ('c_pf_coil_turn_peak_input')
+          call parse_real_array('c_pf_coil_turn_peak_input', c_pf_coil_turn_peak_input, isub1, ngc2, &
                'Current per turn for PF coil', icode)
        case ('etapsu')
           call parse_real_variable('etapsu', etapsu, 0.0D0, 1.0D0, &
                'Efficiency of ohmic heating')
-       case ('fcohbop')
-          call parse_real_variable('fcohbop', fcohbop, 0.0D0, 1.0D0, &
+       case ('f_j_cs_start_pulse_end_flat_top')
+          call parse_real_variable('f_j_cs_start_pulse_end_flat_top', f_j_cs_start_pulse_end_flat_top, 0.0D0, 1.0D0, &
                'Central Solenoid J ratio : BOP/EOF')
        case ('fcuohsu')
           call parse_real_variable('fcuohsu', fcuohsu, 0.0D0, 1.0D0, &
@@ -1849,17 +1849,17 @@ contains
        case ('fcupfsu')
           call parse_real_variable('fcupfsu', fcupfsu, 0.0D0, 1.0D0, &
                'Cu fraction of PF cable conductor')
-       case ('ipfloc')
-          call parse_int_array('ipfloc', ipfloc, isub1, ngrpmx, &
+       case ('i_pf_location')
+          call parse_int_array('i_pf_location', i_pf_location, isub1, n_pf_groups_max, &
                'PF coil location', icode)
-       case ('ipfres')
-          call parse_int_variable('ipfres', ipfres, 0, 1, &
+       case ('i_pf_conductor')
+          call parse_int_variable('i_pf_conductor', i_pf_conductor, 0, 1, &
                'Switch for supercond / resist PF coils')
-       case ('isumatoh')
-          call parse_int_variable('isumatoh', isumatoh, 1, 9, &
+       case ('i_cs_superconductor')
+          call parse_int_variable('i_cs_superconductor', i_cs_superconductor, 1, 9, &
                'Central Solenoid superconductor material')
-       case ('isumatpf')
-          call parse_int_variable('isumatpf', isumatpf, 1, 9, &
+       case ('i_pf_superconductor')
+          call parse_int_variable('i_pf_superconductor', i_pf_superconductor, 1, 9, &
                'PF coil superconductor material')
        case ('supercond_cost_model')
           call parse_int_variable('supercond_cost_model', supercond_cost_model, 0, 1, &
@@ -1870,23 +1870,23 @@ contains
        case ('i_sup_pf_shape')
           call parse_int_variable('i_sup_pf_shape', i_sup_pf_shape, 0, 1, &
                'Switch to place outboard PF coils when TF superconducting')
-       case ('ncls')
-          call parse_int_array('ncls', ncls, isub1, ngrpmx+2, &
+       case ('n_pf_coils_in_group')
+          call parse_int_array('n_pf_coils_in_group', n_pf_coils_in_group, isub1, n_pf_groups_max+2, &
                'No of coils in PF group', icode)
        case ('nfxfh')
           call parse_int_variable('nfxfh', nfxfh, 1, nfixmx/2, &
                'Central Solenoid splitting parameter')
-       case ('ngrp')
-          call parse_int_variable('ngrp', ngrp, 0, ngrpmx, &
+       case ('n_pf_coil_groups')
+          call parse_int_variable('n_pf_coil_groups', n_pf_coil_groups, 0, n_pf_groups_max, &
                'No of groups of PF coils')
-       case ('ohhghf')
-          call parse_real_variable('ohhghf', ohhghf, 0.0D0, 2.0D0, &
+       case ('f_z_cs_tf_internal')
+          call parse_real_variable('f_z_cs_tf_internal', f_z_cs_tf_internal, 0.0D0, 2.0D0, &
                'Central Solenoid height / TF coil height')
-       case ('pfclres')
-          call parse_real_variable('pfclres', pfclres, 0.0D0, 1.0D-4, &
+       case ('rho_pf_coil')
+          call parse_real_variable('rho_pf_coil', rho_pf_coil, 0.0D0, 1.0D-4, &
                'PF coil resistivity (ohm-m)')
-       case ('rjconpf')
-          call parse_real_array('rjconpf', rjconpf, isub1, ngc2, &
+       case ('j_pf_coil_wp_peak')
+          call parse_real_array('j_pf_coil_wp_peak', j_pf_coil_wp_peak, isub1, ngc2, &
                'Average J of PF coil (A/m2)', icode)
        case ('routr')
           call parse_real_variable('routr', routr, -3.0D0, 3.0D0, &
@@ -1898,13 +1898,13 @@ contains
           call parse_real_variable('rpf2', rpf2, -3.0D0, 3.0D0, &
                'Radial offset for location 2 PF coils')
        case ('rref')
-          call parse_real_array('rref', rref, isub1, ngrpmx, &
+          call parse_real_array('rref', rref, isub1, n_pf_groups_max, &
                'radius of location 4 coil groups, minor radii from major radius', icode)
        case ('ccl0_ma')
-          call parse_real_array('ccl0_ma', ccl0_ma, isub1, ngrpmx, &
+          call parse_real_array('ccl0_ma', ccl0_ma, isub1, n_pf_groups_max, &
                'Flux-swing cancel current of PF coil groups, MA', icode)
        case ('ccls_ma')
-          call parse_real_array('ccls_ma', ccls_ma, isub1, ngrpmx, &
+          call parse_real_array('ccls_ma', ccls_ma, isub1, n_pf_groups_max, &
                'Equilibrium current of PF coil groups, MA', icode)
        case ('sigpfcalw')
           call parse_real_variable('sigpfcalw', sigpfcalw, 1.0D0, 1.0D3, &
@@ -1912,14 +1912,14 @@ contains
        case ('sigpfcf')
           call parse_real_variable('sigpfcf', sigpfcf, 0.1D0, 1.0D0, &
                'Fraction of JxB force supported by PF coil case')
-       case ('vf')
-          call parse_real_array('vf', vf, isub1, ngc2, &
+       case ('f_a_pf_coil_void')
+          call parse_real_array('f_a_pf_coil_void', f_a_pf_coil_void, isub1, ngc2, &
                'Void fraction of PF coil', icode)
-       case ('vfohc')
-          call parse_real_variable('vfohc', vfohc, 0.0D0, 1.0D0, &
+       case ('f_a_cs_void')
+          call parse_real_variable('f_a_cs_void', f_a_cs_void, 0.0D0, 1.0D0, &
                'Central Solenoid void fraction for coolant')
        case ('zref')
-          call parse_real_array('zref', zref, isub1, ngrpmx, &
+          call parse_real_array('zref', zref, isub1, n_pf_groups_max, &
                'height of location 3 and 4 coil groups / minor radius', icode)
 
        case ('radius_fw_channel')

@@ -861,25 +861,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_37
-    !! <LI> (37) coheof
+    !! <LI> (37) j_cs_flat_top_end
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(37) = 'coheof        '
+    lablxc(37) = 'j_cs_flat_top_end        '
     boundl(37) = 1.000D5
     boundu(37) = 1.000D8
   end subroutine init_itv_37
 
   real(kind(1.d0)) function itv_37()
-    use pfcoil_variables, only: coheof
+    use pfcoil_variables, only: j_cs_flat_top_end
     implicit none
-    itv_37 = coheof
+    itv_37 = j_cs_flat_top_end
   end function itv_37
 
   subroutine set_itv_37(ratio)
-    use pfcoil_variables, only: coheof
+    use pfcoil_variables, only: j_cs_flat_top_end
     implicit none
     real(kind(1.d0)) :: ratio
-    coheof = ratio
+    j_cs_flat_top_end = ratio
   end subroutine set_itv_37
 
   !---------------------------------
@@ -957,25 +957,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_41
-    !! <LI> (41) fcohbop
+    !! <LI> (41) f_j_cs_start_pulse_end_flat_top
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(41) = 'fcohbop       '
+    lablxc(41) = 'f_j_cs_start_pulse_end_flat_top       '
     boundl(41) = 0.001D0
     boundu(41) = 1.000D0
   end subroutine init_itv_41
 
   real(kind(1.d0)) function itv_41()
-    use pfcoil_variables, only: fcohbop
+    use pfcoil_variables, only: f_j_cs_start_pulse_end_flat_top
     implicit none
-    itv_41 = fcohbop
+    itv_41 = f_j_cs_start_pulse_end_flat_top
   end function itv_41
 
   subroutine set_itv_41(ratio)
-    use pfcoil_variables, only: fcohbop
+    use pfcoil_variables, only: f_j_cs_start_pulse_end_flat_top
     implicit none
     real(kind(1.d0)) :: ratio
-    fcohbop = ratio
+    f_j_cs_start_pulse_end_flat_top = ratio
   end subroutine set_itv_41
 
   !---------------------------------
@@ -2673,25 +2673,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_122
-    !! <LI> (122) oh_steel_frac : streel fraction of Central Solenoid
+    !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(122) = 'oh_steel_frac '
+    lablxc(122) = 'f_a_cs_steel '
     boundl(122) = 0.001D0
     boundu(122) = 0.950D0
   end subroutine init_itv_122
 
   real(kind(1.d0)) function itv_122()
-    use pfcoil_variables, only: oh_steel_frac
+    use pfcoil_variables, only: f_a_cs_steel
     implicit none
-    itv_122 = oh_steel_frac
+    itv_122 = f_a_cs_steel
   end function itv_122
 
   subroutine set_itv_122(ratio)
-    use pfcoil_variables, only: oh_steel_frac
+    use pfcoil_variables, only: f_a_cs_steel
     implicit none
     real(kind(1.d0)) :: ratio
-    oh_steel_frac = ratio
+    f_a_cs_steel = ratio
   end subroutine set_itv_122
 
   !---------------------------------
@@ -3318,25 +3318,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_149
-    !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
+    !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(149) = 'fbmaxcs       '
+    lablxc(149) = 'fb_cs_limit_max       '
     boundl(149) = 0.001D0
     boundu(149) = 1.000D0
   end subroutine init_itv_149
 
   real(kind(1.d0)) function itv_149()
-    use pfcoil_variables, only: fbmaxcs
+    use pfcoil_variables, only: fb_cs_limit_max
     implicit none
-    itv_149 = fbmaxcs
+    itv_149 = fb_cs_limit_max
   end function itv_149
 
   subroutine set_itv_149(ratio)
-    use pfcoil_variables, only: fbmaxcs
+    use pfcoil_variables, only: fb_cs_limit_max
     implicit none
     real(kind(1.d0)) :: ratio
-    fbmaxcs = ratio
+    fb_cs_limit_max = ratio
   end subroutine set_itv_149
 
   !---------------------------------
@@ -3476,25 +3476,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_157
-    !! <LI> (157) fvssu : F-value for available to required start up flux (con. 51)
+    !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(157) = 'fvssu         '
+    lablxc(157) = 'fvs_cs_pf_total_ramp         '
     boundl(157) = 1.00d-3
     boundu(157) = 1.000d1
   end subroutine init_itv_157
 
   real(kind(1.d0)) function itv_157()
-    use pfcoil_variables, only: fvssu
+    use pfcoil_variables, only: fvs_cs_pf_total_ramp
     implicit none
-    itv_157 = fvssu
+    itv_157 = fvs_cs_pf_total_ramp
   end function itv_157
 
   subroutine set_itv_157(ratio)
-    use pfcoil_variables, only: fvssu
+    use pfcoil_variables, only: fvs_cs_pf_total_ramp
     implicit none
     real(kind(1.d0)) :: ratio
-    fvssu = ratio
+    fvs_cs_pf_total_ramp = ratio
   end subroutine set_itv_157
 
   !---------------------------------

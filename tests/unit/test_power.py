@@ -191,35 +191,35 @@ class PfpwrParam(NamedTuple):
 
     srcktpm: Any = None
 
-    ngrp: Any = None
+    n_pf_coil_groups: Any = None
 
-    cpt: Any = None
+    c_pf_coil_turn: Any = None
 
     pfwpmw: Any = None
 
-    pfclres: Any = None
+    rho_pf_coil: Any = None
 
-    ncirt: Any = None
+    n_pf_cs_plasma_circuits: Any = None
 
-    ncls: Any = None
+    n_pf_coils_in_group: Any = None
 
-    ric: Any = None
+    c_pf_cs_coils_peak_ma: Any = None
 
     etapsu: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
-    curpfs: Any = None
+    c_pf_cs_coil_pulse_end_ma: Any = None
 
-    sxlg: Any = None
+    ind_pf_cs_plasma_mutual: Any = None
 
-    turns: Any = None
+    n_pf_coil_turns: Any = None
 
-    vf: Any = None
+    f_a_pf_coil_void: Any = None
 
-    rjconpf: Any = None
+    j_pf_coil_wp_peak: Any = None
 
-    rpf: Any = None
+    r_pf_coil_middle: Any = None
 
     p_plasma_ohmic_mw: Any = None
 
@@ -280,8 +280,8 @@ class PfpwrParam(NamedTuple):
             ensxpfm=0,
             acptmax=0,
             srcktpm=0,
-            ngrp=4,
-            cpt=np.array(
+            n_pf_coil_groups=4,
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -431,12 +431,12 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             pfwpmw=0,
-            pfclres=0,
-            ncirt=8,
-            ncls=np.array(
+            rho_pf_coil=0,
+            n_pf_cs_plasma_circuits=8,
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         14.742063826112622,
@@ -467,7 +467,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -497,7 +497,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=np.array(
+            c_pf_cs_coil_pulse_end_ma=np.array(
                 np.array(
                     (
                         0.067422231232391661,
@@ -527,7 +527,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            sxlg=np.array(
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         2.4933245328128875,
@@ -738,7 +738,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         349.33800535811901,
@@ -768,7 +768,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -798,7 +798,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -828,7 +828,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -1023,8 +1023,8 @@ class PfpwrParam(NamedTuple):
             ensxpfm=37429.525515086898,
             acptmax=24.816666666666666,
             srcktpm=1071.1112934857531,
-            ngrp=4,
-            cpt=np.array(
+            n_pf_coil_groups=4,
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1174,12 +1174,12 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             pfwpmw=0.89998039031509891,
-            pfclres=0,
-            ncirt=8,
-            ncls=np.array(
+            rho_pf_coil=0,
+            n_pf_cs_plasma_circuits=8,
+            n_pf_coils_in_group=np.array(
                 np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.579095475129442,
@@ -1210,7 +1210,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             etapsu=0.90000000000000002,
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1240,7 +1240,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            curpfs=np.array(
+            c_pf_cs_coil_pulse_end_ma=np.array(
                 np.array(
                     (
                         0.019288882290113718,
@@ -1270,7 +1270,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            sxlg=np.array(
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         3.7834082671748859,
@@ -1481,7 +1481,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.26292595093463,
@@ -1511,7 +1511,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            vf=np.array(
+            f_a_pf_coil_void=np.array(
                 np.array(
                     (
                         0.29999999999999999,
@@ -1541,7 +1541,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rjconpf=np.array(
+            j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
                         11000000,
@@ -1571,7 +1571,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            rpf=np.array(
+            r_pf_coil_middle=np.array(
                 np.array(
                     (
                         6.2732560483870969,
@@ -1796,35 +1796,59 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pf_power_variables, "srcktpm", pfpwrparam.srcktpm)
 
-    monkeypatch.setattr(pfcoil_variables, "ngrp", pfpwrparam.ngrp)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coil_groups", pfpwrparam.n_pf_coil_groups
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "cpt", pfpwrparam.cpt)
+    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
 
     monkeypatch.setattr(pfcoil_variables, "pfwpmw", pfpwrparam.pfwpmw)
 
-    monkeypatch.setattr(pfcoil_variables, "pfclres", pfpwrparam.pfclres)
+    monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", pfpwrparam.rho_pf_coil)
 
-    monkeypatch.setattr(pfcoil_variables, "ncirt", pfpwrparam.ncirt)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_cs_plasma_circuits", pfpwrparam.n_pf_cs_plasma_circuits
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "ncls", pfpwrparam.ncls)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "ric", pfpwrparam.ric)
+    monkeypatch.setattr(
+        pfcoil_variables, "c_pf_cs_coils_peak_ma", pfpwrparam.c_pf_cs_coils_peak_ma
+    )
 
     monkeypatch.setattr(pfcoil_variables, "etapsu", pfpwrparam.etapsu)
 
-    monkeypatch.setattr(pfcoil_variables, "cptdin", pfpwrparam.cptdin)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_coil_turn_peak_input",
+        pfpwrparam.c_pf_coil_turn_peak_input,
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "curpfs", pfpwrparam.curpfs)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_cs_coil_pulse_end_ma",
+        pfpwrparam.c_pf_cs_coil_pulse_end_ma,
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "sxlg", pfpwrparam.sxlg)
+    monkeypatch.setattr(
+        pfcoil_variables, "ind_pf_cs_plasma_mutual", pfpwrparam.ind_pf_cs_plasma_mutual
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "turns", pfpwrparam.turns)
+    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", pfpwrparam.n_pf_coil_turns)
 
-    monkeypatch.setattr(pfcoil_variables, "vf", pfpwrparam.vf)
+    monkeypatch.setattr(
+        pfcoil_variables, "f_a_pf_coil_void", pfpwrparam.f_a_pf_coil_void
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "rjconpf", pfpwrparam.rjconpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "j_pf_coil_wp_peak", pfpwrparam.j_pf_coil_wp_peak
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "rpf", pfpwrparam.rpf)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw

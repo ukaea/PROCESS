@@ -2189,7 +2189,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     # Number of coils, both PF and CS
     number_of_coils = 0
     for item in mfile_data.data:
-        if "rpf[" in item:
+        if "r_pf_coil_middle[" in item:
             number_of_coils += 1
 
     # Check for Central Solenoid
@@ -2200,8 +2200,8 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     noc = number_of_coils - 1 if iohcl == 1 else number_of_coils
 
     for coil in range(noc):
-        coils_r.append(mfile_data.data[f"rpf[{coil:01}]"].get_scan(scan))
-        coils_z.append(mfile_data.data[f"zpf[{coil:01}]"].get_scan(scan))
+        coils_r.append(mfile_data.data[f"r_pf_coil_middle[{coil:01}]"].get_scan(scan))
+        coils_z.append(mfile_data.data[f"z_pf_coil_middle[{coil:01}]"].get_scan(scan))
         coils_dr.append(mfile_data.data[f"pfdr({coil:01})"].get_scan(scan))
         coils_dz.append(mfile_data.data[f"pfdz({coil:01})"].get_scan(scan))
         coil_text.append(str(coil + 1))
@@ -2583,12 +2583,12 @@ def plot_magnetics_info(axis, mfile_data, scan):
     # Number of coils (1 is OH coil)
     number_of_coils = 0
     for item in mfile_data.data:
-        if "rpf[" in item:
+        if "r_pf_coil_middle[" in item:
             number_of_coils += 1
 
     pf_info = [
         (
-            mfile_data.data[f"ric[{i:01}]"].get_scan(scan),
+            mfile_data.data[f"c_pf_cs_coils_peak_ma[{i:01}]"].get_scan(scan),
             f"PF {i}",
         )
         for i in range(1, number_of_coils)
@@ -2638,14 +2638,14 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info[1][0], pf_info[1][1], "MA"),
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
-            ("vstot", "Available flux swing", "Wb"),
+            ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
-            ("tmargoh", "CS Temperature margin", "K"),
+            ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
             ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
@@ -2664,7 +2664,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info[1][0], pf_info[1][1], "MA"),
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
-            ("vstot", "Available flux swing", "Wb"),
+            ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),

@@ -9,11 +9,11 @@ amount actually available. The code measures the magnetic flux in units of Volt.
 Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
 is present, and should be assigned a non-zero thickness `dr_cs`. A value of `iohcl` = 0 denotes 
 that no central solenoid is present, in which case the thickness `dr_cs` should be zero. No PF 
-coils should be located at positions defined by `ipfloc(j)` = 1 if no central solenoid is present.
+coils should be located at positions defined by `i_pf_location(j)` = 1 if no central solenoid is present.
 
-The central solenoid can be either resistive or superconducting (controlled via switch `ipfres` as 
-for the other PF coils), and if superconducting, switch `isumatpf` determines the superconducting 
-material to use -  its value is used like `isumattf` and `isumatpf`. The copper fraction (by volume) 
+The central solenoid can be either resistive or superconducting (controlled via switch `i_pf_conductor` as 
+for the other PF coils), and if superconducting, switch `i_pf_superconductor` determines the superconducting 
+material to use -  its value is used like `isumattf` and `i_pf_superconductor`. The copper fraction (by volume) 
 of the superconducting strands is `fcuohsu`.
 
 The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 
@@ -96,7 +96,7 @@ An example output follows.  Note that in this example the cycle life is *not* su
  Minimum burn time (s)                                                    (t_burn_min)                  7.200E+03     
  Initial vertical crack size (m)                                          (t_crack_vertical)        8.900E-04     
  Initial radial crack size (m)                                            (t_crack_radial)          2.670E-03     
- CS turn area (m)                                                         (a_oh_turn)               1.904E-03     
+ CS turn area (m)                                                         (a_cs_turn)               1.904E-03     
  CS turn length (m)                                                       (l_cond_cst)              7.557E-02     
  CS turn internal cable space radius (m)                                  (r_in_cst)                6.732E-03     
  CS turn width (m)                                                        (d_cond_cst)              2.519E-02     
@@ -146,10 +146,10 @@ The central solenoid pre-compression structure is included in the model if and o
 
 ## Current density inputs and limits
 
-The absolute value of the central solenoid current density at the end-of-flat-top ('EOF'), `coheof`, 
+The absolute value of the central solenoid current density at the end-of-flat-top ('EOF'), `j_cs_flat_top_end`, 
 is specified by the user, and can be used as an iteration variable (no. 37). The current density at 
-the beginning-of-pulse ('BOP' - See Figure 1) is specified as a (positive) fraction of `coheof` 
-using `fcohbop` (iteration variable no. 41). The current density in the CS at all other times is 
+the beginning-of-pulse ('BOP' - See Figure 1) is specified as a (positive) fraction of `j_cs_flat_top_end` 
+using `f_j_cs_start_pulse_end_flat_top` (iteration variable no. 41). The current density in the CS at all other times is 
 calculated by taking into account the flux swing necessary to initiate and maintain plasma current.
 
 The current density in the central solenoid can be limited at BOP and at EOF. To limit the current 

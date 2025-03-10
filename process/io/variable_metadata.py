@@ -215,12 +215,12 @@ var_dicts = {
         description="Copper fraction of strand in central solenoid",
         units="",
     ),
-    "coheof": VariableMetadata(
+    "j_cs_flat_top_end": VariableMetadata(
         latex=r"$J [A m^{-2}]$",
         description="central solenoid overall current density at end of flat-top",
         units="A m^{-2}",
     ),
-    "ohhghf": VariableMetadata(
+    "f_z_cs_tf_internal": VariableMetadata(
         latex=r"$Thickness_{\mathrm{CS}}[m]$",
         description="Central solenoid height / TF coil internal height",
         units="m",
@@ -289,7 +289,7 @@ var_dicts = {
         description="Minimum cycles for stress",
         units="",
     ),
-    "a_oh_turn": VariableMetadata(
+    "a_cs_turn": VariableMetadata(
         latex=r"$Turn_{\mathrm{area}}^{\mathrm{CS}}[$m$^{2}]$",
         description="Cross-sectional area of CS coil turns",
         units="m^2",
@@ -299,7 +299,7 @@ var_dicts = {
         description="Minimum burn time",
         units="s",
     ),
-    "pfv.oh_steel_frac": VariableMetadata(
+    "pfv.f_a_cs_steel": VariableMetadata(
         latex=r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$",
         description="Steel fraction in CS coil",
         units="",

@@ -51,27 +51,40 @@ class Pulse:
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
 
-        ioht1 = pfcoil_variables.cpt[pfcoil_variables.nohc - 1, 1]
+        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 1]
 
         #  Current/turn in Central Solenoid at start of flat-top (A/turn)
 
-        ioht2 = pfcoil_variables.cpt[pfcoil_variables.nohc - 1, 2]
+        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 2]
 
         #  Central Solenoid resistance (ohms)
 
-        if pfcoil_variables.ipfres == 0:
+        if pfcoil_variables.i_pf_conductor == 0:
             r = 0.0e0
         else:
             r = (
-                pfcoil_variables.powohres
-                / (1.0e6 * pfcoil_variables.ric[pfcoil_variables.nohc - 1]) ** 2
+                pfcoil_variables.p_cs_resistive_flat_top
+                / (
+                    1.0e6
+                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                )
+                ** 2
             )
 
         #  Central Solenoid bus resistance (ohms) (assumed to include power supply)
         #  Bus parameters taken from routine PFPWR.
 
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
-        albusa = abs(pfcoil_variables.cptdin[pfcoil_variables.nohc - 1]) / 100.0e0
+        albusa = (
+            abs(
+                pfcoil_variables.c_pf_coil_turn_peak_input[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ]
+            )
+            / 100.0e0
+        )
 
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
         #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
@@ -83,12 +96,15 @@ class Pulse:
 
         #  Mutual inductance between Central Solenoid and plasma (H)
 
-        m = pfcoil_variables.sxlg[pfcoil_variables.nohc - 1, pfcoil_variables.ncirt - 1]
+        m = pfcoil_variables.ind_pf_cs_plasma_mutual[
+            pfcoil_variables.n_cs_pf_coils - 1,
+            pfcoil_variables.n_pf_cs_plasma_circuits - 1,
+        ]
 
         #  Self inductance of Central Solenoid (H)
 
-        loh = pfcoil_variables.sxlg[
-            pfcoil_variables.nohc - 1, pfcoil_variables.nohc - 1
+        loh = pfcoil_variables.ind_pf_cs_plasma_mutual[
+            pfcoil_variables.n_cs_pf_coils - 1, pfcoil_variables.n_cs_pf_coils - 1
         ]
 
         #  Maximum rate of change of plasma current (A/s)
@@ -103,7 +119,14 @@ class Pulse:
             loh
             * (ioht2 - ioht1)
             / (
-                ioht2 * (r * pfcoil_variables.turns[pfcoil_variables.nohc - 1] + rho)
+                ioht2
+                * (
+                    r
+                    * pfcoil_variables.n_pf_coil_turns[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                    + rho
+                )
                 - v
                 + m * ipdot
             )
@@ -143,11 +166,11 @@ class Pulse:
         )
 
         #  Total volt-seconds available during flat-top (heat + burn)
-        #  (Previously calculated as (abs(pfcoil_variables.vstot) - vssoft) )
+        #  (Previously calculated as (abs(pfcoil_variables.vs_cs_pf_total_pulse) - vssoft) )
 
         vsmax = (
-            -pfcoil_variables.vsbn
-        )  # pfcoil_variables.vsbn is (or should be...) negative
+            -pfcoil_variables.vs_cs_pf_total_burn
+        )  # pfcoil_variables.vs_cs_pf_total_burn is (or should be...) negative
 
         #  Loop voltage during flat-top (including MHD sawtooth enhancement)
 
@@ -178,8 +201,8 @@ class Pulse:
             po.ovarre(
                 self.outfile,
                 "Total V-s capability of Central Solenoid/PF coils (Wb)",
-                "(abs(vstot))",
-                abs(pfcoil_variables.vstot),
+                "(abs(vs_cs_pf_total_pulse))",
+                abs(pfcoil_variables.vs_cs_pf_total_pulse),
             )
             po.ovarre(
                 self.outfile,
