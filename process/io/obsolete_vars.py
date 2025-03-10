@@ -221,7 +221,7 @@ OBS_VARS = {
     "rjconpf": "j_pf_coil_wp_peak",
     "oh_steel_frac": "f_a_cs_steel",
     "vf": "f_a_pf_coil_void",
-    "coheof": "j_cs_lat_top_end",
+    "coheof": "j_cs_flat_top_end",
     "ipfres": "i_pf_conductor",
     "fvssu": "fvs_cs_pf_total_ramp",
     "fbmaxcs": "fb_cs_limit_max",
