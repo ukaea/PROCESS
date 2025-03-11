@@ -829,6 +829,11 @@ class PFCoil:
 
         # Find Central Solenoid information
         if bv.iohcl != 0:
+            self.set_cs_coil_geometry()
+            self.set_cs_turn_geometry()
+            self.calculate_field_on_cs_coil()
+            self.calculate_stress_on_cs_coil()
+            self.calculate_cs_component_masses()
             self.ohcalc()
 
         # Summation of weights and current
@@ -1081,11 +1086,8 @@ class PFCoil:
 
         return ccls
 
-    def ohcalc(self):
-        """Routine to perform calculations for the Central Solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        """
+    def set_cs_coil_geometry(self):
+        """Set the geometry of the central solenoid coil."""
         hohc = bv.hmax * pfv.f_z_cs_tf_internal
 
         # Z coordinates of coil edges
@@ -1109,6 +1111,8 @@ class PFCoil:
         # Total cross-sectional area
         pfv.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
 
+    def set_cs_turn_geometry(self):
+        """Set the geometry of the central solenoid coil turns."""
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
             sgn = 1.0e0
@@ -1160,8 +1164,11 @@ class PFCoil:
         # Non-steel area void fraction for coolant
         pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
 
+    def calculate_field_on_cs_coil(self):
         # Peak field at the End-Of-Flattop (EOF)
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
+
+        hohc = bv.hmax * pfv.f_z_cs_tf_internal
 
         # Peak field due to central Solenoid itself
         bmaxoh2 = self.bfmax(
@@ -1200,6 +1207,8 @@ class PFCoil:
         )
         pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
 
+    def calculate_stress_on_cs_coil(self):
+        hohc = bv.hmax * pfv.f_z_cs_tf_internal
         # Stress ==> cross-sectional area of supporting steel to use
         if pfv.i_pf_conductor == 0:
             # Superconducting coil
@@ -1253,6 +1262,10 @@ class PFCoil:
             areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
             pfv.pfcaseth[pfv.n_cs_pf_coils - 1] = 0.0e0
 
+    def calculate_cs_component_masses(self):
+        # Area of steel in Central Solenoid
+        areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
+
         # Weight of steel
         pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1] = (
             areaspf
@@ -1291,6 +1304,12 @@ class PFCoil:
                 * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
                 * constants.dcopper
             )
+
+    def ohcalc(self):
+        """Routine to perform calculations for the Central Solenoid.
+
+        author: P J Knight, CCFE, Culham Science Centre
+        """
 
         if pfv.i_pf_conductor == 0:
             # Allowable coil overall current density at EOF
