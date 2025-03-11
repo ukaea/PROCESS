@@ -206,6 +206,7 @@ declblkt = 0.075 * neutron power deposition decay length of blanket structural m
 declfw   = 0.075 * neutron power deposition decay length of first wall structural material [m] (stellarators only)
 declshld = 0.075 * neutron power deposition decay length of shield structural material [m] (stellarators only)
 etahtp   = 1. * electrical efficiency of primary coolant pumps
+radius_fw_channel = 0.008 *Inner radius of first wall coolant channel (m) is 0.008 for stellarator
 
 *-----------------Global Variables-----------------*
 
