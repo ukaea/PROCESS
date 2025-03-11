@@ -136,9 +136,6 @@ class PFCoil:
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
 
-        # Central Solenoid mean radius
-        pfv.r_cs_middle = bv.dr_bore + 0.5e0 * bv.dr_cs
-
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
         if bv.iohcl == 0:
@@ -829,7 +826,20 @@ class PFCoil:
 
         # Find Central Solenoid information
         if bv.iohcl != 0:
-            self.set_cs_coil_geometry()
+            (
+                pfv.r_cs_middle,
+                pfv.a_cs_poloidal,
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1],
+                pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            ) = self.set_cs_coil_geometry(
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                dr_bore=bv.dr_bore,
+                dr_cs=bv.dr_cs,
+            )
             self.set_cs_turn_geometry()
             self.calculate_field_on_cs_coil()
             self.calculate_stress_on_cs_coil()
@@ -1086,30 +1096,59 @@ class PFCoil:
 
         return ccls
 
-    def set_cs_coil_geometry(self):
-        """Set the geometry of the central solenoid coil."""
-        hohc = bv.hmax * pfv.f_z_cs_tf_internal
+    def set_cs_coil_geometry(
+        self, dz_cs_half: float, dr_bore: float, dr_cs: float
+    ) -> None:
+        """Set the geometry of the central solenoid coil.
+
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param dr_bore: Bore diameter of the central solenoid coil (m)
+        :type dr_bore: float
+        :param dr_cs: Radial thickness of the central solenoid coil (m)
+        :type dr_cs: float
+
+        :return: A tuple containing:
+            - r_cs_middle (float): Mean radius of the central solenoid coil (m)
+            - a_cs_poloidal (float): Total cross-sectional area of the central solenoid coil (m^2)
+            - z_cs_coil_upper (float): Z coordinate of the upper edge of the central solenoid coil (m)
+            - z_cs_coil_lower (float): Z coordinate of the lower edge of the central solenoid coil (m)
+            - r_cs_middle (float): Mean radius of the central solenoid coil (m) (repeated)
+            - 0.0 (float): Z codinate of the middle of the central solenoid coil (m)
+            - r_cs_coil_outer (float): Radius of the outer edge of the central solenoid coil (m)
+            - r_cs_coil_inner (float): Radius of the inner edge of the central solenoid coil (m)
+        :rtype: tuple
+
+        """
+
+        # Central Solenoid mean radius
+        r_cs_middle = dr_bore + 0.5e0 * dr_cs
 
         # Z coordinates of coil edges
-        pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1] = hohc
+        z_cs_coil_upper = dz_cs_half
         pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1] = -pfv.z_pf_coil_upper[
             pfv.n_cs_pf_coils - 1
         ]
 
-        # (R,Z) coordinates of coil centre
-        pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1] = pfv.r_cs_middle
-        pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1] = 0.0e0
-
         # Radius of outer edge
-        pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1] = pfv.r_cs_middle + 0.5e0 * bv.dr_cs
+        r_cs_coil_outer = r_cs_middle + 0.5e0 * dr_cs
 
         # Radius of inner edge
-        pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1] = (
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1] - bv.dr_cs
-        )
+        r_cs_coil_inner = r_cs_coil_outer - dr_cs
 
         # Total cross-sectional area
-        pfv.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
+        a_cs_poloidal = 2.0e0 * dz_cs_half * dr_cs
+
+        return (
+            r_cs_middle,
+            a_cs_poloidal,
+            z_cs_coil_upper,
+            -z_cs_coil_upper,
+            r_cs_middle,
+            0.0e0,
+            r_cs_coil_outer,
+            r_cs_coil_inner,
+        )
 
     def set_cs_turn_geometry(self):
         """Set the geometry of the central solenoid coil turns."""
