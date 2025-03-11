@@ -223,8 +223,6 @@
         "admvol": 0.0,
         "m_fuel_amu": 0.0,
         "radius_fw_channel": 0.006,
-        "afwi": 0.008,
-        "afwo": 0.008,
         "aintmass": 0.0,
         "m_ions_total_amu": 0.0,
         "airtemp": 15.0,
@@ -8793,8 +8791,6 @@
         "admvol": "volume of administration buildings (m3)",
         "m_fuel_amu": "average mass of fuel portion of ions (amu)",
         "radius_fw_channel": "radius of first wall cooling channels (m)",
-        "afwi": "inner radius of inboard first wall/blanket coolant channels (stellarator only) (m)",
-        "afwo": "inner radius of outboard first wall/blanket coolant channels (stellarator only) (m)",
         "aintmass": "intercoil structure mass (kg)",
         "m_ions_total_amu": "average mass of all ions (amu)",
         "airtemp": "ambient air temperature (degrees Celsius)",
@@ -11560,14 +11556,6 @@
         "radius_fw_channel": {
             "lb": 0.001,
             "ub": 0.5
-        },
-        "afwi": {
-            "lb": 0.001,
-            "ub": 0.05
-        },
-        "afwo": {
-            "lb": 0.001,
-            "ub": 0.05
         },
         "airtemp": {
             "lb": -15.0,
@@ -18080,8 +18068,6 @@
             "i_shield_mat",
             "i_thermal_electric_conversion",
             "i_blkt_coolant_type",
-            "afwi",
-            "afwo",
             "i_fw_coolant_type",
             "dr_fw_wall",
             "radius_fw_channel",
@@ -19988,8 +19974,6 @@
         "adivflnc": "real_variable",
         "admv": "real_variable",
         "radius_fw_channel": "real_variable",
-        "afwi": "real_variable",
-        "afwo": "real_variable",
         "airtemp": "real_variable",
         "alfapf": "real_variable",
         "alphaj": "real_variable",

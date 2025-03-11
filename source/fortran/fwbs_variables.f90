@@ -300,14 +300,6 @@ module fwbs_variables
   !! - =2 pressurized water
   !#TODO: change switch name to satisfy convention
 
-  real(dp) :: afwi
-  !! inner radius of inboard first wall/blanket coolant channels (stellarator only) [m]
-  !#TODO move to stellarator?
-
-  real(dp) :: afwo
-  !! inner radius of outboard first wall/blanket coolant channels (stellarator only) [m]
-  !#TODO move to stellarator?
-
   character(len=6) :: i_fw_coolant_type
   !! switch for first wall coolant (can be different from blanket coolant):
   !!
@@ -736,8 +728,6 @@ module fwbs_variables
     i_thermal_electric_conversion = 0
     secondary_cycle_liq = 4
     i_blkt_coolant_type = 1
-    afwi = 0.008D0
-    afwo = 0.008D0
     i_fw_coolant_type = 'helium'
     dr_fw_wall = 0.003D0
     radius_fw_channel = 0.006D0
