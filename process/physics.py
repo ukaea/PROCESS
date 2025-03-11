@@ -2240,9 +2240,12 @@ class Physics:
             - physics_variables.p_plasma_rad_mw
         )
 
-        # The following line is unphysical, but prevents -ve sqrt argument
-        # Should be obsolete if constraint eqn 17 is turned on
-        physics_variables.pdivt = max(0.001e0, physics_variables.pdivt)
+        # KLUDGE: Ensure pdivt is continuously positive (physical, rather than
+        # negative potential power), as required by other models (e.g.
+        # Physics.calculate_density_limit())
+        physics_variables.pdivt = physics_variables.pdivt / (
+            1 - np.exp(-physics_variables.pdivt)
+        )
 
         # if double null configuration share the power
         # over the upper and lower divertor, where physics_variables.ftar gives
