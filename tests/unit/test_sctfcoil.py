@@ -3461,7 +3461,7 @@ class StressclParam(NamedTuple):
 
     dr_cs: Any = None
 
-    tf_in_cs: Any = None
+    i_tf_inside_cs: Any = None
 
     dr_cs_tf_gap: Any = None
 
@@ -3639,7 +3639,7 @@ class StressclParam(NamedTuple):
     (
         StressclParam(
             dr_tf_inboard=1.208,
-            tf_in_cs=0,
+            i_tf_inside_cs=0,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
@@ -3762,7 +3762,7 @@ class StressclParam(NamedTuple):
         ),
         StressclParam(
             dr_tf_inboard=1.208,
-            tf_in_cs=0,
+            i_tf_inside_cs=0,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
@@ -3943,7 +3943,7 @@ def test_stresscl(stressclparam, monkeypatch, sctfcoil):
         stressclparam.hmax,
         stressclparam.f_z_cs_tf_internal,
         stressclparam.dr_cs,
-        stressclparam.tf_in_cs,
+        stressclparam.i_tf_inside_cs,
         stressclparam.dr_tf_inboard,
         stressclparam.dr_cs_tf_gap,
         stressclparam.i_pf_conductor,
@@ -14098,8 +14098,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )
     monkeypatch.setattr(build_variables, "dr_tf_outboard", 0)  # simplifies
 
-    monkeypatch.setattr(physics_variables, "rminor", 2.96)  # Baseline 2018
-    monkeypatch.setattr(physics_variables, "kappa", 1.848)  # Baseline 2018
+    monkeypatch.setattr(
+        build_variables, "z_plasma_xpoint_upper", 5.47008
+    )  # Baseline 2018
 
     monkeypatch.setattr(sctfcoil_module, "a_tf_steel", 0.55)  # Section 3
 
@@ -14107,10 +14108,10 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.47)
     monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.47)
 
-    monkeypatch.setattr(build_variables, "vgap_xpoint_divertor", 0.05)  # Baseline 2018
-    monkeypatch.setattr(build_variables, "shldtth", 0.3)  # Baseline 2018
+    monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
+    monkeypatch.setattr(build_variables, "dz_shld_upper", 0.3)  # Baseline 2018
     monkeypatch.setattr(
-        divertor_variables, "divfix", 2.05
+        divertor_variables, "dz_divertor", 2.05
     )  # chosen to achieve H_vv in Table 2
 
     monkeypatch.setattr(build_variables, "dr_tf_shld_gap", 0.05)  # Baseline 2018
@@ -14124,7 +14125,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", 0.06)  # Section 3
     monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
-    monkeypatch.setattr(build_variables, "d_vv_top", 0.06)  # Section 3
+    monkeypatch.setattr(build_variables, "dz_vv_upper", 0.06)  # Section 3
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_coil", 51.1)  # Table 2
     monkeypatch.setattr(

@@ -2762,7 +2762,7 @@ contains
       use constraint_variables, only: foh_stress
       use pfcoil_variables, only: alstroh, s_shear_cs_peak
       use tfcoil_variables, only: sig_tf_cs_bucked, i_tf_bucking
-      use build_variables, only: tf_in_cs
+      use build_variables, only: i_tf_inside_cs
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2771,7 +2771,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! bucked and wedged desing (see subroutine comment)
-      if ( i_tf_bucking >= 2 .and. tf_in_cs == 0 ) then
+      if ( i_tf_bucking >= 2 .and. i_tf_inside_cs == 0 ) then
          tmp_cc = 1.0d0 - foh_stress * alstroh / max(s_shear_cs_peak, sig_tf_cs_bucked)
          tmp_err = alstroh - max(s_shear_cs_peak, sig_tf_cs_bucked)
       ! Free standing CS

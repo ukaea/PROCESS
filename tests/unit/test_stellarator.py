@@ -212,7 +212,7 @@ class StbildParam(NamedTuple):
 
     dr_blkt_outboard: Any = None
 
-    blnktth: Any = None
+    dz_blkt_upper: Any = None
 
     dr_bore: Any = None
 
@@ -256,7 +256,7 @@ class StbildParam(NamedTuple):
 
     dr_shld_outboard: Any = None
 
-    shldtth: Any = None
+    dz_shld_upper: Any = None
 
     dr_tf_inboard: Any = None
 
@@ -304,7 +304,7 @@ class StbildParam(NamedTuple):
 
     outfile: Any = None
 
-    expected_blnktth: Any = None
+    expected_dz_blkt_upper: Any = None
 
     expected_bore: Any = None
 
@@ -345,7 +345,7 @@ class StbildParam(NamedTuple):
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            blnktth=0,
+            dz_blkt_upper=0,
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
@@ -367,7 +367,7 @@ class StbildParam(NamedTuple):
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            shldtth=0.70000000000000007,
+            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=0,
@@ -391,7 +391,7 @@ class StbildParam(NamedTuple):
             f_a=0.99125889880147788,
             iprint=0,
             outfile=11,
-            expected_blnktth=0.75,
+            expected_dz_blkt_upper=0.75,
             expected_bore=17.79214950143977,
             expected_a_fw_total=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
@@ -415,7 +415,7 @@ class StbildParam(NamedTuple):
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            blnktth=0.75,
+            dz_blkt_upper=0.75,
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
@@ -437,7 +437,7 @@ class StbildParam(NamedTuple):
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            shldtth=0.70000000000000007,
+            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=1.8828828828828827,
@@ -461,7 +461,7 @@ class StbildParam(NamedTuple):
             f_a=0.99125889880147788,
             iprint=0,
             outfile=11,
-            expected_blnktth=0.75,
+            expected_dz_blkt_upper=0.75,
             expected_bore=17.79214950143977,
             expected_a_fw_total=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
@@ -509,7 +509,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
     )
 
-    monkeypatch.setattr(build_variables, "blnktth", stbildparam.blnktth)
+    monkeypatch.setattr(build_variables, "dz_blkt_upper", stbildparam.dz_blkt_upper)
 
     monkeypatch.setattr(build_variables, "dr_bore", stbildparam.dr_bore)
 
@@ -569,7 +569,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_shld_outboard", stbildparam.dr_shld_outboard
     )
 
-    monkeypatch.setattr(build_variables, "shldtth", stbildparam.shldtth)
+    monkeypatch.setattr(build_variables, "dz_shld_upper", stbildparam.dz_shld_upper)
 
     monkeypatch.setattr(build_variables, "dr_tf_inboard", stbildparam.dr_tf_inboard)
 
@@ -634,7 +634,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(stellarator_module, "f_a", stbildparam.f_a)
 
     stellarator.stbild(False)
-    assert build_variables.blnktth == pytest.approx(stbildparam.expected_blnktth)
+    assert build_variables.dz_blkt_upper == pytest.approx(
+        stbildparam.expected_dz_blkt_upper
+    )
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 

@@ -144,7 +144,7 @@ class BldgsSizesParam(NamedTuple):
     dr_tf_shld_gap: Any
     dr_shld_thermal_inboard: Any
     dr_shld_thermal_outboard: Any
-    thshield_vb: Any
+    dz_shld_thermal: Any
     dr_shld_inboard: Any
     dr_shld_outboard: Any
     dr_fw_plasma_gap_inboard: Any
@@ -154,7 +154,7 @@ class BldgsSizesParam(NamedTuple):
     dr_blkt_inboard: Any
     dr_blkt_outboard: Any
     r_cp_top: Any
-    divfix: Any
+    dz_divertor: Any
     rmajor: Any
     rminor: Any
     tf_radial_dim: Any
@@ -287,7 +287,7 @@ class BldgsSizesParam(NamedTuple):
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -297,7 +297,7 @@ class BldgsSizesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             r_cp_top=4.20194118510911,
-            divfix=0.62100000000000011,
+            dz_divertor=0.62100000000000011,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
@@ -426,7 +426,7 @@ class BldgsSizesParam(NamedTuple):
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -436,7 +436,7 @@ class BldgsSizesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             r_cp_top=4.20194118510911,
-            divfix=0.62100000000000011,
+            dz_divertor=0.62100000000000011,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
@@ -699,7 +699,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         "dr_shld_thermal_outboard",
         bldgssizesparam.dr_shld_thermal_outboard,
     )
-    monkeypatch.setattr(build_variables, "thshield_vb", bldgssizesparam.thshield_vb)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
     )
@@ -727,7 +729,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         build_variables, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
     )
     monkeypatch.setattr(build_variables, "r_cp_top", bldgssizesparam.r_cp_top)
-    monkeypatch.setattr(divertor_variables, "divfix", bldgssizesparam.divfix)
+    monkeypatch.setattr(divertor_variables, "dz_divertor", bldgssizesparam.dz_divertor)
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 

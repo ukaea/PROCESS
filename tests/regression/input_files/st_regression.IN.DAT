@@ -918,7 +918,7 @@ ripmax = 1.0
 * DESCRIPTION:   Maximum Allowable Toroidal Field Ripple Amplitude at Plasma Edge (%) 
 * JUSTIFICATION: Default
 
-*tf_in_cs switch is found in the radial build section*
+*i_tf_inside_cs switch is found in the radial build section*
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Conductor Type ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -1970,7 +1970,7 @@ icc = 11
 * JUSTIFICATION: Consistency equations should always be on
 * VARIABLES:     rmajor, Rest calculated in-situ
 
-tf_in_cs = 0 
+i_tf_inside_cs = 0 
 * DESCRIPTION:  Switch for placing TF coils inside of the CS
 * JUSTIFICATION: TF placed in CS as design choice
 
@@ -2148,43 +2148,43 @@ tfootfi = 1.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vertical Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-vgap_xpoint_divertor = 0.75
+dz_xpoint_divertor = 0.75
 * DESCRIPTION:   Vertical Gap Between x-point and Divertor (m)
 * JUSTIFICATION: 
 
-*vgaptop = 
+*dz_fw_plasma_gap = 
 * DESCRIPTION:   Top vert gap between plasma and first wall (m)
 * JUSTIFICATION: Not yet set
 
-divfix = 1.0
+dz_divertor = 1.0
 * DESCRIPTION:   Divertor Structure Vertical Thickness (m)
 * JUSTIFICATION: 
 
-shldtth = 0.3
+dz_shld_upper = 0.3
 * DESCRIPTION:   Top shield thickness (m)
 * JUSTIFICATION: Set to match outboard build
 
-shldlth = 0.6
+dz_shld_lower = 0.6
 * DESCRIPTION:   Lower (under divertor) Shield Thickness (m)
 * JUSTIFICATION: 
 
-*blnktth = 
+*dz_blkt_upper = 
 * DESCRIPTION:   top blanket thickness (m)
 * JUSTIFICATION: No longer an input variable
 
-thshield_vb = 0.075    
+dz_shld_thermal = 0.075    
 * DESCRIPTION:   TF-VV Thermal Shield Thickness (m)
 * JUSTIFICATION: 
 
-vgap_vv_thermalshield = 2.0
+dz_shld_vv_gap = 2.0
 * DESCRIPTION:   Vertical Gap Between Vacuum Vessel and TF coil (m)
 * JUSTIFICATION: 
 
-d_vv_top = 0.3
+dz_vv_upper = 0.3
 * DESCRIPTION:   top vaccum vessel thickness(m)
 * JUSTIFICATION: Set to match outboard build
 
-d_vv_bot = 0.3
+dz_vv_lower = 0.3
 * DESCRIPTION:   Bottom (and top for double null) vaccum vessel thickness
 * JUSTIFICATION: 
 

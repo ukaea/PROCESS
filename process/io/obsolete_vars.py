@@ -73,7 +73,11 @@ OBS_VARS = {
     "pcoreradmw": "p_plasma_inner_rad_mw",
     "pedgeradmw": "p_plasma_outer_rad_mw",
     "rad_fraction_core": "rad_fraction_LCFS",
-    "thshield": ["dr_shld_thermal_inboard", "dr_shld_thermal_outboard", "thshield_vb"],
+    "thshield": [
+        "dr_shld_thermal_inboard",
+        "dr_shld_thermal_outboard",
+        "dz_shld_thermal",
+    ],
     "igeom": None,
     "fgamp": None,
     "divleg_profile_inner": None,
@@ -110,6 +114,7 @@ OBS_VARS = {
     "fvolcry": None,
     "idhe3": "f_helium3",
     "blnktth": None,
+    "dz_blkt_upper": None,
     "theat": "t_fusion_ramp",
     "ieped": None,
     "eped_sf": None,
@@ -119,8 +124,8 @@ OBS_VARS = {
     "ips": "i_pfirsch_schluter_current",
     "bootipf": "bootstrap_current_fraction",
     "bscfmax": "bootstrap_current_fraction_max",
-    "vgap2": "vgap_vv_thermalshield",
-    "vgap": "vgap_xpoint_divertor",
+    "vgap2": "dz_shld_vv_gap",
+    "vgap": "dz_xpoint_divertor",
     "ftritbm": "f_tritium_bream",
     "enbeam": "beam_energy",
     "fdeut": "f_deuterium",
@@ -237,11 +242,21 @@ OBS_VARS = {
     "ncls": "n_pf_coils_in_group",
     "cptdin": "c_pf_coil_turn_peak_input",
     "ipfloc": "i_pf_location",
+    "tf_in_cs": "i_tf_inside_cs",
+    "shldtth": "dz_shld_upper",
+    "shldlth": "dz_shld_lower",
+    "vgap_vv_thermalshield": "dz_shld_vv_gap",
+    "thshield_vb": "dz_shld_thermal",
+    "vgaptop": "dz_fw_plasma_gap",
+    "vgap_xpoint_divertor": "dz_xpoint_divertor",
+    "d_vv_top": "dz_vv_upper",
+    "d_vv_bot": "dz_vv_lower",
+    "divfix": "dz_divertor",
 }
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
-    "blnktth": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
+    "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
 }
 
 kallenbach_list = [

@@ -83,9 +83,9 @@ class Buildings:
                 tfcoil_variables.n_tf_coils,
                 build_variables.rsldo,
                 build_variables.rsldi,
-                2.0e0 * (build_variables.hmax - build_variables.vgap_vv_thermalshield)
-                - build_variables.d_vv_top
-                - build_variables.d_vv_bot,
+                2.0e0 * (build_variables.hmax - build_variables.dz_shld_vv_gap)
+                - build_variables.dz_vv_upper
+                - build_variables.dz_vv_lower,
                 fwbs_variables.whtshld,
                 fwbs_variables.r_cryostat_inboard,
                 heat_transport_variables.helpow,
@@ -542,8 +542,8 @@ class Buildings:
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
@@ -587,8 +587,8 @@ class Buildings:
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
@@ -627,7 +627,7 @@ class Buildings:
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
         if cost_variables.divlife != 0.0e0:
-            hcomp_height = divertor_variables.divfix
+            hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (

@@ -562,8 +562,8 @@
  Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      1.8000E+03    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      9.8463E+03 OP 
  # Radial Build #
- TF_coil_radial_placement_switch_________________________________________ (tf_in_cs)____________________              0    
- TF_coil_radial_placement_switch_________________________________________ (tf_in_cs)____________________              0    
+ TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
+ TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  Machine_bore_(m)________________________________________________________ (dr_bore)________________________      1.9854E+00 ITV
  CS_radial_thickness_(m)_________________________________________________ (dr_cs)_______________________      5.7587E-01 ITV
  CS_precompression_(m)___________________________________________________ (dr_cs_precomp)_____________________      6.8064E-02    
@@ -590,16 +590,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      1.6300E-01    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      6.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.5000E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      6.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.5000E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ (fwtth)_______________________      1.8000E-02    
- Top_scrape-off_vertical_thickness_(m)___________________________________ (vgaptop)_____________________      6.0000E-01    
+ Top_scrape-off_vertical_thickness_(m)___________________________________ (dz_fw_plasma_gap)_____________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      4.9333E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0019E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2000E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2000E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -1480,7 +1480,7 @@ dr_tf_wp = 0.5
 * Thermal shield radial thickness [m]
 dr_shld_thermal_inboard = 0.050
 dr_shld_thermal_outboard = 0.050
-thshield_vb = 0.050
+dz_shld_thermal = 0.050
 
 * Gap between thermal shield and vacuum vessel [m]
 dr_shld_vv_gap_inboard = 0.02
@@ -1492,10 +1492,10 @@ dr_vv_inboard  = 0.3
 dr_vv_outboard = 0.3
 
 * Topside vacuum vessel radial thickness [m]
-d_vv_top = 0.3
+dz_vv_upper = 0.3
 
 * Underside vacuum vessel radial thickness [m]
-d_vv_bot = 0.3
+dz_vv_lower = 0.3
 
 * Inboard vacuum vessel thickness [m]
 dr_shld_inboard = 0.3
@@ -1522,7 +1522,7 @@ dr_cryostat = 0.15
 dr_shld_outboard = 0.800
 
 * Divertor structure vertical thickness [m]
-divfix = 0.62 
+dz_divertor = 0.62 
 
 * Coolant void fraction in shield
 vfshld = 0.60 

@@ -1268,7 +1268,7 @@ class Sctfcoil:
                 build_variables.hmax,
                 pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
-                build_variables.tf_in_cs,
+                build_variables.i_tf_inside_cs,
                 build_variables.dr_tf_inboard,
                 build_variables.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
@@ -1511,8 +1511,7 @@ class Sctfcoil:
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
             sctfcoil_module.h_cp_top = (
-                physics_variables.rminor * physics_variables.kappa
-                + tfcoil_variables.dztop
+                build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
         # ---
 
@@ -2322,11 +2321,11 @@ class Sctfcoil:
         rm_coil = build_variables.r_tf_inboard_out + tfcoil_variables.tfa[0]
 
         H_vv = (
-            physics_variables.rminor * physics_variables.kappa
-            + build_variables.vgap_xpoint_divertor
-            + divertor_variables.divfix
-            + build_variables.shldtth
-            + (build_variables.d_vv_top / 2)
+            build_variables.z_plasma_xpoint_upper
+            + build_variables.dz_xpoint_divertor
+            + divertor_variables.dz_divertor
+            + build_variables.dz_shld_upper
+            + (build_variables.dz_vv_upper / 2)
         )
         # ri and ro for VV dont consider the shield widths
         # because it is assumed the shield is on the plasma side
@@ -3583,7 +3582,7 @@ class Sctfcoil:
         hmax,
         f_z_cs_tf_internal,
         dr_cs,
-        tf_in_cs,
+        i_tf_inside_cs,
         dr_tf_inboard,
         dr_cs_tf_gap,
         i_pf_conductor,
@@ -3765,8 +3764,8 @@ class Sctfcoil:
             jeff[0] = 0.0e0
 
             # Inner radius of the CS
-            if tf_in_cs == 1:
-                # CS not used as wedge support tf_in_cs = 1
+            if i_tf_inside_cs == 1:
+                # CS not used as wedge support i_tf_inside_cs = 1
                 radtf[0] = 0.001
             else:
                 radtf[0] = dr_bore
@@ -3778,7 +3777,7 @@ class Sctfcoil:
                 # -#
 
                 # CS vertical cross-section area [m2]
-                if tf_in_cs == 1:
+                if i_tf_inside_cs == 1:
                     a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * (dr_bore - dr_tf_inboard)
                 else:
                     a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * dr_cs
@@ -3888,7 +3887,7 @@ class Sctfcoil:
             jeff[1] = 0.0e0
 
             # Outer radius of the CS
-            if tf_in_cs == 1:
+            if i_tf_inside_cs == 1:
                 radtf[1] = dr_bore - dr_tf_inboard - dr_cs_tf_gap
             else:
                 radtf[1] = dr_bore + dr_cs
@@ -4560,13 +4559,19 @@ class Sctfcoil:
             else:
                 po.ocmmnt(self.outfile, "  -> Bucking cylinder")
 
-        elif tfcoil_variables.i_tf_bucking in (2, 3) and build_variables.tf_in_cs == 1:
+        elif (
+            tfcoil_variables.i_tf_bucking in (2, 3)
+            and build_variables.i_tf_inside_cs == 1
+        ):
             po.ocmmnt(
                 self.outfile,
                 "  -> TF in contact with dr_bore filler support (bucked and weged design)",
             )
 
-        elif tfcoil_variables.i_tf_bucking in (2, 3) and build_variables.tf_in_cs == 0:
+        elif (
+            tfcoil_variables.i_tf_bucking in (2, 3)
+            and build_variables.i_tf_inside_cs == 0
+        ):
             po.ocmmnt(
                 self.outfile, "  -> TF in contact with CS (bucked and weged design)"
             )

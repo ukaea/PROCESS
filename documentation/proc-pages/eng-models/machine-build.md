@@ -66,19 +66,19 @@ case the machine is not symmetric about the midplane.
  TF coil                                      1.576           9.862   (dr_tf_inboard)             
  Gap                                          0.050           8.286   (dr_tf_shld_gap)           
  Thermal shield                               0.050           8.236   (thshield)          
- Gap                                          0.050           8.186   (vgap_vv_thermalshield)             
- Vacuum vessel (and shielding)                0.600           8.136   (d_vv_top+shldtth)  
+ Gap                                          0.050           8.186   (dz_shld_vv_gap)             
+ Vacuum vessel (and shielding)                0.600           8.136   (dz_vv_upper+dz_shld_upper)  
  Gap                                          0.020           7.536   (dr_shld_blkt_gap)           
- Top blanket                                  0.869           7.516   (blnktth)           
- Top first wall                               0.018           6.647   (fwtth)             
- Top scrape-off                               0.600           6.629   (vgaptop)           
- Plasma top                                   6.029           6.029   (rminor*kappa)      
+ Top blanket                                  0.869           7.516   (dz_blkt_upper)           
+ Top first wall                               0.018           6.647   (dz_fw_upper)             
+ Top scrape-off                               0.600           6.629   (dz_fw_plasma_gap)           
+ Plasma top                                   6.029           6.029   (z_plasma_xpoint_upper)      
  Midplane                                     0.000          -0.000                       
- Plasma bottom                                6.029          -6.029   (rminor*kappa)      
+ Plasma bottom                                6.029          -6.029   (z_plasma_xpoint_upper)      
  Lower scrape-off                             2.002          -8.031   (vgap)              
- Divertor structure                           0.621          -8.652   (divfix)            
- Vacuum vessel (and shielding)                1.000          -9.652   (d_vv_bot+shldlth)  
- Gap                                          0.050          -9.702   (vgap_vv_thermalshield)             
+ Divertor structure                           0.621          -8.652   (dz_divertor)            
+ Vacuum vessel (and shielding)                1.000          -9.652   (dz_vv_lower+dz_shld_lower)  
+ Gap                                          0.050          -9.702   (dz_shld_vv_gap)             
  Thermal shield                               0.050          -9.752   (thshield)          
  Gap                                          0.050          -9.802   (dr_tf_shld_gap)           
  TF coil                                      1.576         -11.379   (dr_tf_inboard)    
@@ -99,4 +99,4 @@ these two possibilities is set using input parameter `fwbsshape`, which should b
 
 !!! Info "TF coil placement"
     The radial build can vary from the figures above dependant on the placement of the inboard TF
-    coil leg when using the `tf_in_cs` switch. See [TF coil page](tf-coil.md)**
+    coil leg when using the `i_tf_inside_cs` switch. See [TF coil page](tf-coil.md)**

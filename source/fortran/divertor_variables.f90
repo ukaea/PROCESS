@@ -72,7 +72,7 @@ module divertor_variables
   !! - =1 input
   !#TODO: switch name should be changed to i_<something>
 
-  real(dp) :: divfix
+  real(dp) :: dz_divertor
   !! divertor structure vertical thickness (m)
 
   real(dp) :: divmas
@@ -194,7 +194,7 @@ module divertor_variables
     divclfr = 0.3D0
     divdens = 1.0D4
     divdum = 0
-    divfix = 0.2D0
+    dz_divertor = 0.2D0
     divmas = 0.0D0
     divplt = 0.035D0
     divsur = 0.0D0

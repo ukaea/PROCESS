@@ -105,8 +105,8 @@ dr_bore     = 2.483 * Central solenoid inboard radius (m)
 dr_cryostat    = 0.15 * Cryostat thickness (m)
 dr_vv_inboard  = 0.30 * Inboard vacuum vessel thickness (tf coil / shield) (m)
 dr_vv_outboard = 0.30 * Outboard vacuum vessel thickness (tf coil / shield) (m)
-d_vv_top = 0.30 * Topside vacuum vessel thickness (tf coil / shield) (m)
-d_vv_bot = 0.30 * Underside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_upper = 0.30 * Topside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_lower = 0.30 * Underside vacuum vessel thickness (tf coil / shield) (m)
 dr_shld_vv_gap_inboard    = 0.12 * Gap between inboard vacuum vessel and tf coil (m)
 dr_cs_tf_gap    = 0.05 * Gap between central solenoid and tf coil (m)
 gapomin  = 0.20 * Minimum gap between outboard vacuum vessel and tf coil (m)
@@ -175,7 +175,7 @@ pheat = 50.0
 *----------------Divertor Variables----------------*
 
 divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
-divfix   = 0.621 * Divertor structure vertical thickness (m)
+dz_divertor   = 0.621 * Divertor structure vertical thickness (m)
 hldivlim = 10 * Heat load limit (mw/m2)
 ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma
 prn1     = 0.4 * N-scrape-off / n-average plasma;

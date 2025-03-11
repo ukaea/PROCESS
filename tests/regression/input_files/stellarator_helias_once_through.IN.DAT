@@ -90,8 +90,8 @@ dr_fw_plasma_gap_inboard  = 0.15 * Gap between plasma and first wall; inboard si
 dr_fw_plasma_gap_outboard  = 0.2 * Gap between plasma and first wall; outboard side (m) (if `i_plasma_wall_gap=1`)
 dr_shld_inboard  = 0.2 * inboard shield thickness (m) (`iteration variable 93`)
 dr_shld_outboard  = 0.2 * outboard shield thickness (m) (`iteration variable 94`)
-shldtth  = 0.2 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)
-vgap_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0; it is calculated)
+dz_shld_upper  = 0.2 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)
+dz_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0; it is calculated)
 
 *---------------Buildings Variables----------------*
 

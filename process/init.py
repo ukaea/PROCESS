@@ -658,9 +658,11 @@ def check_process():
 
     if fortran.physics_variables.i_single_null == 0:
         fortran.physics_variables.idivrt = 2
-        fortran.build_variables.vgaptop = fortran.build_variables.vgap_xpoint_divertor
-        fortran.build_variables.shldtth = fortran.build_variables.shldlth
-        fortran.build_variables.d_vv_top = fortran.build_variables.d_vv_bot
+        fortran.build_variables.dz_fw_plasma_gap = (
+            fortran.build_variables.dz_xpoint_divertor
+        )
+        fortran.build_variables.dz_shld_upper = fortran.build_variables.dz_shld_lower
+        fortran.build_variables.dz_vv_upper = fortran.build_variables.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
         fortran.physics_variables.idivrt = 1
@@ -930,9 +932,11 @@ def check_process():
     # CS which is now outside it
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.tf_in_cs == 1
+        and fortran.build_variables.i_tf_inside_cs == 1
     ):
-        raise ProcessValidationError("Cannot have i_tf_bucking >= 2 when tf_in_cs = 1")
+        raise ProcessValidationError(
+            "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
+        )
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design

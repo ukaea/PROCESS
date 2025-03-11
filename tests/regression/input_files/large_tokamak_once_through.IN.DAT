@@ -99,8 +99,8 @@ dr_bore     = 2.003843190236783 * central solenoid inboard radius (m) (`iteratio
 dr_cryostat    = 0.15 * cryostat thickness (m)
 dr_vv_inboard  = 0.3 * vacuum vessel inboard thickness (TF coil / shield) (m)
 dr_vv_outboard = 0.3 * vacuum vessel outboard thickness (TF coil / shield) (m)
-d_vv_top = 0.3 * vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)
-d_vv_bot = 0.3 * vacuum vessel underside thickness (TF coil / shield) (m)
+dz_vv_upper = 0.3 * vacuum vessel topside thickness (TF coil / shield) (m) (= dz_vv_lower if double-null)
+dz_vv_lower = 0.3 * vacuum vessel underside thickness (TF coil / shield) (m)
 dr_shld_vv_gap_inboard    = 0.02 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
 dr_cs    = 0.546816593988753 * Central solenoid thickness (m) (`iteration variable 16`)
 dr_fw_plasma_gap_inboard  = 0.25 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
@@ -110,7 +110,7 @@ dr_shld_outboard  = 0.800 * outboard shield thickness (m) (`iteration variable 9
 dr_tf_inboard    = 1.2 * inboard TF coil thickness; (centrepost for ST) (m)
 dr_shld_thermal_inboard = 0.050 * TF-VV thermal shield thickness; inboard (m)
 dr_shld_thermal_outboard = 0.050 * TF-VV thermal shield thickness; outboard (m)
-thshield_vb = 0.050 * TF-VV thermal shield thickness; vertical build (m)
+dz_shld_thermal = 0.050 * TF-VV thermal shield thickness; vertical build (m)
 dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Buildings Variables----------------*
@@ -175,7 +175,7 @@ pinjalw  = 200.0 * maximum allowable value for injected power (MW) (`constraint 
 
 *----------------Divertor Variables----------------*
 
-divfix   = 0.62 * divertor structure vertical thickness (m)
+dz_divertor   = 0.62 * divertor structure vertical thickness (m)
 
 *------------------Error Handling------------------*
 
