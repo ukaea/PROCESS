@@ -869,7 +869,30 @@ class PFCoil:
                 j_cs_pulse_start=pfv.j_cs_pulse_start,
                 n_cs_pf_coils=pfv.n_cs_pf_coils,
             )
-            self.calculate_stress_on_cs_coil()
+            (
+                pf.sig_hoop,
+                pf.sig_axial,
+                pf.axial_force,
+                pfv.s_shear_cs_peak,
+                pfv.pfcaseth[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_stress_on_cs_coil(
+                i_pf_conductor=pfv.i_pf_conductor,
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                r_cs_coil_inner=pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+                f_a_cs_steel=pfv.f_a_cs_steel,
+                a_cs_poloidal=pfv.a_cs_poloidal,
+                i_cs_stress=pfv.i_cs_stress,
+            )
+            # Calculation of CS fatigue
+            # this is only valid for pulsed reactor design
+            if pv.inductive_current_fraction > 0.0e-4:
+                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
+                    pf.sig_hoop,
+                    csfv.residual_sig_hoop,
+                    csfv.t_crack_vertical,
+                    csfv.t_structural_vertical,
+                    csfv.t_structural_radial,
+                )
             self.calculate_cs_component_masses()
             self.ohcalc()
 
@@ -1345,60 +1368,76 @@ class PFCoil:
 
         return b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_coil_peak, bpf2
 
-    def calculate_stress_on_cs_coil(self):
-        hohc = bv.hmax * pfv.f_z_cs_tf_internal
+    def calculate_stress_on_cs_coil(
+        self,
+        i_pf_conductor: int,
+        dz_cs_half: float,
+        r_cs_coil_inner: float,
+        f_a_cs_steel: float,
+        a_cs_poloidal: float,
+        i_cs_stress: int,
+    ) -> tuple[float, float, float, float, float]:
+        """Calculate the stress on the central solenoid coil.
+
+        :param i_pf_conductor: Indicator for the type of conductor (0 for superconducting, 1 for resistive)
+        :type i_pf_conductor: int
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param r_cs_coil_inner: Inner radius of the central solenoid coil (m)
+        :type r_cs_coil_inner: float
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param i_cs_stress: Indicator for the type of stress calculation (1 for hoop + axial, 0 for hoop only)
+        :type i_cs_stress: int
+        :return: A tuple containing:
+            - s_cs_hoop (float): Hoop stress in the central solenoid coil (Pa)
+            - s_axial_cs (float): Axial stress in the central solenoid coil (Pa)
+            - axial_force_cs (float): Axial force in the central solenoid coil (N)
+            - s_shear_cs_peak (float): Maximum shear stress in the central solenoid coil (Pa)
+            - dr_cs_case (float): Thickness of the hypothetical steel case (m)
+        :rtype: tuple[float, float, float, float, float]
+        """
         # Stress ==> cross-sectional area of supporting steel to use
-        if pfv.i_pf_conductor == 0:
+        if i_pf_conductor == 0:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pf.sig_hoop = self.hoop_stress(pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1])
+            s_cs_hoop = self.hoop_stress(r_cs_coil_inner)
 
             # New calculation from Y. Iwasa for axial stress
-            pf.sig_axial, pf.axial_force = self.axial_stress()
-
-            # Allowable (hoop) stress (Pa) alstroh
-            # Now a user input
-            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
-
-            # Calculation of CS fatigue
-            # this is only valid for pulsed reactor design
-            if pv.inductive_current_fraction > 0.0e-4:
-                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
-                    pf.sig_hoop,
-                    csfv.residual_sig_hoop,
-                    csfv.t_crack_vertical,
-                    csfv.t_structural_vertical,
-                    csfv.t_structural_radial,
-                )
+            s_axial_cs, axial_force_cs = self.axial_stress()
 
             # Now steel area fraction is iteration variable and constraint
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
+            areaspf = f_a_cs_steel * a_cs_poloidal
 
-            if pfv.i_cs_stress == 1:
-                pfv.s_shear_cs_peak = max(
-                    abs(pf.sig_hoop - pf.sig_axial),
-                    abs(pf.sig_axial - 0.0e0),
-                    abs(0.0e0 - pf.sig_hoop),
+            if i_cs_stress == 1:
+                s_shear_cs_peak = max(
+                    abs(s_cs_hoop - s_axial_cs),
+                    abs(s_axial_cs - 0.0e0),
+                    abs(0.0e0 - s_cs_hoop),
                 )
             else:
-                pfv.s_shear_cs_peak = max(
-                    abs(pf.sig_hoop - 0.0e0),
+                s_shear_cs_peak = max(
+                    abs(s_cs_hoop - 0.0e0),
                     abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pf.sig_hoop),
+                    abs(0.0e0 - s_cs_hoop),
                 )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
             # its inside and outside edges; in reality, the steel is distributed
             # throughout the conductor
-            pfv.pfcaseth[pfv.n_cs_pf_coils - 1] = 0.25e0 * areaspf / hohc
+            dr_cs_case = 0.25e0 * areaspf / dz_cs_half
 
         else:
             areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
-            pfv.pfcaseth[pfv.n_cs_pf_coils - 1] = 0.0e0
+            dr_cs_case = 0.0e0
+
+        return s_cs_hoop, s_axial_cs, axial_force_cs, s_shear_cs_peak, dr_cs_case
 
     def calculate_cs_component_masses(self):
         # Area of steel in Central Solenoid
