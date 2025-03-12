@@ -76,7 +76,6 @@ LIST(APPEND PROCESS_SRCS
     scan.f90
     hcpb.f90
     pfcoil.f90
-    reinke_module.f90
     sctfcoil.f90
     cost_variables.f90
     divertor_variables.f90
