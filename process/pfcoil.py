@@ -893,7 +893,17 @@ class PFCoil:
                     csfv.t_structural_vertical,
                     csfv.t_structural_radial,
                 )
-            self.calculate_cs_component_masses()
+            (
+                pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1],
+                pfv.awpoh,
+                pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_cs_component_masses(
+                f_a_cs_steel=pfv.f_a_cs_steel,
+                a_cs_poloidal=pfv.a_cs_poloidal,
+                r_cs_coil_middle=pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                i_pf_conductor=pfv.i_pf_conductor,
+                f_a_cs_void=pfv.f_a_cs_void,
+            )
             self.ohcalc()
 
         # Summation of weights and current
@@ -1439,48 +1449,69 @@ class PFCoil:
 
         return s_cs_hoop, s_axial_cs, axial_force_cs, s_shear_cs_peak, dr_cs_case
 
-    def calculate_cs_component_masses(self):
-        # Area of steel in Central Solenoid
-        areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
+    def calculate_cs_component_masses(
+        self,
+        f_a_cs_steel: float,
+        a_cs_poloidal: float,
+        r_cs_coil_middle: float,
+        i_pf_conductor: int,
+        f_a_cs_void: float,
+    ) -> tuple[float, float, float]:
+        """Calculate the masses of the central solenoid components.
+
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param r_cs_coil_middle: Mean radius of the central solenoid coil (m)
+        :type r_cs_coil_middle: float
+        :param i_pf_conductor: Indicator for the type of conductor (0 for superconducting, 1 for resistive)
+        :type i_pf_conductor: int
+        :param f_a_cs_void: Fraction of the cross-sectional area that is void
+        :type f_a_cs_void: float
+        :return: A tuple containing:
+            - m_cs_coil_structure (float): Mass of the steel structure (kg)
+            - awpoh (float): Non-steel cross-sectional area (m^2)
+            - m_cs_coil_conductor (float): Mass of the conductor (kg)
+        :rtype: tuple[float, float, float]
+        """
+        areaspf = f_a_cs_steel * a_cs_poloidal
 
         # Weight of steel
-        pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1] = (
-            areaspf
-            * 2.0e0
-            * constants.pi
-            * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
-            * fwbsv.denstl
+        m_cs_coil_structure = (
+            areaspf * 2.0e0 * constants.pi * r_cs_coil_middle * fwbsv.denstl
         )
 
         # Non-steel cross-sectional area
-        pfv.awpoh = pfv.a_cs_poloidal - areaspf
+        awpoh = a_cs_poloidal - areaspf
 
         # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
         # monotonically decreases
 
         da = 0.0001e0  # 1 cm^2
-        if pfv.awpoh < da:
-            pfv.awpoh = da * da / (2.0e0 * da - pfv.awpoh)
+        if awpoh < da:
+            awpoh = da * da / (2.0e0 * da - awpoh)
 
         # Weight of conductor in central Solenoid
-        if pfv.i_pf_conductor == 0:
-            pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
-                pfv.awpoh
-                * (1.0e0 - pfv.f_a_cs_void)
+        if i_pf_conductor == 0:
+            m_cs_coil_conductor = (
+                awpoh
+                * (1.0e0 - f_a_cs_void)
                 * 2.0e0
                 * constants.pi
-                * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
+                * r_cs_coil_middle
                 * tfv.dcond[pfv.i_cs_superconductor - 1]
             )
         else:
-            pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
-                pfv.awpoh
-                * (1.0e0 - pfv.f_a_cs_void)
+            m_cs_coil_conductor = (
+                awpoh
+                * (1.0e0 - f_a_cs_void)
                 * 2.0e0
                 * constants.pi
-                * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
+                * r_cs_coil_middle
                 * constants.dcopper
             )
+        return m_cs_coil_structure, awpoh, m_cs_coil_conductor
 
     def ohcalc(self):
         """Routine to perform calculations for the Central Solenoid.
