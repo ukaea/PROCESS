@@ -8,6 +8,7 @@ from warnings import warn
 import process
 import process.fortran as fortran
 import process.process_output as process_output
+from process.blanket_library import init_blanket_library
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -242,7 +243,7 @@ def init_all_module_vars():
     fortran.define_iteration_variables.init_define_iteration_variables()
     fortran.water_usage_variables.init_watuse_variables()
     fortran.cs_fatigue_variables.init_cs_fatigue_variables()
-    fortran.blanket_library.init_blanket_library()
+    init_blanket_library()
     fortran.dcll_module.init_dcll_module()
 
     fortran.init_module.init_fortran_modules()
