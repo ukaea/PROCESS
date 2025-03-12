@@ -2894,3 +2894,56 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     vout = v2 - v1
 
     return vin, vout, vin + vout
+
+
+def init_blanket_library():
+    blanket_library.hblnkt = 0.0
+    blanket_library.hshld = 0.0
+    blanket_library.dz_pf_cryostat = 0.0
+    blanket_library.hvv = 0.0
+    blanket_library.volshldi = 0.0
+    blanket_library.volshldo = 0.0
+    blanket_library.volvvi = 0.0
+    blanket_library.volvvo = 0.0
+    blanket_library.bldepti = 0.0
+    blanket_library.bldepto = 0.0
+    blanket_library.blwidti = 0.0
+    blanket_library.blwidto = 0.0
+    blanket_library.bllengi = 0.0
+    blanket_library.bllengo = 0.0
+    blanket_library.bzfllengi = 0.0
+    blanket_library.bzfllengi_liq = 0.0
+    blanket_library.bzfllengo_liq = 0.0
+    blanket_library.bzfllengo = 0.0
+    blanket_library.pnucfwi = 0.0
+    blanket_library.pnucfwo = 0.0
+    blanket_library.tpeakfwi = 0.0
+    blanket_library.tpeakfwo = 0.0
+    blanket_library.mffwi = 0.0
+    blanket_library.mffwo = 0.0
+    blanket_library.mffw = 0.0
+    blanket_library.npfwi = 0.0
+    blanket_library.npfwo = 0.0
+    blanket_library.mffwpi = 0.0
+    blanket_library.mffwpo = 0.0
+    blanket_library.pnucblkti = 0.0
+    blanket_library.pnucblkto = 0.0
+    blanket_library.mfblkti = 0.0
+    blanket_library.mfblkto = 0.0
+    blanket_library.mfblkti_liq = 0.0
+    blanket_library.mfblkto_liq = 0.0
+    blanket_library.mfblkt_liq = 0.0
+    blanket_library.mfblkt = 0.0
+    blanket_library.mftotal = 0.0
+    blanket_library.npblkti = 0.0
+    blanket_library.npblkto = 0.0
+    blanket_library.mfblktpi = 0.0
+    blanket_library.mfblktpo = 0.0
+    blanket_library.velblkti = 0.0
+    blanket_library.velblkto = 0.0
+    blanket_library.htpmw_fwi = 0.0
+    blanket_library.htpmw_fwo = 0.0
+    blanket_library.htpmw_blkti = 0.0
+    blanket_library.htpmw_blkto = 0.0
+    blanket_library.vfblkti = 0.0
+    blanket_library.vfblkto = 0.0
