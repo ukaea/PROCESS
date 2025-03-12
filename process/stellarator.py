@@ -258,7 +258,8 @@ class Stellarator:
         surfaces with Fourier coefficients')
         """
         physics_variables.vol_plasma = (
-            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_plasma_volume
+            # st.f_r * st.f_a**2 * stellarator_configuration.stella_config_plasma_volume
+            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:

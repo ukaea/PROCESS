@@ -144,7 +144,7 @@ hfact = 1.2 *H-factor on energy confinement times
 alphan = 0.35 *Density profile index
 alphat = 1.2 *Temperature profile index
 
-bt = 6.00 *Toroidal field on axis (T)
+bt = 5.50 *Toroidal field on axis (T)
 rmajor = 23.0 *Plasma major radius (m)
 aspect = 10.1 *Aspect ratio
 
