@@ -9,6 +9,7 @@ import process
 import process.fortran as fortran
 import process.process_output as process_output
 from process.blanket_library import init_blanket_library
+from process.build import init_build_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -235,7 +236,7 @@ def init_all_module_vars():
     fortran.structure_variables.init_structure_variables()
     fortran.vacuum_variables.init_vacuum_variables()
     fortran.pf_power_variables.init_pf_power_variables()
-    fortran.build_variables.init_build_variables()
+    init_build_variables()
     fortran.constraint_variables.init_constraint_variables()
     fortran.pulse_variables.init_pulse_variables()
     fortran.rebco_variables.init_rebco_variables()
