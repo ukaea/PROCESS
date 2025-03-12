@@ -12,6 +12,7 @@ from process.blanket_library import init_blanket_library
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
+from process.cs_fatigue import init_cs_fatigue_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -245,7 +246,7 @@ def init_all_module_vars():
     fortran.reinke_variables.init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()
     fortran.water_usage_variables.init_watuse_variables()
-    fortran.cs_fatigue_variables.init_cs_fatigue_variables()
+    init_cs_fatigue_variables()
     init_blanket_library()
     fortran.dcll_module.init_dcll_module()
 
