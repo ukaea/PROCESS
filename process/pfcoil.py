@@ -824,7 +824,22 @@ class PFCoil:
                 dr_bore=bv.dr_bore,
                 dr_cs=bv.dr_cs,
             )
-            self.set_cs_turn_geometry()
+            (
+                pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1],
+                pfv.a_cs_turn,
+                pfv.d_cond_cst,
+                pfv.l_cond_cst,
+                pfv.r_in_cst,
+                csfv.t_structural_radial,
+                csfv.t_structural_vertical,
+                pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1],
+            ) = self.set_cs_turn_geometry(
+                pfv.a_cs_poloidal,
+                pfv.ld_ratio_cst,
+                pfv.r_out_cst,
+                pfv.f_a_cs_steel,
+                pfv.f_a_cs_void,
+            )
             self.calculate_field_on_cs_coil()
             self.calculate_stress_on_cs_coil()
             self.calculate_cs_component_masses()
@@ -1134,9 +1149,42 @@ class PFCoil:
             r_cs_coil_inner,
         )
 
-    def set_cs_turn_geometry(self):
-        """Set the geometry of the central solenoid coil turns."""
-        # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
+    def set_cs_turn_geometry(
+        self,
+        a_cs_poloidal: float,
+        ld_ratio_cst: float,
+        r_out_cst: float,
+        f_a_cs_steel: float,
+        f_a_cs_void: float,
+    ) -> tuple[float, float, float, float, float, float, float, float]:
+        """Set the geometry of the central solenoid coil turns.
+
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param ld_ratio_cst: Length-to-depth ratio of the central solenoid turn conduit
+        :type ld_ratio_cst: float
+        :param r_out_cst: Radius of the curved outer corner (m)
+        :type r_out_cst: float
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param f_a_cs_void: Fraction of the cross-sectional area that is void
+        :type f_a_cs_void: float
+        :return: A tuple containing:
+            - n_cs_coil_turns (float): Number of turns in the central solenoid coil
+            - a_cs_turn (float): Turn vertical cross-sectional area (m^2)
+            - d_cond_cst (float): Depth/width of CS turn conduit (m)
+            - l_cond_cst (float): Length of CS turn conduit (m)
+            - r_in_cst (float): Radius of turn space (m)
+            - t_structural_radial (float): Thickness of steel conduit in radial direction (m)
+            - t_structural_vertical (float): Thickness of steel conduit in vertical direction (m)
+            - f_a_cs_void (float): Fraction of the cross-sectional area that is void
+        :rtype: tuple[float, float, float, float, float, float, float, float]
+
+        :reference:
+            - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
+            Fusion Engineering and Design, vol. 124, pp. 82–85, Apr. 2017,
+            doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
+        """
         if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
             sgn = 1.0e0
             pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
@@ -1149,43 +1197,57 @@ class PFCoil:
             )
 
         # Number of turns
-        pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1] = (
+        n_cs_coil_turns = (
             1.0e6
             * abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1])
             / pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1]
         )
 
         # Turn vertical cross-sectionnal area
-        pfv.a_cs_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
+        a_cs_turn = a_cs_poloidal / n_cs_coil_turns
 
-        # Depth/width of cs turn conduit
-        pfv.d_cond_cst = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
-        # length of cs turn conduit
-        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.d_cond_cst
-        # Radius of turn space = pfv.r_in_cst
-        # Radius of curved outer corrner pfv.r_out_cst = 3mm from literature
-        # pfv.ld_ratio_cst = 70 / 22 from literature
-        p1_cst = ((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) ** 2
+        # Depth/width of CS turn conduit
+        d_cond_cst = (a_cs_turn / ld_ratio_cst) ** 0.5
+
+        # Length of cs turn conduit
+        l_cond_cst = ld_ratio_cst * d_cond_cst
+
+        # Radius of turn space = r_in_cst
+        # Radius of curved outer corrner r_out_cst = 3mm from literature
+        # ld_ratio_cst = 70 / 22 from literature
+        p1_cst = ((l_cond_cst - d_cond_cst) / constants.pi) ** 2
         p2_cst = (
-            (pfv.l_cond_cst * pfv.d_cond_cst)
-            - (4 - constants.pi) * (pfv.r_out_cst**2)
-            - (pfv.a_cs_turn * pfv.f_a_cs_steel)
+            (l_cond_cst * d_cond_cst)
+            - (4 - constants.pi) * (r_out_cst**2)
+            - (a_cs_turn * f_a_cs_steel)
         ) / constants.pi
+
         # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) + math.sqrt(
+
+        r_in_cst = -((l_cond_cst - d_cond_cst) / constants.pi) + math.sqrt(
             p1_cst + p2_cst
         )
         # Thickness of steel conduit in cs turn
-        csfv.t_structural_radial = (pfv.d_cond_cst / 2) - pfv.r_in_cst
-        # In this model the vertical and radial have the same thickness
-        csfv.t_structural_vertical = csfv.t_structural_radial
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
 
-        # Non-steel area void fraction for coolant
-        pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
+        t_structural_radial = (d_cond_cst / 2) - r_in_cst
+
+        # In this model the vertical and radial have the same thickness
+        t_structural_vertical = t_structural_radial
+
+        # add a check for negative conduit thickness
+        if t_structural_radial < 1.0e-3:
+            t_structural_radial = 1.0e-3
+
+        return (
+            n_cs_coil_turns,
+            a_cs_turn,
+            d_cond_cst,
+            l_cond_cst,
+            r_in_cst,
+            t_structural_radial,
+            t_structural_vertical,
+            f_a_cs_void,
+        )
 
     def calculate_field_on_cs_coil(self):
         # Peak field at the End-Of-Flattop (EOF)
