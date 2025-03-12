@@ -43,12 +43,14 @@ def string_to_f2py_compatible(
     if string:
         if len(string) > target_size and except_length:
             raise RuntimeError(
-                f"String string of length {len(string)} is trying to initiate as {target} with length {target_size}"
+                f"String {string} of length {len(string)} is trying to initiate as {target} with length {target_size}"
             )
         if len(string) > target_size:
             warnings.warn(
-                f"String string of length {len(string)} is trying to initiate as {target} with length \
-                {target_size}. String string will be truncated!",
+                (
+                    f"String {string} of length {len(string)} is trying to initiate as {target} with length"
+                    f"{target_size}. String string will be truncated!"
+                ),
                 stacklevel=2,
             )
 
