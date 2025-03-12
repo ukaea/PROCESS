@@ -135,12 +135,32 @@ def parse_args(args):
     )
 
     parser.add_argument(
+        "-xm",
+        "--x_axis_max",
+        nargs="?",
+        help=(
+            "Used to set the x value corresponding to 100 percent when \nconverting from absolute to percent values."
+        ),
+        type=float,
+    )
+
+    parser.add_argument(
         "-y%",
         "--y_axis_percent",
         action="store_true",
         help=(
             "Used to set the y axis ticks to percentages in place of absolute \nvalues."
         ),
+    )
+
+    parser.add_argument(
+        "-ym",
+        "--y_axis_max",
+        nargs="?",
+        help=(
+            "Used to set the y value corresponding to 100 percent when \nconverting from absolute to percent values."
+        ),
+        type=float,
     )
 
     parser.add_argument(
@@ -195,7 +215,9 @@ def main(args=None):
     term_output = args.term_output
     label_name = str(args.label_name)
     x_axis_percentage = args.x_axis_percent
+    x_max = args.x_axis_max
     y_axis_percentage = args.y_axis_percent
+    y_max = args.y_axis_max
     two_dimensional_contour = args.two_dimensional_contour
     stack_plots = args.stack_plots
     # ---------------------------------------
@@ -523,14 +545,20 @@ def main(args=None):
                         label=labl,
                     )
                     if y_axis_percentage:
-                        yticks = mtick.PercentFormatter(
-                            max(abs(output_arrays[input_file][output_name]))
-                        )
+                        if y_max is not None:
+                            yticks = mtick.PercentFormatter(y_max)
+                        else:
+                            yticks = mtick.PercentFormatter(
+                                max(abs(output_arrays[input_file][output_name]))
+                            )
                         ax.yaxis.set_major_formatter(yticks)
                     if x_axis_percentage:
-                        xticks = mtick.PercentFormatter(
-                            max(abs(scan_var_array[input_file]))
-                        )
+                        if x_max is not None:
+                            xticks = mtick.PercentFormatter(x_max)
+                        else:
+                            xticks = mtick.PercentFormatter(
+                                max(abs(scan_var_array[input_file]))
+                            )
                         ax.xaxis.set_major_formatter(xticks)
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
@@ -545,16 +573,22 @@ def main(args=None):
                             label=labl,
                         )
                         if y_axis_percentage:
-                            yticks = mtick.PercentFormatter(
-                                max(abs(output_arrays[input_file][output_name]))
-                            )
+                            if y_max is not None:
+                                yticks = mtick.PercentFormatter(y_max)
+                            else:
+                                yticks = mtick.PercentFormatter(
+                                    max(abs(output_arrays[input_file][output_name]))
+                                )
                             axs[
                                 output_names.index(output_name)
                             ].yaxis.set_major_formatter(yticks)
                         if x_axis_percentage:
-                            xticks = mtick.PercentFormatter(
-                                max(abs(scan_var_array[input_file]))
-                            )
+                            if x_max is not None:
+                                xticks = mtick.PercentFormatter(x_max)
+                            else:
+                                xticks = mtick.PercentFormatter(
+                                    max(abs(scan_var_array[input_file]))
+                                )
                             axs[
                                 output_names.index(output_name)
                             ].xaxis.set_major_formatter(xticks)
@@ -570,14 +604,20 @@ def main(args=None):
                             label=labl,
                         )
                         if y_axis_percentage:
-                            yticks = mtick.PercentFormatter(
-                                max(abs(output_arrays[input_file][output_name]))
-                            )
+                            if y_max is not None:
+                                yticks = mtick.PercentFormatter(y_max)
+                            else:
+                                yticks = mtick.PercentFormatter(
+                                    max(abs(output_arrays[input_file][output_name]))
+                                )
                             ax.yaxis.set_major_formatter(yticks)
                         if x_axis_percentage:
-                            xticks = mtick.PercentFormatter(
-                                max(abs(scan_var_array[input_file]))
-                            )
+                            if x_max is not None:
+                                xticks = mtick.PercentFormatter(x_max)
+                            else:
+                                xticks = mtick.PercentFormatter(
+                                    max(abs(scan_var_array[input_file]))
+                                )
                             ax.xaxis.set_major_formatter(xticks)
                         plt.rc("xtick", labelsize=axis_tick_size)
                         plt.rc("ytick", labelsize=axis_tick_size)
@@ -600,14 +640,20 @@ def main(args=None):
                         color="red" if len(input_files) == 1 else "black",
                     )
                     if y_axis_percentage:
-                        yticks = mtick.PercentFormatter(
-                            max(abs(output_arrays[input_file][output_name]))
-                        )
+                        if y_max is not None:
+                            yticks = mtick.PercentFormatter(y_max)
+                        else:
+                            yticks = mtick.PercentFormatter(
+                                max(abs(output_arrays[input_file][output_name]))
+                            )
                         ax2.yaxis.set_major_formatter(yticks)
                     if x_axis_percentage:
-                        xticks = mtick.PercentFormatter(
-                            max(abs(scan_var_array[input_file]))
-                        )
+                        if x_max is not None:
+                            xticks = mtick.PercentFormatter(x_max)
+                        else:
+                            xticks = mtick.PercentFormatter(
+                                max(abs(scan_var_array[input_file]))
+                            )
                         ax2.xaxis.set_major_formatter(xticks)
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
@@ -835,10 +881,16 @@ def main(args=None):
                     fontsize=axis_font_size,
                 )
                 if y_axis_percentage:
-                    yticks = mtick.PercentFormatter(max(np.abs(y_contour)))
+                    if y_max is not None:
+                        yticks = mtick.PercentFormatter(y_max)
+                    else:
+                        yticks = mtick.PercentFormatter(max(np.abs(y_contour)))
                     ax.yaxis.set_major_formatter(yticks)
                 if x_axis_percentage:
-                    xticks = mtick.PercentFormatter(max(np.abs(x_contour)))
+                    if x_max is not None:
+                        xticks = mtick.PercentFormatter(x_max)
+                    else:
+                        xticks = mtick.PercentFormatter(max(np.abs(x_contour)))
                     ax.xaxis.set_major_formatter(xticks)
                 plt.rc("xtick", labelsize=axis_tick_size)
                 plt.rc("ytick", labelsize=axis_tick_size)
@@ -897,14 +949,20 @@ def main(args=None):
                     m_file.data[output_name].get_scan(i + 1) for i in range(n_scan_2)
                 ]
                 if y_axis_percentage:
-                    yticks = mtick.PercentFormatter(max(np.abs(y_data)))
+                    if y_max is not None:
+                        yticks = mtick.PercentFormatter(y_max)
+                    else:
+                        yticks = mtick.PercentFormatter(max(np.abs(y_data)))
                     ax.yaxis.set_major_formatter(yticks)
                 x_data = [
                     m_file.data[scan_2_var_name].get_scan(i + 1)
                     for i in range(n_scan_2)
                 ]
                 if x_axis_percentage:
-                    xticks = mtick.PercentFormatter(max(np.abs(x_data)))
+                    if x_max is not None:
+                        xticks = mtick.PercentFormatter(x_max)
+                    else:
+                        xticks = mtick.PercentFormatter(max(np.abs(x_data)))
                     ax.xaxis.set_major_formatter(xticks)
                 plt.rc("xtick", labelsize=8)
                 plt.rc("ytick", labelsize=8)
