@@ -1,5 +1,6 @@
 from process.evaluators import Evaluators
-from process.fortran import define_iteration_variables, numerics
+from process.fortran import numerics
+from process.iteration_variables import load_iteration_variables, load_scaled_bounds
 from process.solver import get_solver
 
 
@@ -25,8 +26,8 @@ class Optimiser:
     def run(self):
         """Run vmcon solver and retry if it fails in certain ways."""
         # Initialise iteration variables and bounds in Fortran
-        define_iteration_variables.loadxc()
-        define_iteration_variables.boundxc()
+        load_iteration_variables()
+        load_scaled_bounds()
 
         # Initialise iteration variables and bounds in Python: relies on Fortran
         # iteration variables being defined above
