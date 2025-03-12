@@ -2374,7 +2374,7 @@ class Sctfcoil:
             # TODO: is this the correct current?
             i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
             # VV properties
-            d_vv=build_variables.dr_vv_shell_thickness,
+            d_vv=build_variables.dr_vv_shells,
         )
 
     def tf_field_and_force(self):
@@ -7200,7 +7200,9 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
     return eyoung_j_out, a_out, poisson_j_perp_out
 
 
-def _inductance_factor(H, ri, ro, rm, theta1):
+def _inductance_factor(
+    H: float, ri: float, ro: float, rm: float, theta1: float
+) -> float:
     """Calculates the inductance factor for a toroidal structure
     using surrogate 2 #1866.
 
@@ -7234,16 +7236,16 @@ def _inductance_factor(H, ri, ro, rm, theta1):
 
 
 @staticmethod
-def lambda_term(tau, omega):
-    """Lambda Term
+def lambda_term(tau: float, omega: float) -> float:
+    """
+    The lambda function used inegral in inductance calcuation found
+    in Y. Itoh et al. The full form of the functions are given in appendix A.
 
     Author: Alexander Pearce, UKAEA
 
     :param tau: tau_{s,k} = (R_{s,k} - R_{c,k}) / R_k
     :param omega: omega_k = R_{c,k}/R_k
-
-    The lammbda fucntion used inegral in inductance calcuation found
-    in Y. Itoh et al. The full form of the functions are given in appendix A.
+    :returns: integral
     """
     p = 1.0 - omega**2.0
 
@@ -7260,19 +7262,22 @@ def lambda_term(tau, omega):
 
 
 @staticmethod
-def _theta_factor_integral(ro_vv, ri_vv, rm_vv, h_vv, theta1_vv):
-    """Theta Factor Integral
-    Author: Alexander Pearce, UKAEA
-
-    :param Ro_vv: the radius of the outboard edge of the VV CCL
-    :param Ri_vv: the radius of the inboard edge of the VV CCL
-    :param Rm_vv: the radius where the maximum height of the VV CCL occurs
-    :param H_vv: the maximum height of the VV CCL
-    :param theta1_vv: the polar angle of the point at which one circular arc is
-    joined to another circular arc in the approximation to the VV CCL
-
+def _theta_factor_integral(
+    ro_vv: float, ri_vv: float, rm_vv: float, h_vv: float, theta1_vv: float
+) -> float:
+    """
     The calcuation of the theta factor found in Eq 4 of Y. Itoh et al. The
     full form of the integral is given in appendix A.
+
+    Author: Alexander Pearce, UKAEA
+
+    :param ro_vv: the radius of the outboard edge of the VV CCL
+    :param ri_vv: the radius of the inboard edge of the VV CCL
+    :param rm_vv: the radius where the maximum height of the VV CCL occurs
+    :param h_vv: the maximum height of the VV CCL
+    :param theta1_vv: the polar angle of the point at which one circular arc is
+    joined to another circular arc in the approximation to the VV CCL
+    :returns: theta factor.
     """
     theta2 = np.pi / 2.0 + theta1_vv
     a = (ro_vv - ri_vv) / 2.0
@@ -7314,28 +7319,28 @@ def _theta_factor_integral(ro_vv, ri_vv, rm_vv, h_vv, theta1_vv):
 
 def vv_stress_on_quench(
     # TF shape
-    H_coil,
-    ri_coil,
-    ro_coil,
-    rm_coil,
-    ccl_length_coil,
-    theta1_coil,
+    H_coil: float,
+    ri_coil: float,
+    ro_coil: float,
+    rm_coil: float,
+    ccl_length_coil: float,
+    theta1_coil: float,
     # VV shape
-    H_vv,
-    ri_vv,
-    ro_vv,
-    rm_vv,
-    theta1_vv,
+    H_vv: float,
+    ri_vv: float,
+    ro_vv: float,
+    rm_vv: float,
+    theta1_vv: float,
     # TF properties
-    n_tf_coils,
-    n_tf_turn,
-    s_rp,
-    s_cc,
-    taud,
-    i_op,
+    n_tf_coils: float,
+    n_tf_turn: float,
+    s_rp: float,
+    s_cc: float,
+    taud: float,
+    i_op: float,
     # VV properties
-    d_vv,
-):
+    d_vv: float,
+) -> float:
     """Generic model to calculate the Tresca stress of the
     Vacuum Vessel (VV), experienced when the TF coil quenches.
 

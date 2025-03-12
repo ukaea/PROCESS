@@ -2640,9 +2640,9 @@ contains
       !! q95 : input real : safety factor q at 95% flux surface
       !! aspect : input real : aspect ratio (iteration variable 1)
       !! rmajor : input real : plasma major radius (m) (iteration variable 3)
-      !! i_use_fixed_q_factor : input int : Switch that allows for fixing q95 only in this constraint.
-      !! fixed_q_factor : input real : fixed safet factor q at 95% flux surface
-      use constraint_variables, only: fpsepbqar, psepbqarmax, i_use_fixed_q_factor, fixed_q_factor
+      !! i_q95_fixed : input int : Switch that allows for fixing q95 only in this constraint.
+      !! q95_fixed : input real : fixed safety factor q at 95% flux surface
+      use constraint_variables, only: fpsepbqar, psepbqarmax, i_q95_fixed, q95_fixed
       use physics_variables, only: pdivt, bt, q95, aspect, rmajor
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2651,9 +2651,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      if (i_use_fixed_q_factor == 1) then
-         tmp_cc = 1.0d0 - fpsepbqar * psepbqarmax / ((pdivt*bt)/(fixed_q_factor*aspect*rmajor))
-         tmp_err = (pdivt*bt)/(fixed_q_factor*aspect*rmajor) - psepbqarmax
+      if (i_q95_fixed == 1) then
+         tmp_cc = 1.0d0 - fpsepbqar * psepbqarmax / ((pdivt*bt)/(q95_fixed*aspect*rmajor))
+         tmp_err = (pdivt*bt)/(q95_fixed*aspect*rmajor) - psepbqarmax
       else
          tmp_cc = 1.0d0 - fpsepbqar * psepbqarmax / ((pdivt*bt)/(q95*aspect*rmajor))
          tmp_err = (pdivt*bt)/(q95*aspect*rmajor) - psepbqarmax
