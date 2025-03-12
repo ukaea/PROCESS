@@ -28,6 +28,7 @@ from argparse import RawTextHelpFormatter
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import numpy as np
 
 # PROCESS libraries
@@ -116,6 +117,24 @@ def parse_args(args):
     )
 
     parser.add_argument(
+        "-x%",
+        "--x_axis_percent",
+        action="store_true",
+        help=(
+            "Used to set the x axis ticks to percentages in place of absolute \nvalues."
+        ),
+    )
+
+    parser.add_argument(
+        "-y%",
+        "--y_axis_percent",
+        action="store_true",
+        help=(
+            "Used to set the y axis ticks to percentages in place of absolute \nvalues."
+        ),
+    )
+
+    parser.add_argument(
         "-ln",
         "--label_name",
         default="",
@@ -166,6 +185,8 @@ def main(args=None):
     save_format = str(args.save_format)
     term_output = args.term_output
     label_name = str(args.label_name)
+    x_axis_percentage = args.x_axis_percent
+    y_axis_percentage = args.y_axis_percent
     two_dimensional_contour = args.two_dimensional_contour
     stack_plots = args.stack_plots
     # ---------------------------------------
@@ -444,6 +465,12 @@ def main(args=None):
         # Plot section
         # -----------
         if stack_plots:
+            # check stack plots will work
+            if len(output_names) <= 1:
+                print(
+                    "ERROR : For stack plots to be used need more than 1 output variable"
+                )
+                exit()
             fig, axs = plt.subplots(
                 len(output_names),
                 1,
@@ -486,6 +513,18 @@ def main(args=None):
                         color="blue" if len(input_files) == 1 else None,
                         label=labl,
                     )
+                    if y_axis_percentage:
+                        yticks = mtick.PercentFormatter(
+                            max(abs(output_arrays[input_file][output_name]))
+                        )
+                        ax.yaxis.set_major_formatter(yticks)
+                    if x_axis_percentage:
+                        xticks = mtick.PercentFormatter(
+                            max(abs(scan_var_array[input_file]))
+                        )
+                        ax.xaxis.set_major_formatter(xticks)
+                    plt.rc("xtick", labelsize=axis_tick_size)
+                    plt.rc("ytick", labelsize=axis_tick_size)
                     plt.tight_layout()
                 else:
                     if stack_plots:
@@ -496,17 +535,43 @@ def main(args=None):
                             color="blue" if output_names2 != [] else None,
                             label=labl,
                         )
+                        if y_axis_percentage:
+                            yticks = mtick.PercentFormatter(
+                                max(abs(output_arrays[input_file][output_name]))
+                            )
+                            axs[
+                                output_names.index(output_name)
+                            ].yaxis.set_major_formatter(yticks)
+                        if x_axis_percentage:
+                            xticks = mtick.PercentFormatter(
+                                max(abs(scan_var_array[input_file]))
+                            )
+                            axs[
+                                output_names.index(output_name)
+                            ].xaxis.set_major_formatter(xticks)
+                        plt.rc("xtick", labelsize=axis_tick_size)
+                        plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                     else:
-                        plt.plot(
+                        ax.plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
                             "--o",
                             color="blue" if output_names2 != [] else None,
                             label=labl,
                         )
-                        plt.xticks(size=axis_tick_size)
-                        plt.yticks(size=axis_tick_size)
+                        if y_axis_percentage:
+                            yticks = mtick.PercentFormatter(
+                                max(abs(output_arrays[input_file][output_name]))
+                            )
+                            ax.yaxis.set_major_formatter(yticks)
+                        if x_axis_percentage:
+                            xticks = mtick.PercentFormatter(
+                                max(abs(scan_var_array[input_file]))
+                            )
+                            ax.xaxis.set_major_formatter(xticks)
+                        plt.rc("xtick", labelsize=axis_tick_size)
+                        plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                 if output_names2 != []:
                     ax2.plot(
@@ -525,6 +590,18 @@ def main(args=None):
                         fontsize=axis_font_size,
                         color="red" if len(input_files) == 1 else "black",
                     )
+                    if y_axis_percentage:
+                        yticks = mtick.PercentFormatter(
+                            max(abs(output_arrays[input_file][output_name]))
+                        )
+                        ax2.yaxis.set_major_formatter(yticks)
+                    if x_axis_percentage:
+                        xticks = mtick.PercentFormatter(
+                            max(abs(scan_var_array[input_file]))
+                        )
+                        ax2.xaxis.set_major_formatter(xticks)
+                    plt.rc("xtick", labelsize=axis_tick_size)
+                    plt.rc("ytick", labelsize=axis_tick_size)
                     plt.tight_layout()
             if output_names2 != []:
                 ax2.yaxis.grid(True)
@@ -546,6 +623,8 @@ def main(args=None):
                     ),
                     fontsize=axis_font_size,
                 )
+                plt.rc("xtick", labelsize=axis_tick_size)
+                plt.rc("ytick", labelsize=axis_tick_size)
                 if len(input_files) != 1:
                     plt.legend(loc="best", fontsize=legend_size)
                 plt.tight_layout()
@@ -568,6 +647,8 @@ def main(args=None):
                     ),
                     fontsize=axis_font_size,
                 )
+                plt.rc("xtick", labelsize=axis_tick_size)
+                plt.rc("ytick", labelsize=axis_tick_size)
                 if len(input_files) > 1:
                     plt.legend(
                         loc="lower center",
@@ -612,6 +693,8 @@ def main(args=None):
                     ),
                     fontsize=axis_font_size,
                 )
+                plt.rc("xtick", labelsize=axis_tick_size)
+                plt.rc("ytick", labelsize=axis_tick_size)
                 plt.title(
                     f"{meta[output_name].latex if output_name in meta else {output_name}} vs "
                     f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
@@ -705,18 +788,20 @@ def main(args=None):
 
                 flat_output_z = output_contour_z.flatten()
                 flat_output_z.sort()
-                plt.contourf(
+                fig, ax = plt.subplots()
+                levels = np.linspace(
+                    next(filter(lambda i: i > 0.0, flat_output_z)),
+                    flat_output_z.max(),
+                    50,
+                )
+                contour = ax.contourf(
                     x_contour,
                     y_contour,
                     output_contour_z,
-                    levels=np.linspace(
-                        next(filter(lambda i: i > 0.0, flat_output_z)),
-                        flat_output_z.max(),
-                        50,
-                    ),
+                    levels=levels,
                 )
 
-                plt.colorbar().set_label(
+                fig.colorbar(contour).set_label(
                     label=(
                         meta[output_name].latex
                         if output_name in meta
@@ -740,6 +825,14 @@ def main(args=None):
                     ),
                     fontsize=axis_font_size,
                 )
+                if y_axis_percentage:
+                    yticks = mtick.PercentFormatter(max(np.abs(y_contour)))
+                    ax.yaxis.set_major_formatter(yticks)
+                if x_axis_percentage:
+                    xticks = mtick.PercentFormatter(max(np.abs(x_contour)))
+                    ax.xaxis.set_major_formatter(xticks)
+                plt.rc("xtick", labelsize=axis_tick_size)
+                plt.rc("ytick", labelsize=axis_tick_size)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
@@ -750,6 +843,7 @@ def main(args=None):
 
             else:
                 # Converged indexes, for normal 2D line plot
+                fig, ax = plt.subplots()
                 for conv_j in (
                     conv_ij
                 ):  # conv_j is an array element containing the converged scan numbers
@@ -770,7 +864,7 @@ def main(args=None):
                     labl = f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}} = {scan_1_var_array[0]}"
 
                     # Plot the graph
-                    plt.plot(scan_2_var_array, output_array, "--o", label=labl)
+                    ax.plot(scan_2_var_array, output_array, "--o", label=labl)
 
                 plt.grid(True)
                 plt.ylabel(
@@ -790,8 +884,21 @@ def main(args=None):
                     fontsize=axis_font_size,
                 )
                 plt.legend(loc="best", fontsize=legend_size)
-                plt.xticks(size=axis_tick_size)
-                plt.yticks(size=axis_tick_size)
+                y_data = [
+                    m_file.data[output_name].get_scan(i + 1) for i in range(n_scan_2)
+                ]
+                if y_axis_percentage:
+                    yticks = mtick.PercentFormatter(max(np.abs(y_data)))
+                    ax.yaxis.set_major_formatter(yticks)
+                x_data = [
+                    m_file.data[scan_2_var_name].get_scan(i + 1)
+                    for i in range(n_scan_2)
+                ]
+                if x_axis_percentage:
+                    xticks = mtick.PercentFormatter(max(np.abs(x_data)))
+                    ax.xaxis.set_major_formatter(xticks)
+                plt.rc("xtick", labelsize=8)
+                plt.rc("ytick", labelsize=8)
                 plt.tight_layout()
                 plt.savefig(
                     f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
