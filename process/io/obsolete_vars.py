@@ -252,6 +252,8 @@ OBS_VARS = {
     "d_vv_top": "dz_vv_upper",
     "d_vv_bot": "dz_vv_lower",
     "divfix": "dz_divertor",
+    "coreradius": "radius_plasma_core_norm",
+    "maxradwallload": "pflux_fw_rad_max",
 }
 
 OBS_VARS_HELP = {

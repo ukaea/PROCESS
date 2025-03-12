@@ -119,7 +119,7 @@ class ProcessTracker:
         "p_plasma_inner_rad_mw",
         "tesep",
         "f_nd_alpha_electron",
-        "wallmw",
+        "pflux_fw_neutron_mw",
         "aspect",
         "rminor",
         "rmajor",

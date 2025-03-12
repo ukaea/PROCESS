@@ -116,7 +116,7 @@ fpnetel  = 1.0 * f-value for net electric power (`constraint equation 16`; `iter
 fptfnuc  = 1 * f-value for maximum TF coil nuclear heating (`constraint equation 54`; `iteration variable 95`)
 fradpwr  = 1 * f-value for core radiation power limit (`constraint equation 17`; `iteration variable 28`)
 fradwall = 1.0 * f-value for upper limit on radiation wall load (`constr; equ; 67`; `iteration variable 116`)
-maxradwallload = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
+pflux_fw_rad_max = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 pnetelin = 1000 * required net electric power (MW) (`constraint equation 16`)
 powfmax  = 500. * maximum fusion power (MW) (`constraint equation 9`)
 walalw   = 1.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
@@ -225,7 +225,7 @@ ipowerflow = 1 * switch for power flow model;
 
 *------------Impurity Radiation Module-------------*
 
-coreradius = 0.6 * coreradius /0;6/ ; normalised radius defining the 'core' region
+radius_plasma_core_norm = 0.6 * radius_plasma_core_norm /0;6/ ; normalised radius defining the 'core' region
 coreradiationfraction = 1. * coreradiationfraction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
 fimp(1) = 1.0
 fimp(2) = 0.1

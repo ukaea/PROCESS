@@ -450,7 +450,7 @@ pheat = 75.0
 **********************
 
 * Normalised radius defining the 'core' region
-coreradius = 0.75
+radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
 coreradiationfraction = 0.6

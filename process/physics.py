@@ -2141,7 +2141,7 @@ class Physics:
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
         if physics_variables.iwalld == 1:
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.neutron_power_total
                 / physics_variables.a_plasma_surface
@@ -2149,14 +2149,14 @@ class Physics:
         else:
             if physics_variables.idivrt == 2:
                 # Double null configuration
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
@@ -2176,17 +2176,34 @@ class Physics:
 
         # Calculate radiation power
 
-        radpwrdata = physics_funcs.calculate_radiation_powers(self.plasma_profile)
+        radpwrdata = physics_funcs.calculate_radiation_powers(
+            self.plasma_profile,
+            physics_variables.ne0,
+            physics_variables.rminor,
+            physics_variables.bt,
+            physics_variables.aspect,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+            physics_variables.te0,
+            physics_variables.f_sync_reflect,
+            physics_variables.rmajor,
+            physics_variables.kappa,
+            physics_variables.vol_plasma,
+        )
         physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
-        physics_variables.pcoreradpv = radpwrdata.pcoreradpv
-        physics_variables.pedgeradpv = radpwrdata.pedgeradpv
+        physics_variables.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
+        physics_variables.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
         physics_variables.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
 
+        physics_variables.p_plasma_sync_mw = (
+            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma
+        )
         physics_variables.p_plasma_inner_rad_mw = (
-            physics_variables.pcoreradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_outer_rad_mw = (
-            physics_variables.pedgeradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_outer_rad_mw * physics_variables.vol_plasma
         )
         physics_variables.p_plasma_rad_mw = (
             physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
@@ -2264,7 +2281,7 @@ class Physics:
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -2313,7 +2330,7 @@ class Physics:
             physics_variables.non_alpha_charged_power,
             current_drive_variables.pinjmw,
             physics_variables.plasma_current,
-            physics_variables.pcoreradpv,
+            physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
@@ -4639,12 +4656,19 @@ class Physics:
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
-        po.osubhd(self.outfile, "Radiation Power (excluding SOL):")
+        po.osubhd(self.outfile, "Plasma radiation powers (excluding SOL):")
         po.ovarre(
             self.outfile,
-            "Synchrotron radiation power (MW)",
-            "(pden_plasma_sync_mw*vol_plasma)",
-            physics_variables.pden_plasma_sync_mw * physics_variables.vol_plasma,
+            "Plasma total synchrotron radiation power (MW)",
+            "(p_plasma_sync_mw)",
+            physics_variables.p_plasma_sync_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma total synchrotron radiation power density (MW/m^3)",
+            "(pden_plasma_sync_mw)",
+            physics_variables.pden_plasma_sync_mw,
             "OP ",
         )
         po.ovarrf(
@@ -4653,11 +4677,12 @@ class Physics:
             "(f_sync_reflect)",
             physics_variables.f_sync_reflect,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Normalised minor radius defining 'core'",
-            "(coreradius)",
-            impurity_radiation_module.coreradius,
+            "Plasma normalised minor radius defining 'core' region",
+            "(radius_plasma_core_norm)",
+            impurity_radiation_module.radius_plasma_core_norm,
         )
         po.ovarre(
             self.outfile,
@@ -4667,14 +4692,14 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Radiation power from inner zone (MW)",
+            "Plasma total radiation power from core region (MW)",
             "(p_plasma_inner_rad_mw)",
             physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Radiation power from outer zone (MW)",
+            "Plasma total radiation power from edge region (MW)",
             "(p_plasma_outer_rad_mw)",
             physics_variables.p_plasma_outer_rad_mw,
             "OP ",
@@ -4691,7 +4716,7 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Total radiation power from inside LCFS (MW)",
+            "Plasma total radiation power from inside last closed flux surface (MW)",
             "(p_plasma_rad_mw)",
             physics_variables.p_plasma_rad_mw,
             "OP ",
@@ -4705,23 +4730,23 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Nominal mean radiation load on inside surface of reactor (MW/m2)",
+            "Nominal mean radiation load on vessel first-wall (MW/m^2)",
             "(pflux_fw_rad_mw)",
             physics_variables.pflux_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Peaking factor for radiation wall load",
+            "Peaking factor for radiation first-wall load",
             "(f_fw_rad_max)",
             constraint_variables.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
-            "Maximum permitted radiation wall load (MW/m^2)",
-            "(maxradwallload)",
-            constraint_variables.maxradwallload,
+            "Maximum permitted radiation first-wall load (MW/m^2)",
+            "(pflux_fw_rad_max)",
+            constraint_variables.pflux_fw_rad_max,
             "IP ",
         )
         po.ovarre(
@@ -4733,16 +4758,16 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Fast alpha particle power incident on the first wall (MW)",
-            "(palpfwmw)",
-            physics_variables.palpfwmw,
+            "Fast alpha particle power incident on the first-wall (MW)",
+            "(p_fw_alpha_mw)",
+            physics_variables.p_fw_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Nominal mean neutron load on inside surface of reactor (MW/m2)",
-            "(wallmw)",
-            physics_variables.wallmw,
+            "Nominal mean neutron load on vessel first-wall (MW/m^2)",
+            "(pflux_fw_neutron_mw)",
+            physics_variables.pflux_fw_neutron_mw,
             "OP ",
         )
 
@@ -5885,7 +5910,7 @@ class Physics:
                 physics_variables.non_alpha_charged_power,
                 current_drive_variables.pinjmw,
                 physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
+                physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.ten,
@@ -6685,7 +6710,7 @@ class Physics:
                 physics_variables.non_alpha_charged_power,
                 current_drive_variables.pinjmw,
                 physics_variables.plasma_current,
-                physics_variables.pcoreradpv,
+                physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.ten,
@@ -6716,7 +6741,7 @@ class Physics:
             if physics_variables.i_rad_loss == 0:
                 fhz_value += physics_variables.pden_plasma_rad_mw
             elif physics_variables.i_rad_loss == 1:
-                fhz_value += physics_variables.pcoreradpv
+                fhz_value += physics_variables.pden_plasma_core_rad_mw
 
             return fhz_value
 
@@ -6740,7 +6765,7 @@ class Physics:
         non_alpha_charged_power: float,
         pinjmw: float,
         plasma_current: float,
-        pcoreradpv: float,
+        pden_plasma_core_rad_mw: float,
         rmajor: float,
         rminor: float,
         ten: float,
@@ -6769,7 +6794,7 @@ class Physics:
         :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
         :param pinjmw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
-        :param pcoreradpv: Total core radiation power (MW/m3)
+        :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
         :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
@@ -6809,7 +6834,7 @@ class Physics:
             )
         elif physics_variables.i_rad_loss == 1:
             p_plasma_loss_mw = (
-                p_plasma_loss_mw - pcoreradpv * vol_plasma
+                p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
             )  # shouldn't this be vol_core instead of vol_plasma?
         # else do not adjust p_plasma_loss_mw for radiation
 

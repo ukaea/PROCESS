@@ -207,7 +207,7 @@ var_dicts = {
         description="Maximum copper-to-area ratio",
         units="A m^{-2}",
     ),
-    "coreradius": VariableMetadata(
+    "radius_plasma_core_norm": VariableMetadata(
         latex=r"$r_{core} [M]$", description="Core radius", units="M"
     ),
     "fcuohsu": VariableMetadata(

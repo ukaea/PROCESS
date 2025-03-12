@@ -561,7 +561,7 @@ module physics_variables
   real(dp) :: alpha_power_electron_density
   !! Alpha power per volume to electrons [MW/m3]
 
-  real(dp) :: palpfwmw
+  real(dp) :: p_fw_alpha_mw
   !! alpha power escaping plasma and reaching first wall (MW)
 
   real(dp) :: alpha_power_ions_density
@@ -591,7 +591,7 @@ module physics_variables
   real(dp) :: p_plasma_inner_rad_mw
   !! radiation power from inner zone (MW)
 
-  real(dp) :: pcoreradpv
+  real(dp) :: pden_plasma_core_rad_mw
   !! total core radiation power per volume (MW/m3)
 
   real(dp) :: dd_power
@@ -621,7 +621,7 @@ module physics_variables
   real(dp) :: p_plasma_outer_rad_mw
   !! radiation power from outer zone (MW)
 
-  real(dp) :: pedgeradpv
+  real(dp) :: pden_plasma_outer_rad_mw
   !! edge radiation power per volume (MW/m3)
 
   real(dp) :: vs_plasma_internal
@@ -680,6 +680,9 @@ module physics_variables
 
   real(dp) :: pden_plasma_sync_mw
   !! synchrotron radiation power per volume (MW/m3)
+
+  real(dp) :: p_plasma_sync_mw
+  !! Total synchrotron radiation power from plasma (MW)
 
   integer :: i_l_h_threshold
   !! switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)
@@ -876,7 +879,7 @@ module physics_variables
   real(dp) :: vs_plasma_total_required
   !! total V-s needed (Wb)
 
-  real(dp) :: wallmw
+  real(dp) :: pflux_fw_neutron_mw
   !! average neutron wall load (MW/m2)
 
   real(dp) :: wtgpd
@@ -1021,7 +1024,7 @@ module physics_variables
     alpha_power_density_plasma = 0.0D0
     alpha_power_density_total = 0.0D0
     alpha_power_electron_density = 0.0D0
-    palpfwmw = 0.0D0
+    p_fw_alpha_mw = 0.0D0
     alpha_power_ions_density = 0.0D0
     alpha_power_total = 0.0D0
     alpha_power_plasma = 0.0D0
@@ -1030,7 +1033,7 @@ module physics_variables
     charged_power_density = 0.0D0
     pcoef = 0.0D0
     p_plasma_inner_rad_mw = 0.0D0
-    pcoreradpv = 0.0D0
+    pden_plasma_core_rad_mw = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0
     pdivt = 0.0D0
@@ -1040,7 +1043,7 @@ module physics_variables
     dt_power_total = 0.0D0
     dt_power_plasma = 0.0D0
     p_plasma_outer_rad_mw = 0.0D0
-    pedgeradpv = 0.0D0
+    pden_plasma_outer_rad_mw = 0.0D0
     charged_particle_power = 0.0D0
     vs_plasma_internal = 0.0D0
     pflux_fw_rad_mw = 0.0D0
@@ -1061,6 +1064,7 @@ module physics_variables
     proton_rate_density = 0.0D0
     psolradmw = 0.0D0
     pden_plasma_sync_mw = 0.0D0
+    p_plasma_sync_mw = 0.0D0
     i_l_h_threshold = 19
     p_l_h_threshold_mw = 0.0D0
     l_h_threshold_powers = 0.0D0
@@ -1117,7 +1121,7 @@ module physics_variables
     vs_plasma_ind_ramp = 0.0D0
     vs_plasma_res_ramp = 0.0D0
     vs_plasma_total_required = 0.0D0
-    wallmw = 0.0D0
+    pflux_fw_neutron_mw = 0.0D0
     wtgpd = 0.0D0
     a_plasma_poloidal = 0.0D0
     zeff = 0.0D0

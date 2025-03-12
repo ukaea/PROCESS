@@ -142,7 +142,7 @@ etath    = 0.4          *Thermal to electric conversion efficiency; if seconday_
 *------------Impurity Radiation Module-------------*
 
 *imprad_model = 1        *Switch for impurity radiation model
-coreradius = 0.6        *Normalised radius defining the 'core' region
+radius_plasma_core_norm = 0.6        *Normalised radius defining the 'core' region
 
 fimp(1)  = 1.0          *Hydrogen (fraction calculated by code)
 fimp(2)  = 0.1          *Helium (fraction calculated by code)

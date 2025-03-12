@@ -65,7 +65,7 @@ module scan_module
   !!         <LI> 26 triang
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)
   !!         <LI> 28 bt
-  !!         <LI> 29 coreradius
+  !!         <LI> 29 radius_plasma_core_norm
   !!         <LI> 30 fimpvar # OBSOLETE
   !!         <LI> 31 f_alpha_energy_confinement_min
   !!         <LI> 32 epsvmc

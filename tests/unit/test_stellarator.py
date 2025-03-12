@@ -2706,7 +2706,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alpha_power_density_total: Any = None
 
-    pcoreradpv: Any = None
+    pden_plasma_core_rad_mw: Any = None
 
     alphan: Any = None
 
@@ -2718,7 +2718,7 @@ class StCalcEffChiParam(NamedTuple):
 
     rminor: Any = None
 
-    coreradius: Any = None
+    radius_plasma_core_norm: Any = None
 
     stella_config_rminor_ref: Any = None
 
@@ -2735,13 +2735,13 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.2629524018077414,
-            pcoreradpv=0.10762698429338043,
+            pden_plasma_core_rad_mw=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2620230359599852,
@@ -2752,13 +2752,13 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.0570658694225301,
-            pcoreradpv=0.1002475669217598,
+            pden_plasma_core_rad_mw=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2368034193234161,
@@ -2793,7 +2793,11 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stcalceffchiparam.alpha_power_density_total,
     )
 
-    monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
+    monkeypatch.setattr(
+        physics_variables,
+        "pden_plasma_core_rad_mw",
+        stcalceffchiparam.pden_plasma_core_rad_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "alphan", stcalceffchiparam.alphan)
 
@@ -2808,7 +2812,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
-        impurity_radiation_module, "coreradius", stcalceffchiparam.coreradius
+        impurity_radiation_module,
+        "radius_plasma_core_norm",
+        stcalceffchiparam.radius_plasma_core_norm,
     )
 
     monkeypatch.setattr(
@@ -2833,7 +2839,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_shld_outboard: Any = None
     cfactr: Any = None
     tlife: Any = None
-    wallmw: Any = None
+    pflux_fw_neutron_mw: Any = None
     casthi: Any = None
     i_tf_sup: Any = None
     tfsai: Any = None
@@ -2864,7 +2870,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_shld_outboard=0.20000000000000001,
             cfactr=0.75000000000000011,
             tlife=40,
-            wallmw=0.61095969282042206,
+            pflux_fw_neutron_mw=0.61095969282042206,
             casthi=0.050000000000000003,
             i_tf_sup=1,
             tfsai=0,
@@ -2935,7 +2941,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
     )
     monkeypatch.setattr(
-        physics_variables, "wallmw", sctfcoilnuclearheatingiter90param.wallmw
+        physics_variables,
+        "pflux_fw_neutron_mw",
+        sctfcoilnuclearheatingiter90param.pflux_fw_neutron_mw,
     )
     monkeypatch.setattr(
         tfcoil_variables, "casthi", sctfcoilnuclearheatingiter90param.casthi
