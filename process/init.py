@@ -7,6 +7,11 @@ from warnings import warn
 
 import process
 import process.fortran as fortran
+from process.blanket_library import init_blanket_library
+from process.build import init_build_variables
+from process.buildings import init_buildings_variables
+from process.costs import init_cost_variables
+from process.cs_fatigue import init_cs_fatigue_variables
 from process.exceptions import ProcessValidationError
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -205,8 +210,8 @@ def init_all_module_vars():
     """
     fortran.numerics.init_numerics()
     fortran.process_input.init_input()
-    fortran.buildings_variables.init_buildings_variables()
-    fortran.cost_variables.init_cost_variables()
+    init_buildings_variables()
+    init_cost_variables()
     fortran.divertor_variables.init_divertor_variables()
     fortran.error_handling.init_error_handling()
     fortran.fwbs_variables.init_fwbs_variables()
@@ -231,7 +236,7 @@ def init_all_module_vars():
     fortran.structure_variables.init_structure_variables()
     fortran.vacuum_variables.init_vacuum_variables()
     fortran.pf_power_variables.init_pf_power_variables()
-    fortran.build_variables.init_build_variables()
+    init_build_variables()
     fortran.constraint_variables.init_constraint_variables()
     fortran.pulse_variables.init_pulse_variables()
     fortran.rebco_variables.init_rebco_variables()
@@ -239,8 +244,8 @@ def init_all_module_vars():
     fortran.define_iteration_variables.init_define_iteration_variables()
     fortran.reinke_module.init_reinke_module()
     fortran.water_usage_variables.init_watuse_variables()
-    fortran.cs_fatigue_variables.init_cs_fatigue_variables()
-    fortran.blanket_library.init_blanket_library()
+    init_cs_fatigue_variables()
+    init_blanket_library()
     fortran.dcll_module.init_dcll_module()
 
     fortran.init_module.init_fortran_modules()
