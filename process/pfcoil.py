@@ -856,7 +856,19 @@ class PFCoil:
                 pfv.f_a_cs_steel,
                 pfv.f_a_cs_void,
             )
-            self.calculate_field_on_cs_coil()
+            (
+                pfv.b_cs_peak_flat_top_end,
+                pfv.b_cs_peak_pulse_start,
+                pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1],
+                pf.bpf2[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_field_on_cs_coil(
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                j_cs_flat_top_end=pfv.j_cs_flat_top_end,
+                r_cs_coil_inner=pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+                r_cs_coil_outer=pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+                j_cs_pulse_start=pfv.j_cs_pulse_start,
+                n_cs_pf_coils=pfv.n_cs_pf_coils,
+            )
             self.calculate_stress_on_cs_coil()
             self.calculate_cs_component_masses()
             self.ohcalc()
@@ -1198,7 +1210,7 @@ class PFCoil:
 
         :reference:
             - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
-            Fusion Engineering and Design, vol. 124, pp. 82–85, Apr. 2017,
+            Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
         """
         if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
@@ -1265,25 +1277,50 @@ class PFCoil:
             f_a_cs_void,
         )
 
-    def calculate_field_on_cs_coil(self):
-        # Peak field at the End-Of-Flattop (EOF)
-        # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
+    def calculate_field_on_cs_coil(
+        self,
+        dz_cs_half: float,
+        j_cs_flat_top_end: float,
+        r_cs_coil_inner: float,
+        r_cs_coil_outer: float,
+        j_cs_pulse_start: float,
+        n_cs_pf_coils: int,
+    ) -> tuple[float, float, float, float]:
+        """Calculate the field on the central solenoid coil.
 
-        hohc = bv.hmax * pfv.f_z_cs_tf_internal
+        This function calculates the peak field at the End-Of-Flattop (EOF) and Beginning-Of-Pulse (BOP) for the central solenoid coil.
+
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param j_cs_flat_top_end: Current density at the end of the flat-top (A/m^2)
+        :type j_cs_flat_top_end: float
+        :param r_cs_coil_inner: Inner radius of the central solenoid coil (m)
+        :type r_cs_coil_inner: float
+        :param r_cs_coil_outer: Outer radius of the central solenoid coil (m)
+        :type r_cs_coil_outer: float
+
+        :return: A tuple containing:
+            - b_cs_peak_flat_top_end (float): Peak field at the end of the flat-top (T)
+            - b_cs_peak_pulse_start (float): Peak field at the beginning of the pulse (T)
+            - b_cs_coil_peak (float): Maximum field on the central solenoid coil (T)
+            - bpf2 (float): Peak field on the outboard side of the central solenoid (T)
+        :rtype: tuple[float, float, float, float]
+        """
+        # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
         bmaxoh2 = self.bfmax(
-            pfv.j_cs_flat_top_end,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+            j_cs_flat_top_end,
+            r_cs_coil_inner,
+            r_cs_coil_outer,
+            dz_cs_half,
         )
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        _, _, bzi, bzo = self.peakb(n_cs_pf_coils, 99, timepoint)
 
-        pfv.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
+        b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
@@ -1291,22 +1328,22 @@ class PFCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfv.b_cs_peak_pulse_start = self.bfmax(
-            pfv.j_cs_pulse_start,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+        b_cs_peak_pulse_start = self.bfmax(
+            j_cs_pulse_start,
+            r_cs_coil_inner,
+            r_cs_coil_outer,
+            dz_cs_half,
         )
         timepoint = 2
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        _, _, bzi, bzo = self.peakb(n_cs_pf_coils, 99, timepoint)
 
-        pfv.b_cs_peak_pulse_start = abs(pfv.b_cs_peak_pulse_start + bzi)
+        b_cs_peak_pulse_start = abs(b_cs_peak_pulse_start + bzi)
 
         # Maximum field values
-        pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(
-            pfv.b_cs_peak_flat_top_end, abs(pfv.b_cs_peak_pulse_start)
-        )
-        pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
+        b_cs_coil_peak = max(b_cs_peak_flat_top_end, abs(b_cs_peak_pulse_start))
+        bpf2 = max(bohco, abs(bzo))
+
+        return b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_coil_peak, bpf2
 
     def calculate_stress_on_cs_coil(self):
         hohc = bv.hmax * pfv.f_z_cs_tf_internal
