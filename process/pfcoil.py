@@ -131,9 +131,6 @@ class PFCoil:
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
 
-        # Central Solenoid mean radius
-        pfv.r_cs_middle = bv.dr_bore + 0.5e0 * bv.dr_cs
-
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
         if bv.iohcl == 0:
@@ -813,6 +810,84 @@ class PFCoil:
 
         # Find Central Solenoid information
         if bv.iohcl != 0:
+            (
+                pfv.r_cs_middle,
+                pfv.a_cs_poloidal,
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1],
+                pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+                pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            ) = self.set_cs_coil_geometry(
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                dr_bore=bv.dr_bore,
+                dr_cs=bv.dr_cs,
+            )
+            (
+                pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1],
+                pfv.a_cs_turn,
+                pfv.d_cond_cst,
+                pfv.l_cond_cst,
+                pfv.r_in_cst,
+                csfv.t_structural_radial,
+                csfv.t_structural_vertical,
+                pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1],
+            ) = self.set_cs_turn_geometry(
+                pfv.a_cs_poloidal,
+                pfv.ld_ratio_cst,
+                pfv.r_out_cst,
+                pfv.f_a_cs_steel,
+                pfv.f_a_cs_void,
+            )
+            (
+                pfv.b_cs_peak_flat_top_end,
+                pfv.b_cs_peak_pulse_start,
+                pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1],
+                pf.bpf2[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_field_on_cs_coil(
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                j_cs_flat_top_end=pfv.j_cs_flat_top_end,
+                r_cs_coil_inner=pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+                r_cs_coil_outer=pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+                j_cs_pulse_start=pfv.j_cs_pulse_start,
+                n_cs_pf_coils=pfv.n_cs_pf_coils,
+            )
+            (
+                pf.sig_hoop,
+                pf.sig_axial,
+                pf.axial_force,
+                pfv.s_shear_cs_peak,
+                pfv.pfcaseth[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_stress_on_cs_coil(
+                i_pf_conductor=pfv.i_pf_conductor,
+                dz_cs_half=bv.hmax * pfv.f_z_cs_tf_internal,
+                r_cs_coil_inner=pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+                f_a_cs_steel=pfv.f_a_cs_steel,
+                a_cs_poloidal=pfv.a_cs_poloidal,
+                i_cs_stress=pfv.i_cs_stress,
+            )
+            # Calculation of CS fatigue
+            # this is only valid for pulsed reactor design
+            if pv.inductive_current_fraction > 0.0e-4:
+                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
+                    pf.sig_hoop,
+                    csfv.residual_sig_hoop,
+                    csfv.t_crack_vertical,
+                    csfv.t_structural_vertical,
+                    csfv.t_structural_radial,
+                )
+            (
+                pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1],
+                pfv.awpoh,
+                pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1],
+            ) = self.calculate_cs_component_masses(
+                f_a_cs_steel=pfv.f_a_cs_steel,
+                a_cs_poloidal=pfv.a_cs_poloidal,
+                r_cs_coil_middle=pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+                i_pf_conductor=pfv.i_pf_conductor,
+                f_a_cs_void=pfv.f_a_cs_void,
+            )
             self.ohcalc()
 
         # Summation of weights and current
@@ -1065,35 +1140,96 @@ class PFCoil:
 
         return ccls
 
-    def ohcalc(self):
-        """Routine to perform calculations for the Central Solenoid.
+    def set_cs_coil_geometry(
+        self, dz_cs_half: float, dr_bore: float, dr_cs: float
+    ) -> None:
+        """Set the geometry of the central solenoid coil.
 
-        author: P J Knight, CCFE, Culham Science Centre
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param dr_bore: Bore diameter of the central solenoid coil (m)
+        :type dr_bore: float
+        :param dr_cs: Radial thickness of the central solenoid coil (m)
+        :type dr_cs: float
+
+        :return: A tuple containing:
+            - r_cs_middle (float): Mean radius of the central solenoid coil (m)
+            - a_cs_poloidal (float): Total cross-sectional area of the central solenoid coil (m^2)
+            - z_cs_coil_upper (float): Z coordinate of the upper edge of the central solenoid coil (m)
+            - z_cs_coil_lower (float): Z coordinate of the lower edge of the central solenoid coil (m)
+            - r_cs_middle (float): Mean radius of the central solenoid coil (m) (repeated)
+            - 0.0 (float): Z codinate of the middle of the central solenoid coil (m)
+            - r_cs_coil_outer (float): Radius of the outer edge of the central solenoid coil (m)
+            - r_cs_coil_inner (float): Radius of the inner edge of the central solenoid coil (m)
+        :rtype: tuple
+
         """
-        hohc = bv.hmax * pfv.f_z_cs_tf_internal
+
+        # Central Solenoid mean radius
+        r_cs_middle = dr_bore + 0.5e0 * dr_cs
 
         # Z coordinates of coil edges
-        pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1] = hohc
+        z_cs_coil_upper = dz_cs_half
         pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1] = -pfv.z_pf_coil_upper[
             pfv.n_cs_pf_coils - 1
         ]
 
-        # (R,Z) coordinates of coil centre
-        pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1] = pfv.r_cs_middle
-        pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1] = 0.0e0
-
         # Radius of outer edge
-        pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1] = pfv.r_cs_middle + 0.5e0 * bv.dr_cs
+        r_cs_coil_outer = r_cs_middle + 0.5e0 * dr_cs
 
         # Radius of inner edge
-        pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1] = (
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1] - bv.dr_cs
-        )
+        r_cs_coil_inner = r_cs_coil_outer - dr_cs
 
         # Total cross-sectional area
-        pfv.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
+        a_cs_poloidal = 2.0e0 * dz_cs_half * dr_cs
 
-        # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
+        return (
+            r_cs_middle,
+            a_cs_poloidal,
+            z_cs_coil_upper,
+            -z_cs_coil_upper,
+            r_cs_middle,
+            0.0e0,
+            r_cs_coil_outer,
+            r_cs_coil_inner,
+        )
+
+    def set_cs_turn_geometry(
+        self,
+        a_cs_poloidal: float,
+        ld_ratio_cst: float,
+        r_out_cst: float,
+        f_a_cs_steel: float,
+        f_a_cs_void: float,
+    ) -> tuple[float, float, float, float, float, float, float, float]:
+        """Set the geometry of the central solenoid coil turns.
+
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param ld_ratio_cst: Length-to-depth ratio of the central solenoid turn conduit
+        :type ld_ratio_cst: float
+        :param r_out_cst: Radius of the curved outer corner (m)
+        :type r_out_cst: float
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param f_a_cs_void: Fraction of the cross-sectional area that is void
+        :type f_a_cs_void: float
+        :return: A tuple containing:
+            - n_cs_coil_turns (float): Number of turns in the central solenoid coil
+            - a_cs_turn (float): Turn vertical cross-sectional area (m^2)
+            - d_cond_cst (float): Depth/width of CS turn conduit (m)
+            - l_cond_cst (float): Length of CS turn conduit (m)
+            - r_in_cst (float): Radius of turn space (m)
+            - t_structural_radial (float): Thickness of steel conduit in radial direction (m)
+            - t_structural_vertical (float): Thickness of steel conduit in vertical direction (m)
+            - f_a_cs_void (float): Fraction of the cross-sectional area that is void
+        :rtype: tuple[float, float, float, float, float, float, float, float]
+
+        :reference:
+            - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
+            Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
+            doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
+        """
         if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
             sgn = 1.0e0
             pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
@@ -1106,60 +1242,102 @@ class PFCoil:
             )
 
         # Number of turns
-        pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1] = (
+        n_cs_coil_turns = (
             1.0e6
             * abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1])
             / pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1]
         )
 
         # Turn vertical cross-sectionnal area
-        pfv.a_cs_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
+        a_cs_turn = a_cs_poloidal / n_cs_coil_turns
 
-        # Depth/width of cs turn conduit
-        pfv.d_cond_cst = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
-        # length of cs turn conduit
-        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.d_cond_cst
-        # Radius of turn space = pfv.r_in_cst
-        # Radius of curved outer corrner pfv.r_out_cst = 3mm from literature
-        # pfv.ld_ratio_cst = 70 / 22 from literature
-        p1_cst = ((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) ** 2
+        # Depth/width of CS turn conduit
+        d_cond_cst = (a_cs_turn / ld_ratio_cst) ** 0.5
+
+        # Length of cs turn conduit
+        l_cond_cst = ld_ratio_cst * d_cond_cst
+
+        # Radius of turn space = r_in_cst
+        # Radius of curved outer corrner r_out_cst = 3mm from literature
+        # ld_ratio_cst = 70 / 22 from literature
+        p1_cst = ((l_cond_cst - d_cond_cst) / constants.pi) ** 2
         p2_cst = (
-            (pfv.l_cond_cst * pfv.d_cond_cst)
-            - (4 - constants.pi) * (pfv.r_out_cst**2)
-            - (pfv.a_cs_turn * pfv.f_a_cs_steel)
+            (l_cond_cst * d_cond_cst)
+            - (4 - constants.pi) * (r_out_cst**2)
+            - (a_cs_turn * f_a_cs_steel)
         ) / constants.pi
+
         # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) + math.sqrt(
+
+        r_in_cst = -((l_cond_cst - d_cond_cst) / constants.pi) + math.sqrt(
             p1_cst + p2_cst
         )
         # Thickness of steel conduit in cs turn
-        csfv.t_structural_radial = (pfv.d_cond_cst / 2) - pfv.r_in_cst
+
+        t_structural_radial = (d_cond_cst / 2) - r_in_cst
+
         # In this model the vertical and radial have the same thickness
-        csfv.t_structural_vertical = csfv.t_structural_radial
+        t_structural_vertical = t_structural_radial
+
         # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
+        if t_structural_radial < 1.0e-3:
+            t_structural_radial = 1.0e-3
 
-        # Non-steel area void fraction for coolant
-        pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
+        return (
+            n_cs_coil_turns,
+            a_cs_turn,
+            d_cond_cst,
+            l_cond_cst,
+            r_in_cst,
+            t_structural_radial,
+            t_structural_vertical,
+            f_a_cs_void,
+        )
 
-        # Peak field at the End-Of-Flattop (EOF)
+    def calculate_field_on_cs_coil(
+        self,
+        dz_cs_half: float,
+        j_cs_flat_top_end: float,
+        r_cs_coil_inner: float,
+        r_cs_coil_outer: float,
+        j_cs_pulse_start: float,
+        n_cs_pf_coils: int,
+    ) -> tuple[float, float, float, float]:
+        """Calculate the field on the central solenoid coil.
+
+        This function calculates the peak field at the End-Of-Flattop (EOF) and Beginning-Of-Pulse (BOP) for the central solenoid coil.
+
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param j_cs_flat_top_end: Current density at the end of the flat-top (A/m^2)
+        :type j_cs_flat_top_end: float
+        :param r_cs_coil_inner: Inner radius of the central solenoid coil (m)
+        :type r_cs_coil_inner: float
+        :param r_cs_coil_outer: Outer radius of the central solenoid coil (m)
+        :type r_cs_coil_outer: float
+
+        :return: A tuple containing:
+            - b_cs_peak_flat_top_end (float): Peak field at the end of the flat-top (T)
+            - b_cs_peak_pulse_start (float): Peak field at the beginning of the pulse (T)
+            - b_cs_coil_peak (float): Maximum field on the central solenoid coil (T)
+            - bpf2 (float): Peak field on the outboard side of the central solenoid (T)
+        :rtype: tuple[float, float, float, float]
+        """
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
         bmaxoh2 = self.bfmax(
-            pfv.j_cs_flat_top_end,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+            j_cs_flat_top_end,
+            r_cs_coil_inner,
+            r_cs_coil_outer,
+            dz_cs_half,
         )
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        _, _, bzi, bzo = self.peakb(n_cs_pf_coils, 99, timepoint)
 
-        pfv.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
+        b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
@@ -1167,114 +1345,163 @@ class PFCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfv.b_cs_peak_pulse_start = self.bfmax(
-            pfv.j_cs_pulse_start,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+        b_cs_peak_pulse_start = self.bfmax(
+            j_cs_pulse_start,
+            r_cs_coil_inner,
+            r_cs_coil_outer,
+            dz_cs_half,
         )
         timepoint = 2
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        _, _, bzi, bzo = self.peakb(n_cs_pf_coils, 99, timepoint)
 
-        pfv.b_cs_peak_pulse_start = abs(pfv.b_cs_peak_pulse_start + bzi)
+        b_cs_peak_pulse_start = abs(b_cs_peak_pulse_start + bzi)
 
         # Maximum field values
-        pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(
-            pfv.b_cs_peak_flat_top_end, abs(pfv.b_cs_peak_pulse_start)
-        )
-        pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
+        b_cs_coil_peak = max(b_cs_peak_flat_top_end, abs(b_cs_peak_pulse_start))
+        bpf2 = max(bohco, abs(bzo))
 
+        return b_cs_peak_flat_top_end, b_cs_peak_pulse_start, b_cs_coil_peak, bpf2
+
+    def calculate_stress_on_cs_coil(
+        self,
+        i_pf_conductor: int,
+        dz_cs_half: float,
+        r_cs_coil_inner: float,
+        f_a_cs_steel: float,
+        a_cs_poloidal: float,
+        i_cs_stress: int,
+    ) -> tuple[float, float, float, float, float]:
+        """Calculate the stress on the central solenoid coil.
+
+        :param i_pf_conductor: Indicator for the type of conductor (0 for superconducting, 1 for resistive)
+        :type i_pf_conductor: int
+        :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+        :type dz_cs_half: float
+        :param r_cs_coil_inner: Inner radius of the central solenoid coil (m)
+        :type r_cs_coil_inner: float
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param i_cs_stress: Indicator for the type of stress calculation (1 for hoop + axial, 0 for hoop only)
+        :type i_cs_stress: int
+        :return: A tuple containing:
+            - s_cs_hoop (float): Hoop stress in the central solenoid coil (Pa)
+            - s_axial_cs (float): Axial stress in the central solenoid coil (Pa)
+            - axial_force_cs (float): Axial force in the central solenoid coil (N)
+            - s_shear_cs_peak (float): Maximum shear stress in the central solenoid coil (Pa)
+            - dr_cs_case (float): Thickness of the hypothetical steel case (m)
+        :rtype: tuple[float, float, float, float, float]
+        """
         # Stress ==> cross-sectional area of supporting steel to use
-        if pfv.i_pf_conductor == 0:
+        if i_pf_conductor == 0:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pf.sig_hoop = self.hoop_stress(pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1])
+            s_cs_hoop = self.hoop_stress(r_cs_coil_inner)
 
             # New calculation from Y. Iwasa for axial stress
-            pf.sig_axial, pf.axial_force = self.axial_stress()
-
-            # Allowable (hoop) stress (Pa) alstroh
-            # Now a user input
-            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
-
-            # Calculation of CS fatigue
-            # this is only valid for pulsed reactor design
-            if pv.inductive_current_fraction > 0.0e-4:
-                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
-                    pf.sig_hoop,
-                    csfv.residual_sig_hoop,
-                    csfv.t_crack_vertical,
-                    csfv.t_structural_vertical,
-                    csfv.t_structural_radial,
-                )
+            s_axial_cs, axial_force_cs = self.axial_stress()
 
             # Now steel area fraction is iteration variable and constraint
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfv.f_a_cs_steel * pfv.a_cs_poloidal
+            areaspf = f_a_cs_steel * a_cs_poloidal
 
-            if pfv.i_cs_stress == 1:
-                pfv.s_shear_cs_peak = max(
-                    abs(pf.sig_hoop - pf.sig_axial),
-                    abs(pf.sig_axial - 0.0e0),
-                    abs(0.0e0 - pf.sig_hoop),
+            if i_cs_stress == 1:
+                s_shear_cs_peak = max(
+                    abs(s_cs_hoop - s_axial_cs),
+                    abs(s_axial_cs - 0.0e0),
+                    abs(0.0e0 - s_cs_hoop),
                 )
             else:
-                pfv.s_shear_cs_peak = max(
-                    abs(pf.sig_hoop - 0.0e0),
+                s_shear_cs_peak = max(
+                    abs(s_cs_hoop - 0.0e0),
                     abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pf.sig_hoop),
+                    abs(0.0e0 - s_cs_hoop),
                 )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
             # its inside and outside edges; in reality, the steel is distributed
             # throughout the conductor
-            pfv.pfcaseth[pfv.n_cs_pf_coils - 1] = 0.25e0 * areaspf / hohc
+            dr_cs_case = 0.25e0 * areaspf / dz_cs_half
 
         else:
             areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
-            pfv.pfcaseth[pfv.n_cs_pf_coils - 1] = 0.0e0
+            dr_cs_case = 0.0e0
+
+        return s_cs_hoop, s_axial_cs, axial_force_cs, s_shear_cs_peak, dr_cs_case
+
+    def calculate_cs_component_masses(
+        self,
+        f_a_cs_steel: float,
+        a_cs_poloidal: float,
+        r_cs_coil_middle: float,
+        i_pf_conductor: int,
+        f_a_cs_void: float,
+    ) -> tuple[float, float, float]:
+        """Calculate the masses of the central solenoid components.
+
+        :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+        :type f_a_cs_steel: float
+        :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+        :type a_cs_poloidal: float
+        :param r_cs_coil_middle: Mean radius of the central solenoid coil (m)
+        :type r_cs_coil_middle: float
+        :param i_pf_conductor: Indicator for the type of conductor (0 for superconducting, 1 for resistive)
+        :type i_pf_conductor: int
+        :param f_a_cs_void: Fraction of the cross-sectional area that is void
+        :type f_a_cs_void: float
+        :return: A tuple containing:
+            - m_cs_coil_structure (float): Mass of the steel structure (kg)
+            - awpoh (float): Non-steel cross-sectional area (m^2)
+            - m_cs_coil_conductor (float): Mass of the conductor (kg)
+        :rtype: tuple[float, float, float]
+        """
+        areaspf = f_a_cs_steel * a_cs_poloidal
 
         # Weight of steel
-        pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1] = (
-            areaspf
-            * 2.0e0
-            * constants.pi
-            * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
-            * fwbsv.denstl
+        m_cs_coil_structure = (
+            areaspf * 2.0e0 * constants.pi * r_cs_coil_middle * fwbsv.denstl
         )
 
         # Non-steel cross-sectional area
-        pfv.awpoh = pfv.a_cs_poloidal - areaspf
+        awpoh = a_cs_poloidal - areaspf
 
         # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
         # monotonically decreases
 
         da = 0.0001e0  # 1 cm^2
-        if pfv.awpoh < da:
-            pfv.awpoh = da * da / (2.0e0 * da - pfv.awpoh)
+        if awpoh < da:
+            awpoh = da * da / (2.0e0 * da - awpoh)
 
         # Weight of conductor in central Solenoid
-        if pfv.i_pf_conductor == 0:
-            pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
-                pfv.awpoh
-                * (1.0e0 - pfv.f_a_cs_void)
+        if i_pf_conductor == 0:
+            m_cs_coil_conductor = (
+                awpoh
+                * (1.0e0 - f_a_cs_void)
                 * 2.0e0
                 * constants.pi
-                * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
+                * r_cs_coil_middle
                 * tfv.dcond[pfv.i_cs_superconductor - 1]
             )
         else:
-            pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1] = (
-                pfv.awpoh
-                * (1.0e0 - pfv.f_a_cs_void)
+            m_cs_coil_conductor = (
+                awpoh
+                * (1.0e0 - f_a_cs_void)
                 * 2.0e0
                 * constants.pi
-                * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
+                * r_cs_coil_middle
                 * constants.dcopper
             )
+        return m_cs_coil_structure, awpoh, m_cs_coil_conductor
+
+    def ohcalc(self):
+        """Routine to perform calculations for the Central Solenoid.
+
+        author: P J Knight, CCFE, Culham Science Centre
+        """
 
         if pfv.i_pf_conductor == 0:
             # Allowable coil overall current density at EOF
