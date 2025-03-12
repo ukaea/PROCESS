@@ -10,6 +10,7 @@ import process.fortran as fortran
 import process.process_output as process_output
 from process.blanket_library import init_blanket_library
 from process.build import init_build_variables
+from process.buildings import init_buildings_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -210,7 +211,7 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     fortran.numerics.init_numerics()
-    fortran.buildings_variables.init_buildings_variables()
+    init_buildings_variables()
     fortran.cost_variables.init_cost_variables()
     fortran.divertor_variables.init_divertor_variables()
     fortran.error_handling.init_error_handling()
