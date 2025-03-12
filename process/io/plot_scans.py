@@ -108,11 +108,20 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-as",
+        "-afs",
         "--axis_font_size",
         nargs="?",
         default=18,
         help="Axis label font size selection (default=18)",
+        type=int,
+    )
+
+    parser.add_argument(
+        "-ats",
+        "--axis_ticklabel_size",
+        nargs="?",
+        default=16,
+        help="Axis tick label font size selection (default=16)",
         type=int,
     )
 
@@ -351,7 +360,7 @@ def main(args=None):
     # Plot settings
     # -------------
     # Plot cosmetic settings
-    axis_tick_size = 16
+    axis_tick_size = args.axis_ticklabel_size
     legend_size = 12
     axis_font_size = args.axis_font_size
     # -------------
