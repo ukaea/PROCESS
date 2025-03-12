@@ -30,6 +30,8 @@ class IterationVariable:
     array_index: int | None = None
     """If `module.name` is an array, the iteration variable can only modify
     `array_index` of that array.
+
+    NOTE: The indexes start at 0 (despite indexing Fortran arrays).
     """
 
 
@@ -51,7 +53,7 @@ ITERATION_VARIABLES = {
     13: IterationVariable("dr_tf_inboard", fortran.build_variables, 0.1, 5.0),
     14: IterationVariable("fwalld", fortran.constraint_variables, 0.001, 1.0),
     15: IterationVariable("fvs", fortran.constraint_variables, 0.001, 10.000),
-    16: IterationVariable("dr_cs", fortran.build_variables, 0.010, 10.00),
+    16: IterationVariable("dr_cs", fortran.build_variables, 0.01, 10.00),
     17: IterationVariable("t_between_pulse", fortran.times_variables, 0.1, 1.0e8),
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
     19: IterationVariable("beam_energy", fortran.current_drive_variables, 1.0, 1.0e6),
@@ -61,7 +63,7 @@ ITERATION_VARIABLES = {
     25: IterationVariable("fpnetel", fortran.constraint_variables, 0.001, 1.0),
     26: IterationVariable("ffuspow", fortran.constraint_variables, 0.001, 1.0),
     27: IterationVariable("fhldiv", fortran.constraint_variables, 0.001, 1.0),
-    28: IterationVariable("fradpwr", fortran.constraint_variables, 0.001, 0.990),
+    28: IterationVariable("fradpwr", fortran.constraint_variables, 0.001, 0.99),
     29: IterationVariable("dr_bore", fortran.build_variables, 0.1, 10.00),
     30: IterationVariable("fmva", fortran.constraint_variables, 0.010, 1.0),
     31: IterationVariable("gapomin", fortran.build_variables, 0.001, 1.0e1),
@@ -89,7 +91,7 @@ ITERATION_VARIABLES = {
     53: IterationVariable("fjprot", fortran.constraint_variables, 0.001, 1.0),
     54: IterationVariable("ftmargtf", fortran.constraint_variables, 0.001, 1.0),
     56: IterationVariable("tdmptf", fortran.tfcoil_variables, 0.1, 100.0),
-    57: IterationVariable("thkcas", fortran.tfcoil_variables, 0.050, 1.0),
+    57: IterationVariable("thkcas", fortran.tfcoil_variables, 0.05, 1.0),
     58: IterationVariable("thwcndut", fortran.tfcoil_variables, 0.001, 0.1),
     59: IterationVariable("fcutfsu", fortran.tfcoil_variables, 0.001, 1.0),
     60: IterationVariable("cpttf", fortran.tfcoil_variables, 0.001, 4.0e4),
@@ -140,7 +142,7 @@ ITERATION_VARIABLES = {
     107: IterationVariable("favail", fortran.cost_variables, 0.001, 1.0),
     108: IterationVariable("breeder_f", fortran.fwbs_variables, 0.060, 1.0),
     109: IterationVariable(
-        "f_nd_alpha_electron", fortran.physics_variables, 0.050, 0.150
+        "f_nd_alpha_electron", fortran.physics_variables, 0.05, 0.15
     ),
     110: IterationVariable(
         "falpha_energy_confinement", fortran.constraint_variables, 0.001, 1.0
@@ -337,7 +339,8 @@ def load_iteration_variables():
             raise ProcessValueError(error_msg)
 
         # if an array index is specified, iteration_variable_value is currently
-        # the array and not the value of interest
+        # the whole array and not just the element we are interested in. Lets extract
+        # the correct element
         if iteration_variable.array_index is not None:
             iteration_variable_value = iteration_variable_value[
                 iteration_variable.array_index
@@ -357,7 +360,7 @@ def load_iteration_variables():
             warn(
                 (
                     "The sweep variable is also an iteration variable and will be "
-                    "overwritten by the optiomiser"
+                    "overwritten by the optimiser"
                 ),
                 stacklevel=3,
             )
@@ -370,11 +373,9 @@ def load_iteration_variables():
         )
 
         fortran.numerics.scale[i] = 1.0 / iteration_variable_value
-        fortran.numerics.scafc[i] = iteration_variable_value
+        fortran.numerics.scafc[i] = 1.0 / fortran.numerics.scale[i]
 
-        # xcm = xcm / scale which is equivalent to 1.0
-        # because xcm was previously set at x and scale = 1/x
-        fortran.numerics.xcm[i] = 1.0
+        fortran.numerics.xcm[i] = iteration_variable_value * fortran.numerics.scale[i]
 
 
 def set_scaled_iteration_variable(xc, nn: int):
