@@ -842,7 +842,7 @@ contains
                'Switch for user input hldiv')
        case ('i_q95_fixed')
           call parse_int_variable('i_q95_fixed', i_q95_fixed, 0, 1, &
-               'Switch that allows for fixing q95 only in this constraint')
+               'Switch that allows fixed q95 within PsepB/qAR (68 constraint)')
        case ('fflutf')
           call parse_real_variable('fflutf', fflutf, 0.001D0, 10.0D0, &
                'F-value for neutron fluence on TF coil')
@@ -854,7 +854,7 @@ contains
                'F-value for SCTF iop/icrit')
        case ('q95_fixed')
             call parse_real_variable('q95_fixed', q95_fixed, 0.001D0, 10.0D0, &
-               'fixed safet factor q at 95% flux surface')
+               'fixed safety factor q at 95% flux surface')
        case ('fjprot')
           call parse_real_variable('fjprot', fjprot, 0.001D0, 10.0D0, &
                'F-value for SCTF winding pack J')

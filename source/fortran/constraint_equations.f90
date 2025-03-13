@@ -2641,7 +2641,7 @@ contains
       !! aspect : input real : aspect ratio (iteration variable 1)
       !! rmajor : input real : plasma major radius (m) (iteration variable 3)
       !! i_q95_fixed : input int : Switch that allows for fixing q95 only in this constraint.
-      !! q95_fixed : input real : fixed safet factor q at 95% flux surface
+      !! q95_fixed : input real : fixed safety factor q at 95% flux surface
       use constraint_variables, only: fpsepbqar, psepbqarmax, i_q95_fixed, q95_fixed
       use physics_variables, only: pdivt, bt, q95, aspect, rmajor
       implicit none
