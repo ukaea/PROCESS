@@ -104,3 +104,17 @@ def test_plot_solutions(examples_temp_data):
     plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
     with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
         pass
+
+
+def test_single_model_evaluation(examples_temp_data):
+    """Run single_model_evaluation.ipynb and check no exceptions are raised.
+
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
+
+    """
+    single_model_evaluation_notebook_location = (
+        examples_temp_data / "single_model_evaluation.ipynb"
+    )
+    with testbook(single_model_evaluation_notebook_location, execute=True, timeout=600):
+        pass
