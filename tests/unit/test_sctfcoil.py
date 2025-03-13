@@ -14076,7 +14076,7 @@ def test_vv_stress_on_quench():
                 d_vv=0.12,  # for 6.6 restistance -> lambda2 = 2.1
             )
         )
-        == 56835032.21809308
+        == 57045874.69917925
     )
 
 
@@ -14105,8 +14105,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil_module, "a_tf_steel", 0.55)  # Section 3
 
     # Sum from Section 3
-    monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.47)
-    monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.47)
+    monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.42)
+    monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.42)
+    monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", 0.05)
 
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "dz_shld_upper", 0.3)  # Baseline 2018
@@ -14142,4 +14143,4 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     sctfcoil.vv_stress_on_quench()
 
-    assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56834395.24352395
+    assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56893800.120420754

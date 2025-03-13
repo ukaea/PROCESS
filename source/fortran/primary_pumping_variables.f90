@@ -50,6 +50,9 @@ module primary_pumping_variables
   !! mechanical pumping power for FW and blanket including heat exchanger and
   !! pipes (`primary_pumping=3`) [MW]
 
+  real(dp) :: f_p_fw_blkt_pump
+  !! Pumping power for FW and Blanket multiplier factor
+
   contains
 
   subroutine init_primary_pumping_variables
@@ -68,6 +71,7 @@ module primary_pumping_variables
     dp_blkt = 3.5D3 ! Pa
     dp_liq = 1.0D7 ! Pa
     htpmw_fw_blkt = 0.0D0
+    f_p_fw_blkt_pump = 1.0D0
 
   end subroutine init_primary_pumping_variables
 

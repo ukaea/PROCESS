@@ -765,7 +765,12 @@ class CCFE_HCPB:
                 + fwbs_variables.psurffwo
                 + fwbs_variables.pnucblkt
             )
-            primary_pumping_variables.htpmw_fw_blkt = fpump / (1 - fpump) * p_plasma
+            primary_pumping_variables.htpmw_fw_blkt = (
+                primary_pumping_variables.f_p_fw_blkt_pump
+                * fpump
+                / (1 - fpump)
+                * p_plasma
+            )
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
@@ -824,6 +829,13 @@ class CCFE_HCPB:
                     "(htpmw_fw_blkt)",
                     primary_pumping_variables.htpmw_fw_blkt,
                     "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Pumping power for FW and Blanket multiplier factor",
+                    "(f_p_fw_blkt_pump)",
+                    primary_pumping_variables.f_p_fw_blkt_pump,
+                    "IP ",
                 )
                 po.ovarre(
                     self.outfile,
