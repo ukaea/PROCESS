@@ -86,6 +86,8 @@ from process.io.process_funcs import (
     process_stopped,
     process_warnings,
     vary_iteration_variables,
+    vary_iteration_variables_lhs,
+    generate_lhs_points
 )
 from process.iteration_variables import load_iteration_variables
 from process.pfcoil import PFCoil
@@ -315,24 +317,18 @@ class VaryRun:
         # If config file contains WDIR, use that. Otherwise, use the directory
         # containing the config file (used when running regression tests in
         # temp dirs)
-        # TODO Not sure this is required any more
         wdir = config.wdir if config.wdir else Path(self.config_file).parent
 
         # Check IN.DAT exists
         if not input_path.exists():
             raise FileNotFoundError
 
-        # TODO add diff ixc summary part
+        # Generate LHS points
+        lhs_points = generate_lhs_points(config.niter, itervars, lbs, ubs, u_seed=config.u_seed)
+
         for i in range(config.niter):
             print(i, end=" ")
 
-            # Run single runs (SingleRun()) of process as subprocesses. This
-            # is the only way to deal with Fortran "stop" statements when
-            # running VaryRun(), which otherwise cause the Python
-            # interpreter to exit, when we want to vary the parameters and
-            # run again
-            # TODO Don't do this; remove stop statements from Fortran and
-            # handle error codes
             # Run process on an IN.DAT file
             config.run_process(input_path, self.solver)
 
@@ -358,8 +354,9 @@ class VaryRun:
                 )
             else:
                 print("PROCESS has stopped without finishing!")
-
-            vary_iteration_variables(itervars, lbs, ubs)
+            
+            # Use LHS points to vary iteration variables
+            vary_iteration_variables_lhs(itervars, lhs_points, i)
 
         config.error_status2readme()
 
