@@ -23,6 +23,7 @@ from process.io.in_dat import InDat
 from process.io.mfile import MFile
 from process.io.python_fortran_dicts import get_dicts
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from scipy.stats.qmc import LatinHypercube
 
 logger = logging.getLogger(__name__)
 
@@ -74,74 +75,74 @@ def update_ixc_bounds(wdir="."):
 ###############################
 
 
-def get_variable_range(itervars, factor, wdir="."):
-    """
-    Returns the lower and upper bounds of the variable range
-    for each iteration variable.
+# def get_variable_range(itervars, factor, wdir="."):
+#     """
+#     Returns the lower and upper bounds of the variable range
+#     for each iteration variable.
 
-    itervars - string list of all iteration variable names
-    factor   - defines the variation range for non-f-values by
-               setting them to value * factor and value / factor
-               respectively while taking their process bounds
-               into account.
+#     itervars - string list of all iteration variable names
+#     factor   - defines the variation range for non-f-values by
+#                setting them to value * factor and value / factor
+#                respectively while taking their process bounds
+#                into account.
 
-    For f-values the allowed range is equal to their process bounds.
+#     For f-values the allowed range is equal to their process bounds.
 
-    """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+#     """
+#     # Load dicts from dicts JSON file
+#     dicts = get_dicts()
+#     in_dat = InDat(pjoin(wdir, "IN.DAT"))
 
-    lbs = []
-    ubs = []
+#     lbs = []
+#     ubs = []
 
-    iteration_variables = [f2py_compatible_to_string(i) for i in numerics.lablxc]
+#     iteration_variables = [f2py_compatible_to_string(i) for i in numerics.lablxc]
 
-    for varname in itervars:
-        iteration_variable_index = iteration_variables.index(varname)
-        lb = numerics.boundl[iteration_variable_index]
-        ub = numerics.boundu[iteration_variable_index]
-        # for f-values we set the same range as in process
-        if varname[0] == "f" and (varname not in dicts["NON_F_VALUES"]):
-            lbs += [lb]
-            ubs += [ub]
+#     for varname in itervars:
+#         iteration_variable_index = iteration_variables.index(varname)
+#         lb = numerics.boundl[iteration_variable_index]
+#         ub = numerics.boundu[iteration_variable_index]
+#         # for f-values we set the same range as in process
+#         if varname[0] == "f" and (varname not in dicts["NON_F_VALUES"]):
+#             lbs += [lb]
+#             ubs += [ub]
 
-        # for non-f-values we modify the range with the factor
-        else:
-            value = get_from_indat_or_default(in_dat, varname)
+#         # for non-f-values we modify the range with the factor
+#         else:
+#             value = get_from_indat_or_default(in_dat, varname)
 
-            if value is None:
-                print(f"Error: Iteration variable {varname} has None value!")
-                exit()
+#             if value is None:
+#                 print(f"Error: Iteration variable {varname} has None value!")
+#                 exit()
 
-            # to allow the factor to have some influence
-            if value == 0.0:
-                value = 1.0
+#             # to allow the factor to have some influence
+#             if value == 0.0:
+#                 value = 1.0
 
-            # assure value is within bounds!
-            if value < lb:
-                value = lb
-            elif value > ub:
-                value = ub
+#             # assure value is within bounds!
+#             if value < lb:
+#                 value = lb
+#             elif value > ub:
+#                 value = ub
 
-            if value > 0:
-                lbs += [max(value / factor, lb)]
-                ubs += [min(value * factor, ub)]
-            else:
-                lbs += [min(value / factor, lb)]
-                ubs += [max(value * factor, ub)]
+#             if value > 0:
+#                 lbs += [max(value / factor, lb)]
+#                 ubs += [min(value * factor, ub)]
+#             else:
+#                 lbs += [min(value / factor, lb)]
+#                 ubs += [max(value * factor, ub)]
 
-        if lbs[-1] > ubs[-1]:
-            print(
-                f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >"
-                f"BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
-                file=stderr,
-            )
+#         if lbs[-1] > ubs[-1]:
+#             print(
+#                 f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >"
+#                 f"BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
+#                 file=stderr,
+#             )
 
-            exit()
-        # assert lbs[-1] < ubs[-1]
+#             exit()
+#         # assert lbs[-1] < ubs[-1]
 
-    return lbs, ubs
+#     return lbs, ubs
 
 
 ###############################
@@ -448,3 +449,78 @@ def set_variable_in_indat(in_dat, varname, value):
 
     else:
         in_dat.add_parameter(varname, value)
+        
+def get_variable_range(itervars, factor, wdir="."):
+    """
+    Returns the original lower and upper bounds of the variable range
+    for each iteration variable.
+
+    itervars - string list of all iteration variable names
+    factor   - not used in this simplified version
+    """
+
+    # Load dicts from dicts JSON file
+    dicts = get_dicts()
+    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+
+    lbs = []
+    ubs = []
+
+    iteration_variables = [f2py_compatible_to_string(i) for i in numerics.lablxc]
+
+    for varname in itervars:
+        iteration_variable_index = iteration_variables.index(varname)
+        lb = numerics.boundl[iteration_variable_index]
+        ub = numerics.boundu[iteration_variable_index]
+
+        # Directly use the original bounds
+        lbs += [lb]
+        ubs += [ub]
+
+        if lbs[-1] > ubs[-1]:
+            print(
+                f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >"
+                f"BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
+                file=stderr,
+            )
+            exit()
+
+    return lbs, ubs
+
+def generate_lhs_points(num_points, itervars, lbs, ubs, u_seed=None):
+    """
+    Generate Latin Hypercube Sampling points.
+    num_points - number of points to generate
+    itervars   - string list of all iteration variable names
+    lbs        - float list of lower bounds for variables
+    ubs        - float list of upper bounds for variables
+    """
+    sampler = LatinHypercube(d=len(itervars), seed=u_seed)
+    sample = sampler.random(n=num_points)
+
+    lhs_points = []
+    for point in sample:
+        lhs_point = [lb + p * (ub - lb) for lb, ub, p in zip(lbs, ubs, point)]
+        lhs_points.append(lhs_point)
+
+    return lhs_points
+
+def vary_iteration_variables_lhs(itervars, lhs_points, point_index):
+    """
+    Routine to change the iteration variables in IN.DAT
+    using pre-planned Latin Hypercube Sampling points.
+    itervars   - string list of all iteration variable names
+    lhs_points - list of LHS points
+    point_index - index of the LHS point to use
+    """
+
+    in_dat = InDat()
+
+    new_values = lhs_points[point_index]
+
+    for varname, new_value in zip(itervars, new_values, strict=False):
+        in_dat.add_parameter(varname, new_value)
+
+    in_dat.write_in_dat(output_filename="IN.DAT")
+
+    return new_values
