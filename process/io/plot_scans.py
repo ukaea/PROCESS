@@ -225,7 +225,7 @@ def main(args=None):
         26: "triang",
         27: "tbrmin",
         28: "bt",
-        29: "coreradius",
+        29: "radius_plasma_core_norm",
         30: "",  # OBSOLETE
         31: "f_alpha_energy_confinement_min",
         32: "epsvmc",

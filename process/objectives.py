@@ -65,7 +65,7 @@ def objective_function(minmax: int) -> float:
         case 1:
             objective_metric = 0.2 * physics_variables.rmajor
         case 3:
-            objective_metric = physics_variables.wallmw
+            objective_metric = physics_variables.pflux_fw_neutron_mw
         case 4:
             objective_metric = (
                 tfcoil_variables.tfcmw + 1e-3 * pf_power_variables.srcktpm

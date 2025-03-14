@@ -17,7 +17,7 @@
         "dr_tf_wp",
         "dr_cryostat",
         "dr_shld_outboard",
-        "divfix",
+        "dz_divertor",
         "rmajor"
     ]
 }

@@ -212,7 +212,7 @@ class StbildParam(NamedTuple):
 
     dr_blkt_outboard: Any = None
 
-    blnktth: Any = None
+    dz_blkt_upper: Any = None
 
     dr_bore: Any = None
 
@@ -256,7 +256,7 @@ class StbildParam(NamedTuple):
 
     dr_shld_outboard: Any = None
 
-    shldtth: Any = None
+    dz_shld_upper: Any = None
 
     dr_tf_inboard: Any = None
 
@@ -304,7 +304,7 @@ class StbildParam(NamedTuple):
 
     outfile: Any = None
 
-    expected_blnktth: Any = None
+    expected_dz_blkt_upper: Any = None
 
     expected_bore: Any = None
 
@@ -345,7 +345,7 @@ class StbildParam(NamedTuple):
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            blnktth=0,
+            dz_blkt_upper=0,
             dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
@@ -367,7 +367,7 @@ class StbildParam(NamedTuple):
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            shldtth=0.70000000000000007,
+            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=0,
@@ -391,7 +391,7 @@ class StbildParam(NamedTuple):
             f_a=0.99125889880147788,
             iprint=0,
             outfile=11,
-            expected_blnktth=0.75,
+            expected_dz_blkt_upper=0.75,
             expected_bore=17.79214950143977,
             expected_a_fw_total=1918.8188778803135,
             expected_dr_fw_inboard=0.018000000000000002,
@@ -415,7 +415,7 @@ class StbildParam(NamedTuple):
             blbuoth=0.46500000000000002,
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            blnktth=0.75,
+            dz_blkt_upper=0.75,
             dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
@@ -437,7 +437,7 @@ class StbildParam(NamedTuple):
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            shldtth=0.70000000000000007,
+            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=1.8828828828828827,
@@ -461,7 +461,7 @@ class StbildParam(NamedTuple):
             f_a=0.99125889880147788,
             iprint=0,
             outfile=11,
-            expected_blnktth=0.75,
+            expected_dz_blkt_upper=0.75,
             expected_bore=17.79214950143977,
             expected_a_fw_total=2120.6210472630282,
             expected_dr_fw_inboard=0.018000000000000002,
@@ -509,7 +509,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
     )
 
-    monkeypatch.setattr(build_variables, "blnktth", stbildparam.blnktth)
+    monkeypatch.setattr(build_variables, "dz_blkt_upper", stbildparam.dz_blkt_upper)
 
     monkeypatch.setattr(build_variables, "dr_bore", stbildparam.dr_bore)
 
@@ -569,7 +569,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_shld_outboard", stbildparam.dr_shld_outboard
     )
 
-    monkeypatch.setattr(build_variables, "shldtth", stbildparam.shldtth)
+    monkeypatch.setattr(build_variables, "dz_shld_upper", stbildparam.dz_shld_upper)
 
     monkeypatch.setattr(build_variables, "dr_tf_inboard", stbildparam.dr_tf_inboard)
 
@@ -634,7 +634,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(stellarator_module, "f_a", stbildparam.f_a)
 
     stellarator.stbild(False)
-    assert build_variables.blnktth == pytest.approx(stbildparam.expected_blnktth)
+    assert build_variables.dz_blkt_upper == pytest.approx(
+        stbildparam.expected_dz_blkt_upper
+    )
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
@@ -2704,7 +2706,7 @@ class StCalcEffChiParam(NamedTuple):
 
     alpha_power_density_total: Any = None
 
-    pcoreradpv: Any = None
+    pden_plasma_core_rad_mw: Any = None
 
     alphan: Any = None
 
@@ -2716,7 +2718,7 @@ class StCalcEffChiParam(NamedTuple):
 
     rminor: Any = None
 
-    coreradius: Any = None
+    radius_plasma_core_norm: Any = None
 
     stella_config_rminor_ref: Any = None
 
@@ -2733,13 +2735,13 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.2629524018077414,
-            pcoreradpv=0.10762698429338043,
+            pden_plasma_core_rad_mw=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2620230359599852,
@@ -2750,13 +2752,13 @@ class StCalcEffChiParam(NamedTuple):
             ne0=3.4479000000000007e20,
             f_alpha_plasma=0.95000000000000007,
             alpha_power_density_total=1.0570658694225301,
-            pcoreradpv=0.1002475669217598,
+            pden_plasma_core_rad_mw=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
             vol_plasma=1385.8142655379029,
             a_plasma_surface=1926.0551116585129,
             rminor=1.7863900994187722,
-            coreradius=0.60000000000000009,
+            radius_plasma_core_norm=0.60000000000000009,
             stella_config_rminor_ref=1.80206932,
             f_r=0.99129932482229,
             expected_output=0.2368034193234161,
@@ -2791,7 +2793,11 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stcalceffchiparam.alpha_power_density_total,
     )
 
-    monkeypatch.setattr(physics_variables, "pcoreradpv", stcalceffchiparam.pcoreradpv)
+    monkeypatch.setattr(
+        physics_variables,
+        "pden_plasma_core_rad_mw",
+        stcalceffchiparam.pden_plasma_core_rad_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "alphan", stcalceffchiparam.alphan)
 
@@ -2806,7 +2812,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
-        impurity_radiation_module, "coreradius", stcalceffchiparam.coreradius
+        impurity_radiation_module,
+        "radius_plasma_core_norm",
+        stcalceffchiparam.radius_plasma_core_norm,
     )
 
     monkeypatch.setattr(
@@ -2831,7 +2839,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_shld_outboard: Any = None
     cfactr: Any = None
     tlife: Any = None
-    wallmw: Any = None
+    pflux_fw_neutron_mw: Any = None
     casthi: Any = None
     i_tf_sup: Any = None
     tfsai: Any = None
@@ -2862,7 +2870,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_shld_outboard=0.20000000000000001,
             cfactr=0.75000000000000011,
             tlife=40,
-            wallmw=0.61095969282042206,
+            pflux_fw_neutron_mw=0.61095969282042206,
             casthi=0.050000000000000003,
             i_tf_sup=1,
             tfsai=0,
@@ -2933,7 +2941,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
     )
     monkeypatch.setattr(
-        physics_variables, "wallmw", sctfcoilnuclearheatingiter90param.wallmw
+        physics_variables,
+        "pflux_fw_neutron_mw",
+        sctfcoilnuclearheatingiter90param.pflux_fw_neutron_mw,
     )
     monkeypatch.setattr(
         tfcoil_variables, "casthi", sctfcoilnuclearheatingiter90param.casthi

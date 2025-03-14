@@ -1239,7 +1239,7 @@ class IfefbsParam(NamedTuple):
     mflibe: Any = None
     fbreed: Any = None
     ifetyp: Any = None
-    wallmw: Any = None
+    pflux_fw_neutron_mw: Any = None
     expected_m_fw_total: Any = None
     expected_whtblkt: Any = None
     expected_whtshld: Any = None
@@ -1450,7 +1450,7 @@ class IfefbsParam(NamedTuple):
             mflibe=0,
             fbreed=0.52600000000000002,
             ifetyp=1,
-            wallmw=8.8876851857005388,
+            pflux_fw_neutron_mw=8.8876851857005388,
             expected_m_fw_total=20574.366184891722,
             expected_whtblkt=347956.92928704334,
             expected_whtshld=1067310.9593707009,
@@ -1574,7 +1574,9 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(ife_variables, "mflibe", ifefbsparam.mflibe)
     monkeypatch.setattr(ife_variables, "fbreed", ifefbsparam.fbreed)
     monkeypatch.setattr(ife_variables, "ifetyp", ifefbsparam.ifetyp)
-    monkeypatch.setattr(physics_variables, "wallmw", ifefbsparam.wallmw)
+    monkeypatch.setattr(
+        physics_variables, "pflux_fw_neutron_mw", ifefbsparam.pflux_fw_neutron_mw
+    )
 
     ife.ifefbs(output=False)
 

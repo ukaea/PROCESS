@@ -39,7 +39,7 @@ class Divertor:
                 pv.rminor,
                 pv.triang,
                 bv.dr_fw_plasma_gap_inboard,
-                bv.vgap_xpoint_divertor,
+                bv.dz_xpoint_divertor,
                 pv.pdivt,
                 output=output,
             )
@@ -753,7 +753,7 @@ class Divertor:
         rminor: float,
         triang: float,
         dr_fw_plasma_gap_inboard: float,
-        vgap_xpoint_divertor: float,
+        dz_xpoint_divertor: float,
         pdivt: float,
         output: bool,
     ) -> float:
@@ -778,8 +778,8 @@ class Divertor:
         :param dr_fw_plasma_gap_inboard: inboard scrape-off width (m)
         :type dr_fw_plasma_gap_inboard: float
 
-        :param vgap_xpoint_divertor: top scrape-off width (m)
-        :type vgap_xpoint_divertor: float
+        :param dz_xpoint_divertor: top scrape-off width (m)
+        :type dz_xpoint_divertor: float
 
         :param pdivt: power to the divertor (MW)
         :type pdivt: float
@@ -801,15 +801,15 @@ class Divertor:
 
         #  Angle of diagonal divertor plate from horizontal
 
-        if vgap_xpoint_divertor <= 0.0e0:
-            eh.fdiags[0] = vgap_xpoint_divertor
+        if dz_xpoint_divertor <= 0.0e0:
+            eh.fdiags[0] = dz_xpoint_divertor
             eh.report_error(22)
 
-        theta = math.atan(vgap_xpoint_divertor / (r2 - r1))
+        theta = math.atan(dz_xpoint_divertor / (r2 - r1))
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * vgap_xpoint_divertor
+        a1 = 2.0e0 * constants.pi * r1 * dz_xpoint_divertor
 
         #  Horizontal plate area
 

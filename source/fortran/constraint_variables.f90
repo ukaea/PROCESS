@@ -221,7 +221,7 @@ module constraint_variables
   real(dp) :: gammax
   !! maximum current drive gamma (`constraint equation 37`)
 
-  real(dp) :: maxradwallload
+  real(dp) :: pflux_fw_rad_max
   !!  Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 
   real(dp) :: mvalim
@@ -372,7 +372,7 @@ module constraint_variables
     fwalld = 1.0D0
     fzeffmax = 1.0D0
     gammax = 2.0D0
-    maxradwallload = 1.0D0
+    pflux_fw_rad_max = 1.0D0
     mvalim = 40.0D0
     nbshinefmax = 1.0D-3
     nflutfmax = 1.0D23

@@ -282,9 +282,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -294,9 +294,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -444,16 +444,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -959,7 +959,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -1277,9 +1277,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -1289,9 +1289,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -1439,16 +1439,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -1954,7 +1954,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -2272,9 +2272,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -2284,9 +2284,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -2434,16 +2434,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -2949,7 +2949,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -3267,9 +3267,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -3279,9 +3279,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -3429,16 +3429,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -3944,7 +3944,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -4262,9 +4262,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -4274,9 +4274,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -4424,16 +4424,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -4939,7 +4939,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -5257,9 +5257,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -5269,9 +5269,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -5419,16 +5419,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -5934,7 +5934,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -6252,9 +6252,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -6264,9 +6264,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -6414,16 +6414,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -6929,7 +6929,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -7247,9 +7247,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -7259,9 +7259,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -7409,16 +7409,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -7924,7 +7924,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -8242,9 +8242,9 @@
  Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      4.3494E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.0456E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.7753E+02 OP 
- Synchrotron_radiation_power_(MW)________________________________________ (pden_plasma_sync_mw*vol)_________________      2.2989E+01 OP 
+ Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
- Normalised_minor_radius_defining_'core'_________________________________ (coreradius)__________________      7.5000E-01    
+ Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
  Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
@@ -8254,9 +8254,9 @@
  Radiation_fraction_=_total_radiation_/_total_power_deposited_in_plasma__ (rad_fraction)________________      9.2000E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.6053E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
- Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (maxradwallload)______________      1.0000E+00 IP 
+ Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
- Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (wallmw)______________________      9.8928E-01 OP 
+ Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
  Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
@@ -8404,16 +8404,16 @@
  # Vertical Build #
  Divertor_null_switch____________________________________________________ (i_single_null)_______________              1    
  Vessel_-_TF_coil_vertical_gap_(m)_______________________________________ (vgap2)_______________________      5.0000E-02    
- Topside_vacuum_vessel_radial_thickness_(m)______________________________ (d_vv_top)____________________      3.0000E-01    
- Top_radiation_shield_thickness_(m)______________________________________ (shldtth)_____________________      3.0000E-01    
- Top_blanket_vertical_thickness_(m)______________________________________ (blnktth)_____________________      8.6850E-01    
+ Topside_vacuum_vessel_radial_thickness_(m)______________________________ (dz_vv_upper)____________________      3.0000E-01    
+ Top_radiation_shield_thickness_(m)______________________________________ (dz_shld_upper)_____________________      3.0000E-01    
+ Top_blanket_vertical_thickness_(m)______________________________________ (dz_blkt_upper)_____________________      8.6850E-01    
  Top_first_wall_vertical_thickness_(m)___________________________________ fwtth_________________________      1.8000E-02    
  Top_scrape-off_vertical_thickness_(m)___________________________________ vgaptop_______________________      6.0000E-01    
  Plasma_half-height_(m)__________________________________________________ (rminor*kappa)________________      5.4712E+00    
  Bottom_scrape-off_vertical_thickness_(m)________________________________ (vgap)________________________      2.0024E+00    
- Divertor_structure_vertical_thickness_(m)_______________________________ (divfix)______________________      6.2100E-01    
- Bottom_radiation_shield_thickness_(m)___________________________________ (shldlth)_____________________      7.0000E-01    
- Underside_vacuum_vessel_radial_thickness_(m)____________________________ (d_vv_bot)____________________      3.0000E-01    
+ Divertor_structure_vertical_thickness_(m)_______________________________ (dz_divertor)______________________      6.2100E-01    
+ Bottom_radiation_shield_thickness_(m)___________________________________ (dz_shld_lower)_____________________      7.0000E-01    
+ Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
  Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
@@ -8919,7 +8919,7 @@
  Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
- Radiation_power_from_inside_"coreradius"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
+ Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.8174E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.6226E+00    
@@ -9084,8 +9084,8 @@ dr_bore     = 2.483 * Central solenoid inboard radius (m)
 dr_cryostat    = 0.15 * Cryostat thickness (m)
 dr_vv_inboard  = 0.30 * Inboard vacuum vessel thickness (tf coil / shield) (m)
 dr_vv_outboard = 0.30 * Outboard vacuum vessel thickness (tf coil / shield) (m)
-d_vv_top = 0.30 * Topside vacuum vessel thickness (tf coil / shield) (m)
-d_vv_bot = 0.30 * Underside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_upper = 0.30 * Topside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_lower = 0.30 * Underside vacuum vessel thickness (tf coil / shield) (m)
 dr_shld_vv_gap_inboard    = 0.12 * Gap between inboard vacuum vessel and tf coil (m)
 dr_cs_tf_gap    = 0.05 * Gap between central solenoid and tf coil (m)
 gapomin  = 0.20 * Minimum gap between outboard vacuum vessel and tf coil (m)
@@ -9095,7 +9095,7 @@ dr_fw_plasma_gap_inboard  = 0.225 * Gap between plasma and first wall; inboard s
 dr_fw_plasma_gap_outboard  = 0.225 * Gap between plasma and first wall; outboard side (m)
 dr_shld_inboard  = 0.30 * Inboard shield thickness (m)
 dr_shld_outboard  = 0.80 * Outboard shield thickness (m)
-shldtth  = 0.30 * Upper/lower shield thickness (m);
+dz_shld_upper  = 0.30 * Upper/lower shield thickness (m);
 dr_tf_inboard    = 1.05 * Inboard tf coil thickness; (centrepost for st) (m)
 dr_tf_shld_gap  = 0.05 * manufacturing/thermal expansion gap between TF and thermal shield (m)
 vgap2    = 0.05 * Vertical gap between vacuum vessel and tf coil (m)
@@ -9154,7 +9154,7 @@ pheat = 50.0
 *----------------Divertor Variables----------------*
 
 divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
-divfix   = 0.621 * Divertor structure vertical thickness (m)
+dz_divertor   = 0.621 * Divertor structure vertical thickness (m)
 hldivlim = 10 * Heat load limit (mw/m2)
 ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma
 prn1     = 0.4 * N-scrape-off / n-average plasma;
@@ -9177,7 +9177,7 @@ etath = 0.375D0  * thermal to electric conversion efficiency
 *------------Impurity Radiation Module-------------*
 
 *imprad_model = 1 * Switch for impurity radiation model;
-coreradius = 0.75 * Normalised radius defining the 'core' region
+radius_plasma_core_norm = 0.75 * Normalised radius defining the 'core' region
 coreradiationfraction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
 fimp(1) = 1.0
 fimp(2) = 0.1

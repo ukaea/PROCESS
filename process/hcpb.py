@@ -67,7 +67,7 @@ class CCFE_HCPB:
             )
 
             # Half height of the CP at the largest shield radius [m]
-            h_sh_max_r = physics_variables.rminor * physics_variables.kappa
+            h_sh_max_r = build_variables.z_plasma_xpoint_upper
 
             # Solid angle fraction of neutrons that hit the centrepost shield [-]
             # Calculating the CP solid angle coverage fraction
@@ -689,7 +689,7 @@ class CCFE_HCPB:
             * build_variables.a_fw_outboard
             / build_variables.a_fw_total
             + current_drive_variables.porbitlossmw
-            + physics_variables.palpfwmw
+            + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.pradfw * (
             1 - build_variables.a_fw_outboard / build_variables.a_fw_total

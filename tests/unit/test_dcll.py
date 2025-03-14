@@ -71,7 +71,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_plasma_rad_mw: Any = None
 
-    palpfwmw: Any = None
+    p_fw_alpha_mw: Any = None
 
     expected_praddiv: Any = None
 
@@ -113,7 +113,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             idivrt=1,
             neutron_power_total=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
-            palpfwmw=19.835845058655043,
+            p_fw_alpha_mw=19.835845058655043,
             expected_praddiv=33.056596978820579,
             expected_pnucdiv=182.58994516305046,
             expected_pradfw=254.39207240222791,
@@ -145,7 +145,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             idivrt=1,
             neutron_power_total=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
-            palpfwmw=19.829653483586444,
+            p_fw_alpha_mw=19.829653483586444,
             expected_praddiv=33.056596978820579,
             expected_pnucdiv=182.53295140508826,
             expected_pradfw=254.39207240222791,
@@ -251,7 +251,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        physics_variables, "palpfwmw", dcllneutronicsandpowerparam.palpfwmw
+        physics_variables, "p_fw_alpha_mw", dcllneutronicsandpowerparam.p_fw_alpha_mw
     )
 
     dcll.dcll_neutronics_and_power(False)

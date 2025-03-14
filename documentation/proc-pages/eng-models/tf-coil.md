@@ -6,8 +6,8 @@ The engineering models are based on a topology like that used in ITER: the centr
 However, an option does exist wich permits the alternative topology, in which the inboard legs of the TF coils pass through the middle of the central solenoid.  This layout is used in MAST, where the copper TF coils can be dismantled to allow the central solenoid to be inserted or removed.
 
 The topology is set as follows:    
-- `tf_in_cs = 0` (default) ITER-like topology: the central solenoid and the TF coils are not linked.   
-- `tf_in_cs = 1` The inboard legs of the TF coils pass through the middle of the central solenoid.  Note that this model does not provide a physically self-consistent result for superconducting coils.  
+- `i_tf_inside_cs = 0` (default) ITER-like topology: the central solenoid and the TF coils are not linked.   
+- `i_tf_inside_cs = 1` The inboard legs of the TF coils pass through the middle of the central solenoid.  Note that this model does not provide a physically self-consistent result for superconducting coils.  
 
 ## Coil type
 Two major types of toroidal field (TF) coils can be considered in PROCESS: Resistive magnets or Superconducting magnets.  The choice of conductor type is made using the following integer switch:
@@ -1255,7 +1255,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 
 |  Parameter | description | Iteration variable | Default | Unit |
 | - | - | - | - | - |
-| `tf_in_cs` | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid |  - | 0 | - |
+| `i_tf_inside_cs` | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid |  - | 0 | - |
 | `dr_tf_inboard` | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable |  ixc = 13 | No default | m |
 | `tfootfi` | Outboard/inboard TF coil thickness ratio | - | 1 | - | 
 | `dr_tf_wp` | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140 | No default | m | 
