@@ -251,7 +251,7 @@ module numerics
   !! <LI> (43) NOT USED
   !! <LI> (44) fvsbrnni
   !! <LI> (45) fqval (f-value for equation 28)
-  !! <LI> (46) fpinj (f-value for equation 30)
+  !! <LI> (46) pinjmw (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)
   !! <LI> (49) fstrcond (f-value for equation 32)
@@ -378,7 +378,7 @@ module numerics
   !! <LI> (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) dx_tf_side_case : TF side case thickness [m]
-  !! <LI> (173) f_deuterium : Deuterium fraction in fuel
+  !! <LI> (173) f_tritium : Tritium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
