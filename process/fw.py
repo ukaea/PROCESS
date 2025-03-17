@@ -342,16 +342,30 @@ class Fw:
             mflow_fw_coolant,
         )
 
-    def fw_thermal_conductivity(self, t):
-        """Calculates the thermal conductivity of the first wall
-        t : input real : property temperature (K)
-        Calculates the thermal conductivity of Eurofer (W/m/K).
+    def fw_thermal_conductivity(self, temp: float) -> float:
         """
-        # Eurofer correlation, from "Fusion Demo Interim Structural Design Criteria -
-        # Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004
-        # t in Kelvin
+        Calculates the thermal conductivity of the first wall material (Eurofer97).
+
+        :param t: Property temperature in Kelvin (K).
+        :type t: float
+        :return: Thermal conductivity of Eurofer97 in W/m/K.
+        :rtype: float
+
+        :notes:
+            Valid up to about 800 K
+
+        :references:
+            - A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,”
+            Journal of Nuclear Materials, vol. 329-333, pp. 257-262, Aug. 2004,
+            doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
+
+            - Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel."
+              CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004)
+        """
+
+        # temp in Kelvin
         return (
-            (5.4308 + 0.13565 * t - 0.00023862 * t * t + 1.3393e-7 * t * t * t)
+            (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
             * fwbs_variables.fw_th_conductivity
             / 28.34
         )
