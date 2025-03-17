@@ -396,7 +396,7 @@ class Fw:
         pr = cf * viscf / kf
 
         # Calculate Darcy friction factor, using Haaland equation
-        f = self.friction(
+        f = self.darcy_friction_haaland(
             reynolds,
             fwbs_variables.roughness_fw_channel,
             fwbs_variables.radius_fw_channel,
@@ -429,7 +429,7 @@ class Fw:
 
         return heat_transfer
 
-    def friction(
+    def darcy_friction_haaland(
         self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
     ) -> float:
         """
