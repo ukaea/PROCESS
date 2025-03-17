@@ -396,7 +396,11 @@ class Fw:
         pr = cf * viscf / kf
 
         # Calculate Darcy friction factor, using Haaland equation
-        f = self.friction(reynolds)
+        f = self.friction(
+            reynolds,
+            fwbs_variables.roughness_fw_channel,
+            fwbs_variables.radius_fw_channel,
+        )
 
         # Calculate the Nusselt number
         nusselt = (
@@ -425,19 +429,33 @@ class Fw:
 
         return heat_transfer
 
-    def friction(self, reynolds):
-        """Calculate Darcy friction factor, using Haaland equation
-        author: M Kovari, CCFE, Culham Science Centre
-        reynolds : input real : Reynolds number
-        darcy_friction : output real : Darcy friction factor
-        Darcy friction factor, using Haaland equation, an approximation to the
-        implicit Colebrook-White equationGnielinski correlation.
-        https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
+    def friction(
+        self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
+    ) -> float:
+        """
+        Calculate Darcy friction factor using the Haaland equation.
+
+        :param reynolds: Reynolds number.
+            :type reynolds: float
+            :param roughness_fw_channel: Roughness of the first wall coolant channel (m).
+            :type roughness_fw_channel: float
+            :param radius_fw_channel: Radius of the first wall coolant channel (m).
+            :type radius_fw_channel: float
+
+            :return: Darcy friction factor.
+            :rtype: float
+
+        :Notes:
+            The Haaland equation is an approximation to the implicit Colebrook-White equation.
+            It is used to calculate the Darcy friction factor for turbulent flow in pipes.
+
+        :References:
+            - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
         """
 
         # Bracketed term in Haaland equation
         bracket = (
-            fwbs_variables.roughness_fw_channel / fwbs_variables.radius_fw_channel / 3.7
+            roughness_fw_channel / radius_fw_channel / 3.7
         ) ** 1.11 + 6.9 / reynolds
 
         # Calculate Darcy friction factor
