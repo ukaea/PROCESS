@@ -266,7 +266,7 @@ contains
       hldiv, i_hldiv
     use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
-      fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
+      fw_armour_thickness, roughness_fw_channel, fwclfr, breedmat, fblli, fblvd, &
       iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
       f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
       fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
@@ -1944,8 +1944,8 @@ contains
        case ('i_fw_coolant_type')
           call parse_string_variable('i_fw_coolant_type', i_fw_coolant_type, 'first wall coolant')
           call lower_case(i_fw_coolant_type)
-       case ('roughness')
-          call parse_real_variable('roughness', roughness, 0.0d0, 1.0D-2, &
+       case ('roughness_fw_channel')
+          call parse_real_variable('roughness_fw_channel', roughness_fw_channel, 0.0d0, 1.0D-2, &
                'first wall channel roughness epsilon')
        case ('len_fw_channel')
           call parse_real_variable('len_fw_channel', len_fw_channel, 1.0D-3, 1.0D3, &
