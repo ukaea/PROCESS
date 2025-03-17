@@ -166,11 +166,11 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     assert massrate == pytest.approx(fwtempparam.expected_massrate, rel=1e-4)
 
 
-def test_friction(monkeypatch, fw):
+def test_darcy_friction_haaland(monkeypatch, fw):
     monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.1)
     monkeypatch.setattr(fwbs_variables, "roughness_fw_channel", 1e-6)
 
-    assert fw.friction(5500) == pytest.approx(0.0366668931278784)
+    assert fw.darcy_friction_haaland(5500) == pytest.approx(0.0366668931278784)
 
 
 def test_heat_transfer(fw):
