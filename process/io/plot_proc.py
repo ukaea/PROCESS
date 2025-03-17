@@ -384,13 +384,13 @@ def plot_current_profiles_over_time(
         t_ramp_down,
     ])
 
-    # Find the number of PF circuits, ncirt includes the CS and plasma circuits
-    ncirt = mfile_data.data["ncirt"].get_scan(scan)
+    # Find the number of PF circuits, n_pf_cs_plasma_circuits includes the CS and plasma circuits
+    n_pf_cs_plasma_circuits = mfile_data.data["n_pf_cs_plasma_circuits"].get_scan(scan)
 
     # Extract PF circuit times
-    # ncirt contains the CS and plasma at the end so we subtract 2
+    # n_pf_cs_plasma_circuits contains the CS and plasma at the end so we subtract 2
     pf_circuits = {}
-    for i in range(int(ncirt - 2)):
+    for i in range(int(n_pf_cs_plasma_circuits - 2)):
         pf_circuits[f"PF Circuit {i}"] = [
             mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(6)
         ]
