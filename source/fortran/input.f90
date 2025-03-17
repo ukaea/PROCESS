@@ -257,7 +257,7 @@ contains
       startupratio, tmain, u_unplanned_cp, supercond_cost_model
     use current_drive_variables, only: pinjfixmw, etaech, pinjalw, etanbi, &
       f_tritium_beam, gamma_ecrh, pheat, beamwd, beam_energy, pheatfix, bootstrap_current_fraction_max, &
-      forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, cboot, &
+      forbitloss, nbshield, tbeamin, feffcd, iefrf, iefrffix, irfcd, pinjmw, cboot, &
       etalh, frbeam, harnum, xi_ebw, wave_mode
     use divertor_variables, only: fdfs, anginc, divdens, divclfr, c4div, &
       c5div, ksic, fififi, flux_exp, divplt, delld, c2div, beta_div, betao, divdum, tdiv, c6div, &
@@ -866,9 +866,9 @@ contains
        case ('fpeakb')
           call parse_real_variable('fpeakb', fpeakb, 0.001D0, 10.0D0, &
                'F-value for max toroidal field')
-       case ('fpinj')
-          call parse_real_variable('fpinj', fpinj, 0.001D0, 10.0D0, &
-               'F-value for injection power')
+       case ('pinjmw')
+          call parse_real_variable('pinjmw', pinjmw, 0.001D0, 10000.0D0, &
+               'injection power')
        case ('fpnetel')
           call parse_real_variable('fpnetel', fpnetel, 0.001D0, 10.0D0, &
                'F-value for net electric power')
