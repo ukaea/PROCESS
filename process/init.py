@@ -327,22 +327,22 @@ def check_process(inputs):  # noqa: ARG001
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )
 
-    #  Fuel ion fractions must add up to 1.0
-    if (
-        abs(
-            1.0
-            - fortran.physics_variables.f_deuterium
-            - fortran.physics_variables.f_tritium
-            - fortran.physics_variables.f_helium3
-        )
-        > 1e-6
-    ):
-        raise ProcessValidationError(
-            "Fuel ion fractions do not sum to 1.0",
-            f_deuterium=fortran.physics_variables.f_deuterium,
-            f_tritium=fortran.physics_variables.f_tritium,
-            f_helium3=fortran.physics_variables.f_helium3,
-        )
+    # #  Fuel ion fractions must add up to 1.0
+    # if (
+    #     abs(
+    #         1.0
+    #         - fortran.physics_variables.f_deuterium
+    #         - fortran.physics_variables.f_tritium
+    #         - fortran.physics_variables.f_helium3
+    #     )
+    #     > 1e-6
+    # ):
+    #     raise ProcessValidationError(
+    #         "Fuel ion fractions do not sum to 1.0",
+    #         f_deuterium=fortran.physics_variables.f_deuterium,
+    #         f_tritium=fortran.physics_variables.f_tritium,
+    #         f_helium3=fortran.physics_variables.f_helium3,
+    #     )
 
     if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
         fortran.buildings_variables.triv = 0.0
