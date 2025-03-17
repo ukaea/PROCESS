@@ -140,7 +140,7 @@ The temperature difference between the channel inner wall (film temperature) and
 
 --------------
 
-### FW coolant friction | `friction()`
+### FW coolant friction | `darcy_friction_haaland()`
 
  The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation. 
 
