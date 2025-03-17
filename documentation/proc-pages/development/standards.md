@@ -102,6 +102,11 @@ $$
 
 This means the variable represents the fraction of the TF coil area taken up by the winding pack.
 
+!!! note "Naming conventions with limit variables"
+
+    For naming variables which represent either upper or lower limits the words `_max` and `_min` should be used in the variable name. Though if a variable represents the highest of a measured value then the variable name should use the word `_peak`.
+
+
 --------------
 
 #### System designations
