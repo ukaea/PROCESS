@@ -1061,25 +1061,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_46
-    !! <LI> (46) fpinj (f-value for equation 30)
+    !! <LI> (46) pinjmw (f-value for equation 30)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(46) = 'fpinj         '
+    lablxc(46) = 'pinjmw        '
     boundl(46) = 0.001D0
     boundu(46) = 1.000D0
   end subroutine init_itv_46
 
   real(kind(1.d0)) function itv_46()
-    use constraint_variables, only: fpinj
+    use current_drive_variables, only: pinjmw
     implicit none
-    itv_46 = fpinj
+    itv_46 = pinjmw
   end function
 
   subroutine set_itv_46(ratio)
-    use constraint_variables, only: fpinj
+    use current_drive_variables, only: pinjmw
     implicit none
     real(kind(1.d0)) :: ratio
-    fpinj = ratio
+    pinjmw = ratio
   end subroutine set_itv_46
 
   !---------------------------------
