@@ -2475,7 +2475,7 @@ class BlanketLibrary:
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
-        lamda = self.fw.friction(
+        lamda = self.fw.darcy_friction_haaland(
             reyn, fwbs_variables.roughness_fw_channel, fwbs_variables.radius_fw_channel
         )
 
