@@ -961,7 +961,6 @@ module physics_variables
     f_alpha_electron = 0.0D0
     f_alpha_plasma = 0.95D0
     f_alpha_ion = 0.0D0
-    f_deuterium = 0.5D0
     ftar = 1.0D0
     ffwal = 0.92D0
     fgwped = 0.85D0
@@ -973,6 +972,7 @@ module physics_variables
     fpdivlim = 1.0D0
     fne0 = 1.0D0
     f_tritium = 0.5D0
+    f_deuterium = 1.0 - f_tritium
     fusion_rate_density_total = 0.0D0
     fusion_rate_density_plasma = 0.0D0
     fvsbrnni = 1.0D0
