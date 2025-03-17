@@ -149,13 +149,15 @@ The temperature difference between the channel inner wall (film temperature) and
 
 ### FW thermal conductivity | `fw_thermal_conductivity()`
 
-The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
+The thermal conductivity of the first wall is assumed to be that of Eurofer97 using the relation below[^1] [^2]:
+ 
+$$
+K_{\text{Eurofer97}} = 5.4308 + 0.13565T - 0.00023862T^2 + 1.3393 \times 10^{-7} T^3
+$$
 
+!!! warning Thermal conductivity validity bounds
 
-
-
-!!! Note "Note" 
-    The pressure drop calculation is only performed for i_coolant_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
+    The sources for the stated thermal conductivity relation above state that the relation is only valid up to 800K [^1] [^2].
 
 -------------
 
@@ -217,4 +219,9 @@ There are three model options, chosen by the user to match their selected blanke
 
 |         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
 | :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
-| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | i_blkt_liquid_breeder_channel_type = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
+| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
+
+
+[^1]: A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,” Journal of Nuclear Materials, vol. 329–333, pp. 257–262, Aug. 2004, doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
+
+[^2]: Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel." CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004).
