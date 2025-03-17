@@ -78,7 +78,11 @@ Summary of key variables and switches:
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
 This can be changed using the switches detailed in the following subsection. 
 
-### First wall
+
+--------------
+
+## First wall
+
 <img
     title="First walld"
     src="../../images/first_wall.png"
@@ -89,6 +93,9 @@ This can be changed using the switches detailed in the following subsection.
 Figure 1: *First wall concept with coolant channels*
 
 The first wall is assumed to be thermally separate from the blanket (Figure 1).  No separation has been made between the structural part of the first wall and the armour.  A simple heuristic model has been used to estimate the peak temperature, as follows.
+
+### Calculate FW temperature | `fw_temp()`
+
 
 Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
 
@@ -125,10 +132,33 @@ $$
 
 where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and $\texttt{onedload}$ is the heat load per unit length.
 
-The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation).  The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation.  The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
+-------------
+
+### FW heat transfer | `heat_transfer()`
+
+The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation). 
+
+--------------
+
+### FW coolant friction | `friction()`
+
+ The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation. 
+
+
+------------
+
+### FW thermal conductivity | `fw_thermal_conductivity()`
+
+The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
+
+
+
 
 !!! Note "Note" 
     The pressure drop calculation is only performed for i_coolant_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
+
+-------------
+
 
 ### Model Switches
 
