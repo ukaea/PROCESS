@@ -317,7 +317,7 @@ module fwbs_variables
   real(dp) :: temp_fw_peak
   !! peak first wall temperature [K]
 
-  real(dp) :: roughness
+  real(dp) :: roughness_fw_channel
   !! first wall channel roughness epsilon [m]
 
   real(dp) :: len_fw_channel
