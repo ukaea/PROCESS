@@ -532,7 +532,7 @@ class Fw:
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
-            f'"{fwbs_variables.i_fw_coolant_type}"',
+            f"{fwbs_variables.i_fw_coolant_type}",
         )
         po.ovarrf(
             self.outfile,

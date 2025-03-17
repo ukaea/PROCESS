@@ -49,6 +49,11 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 <figcaption>Figure 7: plot_proc current profiles comparison page </figcaption>
 </figure>
 
+<figure markdown>
+![plot_proc_8](../images/plot_proc_8.PNG){ width="100%"}
+<figcaption>Figure 8: plot_proc first wall comparison page </figcaption>
+</figure>
+
 <h3>Scan files</h3>
 
 `plot_scans` is a tool to show the change in variables as a scan variable is varied.
@@ -59,12 +64,12 @@ python process/io/plot_scans.py -f path/to/MFILE.DAT
 ```
 <figure markdown>
 ![2D_contour_plot](../images/2D_contour_plot_example.png){figures-side, width="100%"}  
-<figcaption>Figure 8: 2D scan contour plot </figcaption>
+<figcaption>Figure 9: 2D scan contour plot </figcaption>
 </figure>
 
 <figure markdown>
 ![2D_stack_plot](../images/stack_scan_plot_example.png){figures-side, width="100%"}  
-<figcaption>Figure 9: 1D scan plot </figcaption>
+<figcaption>Figure 10: 1D scan plot </figcaption>
 </figure>
 
 
@@ -78,6 +83,6 @@ python process/io/plot_radial_build.py -f path/to/MFILE.DAT
 ```
 <figure markdown>
 ![radial_build_plot](../images/radial_build_plot.png){ width="100%"}
-<figcaption>Figure 10: Simple radial build plot </figcaption>
+<figcaption>Figure 11: Simple radial build plot </figcaption>
 </figure>
 
