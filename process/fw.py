@@ -437,7 +437,7 @@ class Fw:
 
         # Bracketed term in Haaland equation
         bracket = (
-            fwbs_variables.roughness / fwbs_variables.radius_fw_channel / 3.7
+            fwbs_variables.roughness_fw_channel / fwbs_variables.radius_fw_channel / 3.7
         ) ** 1.11 + 6.9 / reynolds
 
         # Calculate Darcy friction factor

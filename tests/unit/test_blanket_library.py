@@ -1652,7 +1652,7 @@ class PressureDropParam(NamedTuple):
     radius_fw_channel: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
-    roughness: Any = None
+    roughness_fw_channel: Any = None
     ip: Any = None
     ofile: Any = None
     i_ps: Any = None
@@ -1673,7 +1673,7 @@ class PressureDropParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
-            roughness=9.9999999999999995e-07,
+            roughness_fw_channel=9.9999999999999995e-07,
             ip=0,
             ofile=11,
             i_ps=1,
@@ -1705,7 +1705,9 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     )
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", pressuredropparam.a_bz_liq)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", pressuredropparam.b_bz_liq)
-    monkeypatch.setattr(fwbs_variables, "roughness", pressuredropparam.roughness)
+    monkeypatch.setattr(
+        fwbs_variables, "roughness_fw_channel", pressuredropparam.roughness_fw_channel
+    )
 
     pressure_drop_out = blanket_library_fixture.pressure_drop(
         i_ps=pressuredropparam.i_ps,
