@@ -168,7 +168,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
 
 def test_friction(monkeypatch, fw):
     monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.1)
-    monkeypatch.setattr(fwbs_variables, "roughness", 1e-6)
+    monkeypatch.setattr(fwbs_variables, "roughness_fw_channel", 1e-6)
 
     assert fw.friction(5500) == pytest.approx(0.0366668931278784)
 
