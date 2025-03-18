@@ -157,6 +157,7 @@ class Fw:
             outlet_coolant_properties.specific_heat_const_p,
             outlet_coolant_properties.viscosity,
             outlet_coolant_properties.thermal_conductivity,
+            fwbs_variables.roughness_fw_channel,
         )
 
         # Temperature drops between first-wall surface and bulk coolant !
@@ -370,36 +371,60 @@ class Fw:
             / 28.34
         )
 
-    def heat_transfer(self, masflx, rhof, radius, cf, viscf, kf):
-        """Calculate heat transfer coefficient using Gnielinski correlation
-        author: M Kovari, CCFE, Culham Science Centre
-        masflx : input real : coolant mass flux in a single channel (kg/m2/s)
-        rhof : input real : coolant density (average of inlet and outlet) (kg/m3)
-        radius : input real : coolant pipe radius (m)
-        cf : input real : coolant specific heat capacity (average of inlet and outlet) (J/K)
-        viscf : input real : coolant viscosity (average of inlet and outlet) (Pa.s)
-        kf : input real : thermal conductivity of coolant (average of inlet and outlet) (W/m.K)
-        Gnielinski correlation. Ignore the distinction between wall and
-        bulk temperatures. Valid for:3000 < Re < 5e6, 0.5 < Pr < 2000
-        https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
+    def heat_transfer(
+        self,
+        mflux_coolant: float,
+        den_coolant: float,
+        radius_channel: float,
+        heatcap_coolant: float,
+        visc_coolant: float,
+        thermcond_coolant: float,
+        roughness_fw_channel: float,
+    ) -> float:
+        """
+        Calculate heat transfer coefficient using Gnielinski correlation.
+
+        :param mflux_coolant: Coolant mass flux in a single channel (kg/m^2/s).
+        :type mflux_coolant: float
+        :param den_coolant: Coolant density (average of inlet and outlet) (kg/m^3).
+        :type den_coolant: float
+        :param radius_channel: Coolant pipe radius (m).
+        :type radius_channel: float
+        :param heatcap_coolant: Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
+        :type heatcap_coolant: float
+        :param visc_coolant: Coolant viscosity (average of inlet and outlet) (Pa.s).
+        :type visc_coolant: float
+        :param thermcond_coolant: Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
+        :type thermcond_coolant: float
+        :param roughness_fw_channel: Roughness of the first wall coolant channel (m).
+        :type roughness_fw_channel: float
+        :return: Heat transfer coefficient (W/m^2K).
+        :rtype: float
+
+        :notes:
+            Gnielinski correlation. Ignore the distinction between wall and
+            bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
+
+        :references:
+            - https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
         """
         # Calculate pipe diameter (m)
-        diameter = 2 * radius
+        diameter = 2 * radius_channel
 
         # Calculate flow velocity (m/s)
-        velocity = masflx / rhof
+        velocity = mflux_coolant / den_coolant
 
         # Calculate Reynolds number
-        reynolds = rhof * velocity * diameter / viscf
+        reynolds = den_coolant * velocity * diameter / visc_coolant
 
         # Calculate Prandtl number
-        pr = cf * viscf / kf
+        pr = heatcap_coolant * visc_coolant / thermcond_coolant
 
         # Calculate Darcy friction factor, using Haaland equation
         f = self.darcy_friction_haaland(
             reynolds,
-            fwbs_variables.roughness_fw_channel,
-            fwbs_variables.radius_fw_channel,
+            roughness_fw_channel,
+            radius_channel,
         )
 
         # Calculate the Nusselt number
@@ -411,7 +436,7 @@ class Fw:
         )
 
         # Calculate the heat transfer coefficient (W/m2K)
-        heat_transfer = nusselt * kf / (2.0 * radius)
+        heat_transfer = nusselt * thermcond_coolant / (2.0 * radius_channel)
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
