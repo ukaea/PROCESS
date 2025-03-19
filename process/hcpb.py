@@ -43,12 +43,6 @@ class CCFE_HCPB:
         ccfe_hcpb_module.ip = int(output)
         ccfe_hcpb_module.ofile = self.outfile
 
-        # MDK (27/11/2015)
-        build_variables.dr_fw_inboard = (
-            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
-        )
-        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
-
         # Coolant type
         fwbs_variables.coolwh = 1
         # Note that the first wall coolant is now input separately.

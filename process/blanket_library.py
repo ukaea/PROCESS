@@ -757,14 +757,6 @@ class BlanketLibrary:
 
         # FW Pipe Flow and Velocity ######
 
-        # Total number of first wall pipes from channel length and dx_fw_module (02/12/2015)
-        blanket_library.npfwi = build_variables.a_fw_inboard / (
-            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
-        )
-        blanket_library.npfwo = build_variables.a_fw_outboard / (
-            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
-        )
-
         # Mass flow rate per FW coolant pipe (kg/s):
         blanket_library.mffwpi = blanket_library.mffwi / blanket_library.npfwi
         blanket_library.mffwpo = blanket_library.mffwo / blanket_library.npfwo
@@ -1527,7 +1519,7 @@ class BlanketLibrary:
             width (m)                   radius_fw_channel (radius, cicular)   radius_fw_channel                 a_bz_liq, b_bz_liq (rectangular)
             wall thickness (m)          dr_fw_wall                 dr_fw_wall             th_wall_secondary
             dx_fw_module (m)                   dx_fw_module
-            roughness epsilon           roughness
+            roughness epsilon           roughness_fw_channel
             peak FW temp (K)            temp_fw_peak
             maximum temp (K)            temp_fw_max
             FCI switch                  ---                     ---                 ifci
@@ -1985,8 +1977,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Roughness of first wall cooling channels (m)",
-                "(roughness)",
-                fwbs_variables.roughness,
+                "(roughness_fw_channel)",
+                fwbs_variables.roughness_fw_channel,
             )
             po.ovarrf(
                 self.outfile,
@@ -2447,7 +2439,9 @@ class BlanketLibrary:
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
-        lamda = self.fw.friction(reyn)
+        lamda = self.fw.darcy_friction_haaland(
+            reyn, fwbs_variables.roughness_fw_channel, fwbs_variables.radius_fw_channel
+        )
 
         # Pressure drop coefficient
 
