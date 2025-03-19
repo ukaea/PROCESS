@@ -32,6 +32,14 @@ class Fw:
             fwbs_variables.dx_fw_module,
         )
 
+        self.set_fw_geometry()
+
+    def set_fw_geometry(self):
+        build_variables.dr_fw_inboard = (
+            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
+        )
+        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+
     def fw_temp(
         self,
         output: bool,
