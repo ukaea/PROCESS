@@ -432,11 +432,11 @@ class Fw:
             (f / 8.0)
             * (reynolds - 1000.0)
             * pr
-            / (1 + 12.7 * np.sqrt(f / 8.0) * (pr**0.6667 - 1.0))
+            / (1 + 12.7 * np.sqrt(f / 8.0) * (pr ** (2 / 3) - 1.0))
         )
 
-        # Calculate the heat transfer coefficient (W/m2K)
-        heat_transfer = nusselt * thermcond_coolant / (2.0 * radius_channel)
+        # Calculate the heat transfer coefficient (W/m^2K)
+        heat_transfer_coefficient = nusselt * thermcond_coolant / (2.0 * radius_channel)
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
@@ -452,7 +452,7 @@ class Fw:
         if f <= 0.0:
             error_handling.report_error(227)
 
-        return heat_transfer
+        return heat_transfer_coefficient
 
     def darcy_friction_haaland(
         self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float

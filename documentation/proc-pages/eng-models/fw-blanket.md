@@ -136,7 +136,47 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
 
 ### FW heat transfer | `heat_transfer()`
 
-The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation). 
+1. **Calculate the Reynolds number:**
+
+    $$
+    \mathrm{Re} = \frac{\rho v \left(2r_{\text{channel}}\right)}{\mu}
+    $$
+
+    were $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
+
+2. **Calculate the Prandtl number:**
+
+    $$
+    \mathrm{Pr} = \frac{c_{\text{p}}\mu}{k}
+    $$
+
+    were $c_{\text{p}}$ is the coolant heat capacity and $k$ is the coolant thermal conductivity.
+
+3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](#fw-coolant-friction--darcy_friction_haaland) method:**
+
+    $$
+    f = \mathtt{darcy\_friction\_haaland()}
+    $$
+
+4. **Calculate the Nusselt number using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation):**
+
+    $$
+    \mathrm{Nu_D}  = \frac{\left(f/8\right)\left(\mathrm{Re}-1000\right)\mathrm{Pr}}{1+12.7\left(f/8\right)^{0.5}\left(\mathrm{Pr}^{2/3}-1\right)}
+    $$
+
+    The relation is valid for:
+
+    $$
+    0.5 \le \mathrm{Pr} \le 2000 \\
+    3000 \le \mathrm{Re} \le 5 \times 10^6
+    $$
+
+5. **Calculate the heat transfer coefficient with the Nusselt number:**
+
+    $$
+    h = \frac{\mathrm{Nu_D}k}{2r_{\text{channel}}}
+    $$
+
 
 --------------
 
