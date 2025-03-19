@@ -302,6 +302,8 @@ class Caller:
 
         self.models.divertor.run(output=False)
 
+        self.models.cryostat.run()
+
         # Structure Model
         self.models.structure.run(output=False)
 

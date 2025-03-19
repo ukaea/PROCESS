@@ -12,13 +12,11 @@ from process.coolprop_interface import FluidProperties
 from process.fortran import (
     blanket_library,
     build_variables,
-    buildings_variables,
     constants,
     divertor_variables,
     error_handling,
     fwbs_variables,
     heat_transport_variables,
-    pfcoil_variables,
     physics_variables,
     primary_pumping_variables,
 )
@@ -82,9 +80,6 @@ class BlanketLibrary:
 
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
-
-        # Calculate cryostat geometry
-        self.external_cryo_geometry()
 
     def component_half_height(self, icomponent: int):
         """Calculate the blanket, shield or vacuum vessel half-height
@@ -372,69 +367,6 @@ class BlanketLibrary:
         # moved from dshaped_* and elliptical_* to keep coverage factor
         # changes in the same location.
         fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
-
-    @staticmethod
-    def external_cryo_geometry() -> None:
-        """Calculate cryostat geometry.
-
-        This method calculates the geometry of the cryostat, including the inboard radius,
-        the vertical clearance between the uppermost PF coil and the cryostat lid, the half-height
-        of the cryostat, the vertical clearance between the TF coil and the cryostat, the cryostat volume,
-        the vacuum vessel mass, and the sum of internal vacuum vessel and cryostat masses.
-
-        """
-
-        # Cryostat radius [m]
-        # Take radius of furthest PF coil and add clearance
-        fwbs_variables.r_cryostat_inboard = (
-            np.max(pfcoil_variables.r_pf_coil_outer) + fwbs_variables.dr_pf_cryostat
-        )
-
-        # Clearance between uppermost PF coil and cryostat lid [m].
-        # Scaling from ITER by M. Kovari
-        blanket_library.dz_pf_cryostat = (
-            build_variables.f_z_cryostat
-            * (2.0 * fwbs_variables.r_cryostat_inboard)
-            / 28.440
-        )
-
-        # Half-height of cryostat [m]
-        # Take height of furthest PF coil and add clearance
-        fwbs_variables.z_cryostat_half_inside = (
-            np.max(pfcoil_variables.z_pf_coil_upper) + blanket_library.dz_pf_cryostat
-        )
-
-        # Vertical clearance between TF coil and cryostat (m)
-        buildings_variables.dz_tf_cryostat = fwbs_variables.z_cryostat_half_inside - (
-            build_variables.hmax + build_variables.dr_tf_inboard
-        )
-
-        # Internal cryostat space volume [m^3]
-        fwbs_variables.vol_cryostat_internal = (
-            np.pi
-            * (fwbs_variables.r_cryostat_inboard) ** 2
-            * 2
-            * fwbs_variables.z_cryostat_half_inside
-        )
-
-        # Cryostat structure volume [m^3]
-        # Calculate by taking the volume of the outer cryostat and subtracting the volume of the inner cryostat
-        fwbs_variables.vol_cryostat = (
-            (
-                np.pi
-                * (fwbs_variables.r_cryostat_inboard + build_variables.dr_cryostat) ** 2
-            )
-            * 2
-            * (build_variables.dr_cryostat + fwbs_variables.z_cryostat_half_inside)
-        ) - (fwbs_variables.vol_cryostat_internal)
-
-        # Vacuum vessel mass (kg)
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
-
-        # Sum of internal vacuum vessel and cryostat masses (kg)
-        fwbs_variables.dewmkg = (
-            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.denstl
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
