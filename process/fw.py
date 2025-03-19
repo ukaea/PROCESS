@@ -45,18 +45,23 @@ class Fw:
         """
         Thermo-hydraulic calculations for the first wall.
 
-        Args:
-            output (bool): Flag to indicate if output is required.
-            radius_fw_channel (float): First wall coolant channel radius (m).
-            dr_fw (float): First wall thickness (m).
-            a_fw (float): Area of first wall section under consideration (m^2).
-            prad_incident (float): Surface heat flux on first wall (MW).
-            pnuc_deposited (float): Nuclear power deposited in FW (MW).
-            label (str): Information string.
+        :param output: Flag to indicate if output is required.
+        :type output: bool
+        :param radius_fw_channel: First wall coolant channel radius (m).
+        :type radius_fw_channel: float
+        :param dr_fw: First wall thickness (m).
+        :type dr_fw: float
+        :param a_fw: Area of first wall section under consideration (m^2).
+        :type a_fw: float
+        :param prad_incident: Radiation surface heat flux on first wall (MW).
+        :type prad_incident: float
+        :param pnuc_deposited: Nuclear power deposited in FW (MW).
+        :type pnuc_deposited: float
+        :param label: Information string.
+        :type label: str
 
-        Returns:
-            tuple: Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
-               coolant density (kg/m^3), and coolant mass flow rate in a single channel (kg/s).
+        :returns: Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
+        :rtype: tuple
 
         Detailed thermal hydraulic model for the blanket (first wall + breeding zone).
         Given the heating incident on the first wall, and the coolant outlet temperature,
@@ -103,9 +108,6 @@ class Fw:
             inlet_coolant_properties.density + outlet_coolant_properties.density
         ) / 2
 
-        # kfmean = (kfi + kfo) / 2  # coolant thermal conductivity (W/m.K)
-        # viscfmean = (viscfi + viscfo) / 2  # coolant viscosity (Pa.s)
-
         # Mean properties (inlet + outlet)/2
         # Average coolant specific heat capacity (J/K)
         heatcap_fw_coolant_average = (
@@ -131,7 +133,7 @@ class Fw:
         # Conditions at the outlet, where the temperature is highest
         # -----------------------------------------------------------
 
-        # coolant velocity (m/s)
+        # Coolant velocity (m/s)
         vel_fw_coolant_average = mflux_fw_coolant / outlet_coolant_properties.density
 
         # Mean temperature of the wall material on the plasma side of the coolant 'temp_fw_peak'
@@ -187,16 +189,11 @@ class Fw:
             + pflux_fw_rad * fwbs_variables.dx_fw_module
         )
 
-        # Note I do NOT assume that the channel covers the full width of the first wall:
         # Effective area for heat transfer (m2)
         effective_area_for_heat_transfer = 2 * radius_fw_channel
 
         # Temperature drop in first-wall material (K)
-        deltat_solid_1D = (
-            onedload
-            * fwbs_variables.dr_fw_wall
-            / (tkfw * effective_area_for_heat_transfer)
-        )
+        deltat_solid_1D = onedload * dr_fw / (tkfw * effective_area_for_heat_transfer)
 
         # Model C: A more realistic model !
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -205,7 +202,7 @@ class Fw:
         # dr_fw_wall | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
             (fwbs_variables.dx_fw_module / 2 - radius_fw_channel) ** 2
-            + (radius_fw_channel + fwbs_variables.dr_fw_wall) ** 2
+            + (radius_fw_channel + dr_fw) ** 2
         )
 
         # Mean distance travelled by surface heat (m)

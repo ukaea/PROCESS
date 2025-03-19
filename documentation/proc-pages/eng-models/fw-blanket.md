@@ -96,33 +96,90 @@ The first wall is assumed to be thermally separate from the blanket (Figure 1). 
 
 ### Calculate FW temperature | `fw_temp()`
 
+This function is used to calculate the first wall heating, it assumes the same coolant and geometry parameters for the inboard and outboard first wall though with different possible heat loads.
 
-Minimum distance travelled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
+1. The coolant properties at the inlet and outlet of the first wall are found for the required coolant type set using `i_fw_coolant_type`, the specificed inlet and outlet temperatures, `temp_fw_coolant_in` & `temp_fw_coolant_out` and the specified fixed pressure for the coolant, `pres_fw_coolant`.
 
-Maximum distance travelled by surface heat load = $\texttt{diagonal}$
+2. Calculate the average coolant density and heat capacity factor by taking the averages of the inlet and outlet.
+
+3. Calculate the heat load per unit length (W/m) of a first wall segment with its own cooling pipe
+
+$$
+Load = \left(\mathtt{pden\_fw\_nuclear} \Delta r_{FW} + \mathtt{pflux\_fw\_rad}\right) \times \mathtt{dx\_fw\_module}
+$$
+
+4. Calculate the mean mass flow rate.
+
+$$
+\dot{m} = \frac{L_{FW} \times Load}{c_{average} \left(T_{out} - T_{in}\right)}
+$$
+
+5. Calculate the mass flux in a single channel
+
+
+$$
+mass flux  = \frac{\dot{m}}{A_{\text{channel}}}
+$$
+
+6. Calculate the coolant velocity
+
+$$
+\mathtt{vel\_fw\_coolant\_average} = \frac{mass flux}{\rho_{outlet}}
+$$
+
+7. Mean temperature between outlet coolant and peak FW structure temperature. Is the estimate from the previous iteration of the wall surface temperature
+
+$$
+\mathtt{temp_k} = \frac{T_{\text{outlet}}+ T_{\text{FW,peak}}}{2}
+$$
+
+8. Calculate the FW thermal conductivity at the $\mathtt{temp_k}$ temperature using the `fw_thermal_conductivity()` function
+
+9. Calculate the heat transfer coefficient with the `heat_transfer()` function.
+
+10. Calculate worst case load
+
+$$
+oneload = \mathtt{f\_fw\_peak} \times \frac{\mathtt{pden\_fw\_nuclear} \times \mathtt{dx\_fw\_module} \times \frac{\Delta r_{FW}}{4}}{\mathtt{pflux\_fw\_rad} \times \times \mathtt{dx\_fw\_module}}
+$$
+
+11. Set the effective heat transfer area equal to the pipe diameter
+
+12. Caclualte the temperature drop in the first wall material
+
+$$
+\Delta T_{\text{FW}} = \frac{oneload \times \mathtt{dr_fw}}{k 2r_{\text{channel}}}
+$$
+
+13. Maximum distance traveled by surface heat load = $\texttt{diagonal}$
 
 $$
 \texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
 $$
 
-Typical distance travelled by surface heat load:
+14. Typical distance travelled by surface heat load:
 
 $$
 \texttt{mean} \_ \texttt{distance}=\frac{\texttt{fw} \_ \texttt{wall}+\texttt{diagonal}}{2}
 $$
 
+15. 
 
+$$ 
+\texttt{mean\_width} = \frac{\texttt{dx_fw_module} + \pi \times \texttt{radius_fw_channel}}{2}
 $$
-\texttt{diagonal}=\sqrt{(\texttt{radius_fw_channel}+\texttt{fw} \_ \texttt{wall})^2 + \left(\frac{\texttt{dx_fw_module}}{2}-\texttt{radius_fw_channel}\right)^2 }
-$$
+
+------------------
+
+Minimum distance traveled by surface heat load = $\texttt{fw} \_ \texttt{wall}$
+
+
 
 The energy travels over a cross-section which is initially $= \texttt{dx_fw_module}$
 It spreads out, arriving at the coolant pipe over an area of half the circumference.
 We use the mean of these values:
 
-$$ 
-\texttt{mean} \_ \texttt{width} = \frac{\texttt{dx_fw_module} + \pi \times \texttt{radius_fw_channel}}{2}
-$$
+
 
 The temperature difference between the plasma-facing surface and the coolant is then:
 
