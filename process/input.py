@@ -1695,6 +1695,7 @@ def parse_input_file():
             raise ProcessValueError(error_msg)
 
         variable_name, array_index, variable_value = line_match.groups()
+        variable_name = variable_name.lower()
 
         variable_config = INPUT_VARIABLES.get(variable_name)
 
