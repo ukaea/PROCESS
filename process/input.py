@@ -1871,6 +1871,7 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
     :param config: the config of the variable that describes how to validate and process it.
     """
     current_array = getattr(config.module, name, ...)
+    shape = current_array.shape
 
     # use ... sentinel for same reason as above
     if current_array is ...:
@@ -1881,5 +1882,13 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
         raise NotImplementedError
 
     new_array = copy.deepcopy(current_array)
+
+    if len(shape) > 1:
+        new_array = new_array.T.ravel()
+
     new_array[array_index - 1] = value
+
+    if len(shape) > 1:
+        new_array = new_array.reshape(shape, order="F")
+
     setattr(config.module, name, new_array)
