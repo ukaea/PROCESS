@@ -65,13 +65,8 @@ module process_input
 #endif
   implicit none
 
-  private
-  public :: input, check_range_int, check_range_real, lower_case, init_input
-  integer, public, parameter :: nin = 10
+  integer, parameter :: nin = 10
 
-#ifdef unit_test
-  public :: parse_input_file
-#endif
   integer, parameter :: maxlen = 2000  !  maximum line length
   character(len=maxlen) :: line  !  current line of text from input file
   integer :: linelen, lineno  !  current line length, line number
@@ -108,60 +103,6 @@ contains
     error_message = ""
   end subroutine init_input
 
-  subroutine input
-
-    !! Routine that calls the main input file parsing routines
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! None
-    !! This routine provides the interface between the input file
-    !! reading routines and the rest of PROCESS.
-    !! A User's Guide to the PROCESS Systems Code, P. J. Knight,
-    !! AEA Fusion Report AEA FUS 251, 1993
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use constants, only: nout
-    use numerics, only: ipeqns, icc, active_constraints
-    implicit none
-
-    !  Arguments
-
-    !  Local variables
-
-    integer :: i
-    !     j
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    call parse_input_file(nin,nout,show_changes)
-
-    ! Set all the values of the active_constraints array
-    do i = 1, ipeqns
-        if (icc(i) /= 0) then
-            active_constraints(icc(i)) = .true.
-            constraints_exist = .true.
-        end if
-    end do
-
-    ! Set the device type based on the input file's switches
-    call devtyp
-  end subroutine input
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine devtyp
-    !! Set icase description based on device type
-    use global_variables, only: icase
-    use ife_variables, only: ife
-    use stellarator_variables, only: istell
-    implicit none
-
-    if (ife == 1) then
-        icase = 'Inertial Fusion model'
-    else if (istell /= 0) then
-        icase = 'Stellarator model'
-    end if
-  end subroutine devtyp
-
   subroutine parse_input_file(in_file,out_file,show_changes)
 
     !! Routine that parses the contents of the input file
@@ -189,7 +130,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use constants, only: dcopper, dalu
-    use global_variables, only: run_tests, verbose, maxcal, runtitle
+    use global_variables, only: run_tests, verbose, maxcal
     use build_variables, only: i_tf_inside_cs, blbmoth, blbuith, dr_shld_outboard, &
       dz_shld_upper, dz_shld_lower, dz_shld_vv_gap, plleni, dr_fw_outboard, dr_shld_blkt_gap, &
       dr_shld_thermal_inboard, dr_shld_thermal_outboard, dz_shld_thermal, i_cs_precomp, &
@@ -293,8 +234,8 @@ contains
       blmatf, ife
     use impurity_radiation_module, only: radius_plasma_core_norm, n_impurities, &
       coreradiationfraction, fimp
-    use numerics, only: factor, boundl, minmax, neqns, nvar, epsfcn, ixc, &
-      epsvmc, ftol, ipnvars, ioptimz, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
+    use numerics, only: factor, minmax, neqns, nvar, epsfcn, ixc, &
+      ftol, ipnvars, nineqns, ipeqns, boundu, icc, ipnfoms, name_xc
     use pfcoil_variables, only: rhopfbus, j_pf_coil_wp_peak, zref, fcuohsu, f_a_cs_steel, f_a_pf_coil_void, &
       j_cs_flat_top_end, sigpfcalw, alstroh, i_pf_conductor, fcupfsu, fvs_cs_pf_total_ramp, etapsu, i_cs_stress, &
       fb_cs_limit_max, ngc, rpf2, f_j_cs_start_pulse_end_flat_top, f_z_cs_tf_internal, f_a_cs_void, i_cs_superconductor, n_pf_groups_max, ngc2, rpf1, &
@@ -449,10 +390,7 @@ contains
        variable: select case (varnam(1:varlen))
 
           !  General settings
-
        case ('runtitle')
-          call parse_string_variable('runtitle', runtitle, &
-               'title of run')
        case ('verbose')
           call parse_int_variable('verbose', verbose, 0, 1, &
                'Switch for diagnostic output')
@@ -462,8 +400,6 @@ contains
 
           !  Numerical solver settings
        case ('boundl')
-          call parse_real_array('boundl', boundl, isub1, ipnvars, &
-               'Iteration variable lower bound', icode)
        case ('boundu')
           call parse_real_array('boundu', boundu, isub1, ipnvars, &
                'Iteration variable upper bound', icode)
@@ -471,8 +407,6 @@ contains
           call parse_real_variable('epsfcn', epsfcn, 0.0D0, 1.0D0, &
                'HYBRD/VMCON derivative step length')
        case ('epsvmc')
-          call parse_real_variable('epsvmc', epsvmc, 0.0D0, 1.0D0, &
-               'VMCON error tolerance')
        case ('factor')
           call parse_real_variable('factor', factor, 0.0D0, 10.0D0, &
                'HYBRD initial step size')
@@ -492,10 +426,7 @@ contains
           call parse_int_array('ixc', ixc, isub1, ipnvars, &
                    'Iteration variable', icode,no_iteration)
           no_iteration = isub1
-
        case ('ioptimz')
-          call parse_int_variable('ioptimz', ioptimz, -2, 1, &
-               'Switch for solver method')
        case ('maxcal')
           call parse_int_variable('maxcal', maxcal, 0, 10000, &
                'Max no of VMCON iterations')
@@ -4971,14 +4902,3 @@ contains
  end subroutine lower_case
 
 end module process_input
-
-#ifdef unit_test
-program test
- use process_input
- implicit none
-
- open(unit=1,file='IN.DAT',status='old')
- call parse_input_file(1,6,1)
- close(unit=1)
-end program test
-#endif

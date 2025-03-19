@@ -7,7 +7,9 @@ from warnings import warn
 
 import process
 import process.fortran as fortran
+import process.process_output as process_output
 from process.exceptions import ProcessValidationError
+from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -30,13 +32,19 @@ def init_process():
     fortran.init_module.open_files()
 
     # Input any desired new initial values
-    fortran.process_input.input()
+    inputs = parse_input_file()
+
+    # Set active constraints
+    set_active_constraints()
+
+    # set the device type (icase)
+    set_device_type()
 
     # Initialise the Stellarator
     fortran.stellarator_module.stinit()
 
     # Check input data for errors/ambiguities
-    check_process()
+    check_process(inputs)
 
     run_summary()
 
@@ -79,71 +87,71 @@ def run_summary():
     # Outfile and terminal #
     for outfile in [fortran.constants.nout, fortran.constants.iotty]:
         # PROCESS code header
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.ocentr(outfile, "PROCESS", 110)
-        process.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.ocentr(outfile, "PROCESS", 110)
+        process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
         # Run execution details
         version = process.__version__
-        process.process_output.ocmmnt(outfile, f"Version : {version}")
+        process_output.ocmmnt(outfile, f"Version : {version}")
 
         git_branch, git_tag = get_git_summary()
 
-        process.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
-        process.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
+        process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
+        process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
         date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
             "%d/%m/%Y %Z"
         )
         time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
 
-        process.process_output.ocmmnt(outfile, f"Date : {date_string}")
-        process.process_output.ocmmnt(outfile, f"Time : {time_string}")
+        process_output.ocmmnt(outfile, f"Date : {date_string}")
+        process_output.ocmmnt(outfile, f"Time : {time_string}")
 
         user = getpass.getuser()
         machine = socket.gethostname()
 
-        process.process_output.ocmmnt(outfile, f"User : {user}")
-        process.process_output.ocmmnt(outfile, f"Computer : {machine}")
-        process.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
+        process_output.ocmmnt(outfile, f"User : {user}")
+        process_output.ocmmnt(outfile, f"Computer : {machine}")
+        process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
         fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
         runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
         )
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
         )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
         )
 
@@ -157,41 +165,37 @@ def run_summary():
         fom_string = f2py_compatible_to_string(
             fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Convergence parameter : {fortran.numerics.epsvmc}",
         )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
 
     # MFile #
     mfile = fortran.constants.mfile
 
-    process.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process.process_output.ovarst(
-        mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"'
-    )
-    process.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process.process_output.ovarst(
+    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarst(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process.process_output.ovarst(
-        mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"'
-    )
+    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process.process_output.ovarin(
+    process_output.ovarin(
         mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
     )
     if fortran.numerics.ioptimz == -2:
-        process.process_output.ovarin(
+        process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
         )
 
@@ -204,7 +208,6 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     fortran.numerics.init_numerics()
-    fortran.process_input.init_input()
     fortran.buildings_variables.init_buildings_variables()
     fortran.cost_variables.init_cost_variables()
     fortran.divertor_variables.init_divertor_variables()
@@ -416,7 +419,7 @@ def initialise_iterative_variables():
     fortran.define_iteration_variables.init_itv_175()
 
 
-def check_process():
+def check_process(inputs):
     """Routine to reset specific variables if certain options are
     being used
     author: P J Knight, CCFE, Culham Science Centre
@@ -424,7 +427,38 @@ def check_process():
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-    # error_handling.errors_on = True
+    # Inboard blanket does not exist if the thickness is below a certain limit.
+    if "dr_blkt_inboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
+        warn(
+            "dr_blkt_inboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
+            stacklevel=1,
+        )
+
+    if "dr_blkt_outboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
+        warn(
+            "dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
+            stacklevel=1,
+        )
+
+    if "iblanket_thickness" in inputs:
+        if fortran.fwbs_variables.i_blanket_type == 3:
+            fortran.build_variables.dr_fw_inboard = 0.03
+            fortran.build_variables.dr_fw_outboard = 0.03
+            fortran.fwbs_variables.fw_armour_thickness = 0.003
+
+        if 0 <= fortran.build_variables.dr_blkt_inboard <= 1e-3:
+            fortran.build_variables.dr_blkt_inboard = 0.0
+            fortran.fwbs_variables.i_blkt_inboard = 0
+
+        if fortran.fwbs_variables.iblanket_thickness == 1:
+            fortran.build_variables.dr_blkt_inboard = 0.53
+            fortran.build_variables.dr_blkt_outboard = 0.91
+        elif fortran.fwbs_variables.iblanket_thickness == 2:
+            fortran.build_variables.dr_blkt_inboard = 0.64
+            fortran.build_variables.dr_blkt_outboard = 1.11
+        elif fortran.fwbs_variables.iblanket_thickness == 3:
+            fortran.build_variables.dr_blkt_inboard = 0.75
+            fortran.build_variables.dr_blkt_outboard = 1.30
 
     # Check that there are sufficient iteration variables
     if fortran.numerics.nvar < fortran.numerics.neqns:
@@ -1260,3 +1294,25 @@ def check_process():
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 88
     ).any() and fortran.tfcoil_variables.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
+
+
+def set_active_constraints():
+    """Set constraints provided in the input file as 'active'"""
+    num_constraints = 0
+    for i in range(fortran.numerics.ipeqns):
+        if fortran.numerics.icc[i] != 0:
+            fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
+            num_constraints += 1
+
+    if fortran.numerics.neqns == 0:
+        # The value of neqns has not been set in the input file.  Default = 0.
+        fortran.numerics.neqns = num_constraints - fortran.numerics.nineqns
+    else:
+        fortran.numerics.nineqns = num_constraints - fortran.numerics.neqns
+
+
+def set_device_type():
+    if fortran.ife_variables.ife == 1:
+        fortran.global_variables.icase = "Inertial Fusion model"
+    elif fortran.stellarator_variables.istell != 0:
+        fortran.global_variables.icase = "Stellarator model"

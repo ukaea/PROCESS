@@ -27,7 +27,10 @@ import create_dicts_config
 import numpy as np
 from python_dicts import get_python_variables
 
+from process.input import INPUT_VARIABLES
 from process.scan import SCAN_VARIABLES
+
+INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
@@ -674,6 +677,14 @@ def dict_var_type():
         DICT_VAR_TYPE['beta'] = 'real_variable'
     """
     di = {}
+
+    for var_name, config in INPUT_VARIABLES.items():
+        var_type = (
+            f"{INPUT_TYPE_MAP[config.type]}_{'array' if config.array else 'variable'}"
+        )
+
+        di[var_name] = var_type
+
     regexp = r"call parse_(real|int|string)_(array|variable)\("
     lines = grep(SOURCEDIR + "/input.f90", regexp)
     for line in lines:
@@ -749,6 +760,18 @@ def dict_input_bounds():
     failedlines = []
     regexp = r"call parse_(real|int)_variable\((.*)"
     lines = grep(SOURCEDIR + "/input.f90", regexp)
+
+    for var_name, config in INPUT_VARIABLES.items():
+        lb, ub = None, None
+        if config.range is not None:
+            lb, ub = config.range
+
+        elif config.choices is not None and config.type in [int, float]:
+            lb = min(config.choices)
+            ub = max(config.choices)
+
+        if lb is not None:
+            di[var_name] = {"lb": lb, "ub": ub}
 
     for line in lines:
         match = re.search(regexp, line)

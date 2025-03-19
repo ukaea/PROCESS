@@ -64,6 +64,8 @@ module numerics
   !!  <LI> (18) Null Figure of Merit
   !!  <LI> (19) linear combination of big Q and pulse length (maximised)
   !!              note: FoM should be minimised only!</UL>
+  integer :: n_constraints
+  !! Total number of constraints (neqns + nineqns)
 
   integer :: ncalls
   !!  ncalls : number of function calls during solution
@@ -461,7 +463,8 @@ contains
     nfev1 = 0
     nfev2 = 0
     nineqns = 0
-    nvar = 16
+    nvar = 0
+    n_constraints = 0
     nviter = 0
     icc = 0
     active_constraints = .false.
