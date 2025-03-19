@@ -26,7 +26,6 @@ from process.fortran import (
     physics_module,
     physics_variables,
     pulse_variables,
-    reinke_module,
     reinke_variables,
     stellarator_variables,
     times_variables,
@@ -2575,7 +2574,7 @@ class Physics:
             # fsep = physics_variables.nesep / physics_variables.dene
             fgw = physics_variables.dlimit(7) / physics_variables.dene
             # calculate separatrix temperature, if Reinke criterion is used
-            physics_variables.tesep = reinke_module.reinke_tsep(
+            physics_variables.tesep = reinke_tsep(
                 physics_variables.bt,
                 constraint_variables.fl_h_threshold,
                 physics_variables.q95,
@@ -7819,3 +7818,28 @@ def l_h_threshold_power(
         martin_ub_aspect,
         martin_lb_aspect,
     ]
+
+
+def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
+    """Function for calculating upstream temperature(keV) in Reinke model
+    author: H Lux, CCFE/UKAEA
+    bt      : input real : toroidal field on axis (T)
+    flh     : input real : fraction of Psep/P_LH
+    qstar   : input real : safety factor similar to q95 (see #707)
+    rmajor  : input real : major radius (m)
+    eps     : input real : inverse aspect ratio
+    fgw     : input real : ratio of volume averaged density to n_GW
+    kappa   : input real : elongation
+    lhat    : input real : connection length factor
+    This function calculates the upstream temperature in the
+    divertor/SoL model used for the Reinke citerion.
+    Issue #707
+    M.L. Reinke 2017 Nucl. Fusion 57 034004
+    """
+    kappa_0 = 2.0e3  # Stangeby W/m/eV^(7/2)
+
+    return (
+        (bt**0.72 * flh**0.29 * fgw**0.21 * qstar**0.08 * rmajor**0.33)
+        * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
+        * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
+    )
