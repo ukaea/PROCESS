@@ -16,6 +16,7 @@ from process.cs_fatigue import init_cs_fatigue_variables
 from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
+from process.hcpb import init_ccfe_hcpb_module
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -221,7 +222,7 @@ def init_all_module_vars():
     fortran.error_handling.init_error_handling()
     fortran.fwbs_variables.init_fwbs_variables()
     fortran.global_variables.init_global_variables()
-    fortran.ccfe_hcpb_module.init_ccfe_hcpb_module()
+    init_ccfe_hcpb_module()
     fortran.heat_transport_variables.init_heat_transport_variables()
     fortran.ife_variables.init_ife_variables()
     fortran.impurity_radiation_module.init_impurity_radiation_module()

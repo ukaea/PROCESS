@@ -1471,3 +1471,19 @@ class CCFE_HCPB:
             "(divmas)",
             divertor_variables.divmas,
         )
+
+
+def init_ccfe_hcpb_module():
+    ccfe_hcpb_module.armour_density = 0.0
+    ccfe_hcpb_module.fw_density = 0.0
+    ccfe_hcpb_module.blanket_density = 0.0
+    ccfe_hcpb_module.shield_density = 0.0
+    ccfe_hcpb_module.vv_density = 0.0
+    ccfe_hcpb_module.x_blanket = 0.0
+    ccfe_hcpb_module.x_shield = 0.0
+    ccfe_hcpb_module.tfc_nuc_heating = 0.0
+    ccfe_hcpb_module.fw_armour_u_nuc_heating = 0.0
+    ccfe_hcpb_module.shld_u_nuc_heating = 0.0
+    ccfe_hcpb_module.exp_blanket = 0.0
+    ccfe_hcpb_module.exp_shield1 = 0.0
+    ccfe_hcpb_module.exp_shield2 = 0.0
