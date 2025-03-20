@@ -7620,6 +7620,55 @@ class Physics:
             p_plasma_loss_mw,
         )
 
+    def calculate_plasma_masses(
+        self,
+        m_fuel_amu: float,
+        m_ions_total_amu: float,
+        nd_ions_total: float,
+        nd_fuel_ions: float,
+        nd_alphas: float,
+        vol_plasma: float,
+        dene: float,
+    ) -> tuple[float, float, float, float, float]:
+        """
+        Calculate the plasma masses.
+
+        :param float m_fuel_amu: Average mass of fuel (amu).
+            :param float m_ions_total_amu: Average mass of all ions (amu).
+            :param float nd_ions_total: Total ion density (/m3).
+            :param float nd_fuel_ions: Fuel ion density (/m3).
+            :param float nd_alphas: Alpha ash density (/m3).
+            :param float vol_plasma: Plasma volume (m3).
+            :param float dene: Volume averaged electron density (/m3).
+
+            :returns: A tuple containing:
+            :rtype: tuple[float, float, float, float, float]
+        """
+
+        # Calculate mass of fuel ions
+        m_fuel_ions_grams = (
+            (m_fuel_amu * constants.atomic_mass_unit) * (nd_fuel_ions * vol_plasma)
+        ) * 1e3
+
+        m_ions_total_grams = (
+            (m_ions_total_amu * constants.atomic_mass_unit)
+            * (nd_ions_total * vol_plasma)
+        ) * 1e3
+
+        m_alphas_grams = (nd_alphas * vol_plasma) * constants.alpha_mass * 1e3
+
+        m_electrons_grams = constants.electron_mass * (dene * vol_plasma) * 1e3
+
+        m_plasma_grams = m_electrons_grams + m_ions_total_grams
+
+        return (
+            m_fuel_ions_grams,
+            m_ions_total_grams,
+            m_alphas_grams,
+            m_electrons_grams,
+            m_plasma_grams,
+        )
+
 
 def calculate_poloidal_beta(btot, bp, beta):
     """Calculates total poloidal beta
