@@ -19,6 +19,7 @@ from process.exceptions import ProcessValidationError
 from process.hcpb import init_ccfe_hcpb_module
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
+from process.pfcoil import init_pfcoil_module
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -227,7 +228,7 @@ def init_all_module_vars():
     fortran.heat_transport_variables.init_heat_transport_variables()
     fortran.ife_variables.init_ife_variables()
     init_impurity_radiation_module()
-    fortran.pfcoil_module.init_pfcoil_module()
+    init_pfcoil_module()
     fortran.physics_module.init_physics_module()
     fortran.physics_variables.init_physics_variables()
     fortran.scan_module.init_scan_module()
