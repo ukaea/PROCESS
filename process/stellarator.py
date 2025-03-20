@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
+import process.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
 import process.superconductors as superconductors
 from process import (
@@ -4187,7 +4188,7 @@ class Stellarator:
 
         #  Calculate fusion power
 
-        fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
         fusion_reactions.deuterium_branching(physics_variables.ti)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
@@ -4213,7 +4214,7 @@ class Stellarator:
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
                 physics_variables.alpha_power_beams,
-            ) = physics_funcs.beam_fusion(
+            ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
@@ -4273,7 +4274,7 @@ class Stellarator:
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,
-        ) = physics_funcs.set_fusion_powers(
+        ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
             physics_variables.alpha_power_beams,
