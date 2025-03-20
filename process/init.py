@@ -14,6 +14,7 @@ from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
 from process.dcll import init_dcll_module
+from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -216,7 +217,7 @@ def init_all_module_vars():
     fortran.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
-    fortran.divertor_variables.init_divertor_variables()
+    init_divertor_variables()
     fortran.error_handling.init_error_handling()
     fortran.fwbs_variables.init_fwbs_variables()
     fortran.global_variables.init_global_variables()
