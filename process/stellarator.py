@@ -5660,3 +5660,13 @@ def init_stellarator_variables():
     stellarator_variables.vporttmax = 0.0
     stellarator_variables.max_gyrotron_frequency = 1.0e9
     stellarator_variables.te0_ecrh_achievable = 1.0e2
+
+
+def init_stellarator_module():
+    st.first_call = True
+    st.first_call_stfwbs = True
+    st.f_n = 0.0
+    st.f_r = 0.0
+    st.f_a = 0.0
+    st.f_b = 0.0
+    st.f_i = 0.0

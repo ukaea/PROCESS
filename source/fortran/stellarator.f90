@@ -24,19 +24,6 @@ module stellarator_module
 
 contains
 
-  subroutine init_stellarator_module
-    !! Initialise module variables
-    implicit none
-
-    first_call = .true.
-    first_call_stfwbs = .true.
-    f_n = 0.0D0
-    f_r = 0.0D0
-    f_a = 0.0D0
-    f_b = 0.0D0
-    f_i = 0.0D0
-  end subroutine init_stellarator_module
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine stinit
