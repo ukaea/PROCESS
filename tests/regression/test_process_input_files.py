@@ -59,7 +59,12 @@ class RegressionTestScenario:
         logger.info(
             f"Running regression test {self.scenario_name} using input file {self.input_file}"
         )
-        main(["--input", str(self.input_file), "--solver", solver])
+        try:
+            main(["--input", str(self.input_file), "--solver", solver])
+        except Exception as e:
+            raise RuntimeError(
+                f"\033[1;101m An error occured while running PROCESS: {e}\033[0m"
+            ) from e
 
     def compare(
         self, reference_mfile_location: Path, tolerance: float, opt_params_only: bool
@@ -94,7 +99,7 @@ class RegressionTestScenario:
         ifail = mfile.data["ifail"].get_scan(-1)
 
         assert ifail == 1 or mfile.data["ioptimz"].get_scan(-1) == -2, (
-            f"ifail of {ifail} indicates PROCESS did not solve successfully"
+            f"\033[0;36m ifail of {ifail} indicates PROCESS did not solve successfully\033[0m"
         )
 
         mfile_keys = set(mfile.data.keys())
@@ -103,14 +108,14 @@ class RegressionTestScenario:
         key_ref_not_mfile = reference_mfile_keys - mfile_keys
 
         key_ref_not_mfile_msg = (
-            "\033[35m Reference MFile contains variables that are not present in "
+            "\033[0;35m Reference MFile contains variables that are not present in "
             f"the MFILE: {key_ref_not_mfile} \033[0m"
         )
         if key_ref_not_mfile:
             logger.warning(key_ref_not_mfile_msg)
 
         key_mfile_not_ref_msg = (
-            "\033[35m MFile contains variables that are not present in "
+            "\033[0;35m MFile contains variables that are not present in "
             f"the reference MFILE: {key_mfile_not_ref} \033[0m"
         )
         if key_mfile_not_ref:
@@ -134,8 +139,8 @@ class RegressionTestScenario:
                 )
 
             assert len(differences) == 0, (
-                f"{len(differences)} differences: the reference MFile contains different values "
-                "for some of the variables. See the warnings for a breakdown of the differences."
+                f"\033[0;32m {len(differences)} differences: the reference MFile contains different values "
+                "for some of the variables. See the warnings for a breakdown of the differences.\033[0m"
             )
 
         assert not key_ref_not_mfile, key_ref_not_mfile_msg
@@ -291,7 +296,7 @@ def test_input_file(
     # are raised first.
     if reference_mfile is None:
         raise RuntimeError(
-            "No reference input file exists (so cannot compare results). The input file ran without any exceptions."
+            "\033[0;36m No reference input file exists (so cannot compare results). The input file ran without any exceptions.\033[0m"
         )
 
     scenario.compare(reference_mfile, reg_tolerance, opt_params_only)
