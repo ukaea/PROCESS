@@ -34,6 +34,40 @@ NORM_OBJF_VALUE = "norm_objf"
 NORM_OBJF_NAME = "objf_name"
 TAG_REGEX = r"tag$"
 TAG = "tag"
+CON_VALUE_PATTERN = r"eq_con\d{3}"
+
+# TODO Eventually this (incomplete) dict of short descriptions of constraints
+# could be an attribute of the constraints themselves once in Python
+# Short constraint descriptions for use on plots
+# EQ: equality, LL: lower limit, UL: upper limit
+CONSTRAINT_NUMS = {
+    "eq_con001": "EQ: beta, temperature, density",
+    "eq_con002": "EQ: global plasma power balance",
+    "eq_con011": "EQ: radial build",
+    "ineq_con030": "UL: injection power",
+    "ineq_con015": "LL: L-H threshold power",
+    "ineq_con016": "LL: net electric power",
+    "ineq_con024": "UL: beta",
+    "ineq_con025": "UL: peak toroidal field",
+    "ineq_con026": "UL: CS current density at EOF",
+    "ineq_con027": "UL: CS current density at BOP",
+    "ineq_con033": "UL: SCTF coil operating J",
+    "ineq_con034": "UL: CSTF coil dump voltage",
+    "ineq_con035": "UL: SCTF coil winding pack J",
+    "ineq_con036": "LL: SCTF coil SC temp margin",
+    "ineq_con060": "LL: CS SC temp margin",
+    "ineq_con062": "LL: alpha:energy confinement times",
+    "ineq_con065": "UL: stress on VV during TF quench",
+    "ineq_con072": "UL: CS Tresca yield stress",
+    "ineq_con081": "LL: central density > pedestal density",
+    "ineq_con068": "UL: divertor protection limit",
+    "ineq_con031": "UL: SCTF coil case stress",
+    "ineq_con032": "UL: SCTF coil conduit stress",
+    "ineq_con005": "UL: density",
+    "ineq_con008": "UL: neutron wall load",
+    "ineq_con009": "UL: fusion power",
+    "ineq_con013": "LL: burn time",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -279,15 +313,19 @@ def _normalise_diffs(
 
 def _filter_vars_of_interest(
     results_df: pd.DataFrame,
-    opt_param_value_pattern: str,
+    opt_param_value_pattern: str | None = None,
+    constraints: bool = False,
     extra_var_names: list[str] | None = None,
 ) -> pd.DataFrame:
     """Filter variables of interest from full results for all solutions.
 
     :param results_df: full results for all solutions
     :type results_df: pandas.DataFrame
-    :param opt_param_value_pattern: normalisation type for opt params in mfile
-    :type opt_param_value_pattern: str
+    :param opt_param_value_pattern: normalisation type for opt params in mfile,
+    set if plotting opt params, defaults to None
+    :type opt_param_value_pattern: str | None, optional
+    :param constraints: filter in constraint values, defaults to False
+    :type constraints: bool, optional
     :param extra_var_names: other variables of interest to filter, defaults to None
     :type extra_var_names: List[str], optional
     :return: variables of interest
@@ -295,6 +333,10 @@ def _filter_vars_of_interest(
     """
     if extra_var_names is None:
         extra_var_names = []
+
+    if constraints:
+        # Filter in tag, equality and inequality constraint values only
+        return results_df.filter(regex=(TAG_REGEX + r"|" + CON_VALUE_PATTERN))
 
     # Filter for optimisation parameters (normalised to initial value
     # e.g. xcm001) values and names, objective function value and name, plus
@@ -441,7 +483,7 @@ def _plot_solutions(
 
     # Adapt x axis label for normalisation type
     if normalisation_type == "init":
-        x_axis_label = "Value normalised by initial value"
+        x_axis_label = "Value normalised by initial value of each solution"
     elif normalisation_type == "range":
         x_axis_label = "Value normalised by parameter range"
     else:
@@ -591,3 +633,56 @@ def _rms_errors(
     tag_series = results_df["tag"]
     rmse_series = pd.Series(rmses, name="rmse")
     return pd.concat([tag_series, rmse_series], axis=1)
+
+
+def _plot_solutions_constraints(df: pd.DataFrame, title: str) -> mpl.figure.Figure:
+    """Create plot from constraint values df.
+
+    :param df: constraint values for each mfile
+    :type df: pd.DataFrame
+    :param title: plot title
+    :type title: str
+    :return: created figure
+    :rtype: mpl.figure.Figure
+    """
+    # Replace constraint numbers with descriptions
+    df = df.rename(mapper=CONSTRAINT_NUMS, axis="columns")
+    df_melt = df.melt(id_vars=TAG)
+    fig, ax = plt.subplots()
+    sns.stripplot(
+        data=df_melt,
+        x="value",
+        y="variable",
+        hue=TAG,
+        jitter=True,
+        ax=ax,
+    )
+
+    ax.set_xlabel("Constraint value")
+    ax.set_ylabel("Constraint")
+    ax.legend()
+    ax.grid()
+    ax.set_title(title)
+    return fig
+
+
+def plot_mfile_solutions_constraints(
+    runs_metadata: Sequence[RunMetadata], title: str
+) -> tuple[mpl.figure.Figure, pd.DataFrame]:
+    """Plot constraint values in mfiles.
+
+    :param runs_metadata: list of RunMetadata objects
+    :type runs_metadata: Sequence[RunMetadata]
+    :param title: plot title
+    :type title: str
+    :return: figure and dataframe of solutions
+    :rtype: Tuple[mpl.figure.Figure, pd.DataFrame]
+    """
+    # Create dataframe from runs metadata: mfile data with a tag for each run
+    results_df = _create_df_from_run_metadata(runs_metadata)
+
+    # Filter for tag and constraint values
+    filtered_results_df = _filter_vars_of_interest(results_df, constraints=True)
+
+    fig = _plot_solutions_constraints(df=filtered_results_df, title=title)
+    return fig, filtered_results_df
