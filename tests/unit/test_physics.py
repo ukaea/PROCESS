@@ -13,7 +13,7 @@ from process.fortran import (
     physics_module,
     physics_variables,
 )
-from process.impurity_radiation import initialise_imprad
+from process.impurity_radiation import init_impurity_radiation_module, initialise_imprad
 from process.physics import (
     Physics,
     calculate_beta_limit,
@@ -1498,7 +1498,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    impurity_radiation_module.init_impurity_radiation_module()
+    init_impurity_radiation_module()
     initialise_imprad()
 
     monkeypatch.setattr(
