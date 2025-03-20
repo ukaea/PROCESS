@@ -23,6 +23,7 @@ from process.pfcoil import init_pfcoil_module
 from process.physics import init_physics_variables
 from process.sctfcoil import init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
+from process.tfcoil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -238,7 +239,7 @@ def init_all_module_vars():
     init_sctfcoil_module()
     init_stellarator_module()
     init_stellarator_variables()
-    fortran.tfcoil_variables.init_tfcoil_variables()
+    init_tfcoil_variables()
     fortran.times_variables.init_times_variables()
     fortran.constants.init_constants()
     fortran.current_drive_variables.init_current_drive_variables()
