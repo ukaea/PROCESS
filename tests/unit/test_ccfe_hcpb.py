@@ -83,10 +83,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     verbose: Any = None
 
-    ip: Any = None
-
-    ofile: Any = None
-
     armour_density: Any = None
 
     fw_density: Any = None
@@ -156,8 +152,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             whttf=19649856.627845347,
             whttflgs=0,
             verbose=0,
-            ip=0,
-            ofile=11,
             armour_density=0,
             fw_density=0,
             blanket_density=0,
@@ -205,8 +199,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             whttf=19662548.210142396,
             whttflgs=0,
             verbose=0,
-            ip=0,
-            ofile=11,
             armour_density=13202.434141839649,
             fw_density=5349.557730199961,
             blanket_density=2504.4899999999998,
@@ -331,10 +323,6 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     )
 
     monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingmagnetsparam.ip)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ofile", nuclearheatingmagnetsparam.ofile)
 
     monkeypatch.setattr(
         ccfe_hcpb_module, "armour_density", nuclearheatingmagnetsparam.armour_density
@@ -717,8 +705,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     fusion_power: Any = None
 
-    ip: Any = None
-
     expected_pnucdiv: Any = None
 
 
@@ -731,7 +717,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnuchcd=0,
             idivrt=1,
             fusion_power=1986.0623241661431,
-            ip=0,
             expected_pnucdiv=182.71773382328519,
         ),
         NuclearHeatingDivertorParam(
@@ -740,7 +725,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
             pnuchcd=0,
             idivrt=1,
             fusion_power=1985.4423932312809,
-            ip=0,
             expected_pnucdiv=182.66070017727785,
         ),
     ),
@@ -769,8 +753,6 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
     )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
 
     ccfe_hcpb.nuclear_heating_divertor()
 
@@ -856,10 +838,6 @@ class PowerflowCalcParam(NamedTuple):
 
     htpmw_fw_blkt: Any = None
 
-    ip: Any = None
-
-    ofile: Any = None
-
     expected_praddiv: Any = None
 
     expected_pradfw: Any = None
@@ -917,8 +895,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             htpmw_fw_blkt=0,
-            ip=0,
-            ofile=11,
             expected_praddiv=33.056596978820579,
             expected_pradfw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
@@ -966,8 +942,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             htpmw_fw_blkt=202.00455086503842,
-            ip=0,
-            ofile=11,
             expected_praddiv=33.056596978820579,
             expected_pradfw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
@@ -1102,10 +1076,6 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         primary_pumping_variables, "htpmw_fw_blkt", powerflowcalcparam.htpmw_fw_blkt
     )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", powerflowcalcparam.ip)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ofile", powerflowcalcparam.ofile)
 
     ccfe_hcpb.powerflow_calc(False)
 
@@ -1333,8 +1303,6 @@ class TbrShimwellParam(NamedTuple):
 
     fw_armour_thickness: Any = None
 
-    ip: Any = None
-
     iprint: Any = None
 
     outfile: Any = None
@@ -1356,7 +1324,6 @@ class TbrShimwellParam(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             tbrmin=1.1499999999999999,
             fw_armour_thickness=0.0030000000000000001,
-            ip=0,
             iprint=0,
             outfile=11,
             iblanket_thickness=1,
@@ -1392,8 +1359,6 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "fw_armour_thickness", tbrshimwellparam.fw_armour_thickness
     )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", tbrshimwellparam.ip)
 
     tbr = ccfe_hcpb.tbr_shimwell(
         iblanket_thickness=tbrshimwellparam.iblanket_thickness,
