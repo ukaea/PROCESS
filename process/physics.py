@@ -1548,6 +1548,22 @@ class Physics:
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
 
+        (
+            physics_variables.m_plasma_fuel_ions,
+            physics_variables.m_plasma_ions_total,
+            physics_variables.m_plasma_alpha,
+            physics_variables.m_plasma_electron,
+            physics_variables.m_plasma,
+        ) = self.calculate_plasma_masses(
+            physics_variables.m_fuel_amu,
+            physics_variables.m_ions_total_amu,
+            physics_variables.nd_ions_total,
+            physics_variables.nd_fuel_ions,
+            physics_variables.nd_alphas,
+            physics_variables.vol_plasma,
+            physics_variables.dene,
+        )
+
         # Define coulomb logarithm
         # (collisions: ion-electron, electron-electron)
         physics_variables.dlamee = (
@@ -4223,6 +4239,13 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Total mass of all ions in plasma (kg)",
+            "(m_plasma_ions_total)",
+            physics_variables.m_plasma_ions_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Average mass of all fuel ions (amu)",
             "(m_fuel_amu)",
             physics_variables.m_fuel_amu,
@@ -4230,9 +4253,37 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Total mass of all fuel ions in plasma (kg)",
+            "(m_plasma_fuel_ions)",
+            physics_variables.m_plasma_fuel_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Average mass of all beam ions (amu)",
             "(m_beam_amu)",
             physics_variables.m_beam_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all alpha particles in plasma (kg)",
+            "(m_plasma_alpha)",
+            physics_variables.m_plasma_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all electrons in plasma (kg)",
+            "(m_plasma_electron)",
+            physics_variables.m_plasma_electron,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of the plasma (kg)",
+            "(m_plasma)",
+            physics_variables.m_plasma,
             "OP ",
         )
 
@@ -7646,27 +7697,26 @@ class Physics:
         """
 
         # Calculate mass of fuel ions
-        m_fuel_ions_grams = (
-            (m_fuel_amu * constants.atomic_mass_unit) * (nd_fuel_ions * vol_plasma)
-        ) * 1e3
+        m_plasma_fuel_ions = (m_fuel_amu * constants.atomic_mass_unit) * (
+            nd_fuel_ions * vol_plasma
+        )
 
-        m_ions_total_grams = (
-            (m_ions_total_amu * constants.atomic_mass_unit)
-            * (nd_ions_total * vol_plasma)
-        ) * 1e3
+        m_plasma_ions_total = (m_ions_total_amu * constants.atomic_mass_unit) * (
+            nd_ions_total * vol_plasma
+        )
 
-        m_alphas_grams = (nd_alphas * vol_plasma) * constants.alpha_mass * 1e3
+        m_plasma_alpha = (nd_alphas * vol_plasma) * constants.alpha_mass
 
-        m_electrons_grams = constants.electron_mass * (dene * vol_plasma) * 1e3
+        m_plasma_electron = constants.electron_mass * (dene * vol_plasma)
 
-        m_plasma_grams = m_electrons_grams + m_ions_total_grams
+        m_plasma = m_plasma_electron + m_plasma_ions_total
 
         return (
-            m_fuel_ions_grams,
-            m_ions_total_grams,
-            m_alphas_grams,
-            m_electrons_grams,
-            m_plasma_grams,
+            m_plasma_fuel_ions,
+            m_plasma_ions_total,
+            m_plasma_alpha,
+            m_plasma_electron,
+            m_plasma,
         )
 
 

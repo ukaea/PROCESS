@@ -26,6 +26,21 @@ module physics_variables
   real(dp) :: m_ions_total_amu
   !! average mass of all ions (amu)
 
+  real(dp) :: m_plasma_fuel_ions_grams
+  !! Mass of the plasma fuel ions (g)
+
+  real(dp) :: m_plasma_ions_total_grams
+  !! Mass of all ions in plasma (g)
+
+  real(dp) :: m_plasma_alpha_grams
+  !! Mass of the alpha particles in the plasma (g)
+
+  real(dp) :: m_plasma_electron_grams
+  !! Mass of the electrons in the plasma (g)
+
+  real(dp) :: m_plasma_grams
+  !! Total mass of the plasma (g)
+
   real(dp) :: alphaj
   !! current profile index (calculated from q_0 and q if `iprofile=1`)
 
@@ -903,6 +918,11 @@ module physics_variables
     m_beam_amu = 0.0D0
     m_fuel_amu = 0.0D0
     m_ions_total_amu = 0.0D0
+    m_plasma_fuel_ions_grams = 0.0D0
+    m_plasma_ions_total_grams = 0.0D0
+    m_plasma_alpha_grams = 0.0D0
+    m_plasma_electron_grams = 0.0D0
+    m_plasma_grams = 0.0D0
     alphaj = 1.0D0
     alphan = 0.25D0
     alphap = 0.0D0
