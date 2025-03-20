@@ -91,31 +91,4 @@ module stellarator_variables
   real(dp) :: powerht_constraint
   real(dp) :: powerscaling_constraint
 
-  contains
-
-  subroutine init_stellarator_variables
-    !! Initialise module variables
-    implicit none
-
-    istell = 0
-    bmn = 1.0D-3
-    f_asym = 1.0D0
-    f_rad = 0.85D0
-    f_w = 0.5D0
-    fdivwet = 0.333333333333333D0
-    flpitch = 1.0D-3
-    hportamax = 0.0D0
-    hportpmax = 0.0D0
-    hporttmax = 0.0D0
-    iotabar = 1.0D0
-    isthtr = 3
-    m_res = 5
-    n_res = 5
-    shear = 0.5D0
-    vportamax = 0.0D0
-    vportpmax = 0.0D0
-    vporttmax = 0.0D0
-    max_gyrotron_frequency = 1.0D9
-    te0_ecrh_achievable = 1.0D2
-  end subroutine init_stellarator_variables
 end module stellarator_variables
