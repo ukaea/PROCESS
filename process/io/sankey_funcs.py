@@ -309,17 +309,11 @@ def plot_full_sankey(
 
         # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
         first_wall = [
-            
             p_fw_alpha_mw,
-           
             p_fw_nuclear_heat_total_mw,
-           
             p_fw_rad_total_mw,
-           
             htpmwfw,
-           
             -pthermfw,
-        ,
         ]
         sankey.add(
             flows=first_wall,
@@ -578,15 +572,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     # Power deposited on Blanket (MW)
     totalblktetc = (
         p_fw_nuclear_heat_total_mw
-       
-        + p_blkt
-       _nuclear_heat_total_mw
+        + p_blkt_nuclear_heat_total_mw
         + pnucshld
-       
         + p_fw_rad_total_mw
-       
         + p_fw_alpha_mw
-       
         - emultmw
     )
 

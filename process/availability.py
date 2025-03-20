@@ -101,7 +101,9 @@ class Availability:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
-                    fwbsv.life_blkt_fpy = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
+                    fwbsv.life_blkt_fpy = min(
+                        cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
+                    )
                 else:
                     fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
             else:
