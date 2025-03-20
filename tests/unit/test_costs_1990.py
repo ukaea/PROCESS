@@ -66,7 +66,7 @@ def acc2261_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"coolwh": 1, "expected": approx(49.68, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": approx(49.68, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -83,7 +83,7 @@ def acc2261_params():
     """
     return [
         acc2261_param(),
-        acc2261_param(coolwh=2, expected=approx(53.85, abs=0.01)),
+        acc2261_param(i_blkt_coolant_type=2, expected=approx(53.85, abs=0.01)),
     ]
 
 
@@ -104,14 +104,14 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 1)
     monkeypatch.setattr(htv, "pfwdiv", 0.0)
-    monkeypatch.setattr(fv, "pnucblkt", 1558.0)
+    monkeypatch.setattr(fv, "p_blkt_nuclear_heat_total_mw", 1558.0)
     monkeypatch.setattr(fv, "pnucshld", 1.478)
     monkeypatch.setattr(htv, "pthermmw", 2647.0)
     monkeypatch.setattr(htv, "nphx", 3)
     monkeypatch.setattr(costs, "c2261", 0)
 
     # Parameterised mocks
-    monkeypatch.setattr(fv, "coolwh", param["coolwh"])
+    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -408,7 +408,7 @@ def acc23_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"coolwh": 1, "expected": approx(230, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": approx(230, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -423,7 +423,10 @@ def acc23_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc23_param(), acc23_param(coolwh=2, expected=approx(245, abs=0.01))]
+    return [
+        acc23_param(),
+        acc23_param(i_blkt_coolant_type=2, expected=approx(245, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc23_params(), ids=["he", "h2o"])
@@ -441,7 +444,7 @@ def acc23_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc23()
     # Some may be parameterised
-    monkeypatch.setattr(fv, "coolwh", param["coolwh"])
+    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
     monkeypatch.setattr(htv, "pgrossmw", 1200.0)
     monkeypatch.setattr(costs, "c23", 0)
 
@@ -1138,17 +1141,17 @@ class Acc2212Param(NamedTuple):
 
     i_blanket_type: Any = None
 
-    whtblli: Any = None
+    m_blkt_lithium: Any = None
 
-    wtblli2o: Any = None
+    m_blkt_li2o: Any = None
 
     whtblbreed: Any = None
 
-    whtblvd: Any = None
+    m_blkt_vanadium: Any = None
 
-    whtblbe: Any = None
+    m_blkt_beryllium: Any = None
 
-    whtblss: Any = None
+    m_blkt_steel_total: Any = None
 
     wtbllipb: Any = None
 
@@ -1209,12 +1212,12 @@ class Acc2212Param(NamedTuple):
             lsa=2,
             fkind=1,
             i_blanket_type=1,
-            whtblli=0,
-            wtblli2o=1258110.2710352642,
+            m_blkt_lithium=0,
+            m_blkt_li2o=1258110.2710352642,
             whtblbreed=0,
-            whtblvd=0,
-            whtblbe=1184720.5052248738,
-            whtblss=1058196.5489677608,
+            m_blkt_vanadium=0,
+            m_blkt_beryllium=1184720.5052248738,
+            m_blkt_steel_total=1058196.5489677608,
             wtbllipb=0,
             ucflib=84,
             blmatm=np.array(
@@ -1263,12 +1266,12 @@ class Acc2212Param(NamedTuple):
             lsa=2,
             fkind=1,
             i_blanket_type=1,
-            whtblli=0,
-            wtblli2o=1260437.468838267,
+            m_blkt_lithium=0,
+            m_blkt_li2o=1260437.468838267,
             whtblbreed=0,
-            whtblvd=0,
-            whtblbe=1186911.9498227015,
-            whtblss=1060153.955039866,
+            m_blkt_vanadium=0,
+            m_blkt_beryllium=1186911.9498227015,
+            m_blkt_steel_total=1060153.955039866,
             wtbllipb=0,
             ucflib=84,
             blmatm=np.array(
@@ -1343,17 +1346,21 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "i_blanket_type", acc2212param.i_blanket_type)
 
-    monkeypatch.setattr(fwbs_variables, "whtblli", acc2212param.whtblli)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_lithium", acc2212param.m_blkt_lithium)
 
-    monkeypatch.setattr(fwbs_variables, "wtblli2o", acc2212param.wtblli2o)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", acc2212param.m_blkt_li2o)
 
     monkeypatch.setattr(fwbs_variables, "whtblbreed", acc2212param.whtblbreed)
 
-    monkeypatch.setattr(fwbs_variables, "whtblvd", acc2212param.whtblvd)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", acc2212param.m_blkt_vanadium)
 
-    monkeypatch.setattr(fwbs_variables, "whtblbe", acc2212param.whtblbe)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_beryllium", acc2212param.m_blkt_beryllium
+    )
 
-    monkeypatch.setattr(fwbs_variables, "whtblss", acc2212param.whtblss)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_steel_total", acc2212param.m_blkt_steel_total
+    )
 
     monkeypatch.setattr(fwbs_variables, "wtbllipb", acc2212param.wtbllipb)
 
@@ -2795,7 +2802,7 @@ class Acc2223Param(NamedTuple):
 
     fkind: Any = None
 
-    vvmass: Any = None
+    m_vv: Any = None
 
     c22: Any = None
 
@@ -2811,7 +2818,7 @@ class Acc2223Param(NamedTuple):
             uccryo=32,
             lsa=2,
             fkind=1,
-            vvmass=9043937.8018644415,
+            m_vv=9043937.8018644415,
             c22=0,
             c2223=0,
             expected_c2223=244.54807816241447,
@@ -2820,7 +2827,7 @@ class Acc2223Param(NamedTuple):
             uccryo=32,
             lsa=2,
             fkind=1,
-            vvmass=9056931.558219457,
+            m_vv=9056931.558219457,
             c22=3474.7391916096453,
             c2223=244.54807816241447,
             expected_c2223=244.89942933425411,
@@ -2846,7 +2853,7 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2223param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "vvmass", acc2223param.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", acc2223param.m_vv)
 
     monkeypatch.setattr(costs, "c22", acc2223param.c22)
 
@@ -3806,11 +3813,11 @@ class Acc2261Param(NamedTuple):
 
     fkind: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
     pnucshld: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
     pthermmw: Any = None
 
@@ -3845,9 +3852,9 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pnucshld=1.3609360176065353,
-            pnucblkt=1504.711566619962,
+            p_blkt_nuclear_heat_total_mw=1504.711566619962,
             pthermmw=2620.2218111502593,
             pfwdiv=0,
             nphx=3,
@@ -3867,9 +3874,9 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pnucshld=1.4036212304705389,
-            pnucblkt=1549.9285082739402,
+            p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             pthermmw=2619.4223856129224,
             pfwdiv=0,
             nphx=3,
@@ -3903,11 +3910,17 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2261param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "coolwh", acc2261param.coolwh)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", acc2261param.i_blkt_coolant_type
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", acc2261param.pnucshld)
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", acc2261param.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        acc2261param.p_blkt_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2261param.pthermmw)
 
@@ -4650,7 +4663,7 @@ class Acc23Param(NamedTuple):
 
     ireactor: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
     pgrossmw: Any = None
 
@@ -4667,7 +4680,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pgrossmw=982.58317918134742,
             c23=0,
             expected_c23=194.83812507173698,
@@ -4677,7 +4690,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            coolwh=1,
+            i_blkt_coolant_type=1,
             pgrossmw=982.28339460484608,
             c23=194.83812507173698,
             expected_c23=194.78878460447092,
@@ -4701,7 +4714,9 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "ireactor", acc23param.ireactor)
 
-    monkeypatch.setattr(fwbs_variables, "coolwh", acc23param.coolwh)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", acc23param.i_blkt_coolant_type
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc23param.pgrossmw)
 
@@ -5473,9 +5488,9 @@ class CoelcParam(NamedTuple):
 
     cfind: Any = None
 
-    bktlife: Any = None
+    life_blkt_fpy: Any = None
 
-    bktlife_cal: Any = None
+    life_blkt: Any = None
 
     uctarg: Any = None
 
@@ -5578,8 +5593,8 @@ class CoelcParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            bktlife=19.216116010620578,
-            bktlife_cal=19.216116010620578,
+            life_blkt_fpy=19.216116010620578,
+            life_blkt=19.216116010620578,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5662,8 +5677,8 @@ class CoelcParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            bktlife=19.222115557991025,
-            bktlife_cal=19.222115557991025,
+            life_blkt_fpy=19.222115557991025,
+            life_blkt=19.222115557991025,
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
@@ -5768,9 +5783,9 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "cfind", coelcparam.cfind)
 
-    monkeypatch.setattr(fwbs_variables, "bktlife", coelcparam.bktlife)
+    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", coelcparam.life_blkt_fpy)
 
-    monkeypatch.setattr(fwbs_variables, "bktlife_cal", coelcparam.bktlife_cal)
+    monkeypatch.setattr(fwbs_variables, "life_blkt", coelcparam.life_blkt)
 
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 

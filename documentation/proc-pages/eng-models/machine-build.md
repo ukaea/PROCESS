@@ -92,7 +92,7 @@ The vertical build is shown schematically below (click to zoom).
 Since PROCESS is essentially a 0-D code, the shape of each component is used to estimate its mass
 and cost, but is not used otherwise.  The first wall, blanket, shield and vacuum vessel may be
 either D-shaped in cross-section, or each may be defined by two half-ellipses. The choice between
-these two possibilities is set using input parameter `fwbsshape`, which should be
+these two possibilities is set using input parameter `i_fw_blkt_vv_shape`, which should be
 
 - 1 for D-shaped,
 - 2 for ellipses.

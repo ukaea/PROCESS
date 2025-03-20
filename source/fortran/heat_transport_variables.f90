@@ -35,7 +35,7 @@ module heat_transport_variables
     !! AC to resistive power conversion for TF coils
 
     real(dp) :: etath
-    !! thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.
+    !! thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated.
 
     real(dp) :: etath_liq
 
@@ -53,7 +53,7 @@ module heat_transport_variables
 
     real(dp) :: fpumpblkt
     !! fraction of total blanket thermal power required to drive the blanket
-    !! coolant pumps (default assumes water coolant) (`secondary_cycle=0`)
+    !! coolant pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
     real(dp) :: fpumpdiv
     !! fraction of total divertor thermal power required to drive the divertor
@@ -61,7 +61,7 @@ module heat_transport_variables
 
     real(dp) :: fpumpfw
     !! fraction of total first wall thermal power required to drive the FW coolant
-    !! pumps (default assumes water coolant) (`secondary_cycle=0`)
+    !! pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
     real(dp) :: fpumpshld
     !! fraction of total shield thermal power required to drive the shield coolant
@@ -179,7 +179,7 @@ module heat_transport_variables
     !! power required for tritium processing (MW)
 
     real(dp) :: tturb
-    !! coolant temperature at turbine inlet (K) (`secondary_cycle = 3,4`)
+    !! coolant temperature at turbine inlet (K) (`i_thermal_electric_conversion = 3,4`)
 
     real(dp) :: vachtmw
     !! vacuum pump power (MW)

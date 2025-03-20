@@ -130,8 +130,8 @@ fwclfr   = 0.1          *First wall coolant fraction
 htpmw_blkt = 120.0      *Blanket coolant mechanical pumping power (MW)
 htpmw_fw = 56.0         *First wall coolant mechanical pumping power (MW)
 htpmw_div = 24.0        *Divertor coolant mechanical pumping power (MW)
-primary_pumping = 0     *Switch for pumping power (0: User sets pump power directly)
-secondary_cycle = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
+i_coolant_pumping = 0     *Switch for pumping power (0: User sets pump power directly)
+i_thermal_electric_conversion = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt   = 0.10         *Coolant void fraction in blanket (blktmodel=0)
 vfshld   = 0.60         *Coolant void fraction in shield
 

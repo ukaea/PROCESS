@@ -206,21 +206,21 @@ contains
       omegan, prn1, frrp, xpertin, c1div, betai, bpsout, xparain, fdiva, &
       zeffdiv, hldivlim, rlenmax, dz_divertor, c3div, &
       hldiv, i_hldiv
-    use fwbs_variables, only: fblhebpo, vfblkt, fdiv, fvolso, i_fw_coolant_type, &
+    use fwbs_variables, only: fblhebpo, vfblkt, f_ster_div_single, fvolso, i_fw_coolant_type, &
       dx_fw_module, i_blanket_type, blktmodel, afwi, fblli2o, nphcdin, breeder_multiplier, &
       fw_armour_thickness, roughness, fwclfr, breedmat, fblli, fblvd, &
-      iblanket_thickness, vfcblkt, breeder_f, fbllipb, fhcd, vfshld, fblhebmi, &
-      f_neut_shield, fw_th_conductivity, nblktmodti, dr_fw_wall, afwo, &
-      fvolsi, etahtp, nblktmodpo, pres_fw_coolant, emult, temp_fw_coolant_out, nblktmodpi, &
-      fblhebpi, fblss, inlet_temp, outlet_temp, fblbreed, qnuc, blpressure, &
+      iblanket_thickness, vfcblkt, breeder_f, fbllipb, f_a_fw_hcd, vfshld, fblhebmi, &
+      f_neut_shield, fw_th_conductivity, n_blkt_inboard_modules_toroidal, dr_fw_wall, afwo, &
+      fvolsi, etahtp, n_blkt_outboard_modules_poloidal, pres_fw_coolant, emult, temp_fw_coolant_out, n_blkt_inboard_modules_poloidal, &
+      fblhebpi, fblss, temp_blkt_coolant_in, temp_blkt_coolant_out, fblbreed, qnuc, pres_blkt_coolant, &
       blpressure_liq, n_liq_recirc, pnuc_fw_ratio_dcll, f_nuc_pow_bz_struct, &
       declblkt, fblhebmo, blkttype, radius_fw_channel, inuclear, declshld, hcdportsize, &
-      npdiv, f_fw_peak, primary_pumping, dr_pf_cryostat, secondary_cycle, secondary_cycle_liq, &
+      npdiv, f_fw_peak, i_coolant_pumping, dr_pf_cryostat, i_thermal_electric_conversion, secondary_cycle_liq, &
       denstl, declfw, nphcdout, i_blkt_inboard, vfpblkt, temp_fw_coolant_in, wallpf, fblbe, &
-      fhole, fwbsshape, coolp, temp_fw_max, irefprop, len_fw_channel, &
-      li6enrich, etaiso, nblktmodto, fvoldw, i_shield_mat, i_bb_liq, &
-      icooldual, ifci, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, ipump, ims, &
-      coolwh, emult
+      fhole, i_fw_blkt_vv_shape, coolp, temp_fw_max, irefprop, len_fw_channel, &
+      f_blkt_li6_enrichment, etaiso, n_blkt_outboard_modules_toroidal, fvoldw, i_shield_mat, i_blkt_liquid_breeder_type, &
+      i_blkt_dual_coolant, i_blkt_liquid_breeder_channel_type, inlet_temp_liq, outlet_temp_liq, bz_channel_conduct_liq, i_fw_blkt_shared_coolant, ims, &
+      i_blkt_coolant_type, emult
     use heat_transport_variables, only: htpmw_fw, baseel, fmgdmw, htpmw_div, &
       pwpm2, etath, vachtmw, iprimshld, fpumpdiv, pinjmax, htpmw_blkt, etatf, &
       htpmw_min, fpumpblkt, ipowerflow, htpmw_shld, fpumpshld, trithtmw, &
@@ -1896,8 +1896,8 @@ contains
        case ('bctmp')
           call parse_real_variable('bctmp', bctmp, 1.0D0, 800.0D0, &
                'First wall bulk coolant temperature (C)')
-       case ('blpressure')
-          call parse_real_variable('blpressure', blpressure, 1.0D5, 1.0D8, &
+       case ('pres_blkt_coolant')
+          call parse_real_variable('pres_blkt_coolant', pres_blkt_coolant, 1.0D5, 1.0D8, &
                'Blanket coolant pressure (Pa)')
        case ('blpressure_liq')
           call parse_real_variable('blpressure_liq', blpressure_liq, 1.0D5, 1.0D8, &
@@ -1943,8 +1943,8 @@ contains
 
           !  First wall, blanket, shield settings
 
-       case ('primary_pumping')
-          call parse_int_variable('primary_pumping', primary_pumping, 0, 3, &
+       case ('i_coolant_pumping')
+          call parse_int_variable('i_coolant_pumping', i_coolant_pumping, 0, 3, &
                'Switch for pumping of primary coolant')
        case ('htpmw_blkt')
           call parse_real_variable('htpmw_blkt', htpmw_blkt, 0.0D0, 1.0D3, &
@@ -1961,14 +1961,14 @@ contains
        case ('i_shield_mat')
          call parse_int_variable('i_shield_mat', i_shield_mat, 0, 1, &
                'Switch for shield material)')
-       case ('i_bb_liq')
-         call parse_int_variable('i_bb_liq', i_bb_liq, 0, 1, &
+       case ('i_blkt_liquid_breeder_type')
+         call parse_int_variable('i_blkt_liquid_breeder_type', i_blkt_liquid_breeder_type, 0, 1, &
                'Switch for breeding blaket liquid metal')
-       case ('icooldual')
-         call parse_int_variable('icooldual', icooldual, 0, 2, &
+       case ('i_blkt_dual_coolant')
+         call parse_int_variable('i_blkt_dual_coolant', i_blkt_dual_coolant, 0, 2, &
                'Switch for single or dual-coolant blanket)')
-       case ('ifci')
-         call parse_int_variable('ifci', ifci, 0, 2, &
+       case ('i_blkt_liquid_breeder_channel_type')
+         call parse_int_variable('i_blkt_liquid_breeder_channel_type', i_blkt_liquid_breeder_channel_type, 0, 2, &
                'Switch for blanket FCIs)')
        case ('inlet_temp_liq')
          call parse_real_variable('inlet_temp_liq', inlet_temp_liq, 508.D0, 1.5D3, &
@@ -1976,18 +1976,18 @@ contains
       case  ('outlet_temp_liq')
          call parse_real_variable('outlet_temp_liq', outlet_temp_liq, 508.D0, 1.5D3, &
                'Outlet temperature for blanket liquid metal')
-      case ('ipump')
-         call parse_int_variable('ipump', ipump, 0, 2, &
+      case ('i_fw_blkt_shared_coolant')
+         call parse_int_variable('i_fw_blkt_shared_coolant', i_fw_blkt_shared_coolant, 0, 2, &
                'Switch for same or different pumping system for FW/BB')
       case ('ims')
          call parse_int_variable('ims', ims, 0, 1, &
                ' Switch for Multi or Single Modle Segment (MMS or SMS)')
-      case ('coolwh')
-         call parse_int_variable('coolwh', coolwh, 1, 2, &
+      case ('i_blkt_coolant_type')
+         call parse_int_variable('i_blkt_coolant_type', i_blkt_coolant_type, 1, 2, &
                ' Blanket coolant type (1=He, 2=H20)')
 
-      case ('secondary_cycle')
-          call parse_int_variable('secondary_cycle', secondary_cycle, 0, 4, &
+      case ('i_thermal_electric_conversion')
+          call parse_int_variable('i_thermal_electric_conversion', i_thermal_electric_conversion, 0, 4, &
                'Switch for blanket thermodynamic model')
 
       case ('secondary_cycle_liq')
@@ -2000,26 +2000,26 @@ contains
        case ('afwo')
           call parse_real_variable('afwo', afwo, 1.0D-3, 0.05D0, &
                'O/B fw/blkt coolant channel inner radius (m)')
-       case ('inlet_temp')
-          call parse_real_variable('inlet_temp', inlet_temp, 200.0D0, 600.0D0, &
+       case ('temp_blkt_coolant_in')
+          call parse_real_variable('temp_blkt_coolant_in', temp_blkt_coolant_in, 200.0D0, 600.0D0, &
                'Coolant inlet temperature (K)')
        case ('irefprop')
           call parse_int_variable('irefprop', irefprop, 0, 1, &
                'Switch to use REFPROP routines')
-       case ('outlet_temp')
-          call parse_real_variable('outlet_temp', outlet_temp, 450.0D0, 900.0D0, &
+       case ('temp_blkt_coolant_out')
+          call parse_real_variable('temp_blkt_coolant_out', temp_blkt_coolant_out, 450.0D0, 900.0D0, &
                'Coolant outlet temperature (K)')
-       case ('nblktmodpo')
-          call parse_int_variable('nblktmodpo', nblktmodpo, 1, 16, &
+       case ('n_blkt_outboard_modules_poloidal')
+          call parse_int_variable('n_blkt_outboard_modules_poloidal', n_blkt_outboard_modules_poloidal, 1, 16, &
                'No of o/b blanket modules in poloidal direction')
-       case ('nblktmodpi')
-          call parse_int_variable('nblktmodpi', nblktmodpi, 1, 16, &
+       case ('n_blkt_inboard_modules_poloidal')
+          call parse_int_variable('n_blkt_inboard_modules_poloidal', n_blkt_inboard_modules_poloidal, 1, 16, &
                'No of i/b blanket modules in poloidal direction')
-       case ('nblktmodto')
-          call parse_int_variable('nblktmodto', nblktmodto, 8, 96, &
+       case ('n_blkt_outboard_modules_toroidal')
+          call parse_int_variable('n_blkt_outboard_modules_toroidal', n_blkt_outboard_modules_toroidal, 8, 96, &
                'No of o/b blanket modules in toroidal direction')
-       case ('nblktmodti')
-          call parse_int_variable('nblktmodti', nblktmodti, 8, 96, &
+       case ('n_blkt_inboard_modules_toroidal')
+          call parse_int_variable('n_blkt_inboard_modules_toroidal', n_blkt_inboard_modules_toroidal, 8, 96, &
                'No of i/b blanket modules in toroidal direction')
        case ('temp_fw_max')
           call parse_real_variable('temp_fw_max', temp_fw_max, 500.0D0, 2000.0D0, &
@@ -2088,11 +2088,11 @@ contains
        case ('fblvd')
           call parse_real_variable('fblvd', fblvd, 0.0D0, 1.0D0, &
                'Vanadium fraction of blanket')
-       case ('fdiv')
-          call parse_real_variable('fdiv', fdiv, 0.0D0, 1.0D0, &
+       case ('f_ster_div_single')
+          call parse_real_variable('f_ster_div_single', f_ster_div_single, 0.0D0, 1.0D0, &
                'Divertor area fraction')
-       case ('fhcd')
-          call parse_real_variable('fhcd', fhcd, 0.0D0, 1.0D0, &
+       case ('f_a_fw_hcd')
+          call parse_real_variable('f_a_fw_hcd', f_a_fw_hcd, 0.0D0, 1.0D0, &
                'HCD + diagnostics area fraction')
        case ('fhole')
           call parse_real_variable('fhole', fhole, 0.0D0, 1.0D0, &
@@ -2111,8 +2111,8 @@ contains
        case ('fwclfr')
           call parse_real_variable('fwclfr', fwclfr, 0.0D0, 1.0D0, &
                'First wall coolant fraction')
-       case ('fwbsshape')
-          call parse_int_variable('fwbsshape', fwbsshape, 1, 2, &
+       case ('i_fw_blkt_vv_shape')
+          call parse_int_variable('i_fw_blkt_vv_shape', i_fw_blkt_vv_shape, 1, 2, &
                'Switch for fw/blanket/shield/vv shape')
        case ('fw_armour_thickness')
           call parse_real_variable('fw_armour_thickness', fw_armour_thickness, 0.0D0, 1.0D0, &
@@ -2147,8 +2147,8 @@ contains
           call parse_real_variable('qnuc', qnuc, 0.0D0, 1.0D6, &
                'nuclear heating in the coils (W)')
 
-       case ('li6enrich')
-          call parse_real_variable('li6enrich', li6enrich, 7.40D0, 100.0D0, &
+       case ('f_blkt_li6_enrichment')
+          call parse_real_variable('f_blkt_li6_enrichment', f_blkt_li6_enrichment, 7.40D0, 100.0D0, &
                'Li-6 enrichment')
 
        ! CCFE hcpb BB module (also includes the CP shielding for ST)

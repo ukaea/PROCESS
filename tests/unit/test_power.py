@@ -2045,9 +2045,9 @@ class Power2Param(NamedTuple):
 
     inuclear: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
-    pradfw: Any = None
+    p_fw_rad_total_mw: Any = None
 
     qnuc: Any = None
 
@@ -2055,27 +2055,27 @@ class Power2Param(NamedTuple):
 
     emult: Any = None
 
-    praddiv: Any = None
+    p_div_rad_total_mw: Any = None
 
-    fdiv: Any = None
+    f_ster_div_single: Any = None
 
-    fhcd: Any = None
+    f_a_fw_hcd: Any = None
 
-    secondary_cycle: Any = None
+    i_thermal_electric_conversion: Any = None
 
     pnuc_cp: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_total_mw: Any = None
 
-    primary_pumping: Any = None
+    i_coolant_pumping: Any = None
 
     ptfnuc: Any = None
 
-    pnuchcd: Any = None
+    p_fw_hcd_nuclear_heat_mw: Any = None
 
     pnucshld: Any = None
 
-    pradhcd: Any = None
+    p_fw_hcd_rad_total_mw: Any = None
 
     p_fw_nuclear_heat_total_mw: Any = None
 
@@ -2244,22 +2244,22 @@ class Power2Param(NamedTuple):
             pinjmw=51.978447720428512,
             emultmw=377.93233088402548,
             inuclear=1,
-            pnucblkt=1504.711566619962,
-            pradfw=254.87601794907812,
+            p_blkt_nuclear_heat_total_mw=1504.711566619962,
+            p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
             emult=1.2690000534057617,
-            praddiv=33.119482558354782,
-            fdiv=0.115,
-            fhcd=0,
-            secondary_cycle=2,
+            p_div_rad_total_mw=33.119482558354782,
+            f_ster_div_single=0.115,
+            f_a_fw_hcd=0,
+            i_thermal_electric_conversion=2,
             pnuc_cp=0,
-            pnucdiv=182.69222981118057,
-            primary_pumping=3,
+            p_div_nuclear_heat_total_mw=182.69222981118057,
+            i_coolant_pumping=3,
             ptfnuc=0.044178296011112193,
-            pnuchcd=0,
+            p_fw_hcd_nuclear_heat_mw=0,
             pnucshld=1.3609360176065353,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=276.76827393356979,
             htpmw_shld=0.0068046800880326762,
             htpmw_blkt=0,
@@ -2346,22 +2346,22 @@ class Power2Param(NamedTuple):
             pinjmw=51.978447720428512,
             emultmw=377.8143718115644,
             inuclear=1,
-            pnucblkt=1549.9285082739402,
-            pradfw=254.87601794907812,
+            p_blkt_nuclear_heat_total_mw=1549.9285082739402,
+            p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
             emult=1.2690000534057617,
-            praddiv=33.119482558354782,
-            fdiv=0.115,
-            fhcd=0,
-            secondary_cycle=2,
+            p_div_rad_total_mw=33.119482558354782,
+            f_ster_div_single=0.115,
+            f_a_fw_hcd=0,
+            i_thermal_electric_conversion=2,
             pnuc_cp=0,
-            pnucdiv=182.6352084763719,
-            primary_pumping=3,
+            p_div_nuclear_heat_total_mw=182.6352084763719,
+            i_coolant_pumping=3,
             ptfnuc=0.045535131445547841,
-            pnuchcd=0,
+            p_fw_hcd_nuclear_heat_mw=0,
             pnucshld=1.4036212304705389,
-            pradhcd=0,
+            p_fw_hcd_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=230.95082168283884,
             htpmw_shld=0.0070181061523526943,
             htpmw_blkt=0,
@@ -2468,9 +2468,15 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "inuclear", power2param.inuclear)
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", power2param.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        power2param.p_blkt_nuclear_heat_total_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pradfw", power2param.pradfw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_rad_total_mw", power2param.p_fw_rad_total_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 
@@ -2478,27 +2484,45 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "emult", power2param.emult)
 
-    monkeypatch.setattr(fwbs_variables, "praddiv", power2param.praddiv)
+    monkeypatch.setattr(
+        fwbs_variables, "p_div_rad_total_mw", power2param.p_div_rad_total_mw
+    )
 
-    monkeypatch.setattr(fwbs_variables, "fdiv", power2param.fdiv)
+    monkeypatch.setattr(
+        fwbs_variables, "f_ster_div_single", power2param.f_ster_div_single
+    )
 
-    monkeypatch.setattr(fwbs_variables, "fhcd", power2param.fhcd)
+    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", power2param.f_a_fw_hcd)
 
-    monkeypatch.setattr(fwbs_variables, "secondary_cycle", power2param.secondary_cycle)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_thermal_electric_conversion",
+        power2param.i_thermal_electric_conversion,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnuc_cp", power2param.pnuc_cp)
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", power2param.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_total_mw",
+        power2param.p_div_nuclear_heat_total_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "primary_pumping", power2param.primary_pumping)
+    monkeypatch.setattr(
+        fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
+    )
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", power2param.ptfnuc)
 
-    monkeypatch.setattr(fwbs_variables, "pnuchcd", power2param.pnuchcd)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_hcd_nuclear_heat_mw", power2param.p_fw_hcd_nuclear_heat_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", power2param.pnucshld)
 
-    monkeypatch.setattr(fwbs_variables, "pradhcd", power2param.pradhcd)
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_hcd_rad_total_mw", power2param.p_fw_hcd_rad_total_mw
+    )
 
     monkeypatch.setattr(
         fwbs_variables,

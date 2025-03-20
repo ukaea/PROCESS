@@ -60,7 +60,7 @@ electricity have been revised extensively.
     - `MEDIUM` -- 1.261
     - `THICK` -- 1.264.
 
-`secondary_cycle` -- This switch controls how the coolant pumping power in the 
+`i_thermal_electric_conversion` -- This switch controls how the coolant pumping power in the 
 first wall and blanket is determined, and also how the calculation of the plant's 
 thermal to electric conversion efficiency (the secondary cycle thermal 
 efficiency) proceeds.
@@ -68,7 +68,7 @@ efficiency) proceeds.
 ## Thermo-hydraulic model for first wall and blanket
 
 !!! Note "Note" 
-    This is called for primary_pumping = 2 and 3
+    This is called for i_coolant_pumping = 2 and 3
 
 Summary of key variables and switches:  
 
@@ -82,13 +82,13 @@ Summary of key variables and switches:
 |    roughness epsilon     |       `roughness`       | ---                      | ---                                  |
 |     peak FW temp (K)     |         `temp_fw_peak`         | ---                      | ---                                  |
 |     maximum temp (K)     |       `temp_fw_max`       | ---                      | ---                                  |
-|        FCI switch        |           ---           | ---                      | `ifci`                               |
+|        FCI switch        |           ---           | ---                      | `i_blkt_liquid_breeder_channel_type`                               |
 |         Coolant          |      :-----------:      | ------------------------ | --------------------------           |
-|  primary coolant switch  |       `i_fw_coolant_type`       | `coolwh`                 | ---                                  |
-| secondary coolant switch |           ---           | ---                      | `i_bb_liq`                           |
-|      inlet temp (K)      |        `temp_fw_coolant_in`        | `inlet_temp`             | `inlet_temp_liq`                     |
-|     outlet temp (K)      |       `temp_fw_coolant_out`        | `outlet_temp`            | `outlet_temp_liq`                    |
-|      pressure (Pa)       |      `pres_fw_coolant`       | `blpressure`             | `blpressure_liq`                     |
+|  primary coolant switch  |       `i_fw_coolant_type`       | `i_blkt_coolant_type`                 | ---                                  |
+| secondary coolant switch |           ---           | ---                      | `i_blkt_liquid_breeder_type`                           |
+|      inlet temp (K)      |        `temp_fw_coolant_in`        | `temp_blkt_coolant_in`             | `inlet_temp_liq`                     |
+|     outlet temp (K)      |       `temp_fw_coolant_out`        | `temp_blkt_coolant_out`            | `outlet_temp_liq`                    |
+|      pressure (Pa)       |      `pres_fw_coolant`       | `pres_blkt_coolant`             | `blpressure_liq`                     |
 
 The default thermo-hydraulic model assumes that a solid breeder is in use, with both the first wall and the breeding blanket using helium as a coolant.
 This can be changed using the switches detailed in the following subsection. 
@@ -143,11 +143,11 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
 The temperature difference between the channel inner wall (film temperature) and the bulk coolant is calculated using the heat transfer coefficient, which is derived using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation).  The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation.  The thermal conductivity of Eurofer is used, from "Fusion Demo Interim Structural Design Criteria - Appendix A Material Design Limit Data", F. Tavassoli, TW4-TTMS-005-D01, 2004"
 
 !!! Note "Note" 
-    The pressure drop calculation is only performed for primary_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
+    The pressure drop calculation is only performed for i_coolant_pumping = 2, as for 3 it is used as an input, as explained in the heat transport section.
 
 ### Model Switches
 
-There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'icooldual' (default=0):
+There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_dual_coolant' (default=0):
     0.   Solid breeder - nuclear heating in the blanket is exctrated by the primary coolant.
     1.   Liquid metal breeder, single-coolant 
         - nuclear heating in the blanket is exctrated by the primary coolant.
@@ -158,12 +158,12 @@ There are three blanket model options, chosen by the user to match their selecte
 
 The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
 It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated seperately. 
-The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'ipump' (default=0): 
-    0.   Same coolant for FW and BB ('i_fw_coolant_type`=`coolwh`)
-    1.   Different coolant for FW and BB ('i_fw_coolant_type`/=`coolwh`) 
+The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'i_fw_blkt_shared_coolant' (default=0): 
+    0.   Same coolant for FW and BB ('i_fw_coolant_type`=`i_blkt_coolant_type`)
+    1.   Different coolant for FW and BB ('i_fw_coolant_type`/=`i_blkt_coolant_type`) 
 
 !!! Note "Note" 
-    For the dual-coolant blanket the 'ipump' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
+    For the dual-coolant blanket the 'i_fw_blkt_shared_coolant' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
 
 The user can select the number poloidal and toroidal modules for the IB and OB BB. The 'ims' switch can be set to 1 for a single-module-segment blanket (default=0):
     0. Multi-module segment 
@@ -171,14 +171,14 @@ The user can select the number poloidal and toroidal modules for the IB and OB B
 
 |   Variable   | Units | Itvar. | Default | Description                                              |
 | :----------: | :---: | ------ | ------- | -------------------------------------------------------- |
-| `nblktmodpi` |  ---  |        | 7       | Number of inboard blanket modules in poloidal direction  |
-| `nblktmodpo` |  ---  |        | 8       | Number of outboard blanket modules in poloidal direction |
-| `nblktmodti` |  ---  |        | 32      | Number of inboard blanket modules in toroidal direction  |
-| `nblktmodto` |  ---  |        | 48      | Number of outboard blanket modules in toroidal direction |
+| `n_blkt_inboard_modules_poloidal` |  ---  |        | 7       | Number of inboard blanket modules in poloidal direction  |
+| `n_blkt_outboard_modules_poloidal` |  ---  |        | 8       | Number of outboard blanket modules in poloidal direction |
+| `n_blkt_inboard_modules_toroidal` |  ---  |        | 32      | Number of inboard blanket modules in toroidal direction  |
+| `n_blkt_outboard_modules_toroidal` |  ---  |        | 48      | Number of outboard blanket modules in toroidal direction |
 
 #### Liquid Breeder or Dual Coolant
 
-There are two material options for the liquid breeder/coolant, chosen by the user to match their selected blanket design using the switch 'i_bb_liq' (default=0):
+There are two material options for the liquid breeder/coolant, chosen by the user to match their selected blanket design using the switch 'i_blkt_liquid_breeder_type' (default=0):
     0.  Lead-Lithium 
     1.  Lithium (needs testing)    
 Both options use the mid-temperature of the metal to find the following properties: density, specific heat, thermal conductivity, dynamic viscosity and electrical conductivity. 
@@ -195,11 +195,11 @@ The Hartmann number is also calculated (using the magnetic feild strength in the
 
 #### Flow Channel Inserts for Liquid Metal Breeder
 
-There are three model options, chosen by the user to match their selected blanket design using the switch 'ifci' (default=0):
+There are three model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_liquid_breeder_channel_type' (default=0):
     0.   No FCIs used. Conductivity of Eurofer steel is assumed for MHD pressure drop calculations in the liquid metal breeder.
     1.   FCIs used, assumed to be perfectly electrically insulating.  
     2.   FCIs used, with conductivity chosen by the user (`bz_channel_conduct_liq`).
 
 |         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
 | :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
-| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
+| `bz_channel_conduct_liq` | A V-1 m-1 | 72     | i_blkt_liquid_breeder_channel_type = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |

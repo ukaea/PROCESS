@@ -53,17 +53,17 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     denstl: Any = None
 
-    whtblkt: Any = None
+    m_blkt_total: Any = None
 
-    volblkt: Any = None
+    vol_blkt_total: Any = None
 
     whtshld: Any = None
 
     volshld: Any = None
 
-    vvmass: Any = None
+    m_vv: Any = None
 
-    vdewin: Any = None
+    vol_vv: Any = None
 
     fw_armour_thickness: Any = None
 
@@ -141,12 +141,12 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
             denstl=7800,
-            whtblkt=3501027.3252278985,
-            volblkt=1397.9003011502937,
+            m_blkt_total=3501027.3252278985,
+            vol_blkt_total=1397.9003011502937,
             whtshld=2294873.8131476045,
             volshld=735.53647857295027,
-            vvmass=9043937.8018644415,
-            vdewin=1159.4792053672361,
+            m_vv=9043937.8018644415,
+            vol_vv=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0,
             f_a_fw_coolant_inboard=0,
@@ -190,12 +190,12 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
             denstl=7800,
-            whtblkt=3507503.3737008357,
-            volblkt=1400.4860764869636,
+            m_blkt_total=3507503.3737008357,
+            vol_blkt_total=1400.4860764869636,
             whtshld=2297808.3935174854,
             volshld=736.47704920432227,
-            vvmass=9056931.558219457,
-            vdewin=1161.1450715665972,
+            m_vv=9056931.558219457,
+            vol_vv=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
             ptfnuc=0.044184461825198453,
             f_a_fw_coolant_inboard=0.31415926535897931,
@@ -286,17 +286,21 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(fwbs_variables, "denstl", nuclearheatingmagnetsparam.denstl)
 
-    monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingmagnetsparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", nuclearheatingmagnetsparam.m_blkt_total
+    )
 
-    monkeypatch.setattr(fwbs_variables, "volblkt", nuclearheatingmagnetsparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", nuclearheatingmagnetsparam.vol_blkt_total
+    )
 
     monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingmagnetsparam.whtshld)
 
     monkeypatch.setattr(fwbs_variables, "volshld", nuclearheatingmagnetsparam.volshld)
 
-    monkeypatch.setattr(fwbs_variables, "vvmass", nuclearheatingmagnetsparam.vvmass)
+    monkeypatch.setattr(fwbs_variables, "m_vv", nuclearheatingmagnetsparam.m_vv)
 
-    monkeypatch.setattr(fwbs_variables, "vdewin", nuclearheatingmagnetsparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", nuclearheatingmagnetsparam.vol_vv)
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -493,15 +497,15 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
 
 
 class NuclearHeatingBlanketParam(NamedTuple):
-    whtblkt: Any = None
+    m_blkt_total: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
     fusion_power: Any = None
 
     exp_blanket: Any = None
 
-    expected_pnucblkt: Any = None
+    expected_p_blkt_nuclear_heat_total_mw: Any = None
 
     expected_exp_blanket: Any = None
 
@@ -510,19 +514,19 @@ class NuclearHeatingBlanketParam(NamedTuple):
     "nuclearheatingblanketparam",
     (
         NuclearHeatingBlanketParam(
-            whtblkt=3501027.3252278985,
-            pnucblkt=0,
+            m_blkt_total=3501027.3252278985,
+            p_blkt_nuclear_heat_total_mw=0,
             fusion_power=1986.0623241661431,
             exp_blanket=0,
-            expected_pnucblkt=1517.0907688379014,
+            expected_p_blkt_nuclear_heat_total_mw=1517.0907688379014,
             expected_exp_blanket=0.99982809071915879,
         ),
         NuclearHeatingBlanketParam(
-            whtblkt=3507503.3737008357,
-            pnucblkt=1504.9215740808861,
+            m_blkt_total=3507503.3737008357,
+            p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             fusion_power=1985.4423932312809,
             exp_blanket=0.99982809071915879,
-            expected_pnucblkt=1516.6213709741428,
+            expected_p_blkt_nuclear_heat_total_mw=1516.6213709741428,
             expected_exp_blanket=0.99983082524994527,
         ),
     ),
@@ -540,9 +544,15 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "whtblkt", nuclearheatingblanketparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", nuclearheatingblanketparam.m_blkt_total
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", nuclearheatingblanketparam.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        nuclearheatingblanketparam.p_blkt_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingblanketparam.fusion_power
@@ -554,8 +564,8 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
 
     ccfe_hcpb.nuclear_heating_blanket()
 
-    assert fwbs_variables.pnucblkt == pytest.approx(
-        nuclearheatingblanketparam.expected_pnucblkt
+    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingblanketparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
     assert ccfe_hcpb_module.exp_blanket == pytest.approx(
@@ -707,11 +717,11 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
 
 class NuclearHeatingDivertorParam(NamedTuple):
-    fdiv: Any = None
+    f_ster_div_single: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_total_mw: Any = None
 
-    pnuchcd: Any = None
+    p_fw_hcd_nuclear_heat_mw: Any = None
 
     idivrt: Any = None
 
@@ -719,29 +729,29 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     ip: Any = None
 
-    expected_pnucdiv: Any = None
+    expected_p_div_nuclear_heat_total_mw: Any = None
 
 
 @pytest.mark.parametrize(
     "nuclearheatingdivertorparam",
     (
         NuclearHeatingDivertorParam(
-            fdiv=0.115,
-            pnucdiv=0,
-            pnuchcd=0,
+            f_ster_div_single=0.115,
+            p_div_nuclear_heat_total_mw=0,
+            p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1986.0623241661431,
             ip=0,
-            expected_pnucdiv=182.71773382328519,
+            expected_p_div_nuclear_heat_total_mw=182.71773382328519,
         ),
         NuclearHeatingDivertorParam(
-            fdiv=0.115,
-            pnucdiv=182.71773382328519,
-            pnuchcd=0,
+            f_ster_div_single=0.115,
+            p_div_nuclear_heat_total_mw=182.71773382328519,
+            p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1985.4423932312809,
             ip=0,
-            expected_pnucdiv=182.66070017727785,
+            expected_p_div_nuclear_heat_total_mw=182.66070017727785,
         ),
     ),
 )
@@ -758,11 +768,23 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "fdiv", nuclearheatingdivertorparam.fdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_ster_div_single",
+        nuclearheatingdivertorparam.f_ster_div_single,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", nuclearheatingdivertorparam.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_total_mw",
+        nuclearheatingdivertorparam.p_div_nuclear_heat_total_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnuchcd", nuclearheatingdivertorparam.pnuchcd)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_hcd_nuclear_heat_mw",
+        nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
 
@@ -774,8 +796,8 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
 
     ccfe_hcpb.nuclear_heating_divertor()
 
-    assert fwbs_variables.pnucdiv == pytest.approx(
-        nuclearheatingdivertorparam.expected_pnucdiv
+    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingdivertorparam.expected_p_div_nuclear_heat_total_mw
     )
 
 
@@ -786,29 +808,29 @@ class PowerflowCalcParam(NamedTuple):
 
     porbitlossmw: Any = None
 
-    fdiv: Any = None
+    f_ster_div_single: Any = None
 
-    praddiv: Any = None
+    p_div_rad_total_mw: Any = None
 
-    pradhcd: Any = None
+    p_fw_hcd_rad_total_mw: Any = None
 
-    fhcd: Any = None
+    f_a_fw_hcd: Any = None
 
-    pradfw: Any = None
+    p_fw_rad_total_mw: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
-    outlet_temp: Any = None
+    temp_blkt_coolant_out: Any = None
 
-    blpressure: Any = None
+    pres_blkt_coolant: Any = None
 
-    primary_pumping: Any = None
+    i_coolant_pumping: Any = None
 
     p_fw_nuclear_heat_total_mw: Any = None
 
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
 
-    pnucdiv: Any = None
+    p_div_nuclear_heat_total_mw: Any = None
 
     pnucshld: Any = None
 
@@ -860,9 +882,9 @@ class PowerflowCalcParam(NamedTuple):
 
     ofile: Any = None
 
-    expected_praddiv: Any = None
+    expected_p_div_rad_total_mw: Any = None
 
-    expected_pradfw: Any = None
+    expected_p_fw_rad_total_mw: Any = None
 
     expected_psurffwi: Any = None
 
@@ -882,18 +904,18 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
             porbitlossmw=0,
-            fdiv=0.115,
-            praddiv=0,
-            pradhcd=0,
-            fhcd=0,
-            pradfw=0,
-            coolwh=1,
-            outlet_temp=823,
-            blpressure=15500000,
-            primary_pumping=3,
+            f_ster_div_single=0.115,
+            p_div_rad_total_mw=0,
+            p_fw_hcd_rad_total_mw=0,
+            f_a_fw_hcd=0,
+            p_fw_rad_total_mw=0,
+            i_blkt_coolant_type=1,
+            temp_blkt_coolant_out=823,
+            pres_blkt_coolant=15500000,
+            i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
-            pnucblkt=1504.9215740808861,
-            pnucdiv=182.71773382328519,
+            p_blkt_nuclear_heat_total_mw=1504.9215740808861,
+            p_div_nuclear_heat_total_mw=182.71773382328519,
             pnucshld=1.3611259588044891,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
@@ -919,8 +941,8 @@ class PowerflowCalcParam(NamedTuple):
             htpmw_fw_blkt=0,
             ip=0,
             ofile=11,
-            expected_praddiv=33.056596978820579,
-            expected_pradfw=254.39207240222791,
+            expected_p_div_rad_total_mw=33.056596978820579,
+            expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
             expected_htpmw_shld=0.0068056297940224456,
@@ -931,18 +953,18 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_outboard=1168.1172772224481,
             a_fw_total=1891.2865102700493,
             porbitlossmw=0,
-            fdiv=0.115,
-            praddiv=33.056596978820579,
-            pradhcd=0,
-            fhcd=0,
-            pradfw=254.39207240222791,
-            coolwh=1,
-            outlet_temp=823,
-            blpressure=15500000,
-            primary_pumping=3,
+            f_ster_div_single=0.115,
+            p_div_rad_total_mw=33.056596978820579,
+            p_fw_hcd_rad_total_mw=0,
+            f_a_fw_hcd=0,
+            p_fw_rad_total_mw=254.39207240222791,
+            i_blkt_coolant_type=1,
+            temp_blkt_coolant_out=823,
+            pres_blkt_coolant=15500000,
+            i_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
-            pnucblkt=1550.1447895848396,
-            pnucdiv=182.66070017727785,
+            p_blkt_nuclear_heat_total_mw=1550.1447895848396,
+            p_div_nuclear_heat_total_mw=182.66070017727785,
             pnucshld=1.4038170956592293,
             etaiso=0.90000000000000002,
             pnuc_cp_sh=0,
@@ -968,8 +990,8 @@ class PowerflowCalcParam(NamedTuple):
             htpmw_fw_blkt=202.00455086503842,
             ip=0,
             ofile=11,
-            expected_praddiv=33.056596978820579,
-            expected_pradfw=254.39207240222791,
+            expected_p_div_rad_total_mw=33.056596978820579,
+            expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
             expected_htpmw_shld=0.007019085478296147,
@@ -1001,24 +1023,42 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         current_drive_variables, "porbitlossmw", powerflowcalcparam.porbitlossmw
     )
 
-    monkeypatch.setattr(fwbs_variables, "fdiv", powerflowcalcparam.fdiv)
-
-    monkeypatch.setattr(fwbs_variables, "praddiv", powerflowcalcparam.praddiv)
-
-    monkeypatch.setattr(fwbs_variables, "pradhcd", powerflowcalcparam.pradhcd)
-
-    monkeypatch.setattr(fwbs_variables, "fhcd", powerflowcalcparam.fhcd)
-
-    monkeypatch.setattr(fwbs_variables, "pradfw", powerflowcalcparam.pradfw)
-
-    monkeypatch.setattr(fwbs_variables, "coolwh", powerflowcalcparam.coolwh)
-
-    monkeypatch.setattr(fwbs_variables, "outlet_temp", powerflowcalcparam.outlet_temp)
-
-    monkeypatch.setattr(fwbs_variables, "blpressure", powerflowcalcparam.blpressure)
+    monkeypatch.setattr(
+        fwbs_variables, "f_ster_div_single", powerflowcalcparam.f_ster_div_single
+    )
 
     monkeypatch.setattr(
-        fwbs_variables, "primary_pumping", powerflowcalcparam.primary_pumping
+        fwbs_variables, "p_div_rad_total_mw", powerflowcalcparam.p_div_rad_total_mw
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_fw_hcd_rad_total_mw",
+        powerflowcalcparam.p_fw_hcd_rad_total_mw,
+    )
+
+    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", powerflowcalcparam.f_a_fw_hcd)
+
+    monkeypatch.setattr(
+        fwbs_variables, "p_fw_rad_total_mw", powerflowcalcparam.p_fw_rad_total_mw
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", powerflowcalcparam.i_blkt_coolant_type
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables,
+        "temp_blkt_coolant_out",
+        powerflowcalcparam.temp_blkt_coolant_out,
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables, "pres_blkt_coolant", powerflowcalcparam.pres_blkt_coolant
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables, "i_coolant_pumping", powerflowcalcparam.i_coolant_pumping
     )
 
     monkeypatch.setattr(
@@ -1027,9 +1067,17 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", powerflowcalcparam.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        powerflowcalcparam.p_blkt_nuclear_heat_total_mw,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "pnucdiv", powerflowcalcparam.pnucdiv)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_div_nuclear_heat_total_mw",
+        powerflowcalcparam.p_div_nuclear_heat_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "pnucshld", powerflowcalcparam.pnucshld)
 
@@ -1109,9 +1157,13 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.powerflow_calc(False)
 
-    assert fwbs_variables.praddiv == pytest.approx(powerflowcalcparam.expected_praddiv)
+    assert fwbs_variables.p_div_rad_total_mw == pytest.approx(
+        powerflowcalcparam.expected_p_div_rad_total_mw
+    )
 
-    assert fwbs_variables.pradfw == pytest.approx(powerflowcalcparam.expected_pradfw)
+    assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
+        powerflowcalcparam.expected_p_fw_rad_total_mw
+    )
 
     assert fwbs_variables.psurffwi == pytest.approx(
         powerflowcalcparam.expected_psurffwi
@@ -1343,7 +1395,7 @@ class TbrShimwellParam(NamedTuple):
 
     breeder_f: Any = None
 
-    li6enrich: Any = None
+    f_blkt_li6_enrichment: Any = None
 
     expected_tbr: Any = None
 
@@ -1361,7 +1413,7 @@ class TbrShimwellParam(NamedTuple):
             outfile=11,
             iblanket_thickness=1,
             breeder_f=0.56366688384345121,
-            li6enrich=82.131743925121199,
+            f_blkt_li6_enrichment=82.131743925121199,
             expected_tbr=1.1284864235692258,
         ),
     ),
@@ -1398,7 +1450,7 @@ def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
     tbr = ccfe_hcpb.tbr_shimwell(
         iblanket_thickness=tbrshimwellparam.iblanket_thickness,
         breeder_f=tbrshimwellparam.breeder_f,
-        li6enrich=tbrshimwellparam.li6enrich,
+        f_blkt_li6_enrichment=tbrshimwellparam.f_blkt_li6_enrichment,
         output=False,
     )
 
@@ -1429,21 +1481,21 @@ class ComponentMassesParam(NamedTuple):
     a_fw_outboard: Any = None
     dr_fw_outboard: Any = None
     a_fw_total: Any = None
-    volblkt: Any = None
+    vol_blkt_total: Any = None
     vfblkt: Any = None
-    whtblbe: Any = None
-    whtblss: Any = None
+    m_blkt_beryllium: Any = None
+    m_blkt_steel_total: Any = None
     denstl: Any = None
-    whtblkt: Any = None
+    m_blkt_total: Any = None
     volshld: Any = None
     vfshld: Any = None
-    coolmass: Any = None
+    m_fw_blkt_div_coolant_total: Any = None
     fwclfr: Any = None
     breeder_f: Any = None
     breeder_multiplier: Any = None
-    whtbltibe12: Any = None
-    whtblli4sio4: Any = None
-    wtblli2o: Any = None
+    m_blkt_tibe12: Any = None
+    m_blkt_li4sio4: Any = None
+    m_blkt_li2o: Any = None
     vfcblkt: Any = None
     vfpblkt: Any = None
     whtshld: Any = None
@@ -1453,8 +1505,8 @@ class ComponentMassesParam(NamedTuple):
     fw_armour_thickness: Any = None
     fw_armour_mass: Any = None
     armour_fw_bl_mass: Any = None
-    volblkti: Any = None
-    volblkto: Any = None
+    vol_blkt_inboard: Any = None
+    vol_blkt_outboard: Any = None
     i_blkt_inboard: Any = None
     fblhebmi: Any = None
     fblhebpi: Any = None
@@ -1469,19 +1521,19 @@ class ComponentMassesParam(NamedTuple):
     f_a_fw_coolant_inboard: Any = None
     f_a_fw_coolant_outboard: Any = None
     vol_fw_total: Any = None
-    fblss_ccfe: Any = None
-    fblli2sio4: Any = None
-    fbltibe12: Any = None
+    f_vol_blkt_steel: Any = None
+    f_vol_blkt_li4sio4: Any = None
+    f_vol_blkt_tibe12: Any = None
     expected_divsur: Any = None
     expected_divmas: Any = None
-    expected_whtblbe: Any = None
-    expected_whtblss: Any = None
-    expected_whtblkt: Any = None
-    expected_coolmass: Any = None
+    expected_m_blkt_beryllium: Any = None
+    expected_m_blkt_steel_total: Any = None
+    expected_m_blkt_total: Any = None
+    expected_m_fw_blkt_div_coolant_total: Any = None
     expected_fwclfr: Any = None
-    expected_whtbltibe12: Any = None
+    expected_m_blkt_tibe12: Any = None
     expected_whtblli4sio4: Any = None
-    expected_wtblli2o: Any = None
+    expected_m_blkt_li2o: Any = None
     expected_whtshld: Any = None
     expected_wpenshld: Any = None
     expected_m_fw_total: Any = None
@@ -1489,8 +1541,8 @@ class ComponentMassesParam(NamedTuple):
     expected_fw_armour_mass: Any = None
     expected_armour_fw_bl_mass: Any = None
     expected_fblss_ccfe: Any = None
-    expected_fblli2sio4: Any = None
-    expected_fbltibe12: Any = None
+    expected_f_vol_blkt_li4sio4: Any = None
+    expected_f_vol_blkt_tibe12: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1520,21 +1572,21 @@ class ComponentMassesParam(NamedTuple):
             a_fw_outboard=838.00728058362097,
             dr_fw_outboard=0.018000000000000002,
             a_fw_total=1343.9683762356615,
-            volblkt=1182.5433772195902,
+            vol_blkt_total=1182.5433772195902,
             vfblkt=0.25,
-            whtblbe=0,
-            whtblss=0,
+            m_blkt_beryllium=0,
+            m_blkt_steel_total=0,
             denstl=7800,
-            whtblkt=0,
+            m_blkt_total=0,
             volshld=783.69914576548854,
             vfshld=0.60000000000000009,
-            coolmass=0,
+            m_fw_blkt_div_coolant_total=0,
             fwclfr=0.14999999999999999,
             breeder_f=0.5,
             breeder_multiplier=0.75,
-            whtbltibe12=0,
-            whtblli4sio4=0,
-            wtblli2o=0,
+            m_blkt_tibe12=0,
+            m_blkt_li4sio4=0,
+            m_blkt_li2o=0,
             vfcblkt=0.052949999999999997,
             vfpblkt=0.10000000000000001,
             whtshld=0,
@@ -1544,8 +1596,8 @@ class ComponentMassesParam(NamedTuple):
             fw_armour_thickness=0.0050000000000000001,
             fw_armour_mass=0,
             armour_fw_bl_mass=0,
-            volblkti=315.83946385183026,
-            volblkto=866.70391336775992,
+            vol_blkt_inboard=315.83946385183026,
+            vol_blkt_outboard=866.70391336775992,
             i_blkt_inboard=1,
             fblhebmi=0.40000000000000002,
             fblhebpi=0.65949999999999998,
@@ -1560,19 +1612,19 @@ class ComponentMassesParam(NamedTuple):
             f_a_fw_coolant_inboard=0,
             f_a_fw_coolant_outboard=0,
             vol_fw_total=0,
-            fblss_ccfe=0,
-            fblli2sio4=0,
-            fbltibe12=0,
+            f_vol_blkt_steel=0,
+            f_vol_blkt_li4sio4=0,
+            f_vol_blkt_tibe12=0,
             expected_divsur=148.78582807401261,
             expected_divmas=36452.527878133093,
-            expected_whtblbe=1002205.5121936026,
-            expected_whtblss=895173.51112145756,
-            expected_whtblkt=2961668.0628126911,
-            expected_coolmass=1161.8025382862772,
+            expected_m_blkt_beryllium=1002205.5121936026,
+            expected_m_blkt_steel_total=895173.51112145756,
+            expected_m_blkt_total=2961668.0628126911,
+            expected_m_fw_blkt_div_coolant_total=1161.8025382862772,
             expected_fwclfr=0,
-            expected_whtbltibe12=1002205.5121936026,
+            expected_m_blkt_tibe12=1002205.5121936026,
             expected_whtblli4sio4=1064289.0394976311,
-            expected_wtblli2o=1064289.0394976311,
+            expected_m_blkt_li2o=1064289.0394976311,
             expected_whtshld=2445141.3347883238,
             expected_wpenshld=2445141.3347883238,
             expected_m_fw_total=188693.16002348688,
@@ -1580,8 +1632,8 @@ class ComponentMassesParam(NamedTuple):
             expected_fw_armour_mass=112982.36729823884,
             expected_armour_fw_bl_mass=3263343.5901344167,
             expected_fblss_ccfe=0.097049999999999997,
-            expected_fblli2sio4=0.375,
-            expected_fbltibe12=0.375,
+            expected_f_vol_blkt_li4sio4=0.375,
+            expected_f_vol_blkt_tibe12=0.375,
         ),
     ),
 )
@@ -1634,25 +1686,39 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )
     monkeypatch.setattr(build_variables, "a_fw_total", componentmassesparam.a_fw_total)
-    monkeypatch.setattr(fwbs_variables, "volblkt", componentmassesparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", componentmassesparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
-    monkeypatch.setattr(fwbs_variables, "whtblbe", componentmassesparam.whtblbe)
-    monkeypatch.setattr(fwbs_variables, "whtblss", componentmassesparam.whtblss)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_beryllium", componentmassesparam.m_blkt_beryllium
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_steel_total", componentmassesparam.m_blkt_steel_total
+    )
     monkeypatch.setattr(fwbs_variables, "denstl", componentmassesparam.denstl)
-    monkeypatch.setattr(fwbs_variables, "whtblkt", componentmassesparam.whtblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_total", componentmassesparam.m_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", componentmassesparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vfshld", componentmassesparam.vfshld)
-    monkeypatch.setattr(fwbs_variables, "coolmass", componentmassesparam.coolmass)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "m_fw_blkt_div_coolant_total",
+        componentmassesparam.m_fw_blkt_div_coolant_total,
+    )
     monkeypatch.setattr(fwbs_variables, "fwclfr", componentmassesparam.fwclfr)
     monkeypatch.setattr(fwbs_variables, "breeder_f", componentmassesparam.breeder_f)
     monkeypatch.setattr(
         fwbs_variables, "breeder_multiplier", componentmassesparam.breeder_multiplier
     )
-    monkeypatch.setattr(fwbs_variables, "whtbltibe12", componentmassesparam.whtbltibe12)
     monkeypatch.setattr(
-        fwbs_variables, "whtblli4sio4", componentmassesparam.whtblli4sio4
+        fwbs_variables, "m_blkt_tibe12", componentmassesparam.m_blkt_tibe12
     )
-    monkeypatch.setattr(fwbs_variables, "wtblli2o", componentmassesparam.wtblli2o)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_li4sio4", componentmassesparam.m_blkt_li4sio4
+    )
+    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", componentmassesparam.m_blkt_li2o)
     monkeypatch.setattr(fwbs_variables, "vfcblkt", componentmassesparam.vfcblkt)
     monkeypatch.setattr(fwbs_variables, "vfpblkt", componentmassesparam.vfpblkt)
     monkeypatch.setattr(fwbs_variables, "whtshld", componentmassesparam.whtshld)
@@ -1670,8 +1736,12 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "armour_fw_bl_mass", componentmassesparam.armour_fw_bl_mass
     )
-    monkeypatch.setattr(fwbs_variables, "volblkti", componentmassesparam.volblkti)
-    monkeypatch.setattr(fwbs_variables, "volblkto", componentmassesparam.volblkto)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_inboard", componentmassesparam.vol_blkt_inboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", componentmassesparam.vol_blkt_outboard
+    )
     monkeypatch.setattr(
         fwbs_variables, "i_blkt_inboard", componentmassesparam.i_blkt_inboard
     )
@@ -1700,9 +1770,15 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "vol_fw_total", componentmassesparam.vol_fw_total
     )
-    monkeypatch.setattr(fwbs_variables, "fblss_ccfe", componentmassesparam.fblss_ccfe)
-    monkeypatch.setattr(fwbs_variables, "fblli2sio4", componentmassesparam.fblli2sio4)
-    monkeypatch.setattr(fwbs_variables, "fbltibe12", componentmassesparam.fbltibe12)
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_steel", componentmassesparam.f_vol_blkt_steel
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_li4sio4", componentmassesparam.f_vol_blkt_li4sio4
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "f_vol_blkt_tibe12", componentmassesparam.f_vol_blkt_tibe12
+    )
 
     ccfe_hcpb.component_masses()
 
@@ -1712,27 +1788,27 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert divertor_variables.divmas == pytest.approx(
         componentmassesparam.expected_divmas
     )
-    assert fwbs_variables.whtblbe == pytest.approx(
-        componentmassesparam.expected_whtblbe
+    assert fwbs_variables.m_blkt_beryllium == pytest.approx(
+        componentmassesparam.expected_m_blkt_beryllium
     )
-    assert fwbs_variables.whtblss == pytest.approx(
-        componentmassesparam.expected_whtblss
+    assert fwbs_variables.m_blkt_steel_total == pytest.approx(
+        componentmassesparam.expected_m_blkt_steel_total
     )
-    assert fwbs_variables.whtblkt == pytest.approx(
-        componentmassesparam.expected_whtblkt
+    assert fwbs_variables.m_blkt_total == pytest.approx(
+        componentmassesparam.expected_m_blkt_total
     )
-    assert fwbs_variables.coolmass == pytest.approx(
-        componentmassesparam.expected_coolmass
+    assert fwbs_variables.m_fw_blkt_div_coolant_total == pytest.approx(
+        componentmassesparam.expected_m_fw_blkt_div_coolant_total
     )
     assert fwbs_variables.fwclfr == pytest.approx(componentmassesparam.expected_fwclfr)
-    assert fwbs_variables.whtbltibe12 == pytest.approx(
-        componentmassesparam.expected_whtbltibe12
+    assert fwbs_variables.m_blkt_tibe12 == pytest.approx(
+        componentmassesparam.expected_m_blkt_tibe12
     )
-    assert fwbs_variables.whtblli4sio4 == pytest.approx(
+    assert fwbs_variables.m_blkt_li4sio4 == pytest.approx(
         componentmassesparam.expected_whtblli4sio4
     )
-    assert fwbs_variables.wtblli2o == pytest.approx(
-        componentmassesparam.expected_wtblli2o
+    assert fwbs_variables.m_blkt_li2o == pytest.approx(
+        componentmassesparam.expected_m_blkt_li2o
     )
     assert fwbs_variables.whtshld == pytest.approx(
         componentmassesparam.expected_whtshld
@@ -1752,12 +1828,12 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.armour_fw_bl_mass == pytest.approx(
         componentmassesparam.expected_armour_fw_bl_mass
     )
-    assert fwbs_variables.fblss_ccfe == pytest.approx(
+    assert fwbs_variables.f_vol_blkt_steel == pytest.approx(
         componentmassesparam.expected_fblss_ccfe
     )
-    assert fwbs_variables.fblli2sio4 == pytest.approx(
-        componentmassesparam.expected_fblli2sio4
+    assert fwbs_variables.f_vol_blkt_li4sio4 == pytest.approx(
+        componentmassesparam.expected_f_vol_blkt_li4sio4
     )
-    assert fwbs_variables.fbltibe12 == pytest.approx(
-        componentmassesparam.expected_fbltibe12
+    assert fwbs_variables.f_vol_blkt_tibe12 == pytest.approx(
+        componentmassesparam.expected_f_vol_blkt_tibe12
     )

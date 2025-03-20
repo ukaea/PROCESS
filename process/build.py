@@ -1996,7 +1996,7 @@ class Build:
         hfw = 0.5e0 * (htop + hbot)
 
         if (physics_variables.itart == 1) or (
-            fwbs_variables.fwbsshape == 1
+            fwbs_variables.i_fw_blkt_vv_shape == 1
         ):  # D-shaped
             #  Major radius to outer edge of inboard section
             r1 = (
@@ -2059,18 +2059,22 @@ class Build:
         if physics_variables.idivrt == 2:
             # Double null configuration
             build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0
+                - 2.0e0 * fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_hcd
             )
             build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0 - 2.0e0 * fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0
+                - 2.0e0 * fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_hcd
             )
         else:
             # Single null configuration
             build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
             )
             build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0 - fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
             )
 
         build_variables.a_fw_total = (
@@ -2078,8 +2082,8 @@ class Build:
         )
 
         if build_variables.a_fw_outboard <= 0.0e0:
-            error_handling.fdiags[0] = fwbs_variables.fdiv
-            error_handling.fdiags[1] = fwbs_variables.fhcd
+            error_handling.fdiags[0] = fwbs_variables.f_ster_div_single
+            error_handling.fdiags[1] = fwbs_variables.f_a_fw_hcd
             error_handling.report_error(61)
 
         #

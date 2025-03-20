@@ -31,7 +31,7 @@ class TestStructure:
         tfmass: float = 21234909.756419446
         m_fw_total: float = 224802.80270851994
         blmass: float = 3501027.3252278985
-        coolmass: float = 1199.6389920083477
+        m_fw_blkt_div_coolant_total: float = 1199.6389920083477
         dewmass: float = 16426726.727684354
         i_tf_sup: int = 1
         i_pf_conductor: int = 0
@@ -58,7 +58,7 @@ class TestStructure:
             tfmass,
             m_fw_total,
             blmass,
-            coolmass,
+            m_fw_blkt_div_coolant_total,
             dewmass,
             output=False,
         )

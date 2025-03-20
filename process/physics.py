@@ -2149,14 +2149,22 @@ class Physics:
             if physics_variables.idivrt == 2:
                 # Double null configuration
                 physics_variables.pflux_fw_neutron_mw = (
-                    (1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv)
+                    (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - 2.0e0 * fwbs_variables.f_ster_div_single
+                    )
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
                 physics_variables.pflux_fw_neutron_mw = (
-                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_ster_div_single
+                    )
                     * physics_variables.neutron_power_total
                     / build_variables.a_fw_total
                 )
@@ -2465,19 +2473,31 @@ class Physics:
             if physics_variables.idivrt == 2:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.pflux_fw_rad_mw = (
-                    1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
+                    1.0e0
+                    - fwbs_variables.f_a_fw_hcd
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
                 ) * physics_variables.p_plasma_rad_mw / build_variables.a_fw_total + (
-                    1.0e0 - fwbs_variables.fhcd - 2.0e0 * fwbs_variables.fdiv
+                    1.0e0
+                    - fwbs_variables.f_a_fw_hcd
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
                 ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
                     build_variables.a_fw_total
                 )
             else:
                 # Single null configuration - including SoL radaition
                 physics_variables.pflux_fw_rad_mw = (
-                    (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_ster_div_single
+                    )
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.a_fw_total
-                    + (1.0e0 - fwbs_variables.fhcd - fwbs_variables.fdiv)
+                    + (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_ster_div_single
+                    )
                     * physics_variables.rad_fraction_sol
                     * physics_variables.pdivt
                     / build_variables.a_fw_total

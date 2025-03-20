@@ -193,8 +193,8 @@ emult    = 1.3 * energy multiplication in blanket and shield
 fblss    = 0.13 * KIT blanket model; steel fraction of breeding zone
 fhole    = 0. * area fraction taken up by other holes (IFE)
 fblbe    = 0.47 * beryllium fraction of blanket by volume (if `iblanket=2`; is Be fraction of breeding zone)
-primary_pumping = 0 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
-secondary_cycle = 2 * Switch for power conversion cycle;
+i_coolant_pumping = 0 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
+i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
 fwclfr   = 0.1 * first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
 vfshld   = 0.6 * coolant void fraction in shield
 fblli2o  = 0.07 * lithium oxide fraction of blanket by volume (stellarator only)
@@ -214,7 +214,7 @@ maxcal   = 200 * maximum number of VMCON iterations
 
 *-------------Heat Transport Variables-------------*
 
-etath    = 0.4 * thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated;
+etath    = 0.4 * thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated;
 htpmw_blkt = 120. * blanket primary coolant mechanical pumping power (MW)
 htpmw_div = 24. * divertor coolant mechanical pumping power (MW)
 htpmw_fw = 56. * first wall coolant mechanical pumping power (MW)

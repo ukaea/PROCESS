@@ -303,7 +303,7 @@ module numerics
   !! <LI> (95) fptfnuc (f-value for equation 54)
   !! <LI> (96) fvvhe (f-value for equation 55)
   !! <LI> (97) fpsepr (f-value for equation 56)
-  !! <LI> (98) li6enrich
+  !! <LI> (98) f_blkt_li6_enrichment
   !! <LI> (99) NOT USED
   !! <LI> (100) NOT USED
   !! <LI> (101) NOT USED

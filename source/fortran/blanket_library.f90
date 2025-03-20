@@ -39,7 +39,7 @@ module blanket_library
     real(dp) :: volshldi, volshldo
     !! Volume of inboard and outboard shield (m3)
 
-    real(dp) :: volvvi, volvvo
+    real(dp) :: vol_vv_inboard, vol_vv_outboard
     !! Volume of inboard and outboard Vacuum Vessel (m3)
 
     real(dp) :: dz_pf_cryostat
@@ -57,31 +57,31 @@ module blanket_library
     real(dp) :: bllengi, bllengo
     !! Inboard/outboard blanket segment poloidal length (m)
 
-    real(dp) :: bzfllengi, bzfllengo
+    real(dp) :: len_blkt_inboard_channel_total, len_blkt_outboard_channel_total
     !! Inboard/outboard primary blanket flow lengths (m)
 
     real(dp) :: bzfllengi_liq, bzfllengo_liq
     !! Inboard/outboard secondary blanket flow lengths (m)
 
-    real(dp) :: pnucfwi, pnucfwo
+    real(dp) :: p_fw_inboard_nuclear_heat_mw, p_fw_outboard_nuclear_heat_mw
     !! Inboard/outboard first wall nuclear heating (MW)
 
-    real(dp) :: tpeakfwi, tpeakfwo
+    real(dp) :: temp_fw_inboard_peak, temp_fw_outboard_peak
     !! Inboard/outboard first wall peak temperature (K)
 
-    real(dp) :: mffwi, mffwo, mffw
+    real(dp) :: mflow_fw_inboard_coolant_total, mflow_fw_outboard_coolant_total, mflow_fw_coolant_total
     !! Inboard/outboard total mass flow rate to remove inboard FW power (kg/s)
 
-    real(dp) :: npfwi, npfwo
-    !! Inboard/utboard total number of pipes
+    real(dp) :: n_fw_inboard_channels, n_fw_outboard_channels
+    !! Inboard / outboard total number of first wall coolant channels
 
-    real(dp) :: mffwpi, mffwpo
+    real(dp) :: mflow_fw_inboard_coolant_channel, mflow_fw_outboard_coolant_channel
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
 
-    real(dp) :: pnucblkti, pnucblkto
+    real(dp) :: p_blkt_nuclear_heat_inboard_mw, p_blkt_nuclear_heat_outboard_mw
     !! Neutron power deposited inboard/outboard blanket blanket (MW)
 
-    real(dp) :: mfblkti, mfblkto, mfblkt
+    real(dp) :: mflow_blkt_inboard_coolant, mflow_blkt_outboard_coolant, mflow_blkt_coolant_total
     !! Inboard/outboard blanket mass flow rate for coolant (kg/s)
 
     real(dp):: mfblkti_liq, mfblkto_liq, mfblkt_liq
@@ -90,13 +90,13 @@ module blanket_library
     real(dp) :: mftotal
     !! Total mass flow rate for coolant (kg/s)
 
-    real(dp) :: npblkti, npblkto
-    !! Inboard/outboard total num of pipes
+    real(dp) :: n_blkt_inboard_channels, n_blkt_outboard_channels
+    !! Inboard/outboard total number of blanket coolant pipes
 
     real(dp) :: mfblktpi, mfblktpo
     !! Inboard/outboard mass flow rate per coolant pipe (kg/s)
 
-    real(dp) :: velblkti, velblkto
+    real(dp) :: vel_blkt_inboard_coolant, vel_blkt_outboard_coolant
     !! Inboard/outboard coolant velocity in blanket (m/s)
 
     real(dp) :: htpmw_fwi, htpmw_fwo
@@ -133,44 +133,44 @@ contains
         hvv = 0.0D0
         volshldi = 0.0D0
         volshldo = 0.0D0
-        volvvi = 0.0D0
-        volvvo = 0.0D0
+        vol_vv_inboard = 0.0D0
+        vol_vv_outboard = 0.0D0
         bldepti = 0.0D0
         bldepto = 0.0D0
         blwidti = 0.0D0
         blwidto = 0.0D0
         bllengi = 0.0D0
         bllengo = 0.0D0
-        bzfllengi = 0.0D0
+        len_blkt_inboard_channel_total = 0.0D0
         bzfllengi_liq = 0.0D0
         bzfllengo_liq = 0.0D0
-        bzfllengo = 0.0D0
-        pnucfwi = 0.0D0
-        pnucfwo = 0.0D0
-        tpeakfwi = 0.0D0
-        tpeakfwo = 0.0D0
-        mffwi = 0.0D0
-        mffwo = 0.0D0
-        mffw = 0.0D0
-        npfwi = 0.0D0
-        npfwo = 0.0D0
-        mffwpi = 0.0D0
-        mffwpo = 0.0D0
-        pnucblkti = 0.0D0
-        pnucblkto = 0.0D0
-        mfblkti = 0.0D0
-        mfblkto = 0.0D0
+        len_blkt_outboard_channel_total = 0.0D0
+        p_fw_inboard_nuclear_heat_mw = 0.0D0
+        p_fw_outboard_nuclear_heat_mw = 0.0D0
+        temp_fw_inboard_peak = 0.0D0
+        temp_fw_outboard_peak = 0.0D0
+        mflow_fw_inboard_coolant_total = 0.0D0
+        mflow_fw_outboard_coolant_total = 0.0D0
+        mflow_fw_coolant_total = 0.0D0
+        n_fw_inboard_channels = 0.0D0
+        n_fw_outboard_channels = 0.0D0
+        mflow_fw_inboard_coolant_channel = 0.0D0
+        mflow_fw_outboard_coolant_channel = 0.0D0
+        p_blkt_nuclear_heat_inboard_mw = 0.0D0
+        p_blkt_nuclear_heat_outboard_mw = 0.0D0
+        mflow_blkt_inboard_coolant = 0.0D0
+        mflow_blkt_outboard_coolant = 0.0D0
         mfblkti_liq = 0.0D0
         mfblkto_liq = 0.0D0
         mfblkt_liq = 0.0D0
-        mfblkt = 0.0D0
+        mflow_blkt_coolant_total = 0.0D0
         mftotal = 0.0D0
-        npblkti = 0.0D0
-        npblkto = 0.0D0
+        n_blkt_inboard_channels = 0.0D0
+        n_blkt_outboard_channels = 0.0D0
         mfblktpi = 0.0D0
         mfblktpo = 0.0D0
-        velblkti = 0.0D0
-        velblkto = 0.0D0
+        vel_blkt_inboard_coolant = 0.0D0
+        vel_blkt_outboard_coolant = 0.0D0
         htpmw_fwi = 0.0D0
         htpmw_fwo = 0.0D0
         htpmw_blkti = 0.0D0

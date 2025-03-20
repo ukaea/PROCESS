@@ -62,8 +62,8 @@ class Structure:
             total_weight_pf,
             tfv.whttf,
             fwbsv.m_fw_total,
-            fwbsv.whtblkt,
-            fwbsv.coolmass,
+            fwbsv.m_blkt_total,
+            fwbsv.m_fw_blkt_div_coolant_total,
             fwbsv.dewmkg,
             output=output,
         )
@@ -85,7 +85,7 @@ class Structure:
         tfmass,
         m_fw_total,
         blmass,
-        coolmass,
+        m_fw_blkt_div_coolant_total,
         dewmass,
         output,
     ):
@@ -139,8 +139,8 @@ class Structure:
         :param m_fw_total: first wall mass (kg)
         :type m_fw_total: float
 
-        :param coolmass: total water coolant mass (kg)
-        :type coolmass: float
+        :param m_fw_blkt_div_coolant_total: total water coolant mass (kg)
+        :type m_fw_blkt_div_coolant_total: float
 
         :param dewmass: vacuum vessel + cryostat mass (kg)
         :type dewmass: float
@@ -189,7 +189,7 @@ class Structure:
 
         #  Torus leg support
 
-        ws1 = coolmass + m_fw_total + blmass + shldmass + dvrtmass
+        ws1 = m_fw_blkt_div_coolant_total + m_fw_total + blmass + shldmass + dvrtmass
         gsm1 = 5.0e0 * 9.807e0 * ws1 * dens / sigal
 
         #  Ring beam

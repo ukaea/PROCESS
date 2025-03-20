@@ -269,11 +269,11 @@ class Costs2015:
         self.s_label[21] = "Lithium enrichment"
 
         # Zero cost for natural enrichment
-        if fwbs_variables.li6enrich <= 7.42e0:
+        if fwbs_variables.f_blkt_li6_enrichment <= 7.42e0:
             self.s_cost[21] = 0.0e0
         else:
             # Percentage of lithium 6 in the product
-            product_li6 = min(fwbs_variables.li6enrich, 99.99e0) / 100.0e0
+            product_li6 = min(fwbs_variables.f_blkt_li6_enrichment, 99.99e0) / 100.0e0
             # SWU will be calculated for a unit mass of product (P=1)
 
             # Feed to product mass ratio
@@ -299,7 +299,7 @@ class Costs2015:
             )
 
             # Mass of lithium (kg).  Lithium orthosilicate is 22% lithium by mass.
-            mass_li = fwbs_variables.wtblli2o * 0.22
+            mass_li = fwbs_variables.m_blkt_li2o * 0.22
 
             # Total swu for lithium in blanket
             total_swu = swu * mass_li
@@ -319,7 +319,7 @@ class Costs2015:
         # Reference cost of lithium pebble manufacture (2014 $)
         self.s_cref[22] = 6.5e4
         # Scale with mass of pebbles (kg)
-        self.s_k[22] = fwbs_variables.wtblli2o
+        self.s_k[22] = fwbs_variables.m_blkt_li2o
         self.s_kref[22] = 10.0e0
         self.s_cost[22] = (
             self.s_cost_factor[22]
@@ -331,7 +331,7 @@ class Costs2015:
         #  Reference cost of titanium beryllide pebble manufacture (2014 $)
         self.s_cref[23] = 450.0e6
         #  Scale with mass of titanium beryllide pebbles (kg)
-        self.s_k[23] = fwbs_variables.whtblbe
+        self.s_k[23] = fwbs_variables.m_blkt_beryllium
         self.s_kref[23] = 1.0e5
         self.s_cost[23] = (
             self.s_cost_factor[23]
@@ -361,7 +361,7 @@ class Costs2015:
         # It includes the first wall, blanket and shield, but excludes the breeder and multiplier materials.
         self.s_cref[25] = 317.0e6
         #  Scale with steel mass in blanket + shield mass
-        self.s_k[25] = fwbs_variables.whtblss + fwbs_variables.whtshld
+        self.s_k[25] = fwbs_variables.m_blkt_steel_total + fwbs_variables.whtshld
         self.s_kref[25] = 4.07e6
         self.s_cost[25] = (
             self.s_cost_factor[25]
@@ -927,7 +927,7 @@ class Costs2015:
         #  Cost of ITER VV in-wall shielding, ports and in-vessel coils
         self.s_cref[36] = 211.0e6
         #  Scale with vacuum vessel mass (kg)
-        self.s_k[36] = fwbs_variables.vvmass
+        self.s_k[36] = fwbs_variables.m_vv
         self.s_kref[36] = 5.2360e6
         self.s_cost[36] = (
             self.s_cost_factor[36]

@@ -1775,33 +1775,37 @@ class IFE:
 
         # Total masses of components (excluding coolant)
         fwbs_variables.m_fw_total = 0.0
-        fwbs_variables.whtblkt = 0.0
+        fwbs_variables.m_blkt_total = 0.0
         fwbs_variables.whtshld = 0.0
         for i in range(5):
             for j in range(3):
                 fwbs_variables.m_fw_total = (
                     fwbs_variables.m_fw_total + ife_variables.fwmatm[j, i]
                 )
-                fwbs_variables.whtblkt = (
-                    fwbs_variables.whtblkt + ife_variables.blmatm[j, i]
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.m_blkt_total + ife_variables.blmatm[j, i]
                 )
                 fwbs_variables.whtshld = (
                     fwbs_variables.whtshld + ife_variables.shmatm[j, i]
                 )
 
         # Other masses
-        fwbs_variables.whtblbe = 0.0
-        fwbs_variables.whtblvd = 0.0
-        fwbs_variables.whtblss = 0.0
-        fwbs_variables.wtblli2o = 0.0
-        fwbs_variables.whtblli = 0.0
+        fwbs_variables.m_blkt_beryllium = 0.0
+        fwbs_variables.m_blkt_vanadium = 0.0
+        fwbs_variables.m_blkt_steel_total = 0.0
+        fwbs_variables.m_blkt_li2o = 0.0
+        fwbs_variables.m_blkt_lithium = 0.0
 
         for j in range(3):
-            fwbs_variables.whtblss = fwbs_variables.whtblss + ife_variables.blmatm[j, 1]
-            fwbs_variables.wtblli2o = (
-                fwbs_variables.wtblli2o + ife_variables.blmatm[j, 4]
+            fwbs_variables.m_blkt_steel_total = (
+                fwbs_variables.m_blkt_steel_total + ife_variables.blmatm[j, 1]
             )
-            fwbs_variables.whtblli = fwbs_variables.whtblli + ife_variables.blmatm[j, 8]
+            fwbs_variables.m_blkt_li2o = (
+                fwbs_variables.m_blkt_li2o + ife_variables.blmatm[j, 4]
+            )
+            fwbs_variables.m_blkt_lithium = (
+                fwbs_variables.m_blkt_lithium + ife_variables.blmatm[j, 8]
+            )
 
         # Total mass of FLiBe
         ife_variables.mflibe = ife_variables.chmatm[3]
@@ -1825,8 +1829,12 @@ class IFE:
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
         ife_variables.mflibe = ife_variables.mflibe / (1.0 - ife_variables.fbreed)
-        fwbs_variables.wtblli2o = fwbs_variables.wtblli2o / (1.0 - ife_variables.fbreed)
-        fwbs_variables.whtblli = fwbs_variables.whtblli / (1.0 - ife_variables.fbreed)
+        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li2o / (
+            1.0 - ife_variables.fbreed
+        )
+        fwbs_variables.m_blkt_lithium = fwbs_variables.m_blkt_lithium / (
+            1.0 - ife_variables.fbreed
+        )
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
         if (ife_variables.ifetyp == 3) or (ife_variables.ifetyp == 4):
@@ -1838,7 +1846,7 @@ class IFE:
                 / (physics_variables.pflux_fw_neutron_mw * cost_variables.cfactr),
             )
 
-        fwbs_variables.bktlife = life
+        fwbs_variables.life_blkt_fpy = life
         fwbs_variables.life_fw_fpy = life
 
         if not output:
@@ -1860,14 +1868,14 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Blanket mass (kg)",
-            "(whtblkt)",
-            fwbs_variables.whtblkt,
+            "(m_blkt_total)",
+            fwbs_variables.m_blkt_total,
         )
         process_output.ovarre(
             self.outfile,
             "Blanket lithium mass (kg)",
-            "(whtblli)",
-            fwbs_variables.whtblli,
+            "(m_blkt_lithium)",
+            fwbs_variables.m_blkt_lithium,
         )
         process_output.ovarre(
             self.outfile,
@@ -1914,12 +1922,14 @@ class IFE:
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
             heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.pthermmw
-            fwbs_variables.pnucblkt = (
+            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                 heat_transport_variables.pthermmw - heat_transport_variables.pfwdiv
             )
         else:
             heat_transport_variables.pfwdiv = 0.0
-            fwbs_variables.pnucblkt = heat_transport_variables.pthermmw
+            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+                heat_transport_variables.pthermmw
+            )
 
         fwbs_variables.pnucshld = 0.0
 
@@ -2050,8 +2060,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Blanket nuclear heating (MW)",
-                "(pnucblkt)",
-                fwbs_variables.pnucblkt,
+                "(p_blkt_nuclear_heat_total_mw)",
+                fwbs_variables.p_blkt_nuclear_heat_total_mw,
             )
             process_output.ovarre(
                 self.outfile,

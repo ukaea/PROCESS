@@ -312,7 +312,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Magnetic field strengths
 
-- Magnetic field strengths should start with the `b_`
+- Magnetic field strengths should start with the `b_` prefix
 
 ---------------------
 
@@ -337,9 +337,17 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Solid Angles
+
+- Solid angles should start with the `ster_` prefix. Short for steradians.
+
+---------------------
+
 ##### Lifetimes
 
-- Lifetimes of componenets should start with the `life_` prefix.
+- Lifetimes of components should start with the `life_` prefix.
+
+The default units for lifetimes is in years.
 
 The unit declaration `_fpy` can be used to specify that it is the full-power year lifetime.
 

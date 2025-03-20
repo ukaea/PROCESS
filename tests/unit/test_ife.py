@@ -1213,14 +1213,14 @@ class IfefbsParam(NamedTuple):
     cfactr: Any = None
     denstl: Any = None
     m_fw_total: Any = None
-    whtblkt: Any = None
+    m_blkt_total: Any = None
     whtshld: Any = None
-    whtblbe: Any = None
-    whtblvd: Any = None
-    whtblss: Any = None
-    wtblli2o: Any = None
-    whtblli: Any = None
-    bktlife: Any = None
+    m_blkt_beryllium: Any = None
+    m_blkt_vanadium: Any = None
+    m_blkt_steel_total: Any = None
+    m_blkt_li2o: Any = None
+    m_blkt_lithium: Any = None
+    life_blkt_fpy: Any = None
     life_fw_fpy: Any = None
     chmatm: Any = None
     chmatv: Any = None
@@ -1241,9 +1241,9 @@ class IfefbsParam(NamedTuple):
     ifetyp: Any = None
     pflux_fw_neutron_mw: Any = None
     expected_m_fw_total: Any = None
-    expected_whtblkt: Any = None
+    expected_m_blkt_total: Any = None
     expected_whtshld: Any = None
-    expected_bktlife: Any = None
+    expected_life_blkt_fpy: Any = None
     expected_life_fw_fpy: Any = None
     expected_fwmatm: Any = None
     expected_v1matm: Any = None
@@ -1263,14 +1263,14 @@ class IfefbsParam(NamedTuple):
             cfactr=0.75000000000000011,
             denstl=7800,
             m_fw_total=0,
-            whtblkt=0,
+            m_blkt_total=0,
             whtshld=0,
-            whtblbe=0,
-            whtblvd=0,
-            whtblss=0,
-            wtblli2o=0,
-            whtblli=0,
-            bktlife=0,
+            m_blkt_beryllium=0,
+            m_blkt_vanadium=0,
+            m_blkt_steel_total=0,
+            m_blkt_li2o=0,
+            m_blkt_lithium=0,
+            life_blkt_fpy=0,
             life_fw_fpy=0,
             chmatm=np.array(
                 np.array((0, 0, 0, 0, 0, 0, 0, 0, 0), order="F"), order="F"
@@ -1452,9 +1452,9 @@ class IfefbsParam(NamedTuple):
             ifetyp=1,
             pflux_fw_neutron_mw=8.8876851857005388,
             expected_m_fw_total=20574.366184891722,
-            expected_whtblkt=347956.92928704334,
+            expected_m_blkt_total=347956.92928704334,
             expected_whtshld=1067310.9593707009,
-            expected_bktlife=3.000406304846492,
+            expected_life_blkt_fpy=3.000406304846492,
             expected_life_fw_fpy=3.000406304846492,
             expected_fwmatm=np.array(
                 (
@@ -1548,14 +1548,18 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(cost_variables, "cfactr", ifefbsparam.cfactr)
     monkeypatch.setattr(fwbs_variables, "denstl", ifefbsparam.denstl)
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
-    monkeypatch.setattr(fwbs_variables, "whtblkt", ifefbsparam.whtblkt)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifefbsparam.whtshld)
-    monkeypatch.setattr(fwbs_variables, "whtblbe", ifefbsparam.whtblbe)
-    monkeypatch.setattr(fwbs_variables, "whtblvd", ifefbsparam.whtblvd)
-    monkeypatch.setattr(fwbs_variables, "whtblss", ifefbsparam.whtblss)
-    monkeypatch.setattr(fwbs_variables, "wtblli2o", ifefbsparam.wtblli2o)
-    monkeypatch.setattr(fwbs_variables, "whtblli", ifefbsparam.whtblli)
-    monkeypatch.setattr(fwbs_variables, "bktlife", ifefbsparam.bktlife)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium
+    )
+    monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
+    monkeypatch.setattr(
+        fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
+    )
+    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", ifefbsparam.m_blkt_li2o)
+    monkeypatch.setattr(fwbs_variables, "m_blkt_lithium", ifefbsparam.m_blkt_lithium)
+    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", ifefbsparam.life_blkt_fpy)
     monkeypatch.setattr(fwbs_variables, "life_fw_fpy", ifefbsparam.life_fw_fpy)
     monkeypatch.setattr(ife_variables, "chmatm", ifefbsparam.chmatm)
     monkeypatch.setattr(ife_variables, "chmatv", ifefbsparam.chmatv)
@@ -1581,9 +1585,13 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     ife.ifefbs(output=False)
 
     assert fwbs_variables.m_fw_total == pytest.approx(ifefbsparam.expected_m_fw_total)
-    assert fwbs_variables.whtblkt == pytest.approx(ifefbsparam.expected_whtblkt)
+    assert fwbs_variables.m_blkt_total == pytest.approx(
+        ifefbsparam.expected_m_blkt_total
+    )
     assert fwbs_variables.whtshld == pytest.approx(ifefbsparam.expected_whtshld)
-    assert fwbs_variables.bktlife == pytest.approx(ifefbsparam.expected_bktlife)
+    assert fwbs_variables.life_blkt_fpy == pytest.approx(
+        ifefbsparam.expected_life_blkt_fpy
+    )
     assert fwbs_variables.life_fw_fpy == pytest.approx(ifefbsparam.expected_life_fw_fpy)
     assert ife_variables.fwmatm == pytest.approx(ifefbsparam.expected_fwmatm)
     assert ife_variables.v1matm == pytest.approx(ifefbsparam.expected_v1matm)
@@ -2024,7 +2032,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
 class Ifepw1Param(NamedTuple):
     emult: Any = None
     fhole: Any = None
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
     pnucshld: Any = None
     pnucloss: Any = None
     priheat: Any = None
@@ -2040,7 +2048,7 @@ class Ifepw1Param(NamedTuple):
     etadrv: Any = None
     pifecr: Any = None
     powfmw: Any = None
-    expected_pnucblkt: Any = None
+    expected_p_blkt_nuclear_heat_total_mw: Any = None
     expected_priheat: Any = None
     expected_pthermmw: Any = None
     expected_pfwdiv: Any = None
@@ -2057,7 +2065,7 @@ class Ifepw1Param(NamedTuple):
         Ifepw1Param(
             emult=1.26,
             fhole=0,
-            pnucblkt=0,
+            p_blkt_nuclear_heat_total_mw=0,
             pnucshld=0,
             pnucloss=0,
             priheat=0,
@@ -2073,7 +2081,7 @@ class Ifepw1Param(NamedTuple):
             etadrv=0.28199999999999997,
             pifecr=10,
             powfmw=2009.6999999999998,
-            expected_pnucblkt=1924.4887199999998,
+            expected_p_blkt_nuclear_heat_total_mw=1924.4887199999998,
             expected_priheat=2532.2219999999998,
             expected_pthermmw=2532.2219999999998,
             expected_pfwdiv=607.73327999999992,
@@ -2099,7 +2107,11 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     """
     monkeypatch.setattr(fwbs_variables, "emult", ifepw1param.emult)
     monkeypatch.setattr(fwbs_variables, "fhole", ifepw1param.fhole)
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", ifepw1param.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        ifepw1param.p_blkt_nuclear_heat_total_mw,
+    )
     monkeypatch.setattr(fwbs_variables, "pnucshld", ifepw1param.pnucshld)
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
@@ -2118,7 +2130,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
     ife.ifepw1()
 
-    assert fwbs_variables.pnucblkt == pytest.approx(ifepw1param.expected_pnucblkt)
+    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+        ifepw1param.expected_p_blkt_nuclear_heat_total_mw
+    )
     assert heat_transport_variables.priheat == pytest.approx(
         ifepw1param.expected_priheat
     )
@@ -2798,7 +2812,7 @@ class Ifepw2Param(NamedTuple):
     pnucloss: Any = None
     emult: Any = None
     tbr: Any = None
-    pnucblkt: Any = None
+    p_blkt_nuclear_heat_total_mw: Any = None
     fachtmw: Any = None
     fcsht: Any = None
     psechtmw: Any = None
@@ -2837,7 +2851,7 @@ class Ifepw2Param(NamedTuple):
             pnucloss=0,
             emult=1.26,
             tbr=0,
-            pnucblkt=1924.4887199999998,
+            p_blkt_nuclear_heat_total_mw=1924.4887199999998,
             fachtmw=0,
             fcsht=24.322206046559071,
             psechtmw=0,
@@ -2885,7 +2899,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw2param.pnucloss)
     monkeypatch.setattr(fwbs_variables, "emult", ifepw2param.emult)
     monkeypatch.setattr(fwbs_variables, "tbr", ifepw2param.tbr)
-    monkeypatch.setattr(fwbs_variables, "pnucblkt", ifepw2param.pnucblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_nuclear_heat_total_mw",
+        ifepw2param.p_blkt_nuclear_heat_total_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "fachtmw", ifepw2param.fachtmw)
     monkeypatch.setattr(heat_transport_variables, "fcsht", ifepw2param.fcsht)
     monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)

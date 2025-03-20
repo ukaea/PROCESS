@@ -134,8 +134,8 @@ class Costs:
         po.ovarrf(
             self.outfile,
             "First wall / blanket life (years)",
-            "(bktlife_cal)",
-            fwbs_variables.bktlife_cal,
+            "(life_blkt)",
+            fwbs_variables.life_blkt,
         )
 
         if ife_variables.ife != 1:
@@ -1204,10 +1204,14 @@ class Costs:
             if fwbs_variables.i_blanket_type == 4:
                 #  Liquid blanket (LiPb + Li)
                 self.c22121 = 1.0e-6 * fwbs_variables.wtbllipb * cost_variables.ucbllipb
-                self.c22122 = 1.0e-6 * fwbs_variables.whtblli * cost_variables.ucblli
+                self.c22122 = (
+                    1.0e-6 * fwbs_variables.m_blkt_lithium * cost_variables.ucblli
+                )
             else:
                 #  Solid blanket (Li2O + Be)
-                self.c22121 = 1.0e-6 * fwbs_variables.whtblbe * cost_variables.ucblbe
+                self.c22121 = (
+                    1.0e-6 * fwbs_variables.m_blkt_beryllium * cost_variables.ucblbe
+                )
                 if fwbs_variables.i_blanket_type == 2:
                     # KIT model
                     self.c22122 = (
@@ -1216,11 +1220,15 @@ class Costs:
                 else:
                     # CCFE model
                     self.c22122 = (
-                        1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
+                        1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
                     )
 
-            self.c22123 = 1.0e-6 * fwbs_variables.whtblss * cost_variables.ucblss
-            self.c22124 = 1.0e-6 * fwbs_variables.whtblvd * cost_variables.ucblvd
+            self.c22123 = (
+                1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
+            )
+            self.c22124 = (
+                1.0e-6 * fwbs_variables.m_blkt_vanadium * cost_variables.ucblvd
+            )
             self.c22125 = 0.0e0
             self.c22126 = 0.0e0
             self.c22127 = 0.0e0
@@ -1230,8 +1238,10 @@ class Costs:
             #  FLiBe and lithium
 
             self.c22121 = 0.0e0
-            self.c22122 = 1.0e-6 * fwbs_variables.wtblli2o * cost_variables.ucblli2o
-            self.c22123 = 1.0e-6 * fwbs_variables.whtblss * cost_variables.ucblss
+            self.c22122 = 1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
+            self.c22123 = (
+                1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
+            )
             self.c22124 = 0.0e0
             self.c22125 = (
                 1.0e-6
@@ -1252,7 +1262,7 @@ class Costs:
                 )
             )
             self.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
-            self.c22128 = 1.0e-6 * cost_variables.ucblli * fwbs_variables.whtblli
+            self.c22128 = 1.0e-6 * cost_variables.ucblli * fwbs_variables.m_blkt_lithium
 
         self.c22121 = cost_variables.fkind * self.c22121 * cmlsa[cost_variables.lsa - 1]
         self.c22122 = cost_variables.fkind * self.c22122 * cmlsa[cost_variables.lsa - 1]
@@ -1769,7 +1779,7 @@ class Costs:
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
-        self.c2223 = 1.0e-6 * fwbs_variables.vvmass * cost_variables.uccryo
+        self.c2223 = 1.0e-6 * fwbs_variables.m_vv * cost_variables.uccryo
         self.c2223 = cost_variables.fkind * self.c2223 * cmlsa[cost_variables.lsa - 1]
 
     def acc223(self):
@@ -2113,14 +2123,14 @@ class Costs:
 
         #  Pumps and piping system
         #  N.B. with blktmodel > 0, the blanket is assumed to be helium-cooled,
-        #  but the shield etc. is water-cooled (coolwh=2). Therefore, a slight
+        #  but the shield etc. is water-cooled (i_blkt_coolant_type=2). Therefore, a slight
         #  inconsistency exists here...
         self.cpp = (
             1.0e-6
-            * cost_variables.uchts[fwbs_variables.coolwh - 1]
+            * cost_variables.uchts[fwbs_variables.i_blkt_coolant_type - 1]
             * (
                 (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
-                + (1.0e6 * fwbs_variables.pnucblkt) ** exphts
+                + (1.0e6 * fwbs_variables.p_blkt_nuclear_heat_total_mw) ** exphts
                 + (1.0e6 * fwbs_variables.pnucshld) ** exphts
             )
         )
@@ -2338,7 +2348,7 @@ class Costs:
         if cost_variables.ireactor == 1:
             self.c23 = (
                 1.0e-6
-                * cost_variables.ucturb[fwbs_variables.coolwh - 1]
+                * cost_variables.ucturb[fwbs_variables.i_blkt_coolant_type - 1]
                 * (heat_transport_variables.pgrossmw / 1200.0e0) ** exptpe
             )
 
@@ -2662,7 +2672,7 @@ class Costs:
 
         #  Compound interest factor
 
-        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.bktlife_cal
+        feffwbl = (1.0e0 + cost_variables.discount_rate) ** fwbs_variables.life_blkt
 
         #  Capital recovery factor
 
@@ -2678,7 +2688,9 @@ class Costs:
         )
 
         if cost_variables.ifueltyp == 2:
-            annfwbl = annfwbl * (1.0e0 - fwbs_variables.bktlife / cost_variables.tlife)
+            annfwbl = annfwbl * (
+                1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.tlife
+            )
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -2917,12 +2929,14 @@ class Costs:
         Author: J Foster, CCFE, Culham Campus
         """
         # FW/Blanket and HCD
-        if fwbs_variables.bktlife < cost_variables.tlife:
-            fwbs_variables.bktlife_cal = fwbs_variables.bktlife * cost_variables.cfactr
+        if fwbs_variables.life_blkt_fpy < cost_variables.tlife:
+            fwbs_variables.life_blkt = (
+                fwbs_variables.life_blkt_fpy * cost_variables.cfactr
+            )
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-            cost_variables.cdrlife_cal = fwbs_variables.bktlife_cal
+            cost_variables.cdrlife_cal = fwbs_variables.life_blkt
         else:
-            fwbs_variables.bktlife_cal = fwbs_variables.bktlife
+            fwbs_variables.life_blkt = fwbs_variables.life_blkt_fpy
 
         # Divertor
         if cost_variables.divlife < cost_variables.tlife:
