@@ -511,7 +511,7 @@ It is not possible to derive a general analytic expression for $F$, so it has be
 The cylindrical equivalent $q$ definition used currently is the one given below from IPDG89[^5]
 
 $$
-q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
+q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa_{95}^2(1+2\delta_{95}^2-1.2\delta_{95}^3))}{2}
 $$
 
 

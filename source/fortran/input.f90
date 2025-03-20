@@ -177,7 +177,8 @@ contains
       fcqt, fzeffmax, fstrcase, fhldiv, foh_stress, fwalld, gammax, fjprot, &
       ft_current_ramp_up, tcycmn, auxmin, zeffmax, f_fw_rad_max, fdtmp, fpoloidalpower, &
       fnbshinef, freinke, fvvhe, fqval, fq, fmaxvvstress, fbeta_poloidal, fbeta_poloidal_eps, fjohc, &
-      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle
+      fflutf, bmxlim, t_burn_min, fbeta_min, fecrh_ignition, fstr_wp, fncycle, i_q95_fixed, &
+      q95_fixed
     use cost_variables, only: ucich, uctfsw, dintrt, ucblbe, uubop, dtlife, &
       cost_factor_vv, cfind, uccry, fcap0cp, uccase, uuves, cconshtf, conf_mag, &
       ucbllipb, ucfuel, uumag, ucpfbs, ireactor, uucd, div_umain_time, div_nu, &
@@ -257,7 +258,7 @@ contains
     use pulse_variables, only: i_pulsed_plant, dtstor, itcycl, istore, bctmp
 
     use primary_pumping_variables, only: t_in_bb, t_out_bb, dp_he, p_he, gamma_he, &
-      dp_fw_blkt, dp_fw, dp_blkt, dp_liq
+      dp_fw_blkt, dp_fw, dp_blkt, dp_liq, f_p_fw_blkt_pump
 
     use scan_module, only: isweep_2, nsweep, isweep, scan_dim, nsweep_2, &
       sweep_2, sweep, ipnscns, ipnscnv
@@ -770,6 +771,9 @@ contains
        case ('i_hldiv')
           call parse_int_variable('i_hldiv', i_hldiv, 0, 2, &
                'Switch for user input hldiv')
+       case ('i_q95_fixed')
+          call parse_int_variable('i_q95_fixed', i_q95_fixed, 0, 1, &
+               'Switch that allows fixed q95 within PsepB/qAR (68 constraint)')
        case ('fflutf')
           call parse_real_variable('fflutf', fflutf, 0.001D0, 10.0D0, &
                'F-value for neutron fluence on TF coil')
@@ -779,6 +783,9 @@ contains
        case ('fiooic')
           call parse_real_variable('fiooic', fiooic, 0.001D0, 10.0D0, &
                'F-value for SCTF iop/icrit')
+       case ('q95_fixed')
+            call parse_real_variable('q95_fixed', q95_fixed, 0.001D0, 10.0D0, &
+               'fixed safety factor q at 95% flux surface')
        case ('fjprot')
           call parse_real_variable('fjprot', fjprot, 0.001D0, 10.0D0, &
                'F-value for SCTF winding pack J')
@@ -2274,7 +2281,9 @@ contains
        case ('p_he')
           call parse_real_variable('p_he', p_he, 0.0D0, 100.0D6, &
               'Pressure in FW and blanket coolant at pump exit')
-
+       case ('f_p_fw_blkt_pump')
+            call parse_real_variable('f_p_fw_blkt_pump', f_p_fw_blkt_pump, 0.0D0, 10.0D0, &
+               'Pumping power for FW and Blanket multiplier factor')
        case ('gamma_he')
           call parse_real_variable('gamma_he', gamma_he, 1.0D0, 2.0D0, &
               'Ratio of specific heats for helium or for another Gas')

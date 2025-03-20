@@ -1054,7 +1054,7 @@ module tfcoil_variables
     i_cp_joints = -1
     cryo_cool_req = 0.0D0
     theta1_coil = 45.0D0
-    theta1_vv = 1.0D0
+    theta1_vv = 1.0D0 ! 1 Deg
     max_vv_stress = 143.0D6
   end subroutine init_tfcoil_variables
 end module tfcoil_variables

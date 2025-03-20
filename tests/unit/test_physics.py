@@ -947,7 +947,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=3.869423496255382,
+            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
@@ -974,7 +974,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_alphaj=1.9008029008029004,
             expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=3.869423496255382,
+            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
     ),
