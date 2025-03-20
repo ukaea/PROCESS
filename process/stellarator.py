@@ -5637,3 +5637,26 @@ class Neoclassics:
                 / neoclassics_module.temperatures
             )
         )
+
+
+def init_stellarator_variables():
+    stellarator_variables.istell = 0
+    stellarator_variables.bmn = 1e-3
+    stellarator_variables.f_asym = 1.0
+    stellarator_variables.f_rad = 0.85
+    stellarator_variables.f_w = 0.5
+    stellarator_variables.fdivwet = 0.333333333333333
+    stellarator_variables.flpitch = 1e-3
+    stellarator_variables.hportamax = 0.0
+    stellarator_variables.hportpmax = 0.0
+    stellarator_variables.hporttmax = 0.0
+    stellarator_variables.iotabar = 1.0
+    stellarator_variables.isthtr = 3
+    stellarator_variables.m_res = 5
+    stellarator_variables.n_res = 5
+    stellarator_variables.shear = 0.5
+    stellarator_variables.vportamax = 0.0
+    stellarator_variables.vportpmax = 0.0
+    stellarator_variables.vporttmax = 0.0
+    stellarator_variables.max_gyrotron_frequency = 1.0e9
+    stellarator_variables.te0_ecrh_achievable = 1.0e2
