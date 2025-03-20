@@ -960,3 +960,55 @@ class Divertor:
             )
             po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
         return dv.hldiv
+
+
+def init_divertor_variables():
+    dv.adas = 0.0
+    dv.anginc = 0.262
+    dv.beta_div = 1.0
+    dv.betai = 1.0
+    dv.betao = 1.0
+    dv.bpsout = 0.60
+    dv.c1div = 0.45
+    dv.c2div = -7.0
+    dv.c3div = 0.54
+    dv.c4div = -3.6
+    dv.c5div = 0.7
+    dv.c6div = 0.0
+    dv.delld = 1.0
+    dv.dendiv = 0.0
+    dv.densin = 0.0
+    dv.divclfr = 0.3
+    dv.divdens = 1.0e4
+    dv.divdum = 0
+    dv.dz_divertor = 0.2
+    dv.divmas = 0.0
+    dv.divplt = 0.035
+    dv.divsur = 0.0
+    dv.fdfs = 10.0
+    dv.fdiva = 1.11
+    dv.fhout = 0.0
+    dv.fififi = 4e-3
+    dv.flux_exp = 2.0
+    dv.frrp = 0.4
+    dv.hldiv = 0.0
+    dv.i_hldiv = 0
+    dv.hldivlim = 5.0
+    dv.ksic = 0.8
+    dv.lamp = 0.0
+    dv.minstang = 0.0
+    dv.omegan = 1.0
+    dv.omlarg = 0.0
+    dv.ppdivr = 0.0
+    dv.prn1 = 0.285
+    dv.ptpdiv = 0.0
+    dv.rconl = 0.0
+    dv.rlclolcn = 0.0
+    dv.rlenmax = 0.5
+    dv.rsrd = 0.0
+    dv.tconl = 0.0
+    dv.tdiv = 2.0
+    dv.tsep = 0.0
+    dv.xparain = 2.1e3
+    dv.xpertin = 2.0
+    dv.zeffdiv = 1.0
