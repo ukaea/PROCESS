@@ -21,6 +21,7 @@ from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module
 from process.physics import init_physics_variables
+from process.sctfcoil import init_sctfcoil_module
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -233,7 +234,7 @@ def init_all_module_vars():
     fortran.physics_module.init_physics_module()
     init_physics_variables()
     fortran.scan_module.init_scan_module()
-    fortran.sctfcoil_module.init_sctfcoil_module()
+    init_sctfcoil_module()
     fortran.stellarator_module.init_stellarator_module()
     fortran.stellarator_variables.init_stellarator_variables()
     fortran.tfcoil_variables.init_tfcoil_variables()
