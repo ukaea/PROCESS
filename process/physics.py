@@ -7671,8 +7671,8 @@ class Physics:
             p_plasma_loss_mw,
         )
 
+    @staticmethod
     def calculate_plasma_masses(
-        self,
         m_fuel_amu: float,
         m_ions_total_amu: float,
         nd_ions_total: float,
@@ -7684,16 +7684,23 @@ class Physics:
         """
         Calculate the plasma masses.
 
-        :param float m_fuel_amu: Average mass of fuel (amu).
-            :param float m_ions_total_amu: Average mass of all ions (amu).
-            :param float nd_ions_total: Total ion density (/m3).
-            :param float nd_fuel_ions: Fuel ion density (/m3).
-            :param float nd_alphas: Alpha ash density (/m3).
-            :param float vol_plasma: Plasma volume (m3).
-            :param float dene: Volume averaged electron density (/m3).
+        :param m_fuel_amu: Average mass of fuel (amu).
+        :type m_fuel_amu: float
+        :param m_ions_total_amu: Average mass of all ions (amu).
+        :type m_ions_total_amu: float
+        :param nd_ions_total: Total ion density (/m3).
+        :type nd_ions_total: float
+        :param nd_fuel_ions: Fuel ion density (/m3).
+        :type nd_fuel_ions: float
+        :param nd_alphas: Alpha ash density (/m3).
+        :type nd_alphas: float
+        :param vol_plasma: Plasma volume (m3).
+        :type vol_plasma: float
+        :param dene: Volume averaged electron density (/m3).
+        :type dene: float
 
-            :returns: A tuple containing:
-            :rtype: tuple[float, float, float, float, float]
+        :returns: A tuple containing:
+        :rtype: tuple[float, float, float, float, float]
         """
 
         # Calculate mass of fuel ions
