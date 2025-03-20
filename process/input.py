@@ -216,7 +216,7 @@ INPUT_VARIABLES = {
     "bldrc": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "bldzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "bldzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
-    "blpressure": InputVariable(
+    "pres_blkt_coolant": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
     "blpressure_liq": InputVariable(
@@ -590,7 +590,7 @@ INPUT_VARIABLES = {
     "fcutfsu": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fdfs": InputVariable(fortran.divertor_variables, float, range=(0.0, 20.0)),
-    "fdiv": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
+    "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(fortran.divertor_variables, float, range=(0.1, 2.0)),
     "fdivcol": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fdivwet": InputVariable(fortran.stellarator_variables, float, range=(0.01, 1.0)),
@@ -602,7 +602,7 @@ INPUT_VARIABLES = {
     "fflutf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ffuspow": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fgamcd": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fhcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
+    "f_a_fw_hcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fhldiv": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fhole": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fhts": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1.0)),
@@ -828,7 +828,9 @@ INPUT_VARIABLES = {
     "initialpressure": InputVariable(
         fortran.vacuum_variables, float, range=(1e-06, 10000.0)
     ),
-    "inlet_temp": InputVariable(fortran.fwbs_variables, float, range=(200.0, 600.0)),
+    "temp_blkt_coolant_in": InputVariable(
+        fortran.fwbs_variables, float, range=(200.0, 600.0)
+    ),
     "inlet_temp_liq": InputVariable(
         fortran.fwbs_variables, float, range=(508.0, 1500.0)
     ),
@@ -846,7 +848,9 @@ INPUT_VARIABLES = {
     ),
     "len_tf_bus": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1000.0)),
     "lhat": InputVariable(fortran.reinke_variables, float, range=(1.0, 15.0)),
-    "li6enrich": InputVariable(fortran.fwbs_variables, float, range=(7.4, 100.0)),
+    "f_blkt_li6_enrichment": InputVariable(
+        fortran.fwbs_variables, float, range=(7.4, 100.0)
+    ),
     "life_dpa": InputVariable(fortran.cost_variables, float, range=(10.0, 100.0)),
     "llw_storage_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
@@ -938,7 +942,9 @@ INPUT_VARIABLES = {
     "outgasindex": InputVariable(
         fortran.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
-    "outlet_temp": InputVariable(fortran.fwbs_variables, float, range=(450.0, 900.0)),
+    "temp_blkt_coolant_out": InputVariable(
+        fortran.fwbs_variables, float, range=(450.0, 900.0)
+    ),
     "outlet_temp_liq": InputVariable(
         fortran.fwbs_variables, float, range=(508.0, 1500.0)
     ),
@@ -1431,16 +1437,18 @@ INPUT_VARIABLES = {
     "ccl0_ma": InputVariable(fortran.pfcoil_variables, float, array=True),
     "ccls_ma": InputVariable(fortran.pfcoil_variables, float, array=True),
     "cfind": InputVariable(fortran.cost_variables, float, array=True),
-    "coolwh": InputVariable(fortran.fwbs_variables, int, choices=[1, 2]),
+    "i_blkt_coolant_type": InputVariable(fortran.fwbs_variables, int, choices=[1, 2]),
     "coppera_m2_max": InputVariable(
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "divdum": InputVariable(fortran.divertor_variables, int, choices=[0, 1]),
     "dwell_pump": InputVariable(fortran.vacuum_variables, int, choices=[0, 1, 2]),
-    "fwbsshape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
+    "i_fw_blkt_vv_shape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "hcdportsize": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
-    "i_bb_liq": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
+    "i_blkt_liquid_breeder_type": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1]
+    ),
     "i_beta_component": InputVariable(fortran.physics_variables, int, range=(0, 3)),
     "i_beta_fast_alpha": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_blanket_type": InputVariable(fortran.fwbs_variables, int, choices=[1, 3, 5]),
@@ -1493,10 +1501,14 @@ INPUT_VARIABLES = {
     "iavail": InputVariable(fortran.cost_variables, int, range=(0, 3)),
     "ibkt_life": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
     "iblanket_thickness": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
-    "icooldual": InputVariable(fortran.fwbs_variables, int, choices=[0, 1, 2]),
+    "i_blkt_dual_coolant": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1, 2]
+    ),
     "iefrf": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
     "iefrffix": InputVariable(fortran.current_drive_variables, int, range=(0, 13)),
-    "ifci": InputVariable(fortran.fwbs_variables, int, choices=[0, 1, 2]),
+    "i_blkt_liquid_breeder_channel_type": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1, 2]
+    ),
     "ife": InputVariable(fortran.ife_variables, int, choices=[0, 1]),
     "ifedrv": InputVariable(fortran.ife_variables, int, range=(-1, 3)),
     "ifetyp": InputVariable(fortran.ife_variables, int, range=(0, 4)),
@@ -1511,7 +1523,9 @@ INPUT_VARIABLES = {
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "iprimshld": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "iprofile": InputVariable(fortran.physics_variables, int, range=(0, 6)),
-    "ipump": InputVariable(fortran.fwbs_variables, int, choices=[0, 1, 2]),
+    "i_fw_blkt_shared_coolant": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1, 2]
+    ),
     "ireactor": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "irefprop": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "irfcd": InputVariable(fortran.current_drive_variables, int, choices=[0, 1]),
@@ -1535,20 +1549,30 @@ INPUT_VARIABLES = {
     "n_tf_graded_layers": InputVariable(fortran.tfcoil_variables, int, range=(1, 20)),
     "n_tf_joints": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),
     "n_tf_joints_contact": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),
-    "nblktmodpi": InputVariable(fortran.fwbs_variables, int, range=(1, 16)),
-    "nblktmodpo": InputVariable(fortran.fwbs_variables, int, range=(1, 16)),
-    "nblktmodti": InputVariable(fortran.fwbs_variables, int, range=(8, 96)),
-    "nblktmodto": InputVariable(fortran.fwbs_variables, int, range=(8, 96)),
+    "n_blkt_inboard_modules_poloidal": InputVariable(
+        fortran.fwbs_variables, int, range=(1, 16)
+    ),
+    "n_blkt_outboard_modules_poloidal": InputVariable(
+        fortran.fwbs_variables, int, range=(1, 16)
+    ),
+    "n_blkt_inboard_modules_toroidal": InputVariable(
+        fortran.fwbs_variables, int, range=(8, 96)
+    ),
+    "n_blkt_outboard_modules_toroidal": InputVariable(
+        fortran.fwbs_variables, int, range=(8, 96)
+    ),
     "npdiv": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "nphcdin": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "ntype": InputVariable(fortran.vacuum_variables, int, choices=[0, 1]),
     "num_rh_systems": InputVariable(fortran.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
-    "primary_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
+    "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
     "reinke_mode": InputVariable(fortran.reinke_variables, int, choices=[0, 1]),
     "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
-    "secondary_cycle": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
+    "i_thermal_electric_conversion": InputVariable(
+        fortran.fwbs_variables, int, range=(0, 4)
+    ),
     "secondary_cycle_liq": InputVariable(fortran.fwbs_variables, int, range=(2, 4)),
     "supercond_cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "i_tf_inside_cs": InputVariable(fortran.build_variables, int, choices=[0, 1]),
