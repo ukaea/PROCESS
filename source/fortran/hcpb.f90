@@ -16,9 +16,6 @@ module ccfe_hcpb_module
 
   implicit none
 
-  ! Variables for output to file
-  integer :: ip, ofile
-
   ! Smeared densities of build sections
   real(dp) :: armour_density
   !! FW armour density [kg/m3]
@@ -62,8 +59,6 @@ contains
     !! Initialise module variables
     implicit none
 
-    ip = 0
-    ofile = 0
     armour_density = 0.0D0
     fw_density = 0.0D0
     blanket_density = 0.0D0

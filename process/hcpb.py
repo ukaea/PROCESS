@@ -39,9 +39,6 @@ class CCFE_HCPB:
         self.blanket_library = blanket_library
 
     def run(self, output: bool):
-        ccfe_hcpb_module.ip = int(output)
-        ccfe_hcpb_module.ofile = self.outfile
-
         # MDK (27/11/2015)
         build_variables.dr_fw_inboard = (
             2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
