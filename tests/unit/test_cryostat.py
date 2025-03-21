@@ -32,8 +32,8 @@ class ExternalCryoGeometryParam(NamedTuple):
     dr_pf_cryostat: Any = None
     z_cryostat_half_inside: Any = None
     vol_cryostat: Any = None
-    vvmass: Any = None
-    vdewin: Any = None
+    m_vv: Any = None
+    vol_vv: Any = None
     denstl: Any = None
     dewmkg: Any = None
     r_pf_coil_outer: Any = None
@@ -61,8 +61,8 @@ class ExternalCryoGeometryParam(NamedTuple):
             dr_pf_cryostat=0.5,
             z_cryostat_half_inside=0,
             vol_cryostat=0,
-            vvmass=0,
-            vdewin=1016.2876250857248,
+            m_vv=0,
+            vol_vv=1016.2876250857248,
             denstl=7800,
             dewmkg=0,
             r_pf_coil_outer=np.array(
@@ -177,8 +177,8 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(
         fwbs_variables, "vol_cryostat", externalcryogeometryparam.vol_cryostat
     )
-    monkeypatch.setattr(fwbs_variables, "vvmass", externalcryogeometryparam.vvmass)
-    monkeypatch.setattr(fwbs_variables, "vdewin", externalcryogeometryparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "m_vv", externalcryogeometryparam.m_vv)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
@@ -205,7 +205,7 @@ def test_external_cryo_geometry(
     assert fwbs_variables.vol_cryostat == pytest.approx(
         externalcryogeometryparam.expected_vol_cryostat
     )
-    assert fwbs_variables.vvmass == pytest.approx(
+    assert fwbs_variables.m_vv == pytest.approx(
         externalcryogeometryparam.expected_vvmass
     )
     assert fwbs_variables.dewmkg == pytest.approx(

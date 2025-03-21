@@ -81,11 +81,11 @@ class Cryostat:
         ) - (fwbs_variables.vol_cryostat_internal)
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
+            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
     def cryostat_output(self) -> None:
