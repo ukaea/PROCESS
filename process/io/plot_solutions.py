@@ -12,6 +12,7 @@ import logging
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from warnings import warn
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -107,12 +108,22 @@ def plot_mfile_solutions(
     :return: figure and dataframe of solutions
     :rtype: Tuple[mpl.figure.Figure, pd.DataFrame]
     """
+    if normalisation_type is not None and normalising_tag is not None:
+        warn(
+            "Double-normalising: using opt params normalised to each solution "
+            "and normalising again to another solution. Are you sure?",
+            stacklevel=1,
+        )
+
     # Determine type of normalised opt params to plot (i.e. itvar, xcm or nitvar)
     if normalisation_type == "init":
+        # Use values normalised to initial value for each solution: final/initial (xcm)
         opt_param_value_pattern = INITIAL_NORM_OPT_PARAM_VALUE_PATTERN
     elif normalisation_type == "range":
+        # Use values normalised to allowed range of value (nitvar)
         opt_param_value_pattern = RANGE_NORM_OPT_PARAM_VALUE_PATTERN
     else:
+        # No normalisation for each solution (itvar)
         opt_param_value_pattern = OPT_PARAM_VALUE_REGEX
 
     # Create dataframe from runs metadata: mfile data with a tag for each run
@@ -351,7 +362,7 @@ def _filter_vars_of_interest(
 
 def _plot_solutions(
     diffs_df: pd.DataFrame,
-    normalisation_type: str,
+    normalisation_type: str | None,
     opt_param_value_pattern: str,
     plot_title: str,
     normalising_tag: str | None,
@@ -361,8 +372,8 @@ def _plot_solutions(
 
     :param diffs_df: normalised diffs for optimisation parameters and objective function
     :type diffs_df: pandas.DataFrame
-    :param normalisation_type: opt param normalisation to use: ["init", "range"]
-    :type normalisation_type: str
+    :param normalisation_type: opt param normalisation to use: ["init", "range", None]
+    :type normalisation_type: str | None
     :param opt_param_value_pattern: normalisation type for opt params in mfile
     :type opt_param_value_pattern: str
     :param plot_title: title of plot
@@ -438,8 +449,9 @@ def _plot_solutions(
 
     # Define optimisation parameter plot
     opt_param_count = len(opt_params_names)
-    if normalisation_type is None:
-        # Separate axes for each opt param: more space per param
+    if normalisation_type is None and normalising_tag is None:
+        # Actual values of opt params, not normalised to any solution
+        # Separate axes required for each opt param: more space per param
         inches_per_opt_param = 0.7
         # Add extra subplot for legend
         nrows_opt_param_subplot = opt_param_count + 1
@@ -501,7 +513,7 @@ def _plot_solutions(
     # If normalisation_type is None (no normalisation of original opt param
     # values), plot strip plot with different axis for each opt param.
     # Otherwise plot all params on single axis
-    if normalisation_type is None:
+    if normalisation_type is None and normalising_tag is None:
         # axs_opt_params[0] reserved for legend
         for i, opt_param_name in enumerate(opt_params_names):
             sns.stripplot(
