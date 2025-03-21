@@ -7,6 +7,7 @@ import scipy.integrate as integrate
 from scipy.optimize import root_scalar
 
 import process.confinement_time as confinement
+import process.fusion_reactions as reactions
 import process.impurity_radiation as impurity_radiation
 import process.l_h_transition as transition
 import process.physics_functions as physics_funcs
@@ -2028,7 +2029,7 @@ class Physics:
 
         # Calculate fusion power + components
 
-        fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
         fusion_reactions.deuterium_branching(physics_variables.ti)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
@@ -2114,7 +2115,7 @@ class Physics:
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
             physics_variables.fusion_power,
-        ) = physics_funcs.set_fusion_powers(
+        ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
             physics_variables.alpha_power_beams,

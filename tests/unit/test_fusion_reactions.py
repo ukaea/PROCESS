@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from pytest import approx
 
-from process import physics_functions
+from process import fusion_reactions as reactions
 from process.fortran import physics_variables as pv
 
 
@@ -178,7 +178,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         alpha_power_ions_density,
         charged_particle_power,
         fusion_power,
-    ) = physics_functions.set_fusion_powers(
+    ) = reactions.set_fusion_powers(
         f_alpha_electron=setfusionpowersparam.f_alpha_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         alpha_power_beams=setfusionpowersparam.alpha_power_beams,
@@ -218,10 +218,10 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
 @pytest.mark.parametrize(
     "t, reaction, expected_bosch_hale",
     (
-        (55.73, physics_functions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
-        (55.73, physics_functions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
-        (55.73, physics_functions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
-        (55.73, physics_functions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
+        (55.73, reactions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
+        (55.73, reactions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
+        (55.73, reactions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
+        (55.73, reactions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
     ),
     ids=["DT", "DHE3", "DD1", "DD2"],
 )
@@ -236,15 +236,15 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
     :param expected_bosch_hale: expected return value from the bosch_hale function
     :type expected_bosch_hale: float
     """
-    bosch_hale = physics_functions.bosch_hale_reactivity(
-        np.array([t]), physics_functions.BoschHaleConstants(**reaction)
+    bosch_hale = reactions.bosch_hale_reactivity(
+        np.array([t]), reactions.BoschHaleConstants(**reaction)
     )
 
     assert bosch_hale == approx(expected_bosch_hale, abs=1e-23)
 
 
 def test_beam_fusion():
-    beta_beam, beam_density_out, alpha_power_beams = physics_functions.beam_fusion(
+    beta_beam, beam_density_out, alpha_power_beams = reactions.beam_fusion(
         1.0,
         1.5,
         0.85,
@@ -275,7 +275,7 @@ def test_beamcalc():
         tritium_beam_alpha_power,
         hot_beam_density,
         beam_deposited_energy,
-    ) = physics_functions.beamcalc(
+    ) = reactions.beamcalc(
         3.3e19,
         3.3e19,
         1000.0,
@@ -296,13 +296,13 @@ def test_beamcalc():
 
 
 def test__fast_ion_pressure_integral():
-    pressure_integral = physics_functions.fast_ion_pressure_integral(1000.0, 276.7)
+    pressure_integral = reactions.fast_ion_pressure_integral(1000.0, 276.7)
 
     assert pressure_integral == pytest.approx(1.1061397270783706)
 
 
 def test_alpha_power_beam():
-    alpha_power_beam = physics_functions.alpha_power_beam(
+    alpha_power_beam = reactions.alpha_power_beam(
         316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
     )
 
@@ -310,8 +310,6 @@ def test_alpha_power_beam():
 
 
 def test_beam_reaction_rate():
-    beam_reaction_rate = physics_functions.beam_reaction_rate(
-        3.01550071597, 5140000.0, 1000.0
-    )
+    beam_reaction_rate = reactions.beam_reaction_rate(3.01550071597, 5140000.0, 1000.0)
 
     assert beam_reaction_rate == pytest.approx(7.465047902975452e-18)
