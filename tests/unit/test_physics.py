@@ -3055,3 +3055,36 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     assert t_ion_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_ion_energy_confinement
     )
+
+
+def test_calculate_plasma_masses():
+    """Test calculate_plasma_masses()"""
+    m_fuel_amu = 2.5
+    m_ions_total_amu = 3.0
+    nd_ions_total = 1.0e20
+    nd_fuel_ions = 0.8e20
+    nd_alphas = 0.1e20
+    vol_plasma = 100.0
+    dene = 1.0e20
+
+    (
+        m_plasma_fuel_ions,
+        m_plasma_ions_total,
+        m_plasma_alpha,
+        m_plasma_electron,
+        m_plasma,
+    ) = Physics.calculate_plasma_masses(
+        m_fuel_amu=m_fuel_amu,
+        m_ions_total_amu=m_ions_total_amu,
+        nd_ions_total=nd_ions_total,
+        nd_fuel_ions=nd_fuel_ions,
+        nd_alphas=nd_alphas,
+        vol_plasma=vol_plasma,
+        dene=dene,
+    )
+
+    assert m_plasma_fuel_ions == pytest.approx(3.32107813784e-05, abs=1e-30)
+    assert m_plasma_ions_total == pytest.approx(4.9816172067599995e-05, abs=1e-30)
+    assert m_plasma_alpha == pytest.approx(6.644657345e-06, abs=1e-30)
+    assert m_plasma_electron == pytest.approx(9.1093837139e-09, abs=1e-34)
+    assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
