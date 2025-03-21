@@ -5,7 +5,6 @@ import numpy as np
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
 from process.fortran import (
-    blanket_library,
     build_variables,
     buildings_variables,
     constants,
@@ -723,11 +722,6 @@ class Build:
                 "\n*Cryostat roof allowance includes uppermost PF coil and outer thermal shield.\n*Cryostat floor allowance includes lowermost PF coil, outer thermal shield and gravity support.",
             )
 
-        #  Other build quantities
-
-        # Output the cryostat geometry
-        _ = self.cryostat_output(output)
-
         # Output the cdivertor geometry
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
@@ -772,59 +766,6 @@ class Build:
                 build_variables.hpfu
                 - (build_variables.hmax + build_variables.dr_tf_inboard)
             ) / 2.0e0
-
-    def cryostat_output(self, output: bool) -> None:
-        """
-        Outputs the cryostat geometry details to the output file.
-
-        Returns:
-            None
-        """
-        if output:
-            po.oheadr(self.outfile, "Cryostat build")
-
-            po.ovarrf(
-                self.outfile,
-                "Cryostat thickness (m)",
-                "(dr_cryostat)",
-                build_variables.dr_cryostat,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Cryostat internal radius (m)",
-                "(r_cryostat_inboard)",
-                fwbs_variables.r_cryostat_inboard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Cryostat intenral half height (m)",
-                "(z_cryostat_half_inside)",
-                fwbs_variables.z_cryostat_half_inside,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Vertical clearance from highest PF coil to cryostat (m)",
-                "(dz_pf_cryostat)",
-                blanket_library.dz_pf_cryostat,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Cryostat structure volume (m^3)",
-                "(vol_cryostat)",
-                fwbs_variables.vol_cryostat,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Cryostat internal volume (m^3)",
-                "(vol_cryostat_internal)",
-                fwbs_variables.vol_cryostat_internal,
-                "OP ",
-            )
 
     def divgeom(self, output: bool):
         """

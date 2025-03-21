@@ -57,6 +57,7 @@ from process.buildings import Buildings
 from process.caller import write_output_files
 from process.costs import Costs
 from process.costs_2015 import Costs2015
+from process.cryostat import Cryostat
 from process.cs_fatigue import CsFatigue
 from process.current_drive import CurrentDrive
 from process.dcll import DCLL
@@ -654,6 +655,7 @@ class Models:
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
+        self.cryostat = Cryostat()
         self.build = Build()
         self.sctfcoil = Sctfcoil()
         self.tfcoil = TFcoil(build=self.build, sctfcoil=self.sctfcoil)

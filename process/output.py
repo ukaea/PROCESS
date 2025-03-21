@@ -58,6 +58,9 @@ def write(models, _outfile):
     # Vertical build
     models.build.calculate_vertical_build(output=True)
 
+    # Cryostat build
+    models.cryostat.cryostat_output()
+
     # Toroidal field coil model
     models.tfcoil.output()
 
