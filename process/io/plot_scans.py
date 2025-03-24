@@ -570,7 +570,7 @@ def main(args=None):
                         y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                     if y_axis_percentage:
                         if y_max is None:
-                            y_max = max(abs(output_arrays[input_file][output_name]))
+                            y_max = max(np.abs(output_arrays[input_file][output_name]))
                         yticks = mtick.PercentFormatter(y_max)
                         if y_axis_range != []:
                             y_divisions = 5 * math.ceil(y_divisions / 5) * y_max / 100
@@ -586,7 +586,7 @@ def main(args=None):
                         x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
                     if x_axis_percentage:
                         if x_max is None:
-                            x_max = max(abs(scan_var_array[input_file]))
+                            x_max = max(np.abs(scan_var_array[input_file]))
                         xticks = mtick.PercentFormatter(x_max)
                         ax.xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
@@ -615,7 +615,9 @@ def main(args=None):
                             y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                         if y_axis_percentage:
                             if y_max is None:
-                                y_max = max(abs(output_arrays[input_file][output_name]))
+                                y_max = max(
+                                    np.abs(output_arrays[input_file][output_name])
+                                )
                             yticks = mtick.PercentFormatter(y_max)
                             if y_axis_range != []:
                                 y_divisions = (
@@ -639,7 +641,7 @@ def main(args=None):
                             x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
                         if x_axis_percentage:
                             if x_max is None:
-                                x_max = max(abs(scan_var_array[input_file]))
+                                x_max = max(np.abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max)
                             print("xticks", xticks)
                             if x_axis_range != []:
@@ -678,7 +680,9 @@ def main(args=None):
                             y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                         if y_axis_percentage:
                             if y_max is None:
-                                y_max = max(abs(output_arrays[input_file][output_name]))
+                                y_max = max(
+                                    np.abs(output_arrays[input_file][output_name])
+                                )
                             yticks = mtick.PercentFormatter(y_max)
                             if y_axis_range != []:
                                 y_divisions = (
@@ -698,7 +702,7 @@ def main(args=None):
                             x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
                         if x_axis_percentage:
                             if x_max is None:
-                                x_max = max(abs(scan_var_array[input_file]))
+                                x_max = max(np.abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max)
                             if x_axis_range != []:
                                 x_divisions = (
@@ -739,7 +743,7 @@ def main(args=None):
                         y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                     if y_axis_percentage:
                         if y_max is None:
-                            y_max = max(abs(output_arrays[input_file][output_name]))
+                            y_max = max(np.abs(output_arrays[input_file][output_name]))
                         yticks = mtick.PercentFormatter(y_max)
                         if y_axis_range != []:
                             y_divisions = 5 * math.ceil(y_divisions / 5) * y_max / 100
@@ -980,7 +984,7 @@ def main(args=None):
                     y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                 if y_axis_percentage:
                     if y_max is None:
-                        y_max = max(abs(y_contour))
+                        y_max = max(np.abs(y_contour))
                     yticks = mtick.PercentFormatter(y_max)
                     if y_axis_range != []:
                         y_divisions = 5 * math.ceil(y_divisions / 5) * y_max / 100
@@ -996,7 +1000,7 @@ def main(args=None):
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
                 if x_axis_percentage:
                     if x_max is None:
-                        x_max = max(abs(x_contour))
+                        x_max = max(np.abs(x_contour))
                     xticks = mtick.PercentFormatter(x_max)
                     if x_axis_range != []:
                         x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
@@ -1004,7 +1008,7 @@ def main(args=None):
                             x_axis_range[0] * x_max / 100,
                             x_axis_range[1] * x_max / 100,
                         )
-                    ax2.xaxis.set_major_formatter(xticks)
+                    ax.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
                     plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
@@ -1068,7 +1072,7 @@ def main(args=None):
                     y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
                 if y_axis_percentage:
                     if y_max is None:
-                        y_max = max(abs(y_data))
+                        y_max = max(np.abs(y_data))
                     yticks = mtick.PercentFormatter(y_max)
                     if y_axis_range != []:
                         y_divisions = 5 * math.ceil(y_divisions / 5) * y_max / 100
@@ -1088,7 +1092,7 @@ def main(args=None):
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
                 if x_axis_percentage:
                     if x_max is None:
-                        x_max = max(abs(x_data))
+                        x_max = max(np.abs(x_data))
                     xticks = mtick.PercentFormatter(x_max)
                     if x_axis_range != []:
                         x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
@@ -1096,7 +1100,7 @@ def main(args=None):
                             x_axis_range[0] * x_max / 100,
                             x_axis_range[1] * x_max / 100,
                         )
-                    ax2.xaxis.set_major_formatter(xticks)
+                    ax.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
                     plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
