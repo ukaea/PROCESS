@@ -1409,10 +1409,14 @@ class Stellarator:
                 bfwo = 0.5e0 * build_variables.dr_fw_outboard
 
                 f_a_fw_coolant_inboard = (
-                    fwbs_variables.afwi * fwbs_variables.afwi / (bfwi * bfwi)
+                    fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
+                    / (bfwi * bfwi)
                 )  # inboard FW coolant void fraction
                 f_a_fw_coolant_outboard = (
-                    fwbs_variables.afwo * fwbs_variables.afwo / (bfwo * bfwo)
+                    fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
+                    / (bfwo * bfwo)
                 )  # outboard FW coolant void fraction
 
                 #  First wall decay length (m) - improved calculation required

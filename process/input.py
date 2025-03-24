@@ -153,8 +153,6 @@ INPUT_VARIABLES = {
     "abktflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
     "admv": InputVariable(fortran.buildings_variables, float, range=(1.0e4, 1.0e6)),
-    "afwi": InputVariable(fortran.fwbs_variables, float, range=(0.001, 0.05)),
-    "afwo": InputVariable(fortran.fwbs_variables, float, range=(0.001, 0.05)),
     "airtemp": InputVariable(fortran.water_usage_variables, float, range=(-15.0, 40.0)),
     "alfapf": InputVariable(fortran.pfcoil_variables, float, range=(1e-12, 1.0)),
     "alstroh": InputVariable(
