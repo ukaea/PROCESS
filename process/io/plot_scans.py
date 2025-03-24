@@ -558,6 +558,7 @@ def main(args=None):
 
                 # Plot the graph
                 if output_names2 != [] and not stack_plots:
+                    print("A - twin axis")
                     ax.plot(
                         scan_var_array[input_file],
                         output_arrays[input_file][output_name],
@@ -590,18 +591,19 @@ def main(args=None):
                         ax.xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
                             x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
-                            x_axis_range = (
+                            x_range = (
                                 x_axis_range[0] * x_max / 100,
                                 x_axis_range[1] * x_max / 100,
                             )
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
                     if x_axis_range != []:
-                        plt.xlim(x_axis_range[0], x_axis_range[1])
+                        plt.xlim(x_range[0], x_range[1])
                         ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
                     plt.tight_layout()
                 else:
                     if stack_plots:
+                        print("B - stack")
                         axs[output_names.index(output_name)].plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
@@ -628,7 +630,9 @@ def main(args=None):
                             ].yaxis.set_major_formatter(yticks)
                         if y_axis_range != []:
                             plt.ylim(y_axis_range[0], y_axis_range[1])
-                            ax.yaxis.set_major_locator(
+                            axs[
+                                output_names.index(output_name)
+                            ].yaxis.set_major_locator(
                                 mtick.MultipleLocator(y_divisions)
                             )
                         if x_axis_range != []:
@@ -637,26 +641,32 @@ def main(args=None):
                             if x_max is None:
                                 x_max = max(abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max)
+                            print("xticks", xticks)
                             if x_axis_range != []:
+                                print("xr", x_axis_range)
                                 x_divisions = (
                                     5 * math.ceil(x_divisions / 5) * x_max / 100
                                 )
-                                x_axis_range = (
+                                x_range = (
                                     x_axis_range[0] * x_max / 100,
                                     x_axis_range[1] * x_max / 100,
                                 )
+                                print("xr", x_axis_range)
                             axs[
                                 output_names.index(output_name)
                             ].xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
-                            plt.xlim(x_axis_range[0], x_axis_range[1])
-                            ax.xaxis.set_major_locator(
+                            plt.xlim(x_range[0], x_range[1])
+                            axs[
+                                output_names.index(output_name)
+                            ].xaxis.set_major_locator(
                                 mtick.MultipleLocator(x_divisions)
                             )
                         plt.rc("xtick", labelsize=axis_tick_size)
                         plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                     else:
+                        print("C - single var")
                         ax.plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
@@ -694,13 +704,13 @@ def main(args=None):
                                 x_divisions = (
                                     5 * math.ceil(x_divisions / 5) * x_max / 100
                                 )
-                                x_axis_range = (
+                                x_range = (
                                     x_axis_range[0] * x_max / 100,
                                     x_axis_range[1] * x_max / 100,
                                 )
                             ax.xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
-                            plt.xlim(x_axis_range[0], x_axis_range[1])
+                            plt.xlim(x_range[0], x_range[1])
                             ax.xaxis.set_major_locator(
                                 mtick.MultipleLocator(x_divisions)
                             )
@@ -708,6 +718,7 @@ def main(args=None):
                         plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                 if output_names2 != []:
+                    print("D - twin axis 2")
                     ax2.plot(
                         scan_var_array[input_file],
                         output_arrays2[input_file][output_name2],
@@ -740,22 +751,6 @@ def main(args=None):
                     if y_axis_range != []:
                         plt.ylim(y_axis_range[0], y_axis_range[1])
                         ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
-                    if x_axis_range != []:
-                        x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                    if x_axis_percentage:
-                        if x_max is None:
-                            x_max = max(abs(scan_var_array[input_file]))
-                        xticks = mtick.PercentFormatter(x_max)
-                        if x_axis_range != []:
-                            x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
-                            x_axis_range = (
-                                x_axis_range[0] * x_max / 100,
-                                x_axis_range[1] * x_max / 100,
-                            )
-                        ax2.xaxis.set_major_formatter(xticks)
-                    if x_axis_range != []:
-                        plt.xlim(x_axis_range[0], x_axis_range[1])
-                        ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
                     plt.tight_layout()
@@ -1005,13 +1000,13 @@ def main(args=None):
                     xticks = mtick.PercentFormatter(x_max)
                     if x_axis_range != []:
                         x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
-                        x_axis_range = (
+                        x_range = (
                             x_axis_range[0] * x_max / 100,
                             x_axis_range[1] * x_max / 100,
                         )
                     ax2.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
-                    plt.xlim(x_axis_range[0], x_axis_range[1])
+                    plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
                 plt.rc("xtick", labelsize=axis_tick_size)
                 plt.rc("ytick", labelsize=axis_tick_size)
@@ -1097,13 +1092,13 @@ def main(args=None):
                     xticks = mtick.PercentFormatter(x_max)
                     if x_axis_range != []:
                         x_divisions = 5 * math.ceil(x_divisions / 5) * x_max / 100
-                        x_axis_range = (
+                        x_range = (
                             x_axis_range[0] * x_max / 100,
                             x_axis_range[1] * x_max / 100,
                         )
                     ax2.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
-                    plt.xlim(x_axis_range[0], x_axis_range[1])
+                    plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
                 plt.rc("xtick", labelsize=8)
                 plt.rc("ytick", labelsize=8)
