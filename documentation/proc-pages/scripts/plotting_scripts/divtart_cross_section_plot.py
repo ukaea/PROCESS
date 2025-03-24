@@ -1,6 +1,6 @@
 import numpy as np
 from bokeh.io import output_file, save
-from bokeh.layouts import column, row
+from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, CustomJS, Quad, Slider, Span
 from bokeh.plotting import figure
 
@@ -8,14 +8,14 @@ from bokeh.plotting import figure
 square_value = 0.0
 
 r0 = Slider(start=0.1, end=10, value=5.0, step=0.1, title="Major radius")
-a = Slider(start=0.01, end=10, value=3.0, step=0.01, title="Minor radius")
+a = Slider(start=0.01, end=2.5, value=2.0, step=0.01, title="Minor radius")
 delta = Slider(start=0.0, end=1, value=0.5, step=0.01, title="Triangularity | delta")
-kappa = Slider(start=0.0, end=10, value=2.0, step=0.01, title="Elongation | kappa")
+kappa = Slider(start=0.0, end=2.5, value=2.0, step=0.01, title="Elongation | kappa")
 first_wall_gap_inboard = Slider(
     start=0.01, end=0.5, value=0.3, step=0.01, title="First Wall Gap"
 )
 plasma_divertor_gap = Slider(
-    start=0.01, end=1.5, value=1.0, step=0.01, title="Plasma to Divertor Gap"
+    start=0.01, end=1.0, value=1.0, step=0.01, title="Plasma to Divertor Gap"
 )
 
 output_file("divtart_divertor.html")
@@ -38,7 +38,7 @@ source = ColumnDataSource(
 plot = figure(
     x_range=(0, 10),
     y_range=(0, 10),
-    width=800,
+    width=650,
     height=800,
     title="divtart divertor box",
 )
@@ -170,6 +170,6 @@ plasma_divertor_gap.js_on_change("value", callback)
 
 # Save the plot as HTML
 save(
-    row(plot, column(r0, a, delta, kappa, first_wall_gap_inboard, plasma_divertor_gap)),
+    column(plot, r0, a, delta, kappa, first_wall_gap_inboard, plasma_divertor_gap),
     filename="./divtart_divertor.html",
 )

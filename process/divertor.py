@@ -75,9 +75,6 @@ class Divertor:
     ) -> float:
         """Tight aspect ratio tokamak divertor model
 
-
-
-
                 :param rmajor: plasma major radius (m)
                 :type rmajor: float
 
