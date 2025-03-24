@@ -74,37 +74,48 @@ class Divertor:
         output: bool,
     ) -> float:
         """Tight aspect ratio tokamak divertor model
-        author: P J Knight, CCFE, Culham Science Centre
 
-        This subroutine calculates the divertor heat load for a tight aspect
-        ratio machine, by assuming that the power is evenly spread around the
-        divertor chamber by the action of a gaseous target. Each divertor is
-        assumed to be approximately triangular in the R,Z plane.
-        AEA FUS 64: Figure 2
 
-        :param rmajor: plasma major radius (m)
-        :type rmajor: float
 
-        :param rminor: plasma minor radius (m)
-        :type rminor: float
 
-        :param triang: plasma triangularity
-        :type triang: float
+                :param rmajor: plasma major radius (m)
+                :type rmajor: float
 
-        :param dr_fw_plasma_gap_inboard: inboard scrape-off width (m)
-        :type dr_fw_plasma_gap_inboard: float
+                :param rminor: plasma minor radius (m)
+                :type rminor: float
 
-        :param dz_xpoint_divertor: top scrape-off width (m)
-        :type dz_xpoint_divertor: float
+                :param triang: plasma triangularity
+                :type triang: float
 
-        :param pdivt: power to the divertor (MW)
-        :type pdivt: float
+                :param dr_fw_plasma_gap_inboard: inboard scrape-off width (m)
+                :type dr_fw_plasma_gap_inboard: float
 
-        :returns: divertor heat load for a tight aspect ratio machine
-        :rtype: float
+                :param dz_xpoint_divertor: top scrape-off width (m)
+                :type dz_xpoint_divertor: float
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+                :param pdivt: power to the divertor (MW)
+                :type pdivt: float
+
+                :returns: divertor heat load for a tight aspect ratio machine
+                :rtype: float
+
+                :param output: indicate whether output should be written to the output file, or not
+                :type output: boolean
+
+                :notes:
+                    This subroutine calculates the divertor heat load for a tight aspect
+                    ratio machine, by assuming that the power is evenly spread around the
+                    divertor chamber by the action of a gaseous target. Each divertor is
+                    assumed to be approximately triangular in the R,Z plane.
+                    AEA FUS 64: Figure 2
+
+                :references:
+                    - Y.-K. M. Peng, J. B. Hicksand AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors".
+                    1990. https://inis.iaea.org/records/ey2rf-dah04
+
+                    - Y.-K. M. Peng, J. B. Hicksand, “Engineering feasibility of tight aspect ratio tokamak (spherical torus) reactors,”
+                    Osti.gov, 1991. https://www.osti.gov/biblio/1022679 (accessed Mar. 24, 2025).
+        ‌
         """
 
         #  Thickness of centrepost + first wall at divertor height
@@ -217,6 +228,14 @@ class Divertor:
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
+
+        :notes:
+
+        :references:
+
+
+
+
         """
 
         # Radius on midplane

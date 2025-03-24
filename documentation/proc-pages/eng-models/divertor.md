@@ -19,17 +19,21 @@ The divertor heat flux `hldiv` can be calculated or it can be input by the user.
 | `i_hldiv` | Description |
 | :-: | - |
 | 0 | the user inputs the value for `hldiv` |
-| 1 | the chamber model (`divtart`) is called to calculate `hldiv` |
+| 1 | the Peng chamber model (`divtart`) is called to calculate `hldiv` |
 | 2 | the Wade heat flux model (`divwade`) is called to calculate `hldiv` |
 
-## Chamber model
+---------------
+
+## Peng Chamber model
 
 !!! Note ""
     `i_hldiv == 1`
 
-The tight aspect ratio tokamak divertor model (`divtart`) calculates the divertor heat flux by 
+The tight aspect ratio tokamak divertor model (`divtart`) [^5] calculates the divertor heat flux by 
 assuming that the power is evenly spread around the divertor chamber by the action of a gaseous 
 target. Each divertor is assumed to be approximately triangular in the R,Z plane.
+
+--------------------
 
 ## Wade Heat Flux Model
 
@@ -102,3 +106,5 @@ ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 [^3]: T. Eich et al, 'Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER', Nucl. Fusion 53 093031 (2013)
 
 [^4]: A. Scarabosio et al, 'Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade, Journal of Nuclear Materials, Vol. 463, 49-54 (2015)
+
+[^5]: Y.-K. M. Peng, J. B. Hicksand AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors". 1990. https://inis.iaea.org/records/ey2rf-dah04
