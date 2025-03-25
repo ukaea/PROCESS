@@ -1064,14 +1064,6 @@ class Stellarator:
         # Energy multiplication factor
         fwbs_variables.emult = 1.269
 
-        # Tritium breeding ratio
-        fwbs_variables.tbr = self.hcpb.tbr_shimwell(
-            fwbs_variables.vol_blkt_total,
-            fwbs_variables.f_blkt_li6_enrichment,
-            1,
-            output=False,
-        )
-
         # Use older model to calculate neutron fluence since it
         # is not calculated in the CCFE blanket model
         (

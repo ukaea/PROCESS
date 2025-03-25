@@ -1498,7 +1498,6 @@ INPUT_VARIABLES = {
     "i_tf_wp_geom": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
     "iavail": InputVariable(fortran.cost_variables, int, range=(0, 3)),
     "ibkt_life": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
-    "iblanket_thickness": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
