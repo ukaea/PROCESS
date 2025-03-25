@@ -1203,7 +1203,6 @@ def check_process(inputs):
 
     if fortran.stellarator_variables.istell == 0 and (
         fortran.fwbs_variables.i_blanket_type == 1
-        or fortran.fwbs_variables.i_blanket_type == 3
     ):
         fsum = (
             fortran.fwbs_variables.breeder_multiplier
