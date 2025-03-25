@@ -419,7 +419,7 @@ def initialise_iterative_variables():
     fortran.define_iteration_variables.init_itv_175()
 
 
-def check_process(inputs):
+def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
     author: P J Knight, CCFE, Culham Science Centre
