@@ -353,7 +353,7 @@ def sort_value(value_words: list[str]) -> str | float:
     :return: string or float representation of value list
     :rtype: Union[str, float]
     """
-    if '"' in value_words[0]:
+    if any(c in value_words[0] for c in ['"', "'"]):
         # First "word" begins with ": return words as single str
         return " ".join(value_words).strip().strip('"').strip()
     try:
