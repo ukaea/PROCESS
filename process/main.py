@@ -87,7 +87,7 @@ from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.pulse import Pulse
 from process.scan import Scan
-from process.sctfcoil import Sctfcoil
+from process.sctfcoil import SuperconductingTFCoil
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
 from process.tfcoil import TFCoil
@@ -657,7 +657,7 @@ class Models:
         self.power = Power()
         self.cryostat = Cryostat()
         self.build = Build()
-        self.sctfcoil = Sctfcoil()
+        self.sctfcoil = SuperconductingTFCoil()
         self.tfcoil = TFCoil(build=self.build, sctfcoil=self.sctfcoil)
         self.divertor = Divertor()
         self.structure = Structure()

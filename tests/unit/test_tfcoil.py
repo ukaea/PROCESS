@@ -8,7 +8,7 @@ from process.build import Build
 from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
-from process.sctfcoil import Sctfcoil
+from process.sctfcoil import SuperconductingTFCoil
 from process.tfcoil import TFCoil
 
 
@@ -22,7 +22,7 @@ def tfcoil():
     :return tfcoil: initialised TFCoil object
     :type tfcoil: process.tfcoil.TFCoil
     """
-    return TFCoil(build=Build(), sctfcoil=Sctfcoil())
+    return TFCoil(build=Build(), sctfcoil=SuperconductingTFCoil())
 
 
 @pytest.mark.parametrize(

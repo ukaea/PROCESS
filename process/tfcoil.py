@@ -10,7 +10,7 @@ from process.fortran import constants
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
-from process.sctfcoil import Sctfcoil
+from process.sctfcoil import SuperconductingTFCoil
 
 TF_TYPES = {
     1: "Nb3Sn ITER",
@@ -28,7 +28,7 @@ TF_TYPES = {
 class TFCoil:
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
-    def __init__(self, build: Build, sctfcoil: Sctfcoil):
+    def __init__(self, build: Build, sctfcoil: SuperconductingTFCoil):
         """Initialise Fortran module variables."""
         self.outfile = ft.constants.nout  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)

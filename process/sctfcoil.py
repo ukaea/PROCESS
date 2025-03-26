@@ -31,7 +31,7 @@ RMU0 = constants.rmu0
 EPS = np.finfo(1.0).eps
 
 
-class Sctfcoil:
+class SuperconductingTFCoil:
     def __init__(self):
         self.outfile = constants.nout
 
