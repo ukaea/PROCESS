@@ -90,7 +90,7 @@ from process.scan import Scan
 from process.sctfcoil import Sctfcoil
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
-from process.tfcoil import TFcoil
+from process.tfcoil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
@@ -658,7 +658,7 @@ class Models:
         self.cryostat = Cryostat()
         self.build = Build()
         self.sctfcoil = Sctfcoil()
-        self.tfcoil = TFcoil(build=self.build, sctfcoil=self.sctfcoil)
+        self.tfcoil = TFCoil(build=self.build, sctfcoil=self.sctfcoil)
         self.divertor = Divertor()
         self.structure = Structure()
         self.plasma_geom = PlasmaGeom()

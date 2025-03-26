@@ -9,20 +9,20 @@ from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
 from process.sctfcoil import Sctfcoil
-from process.tfcoil import TFcoil
+from process.tfcoil import TFCoil
 
 
 @pytest.fixture
 def tfcoil():
-    """Provides TFcoil object for testing.
+    """Provides TFCoil object for testing.
 
     :param monkeypatch: pytest mocking fixture
     :type monkeypatch: MonkeyPatch
 
-    :return tfcoil: initialised TFcoil object
-    :type tfcoil: process.tfcoil.TFcoil
+    :return tfcoil: initialised TFCoil object
+    :type tfcoil: process.tfcoil.TFCoil
     """
-    return TFcoil(build=Build(), sctfcoil=Sctfcoil())
+    return TFCoil(build=Build(), sctfcoil=Sctfcoil())
 
 
 @pytest.mark.parametrize(
@@ -38,7 +38,7 @@ def test_he_density(temperature, expected_density, tfcoil):
     :param expected_density: expected result of the routine.
     :type expected_density: float
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     density = tfcoil.he_density(temperature)
@@ -59,7 +59,7 @@ def test_he_cp(temperature, expected_cp, tfcoil):
     :param expected_cp: expected result of the routine.
     :type expected_cp: float
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
 
@@ -85,7 +85,7 @@ def test_he_visco(temperature, expected_visco, tfcoil):
     :param expected_visco: expected result of the routine.
     :type expected_visco: float
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     visco = tfcoil.he_visco(temperature)
@@ -116,7 +116,7 @@ def test_he_th_cond(temperature, expected_th_cond, reinitialise_error_module, tf
     :param reinitialise_error_module: teardown any error side-effects
     :type reinitialise_error_module: None
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     th_cond = tfcoil.he_th_cond(temperature)
@@ -142,7 +142,7 @@ def test_al_th_cond(temperature, expected_th_cond, tfcoil):
     :param al_th_cond: expected result of the routine.
     :type al_th_cond: float
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     th_cond = tfcoil.al_th_cond(temperature)
@@ -206,7 +206,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     :param reinitialise_error_module: teardown any error side-effects
     :type reinitialise_error_module: None
 
-    :param tfcoil: fixture containing an initialised `TFcoil` object
+    :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     monkeypatch.setattr(tfv, "a_cp_cool", 1)

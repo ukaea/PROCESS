@@ -26,7 +26,7 @@ class TestVacuum:
         :param monkeypatch: Mock fixture
         :type monkeypatch: object
 
-        :param tfcoil: fixture containing an initialised `TFcoil` object
+        :param tfcoil: fixture containing an initialised `TFCoil` object
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
         monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
