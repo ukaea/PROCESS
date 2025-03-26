@@ -5,8 +5,14 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
+from process.fortran import (
+    build_variables,
+    constants,
+    physics_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
 from process.fortran import build_variables as bv
-from process.fortran import constants
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
@@ -38,7 +44,9 @@ class TFCoil:
     def run(self):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
+        self.tf_global_geometry()
         self.tfcoil()
+
 
     def output(self):
         """Run main tfcoil subroutine and write output."""
@@ -60,6 +68,78 @@ class TFCoil:
 
         # Port size calculation
         self.build.portsz()
+
+    def tf_global_geometry(self):
+        """Subroutine for calculating the TF coil geometry
+        This includes:
+        - Overall geometry of coil (radii and toroidal planes area)
+        - Winding Pack NOT included
+        """
+
+        sctfcoil_module.theta_coil = np.pi / tfcoil_variables.n_tf_coils
+        sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.theta_coil)
+
+        # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
+        if tfcoil_variables.i_tf_case_geom == 0:
+            # Circular front case
+            tfcoil_variables.tfareain = np.pi * (
+                build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
+            )
+        else:
+            # Straight front case
+            tfcoil_variables.tfareain = (
+                tfcoil_variables.n_tf_coils
+                * np.sin(sctfcoil_module.theta_coil)
+                * np.cos(sctfcoil_module.theta_coil)
+                * build_variables.r_tf_inboard_out**2
+                - np.pi * build_variables.r_tf_inboard_in**2
+            )
+
+        # Vertical distance from the midplane to the top of the tapered section [m]
+        if physics_variables.itart == 1:
+            sctfcoil_module.h_cp_top = (
+                build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
+            )
+        # ---
+
+        # Outer leg geometry
+        # ---
+        # Mid-plane inner/out radial position of the TF coil outer leg [m]
+
+        sctfcoil_module.r_tf_outboard_in = (
+            build_variables.r_tf_outboard_mid - build_variables.dr_tf_outboard * 0.5e0
+        )
+        sctfcoil_module.r_tf_outboard_out = (
+            build_variables.r_tf_outboard_mid + build_variables.dr_tf_outboard * 0.5e0
+        )
+
+        # TF coil width in toroidal direction at inboard leg outer edge [m]
+        # ***
+        # Sliding joints geometry
+        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+            tfcoil_variables.tftort = (
+                2.0e0 * build_variables.r_cp_top * np.sin(sctfcoil_module.theta_coil)
+            )
+
+        # Default thickness, initially written for DEMO SC magnets
+        elif physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 1:
+            tfcoil_variables.tftort = (
+                2.0e0
+                * build_variables.r_tf_inboard_out
+                * np.sin(sctfcoil_module.theta_coil)
+            )
+        else:
+            tfcoil_variables.tftort = (
+                2.0e0
+                * build_variables.r_tf_inboard_out
+                * np.sin(sctfcoil_module.theta_coil)
+            )
+
+        # Area of rectangular cross-section TF outboard leg [m2]
+        tfcoil_variables.a_tf_leg_outboard = (
+            tfcoil_variables.tftort * build_variables.dr_tf_outboard
+        )
+        # ---
 
     def cntrpst(self):
         """
