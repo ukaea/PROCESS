@@ -89,7 +89,6 @@ class Fw:
             temperature=fwbs_variables.temp_fw_coolant_in.item(),
             pressure=fwbs_variables.pres_fw_coolant.item(),
         )
-        print(inlet_coolant_properties)
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
@@ -532,7 +531,7 @@ class Fw:
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
-            f"{fwbs_variables.i_fw_coolant_type}",
+            f"'{f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type)}'",
         )
         po.ovarrf(
             self.outfile,

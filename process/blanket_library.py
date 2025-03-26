@@ -1987,7 +1987,7 @@ class BlanketLibrary:
                 self.outfile,
                 "First wall coolant type",
                 "(i_fw_coolant_type)",
-                f'"{fwbs_variables.i_fw_coolant_type}"',
+                f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
             )
             po.ovarre(
                 self.outfile,
