@@ -2149,3 +2149,72 @@ class CurrentDrive:
                         )
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
+
+
+def init_current_drive_variables():
+    """Initialise current drive variables"""
+    current_drive_variables.beamwd = 0.58
+    current_drive_variables.bigq = 0.0
+    current_drive_variables.bootstrap_current_fraction = 0.0
+    current_drive_variables.bootstrap_current_fraction_max = 0.9
+    current_drive_variables.bscf_iter89 = 0.0
+    current_drive_variables.bscf_nevins = 0.0
+    current_drive_variables.bscf_sauter = 0.0
+    current_drive_variables.bscf_wilson = 0.0
+    current_drive_variables.bscf_sakai = 0.0
+    current_drive_variables.bscf_aries = 0.0
+    current_drive_variables.bscf_andrade = 0.0
+    current_drive_variables.bscf_hoang = 0.0
+    current_drive_variables.bscf_wong = 0.0
+    current_drive_variables.bscf_gi_I = 0.0
+    current_drive_variables.bscf_gi_II = 0.0
+    current_drive_variables.cboot = 1.0
+    current_drive_variables.beam_current = 0.0
+    current_drive_variables.diacf_hender = 0.0
+    current_drive_variables.diacf_scene = 0.0
+    current_drive_variables.diamagnetic_current_fraction = 0.0
+    current_drive_variables.echpwr = 0.0
+    current_drive_variables.echwpow = 0.0
+    current_drive_variables.effcd = 0.0
+    current_drive_variables.harnum = 2.0
+    current_drive_variables.wave_mode = 0
+    current_drive_variables.beam_energy = 1.0e3
+    current_drive_variables.etacd = 0.0
+    current_drive_variables.etacdfix = 0.0
+    current_drive_variables.etaech = 0.3
+    current_drive_variables.etalh = 0.3
+    current_drive_variables.etanbi = 0.3
+    current_drive_variables.fpion = 0.5
+    current_drive_variables.pnbitot = 0.0
+    current_drive_variables.pscf_scene = 0.0
+    current_drive_variables.nbshinemw = 0.0
+    current_drive_variables.feffcd = 1.0
+    current_drive_variables.forbitloss = 0.0
+    current_drive_variables.frbeam = 1.05
+    current_drive_variables.f_tritium_beam = 1e-6
+    current_drive_variables.gamcd = 0.0
+    current_drive_variables.gamma_ecrh = 0.35
+    current_drive_variables.xi_ebw = 0.8
+    current_drive_variables.iefrf = 5
+    current_drive_variables.iefrffix = 0
+    current_drive_variables.irfcd = 1
+    current_drive_variables.nbshinef = 0.0
+    current_drive_variables.nbshield = 0.5
+    current_drive_variables.pheat = 0.0
+    current_drive_variables.pheatfix = 0.0
+    current_drive_variables.pinjalw = 150.0
+    current_drive_variables.pinjemw = 0.0
+    current_drive_variables.pinjimw = 0.0
+    current_drive_variables.pinjmw = 0.0
+    current_drive_variables.pinjfixmw = 0.0
+    current_drive_variables.plasma_current_internal_fraction = 0.0
+    current_drive_variables.plhybd = 0.0
+    current_drive_variables.pnbeam = 0.0
+    current_drive_variables.porbitlossmw = 0.0
+    current_drive_variables.ps_current_fraction = 0.0
+    current_drive_variables.pwplh = 0.0
+    current_drive_variables.pwpnb = 0.0
+    current_drive_variables.rtanbeam = 0.0
+    current_drive_variables.rtanmax = 0.0
+    current_drive_variables.taubeam = 0.0
+    current_drive_variables.tbeamin = 3.0

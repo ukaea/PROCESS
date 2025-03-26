@@ -16,9 +16,6 @@ module ccfe_hcpb_module
 
   implicit none
 
-  ! Variables for output to file
-  integer :: ip, ofile
-
   ! Smeared densities of build sections
   real(dp) :: armour_density
   !! FW armour density [kg/m3]
@@ -55,28 +52,4 @@ module ccfe_hcpb_module
 
   real(dp) :: exp_blanket, exp_shield1, exp_shield2
   !! Exponential factors in nuclear heating calcs
-
-contains
-
-  subroutine init_ccfe_hcpb_module
-    !! Initialise module variables
-    implicit none
-
-    ip = 0
-    ofile = 0
-    armour_density = 0.0D0
-    fw_density = 0.0D0
-    blanket_density = 0.0D0
-    shield_density = 0.0D0
-    vv_density = 0.0D0
-    x_blanket = 0.0D0
-    x_shield = 0.0D0
-    tfc_nuc_heating = 0.0D0
-    fw_armour_u_nuc_heating = 0.0D0
-    shld_u_nuc_heating = 0.0D0
-    exp_blanket = 0.0D0
-    exp_shield1 = 0.0D0
-    exp_shield2 = 0.0D0
-  end subroutine init_ccfe_hcpb_module
-
 end module ccfe_hcpb_module
