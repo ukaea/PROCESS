@@ -470,3 +470,199 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
     assert sctfcoil_module.tan_theta_coil == pytest.approx(
         tfglobalgeometryparam.expected_tan_theta_coil
     )
+
+
+class TfCurrentParam(NamedTuple):
+    casthi: Any = None
+
+    c_tf_total: Any = None
+
+    rbmax: Any = None
+
+    i_tf_sup: Any = None
+
+    casths_fraction: Any = None
+
+    tinstf: Any = None
+
+    tftort: Any = None
+
+    bmaxtf: Any = None
+
+    tfinsgap: Any = None
+
+    tfc_sidewall_is_fraction: Any = None
+
+    casths: Any = None
+
+    casthi_is_fraction: Any = None
+
+    casthi_fraction: Any = None
+
+    n_tf_coils: Any = None
+
+    thicndut: Any = None
+
+    thkcas: Any = None
+
+    oacdcp: Any = None
+
+    tfareain: Any = None
+
+    r_tf_inboard_out: Any = None
+
+    r_tf_inboard_in: Any = None
+
+    dr_tf_inboard: Any = None
+
+    bt: Any = None
+
+    rmajor: Any = None
+
+    tfc_current: Any = None
+
+    theta_coil: Any = None
+
+    expected_c_tf_total: Any = None
+
+    expected_rbmax: Any = None
+
+    expected_bmaxtf: Any = None
+
+    expected_oacdcp: Any = None
+
+    expected_tfc_current: Any = None
+
+
+@pytest.mark.parametrize(
+    "tfcurrentparam",
+    (
+        TfCurrentParam(
+            casthi=0.060000000000000012,
+            c_tf_total=0,
+            rbmax=0,
+            i_tf_sup=1,
+            casths_fraction=0.059999999999999998,
+            tinstf=0.0080000000000000019,
+            tftort=1.6395161177915356,
+            bmaxtf=0,
+            tfinsgap=0.01,
+            tfc_sidewall_is_fraction=False,
+            casths=0.05000000000000001,
+            casthi_is_fraction=False,
+            casthi_fraction=0.050000000000000003,
+            n_tf_coils=16,
+            thicndut=0.002,
+            thkcas=0.52465000000000006,
+            oacdcp=8673900,
+            tfareain=27.308689677971632,
+            r_tf_inboard_out=4.20194118510911,
+            r_tf_inboard_in=2.9939411851091102,
+            dr_tf_inboard=1.208,
+            bt=5.3292000000000002,
+            rmajor=8.8901000000000003,
+            tfc_current=0,
+            theta_coil=0.19634954084936207,
+            expected_c_tf_total=236885604.60000002,
+            expected_rbmax=4.0432020634751211,
+            expected_bmaxtf=11.717722779177526,
+            expected_oacdcp=8674367.2945641987,
+            expected_tfc_current=14805350.287500001,
+        ),
+    ),
+)
+def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
+    """
+    Automatically generated Regression Unit Test for tf_current.
+
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+
+    :param tfcurrentparam: the data used to mock and assert in this test.
+    :type tfcurrentparam: tfcurrentparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
+    """
+
+    monkeypatch.setattr(tfcoil_variables, "casthi", tfcurrentparam.casthi)
+
+    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfcurrentparam.c_tf_total)
+
+    monkeypatch.setattr(tfcoil_variables, "rbmax", tfcurrentparam.rbmax)
+
+    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcurrentparam.i_tf_sup)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "casths_fraction", tfcurrentparam.casths_fraction
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "tinstf", tfcurrentparam.tinstf)
+
+    monkeypatch.setattr(tfcoil_variables, "tftort", tfcurrentparam.tftort)
+
+    monkeypatch.setattr(tfcoil_variables, "bmaxtf", tfcurrentparam.bmaxtf)
+
+    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfcurrentparam.tfinsgap)
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "tfc_sidewall_is_fraction",
+        tfcurrentparam.tfc_sidewall_is_fraction,
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "casths", tfcurrentparam.casths)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "casthi_is_fraction", tfcurrentparam.casthi_is_fraction
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "casthi_fraction", tfcurrentparam.casthi_fraction
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcurrentparam.n_tf_coils)
+
+    monkeypatch.setattr(tfcoil_variables, "thicndut", tfcurrentparam.thicndut)
+
+    monkeypatch.setattr(tfcoil_variables, "thkcas", tfcurrentparam.thkcas)
+
+    monkeypatch.setattr(tfcoil_variables, "oacdcp", tfcurrentparam.oacdcp)
+
+    monkeypatch.setattr(tfcoil_variables, "tfareain", tfcurrentparam.tfareain)
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_out", tfcurrentparam.r_tf_inboard_out
+    )
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_in", tfcurrentparam.r_tf_inboard_in
+    )
+
+    monkeypatch.setattr(build_variables, "dr_tf_inboard", tfcurrentparam.dr_tf_inboard)
+
+    monkeypatch.setattr(physics_variables, "bt", tfcurrentparam.bt)
+
+    monkeypatch.setattr(physics_variables, "rmajor", tfcurrentparam.rmajor)
+
+    monkeypatch.setattr(sctfcoil_module, "tfc_current", tfcurrentparam.tfc_current)
+
+    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfcurrentparam.theta_coil)
+
+    tfcoil.tf_current()
+
+    assert tfcoil_variables.c_tf_total == pytest.approx(
+        tfcurrentparam.expected_c_tf_total
+    )
+
+    assert tfcoil_variables.rbmax == pytest.approx(tfcurrentparam.expected_rbmax)
+
+    assert tfcoil_variables.bmaxtf == pytest.approx(tfcurrentparam.expected_bmaxtf)
+
+    assert tfcoil_variables.oacdcp == pytest.approx(tfcurrentparam.expected_oacdcp)
+
+    assert sctfcoil_module.tfc_current == pytest.approx(
+        tfcurrentparam.expected_tfc_current
+    )
