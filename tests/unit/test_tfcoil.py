@@ -1,10 +1,16 @@
 """Unit and Integration tests for tfcoil.f90."""
 
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 import pytest
 
 from process.build import Build
+from process.fortran import (
+    build_variables,
+    physics_variables,
+    sctfcoil_module,
+    tfcoil_variables,
+)
 from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
@@ -230,3 +236,237 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     assert pytest.approx(tfv.tcpav2) == cntrpst_asset.expected_tcpav2
     assert pytest.approx(tfv.tcpmax) == cntrpst_asset.expected_tcpmax
     assert pytest.approx(tfv.ppump) == cntrpst_asset.expected_ppump
+
+
+class TfGlobalGeometryParam(NamedTuple):
+    r_tf_outboard_mid: Any = None
+
+    r_cp_top: Any = None
+
+    r_tf_inboard_in: Any = None
+
+    r_tf_inboard_out: Any = None
+
+    dr_tf_outboard: Any = None
+
+    tfareain: Any = None
+
+    c_tf_total: Any = None
+
+    tftort: Any = None
+
+    n_tf_coils: Any = None
+
+    a_tf_leg_outboard: Any = None
+
+    i_tf_sup: Any = None
+
+    dztop: Any = None
+
+    i_tf_case_geom: Any = None
+
+    itart: Any = None
+
+    kappa: Any = None
+
+    rminor: Any = None
+
+    h_cp_top: Any = None
+
+    r_tf_outboard_in: Any = None
+
+    r_tf_outboard_out: Any = None
+
+    theta_coil: Any = None
+
+    tan_theta_coil: Any = None
+
+    expected_tfareain: Any = None
+
+    expected_tftort: Any = None
+
+    expected_a_tf_leg_outboard: Any = None
+
+    expected_r_tf_outboard_in: Any = None
+
+    expected_r_tf_outboard_out: Any = None
+
+    expected_theta_coil: Any = None
+
+    expected_tan_theta_coil: Any = None
+
+
+@pytest.mark.parametrize(
+    "tfglobalgeometryparam",
+    (
+        TfGlobalGeometryParam(
+            r_tf_outboard_mid=16.519405859443332,
+            r_cp_top=4.20194118510911,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            dr_tf_outboard=1.208,
+            tfareain=0,
+            c_tf_total=0,
+            tftort=1,
+            n_tf_coils=16,
+            a_tf_leg_outboard=0,
+            i_tf_sup=1,
+            dztop=0,
+            i_tf_case_geom=0,
+            itart=0,
+            kappa=1.8480000000000001,
+            rminor=2.8677741935483869,
+            h_cp_top=0,
+            r_tf_outboard_in=0,
+            r_tf_outboard_out=0,
+            theta_coil=0,
+            tan_theta_coil=0,
+            expected_tfareain=27.308689677971632,
+            expected_tftort=1.6395161177915356,
+            expected_a_tf_leg_outboard=1.9805354702921749,
+            expected_r_tf_outboard_in=15.915405859443332,
+            expected_r_tf_outboard_out=17.123405859443331,
+            expected_theta_coil=0.19634954084936207,
+            expected_tan_theta_coil=0.19891236737965801,
+        ),
+        TfGlobalGeometryParam(
+            r_tf_outboard_mid=17.063351291812893,
+            r_cp_top=4.4822055399518357,
+            r_tf_inboard_in=2.9538679176819831,
+            r_tf_inboard_out=4.4822055399518357,
+            dr_tf_outboard=1.5283376222698528,
+            tfareain=35.703669036223495,
+            c_tf_total=241812532.66279837,
+            tftort=1.7488698442633552,
+            n_tf_coils=16,
+            a_tf_leg_outboard=2.6728635794409041,
+            i_tf_sup=1,
+            dztop=0,
+            i_tf_case_geom=0,
+            itart=0,
+            kappa=1.8480000000000001,
+            rminor=2.9620024998595755,
+            h_cp_top=0,
+            r_tf_outboard_in=16.299182480677967,
+            r_tf_outboard_out=17.827520102947819,
+            theta_coil=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
+            expected_tfareain=35.703669036223495,
+            expected_tftort=1.7488698442633552,
+            expected_a_tf_leg_outboard=2.6728635794409041,
+            expected_r_tf_outboard_in=16.299182480677967,
+            expected_r_tf_outboard_out=17.827520102947819,
+            expected_theta_coil=0.19634954084936207,
+            expected_tan_theta_coil=0.19891236737965801,
+        ),
+    ),
+)
+def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
+    """
+    Automatically generated Regression Unit Test for tf_global_geometry.
+
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+
+    :param tfglobalgeometryparam: the data used to mock and assert in this test.
+    :type tfglobalgeometryparam: tfglobalgeometryparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
+    """
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_outboard_mid", tfglobalgeometryparam.r_tf_outboard_mid
+    )
+
+    monkeypatch.setattr(build_variables, "r_cp_top", tfglobalgeometryparam.r_cp_top)
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_in", tfglobalgeometryparam.r_tf_inboard_in
+    )
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_out", tfglobalgeometryparam.r_tf_inboard_out
+    )
+
+    monkeypatch.setattr(
+        build_variables, "dr_tf_outboard", tfglobalgeometryparam.dr_tf_outboard
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "tfareain", tfglobalgeometryparam.tfareain)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "c_tf_total", tfglobalgeometryparam.c_tf_total
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "tftort", tfglobalgeometryparam.tftort)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", tfglobalgeometryparam.n_tf_coils
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_leg_outboard", tfglobalgeometryparam.a_tf_leg_outboard
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfglobalgeometryparam.i_tf_sup)
+
+    monkeypatch.setattr(tfcoil_variables, "dztop", tfglobalgeometryparam.dztop)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "i_tf_case_geom", tfglobalgeometryparam.i_tf_case_geom
+    )
+
+    monkeypatch.setattr(physics_variables, "itart", tfglobalgeometryparam.itart)
+
+    monkeypatch.setattr(physics_variables, "kappa", tfglobalgeometryparam.kappa)
+
+    monkeypatch.setattr(physics_variables, "rminor", tfglobalgeometryparam.rminor)
+
+    monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfglobalgeometryparam.h_cp_top)
+
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_outboard_in", tfglobalgeometryparam.r_tf_outboard_in
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_outboard_out", tfglobalgeometryparam.r_tf_outboard_out
+    )
+
+    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfglobalgeometryparam.theta_coil)
+
+    monkeypatch.setattr(
+        sctfcoil_module, "tan_theta_coil", tfglobalgeometryparam.tan_theta_coil
+    )
+
+    tfcoil.tf_global_geometry()
+
+    assert tfcoil_variables.tfareain == pytest.approx(
+        tfglobalgeometryparam.expected_tfareain
+    )
+
+    assert tfcoil_variables.tftort == pytest.approx(
+        tfglobalgeometryparam.expected_tftort
+    )
+
+    assert tfcoil_variables.a_tf_leg_outboard == pytest.approx(
+        tfglobalgeometryparam.expected_a_tf_leg_outboard
+    )
+
+    assert sctfcoil_module.r_tf_outboard_in == pytest.approx(
+        tfglobalgeometryparam.expected_r_tf_outboard_in
+    )
+
+    assert sctfcoil_module.r_tf_outboard_out == pytest.approx(
+        tfglobalgeometryparam.expected_r_tf_outboard_out
+    )
+
+    assert sctfcoil_module.theta_coil == pytest.approx(
+        tfglobalgeometryparam.expected_theta_coil
+    )
+
+    assert sctfcoil_module.tan_theta_coil == pytest.approx(
+        tfglobalgeometryparam.expected_tan_theta_coil
+    )
