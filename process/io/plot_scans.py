@@ -548,25 +548,24 @@ def main(args=None):
                     )
         # Plot section
         # -----------
-        if stack_plots:
-            # check stack plots will work
-            if len(output_names) <= 1:
-                print(
-                    "ERROR : For stack plots to be used need more than 1 output variable"
-                )
-                exit()
-            fig, axs = plt.subplots(
-                len(output_names),
-                1,
-                figsize=(8.0, (3.5 + (1 * len(output_names)))),
-                sharex=True,
-            )
-            fig.subplots_adjust(hspace=0.0)
-        else:
-            fig, ax = plt.subplots()
-            if output_names2 != []:
-                ax2 = ax.twinx()
         for output_name in output_names:
+            if stack_plots:
+                # check stack plots will work
+                if len(output_names) <= 1:
+                    raise ValueError(
+                        "For stack plots to be used need more than 1 output variable"
+                    )
+                fig, axs = plt.subplots(
+                    len(output_names),
+                    1,
+                    figsize=(8.0, (3.5 + (1 * len(output_names)))),
+                    sharex=True,
+                )
+                fig.subplots_adjust(hspace=0.0)
+            else:
+                fig, ax = plt.subplots()
+                if output_names2 != []:
+                    ax2 = ax.twinx()
             # reset counter for label_name
             kk = 0
 
@@ -590,7 +589,6 @@ def main(args=None):
 
                 # Plot the graph
                 if output_names2 != [] and not stack_plots:
-                    print("A - twin axis")
                     ax.plot(
                         scan_var_array[input_file],
                         output_arrays[input_file][output_name],
@@ -639,7 +637,6 @@ def main(args=None):
                     plt.tight_layout()
                 else:
                     if stack_plots:
-                        print("B - stack")
                         axs[output_names.index(output_name)].plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
@@ -681,9 +678,7 @@ def main(args=None):
                             if x_max is None:
                                 x_max = max(np.abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max)
-                            print("xticks", xticks)
                             if x_axis_range != []:
-                                print("xr", x_axis_range)
                                 x_divisions = (
                                     5 * math.ceil(x_divisions / 5) * x_max / 100
                                 )
@@ -691,7 +686,6 @@ def main(args=None):
                                     x_axis_range[0] * x_max / 100,
                                     x_axis_range[1] * x_max / 100,
                                 )
-                                print("xr", x_axis_range)
                             axs[
                                 output_names.index(output_name)
                             ].xaxis.set_major_formatter(xticks)
@@ -708,7 +702,6 @@ def main(args=None):
                         plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                     else:
-                        print("C - single var")
                         ax.plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
@@ -766,7 +759,6 @@ def main(args=None):
                         plt.rc("ytick", labelsize=axis_tick_size)
                         plt.tight_layout()
                 if output_names2 != []:
-                    print("D - twin axis 2")
                     ax2.plot(
                         scan_var_array[input_file],
                         output_arrays2[input_file][output_name2],
