@@ -385,36 +385,6 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     assert tmarg == pytest.approx(superconparam.expected_tmarg)
 
 
-@pytest.mark.parametrize(
-    "a, b, expected_circumference",
-    (
-        (2.667950e9, 6.782819e8, 11464316399.111176),
-        (4.7186039761812131, 3.6192586838709673, 26.308134540723429),
-    ),
-    ids=["johndcook", "baseline_2018"],
-)
-def test_circumference(a, b, expected_circumference, sctfcoil):
-    """Unit test for the sctfcoil circumference routine.
-
-    This unit test uses values from an external blog referenced in the
-    routine header (https://www.johndcook.com/blog/2013/05/05/ramanujan-circumference-ellipse/)
-    as well as results obtained from baseline 2018.
-
-    :param a: the value of a (x/a)^2...  in the formula of an ellipse
-    :type a: float
-
-    :param b: the value of b ...(y/b)^2...  in the formula of an ellipse
-    :type b: float
-
-    :param expected_circumference: the expected result of the routine given inputs a and b
-    :type expected_circumference: float
-
-    :param sctfcoil: initialised SuperconductingTFCoil object
-    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
-    """
-    assert sctfcoil.circumference(a, b) == pytest.approx(expected_circumference)
-
-
 class TfResHeatingParam(NamedTuple):
     rho_cp: Any = None
     temp_tf_legs_outboard: Any = None
