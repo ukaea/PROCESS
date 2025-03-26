@@ -13,17 +13,17 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.sctfcoil import Sctfcoil
+from process.sctfcoil import SuperconductingTFCoil
 
 
 @pytest.fixture
 def sctfcoil():
-    """Provides Sctfcoil object for testing.
+    """Provides SuperconductingTFCoil object for testing.
 
-    :returns: initialised Sctfcoil object
-    :rtype: process.sctfcoil.Sctfcoil
+    :returns: initialised SuperconductingTFCoil object
+    :rtype: process.sctfcoil.SuperconductingTFCoil
     """
-    return Sctfcoil()
+    return SuperconductingTFCoil()
 
 
 class ProtectParam(NamedTuple):
@@ -77,8 +77,8 @@ def test_protect(protectparam, sctfcoil):
     :param protectparam: the data used to mock and assert in this test.
     :type protectparam: protectparam
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
     ajwpro, vd = sctfcoil.protect(
@@ -313,8 +313,8 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
     monkeypatch.setattr(tfcoil_variables, "tmargmin_tf", superconparam.tmargmin_tf)
@@ -496,8 +496,8 @@ def test_tf_current(tfcurrentparam, monkeypatch, sctfcoil):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tfcurrentparam.casthi)
@@ -716,8 +716,8 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, sctfcoil):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
     monkeypatch.setattr(
@@ -839,8 +839,8 @@ def test_circumference(a, b, expected_circumference, sctfcoil):
     :param expected_circumference: the expected result of the routine given inputs a and b
     :type expected_circumference: float
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
     assert sctfcoil.circumference(a, b) == pytest.approx(expected_circumference)
 
@@ -1019,8 +1019,8 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, sctfcoil):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
 
-    :param sctfcoil: initialised Sctfcoil object
-    :type sctfcoil: process.sctfcoil.Sctfcoil
+    :param sctfcoil: initialised SuperconductingTFCoil object
+    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", restfinternalgeomparam.n_tf_turn)
