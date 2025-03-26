@@ -25,7 +25,7 @@ TF_TYPES = {
 }
 
 
-class TFcoil:
+class TFCoil:
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
     def __init__(self, build: Build, sctfcoil: Sctfcoil):
