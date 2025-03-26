@@ -13,6 +13,7 @@ from process.build import init_build_variables
 from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
+from process.current_drive import init_current_drive_variables
 from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
@@ -242,7 +243,7 @@ def init_all_module_vars():
     init_tfcoil_variables()
     fortran.times_variables.init_times_variables()
     fortran.constants.init_constants()
-    fortran.current_drive_variables.init_current_drive_variables()
+    init_current_drive_variables()
     fortran.primary_pumping_variables.init_primary_pumping_variables()
     fortran.pfcoil_variables.init_pfcoil_variables()
     fortran.structure_variables.init_structure_variables()
