@@ -264,7 +264,7 @@ class Caller:
         if ft.tfcoil_variables.i_tf_sup != 1:
             self.models.resistive_tf_coil.run()
 
-        self.models.tfcoil.run()
+        self.models.tfcoil.run(output=False)
 
         # Toroidal field coil superconductor model
         if ft.tfcoil_variables.i_tf_sup == 1:
