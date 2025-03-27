@@ -18,6 +18,7 @@ from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
 from process.hcpb import init_ccfe_hcpb_module
+from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
@@ -232,7 +233,7 @@ def init_all_module_vars():
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
     fortran.heat_transport_variables.init_heat_transport_variables()
-    fortran.ife_variables.init_ife_variables()
+    init_ife_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
     fortran.physics_module.init_physics_module()
