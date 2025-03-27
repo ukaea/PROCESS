@@ -38,7 +38,20 @@ class SuperconductingTFCoil:
         """
         Routine to call the superconductor module for the TF coils
         """
+
+        peaktfflag = 0
         self.vv_stress_on_quench()
+
+        # Peak field including ripple
+        # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
+        tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
+            tfcoil_variables.n_tf_coils,
+            tfcoil_variables.wwp1,
+            tfcoil_variables.dr_tf_wp
+            - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
+            sctfcoil_module.r_wp_centre,
+            tfcoil_variables.bmaxtf,
+        )
 
         tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
@@ -86,6 +99,9 @@ class SuperconductingTFCoil:
             )
 
             tfcoil_variables.vtfskv = vdump / 1.0e3  # TFC Quench voltage in kV
+
+            if output:
+                self.outtf(peaktfflag)
 
     def croco_voltage(self) -> float:
         if f2py_compatible_to_string(tfcoil_variables.quench_model) == "linear":
@@ -1142,7 +1158,6 @@ class SuperconductingTFCoil:
         The primary outputs are coil size, shape, weight, stress and and fields.
         It is a variant from the original FEDC/Tokamak systems code.
         """
-        peaktfflag = 0
 
         # Conductor section internal geometry
         # ---
@@ -1160,20 +1175,6 @@ class SuperconductingTFCoil:
         # ---
 
         # ---
-
-        # Peak field including ripple
-        # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
-        if tfcoil_variables.i_tf_sup == 1:
-            tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
-                tfcoil_variables.n_tf_coils,
-                tfcoil_variables.wwp1,
-                tfcoil_variables.dr_tf_wp
-                - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
-                sctfcoil_module.r_wp_centre,
-                tfcoil_variables.bmaxtf,
-            )
-        else:
-            tfcoil_variables.bmaxtfrp = tfcoil_variables.bmaxtf
 
         # Do stress calculations (writes the stress output)
         if output:
@@ -1349,9 +1350,6 @@ class SuperconductingTFCoil:
                 error_handling.report_error(245)
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
-
-        if output:
-            self.outtf(peaktfflag)
 
     def protect(self, aio, tfes, acs, aturn, tdump, fcond, fcu, tba, tmax):
         """Finds the current density limited by the protection limit
