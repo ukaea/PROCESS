@@ -25,6 +25,7 @@ from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import init_physics_module, init_physics_variables
 from process.power import init_pf_power_variables
+from process.pulse import init_pulse_variables
 from process.scan import init_scan_module
 from process.sctfcoil import init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
@@ -258,7 +259,7 @@ def init_all_module_vars():
     init_pf_power_variables()
     init_build_variables()
     fortran.constraint_variables.init_constraint_variables()
-    fortran.pulse_variables.init_pulse_variables()
+    init_pulse_variables()
     fortran.rebco_variables.init_rebco_variables()
     fortran.reinke_variables.init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()

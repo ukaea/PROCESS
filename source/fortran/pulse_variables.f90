@@ -40,17 +40,4 @@ module pulse_variables
   !!
   !! - =0 continuous operation
   !! - =1 pulsed operation
-
-  contains
-
-  subroutine init_pulse_variables
-    !! Initialise module variables
-    implicit none
-
-    bctmp = 320.0D0
-    dtstor = 300.0D0
-    istore = 1
-    itcycl = 1
-    i_pulsed_plant = 0
-  end subroutine init_pulse_variables
 end module pulse_variables
