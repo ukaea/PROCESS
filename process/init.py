@@ -26,6 +26,7 @@ from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import (
     init_physics_module,
     init_physics_variables,
+    init_reinke_variables,
     init_times_variables,
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
@@ -265,7 +266,7 @@ def init_all_module_vars():
     fortran.constraint_variables.init_constraint_variables()
     init_pulse_variables()
     init_rebco_variables()
-    fortran.reinke_variables.init_reinke_variables()
+    init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()
     init_watuse_variables()
     init_cs_fatigue_variables()
