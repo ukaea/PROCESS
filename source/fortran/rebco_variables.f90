@@ -69,34 +69,4 @@ module rebco_variables
   real(dp) :: hastelloy_area
   real(dp) :: solder_area
   real(dp) :: croco_area
-
-  contains
-
-  subroutine init_rebco_variables
-    !! Initialise module variables
-    implicit none
-
-    rebco_thickness = 1.0D-6
-    copper_thick = 100.0D-6
-    hastelloy_thickness = 50.0D-6
-    tape_width = 4.0D-3
-    croco_od = 0.0D0
-    croco_id = 0.0D0
-    croco_thick = 2.5D-3
-    copper_rrr = 100d0
-    coppera_m2_max = 1D8
-    f_coppera_m2 = 1d0
-    tape_thickness = 6.5D-5
-    stack_thickness = 0.0D0
-    tapes = 0.0D0
-    rebco_area = 0.0D0
-    copper_area = 0.0D0
-    hastelloy_area = 0.0D0
-    solder_area = 0.0D0
-    croco_area = 0.0D0
-    copperA_m2 = 0.0D0
-    copperaoh_m2_max = 1D8
-    f_copperaoh_m2 = 1d0
-    copperaoh_m2 = 0.0D0
-  end subroutine init_rebco_variables
 end module rebco_variables

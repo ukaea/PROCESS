@@ -3876,3 +3876,29 @@ def init_sctfcoil_module():
     sctfcoil_module.time2 = 0.0
     sctfcoil_module.tau2 = 0.0
     sctfcoil_module.estotft = 0.0
+
+
+def init_rebco_variables():
+    """Initialise the REBCO variables"""
+    rebco_variables.rebco_thickness = 1.0e-6
+    rebco_variables.copper_thick = 100.0e-6
+    rebco_variables.hastelloy_thickness = 50.0e-6
+    rebco_variables.tape_width = 4.0e-3
+    rebco_variables.croco_od = 0.0
+    rebco_variables.croco_id = 0.0
+    rebco_variables.croco_thick = 2.5e-3
+    rebco_variables.copper_rrr = 100.0
+    rebco_variables.coppera_m2_max = 1.0e8
+    rebco_variables.f_coppera_m2 = 1.0
+    rebco_variables.tape_thickness = 6.5e-5
+    rebco_variables.stack_thickness = 0.0
+    rebco_variables.tapes = 0.0
+    rebco_variables.rebco_area = 0.0
+    rebco_variables.copper_area = 0.0
+    rebco_variables.hastelloy_area = 0.0
+    rebco_variables.solder_area = 0.0
+    rebco_variables.croco_area = 0.0
+    rebco_variables.copperA_m2 = 0.0
+    rebco_variables.copperaoh_m2_max = 1.0e8
+    rebco_variables.f_copperaoh_m2 = 1.0
+    rebco_variables.copperaoh_m2 = 0.0
