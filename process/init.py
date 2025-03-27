@@ -419,7 +419,7 @@ def initialise_iterative_variables():
     fortran.define_iteration_variables.init_itv_175()
 
 
-def check_process(inputs):
+def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
     author: P J Knight, CCFE, Culham Science Centre
@@ -427,38 +427,6 @@ def check_process(inputs):
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-    # Inboard blanket does not exist if the thickness is below a certain limit.
-    if "dr_blkt_inboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
-        warn(
-            "dr_blkt_inboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
-            stacklevel=1,
-        )
-
-    if "dr_blkt_outboard" in inputs and fortran.fwbs_variables.i_blanket_type == 3:
-        warn(
-            "dr_blkt_outboard input is not required for CCFE HCPB model with Tritium Breeding Ratio calculation",
-            stacklevel=1,
-        )
-
-    if "iblanket_thickness" in inputs:
-        if fortran.fwbs_variables.i_blanket_type == 3:
-            fortran.build_variables.dr_fw_inboard = 0.03
-            fortran.build_variables.dr_fw_outboard = 0.03
-            fortran.fwbs_variables.fw_armour_thickness = 0.003
-
-        if 0 <= fortran.build_variables.dr_blkt_inboard <= 1e-3:
-            fortran.build_variables.dr_blkt_inboard = 0.0
-            fortran.fwbs_variables.i_blkt_inboard = 0
-
-        if fortran.fwbs_variables.iblanket_thickness == 1:
-            fortran.build_variables.dr_blkt_inboard = 0.53
-            fortran.build_variables.dr_blkt_outboard = 0.91
-        elif fortran.fwbs_variables.iblanket_thickness == 2:
-            fortran.build_variables.dr_blkt_inboard = 0.64
-            fortran.build_variables.dr_blkt_outboard = 1.11
-        elif fortran.fwbs_variables.iblanket_thickness == 3:
-            fortran.build_variables.dr_blkt_inboard = 0.75
-            fortran.build_variables.dr_blkt_outboard = 1.30
 
     # Check that there are sufficient iteration variables
     if fortran.numerics.nvar < fortran.numerics.neqns:
@@ -1203,7 +1171,6 @@ def check_process(inputs):
 
     if fortran.stellarator_variables.istell == 0 and (
         fortran.fwbs_variables.i_blanket_type == 1
-        or fortran.fwbs_variables.i_blanket_type == 3
     ):
         fsum = (
             fortran.fwbs_variables.breeder_multiplier

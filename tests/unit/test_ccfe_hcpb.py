@@ -6,7 +6,6 @@ from process.blanket_library import BlanketLibrary
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
-    constraint_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -1374,87 +1373,6 @@ def test_st_centrepost_nuclear_heating(
     )
 
     assert pnuc_cp == pytest.approx(stcentrepostnuclearheatingparam.expected_pnuc_cp)
-
-
-class TbrShimwellParam(NamedTuple):
-    dr_fw_inboard: Any = None
-
-    dr_fw_outboard: Any = None
-
-    tbrmin: Any = None
-
-    fw_armour_thickness: Any = None
-
-    ip: Any = None
-
-    iprint: Any = None
-
-    outfile: Any = None
-
-    iblanket_thickness: Any = None
-
-    breeder_f: Any = None
-
-    f_blkt_li6_enrichment: Any = None
-
-    expected_tbr: Any = None
-
-
-@pytest.mark.parametrize(
-    "tbrshimwellparam",
-    (
-        TbrShimwellParam(
-            dr_fw_inboard=0.018000000000000002,
-            dr_fw_outboard=0.018000000000000002,
-            tbrmin=1.1499999999999999,
-            fw_armour_thickness=0.0030000000000000001,
-            ip=0,
-            iprint=0,
-            outfile=11,
-            iblanket_thickness=1,
-            breeder_f=0.56366688384345121,
-            f_blkt_li6_enrichment=82.131743925121199,
-            expected_tbr=1.1284864235692258,
-        ),
-    ),
-)
-def test_tbr_shimwell(tbrshimwellparam, monkeypatch, ccfe_hcpb):
-    """
-    Automatically generated Regression Unit Test for tbr_shimwell.
-
-    This test was generated using data from tests/regression/scenarios/vacuum_model/IN.DAT.
-
-    :param tbrshimwellparam: the data used to mock and assert in this test.
-    :type tbrshimwellparam: tbrshimwellparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-
-    monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", tbrshimwellparam.dr_fw_inboard
-    )
-
-    monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", tbrshimwellparam.dr_fw_outboard
-    )
-
-    monkeypatch.setattr(constraint_variables, "tbrmin", tbrshimwellparam.tbrmin)
-
-    monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", tbrshimwellparam.fw_armour_thickness
-    )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", tbrshimwellparam.ip)
-
-    tbr = ccfe_hcpb.tbr_shimwell(
-        iblanket_thickness=tbrshimwellparam.iblanket_thickness,
-        breeder_f=tbrshimwellparam.breeder_f,
-        f_blkt_li6_enrichment=tbrshimwellparam.f_blkt_li6_enrichment,
-        output=False,
-    )
-
-    assert tbr == pytest.approx(tbrshimwellparam.expected_tbr)
 
 
 class ComponentMassesParam(NamedTuple):

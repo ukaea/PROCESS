@@ -44,21 +44,6 @@ electricity have been revised extensively.
     using parametric fits to an MCNP neutron and photon transport model of a 
     sector of a tokamak. The blanket contains lithium orthosilicate 
     Li$_4$SiO$_4$, titanium beryllide TiBe$_{12}$, helium and Eurofer steel. 
-- `== 3` -- CCFE HCPB model with tritium breeding ratio. It has the features of 
-    the CCFE HCPB model above, with a set of fitting functions for calculating 
-    tritium breeding ratio (TBR).  It requires a choice of `iblanket_thickness`, 
-    specifiying a `THIN`, `MEDIUM` or `THICK` blanket. This fixes the values 
-    of inboard and outboard blanket thickness, and the initial values of first 
-    wall thickness (3 cm) and first wall armour (3 mm). Note that these last 
-    two can be modified by the first wall thermohydraulic module, in which case 
-    the output will not be fully self-consistent. The lithium-6 enrichment and 
-    the breeder fraction (Li4SiO4/(Be12Ti+Li4SiO4) by volume) are available as 
-    iteration variables, and the minimum TBR can be set as a constraint. The 
-    maximum values of TBR achievable are as follows:
-
-    - `THIN` -- 1.247
-    - `MEDIUM` -- 1.261
-    - `THICK` -- 1.264.
 
 `i_thermal_electric_conversion` -- This switch controls how the coolant pumping power in the 
 first wall and blanket is determined, and also how the calculation of the plant's 

@@ -2335,7 +2335,6 @@
         "iavail": 2.0,
         "ibkt_life": 0.0,
         "i_blanket_type": 1.0,
-        "iblanket_thickness": 2.0,
         "i_blkt_inboard": 1.0,
         "i_bootstrap_current": 3.0,
         "icase": "'Steady-state tokamak model'",
@@ -9807,7 +9806,6 @@
         "iavail": "Switch for plant availability model:\n<ul>\n<li>=0 use input value for cfactr</li>\n<li>=1 calculate cfactr using Taylor and Ward 1999 model</li>\n<li>=2 calculate cfactr using new (2015) model</li>\n</ul>",
         "ibkt_life": "Switch for fw/blanket lifetime calculation in availability module:\n<ul>\n<li>=0 use neutron fluence model</li>\n<li>=1 use fusion power model (DEMO only)</li>\n</ul>",
         "i_blanket_type": "switch for blanket model:\n<ul>\n<li>=1 CCFE HCPB model</li>\n<li>=2 KIT HCPB model</li>\n<li>=3 CCFE HCPB model with Tritium Breeding Ratio calculation</li>\n<li>=4 KIT HCLL model</li>\n</ul>",
-        "iblanket_thickness": "Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `i_blanket_type=3`):\n<ul>\n<li>=1 thin    0.53 m inboard, 0.91 m outboard</li>\n<li>=2 medium  0.64 m inboard, 1.11 m outboard</li>\n<li>=3 thick   0.75 m inboard, 1.30 m outboard</li>\n</ul>",
         "i_blkt_inboard": "switch for inboard blanket:\n<ul>\n<li>=0 No inboard blanket (dr_blkt_inboard=0.0)</li>\n<li>=1 Inboard blanket present</li>\n</ul>",
         "i_bootstrap_current": "switch for bootstrap current scaling\n<ul>\n<li>=1 ITER 1989 bootstrap scaling (high R/a only)</li>\n<li>=2 for Nevins et al general scaling</li>\n<li>=3 for Wilson et al numerical scaling</li>\n<li>=4 for Sauter et al scaling</li>\n</ul>",
         "icase": "power plant type",
@@ -13300,10 +13298,6 @@
         "i_blanket_type": {
             "lb": 1,
             "ub": 4
-        },
-        "iblanket_thickness": {
-            "lb": 1,
-            "ub": 3
         },
         "i_blkt_inboard": {
             "lb": 0,
@@ -18063,7 +18057,6 @@
             "wallpf",
             "whtblbreed",
             "m_blkt_beryllium",
-            "iblanket_thickness",
             "i_coolant_pumping",
             "i_shield_mat",
             "i_thermal_electric_conversion",
@@ -20422,7 +20415,6 @@
         "iavail": "int_variable",
         "ibkt_life": "int_variable",
         "i_blanket_type": "int_variable",
-        "iblanket_thickness": "int_variable",
         "i_blkt_inboard": "int_variable",
         "i_bootstrap_current": "int_variable",
         "icc": "int_array",

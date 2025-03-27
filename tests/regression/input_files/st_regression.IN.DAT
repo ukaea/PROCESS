@@ -2377,13 +2377,6 @@ i_blanket_type = 1
 *                  please use i_coolant_pumping = 0 or 1.
 * JUSTIFICATION: Assuming DCLL blanket
 
-*iblanket_thickness = 
-* DESCRIPTION:  Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `i_blanket_type=3`):
-*=1 thin    0.53 m inboard, 0.91 m outboard
-*=2 medium  0.64 m inboard, 1.11 m outboard
-*=3 thick   0.75 m inboard, 1.30 m outboard
-* JUSTIFICATION: Not used, setting blanket thickness directly
-
 i_blkt_inboard = 0
 * DESCRIPTION:   switch for inboard blanket:
 *  =0 No inboard blanket (dr_blkt_inboard=0.0)

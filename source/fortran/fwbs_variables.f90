@@ -253,16 +253,6 @@ module fwbs_variables
   real(dp) :: m_blkt_beryllium
   !! mass of blanket - beryllium part [kg]
 
-  ! CCFE HCPB model with Tritium Breeding Ratio calculation (i_blanket_type=3)
-  ! ---------------
-
-  integer :: iblanket_thickness
-  !! Blanket thickness switch (Do not set dr_blkt_inboard, dr_blkt_outboard, dr_fw_inboard or dr_fw_outboard when `i_blanket_type=3`):
-  !!
-  !! - =1 thin    0.53 m inboard, 0.91 m outboard
-  !! - =2 medium  0.64 m inboard, 1.11 m outboard
-  !! - =3 thick   0.75 m inboard, 1.30 m outboard
-
   integer :: i_coolant_pumping
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
   !! temperature is only calculated if `i_coolant_pumping=2`):
@@ -722,7 +712,6 @@ module fwbs_variables
     wallpf = 1.21D0
     whtblbreed = 0.0D0
     m_blkt_beryllium = 0.0D0
-    iblanket_thickness = 2
     i_coolant_pumping = 2
     i_shield_mat = 0
     i_thermal_electric_conversion = 0

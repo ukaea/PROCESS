@@ -8,7 +8,6 @@ from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
     constants,
-    constraint_variables,
     cost_variables,
     current_drive_variables,
     divertor_variables,
@@ -221,7 +220,7 @@ class CCFE_HCPB:
         """
         # CCFE HCPB modal calculates the coolant mass,
         # have added an if staement using the i_blanket_type switch for this.
-        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
+        # N.B. i_blanket_type=1 for CCFE HCPB
 
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
@@ -269,7 +268,7 @@ class CCFE_HCPB:
         # shield, FW and FW armour.
         # KIT HCPB calculates the mass of the blanket (including seprate masses for each material)
         # and the void fraction for the blanket.
-        # N.B. i_blanket_type=1 for CCFE HCPB and i_blanket_type=3 for the same with TBR using Shimwell.
+        # N.B. i_blanket_type=1 for CCFE HCPB
 
         # Component masses
 
@@ -1128,137 +1127,6 @@ class CCFE_HCPB:
         pnuc_cp = pnuc_cp_tf + pnuc_cp_sh
 
         return pnuc_cp_tf, pnuc_cp_sh, pnuc_cp
-
-    def tbr_shimwell(
-        self, breeder_f, f_blkt_li6_enrichment, iblanket_thickness, output: bool
-    ):
-        """Calculates TBR
-        author: Michael Kovari
-        breeder_f   : input real : Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
-        f_blkt_li6_enrichment   : input real : lithium-6 enrichment (%)
-        iblanket_thickness   : input integer : blanket thickness switch
-        tbr         : output real : 5-year time-averaged tritium breeding ratio
-        """
-        # for the v array of expansion terms:
-        # the first element is for a thin blanket,
-        # the second element is for a medium blanket
-        # the third element is for a thick blanket
-        v1 = [1.93920586301, 1.96122608615, 1.95893103797]
-        v2 = [-0.948494854004, -0.860855681012, -0.809792727863]
-        v3 = [-0.0186700302911, 0.0193393390622, 0.016958778333]
-        v4 = [0.483417432982, 0.279977226537, -0.120230857418]
-        v5 = [0.785901227724, 0.659918133027, 0.461211316443]
-        v6 = [-0.0120169189644, 0.013070435947, -0.0478789050674]
-        v7 = [-3.45723121388, -3.48450356973, -2.1978304461]
-        v8 = [-2.05212472576, -2.3360647329, -1.38785787744]
-        v9 = [6.45375263346, 7.38314099334, 4.93883798388]
-        v10 = [-0.436421277881, -0.365511595682, -0.223668963335]
-        v11 = [0.0129809166177, -0.0181287662329, 0.0178181886132]
-        v12 = [2.26116309299, 2.30397890094, 1.42583418972]
-        v13 = [-3.87538808736, -4.37481611533, -2.80720698559]
-        v14 = [1.05778783291, 1.30804004777, 0.814691647096]
-        v15 = [-3.12644013943, -3.71450110227, -2.48568193656]
-        v16 = [1.86242247177, 2.1588023402, 1.37932384899]
-        v17 = [0.253324925437, 0.253324925437, 0.253355839249]
-        v18 = [0.18795823903, 0.198976219881, 0.190845918447]
-        v19 = [-0.0256707269253, -0.0192924115968, -0.0257699008284]
-
-        y = f_blkt_li6_enrichment / 100
-        tbr = (
-            v1[iblanket_thickness - 1]
-            + v2[iblanket_thickness - 1] * breeder_f
-            + v3[iblanket_thickness - 1] * y
-            + v4[iblanket_thickness - 1] * y * breeder_f
-            + v5[iblanket_thickness - 1] * breeder_f**2
-            + v6[iblanket_thickness - 1] * y**2
-            + v7[iblanket_thickness - 1] * breeder_f**2 * y
-            + v8[iblanket_thickness - 1] * breeder_f * y**2
-            + v9[iblanket_thickness - 1] * breeder_f**2 * y**2
-            + v10[iblanket_thickness - 1] * breeder_f**3
-            + v11[iblanket_thickness - 1] * y**3
-            + v12[iblanket_thickness - 1] * y * breeder_f**3
-            + v13[iblanket_thickness - 1] * y**2 * breeder_f**3
-            + v14[iblanket_thickness - 1] * y**3 * breeder_f
-            + v15[iblanket_thickness - 1] * y**3 * breeder_f**2
-            + v16[iblanket_thickness - 1] * y**3 * breeder_f**3
-            + v17[iblanket_thickness - 1] * np.log(breeder_f)
-            + v18[iblanket_thickness - 1] * np.log(y)
-            + v19[iblanket_thickness - 1] * np.log(breeder_f) * np.log(y)
-        )
-
-        if output:
-            po.ovarrf(
-                self.outfile,
-                "Lithium-6 enrichment (%)",
-                "(f_blkt_li6_enrichment)",
-                f_blkt_li6_enrichment,
-            )
-            po.ovarrf(
-                self.outfile,
-                "Breeder fraction by volume: Li4SiO4/(Be12Ti+Li4SiO4)",
-                "(breeder_f)",
-                breeder_f,
-            )
-            if iblanket_thickness == 1:
-                po.ovarin(
-                    self.outfile,
-                    "Blanket thickness choice: THIN (0.53 m inboard, 0.91 m outboard)",
-                    "[iblanket_thickness-1]",
-                    iblanket_thickness,
-                )
-            elif iblanket_thickness == 2:
-                po.ovarin(
-                    self.outfile,
-                    "Blanket thickness choice: MEDIUM (0.64 m inboard, 1.11 m outboard)",
-                    "[iblanket_thickness-1]",
-                    iblanket_thickness,
-                )
-            elif iblanket_thickness == 3:
-                po.ovarin(
-                    self.outfile,
-                    "Blanket thickness choice: THICK (0.75 m inboard, 1.30 m outboard)",
-                    "[iblanket_thickness-1]",
-                    iblanket_thickness,
-                )
-            po.ovarrf(
-                self.outfile,
-                "Tritium breeding ratio (5-year time-averaged)",
-                "(tbr)",
-                tbr,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Minimum Tritium breeding ratio",
-                "(tbrmin)",
-                constraint_variables.tbrmin,
-            )
-
-            po.ocmmnt(
-                self.outfile,
-                '(See "A parameter study of time-varying tritium production in solid-type breeder blankets,',
-            )
-            po.ocmmnt(self.outfile, "J. Shimwell et al, Fusion Engineering and Design")
-            po.ovarre(
-                self.outfile,
-                "For consistency, inboard first wall thicknesses should be 0.03 (m)",
-                "(dr_fw_inboard)",
-                build_variables.dr_fw_inboard,
-            )
-            po.ovarre(
-                self.outfile,
-                "For consistency, outboard first wall thicknesses should be 0.03 (m)",
-                "(dr_fw_outboard)",
-                build_variables.dr_fw_outboard,
-            )
-            po.ovarre(
-                self.outfile,
-                "For consistency, first wall armour thickness should be 0.003 (m)",
-                "(fw_armour_thickness)",
-                fwbs_variables.fw_armour_thickness,
-            )
-
-        return tbr
 
     def write_output(self):
         po.oheadr(self.outfile, "First wall and blanket : CCFE HCPB model")

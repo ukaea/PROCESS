@@ -2400,10 +2400,8 @@ class Power:
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  CCFE HCPB Model (with or without TBR)
             if (
-                (fwbs_variables.i_blanket_type == 1)
-                or (fwbs_variables.i_blanket_type == 3)
-                or fwbs_variables.i_blanket_type == 2
-            ):
+                fwbs_variables.i_blanket_type == 1
+            ) or fwbs_variables.i_blanket_type == 2:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2415,9 +2413,7 @@ class Power:
             #  Etath from reference. Div power to primary
         elif fwbs_variables.i_thermal_electric_conversion == 1:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.i_blanket_type == 1) or (
-                fwbs_variables.i_blanket_type == 3
-            ):
+            if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2438,9 +2434,7 @@ class Power:
             #  Steam Rankine cycle to be used
         elif fwbs_variables.i_thermal_electric_conversion == 3:
             #  CCFE HCPB Model (with or without TBR)
-            if (fwbs_variables.i_blanket_type == 1) or (
-                fwbs_variables.i_blanket_type == 3
-            ):
+            if fwbs_variables.i_blanket_type == 1:
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature
                 #  is assumed to be 20 degrees below the primary coolant outlet

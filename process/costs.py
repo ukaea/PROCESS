@@ -1199,7 +1199,7 @@ class Costs:
 
         if ife_variables.ife != 1:
             # i_blanket_type=4 is used for KIT HCLL model. i_blanket_type<4 are all
-            # HCPB (CCFE, KIT and CCFE + Shimwell TBR calculation).
+            # HCPB (CCFE).
 
             if fwbs_variables.i_blanket_type == 4:
                 #  Liquid blanket (LiPb + Li)
