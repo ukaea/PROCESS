@@ -24,7 +24,7 @@ from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import init_physics_module, init_physics_variables
-from process.power import init_pf_power_variables
+from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.pulse import init_pulse_variables
 from process.scan import init_scan_module
 from process.sctfcoil import init_rebco_variables, init_sctfcoil_module
@@ -238,7 +238,7 @@ def init_all_module_vars():
     init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
-    fortran.heat_transport_variables.init_heat_transport_variables()
+    init_heat_transport_variables()
     init_ife_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
