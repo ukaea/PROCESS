@@ -32,37 +32,4 @@ module physics_module
   ! Var in subroutine plasma_composition which requires re-initialisation on
   ! each new run
   integer :: first_call
-
-  contains
-
-  subroutine init_physics_module
-    !! Initialise module variables
-    implicit none
-
-    first_call = 1
-    iscz = 0
-    err242 = 0
-    err243 = 0
-    rad_fraction_LCFS = 0.0D0
-    e_plasma_beta = 0.0D0
-    total_loss_power = 0.0D0
-    t_energy_confinement_beta = 0.0D0
-    ptarmw = 0.0D0
-    lambdaio = 0.0D0
-    drsep = 0.0D0
-    fio = 0.0D0
-    fLI = 0.0D0
-    fLO = 0.0D0
-    fUI = 0.0D0
-    fUO = 0.0D0
-    pLImw = 0.0D0
-    pLOmw = 0.0D0
-    pUImw = 0.0D0
-    pUOmw = 0.0D0
-    rho_star   = 0.0D0
-    nu_star   = 0.0D0
-    beta_mcdonald = 0.0D0
-    itart_r = 0.0D0
-  end subroutine init_physics_module
-
 end module physics_module

@@ -23,7 +23,7 @@ from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
-from process.physics import init_physics_variables
+from process.physics import init_physics_module, init_physics_variables
 from process.sctfcoil import init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
 from process.tfcoil import init_tfcoil_variables
@@ -237,7 +237,7 @@ def init_all_module_vars():
     init_ife_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
-    fortran.physics_module.init_physics_module()
+    init_physics_module()
     init_physics_variables()
     fortran.scan_module.init_scan_module()
     init_sctfcoil_module()
