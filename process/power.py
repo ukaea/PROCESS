@@ -3028,3 +3028,18 @@ class Power:
             )
 
         return (tfckw, len_tf_bus, drarea, tfcbv, tfacpd)
+
+
+def init_pf_power_variables():
+    """Initialise PF coil power variables"""
+    pf_power_variables.acptmax = 0.0
+    pf_power_variables.ensxpfm = 0.0
+    pf_power_variables.iscenr = 2
+    pf_power_variables.pfckts = 0.0
+    pf_power_variables.spfbusl = 0.0
+    pf_power_variables.spsmva = 0.0
+    pf_power_variables.srcktpm = 0.0
+    pf_power_variables.vpfskv = 0.0
+    pf_power_variables.peakpoloidalpower = 0.0
+    pf_power_variables.maxpoloidalpower = 1000.0
+    pf_power_variables.poloidalpower[:] = 0.0
