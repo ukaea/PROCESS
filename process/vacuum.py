@@ -11,7 +11,10 @@ from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
 from process.fortran import vacuum_variables as vacv
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.utilities.f2py_string_patch import (
+    f2py_compatible_to_string,
+    string_to_f2py_compatible,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -665,3 +668,27 @@ class Vacuum:
             )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
+
+
+def init_vacuum_variables():
+    """Initialise Vacuum variables"""
+    vacv.vacuum_model = string_to_f2py_compatible(vacv.vacuum_model, "old")
+    vacv.niterpump = 0.0
+    vacv.ntype = 1
+    vacv.nvduct = 0
+    vacv.dlscal = 0.0
+    vacv.pbase = 5.0e-4
+    vacv.prdiv = 0.36
+    vacv.pumptp = 1.2155e22
+    vacv.rat = 1.3e-8
+    vacv.tn = 300.0
+    vacv.vacdshm = 0.0
+    vacv.vcdimax = 0.0
+    vacv.vpumpn = 0
+    vacv.dwell_pump = 0
+    vacv.pumpareafraction = 0.0203
+    vacv.pumpspeedmax = 27.3
+    vacv.pumpspeedfactor = 0.167
+    vacv.initialpressure = 1.0
+    vacv.outgasindex = 1.0
+    vacv.outgasfactor = 0.0235
