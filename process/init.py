@@ -26,6 +26,7 @@ from process.sctfcoil import init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
 from process.tfcoil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.water_use import init_watuse_variables
 
 
 def init_process():
@@ -255,7 +256,7 @@ def init_all_module_vars():
     fortran.rebco_variables.init_rebco_variables()
     fortran.reinke_variables.init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()
-    fortran.water_usage_variables.init_watuse_variables()
+    init_watuse_variables()
     init_cs_fatigue_variables()
     init_blanket_library()
     init_dcll_module()

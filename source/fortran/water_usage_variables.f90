@@ -58,27 +58,4 @@ module water_usage_variables
 
   real(dp) :: wateruseonethru
   !! total volume of water used in once-through system (m3)
-
-  contains
-
-  subroutine init_watuse_variables
-    !! Initialise module variables
-    implicit none
-
-    airtemp = 15.0D0
-    watertemp = 5.0D0
-    windspeed = 4.0D0
-    waterdens = 998.02D0
-    latentheat = 2257000.0D0
-    volheat = 0.0D0
-    evapratio = 0.0D0
-    evapvol = 0.0D0
-    energypervol = 0.0D0
-    volperenergy = 0.0D0
-    waterusetower = 0.0D0
-    wateruserecirc = 0.0D0
-    wateruseonethru = 0.0D0
-
-  end subroutine init_watuse_variables
-
 end module water_usage_variables
