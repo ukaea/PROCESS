@@ -17,6 +17,7 @@ from process.current_drive import init_current_drive_variables
 from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
+from process.fw import init_fwbs_variables
 from process.hcpb import init_ccfe_hcpb_module
 from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
@@ -229,7 +230,7 @@ def init_all_module_vars():
     init_cost_variables()
     init_divertor_variables()
     fortran.error_handling.init_error_handling()
-    fortran.fwbs_variables.init_fwbs_variables()
+    init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
     fortran.heat_transport_variables.init_heat_transport_variables()
