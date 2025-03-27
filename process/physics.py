@@ -8256,3 +8256,12 @@ def init_times_variables():
     times_variables.t_pulse_repetition = 0.0
     times_variables.t_ramp_down = 15.0
     times_variables.t_precharge = 15.0
+
+
+def init_reinke_variables():
+    """Initialise Reinke criterion variables"""
+    reinke_variables.impvardiv = 9
+    reinke_variables.lhat = 4.33
+    reinke_variables.fzmin = 0.0
+    reinke_variables.fzactual = 0.001
+    reinke_variables.reinke_mode = 0
