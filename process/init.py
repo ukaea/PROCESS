@@ -8,7 +8,7 @@ from warnings import warn
 import process
 import process.fortran as fortran
 import process.process_output as process_output
-from process.blanket_library import init_blanket_library
+from process.blanket_library import init_blanket_library, init_primary_pumping_variables
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
@@ -252,7 +252,7 @@ def init_all_module_vars():
     fortran.times_variables.init_times_variables()
     fortran.constants.init_constants()
     init_current_drive_variables()
-    fortran.primary_pumping_variables.init_primary_pumping_variables()
+    init_primary_pumping_variables()
     init_pfcoil_variables()
     init_structure_variables()
     init_vacuum_variables()
