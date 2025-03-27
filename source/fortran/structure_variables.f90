@@ -28,17 +28,4 @@ module structure_variables
 
   real(dp) :: gsmass
   !! reactor core gravity support mass (kg)
-
-  contains
-
-  subroutine init_structure_variables
-    !! Initialise module variables
-    implicit none
-
-    aintmass = 0.0D0
-    clgsmass = 0.0D0
-    coldmass = 0.0D0
-    fncmass = 0.0D0
-    gsmass = 0.0D0
-  end subroutine init_structure_variables
 end module structure_variables

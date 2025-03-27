@@ -26,6 +26,7 @@ from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import init_physics_module, init_physics_variables
 from process.sctfcoil import init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
+from process.structure import init_structure_variables
 from process.tfcoil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.water_use import init_watuse_variables
@@ -249,7 +250,7 @@ def init_all_module_vars():
     init_current_drive_variables()
     fortran.primary_pumping_variables.init_primary_pumping_variables()
     init_pfcoil_variables()
-    fortran.structure_variables.init_structure_variables()
+    init_structure_variables()
     fortran.vacuum_variables.init_vacuum_variables()
     fortran.pf_power_variables.init_pf_power_variables()
     init_build_variables()
