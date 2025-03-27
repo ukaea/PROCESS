@@ -51,23 +51,4 @@ module pf_power_variables
 
   real(dp), dimension(5) :: poloidalpower
   !! Poloidal power usage at time t (MW)
-
-  contains
-
-  subroutine init_pf_power_variables
-    !! Initialise module variables
-    implicit none
-
-    acptmax = 0.0D0
-    ensxpfm = 0.0D0
-    iscenr = 2
-    pfckts = 0.0D0
-    spfbusl = 0.0D0
-    spsmva = 0.0D0
-    srcktpm = 0.0D0
-    vpfskv = 0.0D0
-    peakpoloidalpower = 0.0D0
-    maxpoloidalpower = 1000.0D0
-    poloidalpower = 0.0D0
-  end subroutine init_pf_power_variables
 end module pf_power_variables
