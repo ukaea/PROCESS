@@ -272,6 +272,7 @@ OBS_VARS = {
     "ifci": "i_blkt_liquid_breeder_channel_type",
     "ipump": "i_fw_blkt_shared_coolant",
     "coolwh": "i_blkt_coolant_type",
+    "iblanket_thickness": None,
 }
 
 OBS_VARS_HELP = {
