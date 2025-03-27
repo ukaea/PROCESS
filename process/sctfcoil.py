@@ -1159,29 +1159,7 @@ class SuperconductingTFCoil:
 
         # TF coil inductance
         # ---
-        if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.tfind = self.tfcind(
-                build_variables.dr_tf_inboard,
-                tfcoil_variables.xarc,
-                tfcoil_variables.yarc,
-            )
-        else:
-            tfcoil_variables.tfind = (
-                (build_variables.hmax + build_variables.dr_tf_outboard)
-                * RMU0
-                / constants.pi
-                * np.log(
-                    build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
-                )
-            )
 
-        # Total TF coil stored magnetic energy [J]
-        sctfcoil_module.estotft = (
-            0.5e0 * tfcoil_variables.tfind * tfcoil_variables.c_tf_total**2
-        )
-
-        # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.estotft
         # ---
 
         # Calculate TF coil areas and masses
@@ -1542,88 +1520,6 @@ class SuperconductingTFCoil:
             # VV properties
             d_vv=build_variables.dr_vv_shells,
         )
-
-    @staticmethod
-    @numba.njit(cache=True)
-    def tfcind(tfthk, xarc, yarc):
-        """Calculates the self inductance of a TF coil
-        This routine calculates the self inductance of a TF coil
-        approximated by a straight inboard section and two elliptical arcs.
-        The inductance of the TFC (considered as a single axisymmetric turn)
-        is calculated by numerical integration over the cross-sectional area.
-        The contribution from the cross-sectional area of the
-        coil itself is calculated by taking the field as B(r)/2.
-        The field in the dr_bore is calculated for unit current.
-        Top/bottom symmetry is assumed.
-
-        :param tfthk: TF coil thickness (m)
-        :type tfthk: float
-        """
-        NINTERVALS = 100
-
-        # Integrate over the whole TF area, including the coil thickness.
-        x0 = xarc[1]
-        y0 = yarc[1]
-
-        # Minor and major radii of the inside and outside perimeters of the the
-        # Inboard leg and arc.
-        # Average the upper and lower halves, which are different in the
-        # single null case
-        ai = xarc[1] - xarc[0]
-        bi = (yarc[1] - yarc[3]) / 2.0e0 - yarc[0]
-        ao = ai + tfthk
-        bo = bi + tfthk
-        # Interval used for integration
-        dr = ao / NINTERVALS
-        # Start both integrals from the centre-point where the arcs join.
-        # Initialise major radius
-        r = x0 - dr / 2.0e0
-
-        tfind = 0
-
-        for _ in range(NINTERVALS):
-            # Field in the dr_bore for unit current
-            b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a dr_bore
-            if x0 - r < ai:
-                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
-            else:
-                h_bore = 0.0e0
-                # Include the contribution from the straight section
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + yarc[0]
-
-            # Assume B in TF coil = 1/2  B in dr_bore
-            # Multiply by 2 for upper and lower halves of coil
-            tfind += b * dr * (2.0e0 * h_bore + h_thick)
-            r = r - dr
-
-        # Outboard arc
-        ai = xarc[2] - xarc[1]
-        bi = (yarc[1] - yarc[3]) / 2.0e0
-        ao = ai + tfthk
-        bo = bi + tfthk
-        dr = ao / NINTERVALS
-        # Initialise major radius
-        r = x0 + dr / 2.0e0
-
-        for _ in range(NINTERVALS):
-            # Field in the dr_bore for unit current
-            b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a dr_bore
-            if r - x0 < ai:
-                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
-            else:
-                h_bore = 0.0e0
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2)
-
-            # Assume B in TF coil = 1/2  B in dr_bore
-            # Multiply by 2 for upper and lower halves of coil
-            tfind += b * dr * (2.0e0 * h_bore + h_thick)
-            r = r + dr
-
-        return tfind
 
     def tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""

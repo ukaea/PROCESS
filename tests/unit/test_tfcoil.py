@@ -2,6 +2,7 @@
 
 from typing import Any, NamedTuple
 
+import numpy as np
 import pytest
 
 from process.build import Build
@@ -943,3 +944,94 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
     assert sctfcoil_module.vforce_inboard_tot == pytest.approx(
         tffieldandforceparam.expected_vforce_inboard_tot
     )
+
+
+class TfcindParam(NamedTuple):
+    yarc: Any = None
+
+    xarc: Any = None
+
+    tfind: Any = None
+
+    tfthk: Any = None
+
+    expected_yarc: Any = None
+
+    expected_tfind: Any = None
+
+
+@pytest.mark.parametrize(
+    "tfcindparam",
+    (
+        TfcindParam(
+            yarc=np.array(
+                (
+                    4.5228880258064512,
+                    7.5381467096774184,
+                    0,
+                    -9.0730900215620327,
+                    -5.4438540129372193,
+                ),
+                order="F",
+            ),
+            xarc=np.array(
+                (
+                    4.20194118510911,
+                    8.316545161290323,
+                    15.915405859443332,
+                    8.316545161290323,
+                    4.20194118510911,
+                ),
+                order="F",
+            ),
+            tfind=0,
+            tfthk=1.208,
+            expected_tfind=5.4453892599192845e-06,
+        ),
+        TfcindParam(
+            yarc=np.array(
+                (
+                    4.5336880258064509,
+                    7.5561467096774191,
+                    0,
+                    -9.0730900215620327,
+                    -5.4438540129372193,
+                ),
+                order="F",
+            ),
+            xarc=np.array(
+                (
+                    4.20194118510911,
+                    8.316545161290323,
+                    15.915405859443332,
+                    8.316545161290323,
+                    4.20194118510911,
+                ),
+                order="F",
+            ),
+            tfind=5.4524893280368181e-06,
+            tfthk=1.208,
+            expected_tfind=5.4524893280368181e-06,
+        ),
+    ),
+)
+def test_tfcind(tfcindparam, monkeypatch, tfcoil):
+    """
+    Automatically generated Regression Unit Test for tfcind.
+
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+
+    :param tfcindparam: the data used to mock and assert in this test.
+    :type tfcindparam: tfcindparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(tfcoil_variables, "tfind", tfcindparam.tfind)
+
+    tfind = tfcoil.tfcind(
+        tfthk=tfcindparam.tfthk, xarc=tfcindparam.xarc, yarc=tfcindparam.yarc
+    )
+
+    assert tfind == pytest.approx(tfcindparam.expected_tfind)
