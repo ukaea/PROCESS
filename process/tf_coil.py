@@ -22,7 +22,10 @@ from process.fortran import build_variables as bv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.utilities.f2py_string_patch import (
+    f2py_compatible_to_string,
+    string_to_f2py_compatible,
+)
 
 RMU0 = constants.rmu0
 
