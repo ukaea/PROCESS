@@ -66,36 +66,4 @@ module times_variables
 
   real(dp) :: t_precharge
   !! the time for the central solenoid and PF coils to ramp from zero to max current (s); if pulsed, = t_current_ramp_up
-
-  contains
-
-  subroutine init_times_variables
-    !! Initialise module variables
-    implicit none
-
-    pulsetimings = 1.0D0
-    t_burn = 1000.0D0
-    t_burn_0 = 0.0D0
-    t_cycle = 0.0D0
-    tdown = 0.0D0
-    t_between_pulse = 1800.0D0
-    t_fusion_ramp = 10.0D0
-    tim = 0.0D0
-    timelabel = (/ 'Start', &
-      'BOP  ', &
-      'EOR  ', &
-      'BOF  ', &
-      'EOF  ', &
-      'EOP  ' /)
-    intervallabel = (/ 't_precharge        ', &
-      't_current_ramp_up  ', &
-      't_fusion_ramp      ', &
-      't_burn             ', &
-      't_ramp_down        ' /)
-    t_current_ramp_up = 30.0D0
-    i_t_current_ramp_up = 0
-    t_pulse_repetition = 0.0D0
-    t_ramp_down = 15.0D0
-    t_precharge = 15.0D0
-  end subroutine init_times_variables
 end module times_variables
