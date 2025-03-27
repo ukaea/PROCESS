@@ -8203,3 +8203,31 @@ def init_physics_variables():
     physics_variables.a_plasma_poloidal = 0.0
     physics_variables.zeff = 0.0
     physics_variables.zeffai = 0.0
+
+
+def init_physics_module():
+    """Initialise the physics module"""
+    physics_module.first_call = 1
+    physics_module.iscz = 0
+    physics_module.err242 = 0
+    physics_module.err243 = 0
+    physics_module.rad_fraction_lcfs = 0.0
+    physics_module.e_plasma_beta = 0.0
+    physics_module.total_loss_power = 0.0
+    physics_module.t_energy_confinement_beta = 0.0
+    physics_module.ptarmw = 0.0
+    physics_module.lambdaio = 0.0
+    physics_module.drsep = 0.0
+    physics_module.fio = 0.0
+    physics_module.fli = 0.0
+    physics_module.flo = 0.0
+    physics_module.fui = 0.0
+    physics_module.fuo = 0.0
+    physics_module.plimw = 0.0
+    physics_module.plomw = 0.0
+    physics_module.puimw = 0.0
+    physics_module.puomw = 0.0
+    physics_module.rho_star = 0.0
+    physics_module.nu_star = 0.0
+    physics_module.beta_mcdonald = 0.0
+    physics_module.itart_r = 0.0
