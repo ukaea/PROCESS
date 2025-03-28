@@ -35,7 +35,7 @@ module tfcoil_variables
   real(dp) :: insulation_area
   !! single turn insulation area (m2)
 
-  real(dp) :: aiwp
+  real(dp) :: a_tf_coil_wp_turn_insulation
   !! winding pack turn insulation area per coil (m2)
 
   real(dp) :: sig_tf_case_max
@@ -845,7 +845,7 @@ module tfcoil_variables
     acond = 0.0D0
     acstf = 0.0D0
     insulation_area = 0.0D0
-    aiwp = 0.0D0
+    a_tf_coil_wp_turn_insulation = 0.0D0
     sig_tf_case_max = 6.0D8
     sig_tf_wp_max = 6.0D8
     a_tf_leg_outboard = 0.0D0

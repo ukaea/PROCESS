@@ -320,12 +320,14 @@ class ResistiveTFCoil(TFCoil):
         a_tf_cond = a_tf_cond * (1.0e0 - tfcoil_variables.fcoolcp)
 
         # Inter turn insulation area per coil [m2]
-        tfcoil_variables.aiwp = sctfcoil_module.awptf - a_tf_cond / (
-            1.0e0 - tfcoil_variables.fcoolcp
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
+            sctfcoil_module.awptf - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
         )
 
         # Total insulation cross-section per coil [m2]
-        sctfcoil_module.a_tf_ins = tfcoil_variables.aiwp + sctfcoil_module.a_ground_ins
+        sctfcoil_module.a_tf_ins = (
+            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_ground_ins
+        )
 
         # Insulation fraction [-]
         sctfcoil_module.f_tf_ins = (
