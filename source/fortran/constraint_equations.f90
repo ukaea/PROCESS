@@ -808,7 +808,7 @@ contains
       !! rmajor |  plasma major radius (m)
       !! bt     |  toroidal field on axis (T)
       !! rbmax  |  radius of maximum toroidal field (m)
-      !! bmaxtf |  peak field at toroidal field coil (T)
+      !! b_tf_inboard_peak |  peak field at toroidal field coil (T)
 
       !! This constraint is depreciated
 
@@ -1327,9 +1327,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpeakb : input real : f-value for maximum toroidal field
       !! bmxlim : input real : maximum peak toroidal field (T)
-      !! bmaxtf : input real : mean peak field at TF coil (T)
+      !! b_tf_inboard_peak : input real : mean peak field at TF coil (T)
       use constraint_variables, only: fpeakb, bmxlim
-      use tfcoil_variables, only: bmaxtf
+      use tfcoil_variables, only: b_tf_inboard_peak
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1337,9 +1337,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fpeakb * bmxlim/bmaxtf
+      tmp_cc =  1.0D0 - fpeakb * bmxlim/b_tf_inboard_peak
       tmp_con = bmxlim * (1.0D0 - tmp_cc)
-      tmp_err = bmaxtf * tmp_cc
+      tmp_err = b_tf_inboard_peak * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'T'
 

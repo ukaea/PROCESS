@@ -489,7 +489,7 @@ class TfCurrentParam(NamedTuple):
 
     tftort: Any = None
 
-    bmaxtf: Any = None
+    b_tf_inboard_peak: Any = None
 
     tfinsgap: Any = None
 
@@ -529,7 +529,7 @@ class TfCurrentParam(NamedTuple):
 
     expected_rbmax: Any = None
 
-    expected_bmaxtf: Any = None
+    expected_b_tf_inboard_peak: Any = None
 
     expected_oacdcp: Any = None
 
@@ -547,7 +547,7 @@ class TfCurrentParam(NamedTuple):
             casths_fraction=0.059999999999999998,
             tinstf=0.0080000000000000019,
             tftort=1.6395161177915356,
-            bmaxtf=0,
+            b_tf_inboard_peak=0,
             tfinsgap=0.01,
             tfc_sidewall_is_fraction=False,
             casths=0.05000000000000001,
@@ -567,7 +567,7 @@ class TfCurrentParam(NamedTuple):
             theta_coil=0.19634954084936207,
             expected_c_tf_total=236885604.60000002,
             expected_rbmax=4.0432020634751211,
-            expected_bmaxtf=11.717722779177526,
+            expected_b_tf_inboard_peak=11.717722779177526,
             expected_oacdcp=8674367.2945641987,
             expected_tfc_current=14805350.287500001,
         ),
@@ -605,7 +605,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tftort", tfcurrentparam.tftort)
 
-    monkeypatch.setattr(tfcoil_variables, "bmaxtf", tfcurrentparam.bmaxtf)
+    monkeypatch.setattr(
+        tfcoil_variables, "b_tf_inboard_peak", tfcurrentparam.b_tf_inboard_peak
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfcurrentparam.tfinsgap)
 
@@ -661,7 +663,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     assert tfcoil_variables.rbmax == pytest.approx(tfcurrentparam.expected_rbmax)
 
-    assert tfcoil_variables.bmaxtf == pytest.approx(tfcurrentparam.expected_bmaxtf)
+    assert tfcoil_variables.b_tf_inboard_peak == pytest.approx(
+        tfcurrentparam.expected_b_tf_inboard_peak
+    )
 
     assert tfcoil_variables.oacdcp == pytest.approx(tfcurrentparam.expected_oacdcp)
 
@@ -729,7 +733,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     c_tf_total: Any = None
 
-    bmaxtf: Any = None
+    b_tf_inboard_peak: Any = None
 
     i_tf_sup: Any = None
 
@@ -786,7 +790,7 @@ class TfFieldAndForceParam(NamedTuple):
             sigvvall=93000000,
             cforce=0,
             c_tf_total=25500000,
-            bmaxtf=34.862617362267024,
+            b_tf_inboard_peak=34.862617362267024,
             i_tf_sup=0,
             f_vforce_inboard=0.5,
             vforce_outboard=0,
@@ -821,7 +825,7 @@ class TfFieldAndForceParam(NamedTuple):
             sigvvall=93000000,
             cforce=37041530.947408713,
             c_tf_total=25500000,
-            bmaxtf=34.862617362267024,
+            b_tf_inboard_peak=34.862617362267024,
             i_tf_sup=0,
             f_vforce_inboard=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
@@ -886,7 +890,9 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_total", tffieldandforceparam.c_tf_total)
 
-    monkeypatch.setattr(tfcoil_variables, "bmaxtf", tffieldandforceparam.bmaxtf)
+    monkeypatch.setattr(
+        tfcoil_variables, "b_tf_inboard_peak", tffieldandforceparam.b_tf_inboard_peak
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tffieldandforceparam.i_tf_sup)
 

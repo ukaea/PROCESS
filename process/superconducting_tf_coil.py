@@ -273,7 +273,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.dr_tf_wp
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
             sctfcoil_module.r_wp_centre,
-            tfcoil_variables.bmaxtf,
+            tfcoil_variables.b_tf_inboard_peak,
         )
 
         tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
@@ -1534,7 +1534,7 @@ class SuperconductingTFCoil(TFCoil):
             d_vv=build_variables.dr_vv_shells,
         )
 
-    def peak_tf_with_ripple(self, n_tf_coils, wwp1, dr_tf_wp, tfin, bmaxtf):
+    def peak_tf_with_ripple(self, n_tf_coils, wwp1, dr_tf_wp, tfin, b_tf_inboard_peak):
         """Peak toroidal field on the conductor
         author: P J Knight, CCFE, Culham Science Centre
         This subroutine calculates the peak toroidal field at the
@@ -1556,8 +1556,8 @@ class SuperconductingTFCoil(TFCoil):
         :type dr_tf_wp: float
         :param tfin: major radius of centre of winding pack (m)
         :type tfin: float
-        :param bmaxtf: nominal (axisymmetric) peak toroidal field (T)
-        :type bmaxtf: float
+        :param b_tf_inboard_peak: nominal (axisymmetric) peak toroidal field (T)
+        :type b_tf_inboard_peak: float
 
         :returns: (bmaxtfrp, flag)
         * bmaxtfrp: peak toroidal field including ripple (T)
@@ -1590,7 +1590,7 @@ class SuperconductingTFCoil(TFCoil):
             a[3] = 0.89808e0
 
         else:
-            bmaxtfrp = 1.09e0 * bmaxtf
+            bmaxtfrp = 1.09e0 * b_tf_inboard_peak
             return bmaxtfrp, flag
 
         #  Maximum winding pack width before adjacent packs touch
@@ -1621,7 +1621,7 @@ class SuperconductingTFCoil(TFCoil):
             + a[3] * sctfcoil_module.tf_fit_z * sctfcoil_module.tf_fit_t
         )
 
-        bmaxtfrp = sctfcoil_module.tf_fit_y * bmaxtf
+        bmaxtfrp = sctfcoil_module.tf_fit_y * b_tf_inboard_peak
 
         return bmaxtfrp, flag
 
@@ -2935,8 +2935,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Nominal peak field assuming toroidal symmetry (T)",
-            "(bmaxtf)",
-            tfcoil_variables.bmaxtf,
+            "(b_tf_inboard_peak)",
+            tfcoil_variables.b_tf_inboard_peak,
             "OP ",
         )
         po.ovarre(

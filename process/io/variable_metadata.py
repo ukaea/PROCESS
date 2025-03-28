@@ -79,7 +79,7 @@ var_dicts = {
         description="Inboard TF coil case outer (non-plasma side) thickness",
         units="m",
     ),
-    "bmaxtf": VariableMetadata(
+    "b_tf_inboard_peak": VariableMetadata(
         latex=r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]",
         description="Mean peak field at TF coil",
         units="T",

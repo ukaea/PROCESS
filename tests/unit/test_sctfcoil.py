@@ -397,7 +397,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tfin: Any = None
 
-    bmaxtf: Any = None
+    b_tf_inboard_peak: Any = None
 
     expected_tf_fit_t: Any = None
 
@@ -421,7 +421,7 @@ class PeakTfWithRippleParam(NamedTuple):
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
-            bmaxtf=11.717722779177526,
+            b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -436,7 +436,7 @@ class PeakTfWithRippleParam(NamedTuple):
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
-            bmaxtf=11.717722779177526,
+            b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -469,7 +469,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         wwp1=peaktfwithrippleparam.wwp1,
         dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
         tfin=peaktfwithrippleparam.tfin,
-        bmaxtf=peaktfwithrippleparam.bmaxtf,
+        b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
     )
 
     assert sctfcoil_module.tf_fit_t == pytest.approx(
