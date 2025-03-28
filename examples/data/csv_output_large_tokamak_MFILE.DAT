@@ -732,8 +732,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      9.1497E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.4504E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5475E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.5696E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0511E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5696E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0511E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1646E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0251E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0251E+08    
@@ -942,7 +942,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3678E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.1784E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.5926E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0511E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0511E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 

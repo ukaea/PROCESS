@@ -55,7 +55,7 @@ class Buildings:
         )
 
         # Find mass of each TF coil, in tonnes
-        tfmtn = 1.0e-3 * tfcoil_variables.whttf / tfcoil_variables.n_tf_coils
+        tfmtn = 1.0e-3 * tfcoil_variables.m_tf_coils_total / tfcoil_variables.n_tf_coils
 
         # Calculate building areas and volumes
 

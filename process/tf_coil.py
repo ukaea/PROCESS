@@ -1405,7 +1405,7 @@ class TFCoil:
             # ---------------------------------
 
             # Total TF coil mass [kg] (all coils)
-            tfcoil_variables.whttf = (
+            tfcoil_variables.m_tf_coils_total = (
                 tfcoil_variables.whtcas
                 + tfcoil_variables.whtcon
                 + tfcoil_variables.whtgw
@@ -1415,10 +1415,10 @@ class TFCoil:
             # (in this case, total TF coil length = inboard `cplen` + outboard `len_tf_coil`)
             if physics_variables.itart == 1:
                 tfleng_sph = tfcoil_variables.cplen + tfcoil_variables.len_tf_coil
-                tfcoil_variables.whtcp = tfcoil_variables.whttf * (
+                tfcoil_variables.whtcp = tfcoil_variables.m_tf_coils_total * (
                     tfcoil_variables.cplen / tfleng_sph
                 )
-                tfcoil_variables.whttflgs = tfcoil_variables.whttf * (
+                tfcoil_variables.whttflgs = tfcoil_variables.m_tf_coils_total * (
                     tfcoil_variables.len_tf_coil / tfleng_sph
                 )
 
@@ -1568,7 +1568,7 @@ class TFCoil:
             )
 
             # Total weight
-            tfcoil_variables.whttf = (
+            tfcoil_variables.m_tf_coils_total = (
                 tfcoil_variables.whtcas
                 + tfcoil_variables.whtconcu
                 + tfcoil_variables.whtconal

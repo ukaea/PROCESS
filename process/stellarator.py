@@ -801,7 +801,7 @@ class Stellarator:
 
         #  Total mass of cooled components
         structure_variables.coldmass = (
-            tfcoil_variables.whttf
+            tfcoil_variables.m_tf_coils_total
             + structure_variables.aintmass
             + fwbs_variables.dewmkg
         )
@@ -2928,7 +2928,7 @@ class Stellarator:
             + tfcoil_variables.whtconin
         )
         # [kg] Total coil mass
-        tfcoil_variables.whttf = (
+        tfcoil_variables.m_tf_coils_total = (
             tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
         ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
@@ -3747,7 +3747,10 @@ class Stellarator:
             self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
         )
         po.ovarre(
-            self.outfile, "Total mass of coils (kg)", "(whttf)", tfcoil_variables.whttf
+            self.outfile,
+            "Total mass of coils (kg)",
+            "(m_tf_coils_total)",
+            tfcoil_variables.m_tf_coils_total,
         )
 
         po.osubhd(self.outfile, "Coil Geometry :")

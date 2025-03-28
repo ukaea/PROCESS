@@ -2882,7 +2882,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
+            ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
         ]
 
     else:

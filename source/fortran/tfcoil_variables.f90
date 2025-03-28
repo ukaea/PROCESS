@@ -708,7 +708,7 @@ module tfcoil_variables
   real(dp) :: whtgw
   !! mass of ground-wall insulation layer per coil (kg/coil)
 
-  real(dp) :: whttf
+  real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
   real(dp) :: wwp1

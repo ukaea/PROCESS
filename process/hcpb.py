@@ -483,7 +483,7 @@ class CCFE_HCPB:
                 e
                 * np.exp(-a * ccfe_hcpb_module.x_blanket)
                 * np.exp(-b * ccfe_hcpb_module.x_shield)
-                * tfcoil_variables.whttf
+                * tfcoil_variables.m_tf_coils_total
             )
 
         # Total heating (MW)
@@ -528,8 +528,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "total mass of the TF coils (kg)",
-                "(whttf)",
-                tfcoil_variables.whttf,
+                "(m_tf_coils_total)",
+                tfcoil_variables.m_tf_coils_total,
             )
 
     def nuclear_heating_fw(self):

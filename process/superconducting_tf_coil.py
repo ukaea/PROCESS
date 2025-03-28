@@ -2912,15 +2912,15 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Mass of each TF coil (kg)",
-            "(whttf/n_tf_coils)",
-            tfcoil_variables.whttf / tfcoil_variables.n_tf_coils,
+            "(m_tf_coils_total/n_tf_coils)",
+            tfcoil_variables.m_tf_coils_total / tfcoil_variables.n_tf_coils,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total TF coil mass (kg)",
-            "(whttf)",
-            tfcoil_variables.whttf,
+            "(m_tf_coils_total)",
+            tfcoil_variables.m_tf_coils_total,
             "OP ",
         )
 
