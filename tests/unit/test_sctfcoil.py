@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process import sctfcoil as sctf
+from process import superconducting_tf_coil as sctf
 from process.fortran import (
     build_variables,
     divertor_variables,
@@ -10,7 +10,7 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.sctfcoil import SuperconductingTFCoil
+from process.superconducting_tf_coil import SuperconductingTFCoil
 
 
 @pytest.fixture
