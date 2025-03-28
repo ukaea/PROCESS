@@ -5,6 +5,8 @@ from process import (
 )
 from process.coolprop_interface import FluidProperties
 from process.fortran import (
+    blanket_library,
+    build_variables,
     constants,
     error_handling,
     fwbs_variables,
@@ -18,6 +20,17 @@ from process.utilities.f2py_string_patch import f2py_compatible_to_string
 class Fw:
     def __init__(self) -> None:
         self.outfile = constants.nout
+
+    def run(self):
+        (
+            blanket_library.n_fw_inboard_channels,
+            blanket_library.n_fw_outboard_channels,
+        ) = self.calculate_total_fw_channels(
+            build_variables.a_fw_inboard,
+            build_variables.a_fw_outboard,
+            fwbs_variables.len_fw_channel,
+            fwbs_variables.dx_fw_module,
+        )
 
     def fw_temp(
         self,
@@ -415,3 +428,136 @@ class Fw:
 
         # Calculate Darcy friction factor
         return (1.8 * np.log10(bracket)) ** (-2)
+
+    @staticmethod
+    def calculate_total_fw_channels(
+        a_fw_inboard: float,
+        a_fw_outboard: float,
+        len_fw_channel: float,
+        dx_fw_module: float,
+    ) -> tuple[int, int]:
+        """
+        Calculate the total number of first wall channels for inboard and outboard sections.
+
+        Args:
+            a_fw_inboard (float): Area of the inboard first wall section (m^2).
+            a_fw_outboard (float): Area of the outboard first wall section (m^2).
+            len_fw_channel (float): Length of each first wall channel (m).
+            dx_fw_module (float): Toroidal width of each first wall module (m).
+
+        Returns:
+            tuple: Number of inboard and outboard first wall channels.
+        """
+        n_fw_inboard_channels = a_fw_inboard / (len_fw_channel * dx_fw_module)
+        n_fw_outboard_channels = a_fw_outboard / (len_fw_channel * dx_fw_module)
+        return int(n_fw_inboard_channels), int(n_fw_outboard_channels)
+
+    def output_fw_geometry(self):
+        """
+        Outputs the first wall geometry details to the output file.
+
+        Returns:
+            None
+        """
+        po.oheadr(self.outfile, "First wall build")
+
+        po.ovarrf(
+            self.outfile,
+            "Radius of first wall cooling channels (m)",
+            "(radius_fw_channel)",
+            fwbs_variables.radius_fw_channel,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial wall thickness surrounding first wall coolant channel (m)",
+            "(dr_fw_wall)",
+            fwbs_variables.dr_fw_wall,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Toroidal width of each first wall module (m)",
+            "(dx_fw_module)",
+            fwbs_variables.dx_fw_module,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Length of each first wall channel (m)",
+            "(len_fw_channel)",
+            fwbs_variables.len_fw_channel,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial thickness off inboard first wall (m)",
+            "(dr_fw_inboard)",
+            build_variables.dr_fw_inboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Radial thickness off outboard first wall (m)",
+            "(dr_fw_outboard)",
+            build_variables.dr_fw_outboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Number of inboard first wall cooling channels",
+            "(n_fw_inboard_channels)",
+            blanket_library.n_fw_inboard_channels,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Number of outboard first wall cooling channels",
+            "(n_fw_outboard_channels)",
+            blanket_library.n_fw_outboard_channels,
+            "OP ",
+        )
+
+    def output_fw_pumping(self):
+        """
+        Outputs the first wall pumping details to the output file.
+
+        Returns:
+            None
+        """
+        po.oheadr(self.outfile, "First wall pumping")
+
+        po.ovarst(
+            self.outfile,
+            "First wall coolant type",
+            "(i_fw_coolant_type)",
+            f"'{f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type)}'",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Outlet temperature of first wall coolant [K]",
+            "(temp_fw_coolant_out)",
+            fwbs_variables.temp_fw_coolant_out,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inlet temperature of first wall coolant [K]",
+            "(temp_fw_coolant_in)",
+            fwbs_variables.temp_fw_coolant_in,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Pressure of first wall coolant [Pa]",
+            "(pres_fw_coolant)",
+            fwbs_variables.pres_fw_coolant,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Peak temperature of first wall [K]",
+            "(temp_fw_peak)",
+            fwbs_variables.temp_fw_peak,
+            "OP ",
+        )

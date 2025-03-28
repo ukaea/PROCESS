@@ -298,6 +298,12 @@ class Build:
                     vbuild,
                     "(z_plasma_xpoint_lower)",
                 )
+                po.ovarre(
+                    self.mfile,
+                    "Plasma lower X-point height (m)",
+                    "(z_plasma_xpoint_lower)",
+                    build_variables.z_plasma_xpoint_lower,
+                )
 
                 vbuild = vbuild - build_variables.dz_xpoint_divertor
                 po.obuild(
@@ -597,7 +603,13 @@ class Build:
                     "Plasma lower X-point height (m)",
                     build_variables.z_plasma_xpoint_lower,
                     vbuild,
-                    "(z_plasma_xpoint_upper)",
+                    "(z_plasma_xpoint_lower)",
+                )
+                po.ovarre(
+                    self.mfile,
+                    "Plasma lower X-point height (m)",
+                    "(z_plasma_xpoint_lower)",
+                    build_variables.z_plasma_xpoint_lower,
                 )
 
                 vbuild = vbuild - build_variables.dz_xpoint_divertor

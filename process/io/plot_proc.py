@@ -384,13 +384,13 @@ def plot_current_profiles_over_time(
         t_ramp_down,
     ])
 
-    # Find the number of PF circuits, ncirt includes the CS and plasma circuits
-    ncirt = mfile_data.data["ncirt"].get_scan(scan)
+    # Find the number of PF circuits, n_pf_cs_plasma_circuits includes the CS and plasma circuits
+    n_pf_cs_plasma_circuits = mfile_data.data["n_pf_cs_plasma_circuits"].get_scan(scan)
 
     # Extract PF circuit times
-    # ncirt contains the CS and plasma at the end so we subtract 2
+    # n_pf_cs_plasma_circuits contains the CS and plasma at the end so we subtract 2
     pf_circuits = {}
-    for i in range(int(ncirt - 2)):
+    for i in range(int(n_pf_cs_plasma_circuits - 2)):
         pf_circuits[f"PF Circuit {i}"] = [
             mfile_data.data[f"pfc{i}t{j}"].get_scan(scan) for j in range(6)
         ]
@@ -1462,6 +1462,238 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
                 color=BLANKET_COLOUR[colour_scheme - 1],
                 lw=0.01,
             )
+
+
+def plot_first_wall_top_down_cross_section(axis, mfile_data, scan):
+    # Import required variables
+    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan) * 100
+    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan) * 100
+    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan) * 100
+
+    # Flot first module
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(0, 0),
+            width=dx_fw_module,
+            height=2 * (dr_fw_wall + radius_fw_channel),
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot cooling channel in first module
+    axis.add_patch(
+        patches.Circle(
+            xy=(dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
+            radius=radius_fw_channel,
+            edgecolor="black",
+            facecolor="#b87333",
+        )
+    )
+
+    # Plot second module
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dx_fw_module, 0),
+            width=dx_fw_module,
+            height=2 * (dr_fw_wall + radius_fw_channel),
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot cooling channel in second module
+    axis.add_patch(
+        patches.Circle(
+            xy=(dx_fw_module + dx_fw_module / 2, dr_fw_wall + radius_fw_channel),
+            radius=radius_fw_channel,
+            edgecolor="black",
+            facecolor="#b87333",
+        )
+    )
+
+    # Draw radius line in the second circle
+    axis.plot(
+        [
+            dx_fw_module + dx_fw_module / 2,
+            dx_fw_module + dx_fw_module / 2 + radius_fw_channel * np.cos(np.pi / 4),
+        ],
+        [
+            dr_fw_wall + radius_fw_channel,
+            dr_fw_wall + radius_fw_channel + radius_fw_channel * np.sin(np.pi / 4),
+        ],
+        color="black",
+        linestyle="--",
+        label=f"$r_{{channel}}$ = {radius_fw_channel:.3f} cm",
+    )
+
+    # Draw width line below the second module
+    axis.plot(
+        [0, 0],
+        [0, 0],
+        color="black",
+        label=f"$w_{{module}}$ = {dx_fw_module:.3f} cm",
+    )
+    axis.annotate(
+        "",
+        xy=(dx_fw_module, -0.2),
+        xytext=(2 * dx_fw_module, -0.2),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Draw dotted line above the channel
+    axis.plot(
+        [dx_fw_module * 1.5, dx_fw_module * 1.5],
+        [2 * radius_fw_channel + dr_fw_wall, 2 * (radius_fw_channel + dr_fw_wall)],
+        color="black",
+        linestyle="dotted",
+        label=rf"$\Delta r_{{wall}}$ = {dr_fw_wall:.3f} cm",
+    )
+
+    # Draw dotted line below the channel
+    axis.plot(
+        [dx_fw_module * 1.5, dx_fw_module * 1.5],
+        [0, dr_fw_wall],
+        color="black",
+        linestyle="dotted",
+    )
+    # Plot a dot in the center of the second channel
+    axis.plot(
+        dx_fw_module + dx_fw_module / 2,
+        dr_fw_wall + radius_fw_channel,
+        marker="o",
+        color="black",
+    )
+
+    # Add the legend to the plot
+    axis.legend()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.set_xlabel("X [cm]")
+    axis.set_ylabel("R [cm]")
+    axis.set_title("First Wall Top-Down Cross Section")
+    axis.set_xlim([-1, 2 * dx_fw_module + 1])
+    axis.set_ylim([-1, 2 * (dr_fw_wall + radius_fw_channel) + 1])
+
+
+def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
+    # Import required variables
+    radius_fw_channel = mfile_data.data["radius_fw_channel"].get_scan(scan)
+    dr_fw_wall = mfile_data.data["dr_fw_wall"].get_scan(scan)
+    dx_fw_module = mfile_data.data["dx_fw_module"].get_scan(scan)
+    len_fw_channel = mfile_data.data["len_fw_channel"].get_scan(scan)
+    temp_fw_coolant_in = mfile_data.data["temp_fw_coolant_in"].get_scan(scan)
+    temp_fw_coolant_out = mfile_data.data["temp_fw_coolant_out"].get_scan(scan)
+    i_fw_coolant_type = mfile_data.data["i_fw_coolant_type"].get_scan(scan)
+    temp_fw_peak = mfile_data.data["temp_fw_peak"].get_scan(scan)
+    pres_fw_coolant = mfile_data.data["pres_fw_coolant"].get_scan(scan)
+    n_fw_outboard_channels = mfile_data.data["n_fw_outboard_channels"].get_scan(scan)
+    n_fw_inboard_channels = mfile_data.data["n_fw_inboard_channels"].get_scan(scan)
+
+    # Plot first wall structure facing plasma
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(0, 0),
+            width=dr_fw_wall,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="gray",
+        )
+    )
+
+    # Plot the cooling channel
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dr_fw_wall, 0),
+            width=2 * radius_fw_channel,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="#b87333",  # Copper color
+        )
+    )
+
+    # Plot the back wall of the first wall
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(dr_fw_wall + 2 * radius_fw_channel, 0),
+            width=dr_fw_wall,
+            height=len_fw_channel,
+            edgecolor="black",
+            facecolor="grey",
+        )
+    )
+
+    # Draw an upward pointing arrow
+    axis.arrow(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        dr_fw_wall + radius_fw_channel,
+        0,
+        len_fw_channel / 6,
+        head_width=dr_fw_wall,
+        head_length=len_fw_channel / 20,
+        fc="black",
+        ec="black",
+    )
+
+    # Add the inlet temperature beside the arrow
+    axis.text(
+        dx_fw_module + 2 * dr_fw_wall,
+        dr_fw_wall + radius_fw_channel + len_fw_channel / 6,
+        f"$T_{{inlet}} = ${temp_fw_coolant_in:.2f} K",
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        color="black",
+    )
+
+    # Draw a right pointing arrow
+    axis.arrow(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        len_fw_channel,
+        2 * dr_fw_wall,
+        0,
+        head_width=len_fw_channel / 30,
+        head_length=dr_fw_wall,
+        fc="black",
+        ec="black",
+        linewidth=5,  # Thicker stem
+    )
+
+    # Add the outlet temperature beside the arrow
+    axis.text(
+        dx_fw_module + 0.5 * dr_fw_wall,
+        len_fw_channel * 0.9,
+        f"$T_{{outlet}} = ${temp_fw_coolant_out:.2f} K",
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        color="black",
+    )
+
+    textstr_fw = "\n".join((
+        rf"Coolant type: {i_fw_coolant_type}",
+        rf"$T_{{FW,peak}}$: {temp_fw_peak:.3f} K",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:.3f} kPa",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:.3f} bar",
+        rf"$N_{{outboard}}$: {n_fw_outboard_channels}",
+        rf"$N_{{inboard}}$: {n_fw_inboard_channels}",
+    ))
+
+    props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    axis.text(
+        -0.7,
+        0.05,
+        textstr_fw,
+        transform=axis.transAxes,
+        fontsize=11,
+        verticalalignment="bottom",
+        bbox=props_fw,
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("First Wall Poloidal Cross Section")
+    axis.set_xlim([-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01])
+    axis.set_ylim([-0.2, len_fw_channel + 0.2])
 
 
 def plot_firstwall(axis, mfile_data, scan, colour_scheme):
@@ -3331,6 +3563,7 @@ def main_plot(
     fig5,
     fig6,
     fig7,
+    fig8,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3453,6 +3686,12 @@ def main_plot(
 
     plot_12 = fig7.add_subplot(111)
     plot_current_profiles_over_time(plot_12, m_file_data, scan)
+
+    plot_13 = fig8.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_13, m_file_data, scan)
+
+    plot_14 = fig8.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_14, m_file_data, scan)
 
 
 def main(args=None):
@@ -3723,6 +3962,7 @@ def main(args=None):
     page5 = plt.figure(figsize=(12, 9), dpi=80)
     page6 = plt.figure(figsize=(12, 9), dpi=80)
     page7 = plt.figure(figsize=(12, 9), dpi=80)
+    page8 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3733,6 +3973,7 @@ def main(args=None):
         page5,
         page6,
         page7,
+        page8,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -3748,6 +3989,7 @@ def main(args=None):
         pdf.savefig(page5)
         pdf.savefig(page6)
         pdf.savefig(page7)
+        pdf.savefig(page8)
 
     # show fig if option used
     if args.show:
@@ -3760,6 +4002,7 @@ def main(args=None):
     plt.close(page5)
     plt.close(page6)
     plt.close(page7)
+    plt.close(page8)
 
 
 if __name__ == "__main__":

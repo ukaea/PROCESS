@@ -706,14 +706,6 @@ class BlanketLibrary:
 
         # FW Pipe Flow and Velocity ######
 
-        # Total number of first wall pipes from channel length and dx_fw_module (02/12/2015)
-        blanket_library.n_fw_inboard_channels = build_variables.a_fw_inboard / (
-            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
-        )
-        blanket_library.n_fw_outboard_channels = build_variables.a_fw_outboard / (
-            fwbs_variables.len_fw_channel * fwbs_variables.dx_fw_module
-        )
-
         # Mass flow rate per FW coolant pipe (kg/s):
         blanket_library.mflow_fw_inboard_coolant_channel = (
             blanket_library.mflow_fw_inboard_coolant_total
@@ -1995,7 +1987,7 @@ class BlanketLibrary:
                 self.outfile,
                 "First wall coolant type",
                 "(i_fw_coolant_type)",
-                f'"{fwbs_variables.i_fw_coolant_type}"',
+                f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
             )
             po.ovarre(
                 self.outfile,
