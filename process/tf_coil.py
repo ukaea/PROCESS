@@ -283,7 +283,7 @@ class TFCoil:
 
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
-            sctfcoil_module.h_cp_top = (
+            sctfcoil_module.z_cp_top = (
                 build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
         # ---

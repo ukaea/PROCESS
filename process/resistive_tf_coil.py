@@ -459,7 +459,7 @@ class ResistiveTFCoil(TFCoil):
                 build_variables.r_tf_inboard_in,
                 build_variables.r_tf_inboard_out,
                 build_variables.r_cp_top,
-                sctfcoil_module.h_cp_top,
+                sctfcoil_module.z_cp_top,
                 build_variables.hmax + build_variables.dr_tf_outboard,
                 tfcoil_variables.thkcas,
                 tfcoil_variables.casthi,

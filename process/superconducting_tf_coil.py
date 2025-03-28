@@ -2386,8 +2386,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Distance from the midplane to the top of the tapered section (m)",
-                "(h_cp_top)",
-                sctfcoil_module.h_cp_top,
+                "(z_cp_top)",
+                sctfcoil_module.z_cp_top,
             )
             po.ovarre(
                 self.outfile,

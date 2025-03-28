@@ -285,7 +285,7 @@ class TfResHeatingParam(NamedTuple):
     r_tf_inboard_in: Any = None
     r_tf_inboard_out: Any = None
     itart: Any = None
-    h_cp_top: Any = None
+    z_cp_top: Any = None
     is_leg_cp_temp_same: Any = None
     expected_rho_cp: Any = None
     expected_rho_tf_leg: Any = None
@@ -339,7 +339,7 @@ class TfResHeatingParam(NamedTuple):
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=0,
             expected_rho_cp=2.0721414e-08,
             expected_rho_tf_leg=2.0721414e-08,
@@ -389,7 +389,7 @@ class TfResHeatingParam(NamedTuple):
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=1,
             expected_rho_cp=2.0721414e-08,
             expected_rho_tf_leg=2.0721414e-08,
@@ -518,7 +518,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
 
-    monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfresheatingparam.h_cp_top)
+    monkeypatch.setattr(sctfcoil_module, "z_cp_top", tfresheatingparam.z_cp_top)
 
     monkeypatch.setattr(
         sctfcoil_module, "is_leg_cp_temp_same", tfresheatingparam.is_leg_cp_temp_same

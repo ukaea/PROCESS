@@ -1160,7 +1160,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
 
 class StCpAngleFractionParam(NamedTuple):
-    h_cp_top: Any = None
+    z_cp_top: Any = None
 
     r_cp_top: Any = None
 
@@ -1175,14 +1175,14 @@ class StCpAngleFractionParam(NamedTuple):
     "stcpanglefractionparam",
     (
         StCpAngleFractionParam(
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             r_cp_top=0.92643571428571436,
             r_cp_mid=0.20483000000000001,
             rmajor=1.7000000000000002,
             expected_f_geom_cp=0.08375588625302606,
         ),
         StCpAngleFractionParam(
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             r_cp_top=0.92643571428571436,
             r_cp_mid=0.20483000000000001,
             rmajor=1.7000000000000002,
@@ -1201,7 +1201,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
 
     f_geom_cp = ccfe_hcpb.st_cp_angle_fraction(
-        h_cp_top=stcpanglefractionparam.h_cp_top,
+        z_cp_top=stcpanglefractionparam.z_cp_top,
         r_cp_top=stcpanglefractionparam.r_cp_top,
         r_cp_mid=stcpanglefractionparam.r_cp_mid,
         rmajor=stcpanglefractionparam.rmajor,

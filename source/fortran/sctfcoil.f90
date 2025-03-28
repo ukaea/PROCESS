@@ -54,7 +54,7 @@ module sctfcoil_module
    real(dp) :: f_tf_ins
 !! Inboard coil insulation fraction [-]
 
-   real(dp) :: h_cp_top
+   real(dp) :: z_cp_top
 !! Vertical distance from the midplane to the top of the tapered section [m]
 
    real(dp) :: r_tf_outboard_in
