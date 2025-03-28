@@ -1057,7 +1057,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     whtconsh: Any = None
 
-    whttf: Any = None
+    m_tf_coils_total: Any = None
 
     whtcas: Any = None
 
@@ -1183,7 +1183,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             hmax=9.0730900215620327,
             denstl=7800,
             whtconsh=0,
-            whttf=0,
+            m_tf_coils_total=0,
             whtcas=0,
             tficrn=0,
             tfcryoarea=0,
@@ -1255,7 +1255,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             hmax=9.0730900215620327,
             denstl=7800,
             whtconsh=115651.90127937049,
-            whttf=19649856.627845347,
+            m_tf_coils_total=19649856.627845347,
             whtcas=1034021.9996272125,
             tficrn=0.8197580588957678,
             tfcryoarea=6381.2092203414386,
@@ -1360,7 +1360,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "whtconsh", tfcoilareaandmassesparam.whtconsh)
 
-    monkeypatch.setattr(tfcoil_variables, "whttf", tfcoilareaandmassesparam.whttf)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coils_total", tfcoilareaandmassesparam.m_tf_coils_total
+    )
 
     monkeypatch.setattr(tfcoil_variables, "whtcas", tfcoilareaandmassesparam.whtcas)
 

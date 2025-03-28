@@ -76,7 +76,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     itart: Any = None
 
-    whttf: Any = None
+    m_tf_coils_total: Any = None
 
     whttflgs: Any = None
 
@@ -152,7 +152,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             f_a_fw_coolant_outboard=0,
             fusion_power=1986.0623241661431,
             itart=0,
-            whttf=19649856.627845347,
+            m_tf_coils_total=19649856.627845347,
             whttflgs=0,
             verbose=0,
             ip=0,
@@ -201,7 +201,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             f_a_fw_coolant_outboard=0.31415926535897931,
             fusion_power=1985.4423932312809,
             itart=0,
-            whttf=19662548.210142396,
+            m_tf_coils_total=19662548.210142396,
             whttflgs=0,
             verbose=0,
             ip=0,
@@ -327,7 +327,11 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
 
-    monkeypatch.setattr(tfcoil_variables, "whttf", nuclearheatingmagnetsparam.whttf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coils_total",
+        nuclearheatingmagnetsparam.m_tf_coils_total,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "whttflgs", nuclearheatingmagnetsparam.whttflgs

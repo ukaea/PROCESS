@@ -730,8 +730,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.6415E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3121E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4642E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.8257E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0921E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8257E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
@@ -938,7 +938,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4211E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2725E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.5991E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0921E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0921E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -1893,8 +1893,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.5813E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2720E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4464E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.6839E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0694E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6839E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0694E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
@@ -2101,7 +2101,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3916E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2457E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6138E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0694E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0694E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -3056,8 +3056,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.4962E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2408E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4272E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.5756E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0521E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5756E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0521E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
@@ -3264,7 +3264,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3690E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2200E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6215E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0521E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0521E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -4219,8 +4219,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.5162E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2436E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4304E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.5855E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0537E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5855E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0537E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
@@ -4427,7 +4427,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3711E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2271E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6243E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0537E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0537E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -5382,8 +5382,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.6364E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2718E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4530E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.6756E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0681E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6756E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0681E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
@@ -5590,7 +5590,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3899E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2612E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6269E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0681E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0681E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -6545,8 +6545,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.7899E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3025E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4821E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.8120E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0899E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8120E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0899E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
@@ -6753,7 +6753,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4183E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.3001E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6218E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0899E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0899E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -7708,8 +7708,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.8136E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3066E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4861E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.8240E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0918E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8240E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0918E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
@@ -7916,7 +7916,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4208E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.3088E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6251E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0918E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0918E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -8871,8 +8871,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.6855E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2726E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4625E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.7080E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0733E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7080E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0733E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
@@ -9079,7 +9079,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3966E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2727E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6273E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0733E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0733E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -10034,8 +10034,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.5529E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2401E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4388E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.5997E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0560E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5997E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0560E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
@@ -10242,7 +10242,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3741E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2277E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6212E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0560E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0560E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -11197,8 +11197,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.5641E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2414E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4407E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.6056E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0569E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6056E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0569E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
@@ -11405,7 +11405,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3753E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2441E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6318E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0569E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0569E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -12360,8 +12360,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.7086E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2742E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4659E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.7129E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0741E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7129E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0741E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
@@ -12568,7 +12568,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3976E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2941E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6414E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0741E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0741E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -13523,8 +13523,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.8270E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3061E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4895E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.8254E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0921E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8254E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
@@ -13731,7 +13731,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4211E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.3316E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6408E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0921E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0921E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -14686,8 +14686,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.8412E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3079E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4918E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.8328E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0933E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8328E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0933E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
@@ -14894,7 +14894,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4226E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.3467E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6496E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0933E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0933E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -15849,8 +15849,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.6959E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2727E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4662E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.7183E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0749E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7183E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0749E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
@@ -16057,7 +16057,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3988E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.3195E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6583E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0749E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0749E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
@@ -17012,8 +17012,8 @@
  Steel_conduit_mass_per_coil_(kg)________________________________________ (whtconsh)____________________      8.5488E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2376E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4403E+05 OP 
- Mass_of_each_TF_coil_(kg)_______________________________________________ (whttf/n_tf_coils)__________________      6.6037E+05 OP 
- Total_TF_coil_mass_(kg)_________________________________________________ (whttf)_______________________      1.0566E+07 OP 
+ Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6037E+05 OP 
+ Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0566E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
@@ -17220,7 +17220,7 @@
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.3749E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.2925E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6674E+03    
- total_mass_of_the_TF_coils_(kg)_________________________________________ (whttf)_______________________      1.0566E+07    
+ total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.0566E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
  Fraction_of_FW_and_blanket_thermal_power_required_for_pumping___________ (fpump)_______________________      8.9463E-02 OP 
