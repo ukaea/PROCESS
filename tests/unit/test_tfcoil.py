@@ -251,7 +251,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     dr_tf_outboard: Any = None
 
-    tfareain: Any = None
+    a_tf_coil_inboard: Any = None
 
     c_tf_total: Any = None
 
@@ -283,7 +283,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     tan_theta_coil: Any = None
 
-    expected_tfareain: Any = None
+    expected_a_tf_coil_inboard: Any = None
 
     expected_tftort: Any = None
 
@@ -307,7 +307,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             dr_tf_outboard=1.208,
-            tfareain=0,
+            a_tf_coil_inboard=0,
             c_tf_total=0,
             tftort=1,
             n_tf_coils=16,
@@ -323,7 +323,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_tf_outboard_out=0,
             rad_tf_coil_toroidal=0,
             tan_theta_coil=0,
-            expected_tfareain=27.308689677971632,
+            expected_a_tf_coil_inboard=27.308689677971632,
             expected_tftort=1.6395161177915356,
             expected_a_tf_leg_outboard=1.9805354702921749,
             expected_r_tf_outboard_in=15.915405859443332,
@@ -337,7 +337,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_tf_inboard_in=2.9538679176819831,
             r_tf_inboard_out=4.4822055399518357,
             dr_tf_outboard=1.5283376222698528,
-            tfareain=35.703669036223495,
+            a_tf_coil_inboard=35.703669036223495,
             c_tf_total=241812532.66279837,
             tftort=1.7488698442633552,
             n_tf_coils=16,
@@ -353,7 +353,7 @@ class TfGlobalGeometryParam(NamedTuple):
             r_tf_outboard_out=17.827520102947819,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            expected_tfareain=35.703669036223495,
+            expected_a_tf_coil_inboard=35.703669036223495,
             expected_tftort=1.7488698442633552,
             expected_a_tf_leg_outboard=2.6728635794409041,
             expected_r_tf_outboard_in=16.299182480677967,
@@ -397,7 +397,9 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
         build_variables, "dr_tf_outboard", tfglobalgeometryparam.dr_tf_outboard
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfareain", tfglobalgeometryparam.tfareain)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_coil_inboard", tfglobalgeometryparam.a_tf_coil_inboard
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "c_tf_total", tfglobalgeometryparam.c_tf_total
@@ -449,8 +451,8 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
 
     tfcoil.tf_global_geometry()
 
-    assert tfcoil_variables.tfareain == pytest.approx(
-        tfglobalgeometryparam.expected_tfareain
+    assert tfcoil_variables.a_tf_coil_inboard == pytest.approx(
+        tfglobalgeometryparam.expected_a_tf_coil_inboard
     )
 
     assert tfcoil_variables.tftort == pytest.approx(
@@ -513,7 +515,7 @@ class TfCurrentParam(NamedTuple):
 
     oacdcp: Any = None
 
-    tfareain: Any = None
+    a_tf_coil_inboard: Any = None
 
     r_tf_inboard_out: Any = None
 
@@ -561,7 +563,7 @@ class TfCurrentParam(NamedTuple):
             thicndut=0.002,
             thkcas=0.52465000000000006,
             oacdcp=8673900,
-            tfareain=27.308689677971632,
+            a_tf_coil_inboard=27.308689677971632,
             r_tf_inboard_out=4.20194118510911,
             r_tf_inboard_in=2.9939411851091102,
             dr_tf_inboard=1.208,
@@ -639,7 +641,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "oacdcp", tfcurrentparam.oacdcp)
 
-    monkeypatch.setattr(tfcoil_variables, "tfareain", tfcurrentparam.tfareain)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_coil_inboard", tfcurrentparam.a_tf_coil_inboard
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_out", tfcurrentparam.r_tf_inboard_out
