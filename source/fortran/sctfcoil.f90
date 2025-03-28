@@ -112,7 +112,7 @@ module sctfcoil_module
    real(dp) :: a_leg_cond
 !! Exact TF ouboard leg conductor area [m2]
 
-   real(dp) :: theta_coil
+   real(dp) :: rad_tf_coil_toroidal
 !! Half toroidal angular extent of a single TF coil inboard leg
 
    real(dp) :: tan_theta_coil

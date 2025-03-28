@@ -164,7 +164,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_wp_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.theta_coil,
+                sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_wp_outer,
                 sctfcoil_module.a_tf_steel,
                 sctfcoil_module.a_case_front,
@@ -1925,7 +1925,8 @@ class SuperconductingTFCoil(TFCoil):
         if i_tf_case_geom == 0:
             # Circular front case
             sctfcoil_module.a_case_front = (
-                sctfcoil_module.theta_coil * build_variables.r_tf_inboard_out**2
+                sctfcoil_module.rad_tf_coil_toroidal
+                * build_variables.r_tf_inboard_out**2
                 - sctfcoil_module.tan_theta_coil * sctfcoil_module.r_wp_outer**2
             )
         else:
@@ -1938,7 +1939,7 @@ class SuperconductingTFCoil(TFCoil):
         # Nose casing area [m2]
         sctfcoil_module.a_case_nose = (
             sctfcoil_module.tan_theta_coil * sctfcoil_module.r_wp_inner**2
-            - sctfcoil_module.theta_coil * build_variables.r_tf_inboard_in**2
+            - sctfcoil_module.rad_tf_coil_toroidal * build_variables.r_tf_inboard_in**2
         )
 
         # Report error if the casing area is negative
