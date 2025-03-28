@@ -24,6 +24,18 @@ from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
+SUPERCONDUCTING_TF_TYPES = {
+    1: "Nb3Sn ITER",
+    2: "Bi-2212",
+    3: "NbTi",
+    4: "Nb3Sn user",
+    5: "Nb3Sn WST",
+    6: "REBCO Croco",
+    7: "NbTi Ginzburg-Landau",
+    8: "REBCO Ginzburg-Landau",
+    9: "REBCO Hazelton-Zhai",
+}
+
 
 RMU0 = constants.rmu0
 EPS = np.finfo(1.0).eps
