@@ -30,7 +30,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     dr_tf_wp: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     a_tf_coil_inboard: Any = None
 
@@ -81,7 +81,7 @@ class ResTfInternalGeomParam(NamedTuple):
             thicndut=0.00080000000000000004,
             thkcas=0,
             dr_tf_wp=0.15483000000000002,
-            tftort=0.45367650933034859,
+            dx_tf_inboard_out_toroidal=0.45367650933034859,
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
@@ -108,7 +108,7 @@ class ResTfInternalGeomParam(NamedTuple):
             thicndut=0.00080000000000000004,
             thkcas=0,
             dr_tf_wp=0.14708850000000001,
-            tftort=0.44435902370665786,
+            dx_tf_inboard_out_toroidal=0.44435902370665786,
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
@@ -156,7 +156,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", restfinternalgeomparam.dr_tf_wp)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", restfinternalgeomparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        restfinternalgeomparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "a_tf_coil_inboard", restfinternalgeomparam.a_tf_coil_inboard
@@ -256,7 +260,7 @@ class TfResHeatingParam(NamedTuple):
     vol_cond_cp: Any = None
     n_tf_turn: Any = None
     thkcas: Any = None
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
     len_tf_coil: Any = None
     res_tf_leg: Any = None
     temp_cp_average: Any = None
@@ -310,7 +314,7 @@ class TfResHeatingParam(NamedTuple):
             vol_cond_cp=0,
             n_tf_turn=1,
             thkcas=0,
-            tftort=0.45367650933034859,
+            dx_tf_inboard_out_toroidal=0.45367650933034859,
             len_tf_coil=15.582502857142856,
             res_tf_leg=0,
             temp_cp_average=347.13,
@@ -360,7 +364,7 @@ class TfResHeatingParam(NamedTuple):
             vol_cond_cp=12.020160732580297,
             n_tf_turn=1,
             thkcas=0,
-            tftort=0.44435902370665786,
+            dx_tf_inboard_out_toroidal=0.44435902370665786,
             len_tf_coil=15.654502857142857,
             res_tf_leg=5.647653956699231e-06,
             temp_cp_average=347.13,
@@ -438,7 +442,11 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(tfcoil_variables, "thkcas", tfresheatingparam.thkcas)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", tfresheatingparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        tfresheatingparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_coil", tfresheatingparam.len_tf_coil)
 

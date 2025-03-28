@@ -303,7 +303,7 @@ class TFCoil:
         # ***
         # Sliding joints geometry
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
-            tfcoil_variables.tftort = (
+            tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_cp_top
                 * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
@@ -311,13 +311,13 @@ class TFCoil:
 
         # Default thickness, initially written for DEMO SC magnets
         elif physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 1:
-            tfcoil_variables.tftort = (
+            tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
                 * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
             )
         else:
-            tfcoil_variables.tftort = (
+            tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
                 * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
@@ -325,7 +325,7 @@ class TFCoil:
 
         # Area of rectangular cross-section TF outboard leg [m2]
         tfcoil_variables.a_tf_leg_outboard = (
-            tfcoil_variables.tftort * build_variables.dr_tf_outboard
+            tfcoil_variables.dx_tf_inboard_out_toroidal * build_variables.dr_tf_outboard
         )
         # ---
 

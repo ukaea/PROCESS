@@ -49,7 +49,9 @@ class Build:
         omega = constants.twopi / tfcoil_variables.n_tf_coils
 
         #  Half-width of outboard TF coil in toroidal direction (m)
-        a = 0.5e0 * tfcoil_variables.tftort  # (previously used inboard leg width)
+        a = (
+            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
+        )  # (previously used inboard leg width)
         try:
             assert a < np.inf
         except AssertionError:

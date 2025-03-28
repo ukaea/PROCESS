@@ -255,7 +255,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     c_tf_total: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     n_tf_coils: Any = None
 
@@ -285,7 +285,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     expected_a_tf_coil_inboard: Any = None
 
-    expected_tftort: Any = None
+    expected_dx_tf_inboard_out_toroidal: Any = None
 
     expected_a_tf_leg_outboard: Any = None
 
@@ -309,7 +309,7 @@ class TfGlobalGeometryParam(NamedTuple):
             dr_tf_outboard=1.208,
             a_tf_coil_inboard=0,
             c_tf_total=0,
-            tftort=1,
+            dx_tf_inboard_out_toroidal=1,
             n_tf_coils=16,
             a_tf_leg_outboard=0,
             i_tf_sup=1,
@@ -324,7 +324,7 @@ class TfGlobalGeometryParam(NamedTuple):
             rad_tf_coil_toroidal=0,
             tan_theta_coil=0,
             expected_a_tf_coil_inboard=27.308689677971632,
-            expected_tftort=1.6395161177915356,
+            expected_dx_tf_inboard_out_toroidal=1.6395161177915356,
             expected_a_tf_leg_outboard=1.9805354702921749,
             expected_r_tf_outboard_in=15.915405859443332,
             expected_r_tf_outboard_out=17.123405859443331,
@@ -339,7 +339,7 @@ class TfGlobalGeometryParam(NamedTuple):
             dr_tf_outboard=1.5283376222698528,
             a_tf_coil_inboard=35.703669036223495,
             c_tf_total=241812532.66279837,
-            tftort=1.7488698442633552,
+            dx_tf_inboard_out_toroidal=1.7488698442633552,
             n_tf_coils=16,
             a_tf_leg_outboard=2.6728635794409041,
             i_tf_sup=1,
@@ -354,7 +354,7 @@ class TfGlobalGeometryParam(NamedTuple):
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_a_tf_coil_inboard=35.703669036223495,
-            expected_tftort=1.7488698442633552,
+            expected_dx_tf_inboard_out_toroidal=1.7488698442633552,
             expected_a_tf_leg_outboard=2.6728635794409041,
             expected_r_tf_outboard_in=16.299182480677967,
             expected_r_tf_outboard_out=17.827520102947819,
@@ -405,7 +405,11 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
         tfcoil_variables, "c_tf_total", tfglobalgeometryparam.c_tf_total
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", tfglobalgeometryparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        tfglobalgeometryparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "n_tf_coils", tfglobalgeometryparam.n_tf_coils
@@ -455,8 +459,8 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
         tfglobalgeometryparam.expected_a_tf_coil_inboard
     )
 
-    assert tfcoil_variables.tftort == pytest.approx(
-        tfglobalgeometryparam.expected_tftort
+    assert tfcoil_variables.dx_tf_inboard_out_toroidal == pytest.approx(
+        tfglobalgeometryparam.expected_dx_tf_inboard_out_toroidal
     )
 
     assert tfcoil_variables.a_tf_leg_outboard == pytest.approx(
@@ -493,7 +497,7 @@ class TfCurrentParam(NamedTuple):
 
     tinstf: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     b_tf_inboard_peak: Any = None
 
@@ -552,7 +556,7 @@ class TfCurrentParam(NamedTuple):
             i_tf_sup=1,
             casths_fraction=0.059999999999999998,
             tinstf=0.0080000000000000019,
-            tftort=1.6395161177915356,
+            dx_tf_inboard_out_toroidal=1.6395161177915356,
             b_tf_inboard_peak=0,
             tfinsgap=0.01,
             tfc_sidewall_is_fraction=False,
@@ -609,7 +613,11 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", tfcurrentparam.tinstf)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", tfcurrentparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        tfcurrentparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "b_tf_inboard_peak", tfcurrentparam.b_tf_inboard_peak

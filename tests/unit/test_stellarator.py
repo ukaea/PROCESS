@@ -702,7 +702,7 @@ class StstrcParam(NamedTuple):
 
     vtfskv: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     stella_config_coilsurface: Any = None
 
@@ -740,7 +740,7 @@ class StstrcParam(NamedTuple):
             tcritsc=16,
             estotftgj=132.55990646265246,
             vtfskv=4.3242392290600487,
-            tftort=0.67648706726464258,
+            dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
             f_n=1,
@@ -764,7 +764,7 @@ class StstrcParam(NamedTuple):
             tcritsc=16,
             estotftgj=132.55990646265246,
             vtfskv=4.3242392290600487,
-            tftort=0.67648706726464258,
+            dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
             f_n=1,
@@ -815,7 +815,11 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(tfcoil_variables, "vtfskv", ststrcparam.vtfskv)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", ststrcparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        ststrcparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(
         stellarator_configuration,

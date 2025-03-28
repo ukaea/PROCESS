@@ -2285,8 +2285,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Outboard leg toroidal thickness (m)",
-            "(tftort)",
-            tfcoil_variables.tftort,
+            "(dx_tf_inboard_out_toroidal)",
+            tfcoil_variables.dx_tf_inboard_out_toroidal,
             "OP ",
         )
         po.ovarre(

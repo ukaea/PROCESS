@@ -782,7 +782,7 @@ class Stellarator:
         # The following line is correct AS LONG AS we do not scale the coil sizes
         intercoil_surface = (
             stellarator_configuration.stella_config_coilsurface * st.f_r**2
-            - tfcoil_variables.tftort
+            - tfcoil_variables.dx_tf_inboard_out_toroidal
             * stellarator_configuration.stella_config_coillength
             * st.f_r
             * st.f_n
@@ -2734,7 +2734,7 @@ class Stellarator:
         #######################################################################################
         #  General Coil Geometry values
         #
-        tfcoil_variables.tftort = (
+        tfcoil_variables.dx_tf_inboard_out_toroidal = (
             tfcoil_variables.wwp1
             + 2.0e0 * tfcoil_variables.casths
             + 2.0e0 * tfcoil_variables.tinstf
@@ -2753,24 +2753,24 @@ class Stellarator:
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
         tfcoil_variables.a_tf_leg_outboard = (
-            build_variables.dr_tf_inboard * tfcoil_variables.tftort
+            build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
         tfcoil_variables.acasetf = (
-            build_variables.dr_tf_inboard * tfcoil_variables.tftort
+            build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
         ) - awpc  # [m^2] Cross-sectional area of surrounding case
 
         tfcoil_variables.tfocrn = (
-            0.5e0 * tfcoil_variables.tftort
+            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m] Half-width of side of coil nearest torus centreline
         tfcoil_variables.tficrn = (
-            0.5e0 * tfcoil_variables.tftort
+            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m] Half-width of side of coil nearest plasma
 
         # [m^2] Total surface area of coil side facing plasma: inboard region
         tfcoil_variables.tfsai = (
             tfcoil_variables.n_tf_coils
-            * tfcoil_variables.tftort
+            * tfcoil_variables.dx_tf_inboard_out_toroidal
             * 0.5e0
             * tfcoil_variables.len_tf_coil
         )
@@ -2790,7 +2790,9 @@ class Stellarator:
             )
         )
         # Left-Over coil gap between two coils (m)
-        coilcoilgap = tfcoil_variables.toroidalgap - tfcoil_variables.tftort
+        coilcoilgap = (
+            tfcoil_variables.toroidalgap - tfcoil_variables.dx_tf_inboard_out_toroidal
+        )
 
         #  Variables for ALL coils.
         tfcoil_variables.a_tf_coil_inboard = (
@@ -3677,8 +3679,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Outboard leg toroidal thickness (m)",
-            "(tftort)",
-            tfcoil_variables.tftort,
+            "(dx_tf_inboard_out_toroidal)",
+            tfcoil_variables.dx_tf_inboard_out_toroidal,
         )
         po.ovarre(
             self.outfile, "Minimum coil distance (m)", "(toroidalgap)", toroidalgap

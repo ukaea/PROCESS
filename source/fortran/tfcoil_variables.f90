@@ -86,7 +86,7 @@ module tfcoil_variables
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
-  !! inboard TF coil sidewall case thickness as a fraction of tftort
+  !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
   !! logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)
@@ -388,7 +388,7 @@ module tfcoil_variables
   !! Minimal distance between two toroidal coils. (m)
 
   real(dp) :: ftoroidalgap
-  !! F-value for minimum tftort (`constraint equation 82`)
+  !! F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 
   real(dp) :: ripmax
   !! aximum allowable toroidal field ripple amplitude at plasma edge (%)
@@ -601,7 +601,7 @@ module tfcoil_variables
   real(dp) :: tftmp
   !! peak helium coolant temperature in TF coils and PF coils (K)
 
-  real(dp) :: tftort
+  real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
   real(dp) :: thicndut

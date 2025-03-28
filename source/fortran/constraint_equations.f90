@@ -3096,14 +3096,14 @@ contains
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! toroidalgap > tftort
+      !! toroidalgap > dx_tf_inboard_out_toroidal
       !! #=# tfcoil
-      !! #=#=# tftort, ftoroidalgap
+      !! #=#=# dx_tf_inboard_out_toroidal, ftoroidalgap
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftoroidalgap : input real : f-value for constraint toroidalgap > tftort
+      !! ftoroidalgap : input real : f-value for constraint toroidalgap > dx_tf_inboard_out_toroidal
       !! toroidalgap : input real :  minimal gap between two stellarator coils
-      !! tftort : input real :  total toroidal width of a tf coil
-      use tfcoil_variables, only: tftort,ftoroidalgap,toroidalgap
+      !! dx_tf_inboard_out_toroidal : input real :  total toroidal width of a tf coil
+      use tfcoil_variables, only: dx_tf_inboard_out_toroidal,ftoroidalgap,toroidalgap
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3111,9 +3111,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftoroidalgap * toroidalgap/tftort
+      tmp_cc =  1.0D0 - ftoroidalgap * toroidalgap/dx_tf_inboard_out_toroidal
       tmp_con = toroidalgap
-      tmp_err = toroidalgap - tftort/ftoroidalgap
+      tmp_err = toroidalgap - dx_tf_inboard_out_toroidal/ftoroidalgap
       tmp_symbol = '<'
       tmp_units = 'm'
 

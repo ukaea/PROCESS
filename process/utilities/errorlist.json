@@ -263,7 +263,7 @@
     {
       "no": 51,
       "level": 3,
-      "message": "LOADXC: Do not use tftort as an iteration variable if irfp=0"
+      "message": "LOADXC: Do not use dx_tf_inboard_out_toroidal as an iteration variable if irfp=0"
     },
     {
       "no": 52,
