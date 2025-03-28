@@ -7,6 +7,7 @@ from process.fortran import (
     build_variables,
     constants,
     error_handling,
+    pfcoil_variables,
     physics_variables,
     sctfcoil_module,
     tfcoil_variables,
@@ -16,15 +17,225 @@ from process.tfcoil import TFCoil
 logger = logging.getLogger(__name__)
 
 EPS = np.finfo(1.0).eps
+RMU0 = constants.rmu0
 
 
 class ResistiveTFCoil(TFCoil):
     def __init__(self):
         self.outfile = constants.nout
 
-    def run(self):
+    def run(self, output: bool):
+        """Run main tfcoil subroutine without outputting."""
+        self.iprint = 0
+        self.tf_global_geometry()
+        self.tf_current()
+        self.coilshap()
         self.res_tf_internal_geom()
         self.tf_res_heating()
+
+        if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
+            tfcoil_variables.tfind = self.tfcind(
+                build_variables.dr_tf_inboard,
+                tfcoil_variables.xarc,
+                tfcoil_variables.yarc,
+            )
+        else:
+            tfcoil_variables.tfind = (
+                (build_variables.hmax + build_variables.dr_tf_outboard)
+                * RMU0
+                / constants.pi
+                * np.log(
+                    build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
+                )
+            )
+
+        # Total TF coil stored magnetic energy [J]
+        sctfcoil_module.estotft = (
+            0.5e0 * tfcoil_variables.tfind * tfcoil_variables.c_tf_total**2
+        )
+
+        # Total TF coil stored magnetic energy [Gigajoule]
+        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.estotft
+
+        self.tf_field_and_force()
+
+        # Calculate TF coil areas and masses
+        self.tf_coil_area_and_masses()
+
+        # Do stress calculations (writes the stress output)
+        if output:
+            tfcoil_variables.n_rad_per_layer = 500
+
+        try:
+            (
+                sig_tf_r_max,
+                sig_tf_t_max,
+                sig_tf_z_max,
+                sig_tf_vmises_max,
+                s_shear_tf_peak,
+                deflect,
+                eyoung_axial,
+                eyoung_trans,
+                eyoung_wp_axial,
+                eyoung_wp_trans,
+                poisson_wp_trans,
+                radial_array,
+                s_shear_cea_tf_cond,
+                poisson_wp_axial,
+                sig_tf_r,
+                sig_tf_smeared_r,
+                sig_tf_smeared_t,
+                sig_tf_smeared_z,
+                sig_tf_t,
+                s_shear_tf,
+                sig_tf_vmises,
+                sig_tf_z,
+                str_tf_r,
+                str_tf_t,
+                str_tf_z,
+                n_radial_array,
+                n_tf_bucking,
+                tfcoil_variables.sig_tf_wp,
+                sig_tf_case,
+                sig_tf_cs_bucked,
+                str_wp,
+                casestr,
+                insstrain,
+                sig_tf_wp_av_z,
+            ) = self.stresscl(
+                int(tfcoil_variables.n_tf_stress_layers),
+                int(tfcoil_variables.n_rad_per_layer),
+                int(tfcoil_variables.n_tf_wp_layers),
+                int(tfcoil_variables.i_tf_bucking),
+                float(build_variables.r_tf_inboard_in),
+                build_variables.dr_bore,
+                build_variables.hmax,
+                pfcoil_variables.f_z_cs_tf_internal,
+                build_variables.dr_cs,
+                build_variables.i_tf_inside_cs,
+                build_variables.dr_tf_inboard,
+                build_variables.dr_cs_tf_gap,
+                pfcoil_variables.i_pf_conductor,
+                pfcoil_variables.j_cs_flat_top_end,
+                pfcoil_variables.j_cs_pulse_start,
+                pfcoil_variables.c_pf_coil_turn_peak_input,
+                pfcoil_variables.n_pf_coils_in_group,
+                pfcoil_variables.ld_ratio_cst,
+                pfcoil_variables.r_out_cst,
+                pfcoil_variables.f_a_cs_steel,
+                tfcoil_variables.eyoung_steel,
+                tfcoil_variables.poisson_steel,
+                tfcoil_variables.eyoung_cond_axial,
+                tfcoil_variables.poisson_cond_axial,
+                tfcoil_variables.eyoung_cond_trans,
+                tfcoil_variables.poisson_cond_trans,
+                tfcoil_variables.eyoung_ins,
+                tfcoil_variables.poisson_ins,
+                tfcoil_variables.thicndut,
+                tfcoil_variables.eyoung_copper,
+                tfcoil_variables.poisson_copper,
+                tfcoil_variables.i_tf_sup,
+                tfcoil_variables.eyoung_res_tf_buck,
+                sctfcoil_module.r_wp_inner,
+                sctfcoil_module.tan_theta_coil,
+                sctfcoil_module.theta_coil,
+                sctfcoil_module.r_wp_outer,
+                sctfcoil_module.a_tf_steel,
+                sctfcoil_module.a_case_front,
+                sctfcoil_module.a_case_nose,
+                tfcoil_variables.tfinsgap,
+                tfcoil_variables.tinstf,
+                tfcoil_variables.n_tf_turn,
+                int(tfcoil_variables.i_tf_turns_integer),
+                sctfcoil_module.t_cable,
+                sctfcoil_module.t_cable_radial,
+                tfcoil_variables.dhecoil,
+                tfcoil_variables.fcutfsu,
+                tfcoil_variables.thwcndut,
+                sctfcoil_module.t_lat_case_av,
+                sctfcoil_module.t_wp_toroidal_av,
+                sctfcoil_module.a_tf_ins,
+                tfcoil_variables.aswp,
+                tfcoil_variables.acond,
+                sctfcoil_module.awpc,
+                tfcoil_variables.eyoung_al,
+                tfcoil_variables.poisson_al,
+                tfcoil_variables.fcoolcp,
+                tfcoil_variables.n_tf_graded_layers,
+                tfcoil_variables.c_tf_total,
+                tfcoil_variables.casthi,
+                tfcoil_variables.i_tf_stress_model,
+                sctfcoil_module.vforce_inboard_tot,
+                tfcoil_variables.i_tf_tresca,
+                tfcoil_variables.acasetf,
+                tfcoil_variables.vforce,
+                tfcoil_variables.acndttf,
+            )
+
+            tfcoil_variables.sig_tf_case = (
+                tfcoil_variables.sig_tf_case
+                if tfcoil_variables.sig_tf_case is None
+                else sig_tf_case
+            )
+
+            tfcoil_variables.sig_tf_cs_bucked = (
+                tfcoil_variables.sig_tf_cs_bucked
+                if tfcoil_variables.sig_tf_cs_bucked is None
+                else sig_tf_cs_bucked
+            )
+
+            tfcoil_variables.str_wp = (
+                tfcoil_variables.str_wp if tfcoil_variables.str_wp is None else str_wp
+            )
+
+            tfcoil_variables.casestr = (
+                tfcoil_variables.casestr
+                if tfcoil_variables.casestr is None
+                else casestr
+            )
+
+            tfcoil_variables.insstrain = (
+                tfcoil_variables.insstrain
+                if tfcoil_variables.insstrain is None
+                else insstrain
+            )
+
+            if output:
+                self.out_stress(
+                    sig_tf_r_max,
+                    sig_tf_t_max,
+                    sig_tf_z_max,
+                    sig_tf_vmises_max,
+                    s_shear_tf_peak,
+                    deflect,
+                    eyoung_axial,
+                    eyoung_trans,
+                    eyoung_wp_axial,
+                    eyoung_wp_trans,
+                    poisson_wp_trans,
+                    radial_array,
+                    s_shear_cea_tf_cond,
+                    poisson_wp_axial,
+                    sig_tf_r,
+                    sig_tf_smeared_r,
+                    sig_tf_smeared_t,
+                    sig_tf_smeared_z,
+                    sig_tf_t,
+                    s_shear_tf,
+                    sig_tf_vmises,
+                    sig_tf_z,
+                    str_tf_r,
+                    str_tf_t,
+                    str_tf_z,
+                    n_radial_array,
+                    n_tf_bucking,
+                    sig_tf_wp_av_z,
+                )
+        except ValueError as e:
+            if e.args[1] == 245 and e.args[2] == 0:
+                error_handling.report_error(245)
+                tfcoil_variables.sig_tf_case = 0.0e0
+                tfcoil_variables.sig_tf_wp = 0.0e0
 
     def res_tf_internal_geom(self):
         """
