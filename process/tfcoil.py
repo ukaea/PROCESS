@@ -22,7 +22,6 @@ from process.fortran import build_variables as bv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
-from process.sctfcoil import SuperconductingTFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 TF_TYPES = {
@@ -43,12 +42,11 @@ RMU0 = constants.rmu0
 class TFCoil:
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
-    def __init__(self, build: Build, sctfcoil: SuperconductingTFCoil):
+    def __init__(self, build: Build):
         """Initialise Fortran module variables."""
         self.outfile = ft.constants.nout  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
-        self.sctfcoil = sctfcoil
 
     def run(self, output):
         """Run main tfcoil subroutine without outputting."""
@@ -56,7 +54,6 @@ class TFCoil:
         self.tf_global_geometry()
         self.tf_current()
         self.coilshap()
-        self.tfcoil()
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.tfind = self.tfcind(
@@ -265,23 +262,7 @@ class TFCoil:
     def output(self):
         """Run main tfcoil subroutine and write output."""
         self.iprint = 1
-        self.tfcoil()
-
-    def tfcoil(self):
-        """TF coil module
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
-        This subroutine calculates various parameters for the TF coil set.
-        If the TF coils are superconducting the calculations are performed
-        in routine <A HREF="sctfcoil.html">sctfcoil</A> instead.
-        """
-
-        # TF coil calculations
-        self.sctfcoil.sctfcoil()
-
-        # Port size calculation
-        self.build.portsz()
+        self.tfcoil(output=bool(self.iprint))
 
     def tf_global_geometry(self):
         """Subroutine for calculating the TF coil geometry
