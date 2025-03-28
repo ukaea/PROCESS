@@ -31,7 +31,7 @@ module sctfcoil_module
    real(dp) :: tf_fit_y
 !! Ratio of peak field with ripple to nominal axisymmetric peak field
 
-   real(dp) :: tfc_current
+   real(dp) :: c_tf_coil
 !! Current in each TF coil
 
    real(dp) :: awpc
@@ -181,7 +181,7 @@ contains
       tf_fit_t = 0.0D0
       tf_fit_z = 0.0D0
       tf_fit_y = 0.0D0
-      tfc_current = 0.0D0
+      c_tf_coil = 0.0D0
       awpc = 0.0D0
       awptf = 0.0D0
       a_tf_steel = 0.0D0

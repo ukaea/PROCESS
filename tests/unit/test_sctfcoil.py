@@ -925,7 +925,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     t_turn_tf: Any = None
 
-    tfc_current: Any = None
+    c_tf_coil: Any = None
 
     t_wp_toroidal: Any = None
 
@@ -989,7 +989,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             tfinsgap=0.01,
             t_conductor=0,
             t_turn_tf=0,
-            tfc_current=14805350.287500001,
+            c_tf_coil=14805350.287500001,
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0,
             t_conductor_toroidal=0,
@@ -1023,7 +1023,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             tfinsgap=0.01,
             t_conductor=0.052553108427885735,
             t_turn_tf=0.056579413904423038,
-            tfc_current=14805350.287500001,
+            c_tf_coil=14805350.287500001,
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0.046661087836601015,
             t_conductor_toroidal=0.059189130247124938,
@@ -1078,9 +1078,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "t_turn_tf", tfintegerturngeomparam.t_turn_tf)
 
-    monkeypatch.setattr(
-        sctfcoil_module, "tfc_current", tfintegerturngeomparam.tfc_current
-    )
+    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfintegerturngeomparam.c_tf_coil)
 
     monkeypatch.setattr(
         sctfcoil_module, "t_wp_toroidal", tfintegerturngeomparam.t_wp_toroidal
@@ -1575,7 +1573,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
-    monkeypatch.setattr(sctfcoil_module, "tfc_current", 83200 * 192)  # Section 3
+    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", 83200 * 192)  # Section 3
 
     monkeypatch.setattr(
         build_variables, "r_vv_inboard_out", 4.45 + (build_variables.dr_vv_inboard / 2)
