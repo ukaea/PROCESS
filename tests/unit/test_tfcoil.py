@@ -531,7 +531,7 @@ class TfCurrentParam(NamedTuple):
 
     rmajor: Any = None
 
-    tfc_current: Any = None
+    c_tf_coil: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -543,7 +543,7 @@ class TfCurrentParam(NamedTuple):
 
     expected_oacdcp: Any = None
 
-    expected_tfc_current: Any = None
+    expected_c_tf_coil: Any = None
 
 
 @pytest.mark.parametrize(
@@ -573,13 +573,13 @@ class TfCurrentParam(NamedTuple):
             dr_tf_inboard=1.208,
             bt=5.3292000000000002,
             rmajor=8.8901000000000003,
-            tfc_current=0,
+            c_tf_coil=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             expected_c_tf_total=236885604.60000002,
             expected_rbmax=4.0432020634751211,
             expected_b_tf_inboard_peak=11.717722779177526,
             expected_oacdcp=8674367.2945641987,
-            expected_tfc_current=14805350.287500001,
+            expected_c_tf_coil=14805350.287500001,
         ),
     ),
 )
@@ -667,7 +667,7 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(physics_variables, "rmajor", tfcurrentparam.rmajor)
 
-    monkeypatch.setattr(sctfcoil_module, "tfc_current", tfcurrentparam.tfc_current)
+    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfcurrentparam.c_tf_coil)
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfcurrentparam.rad_tf_coil_toroidal
@@ -687,9 +687,7 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     assert tfcoil_variables.oacdcp == pytest.approx(tfcurrentparam.expected_oacdcp)
 
-    assert sctfcoil_module.tfc_current == pytest.approx(
-        tfcurrentparam.expected_tfc_current
-    )
+    assert sctfcoil_module.c_tf_coil == pytest.approx(tfcurrentparam.expected_c_tf_coil)
 
 
 @pytest.mark.parametrize(

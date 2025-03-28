@@ -379,7 +379,7 @@ class TFCoil:
         )
 
         # Current per TF coil [A]
-        sctfcoil_module.tfc_current = (
+        sctfcoil_module.c_tf_coil = (
             tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
         )
 

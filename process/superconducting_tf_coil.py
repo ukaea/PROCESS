@@ -1529,7 +1529,7 @@ class SuperconductingTFCoil(TFCoil):
             + 2.0 * sctfcoil_module.t_lat_case_av,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
-            i_op=sctfcoil_module.tfc_current / tfcoil_variables.n_tf_turn,
+            i_op=sctfcoil_module.c_tf_coil / tfcoil_variables.n_tf_turn,
             # VV properties
             d_vv=build_variables.dr_vv_shells,
         )
@@ -2015,7 +2015,7 @@ class SuperconductingTFCoil(TFCoil):
         n_tf_turn = np.double(n_layer * n_pancake)
 
         # Current per turn [A/turn]
-        cpttf = sctfcoil_module.tfc_current / n_tf_turn
+        cpttf = sctfcoil_module.c_tf_coil / n_tf_turn
 
         # Radial and toroidal dimension of conductor [m]
         sctfcoil_module.t_conductor_radial = (
