@@ -5,7 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-import process.tfcoil as tfcoil_module
+import process.tf_coil as tfcoil_module
 from process.build import Build
 from process.fortran import (
     build_variables,
@@ -17,7 +17,7 @@ from process.fortran import (
 from process.fortran import build_variables as bv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
-from process.tfcoil import TFCoil
+from process.tf_coil import TFCoil
 
 
 @pytest.fixture

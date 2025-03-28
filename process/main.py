@@ -91,7 +91,7 @@ from process.scan import Scan
 from process.sctfcoil import SuperconductingTFCoil
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
-from process.tfcoil import TFCoil
+from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse

@@ -19,7 +19,7 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.tfcoil import TFCoil
+from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)

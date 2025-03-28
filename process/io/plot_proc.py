@@ -52,7 +52,7 @@ from process.geometry.vacuum_vessel_geometry import (
 )
 from process.impurity_radiation import read_impurity_file
 from process.objectives import OBJECTIVE_NAMES
-from process.tfcoil import TF_TYPES
+from process.tf_coil import TF_TYPES
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
     mpl.use("Agg")
