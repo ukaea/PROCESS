@@ -659,7 +659,7 @@ class Models:
         self.cryostat = Cryostat()
         self.build = Build()
         self.sctfcoil = SuperconductingTFCoil()
-        self.tfcoil = TFCoil(build=self.build, sctfcoil=self.sctfcoil)
+        self.tfcoil = TFCoil(build=self.build)
         self.resistive_tf_coil = ResistiveTFCoil()
         self.divertor = Divertor()
         self.structure = Structure()
