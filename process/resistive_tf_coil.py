@@ -12,7 +12,7 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.tfcoil import TFCoil
+from process.tf_coil import TFCoil
 
 logger = logging.getLogger(__name__)
 
