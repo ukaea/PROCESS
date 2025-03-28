@@ -35,7 +35,7 @@ module tfcoil_variables
   real(dp) :: insulation_area
   !! single turn insulation area (m2)
 
-  real(dp) :: aiwp
+  real(dp) :: a_tf_coil_wp_turn_insulation
   !! winding pack turn insulation area per coil (m2)
 
   real(dp) :: sig_tf_case_max
@@ -64,7 +64,7 @@ module tfcoil_variables
   !! upper critical field (T) for Nb3Sn superconductor at zero temperature and
   !! strain (`i_tf_sc_mat=4, =bc20m`)
 
-  real(dp) :: bmaxtf
+  real(dp) :: b_tf_inboard_peak
   !! mean peak field at TF coil (T)
 
   real(dp) :: bmaxtfrp
@@ -86,7 +86,7 @@ module tfcoil_variables
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
-  !! inboard TF coil sidewall case thickness as a fraction of tftort
+  !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
   !! logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)
@@ -388,7 +388,7 @@ module tfcoil_variables
   !! Minimal distance between two toroidal coils. (m)
 
   real(dp) :: ftoroidalgap
-  !! F-value for minimum tftort (`constraint equation 82`)
+  !! F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 
   real(dp) :: ripmax
   !! aximum allowable toroidal field ripple amplitude at plasma edge (%)
@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: tfareain
+  real(dp) :: a_tf_coil_inboard
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus
@@ -601,7 +601,7 @@ module tfcoil_variables
   real(dp) :: tftmp
   !! peak helium coolant temperature in TF coils and PF coils (K)
 
-  real(dp) :: tftort
+  real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
   real(dp) :: thicndut
@@ -708,7 +708,7 @@ module tfcoil_variables
   real(dp) :: whtgw
   !! mass of ground-wall insulation layer per coil (kg/coil)
 
-  real(dp) :: whttf
+  real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
   real(dp) :: wwp1
@@ -845,7 +845,7 @@ module tfcoil_variables
     acond = 0.0D0
     acstf = 0.0D0
     insulation_area = 0.0D0
-    aiwp = 0.0D0
+    a_tf_coil_wp_turn_insulation = 0.0D0
     sig_tf_case_max = 6.0D8
     sig_tf_wp_max = 6.0D8
     a_tf_leg_outboard = 0.0D0
@@ -853,7 +853,7 @@ module tfcoil_variables
     avwp = 0.0D0
     awphec = 0.0D0
     bcritsc = 24.0D0
-    bmaxtf = 0.0D0
+    b_tf_inboard_peak = 0.0D0
     bmaxtfrp = 0.0D0
     casestr = 0.0D0
     casthi = 0.0D0
@@ -955,7 +955,7 @@ module tfcoil_variables
     time1 = 0D0
     tcritsc = 16.0D0
     tdmptf = 10.0D0
-    tfareain = 0.0D0
+    a_tf_coil_inboard = 0.0D0
     len_tf_bus = 300.0D0
     m_tf_bus = 0.0D0
     tfckw = 0.0D0
@@ -984,7 +984,7 @@ module tfcoil_variables
     tfsai = 0.0D0
     tfsao = 0.0D0
     tftmp = 4.5D0
-    tftort = 1.0D0
+    dx_tf_inboard_out_toroidal = 1.0D0
     thicndut = 8.0D-4
     layer_ins = 0.0D0
     thkcas = 0.3D0
@@ -1017,7 +1017,7 @@ module tfcoil_variables
     whtconsc = 0.0D0
     whtconsh = 0.0D0
     whtgw = 0.0D0
-    whttf = 0.0D0
+    m_tf_coils_total = 0.0D0
     wwp1 = 0.0D0
     wwp2 = 0.0D0
     dthet = 0.0D0

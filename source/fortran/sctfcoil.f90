@@ -54,7 +54,7 @@ module sctfcoil_module
    real(dp) :: f_tf_ins
 !! Inboard coil insulation fraction [-]
 
-   real(dp) :: h_cp_top
+   real(dp) :: z_cp_top
 !! Vertical distance from the midplane to the top of the tapered section [m]
 
    real(dp) :: r_tf_outboard_in
@@ -112,7 +112,7 @@ module sctfcoil_module
    real(dp) :: a_leg_cond
 !! Exact TF ouboard leg conductor area [m2]
 
-   real(dp) :: theta_coil
+   real(dp) :: rad_tf_coil_toroidal
 !! Half toroidal angular extent of a single TF coil inboard leg
 
    real(dp) :: tan_theta_coil
@@ -188,7 +188,7 @@ contains
       a_tf_ins = 0.0D0
       f_tf_steel = 0.0D0
       f_tf_ins = 0.0D0
-      h_cp_top = 0.0D0
+      z_cp_top = 0.0D0
       r_tf_outboard_in = 0.0D0
       r_tf_outboard_out = 0.0D0
       r_wp_inner = 0.0D0
@@ -207,7 +207,7 @@ contains
       a_leg_ins = 0.0D0
       a_leg_gr_ins = 0.0D0
       a_leg_cond = 0.0D0
-      theta_coil = 0.0D0
+      rad_tf_coil_toroidal = 0.0D0
       tan_theta_coil = 0.0D0
       t_conductor_radial = 0.0D0
       t_conductor_toroidal = 0.0D0

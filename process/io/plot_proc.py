@@ -52,7 +52,7 @@ from process.geometry.vacuum_vessel_geometry import (
 )
 from process.impurity_radiation import read_impurity_file
 from process.objectives import OBJECTIVE_NAMES
-from process.tfcoil import TF_TYPES
+from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
     mpl.use("Agg")
@@ -2617,7 +2617,9 @@ def plot_magnetics_info(axis, mfile_data, scan):
         i_tf_sc_mat = 0
 
     if i_tf_sc_mat > 0:
-        tftype = TF_TYPES[int(mfile_data.data["i_tf_sc_mat"].get_scan(scan))]
+        tftype = SUPERCONDUCTING_TF_TYPES[
+            int(mfile_data.data["i_tf_sc_mat"].get_scan(scan))
+        ]
     else:
         tftype = "Resistive Copper"
 
@@ -2648,7 +2650,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
+            ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
         ]
 
     else:
@@ -2668,7 +2670,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak", "Peak field at conductor (w. rip.)", "T"),
             ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),
