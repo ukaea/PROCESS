@@ -86,11 +86,12 @@ from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.pulse import Pulse
+from process.resistive_tf_coil import ResistiveTFCoil
 from process.scan import Scan
-from process.sctfcoil import Sctfcoil
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
-from process.tfcoil import TFcoil
+from process.superconducting_tf_coil import SuperconductingTFCoil
+from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
@@ -657,8 +658,9 @@ class Models:
         self.power = Power()
         self.cryostat = Cryostat()
         self.build = Build()
-        self.sctfcoil = Sctfcoil()
-        self.tfcoil = TFcoil(build=self.build, sctfcoil=self.sctfcoil)
+        self.sctfcoil = SuperconductingTFCoil()
+        self.tfcoil = TFCoil(build=self.build)
+        self.resistive_tf_coil = ResistiveTFCoil()
         self.divertor = Divertor()
         self.structure = Structure()
         self.plasma_geom = PlasmaGeom()
