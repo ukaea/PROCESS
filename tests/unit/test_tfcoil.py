@@ -273,7 +273,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     rminor: Any = None
 
-    h_cp_top: Any = None
+    z_cp_top: Any = None
 
     r_tf_outboard_in: Any = None
 
@@ -318,7 +318,7 @@ class TfGlobalGeometryParam(NamedTuple):
             itart=0,
             kappa=1.8480000000000001,
             rminor=2.8677741935483869,
-            h_cp_top=0,
+            z_cp_top=0,
             r_tf_outboard_in=0,
             r_tf_outboard_out=0,
             rad_tf_coil_toroidal=0,
@@ -348,7 +348,7 @@ class TfGlobalGeometryParam(NamedTuple):
             itart=0,
             kappa=1.8480000000000001,
             rminor=2.9620024998595755,
-            h_cp_top=0,
+            z_cp_top=0,
             r_tf_outboard_in=16.299182480677967,
             r_tf_outboard_out=17.827520102947819,
             rad_tf_coil_toroidal=0.19634954084936207,
@@ -429,7 +429,7 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(physics_variables, "rminor", tfglobalgeometryparam.rminor)
 
-    monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfglobalgeometryparam.h_cp_top)
+    monkeypatch.setattr(sctfcoil_module, "z_cp_top", tfglobalgeometryparam.z_cp_top)
 
     monkeypatch.setattr(
         sctfcoil_module, "r_tf_outboard_in", tfglobalgeometryparam.r_tf_outboard_in
