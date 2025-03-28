@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: tfareain
+  real(dp) :: a_tf_coil_inboard
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus

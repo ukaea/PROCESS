@@ -18,7 +18,7 @@ OBS_VARS = {
     "itfsup": "i_tf_sup",
     "r_tf_inleg_mid": "r_tf_inboard_mid",
     "rtot": "r_tf_outboard_mid",
-    "a_tf_inboard": "tfareain",
+    "a_tf_inboard": "a_tf_coil_inboard",
     "r_tf_inleg_in": "r_tf_inleg_in",
     "r_tf_inleg_out": "r_tf_inleg_out",
     "a_tf_wp": "awpc",

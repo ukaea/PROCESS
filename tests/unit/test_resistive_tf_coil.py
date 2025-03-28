@@ -32,7 +32,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     tftort: Any = None
 
-    tfareain: Any = None
+    a_tf_coil_inboard: Any = None
 
     c_tf_total: Any = None
 
@@ -82,7 +82,7 @@ class ResTfInternalGeomParam(NamedTuple):
             thkcas=0,
             dr_tf_wp=0.15483000000000002,
             tftort=0.45367650933034859,
-            tfareain=0.0753112923616783,
+            a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
             cpttf=70000,
@@ -109,7 +109,7 @@ class ResTfInternalGeomParam(NamedTuple):
             thkcas=0,
             dr_tf_wp=0.14708850000000001,
             tftort=0.44435902370665786,
-            tfareain=0.0753112923616783,
+            a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
             cpttf=2125000,
@@ -158,7 +158,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "tftort", restfinternalgeomparam.tftort)
 
-    monkeypatch.setattr(tfcoil_variables, "tfareain", restfinternalgeomparam.tfareain)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_coil_inboard", restfinternalgeomparam.a_tf_coil_inboard
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "c_tf_total", restfinternalgeomparam.c_tf_total

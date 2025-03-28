@@ -333,14 +333,14 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.f_tf_ins = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_ins
-            / tfcoil_variables.tfareain
+            / tfcoil_variables.a_tf_coil_inboard
         )
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
         # physics_variables.itart = 1 : Only valid at mid-plane
         tfcoil_variables.acasetf = (
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils
+            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.awpc
 
         # Current per turn

@@ -1710,7 +1710,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.f_tf_steel = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_steel
-            / tfcoil_variables.tfareain
+            / tfcoil_variables.a_tf_coil_inboard
         )
 
         # Inboard coil insulation cross-section [m2]
@@ -1722,7 +1722,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.f_tf_ins = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_ins
-            / tfcoil_variables.tfareain
+            / tfcoil_variables.a_tf_coil_inboard
         )
 
         # Negative areas or fractions error reporting
@@ -1913,7 +1913,7 @@ class SuperconductingTFCoil(TFCoil):
         Setting the case geometry and area for SC magnets
         """
         tfcoil_variables.acasetf = (
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils
+            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.awpc
 
         # Outboard leg cross-sectional area of surrounding case [m2]
@@ -2403,8 +2403,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "TF cross-section (total) (m2)",
-                "(tfareain)",
-                tfcoil_variables.tfareain,
+                "(a_tf_coil_inboard)",
+                tfcoil_variables.a_tf_coil_inboard,
             )
             po.ovarre(
                 self.outfile,

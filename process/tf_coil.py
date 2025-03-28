@@ -268,12 +268,12 @@ class TFCoil:
         # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
         if tfcoil_variables.i_tf_case_geom == 0:
             # Circular front case
-            tfcoil_variables.tfareain = np.pi * (
+            tfcoil_variables.a_tf_coil_inboard = np.pi * (
                 build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
             )
         else:
             # Straight front case
-            tfcoil_variables.tfareain = (
+            tfcoil_variables.a_tf_coil_inboard = (
                 tfcoil_variables.n_tf_coils
                 * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
                 * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
@@ -385,7 +385,7 @@ class TFCoil:
 
         # Global inboard leg average current in TF coils [A/m2]
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.tfareain
+            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
         )
 
     def coilshap(self):
