@@ -3524,7 +3524,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_159
-    !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
+    !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
     use numerics, only: lablxc, boundl, boundu
     lablxc(159) = 'ftoroidalgap  '
     boundl(159) = 1.0D-4

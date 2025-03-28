@@ -352,7 +352,7 @@ class ResistiveTFCoil(TFCoil):
         tfcoil_variables.cdtfleg = tfcoil_variables.c_tf_total / (
             (1.0e0 - tfcoil_variables.fcoolcp)
             * (
-                tfcoil_variables.tftort
+                tfcoil_variables.dx_tf_inboard_out_toroidal
                 - 2.0e0
                 * (
                     tfcoil_variables.n_tf_turn * tfcoil_variables.thicndut
@@ -477,12 +477,14 @@ class ResistiveTFCoil(TFCoil):
         # ---
         # Leg ground insulation area per coil [m2]
         sctfcoil_module.a_leg_gr_ins = tfcoil_variables.a_tf_leg_outboard - (
-            tfcoil_variables.tftort - 2.0e0 * tfcoil_variables.tinstf
+            tfcoil_variables.dx_tf_inboard_out_toroidal
+            - 2.0e0 * tfcoil_variables.tinstf
         ) * (build_variables.dr_tf_outboard - 2.0e0 * tfcoil_variables.tinstf)
 
         # Outboard leg turns insulation area per coil [m2]
         sctfcoil_module.a_leg_ins = 2.0e0 * tfcoil_variables.thicndut * (
-            tfcoil_variables.tftort - 2.0e0 * tfcoil_variables.tinstf
+            tfcoil_variables.dx_tf_inboard_out_toroidal
+            - 2.0e0 * tfcoil_variables.tinstf
         ) + 2.0e0 * tfcoil_variables.thicndut * tfcoil_variables.n_tf_turn * (
             build_variables.dr_tf_outboard
             - 2.0e0 * (tfcoil_variables.thicndut + tfcoil_variables.tinstf)
