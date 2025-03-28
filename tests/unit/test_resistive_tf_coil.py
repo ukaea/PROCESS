@@ -44,7 +44,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     casthi: Any = None
 
-    aiwp: Any = None
+    a_tf_coil_wp_turn_insulation: Any = None
 
     acasetf: Any = None
 
@@ -68,7 +68,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     expected_cdtfleg: Any = None
 
-    expected_aiwp: Any = None
+    expected_a_tf_coil_wp_turn_insulation: Any = None
 
     expected_acasetf: Any = None
 
@@ -88,7 +88,7 @@ class ResTfInternalGeomParam(NamedTuple):
             cpttf=70000,
             cdtfleg=0,
             casthi=0.0077415000000000019,
-            aiwp=0,
+            a_tf_coil_wp_turn_insulation=0,
             acasetf=0,
             tinstf=0,
             n_tf_coils=12,
@@ -100,7 +100,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_n_tf_turn=1,
             expected_cpttf=2125000,
             expected_cdtfleg=421788350.27812088,
-            expected_aiwp=0.00030678028680367151,
+            expected_a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             expected_acasetf=0.00061190425043863676,
         ),
         ResTfInternalGeomParam(
@@ -115,7 +115,7 @@ class ResTfInternalGeomParam(NamedTuple):
             cpttf=2125000,
             cdtfleg=421788350.27812088,
             casthi=0.0077415000000000019,
-            aiwp=0.00030678028680367151,
+            a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             acasetf=0.00061190425043863676,
             tinstf=0,
             n_tf_coils=12,
@@ -127,7 +127,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_n_tf_turn=1,
             expected_cpttf=2125000,
             expected_cdtfleg=430664525.98439038,
-            expected_aiwp=0.00029439388680367086,
+            expected_a_tf_coil_wp_turn_insulation=0.00029439388680367086,
             expected_acasetf=0.00061190425043863676,
         ),
     ),
@@ -172,7 +172,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "casthi", restfinternalgeomparam.casthi)
 
-    monkeypatch.setattr(tfcoil_variables, "aiwp", restfinternalgeomparam.aiwp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_wp_turn_insulation",
+        restfinternalgeomparam.a_tf_coil_wp_turn_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "acasetf", restfinternalgeomparam.acasetf)
 
@@ -212,7 +216,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
+    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
+    )
 
     assert tfcoil_variables.acasetf == pytest.approx(
         restfinternalgeomparam.expected_acasetf
@@ -230,7 +236,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
+    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
+    )
 
     assert tfcoil_variables.acasetf == pytest.approx(
         restfinternalgeomparam.expected_acasetf

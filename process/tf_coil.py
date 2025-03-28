@@ -1388,10 +1388,10 @@ class TFCoil:
             )
 
             # Conduit insulation mass [kg]
-            # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
+            # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
             tfcoil_variables.whtconin = (
                 tfcoil_variables.len_tf_coil
-                * tfcoil_variables.aiwp
+                * tfcoil_variables.a_tf_coil_wp_turn_insulation
                 * tfcoil_variables.dcondins
             )
 

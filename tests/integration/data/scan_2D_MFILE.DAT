@@ -705,8 +705,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7055E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2197E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8925E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2910E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8925E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2910E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4728E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7774E-02 OP 
@@ -1868,8 +1868,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6827E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2483E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8742E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2643E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8742E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2643E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7926E-02 OP 
@@ -3031,8 +3031,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6486E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2651E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8744E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2475E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8744E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2475E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4275E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7852E-02 OP 
@@ -4194,8 +4194,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6570E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2670E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8713E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2458E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8713E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2458E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7899E-02 OP 
@@ -5357,8 +5357,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7063E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2616E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8578E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2526E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8578E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2526E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4390E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8141E-02 OP 
@@ -6520,8 +6520,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7690E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2569E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8321E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2599E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8321E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2599E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4469E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8549E-02 OP 
@@ -7683,8 +7683,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7788E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2586E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8296E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2584E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8296E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2584E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4484E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8590E-02 OP 
@@ -8846,8 +8846,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7266E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2639E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8345E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2527E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8345E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2527E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4315E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8451E-02 OP 
@@ -10009,8 +10009,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6723E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2663E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8421E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2495E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8421E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2495E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4163E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8278E-02 OP 
@@ -11172,8 +11172,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6770E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2673E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8397E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2487E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8397E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2487E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4162E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8312E-02 OP 
@@ -12335,8 +12335,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7364E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2674E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8292E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2496E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8292E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2496E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4306E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8526E-02 OP 
@@ -13498,8 +13498,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7844E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2573E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8196E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2608E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8196E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2608E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8724E-02 OP 
@@ -14661,8 +14661,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7903E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2585E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8170E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2598E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8170E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2598E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4447E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8762E-02 OP 
@@ -15824,8 +15824,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.7308E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2599E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8245E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2576E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8245E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2576E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8585E-02 OP 
@@ -16987,8 +16987,8 @@
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.6704E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.2606E-01    
- Insulation_WP_fraction__________________________________________________ (aiwp/awpc)___________________      4.8326E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-aiwp)/awpc)_______      5.2561E-01    
+ Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8326E-02    
+ Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2561E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4117E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8398E-02 OP 

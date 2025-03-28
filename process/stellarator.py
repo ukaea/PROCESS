@@ -2658,7 +2658,7 @@ class Stellarator:
             tfcoil_variables.acstf * tfcoil_variables.n_tf_turn * tfcoil_variables.vftf
         )
         # [m^2] Insulation area (not including ground-wall)
-        tfcoil_variables.aiwp = tfcoil_variables.n_tf_turn * (
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = tfcoil_variables.n_tf_turn * (
             tfcoil_variables.t_turn_tf**2
             - tfcoil_variables.acndttf
             - tfcoil_variables.acstf
@@ -2914,10 +2914,10 @@ class Stellarator:
         )
         # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
-        # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
+        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
         tfcoil_variables.whtconin = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.aiwp
+            * tfcoil_variables.a_tf_coil_wp_turn_insulation
             * tfcoil_variables.dcondins
         )
         # [kg] Total conductor mass
@@ -3854,8 +3854,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Insulator fraction of winding pack",
-            "(aiwp/ap)",
-            tfcoil_variables.aiwp / ap,
+            "(a_tf_coil_wp_turn_insulation/ap)",
+            tfcoil_variables.a_tf_coil_wp_turn_insulation / ap,
         )
         po.ovarre(
             self.outfile,

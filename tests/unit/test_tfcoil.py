@@ -1093,7 +1093,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    aiwp: Any = None
+    a_tf_coil_wp_turn_insulation: Any = None
 
     acasetfo: Any = None
 
@@ -1206,7 +1206,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
             n_tf_coils=16,
-            aiwp=0.087880174466980876,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
@@ -1278,7 +1278,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acndttf=0.0014685061538103825,
             n_tf_turn=200,
             n_tf_coils=16,
-            aiwp=0.087880174466980876,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
@@ -1410,7 +1410,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoil_variables, "n_tf_coils", tfcoilareaandmassesparam.n_tf_coils
     )
 
-    monkeypatch.setattr(tfcoil_variables, "aiwp", tfcoilareaandmassesparam.aiwp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_wp_turn_insulation",
+        tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcoilareaandmassesparam.acasetfo)
 
@@ -1616,7 +1620,7 @@ class StressclParam(NamedTuple):
 
     eyoung_copper: Any = None
 
-    aiwp: Any = None
+    a_tf_coil_wp_turn_insulation: Any = None
 
     aswp: Any = None
 
@@ -1761,7 +1765,7 @@ class StressclParam(NamedTuple):
             eyoung_ins=20000000000,
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
-            aiwp=0.087880174466980876,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
             n_tf_coils=16,
@@ -1884,7 +1888,7 @@ class StressclParam(NamedTuple):
             eyoung_ins=20000000000,
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
-            aiwp=0.087880174466980876,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
             aswp=0.29370123076207649,
             cpttf=74026.751437500003,
             n_tf_coils=16,

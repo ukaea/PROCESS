@@ -35,7 +35,7 @@ module tfcoil_variables
   real(dp) :: insulation_area
   !! single turn insulation area (m2)
 
-  real(dp) :: aiwp
+  real(dp) :: a_tf_coil_wp_turn_insulation
   !! winding pack turn insulation area per coil (m2)
 
   real(dp) :: sig_tf_case_max

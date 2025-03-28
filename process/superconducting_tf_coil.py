@@ -1696,7 +1696,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Area of inter-turn insulation: total [m2]
-        tfcoil_variables.aiwp = (
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
             tfcoil_variables.n_tf_turn * tfcoil_variables.insulation_area
         )
 
@@ -1714,7 +1714,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Inboard coil insulation cross-section [m2]
-        sctfcoil_module.a_tf_ins = tfcoil_variables.aiwp + sctfcoil_module.a_ground_ins
+        sctfcoil_module.a_tf_ins = (
+            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_ground_ins
+        )
 
         #  Inboard coil insulation fraction [-]
         sctfcoil_module.f_tf_ins = (
@@ -1727,7 +1729,7 @@ class SuperconductingTFCoil(TFCoil):
         if (
             tfcoil_variables.acond <= 0.0e0
             or tfcoil_variables.avwp <= 0.0e0
-            or tfcoil_variables.aiwp <= 0.0e0
+            or tfcoil_variables.a_tf_coil_wp_turn_insulation <= 0.0e0
             or tfcoil_variables.aswp <= 0.0e0
             or sctfcoil_module.a_tf_steel <= 0.0e0
             or sctfcoil_module.f_tf_steel <= 0.0e0
@@ -1736,7 +1738,7 @@ class SuperconductingTFCoil(TFCoil):
         ):
             error_handling.fdiags[0] = tfcoil_variables.acond
             error_handling.fdiags[1] = tfcoil_variables.avwp
-            error_handling.fdiags[2] = tfcoil_variables.aiwp
+            error_handling.fdiags[2] = tfcoil_variables.a_tf_coil_wp_turn_insulation
             error_handling.fdiags[3] = tfcoil_variables.aswp
             error_handling.fdiags[4] = sctfcoil_module.a_tf_steel
             error_handling.fdiags[5] = sctfcoil_module.f_tf_steel
@@ -2537,14 +2539,18 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Insulation WP fraction",
-                "(aiwp/awpc)",
-                tfcoil_variables.aiwp / sctfcoil_module.awpc,
+                "(a_tf_coil_wp_turn_insulation/awpc)",
+                tfcoil_variables.a_tf_coil_wp_turn_insulation / sctfcoil_module.awpc,
             )
             po.ovarre(
                 self.outfile,
                 "Cable WP fraction",
-                "((awpc-aswp-aiwp)/awpc)",
-                (sctfcoil_module.awpc - tfcoil_variables.aswp - tfcoil_variables.aiwp)
+                "((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)",
+                (
+                    sctfcoil_module.awpc
+                    - tfcoil_variables.aswp
+                    - tfcoil_variables.a_tf_coil_wp_turn_insulation
+                )
                 / sctfcoil_module.awpc,
             )
 
@@ -2695,13 +2701,13 @@ class SuperconductingTFCoil(TFCoil):
                 # TODO
                 # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.acond/ap)',acond/ap, 'OP ')
                 # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_turn*tfcoil_variables.acndttf/ap)',n_tf_turn*tfcoil_variables.acndttf/ap, 'OP ')
-                # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.aiwp/ap)',aiwp/ap, 'OP ')
+                # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
                 # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.awphec/ap)',awphec/ap, 'OP ')
                 ap = (
                     tfcoil_variables.acond
                     + tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
-                    + tfcoil_variables.aiwp
+                    + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.avwp
                     + tfcoil_variables.awphec
                 )
@@ -2712,7 +2718,7 @@ class SuperconductingTFCoil(TFCoil):
                     (
                         tfcoil_variables.acond
                         + tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
-                        + tfcoil_variables.aiwp
+                        + tfcoil_variables.a_tf_coil_wp_turn_insulation
                         + tfcoil_variables.avwp
                         + tfcoil_variables.awphec
                     )
