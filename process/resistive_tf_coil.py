@@ -138,7 +138,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_wp_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.theta_coil,
+                sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_wp_outer,
                 sctfcoil_module.a_tf_steel,
                 sctfcoil_module.a_case_front,

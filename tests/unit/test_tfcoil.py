@@ -279,7 +279,7 @@ class TfGlobalGeometryParam(NamedTuple):
 
     r_tf_outboard_out: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -321,7 +321,7 @@ class TfGlobalGeometryParam(NamedTuple):
             h_cp_top=0,
             r_tf_outboard_in=0,
             r_tf_outboard_out=0,
-            theta_coil=0,
+            rad_tf_coil_toroidal=0,
             tan_theta_coil=0,
             expected_tfareain=27.308689677971632,
             expected_tftort=1.6395161177915356,
@@ -351,7 +351,7 @@ class TfGlobalGeometryParam(NamedTuple):
             h_cp_top=0,
             r_tf_outboard_in=16.299182480677967,
             r_tf_outboard_out=17.827520102947819,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_tfareain=35.703669036223495,
             expected_tftort=1.7488698442633552,
@@ -437,7 +437,11 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
         sctfcoil_module, "r_tf_outboard_out", tfglobalgeometryparam.r_tf_outboard_out
     )
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfglobalgeometryparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "rad_tf_coil_toroidal",
+        tfglobalgeometryparam.rad_tf_coil_toroidal,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "tan_theta_coil", tfglobalgeometryparam.tan_theta_coil
@@ -465,7 +469,7 @@ def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
         tfglobalgeometryparam.expected_r_tf_outboard_out
     )
 
-    assert sctfcoil_module.theta_coil == pytest.approx(
+    assert sctfcoil_module.rad_tf_coil_toroidal == pytest.approx(
         tfglobalgeometryparam.expected_theta_coil
     )
 
@@ -523,7 +527,7 @@ class TfCurrentParam(NamedTuple):
 
     tfc_current: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     expected_c_tf_total: Any = None
 
@@ -564,7 +568,7 @@ class TfCurrentParam(NamedTuple):
             bt=5.3292000000000002,
             rmajor=8.8901000000000003,
             tfc_current=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             expected_c_tf_total=236885604.60000002,
             expected_rbmax=4.0432020634751211,
             expected_b_tf_inboard_peak=11.717722779177526,
@@ -653,7 +657,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "tfc_current", tfcurrentparam.tfc_current)
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfcurrentparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module, "rad_tf_coil_toroidal", tfcurrentparam.rad_tf_coil_toroidal
+    )
 
     tfcoil.tf_current()
 
@@ -1149,7 +1155,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_leg_cond: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -1237,7 +1243,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_leg_ins=0,
             a_leg_gr_ins=0,
             a_leg_cond=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_whtconsh=115651.90127937049,
             expected_whtcas=1034021.9996272125,
@@ -1309,7 +1315,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_leg_ins=0,
             a_leg_gr_ins=0,
             a_leg_cond=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_whtconsh=115721.02357090525,
             expected_whtcas=1034699.2182961091,
@@ -1491,7 +1497,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "theta_coil", tfcoilareaandmassesparam.theta_coil
+        sctfcoil_module,
+        "rad_tf_coil_toroidal",
+        tfcoilareaandmassesparam.rad_tf_coil_toroidal,
     )
 
     monkeypatch.setattr(
@@ -1698,7 +1706,7 @@ class StressclParam(NamedTuple):
 
     a_case_nose: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -1838,7 +1846,7 @@ class StressclParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
             a_case_nose=0.70261616505511615,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             t_cable_radial=0.030661087836601014,
             t_cable=0.036389912284773368,
@@ -1961,7 +1969,7 @@ class StressclParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
             a_case_nose=0.70261616505511615,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             t_cable_radial=0.030661087836601014,
             t_cable=0.036389912284773368,
@@ -2062,7 +2070,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.eyoung_res_tf_buck,
         stressclparam.r_wp_inner,
         stressclparam.tan_theta_coil,
-        stressclparam.theta_coil,
+        stressclparam.rad_tf_coil_toroidal,
         stressclparam.r_wp_outer,
         stressclparam.a_tf_steel,
         stressclparam.a_case_front,

@@ -528,7 +528,7 @@ class TfWpGeomParam(NamedTuple):
 
     a_ground_ins: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -576,7 +576,7 @@ class TfWpGeomParam(NamedTuple):
             t_wp_toroidal=0,
             t_wp_toroidal_av=0,
             a_ground_ins=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
@@ -609,7 +609,7 @@ class TfWpGeomParam(NamedTuple):
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             a_ground_ins=0.028582295732936136,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
@@ -681,7 +681,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "a_ground_ins", tfwpgeomparam.a_ground_ins)
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfwpgeomparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module, "rad_tf_coil_toroidal", tfwpgeomparam.rad_tf_coil_toroidal
+    )
 
     monkeypatch.setattr(sctfcoil_module, "tan_theta_coil", tfwpgeomparam.tan_theta_coil)
 
@@ -751,7 +753,7 @@ class TfCaseGeomParam(NamedTuple):
 
     a_case_nose: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -790,7 +792,7 @@ class TfCaseGeomParam(NamedTuple):
             t_lat_case_av=0,
             a_case_front=0,
             a_case_nose=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
@@ -817,7 +819,7 @@ class TfCaseGeomParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
             a_case_nose=0.70261616505511615,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
@@ -880,7 +882,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "a_case_nose", tfcasegeomparam.a_case_nose)
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfcasegeomparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module, "rad_tf_coil_toroidal", tfcasegeomparam.rad_tf_coil_toroidal
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "tan_theta_coil", tfcasegeomparam.tan_theta_coil

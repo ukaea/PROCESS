@@ -148,7 +148,7 @@ class TFCoil:
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_wp_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.theta_coil,
+                sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_wp_outer,
                 sctfcoil_module.a_tf_steel,
                 sctfcoil_module.a_case_front,
@@ -259,8 +259,8 @@ class TFCoil:
         - Winding Pack NOT included
         """
 
-        sctfcoil_module.theta_coil = np.pi / tfcoil_variables.n_tf_coils
-        sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.theta_coil)
+        sctfcoil_module.rad_tf_coil_toroidal = np.pi / tfcoil_variables.n_tf_coils
+        sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.rad_tf_coil_toroidal)
 
         # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
         if tfcoil_variables.i_tf_case_geom == 0:
@@ -272,8 +272,8 @@ class TFCoil:
             # Straight front case
             tfcoil_variables.tfareain = (
                 tfcoil_variables.n_tf_coils
-                * np.sin(sctfcoil_module.theta_coil)
-                * np.cos(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
+                * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
                 * build_variables.r_tf_inboard_out**2
                 - np.pi * build_variables.r_tf_inboard_in**2
             )
@@ -301,7 +301,9 @@ class TFCoil:
         # Sliding joints geometry
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
             tfcoil_variables.tftort = (
-                2.0e0 * build_variables.r_cp_top * np.sin(sctfcoil_module.theta_coil)
+                2.0e0
+                * build_variables.r_cp_top
+                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
             )
 
         # Default thickness, initially written for DEMO SC magnets
@@ -309,13 +311,13 @@ class TFCoil:
             tfcoil_variables.tftort = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
-                * np.sin(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
             )
         else:
             tfcoil_variables.tftort = (
                 2.0e0
                 * build_variables.r_tf_inboard_out
-                * np.sin(sctfcoil_module.theta_coil)
+                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
             )
 
         # Area of rectangular cross-section TF outboard leg [m2]
@@ -346,7 +348,8 @@ class TFCoil:
             # SC : conservative assumption as the radius is calculated with the
             # WP radial distances defined at the TF middle (cos)
             tfcoil_variables.rbmax = (
-                build_variables.r_tf_inboard_out * np.cos(sctfcoil_module.theta_coil)
+                build_variables.r_tf_inboard_out
+                * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
                 - tfcoil_variables.casthi
                 - tfcoil_variables.tinstf
                 - tfcoil_variables.tfinsgap
@@ -1287,7 +1290,8 @@ class TFCoil:
 
         # Surface areas (for cryo system) [m2]
         wbtf = (
-            build_variables.r_tf_inboard_out * np.sin(sctfcoil_module.theta_coil)
+            build_variables.r_tf_inboard_out
+            * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
             - build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
         )
         tfcoil_variables.tfocrn = (
@@ -1611,7 +1615,7 @@ class TFCoil:
         eyoung_res_tf_buck,
         r_wp_inner,
         tan_theta_coil,
-        theta_coil,
+        rad_tf_coil_toroidal,
         r_wp_outer,
         a_tf_steel,
         a_case_front,
@@ -1934,11 +1938,11 @@ class TFCoil:
         if i_tf_sup == 1:
             # Inner/outer radii of the layer representing the WP in stress calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
-            r_wp_inner_eff = r_wp_inner * np.sqrt(tan_theta_coil / theta_coil)
-            r_wp_outer_eff = r_wp_outer * np.sqrt(tan_theta_coil / theta_coil)
+            r_wp_inner_eff = r_wp_inner * np.sqrt(tan_theta_coil / rad_tf_coil_toroidal)
+            r_wp_outer_eff = r_wp_outer * np.sqrt(tan_theta_coil / rad_tf_coil_toroidal)
 
             # Area of the cylinder representing the WP in stress calculations [m2]
-            a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * theta_coil
+            a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * rad_tf_coil_toroidal
 
             # Steel cross-section under the area representing the WP in stress calculations [m2]
             a_wp_steel_eff = a_tf_steel - a_case_front - a_case_nose
@@ -2072,7 +2076,7 @@ class TFCoil:
             poisson_wp_trans = np.double(poisson_cond)
 
             # WP area using the stress model circular geometry (per coil) [m2]
-            a_wp_eff = (r_wp_outer**2 - r_wp_inner**2) * theta_coil
+            a_wp_eff = (r_wp_outer**2 - r_wp_inner**2) * rad_tf_coil_toroidal
 
             # Effective conductor region young modulus in the vertical direction [Pa]
             # Parallel-composite conductor and insulator
@@ -2141,7 +2145,7 @@ class TFCoil:
         # front case, and that considered by the plane strain solver
         f_tf_stress_front_case = (
             a_case_front
-            / theta_coil
+            / rad_tf_coil_toroidal
             / (radtf[n_tf_layer] ** 2 - radtf[n_tf_layer - 1] ** 2)
         )
 
