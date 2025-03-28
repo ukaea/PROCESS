@@ -2902,7 +2902,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak", "Peak field at conductor (w. rip.)", "T"),
             ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),

@@ -64,7 +64,7 @@ module tfcoil_variables
   !! upper critical field (T) for Nb3Sn superconductor at zero temperature and
   !! strain (`i_tf_sc_mat=4, =bc20m`)
 
-  real(dp) :: bmaxtf
+  real(dp) :: b_tf_inboard_peak
   !! mean peak field at TF coil (T)
 
   real(dp) :: bmaxtfrp

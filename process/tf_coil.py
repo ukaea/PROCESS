@@ -365,14 +365,14 @@ class TFCoil:
             )
 
         # Calculation of the maximum B field on the magnet [T]
-        tfcoil_variables.bmaxtf = (
+        tfcoil_variables.b_tf_inboard_peak = (
             physics_variables.bt * physics_variables.rmajor / tfcoil_variables.rbmax
         )
 
         # Total current in TF coils [A]
         # rem SK : ritcf is no longer an input
         tfcoil_variables.c_tf_total = (
-            tfcoil_variables.bmaxtf * tfcoil_variables.rbmax * 5.0e6
+            tfcoil_variables.b_tf_inboard_peak * tfcoil_variables.rbmax * 5.0e6
         )
 
         # Current per TF coil [A]
@@ -891,7 +891,7 @@ class TFCoil:
         # Centering force = net inwards radial force per meters per TF coil [N/m]
         tfcoil_variables.cforce = (
             0.5e0
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
         )

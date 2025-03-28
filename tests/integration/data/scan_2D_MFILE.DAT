@@ -732,7 +732,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4642E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8257E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2407E+01 OP 
@@ -1895,7 +1895,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4464E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6839E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0694E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2167E+01 OP 
@@ -3058,7 +3058,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4272E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5756E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0521E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1927E+01 OP 
@@ -4221,7 +4221,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4304E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5855E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0537E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1927E+01 OP 
@@ -5384,7 +5384,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4530E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6756E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0681E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2167E+01 OP 
@@ -6547,7 +6547,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4821E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8120E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0899E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2408E+01 OP 
@@ -7710,7 +7710,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4861E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8240E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0918E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2408E+01 OP 
@@ -8873,7 +8873,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4625E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7080E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0733E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
@@ -10036,7 +10036,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4388E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5997E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0560E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
@@ -11199,7 +11199,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4407E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6056E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0569E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
@@ -12362,7 +12362,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4659E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7129E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0741E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
@@ -13525,7 +13525,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4895E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8254E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2409E+01 OP 
@@ -14688,7 +14688,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4918E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8328E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0933E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1962E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2409E+01 OP 
@@ -15851,7 +15851,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4662E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7183E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0749E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1732E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
@@ -17014,7 +17014,7 @@
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4403E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6037E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0566E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (bmaxtf)______________________      1.1502E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
