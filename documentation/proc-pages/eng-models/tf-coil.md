@@ -1180,7 +1180,7 @@ For `i_tf_sc_mat = 4`, important superconductor properties may be input as follo
 - Upper critical field at zero temperature and strain: `bcritsc`,
 - Critical temperature at zero field and strain: `tcritsc`.
 
-The toroidal field falls off at a rate $1/R$, with the peak value occurring at the outer edge of the inboard portion of the TF coil winding pack (radius `rbmax`). 
+The toroidal field falls off at a rate $1/R$, with the peak value occurring at the outer edge of the inboard portion of the TF coil winding pack (radius `r_b_tf_inboard_peak`). 
 
 Three constraints are relevant to the operating current density $J_{\mbox{op}}$ in the TF coils.
 

@@ -350,7 +350,7 @@ class TFCoil:
         if tfcoil_variables.i_tf_sup == 1:
             # SC : conservative assumption as the radius is calculated with the
             # WP radial distances defined at the TF middle (cos)
-            tfcoil_variables.rbmax = (
+            tfcoil_variables.r_b_tf_inboard_peak = (
                 build_variables.r_tf_inboard_out
                 * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
                 - tfcoil_variables.casthi
@@ -360,7 +360,7 @@ class TFCoil:
         else:
             # Resistive coils : No approx necessary as the symmetry is cylindrical
             # The turn insulation th (tfcoil_variables.thicndut) is also subtracted too here
-            tfcoil_variables.rbmax = (
+            tfcoil_variables.r_b_tf_inboard_peak = (
                 build_variables.r_tf_inboard_out
                 - tfcoil_variables.casthi
                 - tfcoil_variables.thicndut
@@ -369,13 +369,17 @@ class TFCoil:
 
         # Calculation of the maximum B field on the magnet [T]
         tfcoil_variables.b_tf_inboard_peak = (
-            physics_variables.bt * physics_variables.rmajor / tfcoil_variables.rbmax
+            physics_variables.bt
+            * physics_variables.rmajor
+            / tfcoil_variables.r_b_tf_inboard_peak
         )
 
         # Total current in TF coils [A]
         # rem SK : ritcf is no longer an input
         tfcoil_variables.c_tf_total = (
-            tfcoil_variables.b_tf_inboard_peak * tfcoil_variables.rbmax * 5.0e6
+            tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.r_b_tf_inboard_peak
+            * 5.0e6
         )
 
         # Current per TF coil [A]

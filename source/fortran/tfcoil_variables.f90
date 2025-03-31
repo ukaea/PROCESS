@@ -378,7 +378,7 @@ module tfcoil_variables
   real(dp) :: poisson_cond_trans
   !! SC TF coil conductor Poisson's ratio in the transverse-transverse direction
 
-  real(dp) :: rbmax
+  real(dp) :: r_b_tf_inboard_peak
   !! Radius of maximum TF B-field (m)
 
   real(dp) :: res_tf_leg

@@ -2804,7 +2804,7 @@ class Stellarator:
         tfcoil_variables.oacdcp = (
             tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
         )  # [A / m^2] overall current density
-        tfcoil_variables.rbmax = (
+        tfcoil_variables.r_b_tf_inboard_peak = (
             r_coil_major - r_coil_minor + awp_rad
         )  # [m] radius of peak field occurrence, average
         # jlion: not sure what this will be used for. Not very
