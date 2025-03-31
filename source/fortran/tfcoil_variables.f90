@@ -526,7 +526,7 @@ module tfcoil_variables
   real(dp) :: tficrn
   !! TF coil half-width - inner dr_bore (m)
 
-  real(dp) :: tfind
+  real(dp) :: ind_tf_coil
   !! TF coil inductance (H)
 
   real(dp) :: tfinsgap
