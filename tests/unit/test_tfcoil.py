@@ -978,13 +978,13 @@ class TfcindParam(NamedTuple):
 
     xarc: Any = None
 
-    tfind: Any = None
+    ind_tf_coil: Any = None
 
     tfthk: Any = None
 
     expected_yarc: Any = None
 
-    expected_tfind: Any = None
+    expected_ind_tf_coil: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1011,9 +1011,9 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            tfind=0,
+            ind_tf_coil=0,
             tfthk=1.208,
-            expected_tfind=5.4453892599192845e-06,
+            expected_ind_tf_coil=5.4453892599192845e-06,
         ),
         TfcindParam(
             yarc=np.array(
@@ -1036,9 +1036,9 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            tfind=5.4524893280368181e-06,
+            ind_tf_coil=5.4524893280368181e-06,
             tfthk=1.208,
-            expected_tfind=5.4524893280368181e-06,
+            expected_ind_tf_coil=5.4524893280368181e-06,
         ),
     ),
 )
@@ -1055,13 +1055,13 @@ def test_tfcind(tfcindparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "tfind", tfcindparam.tfind)
+    monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
-    tfind = tfcoil.tfcind(
+    ind_tf_coil = tfcoil.tfcind(
         tfthk=tfcindparam.tfthk, xarc=tfcindparam.xarc, yarc=tfcindparam.yarc
     )
 
-    assert tfind == pytest.approx(tfcindparam.expected_tfind)
+    assert ind_tf_coil == pytest.approx(tfcindparam.expected_ind_tf_coil)
 
 
 class TfCoilAreaAndMassesParam(NamedTuple):

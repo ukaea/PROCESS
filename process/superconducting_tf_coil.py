@@ -60,13 +60,13 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.tfind = self.tfcind(
+            tfcoil_variables.ind_tf_coil = self.tfcind(
                 build_variables.dr_tf_inboard,
                 tfcoil_variables.xarc,
                 tfcoil_variables.yarc,
             )
         else:
-            tfcoil_variables.tfind = (
+            tfcoil_variables.ind_tf_coil = (
                 (build_variables.hmax + build_variables.dr_tf_outboard)
                 * RMU0
                 / constants.pi
@@ -77,7 +77,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Total TF coil stored magnetic energy [J]
         sctfcoil_module.estotft = (
-            0.5e0 * tfcoil_variables.tfind * tfcoil_variables.c_tf_total**2
+            0.5e0 * tfcoil_variables.ind_tf_coil * tfcoil_variables.c_tf_total**2
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
