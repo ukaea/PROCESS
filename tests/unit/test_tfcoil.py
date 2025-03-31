@@ -489,7 +489,7 @@ class TfCurrentParam(NamedTuple):
 
     c_tf_total: Any = None
 
-    rbmax: Any = None
+    r_b_tf_inboard_peak: Any = None
 
     i_tf_sup: Any = None
 
@@ -537,7 +537,7 @@ class TfCurrentParam(NamedTuple):
 
     expected_c_tf_total: Any = None
 
-    expected_rbmax: Any = None
+    expected_r_b_tf_inboard_peak: Any = None
 
     expected_b_tf_inboard_peak: Any = None
 
@@ -552,7 +552,7 @@ class TfCurrentParam(NamedTuple):
         TfCurrentParam(
             casthi=0.060000000000000012,
             c_tf_total=0,
-            rbmax=0,
+            r_b_tf_inboard_peak=0,
             i_tf_sup=1,
             casths_fraction=0.059999999999999998,
             tinstf=0.0080000000000000019,
@@ -576,7 +576,7 @@ class TfCurrentParam(NamedTuple):
             c_tf_coil=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             expected_c_tf_total=236885604.60000002,
-            expected_rbmax=4.0432020634751211,
+            expected_r_b_tf_inboard_peak=4.0432020634751211,
             expected_b_tf_inboard_peak=11.717722779177526,
             expected_oacdcp=8674367.2945641987,
             expected_c_tf_coil=14805350.287500001,
@@ -603,7 +603,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfcurrentparam.c_tf_total)
 
-    monkeypatch.setattr(tfcoil_variables, "rbmax", tfcurrentparam.rbmax)
+    monkeypatch.setattr(
+        tfcoil_variables, "r_b_tf_inboard_peak", tfcurrentparam.r_b_tf_inboard_peak
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcurrentparam.i_tf_sup)
 
@@ -679,7 +681,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
         tfcurrentparam.expected_c_tf_total
     )
 
-    assert tfcoil_variables.rbmax == pytest.approx(tfcurrentparam.expected_rbmax)
+    assert tfcoil_variables.r_b_tf_inboard_peak == pytest.approx(
+        tfcurrentparam.expected_r_b_tf_inboard_peak
+    )
 
     assert tfcoil_variables.b_tf_inboard_peak == pytest.approx(
         tfcurrentparam.expected_b_tf_inboard_peak

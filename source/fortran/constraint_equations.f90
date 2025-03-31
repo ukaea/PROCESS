@@ -807,7 +807,7 @@ contains
       !! #=#=# consistency
       !! rmajor |  plasma major radius (m)
       !! bt     |  toroidal field on axis (T)
-      !! rbmax  |  radius of maximum toroidal field (m)
+      !! r_b_tf_inboard_peak  |  radius of maximum toroidal field (m)
       !! b_tf_inboard_peak |  peak field at toroidal field coil (T)
 
       !! This constraint is depreciated

@@ -378,7 +378,7 @@ module tfcoil_variables
   real(dp) :: poisson_cond_trans
   !! SC TF coil conductor Poisson's ratio in the transverse-transverse direction
 
-  real(dp) :: rbmax
+  real(dp) :: r_b_tf_inboard_peak
   !! Radius of maximum TF B-field (m)
 
   real(dp) :: res_tf_leg
@@ -928,7 +928,7 @@ module tfcoil_variables
     poisson_ins = 0.34D0
     poisson_cond_axial = 0.3
     poisson_cond_trans = 0.3
-    rbmax = 0.0D0
+    r_b_tf_inboard_peak = 0.0D0
     res_tf_leg = 0.0D0
     toroidalgap = 1.0D0 ![m]
     ftoroidalgap = 1.0D0
