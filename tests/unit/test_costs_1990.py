@@ -4085,7 +4085,7 @@ class Acc2263Param(NamedTuple):
 
     helpow: Any = None
 
-    tmpcry: Any = None
+    temp_tf_cryo: Any = None
 
     c226: Any = None
 
@@ -4104,7 +4104,7 @@ class Acc2263Param(NamedTuple):
             lsa=2,
             fkind=1,
             helpow=76851.741036987034,
-            tmpcry=4.5,
+            temp_tf_cryo=4.5,
             c226=0,
             c2263=0,
             c22=0,
@@ -4115,7 +4115,7 @@ class Acc2263Param(NamedTuple):
             lsa=2,
             fkind=1,
             helpow=220505.71684249729,
-            tmpcry=4.5,
+            temp_tf_cryo=4.5,
             c226=228.30921518184891,
             c2263=122.17123799205466,
             c22=3474.7391916096453,
@@ -4144,7 +4144,7 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "helpow", acc2263param.helpow)
 
-    monkeypatch.setattr(tfcoil_variables, "tmpcry", acc2263param.tmpcry)
+    monkeypatch.setattr(tfcoil_variables, "temp_tf_cryo", acc2263param.temp_tf_cryo)
 
     monkeypatch.setattr(costs, "c226", acc2263param.c226)
 
