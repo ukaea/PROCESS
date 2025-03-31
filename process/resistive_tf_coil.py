@@ -50,12 +50,12 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Total TF coil stored magnetic energy [J]
-        sctfcoil_module.estotft = (
+        sctfcoil_module.e_tf_magnetic_stored_total = (
             0.5e0 * tfcoil_variables.ind_tf_coil * tfcoil_variables.c_tf_total**2
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.estotft
+        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
 
         self.tf_field_and_force()
 

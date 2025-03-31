@@ -162,7 +162,7 @@ module sctfcoil_module
    real(dp) :: conductor_area
 !! Area of cable space inside jacket
 
-   real(dp):: T1, time2, tau2, estotft
+   real(dp):: T1, time2, tau2, e_tf_magnetic_stored_total
 ! (OBSOLETE, but leave for moment)
 ! real (kind(1.0D0)) ::croco_quench_factor
 ! real(dp):: jwdgpro_1, jwdgpro_2,  etamax
@@ -220,7 +220,7 @@ contains
       T1 = 0.0D0
       time2 = 0.0D0
       tau2 = 0.0D0
-      estotft = 0.0D0
+      e_tf_magnetic_stored_total = 0.0D0
    end subroutine init_sctfcoil_module
 
 ! --------------------------------------------------------------------------

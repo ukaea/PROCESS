@@ -76,12 +76,12 @@ class SuperconductingTFCoil(TFCoil):
             )
 
         # Total TF coil stored magnetic energy [J]
-        sctfcoil_module.estotft = (
+        sctfcoil_module.e_tf_magnetic_stored_total = (
             0.5e0 * tfcoil_variables.ind_tf_coil * tfcoil_variables.c_tf_total**2
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.estotft
+        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
 
         self.tf_field_and_force()
 
@@ -276,7 +276,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.b_tf_inboard_peak,
         )
 
-        tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
+        tfes = sctfcoil_module.e_tf_magnetic_stored_total / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
         aturn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
@@ -332,7 +332,10 @@ class SuperconductingTFCoil(TFCoil):
             croco_voltage = (
                 2.0e0
                 / sctfcoil_module.time2
-                * (sctfcoil_module.estotft / tfcoil_variables.n_tf_coils)
+                * (
+                    sctfcoil_module.e_tf_magnetic_stored_total
+                    / tfcoil_variables.n_tf_coils
+                )
                 / tfcoil_variables.cpttf
             )
         elif f2py_compatible_to_string(tfcoil_variables.quench_model) == "exponential":
@@ -340,7 +343,10 @@ class SuperconductingTFCoil(TFCoil):
             croco_voltage = (
                 2.0e0
                 / sctfcoil_module.tau2
-                * (sctfcoil_module.estotft / tfcoil_variables.n_tf_coils)
+                * (
+                    sctfcoil_module.e_tf_magnetic_stored_total
+                    / tfcoil_variables.n_tf_coils
+                )
                 / tfcoil_variables.cpttf
             )
         else:
