@@ -1373,7 +1373,7 @@
     {
       "no": 273,
       "level": 3,
-      "message": "[tfcoil]: tmpcry should be lower than tftmp"
+      "message": "[tfcoil]: temp_tf_cryo should be lower than tftmp"
     },
     {
       "no": 274,

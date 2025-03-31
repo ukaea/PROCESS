@@ -7581,7 +7581,7 @@
         "tmargtf": 0.0,
         "tmax_croco": 200.0,
         "tmaxpro": 150.0,
-        "tmpcry": 4.5,
+        "temp_tf_cryo": 4.5,
         "tn": 300.0,
         "t_current_ramp_up": 30.0,
         "tohsin": 0.0,
@@ -9691,7 +9691,7 @@
         "heat_sink_l": "heat sinks length, width, height (m)",
         "heat_sink_w": "heat sinks length, width, height (m)",
         "helium": "",
-        "helpow": "Heat removal at cryogenic temperature tmpcry (W)",
+        "helpow": "Heat removal at cryogenic temperature temp_tf_cryo (W)",
         "helpow_cryal": "Heat removal at cryogenic temperature tcoolin (W)",
         "hfac": "H factors for an ignited plasma for each energy confinement time scaling law",
         "hfact": "H factor on energy confinement times, radiation corrected (`iteration variable 10`)",
@@ -10777,7 +10777,7 @@
         "tmargtf": "TF coil temperature margin (K)",
         "tmax_croco": "CroCo strand: maximum permitted temp during a quench (K)",
         "tmaxpro": "maximum temp rise during a quench for protection (K)",
-        "tmpcry": "coil temperature for cryogenic plant power calculation (K)",
+        "temp_tf_cryo": "coil temperature for cryogenic plant power calculation (K)",
         "tn": "neutral gas temperature in chamber (K)",
         "t_current_ramp_up": "plasma current ramp-up time for current initiation (s) (calculated if `i_pulsed_plant=0`)\n (`iteration variable 65`)",
         "tohsin": "Switch for plasma current ramp-up time (if i_pulsed_plant=0):\n<ul>\n<li>= 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5</li>\n<li><>0, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input</li>\n</ul>",
@@ -14447,7 +14447,7 @@
             "lb": 0.0,
             "ub": 1000.0
         },
-        "tmpcry": {
+        "temp_tf_cryo": {
             "lb": 0.01,
             "ub": 293.0
         },
@@ -19474,7 +19474,7 @@
             "tmaxpro",
             "tmax_croco",
             "croco_quench_temperature",
-            "tmpcry",
+            "temp_tf_cryo",
             "n_tf_turn",
             "vdalw",
             "vforce",
@@ -20571,7 +20571,7 @@
         "tmax_croco": "real_variable",
         "tmax_jacket": "real_variable",
         "tmaxpro": "real_variable",
-        "tmpcry": "real_variable",
+        "temp_tf_cryo": "real_variable",
         "tn": "real_variable",
         "t_current_ramp_up": "real_variable",
         "tohsin": "real_variable",

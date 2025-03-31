@@ -374,7 +374,7 @@ thicndut = 0.001 * conduit insulation thickness (m)
 thkcas   = 0.05 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 thwcndut = 0.006 * TF coil conduit case thickness (m) (`iteration variable 58`)
 tinstf   = 0.01 * Thickness of the ground insulation layer surrounding (m)
-tmpcry   = 4.5 * coil temperature for cryogenic plant power calculation (K)
+temp_tf_cryo   = 4.5 * coil temperature for cryogenic plant power calculation (K)
 vdalw    = 12.5 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 

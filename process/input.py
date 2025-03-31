@@ -1249,7 +1249,7 @@ INPUT_VARIABLES = {
     "tmargmin_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmax_croco": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 1000.0)),
     "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
-    "tmpcry": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
+    "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tn": InputVariable(fortran.vacuum_variables, float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable(fortran.times_variables, int, choices=[0, 1]),
     "transp_clrnc": InputVariable(

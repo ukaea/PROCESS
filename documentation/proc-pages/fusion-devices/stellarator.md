@@ -224,7 +224,7 @@ i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 sig_tf_wp_max = 4.e8 * Maximal allowable Stress level on Ground insulation for a simple stellarator coil stress module (Pa)
 fcutfsu = 0.7 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
-tmpcry = 4.75 * Temperature in TF coils, required for plant efficiency (K)
+temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 vdalw = 12.64 * Max voltage across tf coil during quench (kV)

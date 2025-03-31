@@ -650,7 +650,7 @@ module tfcoil_variables
   real(dp) :: croco_quench_temperature
   !! CroCo strand: Actual temp reached during a quench (K)
 
-  real(dp) :: tmpcry
+  real(dp) :: temp_tf_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
   real(dp) :: n_tf_turn
