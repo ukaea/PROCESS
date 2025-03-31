@@ -610,7 +610,7 @@ module tfcoil_variables
   real(dp) :: layer_ins
   !! Additional insulation thickness between layers (m)
 
-  real(dp) :: thkcas
+  real(dp) :: dr_tf_nose_case
   !! inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
   !! (calculated for stellarators)
 

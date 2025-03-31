@@ -226,9 +226,9 @@ fvsbrnni = 0.4
 ixc = 56
 tdmptf = 25.0
 
-* thkcas [m]
+* dr_tf_nose_case [m]
 ixc = 57
-thkcas = 0.5
+dr_tf_nose_case = 0.5
 
 * TF coil conduit thickness [m]
 ixc = 58

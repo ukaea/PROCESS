@@ -1921,7 +1921,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
-    nose_thickness = mfile_data.data["thkcas"].get_scan(scan)
+    nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
     side_thickness = mfile_data.data["casths"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
@@ -3772,7 +3772,7 @@ def main(args=None):
     global wwp2
     global dr_tf_wp
     global tinstf
-    global thkcas
+    global dr_tf_nose_case
     global casthi
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
@@ -3782,7 +3782,7 @@ def main(args=None):
             wwp2 = m_file.data["wwp2"].get_scan(scan)
         dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
         tinstf = m_file.data["tinstf"].get_scan(scan)
-        thkcas = m_file.data["thkcas"].get_scan(scan)
+        dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
 
         # To be re-inergrated to resistives when in-plane stresses is integrated
         casthi = m_file.data["casthi"].get_scan(scan)

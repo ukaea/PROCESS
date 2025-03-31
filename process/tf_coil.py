@@ -342,7 +342,7 @@ class TFCoil:
         if tfcoil_variables.tfc_sidewall_is_fraction:
             tfcoil_variables.casths = (
                 tfcoil_variables.casths_fraction
-                * (build_variables.r_tf_inboard_in + tfcoil_variables.thkcas)
+                * (build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case)
                 * np.tan(np.pi / tfcoil_variables.n_tf_coils)
             )
 

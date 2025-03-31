@@ -515,7 +515,7 @@ class TfCurrentParam(NamedTuple):
 
     thicndut: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     oacdcp: Any = None
 
@@ -565,7 +565,7 @@ class TfCurrentParam(NamedTuple):
             casthi_fraction=0.050000000000000003,
             n_tf_coils=16,
             thicndut=0.002,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             oacdcp=8673900,
             a_tf_coil_inboard=27.308689677971632,
             r_tf_inboard_out=4.20194118510911,
@@ -647,7 +647,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "thicndut", tfcurrentparam.thicndut)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", tfcurrentparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfcurrentparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "oacdcp", tfcurrentparam.oacdcp)
 
@@ -1145,7 +1147,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_tf_leg_outboard: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     voltfleg: Any = None
 
@@ -1245,7 +1247,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             i_tf_sup=1,
             i_tf_sc_mat=5,
             a_tf_leg_outboard=1.9805354702921749,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             voltfleg=0,
             cplen=0,
             itart=0,
@@ -1317,7 +1319,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             i_tf_sup=1,
             i_tf_sc_mat=5,
             a_tf_leg_outboard=1.9805354702921749,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             voltfleg=0,
             cplen=20.562180043124066,
             itart=0,
@@ -1478,7 +1480,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.a_tf_leg_outboard,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", tfcoilareaandmassesparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfcoilareaandmassesparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "voltfleg", tfcoilareaandmassesparam.voltfleg)
 

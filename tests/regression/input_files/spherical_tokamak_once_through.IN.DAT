@@ -65,7 +65,7 @@ boundu(49) = 1.0
 ixc = 50 * fiooic
 boundl(50) = 0.01
 boundu(50) = 1.0
-ixc = 57 * thkcas
+ixc = 57 * dr_tf_nose_case
 boundl(57) = 0.01
 boundu(57) = 0.5
 ixc = 72 * fipir
@@ -432,7 +432,7 @@ ripmax   = 1.0 * aximum allowable toroidal field ripple amplitude at plasma edge
 i_cp_joints = 0 * Switch for CP demoutable joints type
 n_tf_coils     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)
-thkcas   = 0.1293140904093427 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
+dr_tf_nose_case   = 0.1293140904093427 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp = 0.6044340543574178 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 temp_tf_cryo   = 20.0 * coil temperature for cryogenic plant power calculation (K)
 f_vforce_inboard = 0.5 * Fraction of the total vertical force taken by the TF inboard leg tension

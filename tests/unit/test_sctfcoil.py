@@ -500,7 +500,7 @@ class TfWpGeomParam(NamedTuple):
 
     casthi: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     casths: Any = None
 
@@ -562,7 +562,7 @@ class TfWpGeomParam(NamedTuple):
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             casths=0.05000000000000001,
             wwp1=0,
             wwp2=0,
@@ -595,7 +595,7 @@ class TfWpGeomParam(NamedTuple):
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             casths=0.05000000000000001,
             wwp1=1.299782604942499,
             wwp2=0,
@@ -651,7 +651,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tfwpgeomparam.casthi)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", tfwpgeomparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfwpgeomparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "casths", tfwpgeomparam.casths)
 

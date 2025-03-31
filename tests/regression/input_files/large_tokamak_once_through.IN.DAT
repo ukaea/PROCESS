@@ -60,7 +60,7 @@ ixc = 37 * j_cs_flat_top_end
 ixc = 41 * f_j_cs_start_pulse_end_flat_top
 ixc = 44 * fvsbrnni
 ixc = 56 * tdmptf
-ixc = 57 * thkcas
+ixc = 57 * dr_tf_nose_case
 ixc = 58 * thwcndut
 boundl(58) = 0.008
 ixc = 59 * fcutfsu
@@ -420,7 +420,7 @@ ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge
 tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
-thkcas   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
+dr_tf_nose_case   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp = 0.5153787768966674 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 thwcndut = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
 tinstf   = 0.008 * Thickness of the ground insulation layer surrounding (m)

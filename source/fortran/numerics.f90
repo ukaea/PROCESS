@@ -262,7 +262,7 @@ module numerics
   !! <LI> (54) ftmargtf (f-value for equation 36)
   !! <LI> (55) NOT USED
   !! <LI> (56) tdmptf
-  !! <LI> (57) thkcas
+  !! <LI> (57) dr_tf_nose_case
   !! <LI> (58) thwcndut
   !! <LI> (59) fcutfsu
   !! <LI> (60) cpttf

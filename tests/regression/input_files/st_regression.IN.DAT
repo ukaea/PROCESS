@@ -1031,7 +1031,7 @@ i_tf_case_geom = 0
 * JUSTIFICATION: Not set, assuming default
 
 ixc = 57
-thkcas = 0.4
+dr_tf_nose_case = 0.4
 boundl(57) = 0.01 
 boundu(57) = 0.5 
 * DESCRIPTION:   Inboard TF Coil Case Outer (Nose case) thickness (m)
