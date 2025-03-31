@@ -445,7 +445,6 @@ def main(args=None):
                 x_max += [None]
     else:
         x_max = np.float64(x_max_input)
-    print(len(y_max_input), len(output_names))
     if len(y_max_input) != len(output_names):
         y_max = []
         for _ in range(len(output_names)):
@@ -748,7 +747,6 @@ def main(args=None):
                                 y_max[index] = max(
                                     np.abs(output_arrays[input_file][output_name])
                                 )
-                            print(y_max[index], type(y_max[index]))
                             yticks = mtick.PercentFormatter(y_max[index])
                             if y_axis_range != []:
                                 y_divisions = (
