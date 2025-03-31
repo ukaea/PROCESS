@@ -74,7 +74,7 @@ var_dicts = {
         description="TF coil vertical force",
         units="N",
     ),
-    "thkcas": VariableMetadata(
+    "dr_tf_nose_case": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{buck}$ [$m$]",
         description="Inboard TF coil case outer (non-plasma side) thickness",
         units="m",

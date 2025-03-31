@@ -1468,7 +1468,9 @@ class Build:
         n = float(tfcoil_variables.n_tf_coils)
         if tfcoil_variables.i_tf_sup == 1:
             # Minimal inboard WP radius [m]
-            r_wp_min = build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
+            r_wp_min = (
+                build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
+            )
 
             # Rectangular WP
             if tfcoil_variables.i_tf_wp_geom == 0:
@@ -1503,7 +1505,7 @@ class Build:
             # Radius used to define the t_wp_max [m]
             r_wp_max = (
                 build_variables.r_tf_inboard_in
-                + tfcoil_variables.thkcas
+                + tfcoil_variables.dr_tf_nose_case
                 + tfcoil_variables.dr_tf_wp
             )
 
@@ -1675,7 +1677,7 @@ class Build:
                     build_variables.r_tf_inboard_in
                     + tfcoil_variables.dr_tf_wp
                     + tfcoil_variables.casthi
-                    + tfcoil_variables.thkcas
+                    + tfcoil_variables.dr_tf_nose_case
                 ) / np.cos(
                     np.pi / tfcoil_variables.n_tf_coils
                 ) - build_variables.r_tf_inboard_in
@@ -1685,7 +1687,7 @@ class Build:
                 build_variables.dr_tf_inboard = (
                     tfcoil_variables.dr_tf_wp
                     + tfcoil_variables.casthi
-                    + tfcoil_variables.thkcas
+                    + tfcoil_variables.dr_tf_nose_case
                 )
 
         # Radial build to tfcoil middle [m]
@@ -1708,7 +1710,7 @@ class Build:
                     * build_variables.r_tf_inboard_out
                     - build_variables.r_tf_inboard_in
                     - tfcoil_variables.casthi
-                    - tfcoil_variables.thkcas
+                    - tfcoil_variables.dr_tf_nose_case
                 )
 
             # Resistive magnets
@@ -1716,7 +1718,7 @@ class Build:
                 tfcoil_variables.dr_tf_wp = (
                     build_variables.dr_tf_inboard
                     - tfcoil_variables.casthi
-                    - tfcoil_variables.thkcas
+                    - tfcoil_variables.dr_tf_nose_case
                 )
 
         # Radius of the centrepost at the top of the machine

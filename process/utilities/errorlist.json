@@ -248,7 +248,7 @@
     {
       "no": 48,
       "level": 3,
-      "message": "LOADXC: Do not use thkcas as an iteration variable if istell=1"
+      "message": "LOADXC: Do not use dr_tf_nose_case as an iteration variable if istell=1"
     },
     {
       "no": 49,

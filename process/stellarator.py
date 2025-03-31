@@ -2673,15 +2673,15 @@ class Stellarator:
         #
         # Coil case thickness (m). Here assumed to be constant
         # until something better comes up.
-        # case_thickness_constant = tfcoil_variables.thkcas #0.2e0 # #? Leave this constant for now... Check this## Should be scaled with forces I think.
+        # case_thickness_constant = tfcoil_variables.dr_tf_nose_case #0.2e0 # #? Leave this constant for now... Check this## Should be scaled with forces I think.
         #  For now assumed to be constant in a bolted plate model.
         #
         tfcoil_variables.casthi = (
-            tfcoil_variables.thkcas
+            tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness outboard distance (radial)
-        # thkcas = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
+        # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
         tfcoil_variables.casths = (
-            tfcoil_variables.thkcas
+            tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness toroidal distance (toroidal)
 
         # End of casing calculations
@@ -2741,13 +2741,13 @@ class Stellarator:
         )  # [m] Thickness of inboard leg in toroidal direction
 
         build_variables.dr_tf_inboard = (
-            tfcoil_variables.thkcas
+            tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of inboard leg in radial direction
         build_variables.dr_tf_outboard = (
-            tfcoil_variables.thkcas
+            tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.casthi
             + 2.0e0 * tfcoil_variables.tinstf
@@ -4016,8 +4016,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case thickness, outer side (m)",
-            "(thkcas)",
-            tfcoil_variables.thkcas,
+            "(dr_tf_nose_case)",
+            tfcoil_variables.dr_tf_nose_case,
         )
         po.ovarre(
             self.outfile,

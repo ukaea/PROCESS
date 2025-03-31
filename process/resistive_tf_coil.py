@@ -244,7 +244,7 @@ class ResistiveTFCoil(TFCoil):
 
         """
         sctfcoil_module.r_wp_inner = (
-            build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
+            build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
         sctfcoil_module.r_wp_outer = (
             build_variables.r_tf_inboard_out - tfcoil_variables.casthi
@@ -255,7 +255,7 @@ class ResistiveTFCoil(TFCoil):
             sctfcoil_module.dr_tf_wp_top = (
                 build_variables.r_cp_top
                 - tfcoil_variables.casthi
-                - tfcoil_variables.thkcas
+                - tfcoil_variables.dr_tf_nose_case
                 - build_variables.r_tf_inboard_in
             )
 
@@ -461,7 +461,7 @@ class ResistiveTFCoil(TFCoil):
                 build_variables.r_cp_top,
                 sctfcoil_module.z_cp_top,
                 build_variables.hmax + build_variables.dr_tf_outboard,
-                tfcoil_variables.thkcas,
+                tfcoil_variables.dr_tf_nose_case,
                 tfcoil_variables.casthi,
                 tfcoil_variables.tinstf,
                 tfcoil_variables.thicndut,

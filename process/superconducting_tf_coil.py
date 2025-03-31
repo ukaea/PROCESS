@@ -1752,7 +1752,7 @@ class SuperconductingTFCoil(TFCoil):
         Seting the WP geometry and area for SC magnets
         """
         sctfcoil_module.r_wp_inner = (
-            build_variables.r_tf_inboard_in + tfcoil_variables.thkcas
+            build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
 
         # Radial position of outer edge of winding pack [m]
@@ -2448,8 +2448,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 'Inboard leg case inboard "nose" thickness (m)',
-                "(thkcas)",
-                tfcoil_variables.thkcas,
+                "(dr_tf_nose_case)",
+                tfcoil_variables.dr_tf_nose_case,
             )
             po.ovarre(
                 self.outfile,
@@ -2784,8 +2784,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Inboard leg bucking cylinder thickness (m)",
-                "(thkcas)",
-                tfcoil_variables.thkcas,
+                "(dr_tf_nose_case)",
+                tfcoil_variables.dr_tf_nose_case,
             )
 
             # Conductor layer geometry
@@ -3209,13 +3209,13 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial build for SC TF coils
         if tfcoil_variables.i_tf_sup == 1:
-            radius = radius + tfcoil_variables.thkcas
+            radius = radius + tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 'Coil case ("nose")',
-                tfcoil_variables.thkcas,
+                tfcoil_variables.dr_tf_nose_case,
                 radius,
-                "(thkcas)",
+                "(dr_tf_nose_case)",
             )
 
             radius = radius + tfcoil_variables.tfinsgap
@@ -3306,13 +3306,13 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial build for restive coil
         else:
-            radius = radius + tfcoil_variables.thkcas
+            radius = radius + tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 "Coil bucking cylindre",
-                tfcoil_variables.thkcas,
+                tfcoil_variables.dr_tf_nose_case,
                 radius,
-                "(thkcas)",
+                "(dr_tf_nose_case)",
             )
 
             radius = radius + tfcoil_variables.tinstf
@@ -3413,13 +3413,13 @@ class SuperconductingTFCoil(TFCoil):
             radius = build_variables.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
-            radius = radius + tfcoil_variables.thkcas
+            radius = radius + tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 "Coil bucking cylindre",
-                tfcoil_variables.thkcas,
+                tfcoil_variables.dr_tf_nose_case,
                 radius,
-                "(thkcas)",
+                "(dr_tf_nose_case)",
             )
 
             radius = radius + tfcoil_variables.tinstf
