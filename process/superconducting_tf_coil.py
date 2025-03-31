@@ -2880,8 +2880,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Steel conduit mass per coil (kg)",
-            "(whtconsh)",
-            tfcoil_variables.whtconsh,
+            "(m_tf_turn_steel_conduit)",
+            tfcoil_variables.m_tf_turn_steel_conduit,
             "OP ",
         )
         po.ovarre(

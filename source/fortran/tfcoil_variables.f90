@@ -702,7 +702,7 @@ module tfcoil_variables
   real(dp) :: whtconsc
   !! superconductor mass in TF coil cable (kg/coil)
 
-  real(dp) :: whtconsh
+  real(dp) :: m_tf_turn_steel_conduit
   !! steel conduit mass in TF coil conductor (kg/coil)
 
   real(dp) :: whtgw
@@ -1015,7 +1015,7 @@ module tfcoil_variables
     whtconal = 0.0D0
     whtconin = 0.0D0
     whtconsc = 0.0D0
-    whtconsh = 0.0D0
+    m_tf_turn_steel_conduit = 0.0D0
     whtgw = 0.0D0
     m_tf_coils_total = 0.0D0
     wwp1 = 0.0D0
