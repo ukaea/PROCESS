@@ -551,7 +551,7 @@ contains
       'Peak CS field upper limit        ', &
       'pdivt lower limit                ', &
       'ne0 > neped                      ', &
-      'toroidalgap >  dx_tf_inboard_out_toroidal            ', &
+      'toroidalgap > dx_tf_inboard_out_t', &
       'available_space > required_space ', &
       'beta > beta_min                  ', &
       'CP lifetime                      ', &

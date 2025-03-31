@@ -29,7 +29,7 @@ class ResistiveTFCoil(TFCoil):
         self.iprint = 0
         self.tf_global_geometry()
         self.tf_current()
-        self.coilshap()
+        self.tf_coil_shape_inner()
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
