@@ -44,7 +44,7 @@ class TFCoil:
         self.iprint = 0
         self.tf_global_geometry()
         self.tf_current()
-        self.coilshap()
+        self.tf_coil_shape_inner()
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.tfind = self.tfcind(
@@ -388,7 +388,7 @@ class TFCoil:
             tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
         )
 
-    def coilshap(self):
+    def tf_coil_shape_inner(self):
         """Calculates the TF coil shape
         Calculates the shape of the INSIDE of the TF coil. The coil is
         approximated by a straight inboard section and four elliptical arcs

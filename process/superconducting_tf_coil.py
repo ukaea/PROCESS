@@ -52,7 +52,7 @@ class SuperconductingTFCoil(TFCoil):
         self.iprint = 0
         self.tf_global_geometry()
         self.tf_current()
-        self.coilshap()
+        self.tf_coil_shape_inner()
         self.sc_tf_internal_geom(
             tfcoil_variables.i_tf_wp_geom,
             tfcoil_variables.i_tf_case_geom,
