@@ -82,14 +82,14 @@ module tfcoil_variables
   logical :: casthi_is_fraction
   !! logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)
 
-  real(dp) :: casths
+  real(dp) :: dx_tf_side_case
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
   !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
-  !! logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)
+  !! logical switch to make dx_tf_side_case a fraction of TF coil thickness (`casths_fraction`)
 
   real(dp) :: t_conductor
   !! Conductor (cable + steel conduit) area averaged dimension [m]
@@ -859,7 +859,7 @@ module tfcoil_variables
     casthi = 0.0D0
     casthi_fraction = 0.05D0
     casthi_is_fraction = .false.
-    casths = 0.0D0
+    dx_tf_side_case = 0.0D0
     casths_fraction = 0.06D0
     t_conductor = 0.0D0
     t_cable_tf = 0.0D0

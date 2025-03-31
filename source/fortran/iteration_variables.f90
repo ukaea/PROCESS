@@ -3829,25 +3829,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_172
-    !! <LI> (172) casths: TF side case thickness [m]
+    !! <LI> (172) dx_tf_side_case: TF side case thickness [m]
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(172) = 'casths        '
+    lablxc(172) = 'dx_tf_side_case        '
     boundl(172) = 0.001
     boundu(172) = 1.0
   end subroutine init_itv_172
 
   real(kind(1.d0)) function itv_172()
-    use tfcoil_variables, only: casths
+    use tfcoil_variables, only: dx_tf_side_case
     implicit none
-    itv_172 = casths
+    itv_172 = dx_tf_side_case
   end function itv_172
 
   subroutine set_itv_172(ratio)
-    use tfcoil_variables, only: casths
+    use tfcoil_variables, only: dx_tf_side_case
     implicit none
     real(kind(1.d0)) :: ratio
-    casths = ratio
+    dx_tf_side_case = ratio
   end subroutine set_itv_172
 
   subroutine init_itv_173
