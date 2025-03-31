@@ -279,7 +279,7 @@ class SuperconductingTFCoil(TFCoil):
         tfes = sctfcoil_module.estotft / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
         aturn = tfcoil_variables.c_tf_total / (
-            tfcoil_variables.jwptf
+            tfcoil_variables.j_tf_wp
             * tfcoil_variables.n_tf_coils
             * tfcoil_variables.n_tf_turn
         )
@@ -309,7 +309,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.vftf,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.cpttf,
-                tfcoil_variables.jwptf,
+                tfcoil_variables.j_tf_wp,
                 tfcoil_variables.i_tf_sc_mat,
                 tfcoil_variables.fhts,
                 tfcoil_variables.tdmptf,
@@ -1653,7 +1653,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.insulation_area,
                 tfcoil_variables.n_tf_turn,
             ) = self.tf_averaged_turn_geom(
-                tfcoil_variables.jwptf,
+                tfcoil_variables.j_tf_wp,
                 tfcoil_variables.thwcndut,
                 tfcoil_variables.thicndut,
                 tfcoil_variables.i_tf_sc_mat,
@@ -2084,7 +2084,7 @@ class SuperconductingTFCoil(TFCoil):
         Author : S. Kahn, CCFE
         Turn engineering turn currents/densities
         """
-        tfcoil_variables.jwptf = max(
+        tfcoil_variables.j_tf_wp = max(
             1.0e0,
             tfcoil_variables.c_tf_total
             / (tfcoil_variables.n_tf_coils * sctfcoil_module.awptf),
@@ -2964,8 +2964,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Winding pack current density (A/m2)",
-                "(jwptf)",
-                tfcoil_variables.jwptf,
+                "(j_tf_wp)",
+                tfcoil_variables.j_tf_wp,
                 "OP ",
             )
 
@@ -3484,7 +3484,7 @@ class SuperconductingTFCoil(TFCoil):
                 )
                 po.oblnkl(self.outfile)
 
-    def tf_averaged_turn_geom(self, jwptf, thwcndut, thicndut, i_tf_sc_mat):
+    def tf_averaged_turn_geom(self, j_tf_wp, thwcndut, thicndut, i_tf_sc_mat):
         """
         subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
         Authors : J. Morris, CCFE
@@ -3502,7 +3502,7 @@ class SuperconductingTFCoil(TFCoil):
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
-            tfcoil_variables.cpttf = a_turn * jwptf
+            tfcoil_variables.cpttf = a_turn * j_tf_wp
 
         # Turn cable dimension is an input
         elif tfcoil_variables.t_cable_tf_is_input:
@@ -3515,14 +3515,14 @@ class SuperconductingTFCoil(TFCoil):
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
-            tfcoil_variables.cpttf = a_turn * jwptf
+            tfcoil_variables.cpttf = a_turn * j_tf_wp
 
         # Current per turn is an input
         else:
             # Turn area [m2]
             # Allow for additional inter-layer insulation MDK 13/11/18
             # Area of turn including conduit and inter-layer insulation
-            a_turn = tfcoil_variables.cpttf / jwptf
+            a_turn = tfcoil_variables.cpttf / j_tf_wp
 
             # Dimension of square cross-section of each turn including inter-turn insulation [m]
             tfcoil_variables.t_turn_tf = np.sqrt(a_turn)

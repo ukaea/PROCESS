@@ -1594,7 +1594,7 @@ class StressclParam(NamedTuple):
 
     c_tf_total: Any = None
 
-    jwptf: Any = None
+    j_tf_wp: Any = None
 
     sig_tf_cs_bucked: Any = None
 
@@ -1764,7 +1764,7 @@ class StressclParam(NamedTuple):
             acstf=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
-            jwptf=23124470.793774806,
+            j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
             sig_tf_case=0,
             sig_tf_wp=0,
@@ -1887,7 +1887,7 @@ class StressclParam(NamedTuple):
             acstf=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
-            jwptf=23124470.793774806,
+            j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
             sig_tf_case=543381805.25001633,
             sig_tf_wp=397005702.35272157,

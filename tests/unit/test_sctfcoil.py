@@ -1199,7 +1199,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     i_tf_sc_mat: Any = None
 
-    jwptf: Any = None
+    j_tf_wp: Any = None
 
     thwcndut: Any = None
 
@@ -1240,7 +1240,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0,
             t_cable=0,
             i_tf_sc_mat=5,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             thwcndut=0.0080000000000000019,
             thicndut=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
@@ -1266,7 +1266,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.049532469413859428,
             t_cable=0.031932469413859424,
             i_tf_sc_mat=5,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             thwcndut=0.0080000000000000019,
             thicndut=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
@@ -1292,7 +1292,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
-            jwptf=2.301e07,
+            j_tf_wp=2.301e07,
             thwcndut=8.015e-03,
             thicndut=8.0e-4,
             expected_t_conductor=5.712e-02,
@@ -1318,7 +1318,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
-            jwptf=2.673e07,
+            j_tf_wp=2.673e07,
             thwcndut=8.148e-03,
             thicndut=8.0e-4,
             expected_t_conductor=0.058296,
@@ -1390,7 +1390,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     acstf, acndttf, insulation_area, n_tf_turn = sctfcoil.tf_averaged_turn_geom(
         i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
-        jwptf=tfaveragedturngeomparam.jwptf,
+        j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         thwcndut=tfaveragedturngeomparam.thwcndut,
         thicndut=tfaveragedturngeomparam.thicndut,
     )
@@ -1431,11 +1431,11 @@ class TfWpCurrentsParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    jwptf: Any = None
+    j_tf_wp: Any = None
 
     awptf: Any = None
 
-    expected_jwptf: Any = None
+    expected_j_tf_wp: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1444,16 +1444,16 @@ class TfWpCurrentsParam(NamedTuple):
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            jwptf=0,
+            j_tf_wp=0,
             awptf=0.60510952642236249,
-            expected_jwptf=26493137.688284047,
+            expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             awptf=0.60510952642236249,
-            expected_jwptf=26493137.688284047,
+            expected_j_tf_wp=26493137.688284047,
         ),
     ),
 )
@@ -1474,13 +1474,13 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfwpcurrentsparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "jwptf", tfwpcurrentsparam.jwptf)
+    monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
     monkeypatch.setattr(sctfcoil_module, "awptf", tfwpcurrentsparam.awptf)
 
     sctfcoil.tf_wp_currents()
 
-    assert tfcoil_variables.jwptf == pytest.approx(tfwpcurrentsparam.expected_jwptf)
+    assert tfcoil_variables.j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
 
 
 def test_vv_stress_on_quench():

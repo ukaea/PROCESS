@@ -322,7 +322,7 @@ module tfcoil_variables
   real(dp) :: jwdgpro
   !! allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)
 
-  real(dp) :: jwptf
+  real(dp) :: j_tf_wp
   !! winding pack engineering current density (A/m2)
 
   real(dp) :: oacdcp

@@ -1924,7 +1924,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     nose_thickness = mfile_data.data["thkcas"].get_scan(scan)
     side_thickness = mfile_data.data["casths"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
-    jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
+    j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["dr_tf_inboard"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
 
@@ -2103,7 +2103,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
                     label=(
-                        f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"Winding pack:  \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 )
@@ -2175,7 +2175,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 ),
@@ -2229,7 +2229,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     xy=list(zip(x, y, strict=False)),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n"
+                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
                         f"$\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 )
