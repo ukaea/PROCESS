@@ -237,7 +237,7 @@ INPUT_VARIABLES = {
     ),
     "casthi": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "casthi_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "casths": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "dx_tf_side_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "casths_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "cboot": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
     "cconfix": InputVariable(fortran.cost_variables, float, range=(50.0, 200.0)),

@@ -502,7 +502,7 @@ class TfWpGeomParam(NamedTuple):
 
     dr_tf_nose_case: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     wwp1: Any = None
 
@@ -563,7 +563,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             wwp1=0,
             wwp2=0,
             tinstf=0.0080000000000000019,
@@ -596,7 +596,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             wwp1=1.299782604942499,
             wwp2=0,
             tinstf=0.0080000000000000019,
@@ -655,7 +655,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dr_tf_nose_case", tfwpgeomparam.dr_tf_nose_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "casths", tfwpgeomparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", tfwpgeomparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "wwp1", tfwpgeomparam.wwp1)
 
@@ -733,7 +735,7 @@ class TfCaseGeomParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     casthi: Any = None
 
@@ -783,7 +785,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -810,7 +812,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -860,7 +862,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcasegeomparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "casths", tfcasegeomparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", tfcasegeomparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tfcasegeomparam.casthi)
 

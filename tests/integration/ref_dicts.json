@@ -1275,7 +1275,7 @@
         "casthi": 0.0,
         "casthi_fraction": 0.05,
         "casthi_is_fraction": ".false.",
-        "casths": 0.0,
+        "dx_tf_side_case": 0.0,
         "casths_fraction": 0.06,
         "cboot": 1.0,
         "ccl0": [
@@ -9027,7 +9027,7 @@
         "casthi": "inboard TF coil case plasma side thickness (m) (calculated for stellarators)",
         "casthi_fraction": "inboard TF coil case plasma side thickness as a fraction of dr_tf_inboard",
         "casthi_is_fraction": "logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)",
-        "casths": "inboard TF coil sidewall case thickness (m) (calculated for stellarators)",
+        "dx_tf_side_case": "inboard TF coil sidewall case thickness (m) (calculated for stellarators)",
         "casths_fraction": "inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal",
         "cboot": "bootstrap current fraction multiplier (`i_bootstrap_current=1`)",
         "ccl0": "",
@@ -10713,7 +10713,7 @@
         "m_tf_bus": "TF coil bus mass (kg)",
         "c_tf_coil": "Current in each TF coil",
         "tfc_nuc_heating": "Unit nuclear heating in TF coil (W per W of fusion power)",
-        "tfc_sidewall_is_fraction": "logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)",
+        "tfc_sidewall_is_fraction": "logical switch to make dx_tf_side_case a fraction of TF coil thickness (`casths_fraction`)",
         "tfcbv": "volume of TF coil power supply building (m3) (calculated if TF coils are superconducting)",
         "tfckw": "available DC power for charging the TF coils (kW)",
         "tfcmw": "Peak power per TF power supply (MW)",
@@ -11731,7 +11731,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "casths": {
+        "dx_tf_side_case": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19337,7 +19337,7 @@
             "casthi",
             "casthi_fraction",
             "casthi_is_fraction",
-            "casths",
+            "dx_tf_side_case",
             "casths_fraction",
             "tfc_sidewall_is_fraction",
             "t_conductor",
@@ -19862,7 +19862,7 @@
         "cable_helium_fraction": "real_variable",
         "casthi": "real_variable",
         "casthi_fraction": "real_variable",
-        "casths": "real_variable",
+        "dx_tf_side_case": "real_variable",
         "casths_fraction": "real_variable",
         "cboot": "real_variable",
         "ccl0_ma": "real_array",

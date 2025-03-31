@@ -696,7 +696,7 @@
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.0816E-01    
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.2965E-01 ITV
- Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (casths)______________________      5.0000E-02    
+ Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      4.9722E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.7619E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      5.1826E-01    
@@ -1779,7 +1779,7 @@ i_cs_superconductor = 1
 casthi = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
-casths = 0.05
+dx_tf_side_case = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
 ripmax = 0.6

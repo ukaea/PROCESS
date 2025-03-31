@@ -505,7 +505,7 @@ class TfCurrentParam(NamedTuple):
 
     tfc_sidewall_is_fraction: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     casthi_is_fraction: Any = None
 
@@ -560,7 +560,7 @@ class TfCurrentParam(NamedTuple):
             b_tf_inboard_peak=0,
             tfinsgap=0.01,
             tfc_sidewall_is_fraction=False,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             casthi_is_fraction=False,
             casthi_fraction=0.050000000000000003,
             n_tf_coils=16,
@@ -633,7 +633,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
         tfcurrentparam.tfc_sidewall_is_fraction,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "casths", tfcurrentparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", tfcurrentparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "casthi_is_fraction", tfcurrentparam.casthi_is_fraction

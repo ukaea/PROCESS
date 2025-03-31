@@ -1059,7 +1059,7 @@ casths_fraction = 0.65
 
 * Use one or the other *
 
-*casths = 0.05 
+*dx_tf_side_case = 0.05 
 * DESCRIPTION:   TF coil case sidewall thickness (m)
 * JUSTIFICATION: Not used, using casths_fraction instead
 

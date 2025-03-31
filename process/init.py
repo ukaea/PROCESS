@@ -815,7 +815,7 @@ def check_process(inputs):  # noqa: ARG001
     )
 
     # If TFC sidewall has not been set by user
-    if fortran.tfcoil_variables.casths < 0.1e-10:
+    if fortran.tfcoil_variables.dx_tf_side_case < 0.1e-10:
         fortran.tfcoil_variables.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user

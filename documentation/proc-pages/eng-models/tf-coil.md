@@ -92,7 +92,7 @@ $$
     **The nose casing:** this section corresponds to the case separating the WP with the machine center. Due to the presence of net electromechanical centering forces, this case has a major structural purpose and is often much larger than the other sides. The nose case dimension is set by its radial thickness that the user can specify using the `dr_tf_nose_case`  input variable (iteration variable 57).
   </p>
 - <p style='text-align: justify;'> 
-    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `casths`. The user can either directly specify `casths` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_wp_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `casths` value will be overwritten.
+    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case`. The user can either directly specify `dx_tf_side_case` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_wp_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case` value will be overwritten.
   </p>
 - <p style='text-align: justify;'> 
     **Plasma side casing:** this section corresponds to the case section separating the WP with the plasma. As the geometry of this section is rounded, its thickness is set by its minimal value `casthi` (user input). This parameter can also be defined as a fraction of the total TF coil thickness `dr_tf_inboard` using `casthi_fraction`. If the `casthi_fraction` parametrization is used, the `casthi` value will be overwritten.
@@ -1260,8 +1260,8 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `tfootfi` | Outboard/inboard TF coil thickness ratio | - | 1 | - | 
 | `dr_tf_wp` | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140 | No default | m | 
 | `dr_tf_nose_case` | Nose/inner case radial thickness | ixc = 57 | 0.3 | m |
-| `casths` | Minimal sidewall casing thickness | - | - | m |
-| `casths_fraction` | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `casths` input value | - | 0.03 | - |
+| `dx_tf_side_case` | Minimal sidewall casing thickness | - | - | m |
+| `casths_fraction` | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value | - | 0.03 | - |
 | `casthi` | Minimal plasma side casing thickness | - | - | m |
 | `casthi_fraction` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value | - | 0.05 | - |
 | `i_tf_case_geom` | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing | - | 0 | - |
