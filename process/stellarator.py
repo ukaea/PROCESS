@@ -2908,13 +2908,13 @@ class Stellarator:
             - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
-        tfcoil_variables.whtconsh = (
+        tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
             * tfcoil_variables.acndttf
             * fwbs_variables.denstl
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
         # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
         tfcoil_variables.whtconin = (
@@ -2926,7 +2926,7 @@ class Stellarator:
         tfcoil_variables.whtcon = (
             tfcoil_variables.whtconsc
             + tfcoil_variables.whtconcu
-            + tfcoil_variables.whtconsh
+            + tfcoil_variables.m_tf_turn_steel_conduit
             + tfcoil_variables.whtconin
         )
         # [kg] Total coil mass
@@ -3798,8 +3798,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Steel conduit mass per coil (kg)",
-            "(whtconsh)",
-            tfcoil_variables.whtconsh,
+            "(m_tf_turn_steel_conduit)",
+            tfcoil_variables.m_tf_turn_steel_conduit,
         )
         po.ovarre(
             self.outfile,

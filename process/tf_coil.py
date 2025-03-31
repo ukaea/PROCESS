@@ -1388,7 +1388,7 @@ class TFCoil:
                 tfcoil_variables.whtconcu = 0.0e0
 
             # Steel conduit (sheath) mass [kg]
-            tfcoil_variables.whtconsh = (
+            tfcoil_variables.m_tf_turn_steel_conduit = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
                 * tfcoil_variables.acndttf
@@ -1407,7 +1407,7 @@ class TFCoil:
             tfcoil_variables.whtcon = (
                 tfcoil_variables.whtconsc
                 + tfcoil_variables.whtconcu
-                + tfcoil_variables.whtconsh
+                + tfcoil_variables.m_tf_turn_steel_conduit
                 + tfcoil_variables.whtconin
             )
             # ---------------------------------
