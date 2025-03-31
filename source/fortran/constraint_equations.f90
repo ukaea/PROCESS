@@ -1586,9 +1586,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fiooic : input real : f-value for TF coil operating current / critical
       !! jwdgcrt : input real : critical current density for winding pack (A/m2)
-      !! jwptf : input real : winding pack current density (A/m2)
+      !! j_tf_wp : input real : winding pack current density (A/m2)
       use constraint_variables, only: fiooic
-      use tfcoil_variables, only: jwdgcrt, jwptf
+      use tfcoil_variables, only: jwdgcrt, j_tf_wp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1597,9 +1597,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       if (fiooic > 0.7D0) call report_error(285)
-      tmp_cc =  1.0D0 - fiooic * jwdgcrt/jwptf
+      tmp_cc =  1.0D0 - fiooic * jwdgcrt/j_tf_wp
       tmp_con = jwdgcrt * (1.0D0 - tmp_cc)
-      tmp_err = jwptf * tmp_cc
+      tmp_err = j_tf_wp * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
@@ -1647,9 +1647,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjprot : input real : f-value for TF coil winding pack current density
       !! jwdgpro : input real : allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)
-      !! jwptf : input real : winding pack current density (A/m2)
+      !! j_tf_wp : input real : winding pack current density (A/m2)
       use constraint_variables, only: fjprot
-      use tfcoil_variables, only: jwdgpro, jwptf
+      use tfcoil_variables, only: jwdgpro, j_tf_wp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1657,9 +1657,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fjprot * jwdgpro/jwptf
+      tmp_cc =  1.0D0 - fjprot * jwdgpro/j_tf_wp
       tmp_con = jwdgpro
-      tmp_err =  jwptf - jwdgpro
+      tmp_err =  j_tf_wp - jwdgpro
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 

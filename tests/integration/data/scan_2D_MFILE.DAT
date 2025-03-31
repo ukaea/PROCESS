@@ -736,7 +736,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2407E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6445E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6445E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1870E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1644E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0147E+08 OP 
@@ -1899,7 +1899,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2167E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6304E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6304E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1837E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1183E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9375E+08 OP 
@@ -3062,7 +3062,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1927E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6163E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6163E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1765E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.0721E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.8617E+08 OP 
@@ -4225,7 +4225,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1927E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6111E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6111E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1749E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.0724E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.8618E+08 OP 
@@ -5388,7 +5388,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2167E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6210E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6210E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1837E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1183E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9378E+08 OP 
@@ -6551,7 +6551,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2408E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6209E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6209E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1864E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1645E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0154E+08 OP 
@@ -7714,7 +7714,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2408E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6147E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6147E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1844E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1649E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0155E+08 OP 
@@ -8877,7 +8877,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6070E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6070E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1788E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1191E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9381E+08 OP 
@@ -10040,7 +10040,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.5987E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.5987E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1721E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.0729E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.8621E+08 OP 
@@ -11203,7 +11203,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.5958E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.5958E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1712E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.0730E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.8622E+08 OP 
@@ -12366,7 +12366,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6019E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6019E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1777E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1193E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9382E+08 OP 
@@ -13529,7 +13529,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2409E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6095E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6095E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1837E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1650E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0157E+08 OP 
@@ -14692,7 +14692,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0800E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0800E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2409E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6060E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6060E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1826E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1652E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0158E+08 OP 
@@ -15855,7 +15855,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0400E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0400E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2168E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.6012E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.6012E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1771E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1194E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9382E+08 OP 
@@ -17018,7 +17018,7 @@
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.0000E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.0000E+08    
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1928E+01 OP 
- Winding_pack_current_density_(A/m2)_____________________________________ (jwptf)_______________________      2.5964E+07 OP 
+ Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.5964E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1715E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.0730E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.8621E+08 OP 

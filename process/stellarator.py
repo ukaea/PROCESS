@@ -2577,7 +2577,7 @@ class Stellarator:
                 tfcoil_variables.t_crit_nbti,
                 tfcoil_variables.tcritsc,
                 tfcoil_variables.vftf,
-                tfcoil_variables.jwptf,
+                tfcoil_variables.j_tf_wp,
             )  # Get here a temperature margin of 1.5K.
 
         # The operation current density weighted with the global iop/icrit fraction
@@ -2638,7 +2638,7 @@ class Stellarator:
         )
 
         awptf = awp_tor * awp_rad  # [m^2] winding-pack cross sectional area
-        tfcoil_variables.jwptf = (
+        tfcoil_variables.j_tf_wp = (
             coilcurrent * 1.0e6 / awptf
         )  # [A/m^2] winding pack current density
         tfcoil_variables.n_tf_turn = (
@@ -3014,7 +3014,7 @@ class Stellarator:
             tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",jwptf/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
+        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
         # print *, "acstf: ", tfcoil_variables.acstf
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
@@ -3718,8 +3718,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Winding pack current density (A/m2)",
-            "(jwptf)",
-            tfcoil_variables.jwptf,
+            "(j_tf_wp)",
+            tfcoil_variables.j_tf_wp,
         )
         po.ovarre(
             self.outfile,
