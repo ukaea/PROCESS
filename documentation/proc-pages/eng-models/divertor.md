@@ -61,6 +61,30 @@ $$
 A_{\text{div,horizontal}} = \pi \left(r_{\text{outer}}^2 - r_{\text{inner}}^2 \right)
 $$
 
+We define an angle $\theta$ such that:
+
+$$
+\theta = \arctan\left({\frac{\Delta z_{\text{plasma,div}}}{r_{\text{outer}} - r_{\text{inner}}}}\right)
+$$
+
+The diagonal plate area is then given by:
+
+$$
+A_{\text{div,diagonal}} = \frac{A_{\text{div,horizontal}}}{\cos\left({\theta}\right)^2}
+$$
+
+Therefore the total divertor surface area is given by:
+
+$$
+A_{\text{div,vertical}} + A_{\text{div,horizontal}} + A_{\text{div,diagonal}}
+$$
+
+!!! warning "Radiated power area"
+
+    The main assumption of the Peng gaseous divertor model is that the power radiated to the divertor is equally radiated in the divertor box across all three surfaces. This may not truly be the case in reality.
+
+The interactive graph below can be used to investigate how changing the key prameters changes the divertor configuration.
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
