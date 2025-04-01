@@ -53,11 +53,7 @@ module divertor_variables
   real(dp) :: delld
   !! coeff for power distribution along main plasma
 
-  real(dp) :: dendiv
-  !! plasma density at divertor (10**20 /m3)
 
-  real(dp) :: densin
-  !! density at plate (on separatrix) (10**20 /m3)
 
   real(dp) :: divclfr
   !! divertor coolant fraction
@@ -119,8 +115,6 @@ module divertor_variables
   real(dp) :: ksic
   !! power fraction for outboard double-null scrape-off plasma
 
-  real(dp) :: lamp
-  !! power flow width (m)
 
   real(dp) :: minstang
   !! minimum strike angle for heat flux calculation
@@ -131,14 +125,10 @@ module divertor_variables
   real(dp) :: omlarg
   !! power spillage to private flux factor
 
-  real(dp) :: ppdivr
-  !! peak heat load at plate (with radiation) (MW/m2)
 
   real(dp) :: prn1
   !! n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)
 
-  real(dp) :: ptpdiv
-  !! peak temperature at the plate (eV)
 
   real(dp) :: rconl
   !! connection length ratio, outboard side
@@ -158,8 +148,6 @@ module divertor_variables
   real(dp) :: tdiv
   !! temperature at divertor (eV) (input for stellarator only, calculated for tokamaks)
 
-  real(dp) :: tsep
-  !! temperature at the separatrix (eV)
 
   real(dp) :: xparain
   !! parallel heat transport coefficient (m2/s)
@@ -189,8 +177,6 @@ module divertor_variables
     c5div = 0.7D0
     c6div = 0.0D0
     delld = 1.0D0
-    dendiv = 0.0D0
-    densin = 0.0D0
     divclfr = 0.3D0
     divdens = 1.0D4
     divdum = 0
@@ -208,20 +194,16 @@ module divertor_variables
     i_hldiv = 0
     hldivlim = 5.0D0
     ksic = 0.8D0
-    lamp = 0.0D0
     minstang = 0.0D0
     omegan = 1.0D0
     omlarg = 0.0D0
-    ppdivr = 0.0D0
     prn1 = 0.285D0
-    ptpdiv = 0.0D0
     rconl = 0.0D0
     rlclolcn = 0.0D0
     rlenmax = 0.5D0
     rsrd = 0.0D0
     tconl = 0.0D0
     tdiv = 2.0D0
-    tsep = 0.0D0
     xparain = 2.1D3
     xpertin = 2.0D0
     zeffdiv = 1.0D0
