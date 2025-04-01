@@ -76,7 +76,19 @@ $$
 Therefore the total divertor surface area is given by:
 
 $$
-A_{\text{div,vertical}} + A_{\text{div,horizontal}} + A_{\text{div,diagonal}}
+A_{\text{div}} = \left(A_{\text{div,vertical}} + A_{\text{div,horizontal}} + A_{\text{div,diagonal}}\right)
+$$
+
+If a double null machine is set up with `i_single_null = 0` then the total divertor area is simply:
+
+$$
+A_{\text{div}} = 2 \times \left(A_{\text{div,vertical}} + A_{\text{div,horizontal}} + A_{\text{div,diagonal}}\right)
+$$
+
+The divertor heat load is then found as:
+
+$$
+\mathtt{hldiv} = \frac{\mathtt{pdivt}}{A_{\text{div}}}
 $$
 
 !!! warning "Radiated power area"
