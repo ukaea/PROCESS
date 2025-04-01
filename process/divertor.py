@@ -74,6 +74,7 @@ class Divertor:
         pdivt: float,
         output: bool,
         i_single_null: int,
+        dz_divertor: float,
     ) -> float:
         """Tight aspect ratio tokamak divertor model
         author: P J Knight, CCFE, Culham Science Centre
@@ -137,11 +138,11 @@ class Divertor:
             eh.fdiags[0] = dz_xpoint_divertor
             eh.report_error(22)
 
-        theta = math.atan(dz_xpoint_divertor / (r2 - r1))
+        theta = math.atan(dz_divertor / (r2 - r1))
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * dz_xpoint_divertor
+        a1 = 2.0e0 * constants.pi * r1 * dz_divertor
 
         #  Horizontal plate area
 

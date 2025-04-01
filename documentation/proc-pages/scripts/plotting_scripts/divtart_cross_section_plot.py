@@ -17,6 +17,9 @@ first_wall_gap_inboard = Slider(
 plasma_divertor_gap = Slider(
     start=0.01, end=1.0, value=1.0, step=0.01, title="Plasma to Divertor Gap"
 )
+divertor_height = Slider(
+    start=0.01, end=1.5, value=1.0, step=0.01, title="Divertor vertical height"
+)
 
 output_file("divtart_divertor.html")
 x = np.linspace(-np.pi, np.pi, 256)
@@ -99,8 +102,8 @@ divertor_triangle = plot.patch(
     ],
     [
         kappa.value * a.value + plasma_divertor_gap.value,
-        kappa.value * a.value + 2 * plasma_divertor_gap.value,
-        kappa.value * a.value + 2 * plasma_divertor_gap.value,
+        kappa.value * a.value + plasma_divertor_gap.value + divertor_height.value,
+        kappa.value * a.value + plasma_divertor_gap.value + divertor_height.value,
     ],
     fill_color="green",
     fill_alpha=0.6,
@@ -123,6 +126,7 @@ callback = CustomJS(
         "hline": hline,
         "first_wall_gap": first_wall_gap_inboard,
         "plasma_divertor_gap": plasma_divertor_gap,
+        "divertor_height": divertor_height,
         "left_rect": left_rect,
         "divertor_triangle": divertor_triangle,
     },
@@ -134,6 +138,7 @@ callback = CustomJS(
     const S = square_value;
     const F = first_wall_gap.value;
     const P = plasma_divertor_gap.value;
+    const H = divertor_height.value;
     const x = source.data['linspace'];
     const R = source.data['x'];
     const Z = source.data['y'];
@@ -153,8 +158,8 @@ callback = CustomJS(
     ];
     divertor_triangle.data_source.data['y'] = [
         K*B + P,
-        K*B + P*2,
-        K*B + P*2
+        K*B + P + H,
+        K*B + P + H
     ];
     source.change.emit();
     divertor_triangle.data_source.change.emit();
@@ -167,9 +172,18 @@ delta.js_on_change("value", callback)
 kappa.js_on_change("value", callback)
 first_wall_gap_inboard.js_on_change("value", callback)
 plasma_divertor_gap.js_on_change("value", callback)
-
+divertor_height.js_on_change("value", callback)
 # Save the plot as HTML
 save(
-    column(plot, r0, a, delta, kappa, first_wall_gap_inboard, plasma_divertor_gap),
+    column(
+        plot,
+        r0,
+        a,
+        delta,
+        kappa,
+        first_wall_gap_inboard,
+        plasma_divertor_gap,
+        divertor_height,
+    ),
     filename="./divtart_divertor.html",
 )
