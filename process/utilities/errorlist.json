@@ -248,7 +248,7 @@
     {
       "no": 48,
       "level": 3,
-      "message": "LOADXC: Do not use thkcas as an iteration variable if istell=1"
+      "message": "LOADXC: Do not use dr_tf_nose_case as an iteration variable if istell=1"
     },
     {
       "no": 49,
@@ -263,7 +263,7 @@
     {
       "no": 51,
       "level": 3,
-      "message": "LOADXC: Do not use tftort as an iteration variable if irfp=0"
+      "message": "LOADXC: Do not use dx_tf_inboard_out_toroidal as an iteration variable if irfp=0"
     },
     {
       "no": 52,
@@ -1373,7 +1373,7 @@
     {
       "no": 273,
       "level": 3,
-      "message": "[tfcoil]: tmpcry should be lower than tftmp"
+      "message": "[tfcoil]: temp_tf_cryo should be lower than tftmp"
     },
     {
       "no": 274,

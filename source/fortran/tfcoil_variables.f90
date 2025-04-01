@@ -35,7 +35,7 @@ module tfcoil_variables
   real(dp) :: insulation_area
   !! single turn insulation area (m2)
 
-  real(dp) :: aiwp
+  real(dp) :: a_tf_coil_wp_turn_insulation
   !! winding pack turn insulation area per coil (m2)
 
   real(dp) :: sig_tf_case_max
@@ -64,7 +64,7 @@ module tfcoil_variables
   !! upper critical field (T) for Nb3Sn superconductor at zero temperature and
   !! strain (`i_tf_sc_mat=4, =bc20m`)
 
-  real(dp) :: bmaxtf
+  real(dp) :: b_tf_inboard_peak
   !! mean peak field at TF coil (T)
 
   real(dp) :: bmaxtfrp
@@ -82,14 +82,14 @@ module tfcoil_variables
   logical :: casthi_is_fraction
   !! logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)
 
-  real(dp) :: casths
+  real(dp) :: dx_tf_side_case
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
-  !! inboard TF coil sidewall case thickness as a fraction of tftort
+  !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
-  !! logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)
+  !! logical switch to make dx_tf_side_case a fraction of TF coil thickness (`casths_fraction`)
 
   real(dp) :: t_conductor
   !! Conductor (cable + steel conduit) area averaged dimension [m]
@@ -322,7 +322,7 @@ module tfcoil_variables
   real(dp) :: jwdgpro
   !! allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)
 
-  real(dp) :: jwptf
+  real(dp) :: j_tf_wp
   !! winding pack engineering current density (A/m2)
 
   real(dp) :: oacdcp
@@ -378,7 +378,7 @@ module tfcoil_variables
   real(dp) :: poisson_cond_trans
   !! SC TF coil conductor Poisson's ratio in the transverse-transverse direction
 
-  real(dp) :: rbmax
+  real(dp) :: r_b_tf_inboard_peak
   !! Radius of maximum TF B-field (m)
 
   real(dp) :: res_tf_leg
@@ -388,7 +388,7 @@ module tfcoil_variables
   !! Minimal distance between two toroidal coils. (m)
 
   real(dp) :: ftoroidalgap
-  !! F-value for minimum tftort (`constraint equation 82`)
+  !! F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 
   real(dp) :: ripmax
   !! aximum allowable toroidal field ripple amplitude at plasma edge (%)
@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: tfareain
+  real(dp) :: a_tf_coil_inboard
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus
@@ -526,7 +526,7 @@ module tfcoil_variables
   real(dp) :: tficrn
   !! TF coil half-width - inner dr_bore (m)
 
-  real(dp) :: tfind
+  real(dp) :: ind_tf_coil
   !! TF coil inductance (H)
 
   real(dp) :: tfinsgap
@@ -601,7 +601,7 @@ module tfcoil_variables
   real(dp) :: tftmp
   !! peak helium coolant temperature in TF coils and PF coils (K)
 
-  real(dp) :: tftort
+  real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
   real(dp) :: thicndut
@@ -610,7 +610,7 @@ module tfcoil_variables
   real(dp) :: layer_ins
   !! Additional insulation thickness between layers (m)
 
-  real(dp) :: thkcas
+  real(dp) :: dr_tf_nose_case
   !! inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
   !! (calculated for stellarators)
 
@@ -650,7 +650,7 @@ module tfcoil_variables
   real(dp) :: croco_quench_temperature
   !! CroCo strand: Actual temp reached during a quench (K)
 
-  real(dp) :: tmpcry
+  real(dp) :: temp_tf_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
   real(dp) :: n_tf_turn
@@ -702,13 +702,13 @@ module tfcoil_variables
   real(dp) :: whtconsc
   !! superconductor mass in TF coil cable (kg/coil)
 
-  real(dp) :: whtconsh
+  real(dp) :: m_tf_turn_steel_conduit
   !! steel conduit mass in TF coil conductor (kg/coil)
 
   real(dp) :: whtgw
   !! mass of ground-wall insulation layer per coil (kg/coil)
 
-  real(dp) :: whttf
+  real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
   real(dp) :: wwp1
@@ -845,7 +845,7 @@ module tfcoil_variables
     acond = 0.0D0
     acstf = 0.0D0
     insulation_area = 0.0D0
-    aiwp = 0.0D0
+    a_tf_coil_wp_turn_insulation = 0.0D0
     sig_tf_case_max = 6.0D8
     sig_tf_wp_max = 6.0D8
     a_tf_leg_outboard = 0.0D0
@@ -853,13 +853,13 @@ module tfcoil_variables
     avwp = 0.0D0
     awphec = 0.0D0
     bcritsc = 24.0D0
-    bmaxtf = 0.0D0
+    b_tf_inboard_peak = 0.0D0
     bmaxtfrp = 0.0D0
     casestr = 0.0D0
     casthi = 0.0D0
     casthi_fraction = 0.05D0
     casthi_is_fraction = .false.
-    casths = 0.0D0
+    dx_tf_side_case = 0.0D0
     casths_fraction = 0.06D0
     t_conductor = 0.0D0
     t_cable_tf = 0.0D0
@@ -913,7 +913,7 @@ module tfcoil_variables
       865652122.9071957D0/)
     jwdgcrt = 0.0D0
     jwdgpro = 0.0D0
-    jwptf = 0.0D0
+    j_tf_wp = 0.0D0
     oacdcp = 0.0D0
     eyoung_ins = 1.0D8
     eyoung_steel = 2.05D11
@@ -928,7 +928,7 @@ module tfcoil_variables
     poisson_ins = 0.34D0
     poisson_cond_axial = 0.3
     poisson_cond_trans = 0.3
-    rbmax = 0.0D0
+    r_b_tf_inboard_peak = 0.0D0
     res_tf_leg = 0.0D0
     toroidalgap = 1.0D0 ![m]
     ftoroidalgap = 1.0D0
@@ -955,7 +955,7 @@ module tfcoil_variables
     time1 = 0D0
     tcritsc = 16.0D0
     tdmptf = 10.0D0
-    tfareain = 0.0D0
+    a_tf_coil_inboard = 0.0D0
     len_tf_bus = 300.0D0
     m_tf_bus = 0.0D0
     tfckw = 0.0D0
@@ -964,7 +964,7 @@ module tfcoil_variables
     tfjtsmw = 0.0D0
     tfcryoarea = 0.0D0
     tficrn = 0.0D0
-    tfind = 0.0D0
+    ind_tf_coil = 0.0D0
     tfinsgap = 0.010D0
     tflegmw = 0.0D0
     rho_cp = 0.0D0
@@ -984,10 +984,10 @@ module tfcoil_variables
     tfsai = 0.0D0
     tfsao = 0.0D0
     tftmp = 4.5D0
-    tftort = 1.0D0
+    dx_tf_inboard_out_toroidal = 1.0D0
     thicndut = 8.0D-4
     layer_ins = 0.0D0
-    thkcas = 0.3D0
+    dr_tf_nose_case = 0.3D0
     dr_tf_wp = 0.0D0
     thwcndut = 8.0D-3
     tinstf = 0.018D0
@@ -999,7 +999,7 @@ module tfcoil_variables
     tmaxpro = 150.0D0
     tmax_croco = 200.0D0
     croco_quench_temperature = 0D0
-    tmpcry = 4.5D0
+    temp_tf_cryo = 4.5D0
     n_tf_turn = 0.0D0
     vdalw = 20.0D0
     vforce = 0.0D0
@@ -1015,9 +1015,9 @@ module tfcoil_variables
     whtconal = 0.0D0
     whtconin = 0.0D0
     whtconsc = 0.0D0
-    whtconsh = 0.0D0
+    m_tf_turn_steel_conduit = 0.0D0
     whtgw = 0.0D0
-    whttf = 0.0D0
+    m_tf_coils_total = 0.0D0
     wwp1 = 0.0D0
     wwp2 = 0.0D0
     dthet = 0.0D0

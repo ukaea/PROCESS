@@ -60,7 +60,7 @@ class Structure:
             fwbsv.whtshld,
             divv.divmas,
             total_weight_pf,
-            tfv.whttf,
+            tfv.m_tf_coils_total,
             fwbsv.m_fw_total,
             fwbsv.m_blkt_total,
             fwbsv.m_fw_blkt_div_coolant_total,

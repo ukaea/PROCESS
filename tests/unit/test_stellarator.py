@@ -694,7 +694,7 @@ class StstrcParam(NamedTuple):
 
     gsmass: Any = None
 
-    whttf: Any = None
+    m_tf_coils_total: Any = None
 
     tcritsc: Any = None
 
@@ -702,7 +702,7 @@ class StstrcParam(NamedTuple):
 
     vtfskv: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     stella_config_coilsurface: Any = None
 
@@ -736,11 +736,11 @@ class StstrcParam(NamedTuple):
             coldmass=0,
             fncmass=0,
             gsmass=0,
-            whttf=5204872.8206625767,
+            m_tf_coils_total=5204872.8206625767,
             tcritsc=16,
             estotftgj=132.55990646265246,
             vtfskv=4.3242392290600487,
-            tftort=0.67648706726464258,
+            dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
             f_n=1,
@@ -760,11 +760,11 @@ class StstrcParam(NamedTuple):
             coldmass=10087177.087209985,
             fncmass=0,
             gsmass=0,
-            whttf=5204872.8206625767,
+            m_tf_coils_total=5204872.8206625767,
             tcritsc=16,
             estotftgj=132.55990646265246,
             vtfskv=4.3242392290600487,
-            tftort=0.67648706726464258,
+            dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
             f_n=1,
@@ -805,7 +805,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(structure_variables, "gsmass", ststrcparam.gsmass)
 
-    monkeypatch.setattr(tfcoil_variables, "whttf", ststrcparam.whttf)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coils_total", ststrcparam.m_tf_coils_total
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tcritsc", ststrcparam.tcritsc)
 
@@ -813,7 +815,11 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(tfcoil_variables, "vtfskv", ststrcparam.vtfskv)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", ststrcparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        ststrcparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(
         stellarator_configuration,

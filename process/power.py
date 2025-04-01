@@ -827,11 +827,11 @@ class Power:
             # Use 13% of ideal Carnot efficiency to fit J. Miller estimate
             # Rem SK : This ITER efficiency is very low compare to the Strowbridge curve
             #          any reasons why?
-            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tmpcry (MW)
+            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
             heat_transport_variables.crypmw = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.tmpcry)
-                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
+                * (293.0e0 - tfcoil_variables.temp_tf_cryo)
+                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
                 * heat_transport_variables.helpow
             )
 
@@ -865,7 +865,7 @@ class Power:
         # Calculate cryo cooling requirement at 4.5K (kW)
         tfcoil_variables.cryo_cool_req = (
             heat_transport_variables.helpow
-            * ((293 / tfcoil_variables.tmpcry) - 1)
+            * ((293 / tfcoil_variables.temp_tf_cryo) - 1)
             / ((293 / 4.5) - 1)
             + heat_transport_variables.helpow_cryal
             * ((293 / tfcoil_variables.tcoolin) - 1)
@@ -1004,7 +1004,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (tmpcry & tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & tcoolin) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,
@@ -1013,8 +1013,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Temperature of cryogenic superconducting components (K)",
-            "(tmpcry)",
-            tfcoil_variables.tmpcry,
+            "(temp_tf_cryo)",
+            tfcoil_variables.temp_tf_cryo,
         )
         po.ovarre(
             self.outfile,
@@ -1027,8 +1027,8 @@ class Power:
             self.outfile,
             "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
             "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tmpcry)
-            / (293.0e0 - tfcoil_variables.tmpcry),
+            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
+            / (293.0e0 - tfcoil_variables.temp_tf_cryo),
             "OP ",
         )
         po.ovarre(

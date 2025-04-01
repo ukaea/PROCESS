@@ -61,8 +61,9 @@ def write(models, _outfile):
     # Cryostat build
     models.cryostat.cryostat_output()
 
-    # Toroidal field coil model
-    models.tfcoil.output()
+    # Toroidal field coil resistive model
+    if ft.tfcoil_variables.i_tf_sup != 1:
+        models.resistive_tf_coil.run(output=True)
 
     # Toroidal field coil superconductor model
     if ft.tfcoil_variables.i_tf_sup == 1:
