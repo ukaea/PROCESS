@@ -38,6 +38,7 @@ class TestDivertor:
         dr_fw_plasma_gap_inboard = 0.09595
         dz_xpoint_divertor = 0.5
         pdivt = 7.7197999809272062
+        i_single_null = 0
         monkeypatch.setattr(dv, "i_hldiv", 1)
 
         expected_hldiv = 0.087770426974167357
@@ -50,6 +51,7 @@ class TestDivertor:
             dz_xpoint_divertor,
             pdivt,
             False,
+            i_single_null,
         )
 
         assert hldiv == pytest.approx(expected_hldiv)
