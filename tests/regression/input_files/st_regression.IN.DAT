@@ -837,14 +837,6 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*c1div- c6div = 
-* DESCRIPTION:   Divertor model fitting coefficients
-* JUSTIFICATION: Leaving as default
-
-*delld = 
-* DESCRIPTION:   Coeff for power distribution along main plasma (default = 1.0)
-* JUSTIFICATION: Leaving as default
-
 *divdum = 
 * DESCRIPTION:   switch for divertor Zeff model: (default = 0)
 * =0 calc
@@ -855,28 +847,12 @@ boundu(97) = 1.0
 * DESCRIPTION:   Zeff in the divertor region (if `divdum/=0`) (default =  1.0)
 * JUSTIFICATION: Not yet set
 
-*fdfs = 
-* DESCRIPTION:   Radial gradient ratio (default = 10.0)
-* JUSTIFICATION: Not yet set
-
-*fififi = 
-* DESCRIPTION:   Coefficient for gamdiv (default = 4.0D-3)
-* JUSTIFICATION: Not yet set
-
 *flux_exp = 
 * DESCRIPTION:   The plasma flux expansion in the divertor (default 2; Wade 2020)
 * JUSTIFICATION: Not yet set
 
-*frrp = 
-* DESCRIPTION:   Fraction of radiated power to plate (default = 0.4)
-* JUSTIFICATION: Not yet set
-
 *ksic = 
 * DESCRIPTION:   Power fraction for outboard double-null scrape-off plasma (default = 0.8)
-* JUSTIFICATION: Not yet set
-
-*omegan = 
-* DESCRIPTION:   Pressure ratio (nT)_plasma / (nT)_scrape-off (default = 1.0)
 * JUSTIFICATION: Not yet set
 
 *prn1 = 

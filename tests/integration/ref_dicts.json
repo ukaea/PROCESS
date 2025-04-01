@@ -1178,7 +1178,6 @@
         "len_blkt_inboard_channel_total": 0.0,
         "len_blkt_outboard_channel_total": 0.0,
         "c": "2.99792458e10_rkind",
-        "c1div": 0.45,
         "c21": 0.0,
         "c211": 0.0,
         "c212": 0.0,
@@ -1271,11 +1270,6 @@
         "c245": 0.0,
         "c25": 0.0,
         "c26": 0.0,
-        "c2div": -7.0,
-        "c3div": 0.54,
-        "c4div": -3.6,
-        "c5div": 0.7,
-        "c6div": 0.0,
         "c_": 299792500.0,
         "calpha": null,
         "capcost": 0.0,
@@ -1615,7 +1609,6 @@
         "deflect": 0.0,
         "degrad": 0.01745329251,
         "degree": "pi/180.0D0",
-        "delld": 1.0,
         "delta": null,
         "delta_eta": 0.0,
         "delta_var": null,
@@ -1905,7 +1898,6 @@
         "fcwr": 1.0,
         "fdene": 1.0,
         "f_deuterium": 0.5,
-        "fdfs": 10.0,
         "fdiags": [
             "FLT_DEFAULT",
             "FLT_DEFAULT",
@@ -1940,7 +1932,6 @@
         "fhole": 0.0,
         "fhout": 0.0,
         "fhts": 0.5,
-        "fififi": 0.004,
         "figmer": 0.0,
         "fileprefix": "",
         "fimp": [
@@ -2029,7 +2020,6 @@
         "frholeg": 1.0,
         "frminor": 1.0,
         "frrmax": 1.0,
-        "frrp": 0.4,
         "fseppc": 350000000.0,
         "fstr_wp": 1.0,
         "fstrcase": 1.0,
@@ -3445,7 +3435,6 @@
         "dr_cs": 0.811,
         "f_z_cs_tf_internal": 0.71,
         "om": null,
-        "omegan": 1.0,
         "omlarg": 0.0,
         "one": 1.0,
         "opt_file": 15.0,
@@ -8956,7 +8945,6 @@
         "len_blkt_inboard_channel_total": "Inboard/outboard blanket flow lengths (m)",
         "len_blkt_outboard_channel_total": "Inboard/outboard blanket flow lengths (m)",
         "c": "",
-        "c1div": "fitting coefficient to adjust ptpdiv, ppdiv",
         "c21": "",
         "c211": "",
         "c212": "",
@@ -9049,11 +9037,6 @@
         "c245": "",
         "c25": "",
         "c26": "",
-        "c2div": "fitting coefficient to adjust ptpdiv, ppdiv",
-        "c3div": "fitting coefficient to adjust ptpdiv, ppdiv",
-        "c4div": "fitting coefficient to adjust ptpdiv, ppdiv",
-        "c5div": "fitting coefficient to adjust ptpdiv, ppdiv",
-        "c6div": "fitting coefficient to adjust ptpdiv, ppdiv",
         "c_": "",
         "calpha": "",
         "capcost": "total capital cost including interest (M$)",
@@ -9258,7 +9241,6 @@
         "deflect": "TF coil radial deflection (displacement) radial distribution [m]",
         "degrad": "degrees to radians, = pi/180",
         "degree": "",
-        "delld": "coeff for power distribution along main plasma",
         "delta": "",
         "delta_eta": "",
         "delta_var": "",
@@ -9512,7 +9494,6 @@
         "fcwr": "f-value for conducting wall radius / rminor limit\n (`constraint equation 23`, `iteration variable 104`)",
         "fdene": "f-value for density limit (`constraint equation 5`, `iteration variable 9`)\n (invalid if `ipedestal=3`)",
         "f_deuterium": "deuterium fuel fraction",
-        "fdfs": "radial gradient ratio",
         "fdiags": "",
         "f_ster_div_single": "Solid angle fraction taken by one divertor",
         "fdiva": "divertor area fudge factor (for ITER, Sept 1990)",
@@ -9538,7 +9519,6 @@
         "fhole": "area fraction taken up by other holes (IFE)",
         "fhout": "fraction of power to outboard divertor (for single null)",
         "fhts": "technology adjustment factor for critical current density fit for isumat..=2\n Bi-2212 superconductor, to describe the level of technology assumed (i.e. to\n account for stress, fatigue, radiation, AC losses, joints or manufacturing\n variations; 1.0 would be very optimistic)",
-        "fififi": "coefficient for gamdiv",
         "figmer": "physics figure of merit (= plasma_current<em>aspect</em>*sbar, where `sbar=1`)",
         "fileprefix": "input file prefix",
         "fimp": "",
@@ -9612,7 +9592,6 @@
         "frholeg": "Ouboard legs resistivity enhancement factor. Only used for `itart=1`.",
         "frminor": "f-value for minor radius limit (`constraint equation 21`, `iteration variable 32`)",
         "frrmax": "f-value for maximum IFE repetition rate (`constraint equation 50`, `iteration variable 86`)",
-        "frrp": "fraction of radiated power to plate",
         "fseppc": "Separation force in CS coil pre-compression structure",
         "fstr_wp": "f-value for maxiumum TF coil strain absolute value\n (`constraint equation 88`, `iteration variable 165`)",
         "fstrcase": "f-value for maximum TF coil case Tresca yield criterion\n (`constraint equation 31`, `iteration variable 48`)",
@@ -10195,7 +10174,6 @@
         "dr_cs": "Central solenoid thickness (m) (`iteration variable 16`)",
         "f_z_cs_tf_internal": "Central solenoid height / TF coil internal height",
         "om": "",
-        "omegan": "pressure ratio (nT)_plasma / (nT)_scrape-off",
         "omlarg": "power spillage to private flux factor",
         "one": "",
         "opt_file": "Optimisation information output file number",
@@ -11775,30 +11753,6 @@
             "lb": 0.0,
             "ub": 30.0
         },
-        "c1div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
-        "c2div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
-        "c3div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
-        "c4div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
-        "c5div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
-        "c6div": {
-            "lb": -100.0,
-            "ub": 100.0
-        },
         "cable_helium_fraction": {
             "lb": 0.215,
             "ub": 0.99
@@ -12154,10 +12108,6 @@
         "decomf": {
             "lb": 0.0,
             "ub": 1.0
-        },
-        "delld": {
-            "lb": 0.1,
-            "ub": 2.0
         },
         "dene": {
             "lb": 1e+18,
@@ -12591,10 +12541,6 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "fdfs": {
-            "lb": 0.0,
-            "ub": 20.0
-        },
         "f_ster_div_single": {
             "lb": 0.0,
             "ub": 1.0
@@ -12665,10 +12611,6 @@
         },
         "fhts": {
             "lb": 0.01,
-            "ub": 1.0
-        },
-        "fififi": {
-            "lb": 1e-06,
             "ub": 1.0
         },
         "fiooic": {
@@ -12849,10 +12791,6 @@
         },
         "frrmax": {
             "lb": 1e-06,
-            "ub": 1.0
-        },
-        "frrp": {
-            "lb": 0.0,
             "ub": 1.0
         },
         "fseppc": {
@@ -13798,10 +13736,6 @@
         "f_z_cs_tf_internal": {
             "lb": 0.0,
             "ub": 2.0
-        },
-        "omegan": {
-            "lb": 0.1,
-            "ub": 10.0
         },
         "outgasfactor": {
             "lb": 1e-06,
@@ -17866,13 +17800,6 @@
             "betai",
             "betao",
             "bpsout",
-            "c1div",
-            "c2div",
-            "c3div",
-            "c4div",
-            "c5div",
-            "c6div",
-            "delld",
             "divclfr",
             "divdens",
             "divdum",
@@ -17880,16 +17807,12 @@
             "divmas",
             "divplt",
             "divsur",
-            "fdfs",
             "fdiva",
             "fhout",
-            "fififi",
-            "frrp",
             "hldiv",
             "hldivlim",
             "ksic",
             "minstang",
-            "omegan",
             "omlarg",
             "prn1",
             "rconl",
@@ -20010,12 +19933,6 @@
         "breedmat": "int_variable",
         "bootstrap_current_fraction_max": "real_variable",
         "bt": "real_variable",
-        "c1div": "real_variable",
-        "c2div": "real_variable",
-        "c3div": "real_variable",
-        "c4div": "real_variable",
-        "c5div": "real_variable",
-        "c6div": "real_variable",
         "cable_helium_fraction": "real_variable",
         "casthi": "real_variable",
         "casthi_fraction": "real_variable",
@@ -20111,7 +20028,6 @@
         "declfw": "real_variable",
         "declshld": "real_variable",
         "decomf": "real_variable",
-        "delld": "real_variable",
         "dene": "real_variable",
         "denstl": "real_variable",
         "dhecoil": "real_variable",
@@ -20221,7 +20137,6 @@
         "fcwr": "real_variable",
         "fdene": "real_variable",
         "f_deuterium": "real_variable",
-        "fdfs": "real_variable",
         "f_ster_div_single": "real_variable",
         "fdiva": "real_variable",
         "fdivcol": "real_variable",
@@ -20240,7 +20155,6 @@
         "fhldiv": "real_variable",
         "fhole": "real_variable",
         "fhts": "real_variable",
-        "fififi": "real_variable",
         "fimp": "real_array",
         "fiooic": "real_variable",
         "fipir": "real_variable",
@@ -20286,7 +20200,6 @@
         "frholeg": "real_variable",
         "frminor": "real_variable",
         "frrmax": "real_variable",
-        "frrp": "real_variable",
         "fseppc": "real_variable",
         "fstr_wp": "real_variable",
         "fstrcase": "real_variable",
@@ -20541,7 +20454,6 @@
         "f_a_cs_steel": "real_variable",
         "dr_cs": "real_variable",
         "f_z_cs_tf_internal": "real_variable",
-        "omegan": "real_variable",
         "outgasfactor": "real_variable",
         "outgasindex": "real_variable",
         "temp_blkt_coolant_out": "real_variable",

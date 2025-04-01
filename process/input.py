@@ -236,12 +236,6 @@ INPUT_VARIABLES = {
     "bz_channel_conduct_liq": InputVariable(
         fortran.fwbs_variables, float, range=(1e-06, 1000000.0)
     ),
-    "c1div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
-    "c2div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
-    "c3div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
-    "c4div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
-    "c5div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
-    "c6div": InputVariable(fortran.divertor_variables, float, range=(-100.0, 100.0)),
     "casthi": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "casthi_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "casths": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
@@ -359,7 +353,6 @@ INPUT_VARIABLES = {
     "declfw": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "decomf": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "delld": InputVariable(fortran.divertor_variables, float, range=(0.1, 2.0)),
     "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
     "dhecoil": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "dintrt": InputVariable(fortran.cost_variables, float, range=(0.0, 0.1)),
@@ -590,7 +583,6 @@ INPUT_VARIABLES = {
     "fcupfsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcutfsu": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fdfs": InputVariable(fortran.divertor_variables, float, range=(0.0, 20.0)),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(fortran.divertor_variables, float, range=(0.1, 2.0)),
     "fdivcol": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -607,7 +599,6 @@ INPUT_VARIABLES = {
     "fhldiv": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fhole": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fhts": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1.0)),
-    "fififi": InputVariable(fortran.divertor_variables, float, range=(1e-06, 1.0)),
     "fiooic": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fipir": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fjohc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -683,7 +674,6 @@ INPUT_VARIABLES = {
     "frholeg": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
     "frminor": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "frrmax": InputVariable(fortran.ife_variables, float, range=(1e-06, 1.0)),
-    "frrp": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
     "fseppc": InputVariable(
         fortran.build_variables, float, range=(1000000.0, 1000000000.0)
     ),
@@ -936,7 +926,6 @@ INPUT_VARIABLES = {
     "f_z_cs_tf_internal": InputVariable(
         fortran.pfcoil_variables, float, range=(0.0, 2.0)
     ),
-    "omegan": InputVariable(fortran.divertor_variables, float, range=(0.1, 10.0)),
     "outgasfactor": InputVariable(
         fortran.vacuum_variables, float, range=(1e-06, 1000.0)
     ),

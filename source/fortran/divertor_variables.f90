@@ -32,26 +32,7 @@ module divertor_variables
   real(dp) :: bpsout
   !! reference B_p at outboard divertor strike point (T)
 
-  real(dp) :: c1div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
 
-  real(dp) :: c2div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
-
-  real(dp) :: c3div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
-
-  real(dp) :: c4div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
-
-  real(dp) :: c5div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
-
-  real(dp) :: c6div
-  !! fitting coefficient to adjust ptpdiv, ppdiv
-
-  real(dp) :: delld
-  !! coeff for power distribution along main plasma
 
 
 
@@ -80,24 +61,14 @@ module divertor_variables
   real(dp) :: divsur
   !! divertor surface area (m2)
 
-  real(dp) :: fdfs
-  !! radial gradient ratio
-
   real(dp) :: fdiva
   !! divertor area fudge factor (for ITER, Sept 1990)
 
   real(dp) :: fhout
   !! fraction of power to outboard divertor (for single null)
 
-  real(dp) :: fififi
-  !! coefficient for gamdiv
-  !#TODO: what the hell is this variable name...
-
   real(dp) :: flux_exp
   !! The plasma flux expansion in the divertor (default 2; Wade 2020)
-
-  real(dp) :: frrp
-  !! fraction of radiated power to plate
 
   real(dp) :: hldiv
   !! divertor heat load (MW/m2)
@@ -118,9 +89,6 @@ module divertor_variables
 
   real(dp) :: minstang
   !! minimum strike angle for heat flux calculation
-
-  real(dp) :: omegan
-  !! pressure ratio (nT)_plasma / (nT)_scrape-off
 
   real(dp) :: omlarg
   !! power spillage to private flux factor
@@ -170,13 +138,6 @@ module divertor_variables
     betai = 1.0D0
     betao = 1.0D0
     bpsout = 0.60D0
-    c1div = 0.45D0
-    c2div = -7.0D0
-    c3div = 0.54D0
-    c4div = -3.6D0
-    c5div = 0.7D0
-    c6div = 0.0D0
-    delld = 1.0D0
     divclfr = 0.3D0
     divdens = 1.0D4
     divdum = 0
@@ -184,18 +145,14 @@ module divertor_variables
     divmas = 0.0D0
     divplt = 0.035D0
     divsur = 0.0D0
-    fdfs = 10.0D0
     fdiva = 1.11D0
     fhout = 0.0D0
-    fififi = 4.0D-3
     flux_exp = 2.0D0
-    frrp = 0.4D0
     hldiv = 0.0D0
     i_hldiv = 0
     hldivlim = 5.0D0
     ksic = 0.8D0
     minstang = 0.0D0
-    omegan = 1.0D0
     omlarg = 0.0D0
     prn1 = 0.285D0
     rconl = 0.0D0
