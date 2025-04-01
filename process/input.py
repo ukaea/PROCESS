@@ -228,7 +228,6 @@ INPUT_VARIABLES = {
     "bootstrap_current_fraction_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
-    "bpsout": InputVariable(fortran.divertor_variables, float, range=(0.0, 10.0)),
     "breeder_f": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "breeder_multiplier": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
@@ -831,7 +830,6 @@ INPUT_VARIABLES = {
     ),
     "kappa": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
     "kappa95": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
-    "ksic": InputVariable(fortran.divertor_variables, float, range=(0.0, 2.0)),
     "layer_ins": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "ld_ratio_cst": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 5.0)),
     "len_fw_channel": InputVariable(
@@ -1418,9 +1416,7 @@ INPUT_VARIABLES = {
     ),
     "wsvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
-    "xparain": InputVariable(fortran.divertor_variables, float, range=(0.01, 10000.0)),
     "xpertin": InputVariable(fortran.divertor_variables, float, range=(0.0, 10.0)),
-    "zeffdiv": InputVariable(fortran.divertor_variables, float, range=(0.01, 100.0)),
     "zeffmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
     "blktmodel": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "blkttype": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
@@ -1433,7 +1429,6 @@ INPUT_VARIABLES = {
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
-    "divdum": InputVariable(fortran.divertor_variables, int, choices=[0, 1]),
     "dwell_pump": InputVariable(fortran.vacuum_variables, int, choices=[0, 1, 2]),
     "i_fw_blkt_vv_shape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "hcdportsize": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),

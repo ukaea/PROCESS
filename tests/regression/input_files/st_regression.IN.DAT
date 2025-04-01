@@ -837,22 +837,8 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*divdum = 
-* DESCRIPTION:   switch for divertor Zeff model: (default = 0)
-* =0 calc
-* =1 input
-* JUSTIFICATION: Not yet set
-
-*zeffdiv = 
-* DESCRIPTION:   Zeff in the divertor region (if `divdum/=0`) (default =  1.0)
-* JUSTIFICATION: Not yet set
-
 *flux_exp = 
 * DESCRIPTION:   The plasma flux expansion in the divertor (default 2; Wade 2020)
-* JUSTIFICATION: Not yet set
-
-*ksic = 
-* DESCRIPTION:   Power fraction for outboard double-null scrape-off plasma (default = 0.8)
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
@@ -861,10 +847,6 @@ boundu(97) = 1.0
 
 *tdiv = 
 * DESCRIPTION:   Plasma temperature at divertor (eV) (default =  2.0)
-* JUSTIFICATION: Not yet set
-
-*xparain = 
-* DESCRIPTION:   Parallel heat transport coefficient (m2/s) (default =  2.1D3)
 * JUSTIFICATION: Not yet set
 
 *xpertin = 

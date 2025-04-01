@@ -110,10 +110,8 @@ pheat    = 0.0          *Heating power not used for current drive (MW)
 *----------------Divertor Variables----------------*
 
 anginc   = 0.035        *Angle of incidence of field line on plate (rad)
-divdum   = 1            *Switch for divertor zeff model (1: input)
 tdiv     = 3.0          *Temperature at divertor (eV)
 xpertin  = 1.5          *Perpendicular heat transport coefficient (m2/s)
-zeffdiv  = 3.0          *Zeff in the divertor region (if divdum /= 0)
 
 *------------------FWBs Variables------------------*
 

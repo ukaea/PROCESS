@@ -165,11 +165,9 @@ pheat    = 0. * heating power not used for current drive (MW) (`iteration variab
 *----------------Divertor Variables----------------*
 
 anginc   = 0.035 * angle of incidence of field line on plate (rad)
-divdum   = 1 * switch for divertor Zeff model;
 hldivlim = 15 * heat load limit (MW/m2)
 tdiv     = 3. * temperature at divertor (eV) (input for stellarator only; calculated for tokamaks)
 xpertin  = 1.5 * perpendicular heat transport coefficient (m2/s)
-zeffdiv  = 3. * Zeff in the divertor region (if `divdum/=0`)
 
 *------------------Error Handling------------------*
 
