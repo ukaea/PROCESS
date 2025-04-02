@@ -3331,7 +3331,7 @@
         "n_blkt_outboard_modules_poloidal": 8.0,
         "n_blkt_inboard_modules_toroidal": 32.0,
         "n_blkt_outboard_modules_toroidal": 48.0,
-        "nbshield": 0.5,
+        "dx_beam_shield": 0.5,
         "f_p_beam_shine_through": 0.0,
         "f_p_beam_shine_through_max": 0.001,
         "p_beam_shine_through_mw": 0.0,
@@ -10069,7 +10069,7 @@
         "n_blkt_outboard_modules_poloidal": "number of outboard blanket modules in poloidal direction (`i_thermal_electric_conversion>1`)",
         "n_blkt_inboard_modules_toroidal": "number of inboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)",
         "n_blkt_outboard_modules_toroidal": "number of outboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)",
-        "nbshield": "neutral beam duct shielding thickness (m)",
+        "dx_beam_shield": "neutral beam duct shielding thickness (m)",
         "f_p_beam_shine_through": "neutral beam shine-through fraction",
         "f_p_beam_shine_through_max": "maximum neutral beam shine-through fraction (`constraint equation 59`)",
         "p_beam_shine_through_mw": "neutral beam shine-through power",
@@ -13627,7 +13627,7 @@
             "lb": 8,
             "ub": 96
         },
-        "nbshield": {
+        "dx_beam_shield": {
             "lb": 0.01,
             "ub": 0.5
         },
@@ -17650,7 +17650,7 @@
             "i_hcd_secondary",
             "irfcd",
             "f_p_beam_shine_through",
-            "nbshield",
+            "dx_beam_shield",
             "pheat",
             "pheatfix",
             "pinjalw",
@@ -20354,7 +20354,7 @@
         "n_blkt_outboard_modules_poloidal": "int_variable",
         "n_blkt_inboard_modules_toroidal": "int_variable",
         "n_blkt_outboard_modules_toroidal": "int_variable",
-        "nbshield": "real_variable",
+        "dx_beam_shield": "real_variable",
         "f_p_beam_shine_through_max": "real_variable",
         "n_pf_coils_in_group": "int_array",
         "neped": "real_variable",

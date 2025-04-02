@@ -905,7 +905,7 @@ INPUT_VARIABLES = {
     "nbi_sys_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "nbshield": InputVariable(
+    "dx_beam_shield": InputVariable(
         fortran.current_drive_variables, float, range=(0.01, 0.5)
     ),
     "f_p_beam_shine_through_max": InputVariable(

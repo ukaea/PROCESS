@@ -634,7 +634,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
             n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
-            w=w + nbshield,
+            w=w + dx_beam_shield,
             facecolor=NBSHIELD_COLOUR[colour_scheme - 1],
         )
         # Overlay TF coil segments
@@ -653,7 +653,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
-        c = beamwd + 2 * nbshield
+        c = beamwd + 2 * dx_beam_shield
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
         # Coordinates of the inner and outer edges of the beam at its tangency point
@@ -666,12 +666,12 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         youter = router * np.sin(beta)
         # Corner of TF coils
         xcorner = r4
-        ycorner = w + nbshield
+        ycorner = w + dx_beam_shield
         axis.plot(
             [xinner, xcorner], [yinner, ycorner], linestyle="dotted", color="black"
         )
-        x = xcorner + c * np.cos(beta) - nbshield * np.cos(beta)
-        y = ycorner + c * np.sin(beta) - nbshield * np.sin(beta)
+        x = xcorner + c * np.cos(beta) - dx_beam_shield * np.cos(beta)
+        y = ycorner + c * np.sin(beta) - dx_beam_shield * np.sin(beta)
         axis.plot([xouter, x], [youter, y], linestyle="dotted", color="black")
 
     # Ranges
@@ -3804,7 +3804,7 @@ def main(args=None):
         # To be re-inergrated to resistives when in-plane stresses is integrated
         casthi = m_file.data["casthi"].get_scan(scan)
 
-    global nbshield
+    global dx_beam_shield
     global rtanbeam
     global rtanmax
     global beamwd
@@ -3813,12 +3813,12 @@ def main(args=None):
     i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
 
     if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
-        nbshield = m_file.data["nbshield"].get_scan(scan)
+        dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
         rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
         rtanmax = m_file.data["rtanmax"].get_scan(scan)
         beamwd = m_file.data["beamwd"].get_scan(scan)
     else:
-        nbshield = rtanbeam = rtanmax = beamwd = 0.0
+        dx_beam_shield = rtanbeam = rtanmax = beamwd = 0.0
 
     # Pedestal profile parameters
     global ipedestal

@@ -68,7 +68,10 @@ class Build:
             b = 1e10
 
         #  Width of beam duct, including shielding on both sides (m)
-        c = current_drive_variables.beamwd + 2.0e0 * current_drive_variables.nbshield
+        c = (
+            current_drive_variables.beamwd
+            + 2.0e0 * current_drive_variables.dx_beam_shield
+        )
 
         #  Major radius of inner edge of outboard TF coil (m)
         d = build_variables.r_tf_outboard_mid - 0.5e0 * b
