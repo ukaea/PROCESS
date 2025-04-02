@@ -1772,7 +1772,7 @@
         "etaiso": 0.85,
         "etalh": 0.3,
         "etali": 0.4,
-        "etanbi": 0.3,
+        "eta_beam_injector_wall_plug": 0.3,
         "etapsu": 0.9,
         "etapump": 0.8,
         "etatf": 0.9,
@@ -9376,7 +9376,7 @@
         "etaiso": "isentropic efficiency of FW and blanket coolant pumps",
         "etalh": "lower hybrid wall plug to injector efficiency",
         "etali": "IFE lithium pump wall plug efficiency (`ifetyp=4`)",
-        "etanbi": "neutral beam wall plug to injector efficiency",
+        "eta_beam_injector_wall_plug": "neutral beam wall plug to injector efficiency",
         "etapsu": "Efficiency of transfer of PF stored energy into or out of storage.",
         "etapump": "centrepost coolant pump efficiency",
         "etatf": "AC to resistive power conversion for TF coils",
@@ -12251,7 +12251,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "etanbi": {
+        "eta_beam_injector_wall_plug": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -17634,7 +17634,7 @@
             "etacdfix",
             "etaech",
             "etalh",
-            "etanbi",
+            "eta_beam_injector_wall_plug",
             "fpion",
             "p_beam_injected",
             "pscf_scene",
@@ -19998,7 +19998,7 @@
         "etaiso": "real_variable",
         "etalh": "real_variable",
         "etali": "real_variable",
-        "etanbi": "real_variable",
+        "eta_beam_injector_wall_plug": "real_variable",
         "etapsu": "real_variable",
         "etapump": "real_variable",
         "etatf": "real_variable",

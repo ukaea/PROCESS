@@ -465,7 +465,9 @@ INPUT_VARIABLES = {
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "etalh": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
     "etali": InputVariable(fortran.ife_variables, float, range=(0.0, 1.0)),
-    "etanbi": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "eta_beam_injector_wall_plug": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "etapsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),

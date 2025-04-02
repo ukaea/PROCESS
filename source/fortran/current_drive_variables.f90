@@ -111,7 +111,7 @@ module current_drive_variables
   real(dp) :: etalh
   !! lower hybrid wall plug to injector efficiency
 
-  real(dp) :: etanbi
+  real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
 
   real(dp) :: fpion

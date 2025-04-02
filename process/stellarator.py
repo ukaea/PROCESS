@@ -4973,7 +4973,9 @@ class Stellarator:
             current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
                 1 - fpion
             )
-            current_drive_variables.etacd = current_drive_variables.etanbi
+            current_drive_variables.etacd = (
+                current_drive_variables.eta_beam_injector_wall_plug
+            )
             current_drive_variables.pinjwp = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd

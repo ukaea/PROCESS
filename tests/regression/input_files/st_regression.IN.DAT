@@ -2744,7 +2744,7 @@ feffcd = 1.0
 * DESCRIPTION:   Number of NB decay lengths to plasma centre
 * JUSTIFICATION: Not used as no NBI used
 
-*etanbi = 
+*eta_beam_injector_wall_plug = 
 * DESCRIPTION:   NBI wall plug to injector efficiency
 * JUSTIFICATION: Not used as no NBI used
 

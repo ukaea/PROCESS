@@ -343,10 +343,12 @@ class CurrentDrive:
                 pinjemwfix = pinjmwfix * (1.0e0 - current_drive_variables.fpion)
 
                 current_drive_variables.pwpnb = (
-                    pnbitotfix / current_drive_variables.etanbi
+                    pnbitotfix / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
                 heat_transport_variables.pinjwpfix = current_drive_variables.pwpnb
-                current_drive_variables.etacdfix = current_drive_variables.etanbi
+                current_drive_variables.etacdfix = (
+                    current_drive_variables.eta_beam_injector_wall_plug
+                )
                 gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
                 gamcdfix = gamnb
                 beam_current_fix = (
@@ -666,10 +668,12 @@ class CurrentDrive:
 
                 current_drive_variables.pwpnb = (
                     current_drive_variables.p_beam_injected
-                    / current_drive_variables.etanbi
+                    / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
                 pinjwp1 = current_drive_variables.pwpnb
-                current_drive_variables.etacd = current_drive_variables.etanbi
+                current_drive_variables.etacd = (
+                    current_drive_variables.eta_beam_injector_wall_plug
+                )
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamnb
                 current_drive_variables.beam_current = (
@@ -1083,8 +1087,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Neutral beam wall plug efficiency",
-                "(etanbi)",
-                current_drive_variables.etanbi,
+                "(eta_beam_injector_wall_plug)",
+                current_drive_variables.eta_beam_injector_wall_plug,
             )
             po.ovarre(
                 self.outfile,
