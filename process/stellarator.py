@@ -4960,7 +4960,7 @@ class Stellarator:
             (
                 effnbss,
                 fpion,
-                current_drive_variables.nbshinef,
+                current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
                 1 - current_drive_variables.f_p_beam_orbit_loss
@@ -5067,8 +5067,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam shine-through fraction",
-                    "(nbshinef)",
-                    current_drive_variables.nbshinef,
+                    "(f_p_beam_shine_through)",
+                    current_drive_variables.f_p_beam_shine_through,
                 )
                 po.ovarre(
                     self.outfile,

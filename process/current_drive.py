@@ -122,7 +122,7 @@ class CurrentDrive:
                 (
                     effnbss,
                     current_drive_variables.fpion,
-                    current_drive_variables.nbshinef,
+                    current_drive_variables.f_p_beam_shine_through,
                 ) = self.iternb()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
@@ -141,7 +141,7 @@ class CurrentDrive:
                 (
                     effnbss,
                     current_drive_variables.fpion,
-                    current_drive_variables.nbshinef,
+                    current_drive_variables.f_p_beam_shine_through,
                 ) = self.culnbi()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
@@ -324,11 +324,13 @@ class CurrentDrive:
                     1.0e0
                     - current_drive_variables.f_p_beam_orbit_loss
                     + current_drive_variables.f_p_beam_orbit_loss
-                    * current_drive_variables.nbshinef
+                    * current_drive_variables.f_p_beam_shine_through
                 )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
-                nbshinemwfix = pnbitotfix * current_drive_variables.nbshinef
+                nbshinemwfix = (
+                    pnbitotfix * current_drive_variables.f_p_beam_shine_through
+                )
 
                 # First orbit loss
                 porbitlossmwfix = current_drive_variables.f_p_beam_orbit_loss * (
@@ -413,7 +415,7 @@ class CurrentDrive:
                 (
                     effnbss,
                     current_drive_variables.fpion,
-                    current_drive_variables.nbshinef,
+                    current_drive_variables.f_p_beam_shine_through,
                 ) = self.iternb()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effnbss
@@ -432,7 +434,7 @@ class CurrentDrive:
                 (
                     effnbss,
                     current_drive_variables.fpion,
-                    current_drive_variables.nbshinef,
+                    current_drive_variables.f_p_beam_shine_through,
                 ) = self.culnbi()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.effcd = effnbss
@@ -635,13 +637,13 @@ class CurrentDrive:
                     1.0e0
                     - current_drive_variables.f_p_beam_orbit_loss
                     + current_drive_variables.f_p_beam_orbit_loss
-                    * current_drive_variables.nbshinef
+                    * current_drive_variables.f_p_beam_shine_through
                 )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.p_beam_injected
-                    * current_drive_variables.nbshinef
+                    * current_drive_variables.f_p_beam_shine_through
                 )
 
                 # First orbit loss
@@ -1094,8 +1096,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Beam shine-through fraction",
-                "(nbshinef)",
-                current_drive_variables.nbshinef,
+                "(f_p_beam_shine_through)",
+                current_drive_variables.f_p_beam_shine_through,
                 "OP ",
             )
             po.ovarre(

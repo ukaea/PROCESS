@@ -2378,18 +2378,18 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fnbshinef : input real : f-value for maximum neutral beam shine-through fraction
       !! nbshinefmax : input real :  maximum neutral beam shine-through fraction
-      !! nbshinef : input real :  neutral beam shine-through fraction
+      !! f_p_beam_shine_through : input real :  neutral beam shine-through fraction
       use constraint_variables, only: fnbshinef, nbshinefmax
-      use current_drive_variables, only: nbshinef
+      use current_drive_variables, only: f_p_beam_shine_through
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc = nbshinef/nbshinefmax - 1.0D0 * fnbshinef
+      tmp_cc = nbshinef/nbshinefmax - 1.0D0 * f_p_beam_shine_through
       tmp_con = nbshinefmax * (1.0D0 - tmp_cc)
-      tmp_err = nbshinef * tmp_cc
+      tmp_err = f_p_beam_shine_through * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
    end subroutine constraint_eqn_059
