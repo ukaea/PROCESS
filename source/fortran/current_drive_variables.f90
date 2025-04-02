@@ -208,7 +208,7 @@ module current_drive_variables
   real(dp) :: pinjimw
   !! auxiliary injected power to ions (MW)
 
-  real(dp) :: pinjmw
+  real(dp) :: p_hcd_injected_total_mw
   !! total auxiliary injected power (MW)
 
   real(dp)  :: pinjfixmw

@@ -2274,7 +2274,11 @@ class Physics:
         # Power transported to the divertor by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
-        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
+        pinj = (
+            current_drive_variables.p_hcd_injected_total_mw
+            if physics_variables.ignite == 0
+            else 0.0
+        )
 
         physics_variables.pdivt = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
@@ -2323,7 +2327,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.i_density_limit,
             physics_variables.pdivt,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             divertor_variables.prn1,
             physics_variables.qstar,
@@ -2358,7 +2362,7 @@ class Physics:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
@@ -2590,7 +2594,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
         physics_module.rad_fraction_lcfs = (
             1.0e6 * physics_variables.p_plasma_rad_mw / physics_module.total_loss_power
@@ -2642,7 +2646,7 @@ class Physics:
         bt: float,
         i_density_limit: int,
         pdivt: float,
-        pinjmw: float,
+        p_hcd_injected_total_mw: float,
         plasma_current: float,
         prn1: float,
         qcyl: float,
@@ -2659,7 +2663,7 @@ class Physics:
             bt (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
             pdivt (float): Power flowing to the edge plasma via charged particles (MW).
-            pinjmw (float): Power injected into the plasma (MW).
+            p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
             plasma_current (float): Plasma current (A).
             prn1 (float): Edge density / average plasma density.
             qcyl (float): Equivalent cylindrical safety factor (qstar).
@@ -2738,7 +2742,7 @@ class Physics:
 
             dlimit[3] = 0.0
         else:
-            dlimit[3] = (1.0e20 * np.sqrt(pinjmw / denom)) / prn1
+            dlimit[3] = (1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -2758,7 +2762,7 @@ class Physics:
         dlimit[7] = (
             1.0e20
             * 0.506
-            * (pinjmw**0.396 * (plasma_current / 1.0e6) ** 0.265)
+            * (p_hcd_injected_total_mw**0.396 * (plasma_current / 1.0e6) ** 0.265)
             / (q95**0.323)
         ) / prn1
 
@@ -4723,7 +4727,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
         po.ovarre(
             self.outfile,
@@ -5989,7 +5993,7 @@ class Physics:
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
+                current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
@@ -6786,7 +6790,7 @@ class Physics:
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
+                current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
@@ -6812,7 +6816,8 @@ class Physics:
             # Take into account whether injected power is included in tau_e calculation (i.e. whether device is ignited)
             if physics_variables.ignite == 0:
                 fhz_value -= (
-                    current_drive_variables.pinjmw / physics_variables.vol_plasma
+                    current_drive_variables.p_hcd_injected_total_mw
+                    / physics_variables.vol_plasma
                 )
 
             # Include the radiation power if requested
@@ -6841,7 +6846,7 @@ class Physics:
         kappa: float,
         kappa95: float,
         non_alpha_charged_power: float,
-        pinjmw: float,
+        p_hcd_injected_total_mw: float,
         plasma_current: float,
         pden_plasma_core_rad_mw: float,
         rmajor: float,
@@ -6870,7 +6875,7 @@ class Physics:
         :param kappa: Plasma elongation
         :param kappa95: Plasma elongation at 95% surface
         :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
-        :param pinjmw: Auxiliary power to ions and electrons (MW)
+        :param p_hcd_injected_total_mw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
         :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
         :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
@@ -6903,7 +6908,7 @@ class Physics:
 
         # If the device is not ignited, add the injected auxiliary power
         if ignite == 0:
-            p_plasma_loss_mw = p_plasma_loss_mw + pinjmw
+            p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
 
         # Include the radiation as a loss term if requested
         if physics_variables.i_rad_loss == 0:

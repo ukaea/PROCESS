@@ -141,7 +141,7 @@ var_dicts = {
         description="Toroidal field lower bound",
         units="A",
     ),
-    "pinjmw": VariableMetadata(
+    "p_hcd_injected_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
     "hldivlim": VariableMetadata(

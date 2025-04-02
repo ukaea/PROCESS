@@ -3094,7 +3094,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    pinjie = mfile_data.data["pinjmw"].get_scan(scan)
+    pinjie = mfile_data.data["p_hcd_injected_total_mw"].get_scan(scan)
     pdivt = mfile_data.data["pdivt"].get_scan(scan)
     pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
 

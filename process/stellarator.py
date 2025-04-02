@@ -4401,7 +4401,7 @@ class Stellarator:
 
         if physics_variables.ignite == 0:
             powht = (
-                powht + current_drive_variables.pinjmw
+                powht + current_drive_variables.p_hcd_injected_total_mw
             )  # if not ignited add the auxiliary power
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
@@ -4467,7 +4467,7 @@ class Stellarator:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
 
         #  Calculate transport losses and energy confinement time using the
@@ -4496,7 +4496,7 @@ class Stellarator:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
@@ -4992,7 +4992,7 @@ class Stellarator:
 
         #  Total injected power
 
-        current_drive_variables.pinjmw = (
+        current_drive_variables.p_hcd_injected_total_mw = (
             current_drive_variables.pinjemw + current_drive_variables.pinjimw
         )
 
@@ -5011,7 +5011,7 @@ class Stellarator:
 
         if (
             abs(
-                current_drive_variables.pinjmw
+                current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss
                 + physics_variables.p_plasma_ohmic_mw
             )
@@ -5020,7 +5020,7 @@ class Stellarator:
             current_drive_variables.bigq = 1e18
         else:
             current_drive_variables.bigq = physics_variables.fusion_power / (
-                current_drive_variables.pinjmw
+                current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss
                 + physics_variables.p_plasma_ohmic_mw
             )

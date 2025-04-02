@@ -74,7 +74,7 @@ icc = 1
 icc = 2
 * DESCRIPTION:   Global Power Balance Consistency
 * JUSTIFICATION: Consistency equations should always be on
-* VARIABLES:     pinjmw, Rest calculated in-situ
+* VARIABLES:     p_hcd_injected_total_mw, Rest calculated in-situ
 
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
@@ -2645,7 +2645,7 @@ irfcd = 1
 *icc = 40
 * DESCRIPTION:   Constraint equation for auxiliary power lower limit
 * JUSTIFICATION: Turned off, do not care about auxiliary power lower limit 
-* VARIABLES:     pinjmw (MW) calculated in-situ
+* VARIABLES:     p_hcd_injected_total_mw (MW) calculated in-situ
 
 *auxmin =  
 * DESCRIPTION:   Minimum required auxiliary power (MW)
@@ -2692,7 +2692,7 @@ i_hcd_primary = 13
 icc = 30
 * DESCRIPTION:   Injection Power Upper Limit
 * JUSTIFICATION: Limit for plasma stability
-* VARIABLES:     pinjmw (total auxiliary injected power (MW)) summed from all injected power sources
+* VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
 
 ixc = 46
 fpinj = 1.0

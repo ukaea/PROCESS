@@ -92,7 +92,7 @@ class ProcessTracker:
     tracking_variables: ClassVar = {
         "pheat",
         "bootstrap_current_fraction",
-        "pinjmw",
+        "p_hcd_injected_total_mw",
         "dr_shld_inboard",
         "dr_fw_inboard",
         "dr_fw_outboard",

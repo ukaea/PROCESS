@@ -700,7 +700,7 @@ class CurrentDrive:
 
             # Total injected power
             # sum contributions from primary and secondary systems
-            current_drive_variables.pinjmw = (
+            current_drive_variables.p_hcd_injected_total_mw = (
                 pinjemw1 + pinjimw1 + pinjemwfix + pinjimwfix
             )
             pinjmw1 = pinjemw1 + pinjimw1
@@ -718,7 +718,7 @@ class CurrentDrive:
             # Ratio of fusion to input (injection+ohmic) power
             if (
                 abs(
-                    current_drive_variables.pinjmw
+                    current_drive_variables.p_hcd_injected_total_mw
                     + current_drive_variables.p_beam_orbit_loss
                     + physics_variables.p_plasma_ohmic_mw
                 )
@@ -727,7 +727,7 @@ class CurrentDrive:
                 current_drive_variables.bigq = 1.0e18
             else:
                 current_drive_variables.bigq = physics_variables.fusion_power / (
-                    current_drive_variables.pinjmw
+                    current_drive_variables.p_hcd_injected_total_mw
                     + current_drive_variables.p_beam_orbit_loss
                     + physics_variables.p_plasma_ohmic_mw
                 )
@@ -824,7 +824,7 @@ class CurrentDrive:
             self.outfile,
             "Power injected for current drive (MW)",
             "(pcurrentdrivemw)",
-            current_drive_variables.pinjmw
+            current_drive_variables.p_hcd_injected_total_mw
             - current_drive_variables.pheat
             - current_drive_variables.pheatfix,
         )
@@ -1151,7 +1151,7 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Beam power deposited in plasma (MW)",
-                    "(pinjmw)",
+                    "(p_hcd_injected_total_mw)",
                     pinjmw1,
                     "OP ",
                 )
@@ -1164,7 +1164,7 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Total (MW)",
-                    "(current_drive_variables.p_beam_orbit_loss+current_drive_variables.p_beam_shine_through_mw+current_drive_variables.pinjmw)",
+                    "(current_drive_variables.p_beam_orbit_loss+current_drive_variables.p_beam_shine_through_mw+current_drive_variables.p_hcd_injected_total_mw)",
                     current_drive_variables.p_beam_orbit_loss
                     + current_drive_variables.p_beam_shine_through_mw
                     + pinjmw1,

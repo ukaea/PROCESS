@@ -790,15 +790,16 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.pinjmw + current_drive_variables.p_beam_orbit_loss + physics_variables.p_fw_alpha_mw)/etacd
+        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss + physics_variables.p_fw_alpha_mw)/etacd
         # heat_transport_variables.pinjwp calculated in current_drive.f90
 
         #  Waste injection power
         if physics_variables.ignite == 0:
             # MDK
-            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.pinjmw - current_drive_variables.p_beam_orbit_loss - physics_variables.p_fw_alpha_mw
+            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
-                heat_transport_variables.pinjwp - current_drive_variables.pinjmw
+                heat_transport_variables.pinjwp
+                - current_drive_variables.p_hcd_injected_total_mw
             )
         else:
             heat_transport_variables.pinjht = 0.0e0
@@ -1342,7 +1343,11 @@ class Power:
             "------------------------------------------------------------------",
         )
 
-        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
+        pinj = (
+            current_drive_variables.p_hcd_injected_total_mw
+            if physics_variables.ignite == 0
+            else 0.0
+        )
 
         primsum = 0.0e0
         secsum = 0.0e0
@@ -1727,7 +1732,7 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Injected power deposited in plasma (MW)",
-            "(pinjmw)",
+            "(p_hcd_injected_total_mw)",
             pinj,
             "OP ",
         )
@@ -1781,7 +1786,13 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Injected power (MW)", "(pinjmw.)", pinj, "OP ")
+        po.ovarrf(
+            self.outfile,
+            "Injected power (MW)",
+            "(p_hcd_injected_total_mw.)",
+            pinj,
+            "OP ",
+        )
         po.ovarrf(
             self.outfile,
             "Ohmic power (MW)",

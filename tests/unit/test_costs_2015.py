@@ -13733,7 +13733,7 @@ def test_calc_energy_conversion_system(
 
 
 class CalcRemainingSubsystemsParam(NamedTuple):
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     pdivt: Any = None
 
@@ -13786,7 +13786,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
     "calcremainingsubsystemsparam",
     (
         CalcRemainingSubsystemsParam(
-            pinjmw=43.745615131519273,
+            p_hcd_injected_total_mw=43.745615131519273,
             pdivt=94.203763268233445,
             fusion_power=1726.9363495105574,
             t_plasma_res_diffusion=2562.1529343276788,
@@ -14882,7 +14882,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
             ).transpose(),
         ),
         CalcRemainingSubsystemsParam(
-            pinjmw=43.745615131519266,
+            p_hcd_injected_total_mw=43.745615131519266,
             pdivt=94.062415557688894,
             fusion_power=1726.1944723154274,
             t_plasma_res_diffusion=2562.1529343276788,
@@ -15995,7 +15995,9 @@ def test_calc_remaining_subsystems(
     """
 
     monkeypatch.setattr(
-        current_drive_variables, "pinjmw", calcremainingsubsystemsparam.pinjmw
+        current_drive_variables,
+        "p_hcd_injected_total_mw",
+        calcremainingsubsystemsparam.p_hcd_injected_total_mw,
     )
 
     monkeypatch.setattr(physics_variables, "pdivt", calcremainingsubsystemsparam.pdivt)
