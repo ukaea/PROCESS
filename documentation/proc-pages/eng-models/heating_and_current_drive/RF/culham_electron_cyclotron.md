@@ -1,6 +1,6 @@
 # Culham Electron Cyclotron Model | `culecd()`
 
-- `iefrf/iefrffix` = 7
+- `i_hcd_primary/iefrffix` = 7
 
 This routine calculates the current drive parameters for a electron cyclotron system, based on the AEA FUS 172 model[^1]
 

@@ -1,6 +1,6 @@
 # ITER Neutral Beam Model | `iternb()`
 
-- `iefrf/iefrffix` = 5
+- `i_hcd_primary/iefrffix` = 5
 
 | Output | Description |
 |----------|-------------|

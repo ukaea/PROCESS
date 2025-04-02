@@ -385,7 +385,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -1380,7 +1380,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -2375,7 +2375,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -3370,7 +3370,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -4365,7 +4365,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -5360,7 +5360,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -6355,7 +6355,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -7350,7 +7350,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -8345,7 +8345,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.3962E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.9000E-01    
@@ -9145,7 +9145,7 @@ ucme     = 3.0d8 * Unit cost of maintenance equipment ($/w**0;3)
 *-------------Current Drive Variables--------------*
 
 bootstrap_current_fraction_max  = 0.99 * Maximum fraction of plasma current from bootstrap;
-iefrf    = 10 * Switch for current drive efficiency model;
+i_hcd_primary    = 10 * Switch for current drive efficiency model;
 gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
 etaech = 0.4 * ECRH wall-plug efficiency
 pinjalw  = 51.0 * Maximum allowable value for injected power (mw)

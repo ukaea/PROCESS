@@ -525,7 +525,7 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.7174E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Secondary_current_drive_efficiency_model________________________________ (iefrffix)____________________              0    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
@@ -1645,7 +1645,7 @@ t_precharge = 500.0
 bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
-iefrf = 10
+i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
 gamma_ecrh = 0.30

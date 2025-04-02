@@ -166,7 +166,7 @@ ucme     = 3.0d8 * Unit cost of maintenance equipment ($/w**0;3)
 *-------------Current Drive Variables--------------*
 
 bootstrap_current_fraction_max  = 0.99 * Maximum fraction of plasma current from bootstrap;
-iefrf    = 10 * Switch for current drive efficiency model;
+i_hcd_primary    = 10 * Switch for current drive efficiency model;
 gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
 etaech = 0.4 * ECRH wall-plug efficiency
 pinjalw  = 51.0 * Maximum allowable value for injected power (mw)

@@ -638,7 +638,7 @@
     {
       "no": 126,
       "level": 3,
-      "message": "CUDRIV: Illegal value for iefrf"
+      "message": "CUDRIV: Illegal value for i_hcd_primary"
     },
     {
       "no": 127,
@@ -653,7 +653,7 @@
     {
       "no": 129,
       "level": 3,
-      "message": "CULLHY: Normalised LH efficiency < 0; use a different value of iefrf"
+      "message": "CULLHY: Normalised LH efficiency < 0; use a different value of i_hcd_primary"
     },
     {
       "no": 130,
