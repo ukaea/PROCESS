@@ -799,11 +799,6 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Divertor Heat Model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*icc = 22
-* DESCRIPTION:   Constraint equation for divertor collision/connection length ratio upper limit 
-* JUSTIFICATION: Turned off, dont care about connection length
-* VARIABLES:     rlenmax  (maximum value for length ratio (rlclolcn)), rlclolcn calculated in-situ
-
 *rlenmax = 
 * DESCRIPTION:   Maximum value for length ratio (rlclolcn) (`constraintg eqn 22`)
 * JUSTIFICATION: Turned off, not using icc =22
