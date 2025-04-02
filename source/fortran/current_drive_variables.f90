@@ -199,7 +199,7 @@ module current_drive_variables
   real(dp) :: pheatfix
   !! secondary fixed heating power not used for current drive (MW)
 
-  real(dp) :: pinjalw
+  real(dp) :: p_hcd_injected_max
   !! maximum allowable value for injected power (MW) (`constraint equation 30`)
 
   real(dp) :: pinjemw
@@ -302,7 +302,7 @@ module current_drive_variables
     dx_beam_shield = 0.5D0
     pheat = 0.0D0
     pheatfix = 0.0D0
-    pinjalw = 150.0D0
+    p_hcd_injected_max = 150.0D0
     pinjemw = 0.0D0
     pinjimw = 0.0D0
     pinjmw = 0.0D0

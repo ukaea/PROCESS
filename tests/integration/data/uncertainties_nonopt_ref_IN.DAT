@@ -169,7 +169,7 @@ bootstrap_current_fraction_max  = 0.99 * Maximum fraction of plasma current from
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
 gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
 etaech = 0.4 * ECRH wall-plug efficiency
-pinjalw  = 51.0 * Maximum allowable value for injected power (mw)
+p_hcd_injected_max  = 51.0 * Maximum allowable value for injected power (mw)
 pheat = 50.0
 
 *----------------Divertor Variables----------------*

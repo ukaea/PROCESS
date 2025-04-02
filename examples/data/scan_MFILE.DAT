@@ -403,7 +403,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -1398,7 +1398,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -2393,7 +2393,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -3388,7 +3388,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -4383,7 +4383,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -5378,7 +5378,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -6373,7 +6373,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -7368,7 +7368,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -8363,7 +8363,7 @@
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.8724E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      5.1000E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      5.1000E+01    
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      5.1000E+01    
  ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      4.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.2750E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.2115E+02    
@@ -9148,7 +9148,7 @@ bootstrap_current_fraction_max  = 0.99 * Maximum fraction of plasma current from
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
 gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
 etaech = 0.4 * ECRH wall-plug efficiency
-pinjalw  = 51.0 * Maximum allowable value for injected power (mw)
+p_hcd_injected_max  = 51.0 * Maximum allowable value for injected power (mw)
 pheat = 50.0
 
 *----------------Divertor Variables----------------*
