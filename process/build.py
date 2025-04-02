@@ -2422,7 +2422,7 @@ class Build:
                 )
 
             if (current_drive_variables.i_hcd_primary in [5, 8]) or (
-                current_drive_variables.iefrffix in [5, 8]
+                current_drive_variables.i_hcd_secondary in [5, 8]
             ):
                 po.ovarre(
                     self.mfile,

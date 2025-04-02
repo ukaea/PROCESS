@@ -2721,7 +2721,7 @@ feffcd = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Secondary H&CD System ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*iefrffix = 
+*i_hcd_secondary = 
 * DESCRIPTION:   Switch for 2nd current drive efficiency model
 * JUSTIFICATION: Not used, ECRH only
 

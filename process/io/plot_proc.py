@@ -507,7 +507,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     ]
 
     if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
-        mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
+        mfile_data.data["i_hcd_secondary"].get_scan(scan) in [5, 8]
     ):
         labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
         labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
@@ -3067,25 +3067,25 @@ def plot_current_drive_info(axis, mfile_data, scan):
         iccd = True
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
-    if "iefrffix" in mfile_data.data:
+    if "i_hcd_secondary" in mfile_data.data:
         secondary_heating = ""
-        iefrffix = mfile_data.data["iefrffix"].get_scan(scan)
+        i_hcd_secondary = mfile_data.data["i_hcd_secondary"].get_scan(scan)
 
-        if (iefrffix == 5) or (iefrffix == 8):
+        if (i_hcd_secondary == 5) or (i_hcd_secondary == 8):
             secondary_heating = "NBI"
         if (
-            (iefrffix == 3)
-            or (iefrffix == 7)
-            or (iefrffix == 10)
-            or (iefrffix == 11)
-            or (iefrffix == 13)
+            (i_hcd_secondary == 3)
+            or (i_hcd_secondary == 7)
+            or (i_hcd_secondary == 10)
+            or (i_hcd_secondary == 11)
+            or (i_hcd_secondary == 13)
         ):
             secondary_heating = "ECH"
-        if iefrffix == 12:
+        if i_hcd_secondary == 12:
             secondary_heating = "EBW"
-        if iefrffix in [1, 4, 6]:
+        if i_hcd_secondary in [1, 4, 6]:
             secondary_heating = "LHCD"
-        if iefrffix == 2:
+        if i_hcd_secondary == 2:
             secondary_heating = "ICCD"
 
     axis.set_ylim([ymin, ymax])
@@ -3098,7 +3098,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     pdivt = mfile_data.data["pdivt"].get_scan(scan)
     pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
 
-    if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+    if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
         pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
 
     pdivnr = (
@@ -3142,8 +3142,8 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        # iefrffix is now always in the MFILE with = 0 meaning no fixed heating
-        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        # i_hcd_secondary is now always in the MFILE with = 0 meaning no fixed heating
+        if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3169,7 +3169,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3198,7 +3198,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3227,7 +3227,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3256,7 +3256,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3810,9 +3810,9 @@ def main(args=None):
     global beamwd
 
     i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
-    iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
+    i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
 
-    if (i_hcd_primary in [5, 8]) or (iefrffix in [5, 8]):
+    if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
         nbshield = m_file.data["nbshield"].get_scan(scan)
         rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
         rtanmax = m_file.data["rtanmax"].get_scan(scan)

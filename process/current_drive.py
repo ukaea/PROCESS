@@ -52,7 +52,7 @@ class CurrentDrive:
 
         # To stop issues with input file we force
         # zero secondary heating if no injection method
-        if current_drive_variables.iefrffix == 0:
+        if current_drive_variables.i_hcd_secondary == 0:
             current_drive_variables.pheatfix = 0.0
 
         # check for unphysically large heating in
@@ -70,10 +70,10 @@ class CurrentDrive:
             # If present we must calculate second current drive
             # efficiencies in units of Amps/Watt using the fixed
             # values from user input
-            # current_drive_variables.iefrffix |  switch for fixed current drive efficiency model
+            # current_drive_variables.i_hcd_secondary |  switch for fixed current drive efficiency model
 
             # Fenstermacher Lower Hybrid model
-            if current_drive_variables.iefrffix == 1:
+            if current_drive_variables.i_hcd_secondary == 1:
                 effrfssfix = (
                     (0.36e0 * (1.0e0 + (physics_variables.te / 25.0e0) ** 1.16e0))
                     / (physics_variables.rmajor * dene20)
@@ -81,7 +81,7 @@ class CurrentDrive:
                 )
                 effcdfix = effrfssfix
             # Ion-Cyclotron current drive
-            elif current_drive_variables.iefrffix == 2:
+            elif current_drive_variables.i_hcd_secondary == 2:
                 effrfssfix = (
                     0.63e0
                     * 0.1e0
@@ -92,7 +92,7 @@ class CurrentDrive:
                 )
                 effcdfix = effrfssfix
             # Fenstermacher Electron Cyclotron Resonance model
-            elif current_drive_variables.iefrffix == 3:
+            elif current_drive_variables.i_hcd_secondary == 3:
                 effrfssfix = (
                     0.21e0
                     * physics_variables.ten
@@ -101,7 +101,7 @@ class CurrentDrive:
                 )
                 effcdfix = effrfssfix
             # Ehst Lower Hybrid / Fast Wave current drive
-            elif current_drive_variables.iefrffix == 4:
+            elif current_drive_variables.i_hcd_secondary == 4:
                 effrfssfix = (
                     physics_variables.te**0.77e0
                     * (0.034e0 + 0.196e0 * physics_variables.beta)
@@ -118,7 +118,7 @@ class CurrentDrive:
                     * current_drive_variables.feffcd
                 )
                 effcdfix = effrfssfix
-            elif current_drive_variables.iefrffix == 5:
+            elif current_drive_variables.i_hcd_secondary == 5:
                 (
                     effnbss,
                     current_drive_variables.fpion,
@@ -127,17 +127,17 @@ class CurrentDrive:
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
             # Culham Lower Hybrid current drive model
-            elif current_drive_variables.iefrffix == 6:
+            elif current_drive_variables.i_hcd_secondary == 6:
                 effrfss = self.cullhy()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 effcdfix = effrfssfix
             # Culham ECCD model
-            elif current_drive_variables.iefrffix == 7:
+            elif current_drive_variables.i_hcd_secondary == 7:
                 effrfss = self.culecd()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 effcdfix = effrfssfix
             # Culham Neutral Beam model
-            elif current_drive_variables.iefrffix == 8:
+            elif current_drive_variables.i_hcd_secondary == 8:
                 (
                     effnbss,
                     current_drive_variables.fpion,
@@ -146,7 +146,7 @@ class CurrentDrive:
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 effcdfix = effnbssfix
             # ECRH user input gamma
-            elif current_drive_variables.iefrffix == 10:
+            elif current_drive_variables.i_hcd_secondary == 10:
                 # Normalised current drive efficiency gamma
                 current_drive_variables.gamcd = current_drive_variables.gamma_ecrh
 
@@ -156,7 +156,7 @@ class CurrentDrive:
                 )
                 effcdfix = effrfssfix
             # EBW scaling
-            elif current_drive_variables.iefrffix == 12:
+            elif current_drive_variables.i_hcd_secondary == 12:
                 # Scaling author Simon Freethy
                 # Ref : PROCESS issue 1262
                 # Normalised current drive efficiency gamma
@@ -200,7 +200,7 @@ class CurrentDrive:
 
                 effcdfix = effcdfix * density_factor
                 effrfssfix = effrfssfix * density_factor
-            elif current_drive_variables.iefrffix == 13:
+            elif current_drive_variables.i_hcd_secondary == 13:
                 # ECCD model for O-mode cut-off with added Te and Zeff dependance
                 # Scaling author: Simon Freethy
                 # Ref : PROCESS issue #2994
@@ -256,12 +256,12 @@ class CurrentDrive:
                     )
                 )
                 effcdfix = effrfssfix * cutoff_factor
-            elif current_drive_variables.iefrffix != 0:
+            elif current_drive_variables.i_hcd_secondary != 0:
                 raise ProcessValueError(
-                    f"Current drive switch is invalid: {current_drive_variables.iefrffix = }"
+                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
                 )
 
-            if current_drive_variables.iefrffix in [1, 2, 4, 6]:
+            if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
 
@@ -288,7 +288,7 @@ class CurrentDrive:
                 aux_current_fraction_fix = (
                     auxiliary_cdfix / physics_variables.plasma_current
                 )
-            elif current_drive_variables.iefrffix in [3, 7, 10, 12, 13]:
+            elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.pinjfixmw
 
@@ -312,7 +312,7 @@ class CurrentDrive:
                 aux_current_fraction_fix = (
                     auxiliary_cdfix / physics_variables.plasma_current
                 )
-            elif current_drive_variables.iefrffix in [5, 8]:
+            elif current_drive_variables.i_hcd_secondary in [5, 8]:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
@@ -747,21 +747,21 @@ class CurrentDrive:
             current_drive_variables.i_hcd_primary,
         )
 
-        if current_drive_variables.iefrffix in [1, 4, 6]:
+        if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
             po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.iefrffix == 2:
+        elif current_drive_variables.i_hcd_secondary == 2:
             po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.iefrffix in [3, 7]:
+        elif current_drive_variables.i_hcd_secondary in [3, 7]:
             po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.iefrffix in [5, 8]:
+        elif current_drive_variables.i_hcd_secondary in [5, 8]:
             po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.iefrffix == 10:
+        elif current_drive_variables.i_hcd_secondary == 10:
             po.ocmmnt(
                 self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
             )
-        elif current_drive_variables.iefrffix == 12:
+        elif current_drive_variables.i_hcd_secondary == 12:
             po.ocmmnt(self.outfile, "EBW current drive")
-        elif current_drive_variables.iefrffix == 13:
+        elif current_drive_variables.i_hcd_secondary == 13:
             po.ocmmnt(
                 self.outfile,
                 "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
@@ -770,8 +770,8 @@ class CurrentDrive:
         po.ovarin(
             self.outfile,
             "Secondary current drive efficiency model",
-            "(iefrffix)",
-            current_drive_variables.iefrffix,
+            "(i_hcd_secondary)",
+            current_drive_variables.i_hcd_secondary,
         )
 
         if physics_variables.ignite == 1:
@@ -812,7 +812,7 @@ class CurrentDrive:
             "(bootstrap_current_fraction_max)",
             current_drive_variables.bootstrap_current_fraction_max,
         )
-        if current_drive_variables.iefrffix != 0:
+        if current_drive_variables.i_hcd_secondary != 0:
             po.ovarre(
                 self.outfile,
                 "Power injected for main current drive (MW)",
@@ -840,7 +840,7 @@ class CurrentDrive:
             auxiliary_cd,
             "OP ",
         )
-        if current_drive_variables.iefrffix != 0:
+        if current_drive_variables.i_hcd_secondary != 0:
             po.ovarre(
                 self.outfile,
                 "Secondary auxiliary current drive (A)",
@@ -899,7 +899,7 @@ class CurrentDrive:
                 current_drive_variables.wave_mode,
             )
 
-        if current_drive_variables.iefrffix != 0:
+        if current_drive_variables.i_hcd_secondary != 0:
             po.ovarre(
                 self.outfile,
                 "Secondary current drive efficiency (A/W)",
@@ -1026,8 +1026,8 @@ class CurrentDrive:
         if (
             (current_drive_variables.i_hcd_primary == 5)
             or (current_drive_variables.i_hcd_primary == 8)
-            or (current_drive_variables.iefrffix == 5)
-            or (current_drive_variables.iefrffix == 8)
+            or (current_drive_variables.i_hcd_secondary == 5)
+            or (current_drive_variables.i_hcd_secondary == 8)
         ):
             po.ovarre(
                 self.outfile,
@@ -1046,8 +1046,8 @@ class CurrentDrive:
                     "OP ",
                 )
 
-            if (current_drive_variables.iefrffix == 5) or (
-                current_drive_variables.iefrffix == 8
+            if (current_drive_variables.i_hcd_secondary == 5) or (
+                current_drive_variables.i_hcd_secondary == 8
             ):
                 po.ovarre(
                     self.outfile,
@@ -1064,8 +1064,8 @@ class CurrentDrive:
                     self.outfile, "Beam efficiency (A/W)", "(effnbss)", effnbss, "OP "
                 )
 
-            if (current_drive_variables.iefrffix == 5) or (
-                current_drive_variables.iefrffix == 8
+            if (current_drive_variables.i_hcd_secondary == 5) or (
+                current_drive_variables.i_hcd_secondary == 8
             ):
                 po.ovarre(
                     self.outfile,
@@ -1156,8 +1156,8 @@ class CurrentDrive:
                     "OP ",
                 )
 
-            if (current_drive_variables.iefrffix == 5) or (
-                current_drive_variables.iefrffix == 8
+            if (current_drive_variables.i_hcd_secondary == 5) or (
+                current_drive_variables.i_hcd_secondary == 8
             ):
                 po.oblnkl(self.outfile)
                 po.ocmmnt(self.outfile, "Secondary fixed neutral beam power balance :")

@@ -2430,7 +2430,7 @@
         ],
         "idivrt": 2.0,
         "i_hcd_primary": 5.0,
-        "iefrffix": 0.0,
+        "i_hcd_secondary": 0.0,
         "i_beta_fast_alpha": 1.0,
         "ife": 0.0,
         "ifedrv": 2.0,
@@ -9769,7 +9769,7 @@
         "idiags": "",
         "idivrt": "number of divertors (calculated from `i_single_null`)",
         "i_hcd_primary": "Switch for current drive efficiency model:\n<ul>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
-        "iefrffix": "Switch for 2nd current drive efficiency model:\n<ul>\n<li>=0 No fixed current drive</li>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
+        "i_hcd_secondary": "Switch for 2nd current drive efficiency model:\n<ul>\n<li>=0 No fixed current drive</li>\n<li>=1 Fenstermacher Lower Hybrid</li>\n<li>=2 Ion Cyclotron current drive</li>\n<li>=3 Fenstermacher ECH</li>\n<li>=4 Ehst Lower Hybrid</li>\n<li>=5 ITER Neutral Beam</li>\n<li>=6 new Culham Lower Hybrid model</li>\n<li>=7 new Culham ECCD model</li>\n<li>=8 new Culham Neutral Beam model</li>\n<li>=9 RFP option removed in PROCESS (issue #508)</li>\n<li>=10 ECRH user input gamma</li>\n<li>=11 ECRH \"HARE\" model (E. Poli, Physics of Plasmas 2019)</li>\n<li>=12 EBW user scaling input. Scaling (S. Freethy)</li>\n</ul>",
         "i_beta_fast_alpha": "switch for fast alpha pressure calculation\n<ul>\n<li>=0 ITER physics rules (Uckan) fit</li>\n<li>=1 Modified fit (D. Ward) - better at high temperature</li>\n</ul>",
         "ife": "Switch for IFE option:\n<ul>\n<li>=0 use tokamak, RFP or stellarator model</li>\n<li>=1 use IFE model</li>\n</ul>",
         "ifedrv": "Switch for type of IFE driver:\n<ul>\n<li>=-1 use gainve, etave for gain and driver efficiency</li>\n<li>=0 use tgain, drveff for gain and driver efficiency</li>\n<li>=1 use laser driver based on SOMBRERO design</li>\n<li>=2 use heavy ion beam driver based on OSIRIS</li>\n<li>=3 Input pfusife, rrin and drveff</li>\n</ul>",
@@ -13211,7 +13211,7 @@
             "lb": 1,
             "ub": 12
         },
-        "iefrffix": {
+        "i_hcd_secondary": {
             "lb": 0,
             "ub": 12
         },
@@ -17647,7 +17647,7 @@
             "gamma_ecrh",
             "xi_ebw",
             "i_hcd_primary",
-            "iefrffix",
+            "i_hcd_secondary",
             "irfcd",
             "nbshinef",
             "nbshield",
@@ -20243,7 +20243,7 @@
         "i_density_limit": "int_variable",
         "i_diamagnetic_current": "int_variable",
         "i_hcd_primary": "int_variable",
-        "iefrffix": "int_variable",
+        "i_hcd_secondary": "int_variable",
         "i_beta_fast_alpha": "int_variable",
         "ife": "int_variable",
         "ifedrv": "int_variable",

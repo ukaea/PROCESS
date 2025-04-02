@@ -164,7 +164,7 @@ module current_drive_variables
   !!  - =11 ECRH "HARE" model (E. Poli, Physics of Plasmas 2019). Removed in #1811.
   !!  - =12 EBW user scaling input. Scaling (S. Freethy)
 
-  integer :: iefrffix
+  integer :: i_hcd_secondary
   !! Switch for 2nd current drive efficiency model:
   !!
   !! - =0 No fixed current drive
