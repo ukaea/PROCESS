@@ -208,7 +208,7 @@ module current_drive_variables
   real(dp) :: pinjimw
   !! auxiliary injected power to ions (MW)
 
-  real(dp) :: pinjmw
+  real(dp) :: p_hcd_injected_total_mw
   !! total auxiliary injected power (MW)
 
   real(dp)  :: pinjfixmw
@@ -305,7 +305,7 @@ module current_drive_variables
     p_hcd_injected_max = 150.0D0
     pinjemw = 0.0D0
     pinjimw = 0.0D0
-    pinjmw = 0.0D0
+    p_hcd_injected_total_mw = 0.0D0
     pinjfixmw = 0.0D0
     plasma_current_internal_fraction = 0.0D0
     plhybd = 0.0D0

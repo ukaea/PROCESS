@@ -69,7 +69,7 @@ class CudrivParam(NamedTuple):
 
     f_p_beam_orbit_loss: Any = None
 
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     pwpnb: Any = None
 
@@ -189,7 +189,7 @@ class CudrivParam(NamedTuple):
 
     expected_etacd: Any = None
 
-    expected_pinjmw: Any = None
+    expected_p_hcd_injected_total_mw: Any = None
 
     expected_effcd: Any = None
 
@@ -227,7 +227,7 @@ class CudrivParam(NamedTuple):
             etacdfix=0,
             eta_ecrh_injector_wall_plug=0.5,
             f_p_beam_orbit_loss=0,
-            pinjmw=0,
+            p_hcd_injected_total_mw=0,
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
             beam_energy=1000,
@@ -287,7 +287,7 @@ class CudrivParam(NamedTuple):
             expected_echpwr=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
-            expected_pinjmw=120.49600019005746,
+            expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
             expected_echwpow=240.99200038011492,
             expected_pinjemw=120.49600019005746,
@@ -317,7 +317,7 @@ class CudrivParam(NamedTuple):
             etacdfix=0,
             eta_ecrh_injector_wall_plug=0.5,
             f_p_beam_orbit_loss=0,
-            pinjmw=120.49600019005746,
+            p_hcd_injected_total_mw=120.49600019005746,
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
             beam_energy=1000,
@@ -377,7 +377,7 @@ class CudrivParam(NamedTuple):
             expected_echpwr=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
-            expected_pinjmw=120.49600019005746,
+            expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
             expected_echwpow=240.99200038011492,
             expected_pinjemw=120.49600019005746,
@@ -470,7 +470,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "f_p_beam_orbit_loss", cudrivparam.f_p_beam_orbit_loss
     )
 
-    monkeypatch.setattr(current_drive_variables, "pinjmw", cudrivparam.pinjmw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_total_mw",
+        cudrivparam.p_hcd_injected_total_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "pwpnb", cudrivparam.pwpnb)
 
@@ -628,7 +632,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     assert current_drive_variables.etacd == pytest.approx(cudrivparam.expected_etacd)
 
-    assert current_drive_variables.pinjmw == pytest.approx(cudrivparam.expected_pinjmw)
+    assert current_drive_variables.p_hcd_injected_total_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_injected_total_mw
+    )
 
     assert current_drive_variables.effcd == pytest.approx(cudrivparam.expected_effcd)
 
