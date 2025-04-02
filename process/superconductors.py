@@ -3,6 +3,7 @@ import logging
 import numpy as np
 from scipy import optimize
 
+from process.exceptions import ProcessValueError
 from process.fortran import error_handling as eh
 from process.fortran import rebco_variables
 
@@ -229,10 +230,9 @@ def bi2212(bmax, jstrand, tsc, fhts):
     #  Check if ranges of validity have been violated
 
     if (tsc > 20.0) or (bmax < 6.0) or (b > 104.0):
-        eh.fdiags[0] = tsc
-        eh.fdiags[1] = bmax
-        eh.fdiags[2] = b
-        eh.report_error(106)
+        raise ProcessValueError(
+            "Fit extrapolated outside of range of validity", tsc=tsc, bmax=bmax, b=b
+        )
 
     return jcrit, tmarg
 

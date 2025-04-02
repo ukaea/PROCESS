@@ -7,7 +7,8 @@ from pathlib import Path
 import numpy as np
 from scipy import integrate
 
-from process.fortran import constants, error_handling, impurity_radiation_module
+from process.exceptions import ProcessValueError
+from process.fortran import constants, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 
@@ -246,9 +247,11 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
         return
 
     if no > len(impurity_radiation_module.impurity_arr_label):
-        error_handling.idiags[0] = no
-        error_handling.idiags[1] = len(impurity_radiation_module.impurity_arr_label)
-        error_handling.report_error(27)
+        raise ProcessValueError(
+            "Illegal impurity number",
+            number=no,
+            max=len(impurity_radiation_module.impurity_arr_label),
+        )
 
     impurity_radiation_module.impurity_arr_label[no - 1] = label
     impurity_radiation_module.impurity_arr_z[no - 1] = z
@@ -313,12 +316,9 @@ def z2index(zimp):
             return i
 
     # Should only get here if there is a problem
-
-    error_handling.idiags[0] = zimp
-    error_handling.report_error(33)
-
-    # Explicit return
-    return None
+    raise ProcessValueError(
+        "Element with the given charge is not in the impurity array", zimp=zimp
+    )
 
 
 def fradcore(rho, radius_plasma_core_norm, coreradiationfraction):

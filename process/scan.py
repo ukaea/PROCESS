@@ -172,9 +172,11 @@ class Scan:
             return
 
         if scan_module.isweep > scan_module.ipnscns:
-            error_handling.idiags[1] = scan_module.isweep
-            error_handling.idiags[2] = scan_module.ipnscns
-            error_handling.report_error(94)
+            raise ProcessValueError(
+                "Illegal value of isweep",
+                isweep=scan_module.isweep,
+                ipnscns=scan_module.ipnscns,
+            )
 
         if scan_module.scan_dim == 2:
             self.scan_2d()

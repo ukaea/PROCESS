@@ -11,6 +11,7 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
@@ -1495,7 +1496,9 @@ class Stellarator:
                         )
                     )
                 else:
-                    error_handling.report_error(215)
+                    raise ProcessValueError(
+                        "i_coolant_pumping = 0 or 1 only for stellarator"
+                    )
 
                 fwbs_variables.emultmw = (
                     heat_transport_variables.fpumpblkt
@@ -3316,8 +3319,9 @@ class Stellarator:
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         else:
-            error_handling.idiags[0] = i_tf_sc_mat
-            error_handling.report_error(156)
+            raise ProcessValueError(
+                "Illegal value for i_pf_superconductor", i_tf_sc_mat=i_tf_sc_mat
+            )
 
         return j_crit_sc * 1e-6
 
@@ -3568,12 +3572,14 @@ class Stellarator:
         arg = powht * bt / (rmajor * rminor * rminor)
 
         if arg <= 0.0e0:
-            error_handling.fdiags[0] = arg
-            error_handling.fdiags[1] = powht
-            error_handling.fdiags[2] = bt
-            error_handling.fdiags[3] = rmajor
-            error_handling.fdiags[4] = rminor
-            error_handling.report_error(108)
+            raise ProcessValueError(
+                "Negative square root imminent",
+                arg=arg,
+                powht=powht,
+                bt=bt,
+                rmajor=rmajor,
+                rminor=rminor,
+            )
 
         #  Maximum line-averaged electron density
 
@@ -4130,10 +4136,11 @@ class Stellarator:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
-        if (
-            5 in numerics.ixc
-        ):  # Check if physics_variables.beta (iteration variable 5) is an iteration variable
-            error_handling.report_error(251)
+        # Check if physics_variables.beta (iteration variable 5) is an iteration variable
+        if 5 in numerics.ixc:
+            raise ProcessValueError(
+                "Beta should not be in ixc if istell>0. Use Constraints 24 and 84 instead"
+            )
 
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
@@ -4970,8 +4977,9 @@ class Stellarator:
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd
         else:
-            error_handling.idiags[0] = stellarator_variables.isthtr
-            error_handling.report_error(107)
+            raise ProcessValueError(
+                "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
+            )
 
         #  Total injected power
 

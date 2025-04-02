@@ -3,6 +3,7 @@ import numpy as np
 from process import (
     process_output as po,
 )
+from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import (
     constants,
     cost_variables,
@@ -1299,9 +1300,11 @@ class CurrentDrive:
         """
         # Check argument sanity
         if (1 + physics_variables.eps) < current_drive_variables.frbeam:
-            eh.fdiags[0] = physics_variables.eps
-            eh.fdiags[1] = current_drive_variables.frbeam
-            eh.report_error(15)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=physics_variables.eps,
+                frbeam=current_drive_variables.frbeam,
+            )
 
         # Calculate beam path length to centre
         dpath = physics_variables.rmajor * np.sqrt(
@@ -1414,9 +1417,11 @@ class CurrentDrive:
         term04 = 3.5e0 * epslh**0.77e0 + x
 
         if term03 > term04:
-            eh.fdiags[0] = term03
-            eh.fdiags[1] = term04
-            eh.report_error(129)
+            raise ProcessValueError(
+                "Normalised LH efficiency < 0; use a different value of iefrf",
+                term03=term03,
+                term04=term04,
+            )
 
         gamlh = term01 * term02 * (1.0e0 - term03 / term04)
 
@@ -1553,7 +1558,7 @@ class CurrentDrive:
         )
 
         if ecgam < 0.0e0:
-            eh.report_error(17)
+            raise ProcessValueError("Negative normalised current drive efficiency")
         return ecgam
 
     def culnbi(self):
@@ -1569,9 +1574,11 @@ class CurrentDrive:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
-            eh.fdiags[0] = physics_variables.eps
-            eh.fdiags[1] = current_drive_variables.frbeam
-            eh.report_error(20)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=physics_variables.eps,
+                frbeam=current_drive_variables.frbeam,
+            )
 
         #  Calculate beam path length to centre
 
@@ -1787,9 +1794,11 @@ class CurrentDrive:
         eps1 = rminor / r
 
         if (1.0 + eps1) < frbeam:
-            eh.fdiags[0] = eps1
-            eh.fdiags[1] = frbeam
-            eh.report_error(21)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=eps1,
+                frbeam=frbeam,
+            )
 
         d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
 
@@ -2023,7 +2032,7 @@ class CurrentDrive:
         """
         if abs(arg) > (1.0e0 + 1.0e-10):
             eh.fdiags[0] = arg
-            eh.report_error(18)
+            raise ProcessValueError("Invalid argument", arg=arg)
 
         arg2 = min(arg, (1.0e0 - 1.0e-10))
         sinsq = 0.5e0 * (1.0e0 - arg2)
@@ -2056,8 +2065,7 @@ class CurrentDrive:
             palpha = palpha + pterm
             palphap = palphap - n * pterm / (1.0e0 - arg2)
         else:
-            eh.report_error(19)
-            return None
+            raise ProcessError("legend: Solution has not converged")
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen

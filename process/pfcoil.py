@@ -10,6 +10,7 @@ from scipy.special import ellipe, ellipk
 import process.superconductors as superconductors
 from process import fortran as ft
 from process import process_output as op
+from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants, numerics
 from process.fortran import constraint_variables as ctv
@@ -91,19 +92,23 @@ class PFCoil:
         # Set up the number of PF coils including the Central Solenoid (n_cs_pf_coils),
         # and the number of PF circuits including the plasma (n_pf_cs_plasma_circuits)
         if pfv.n_pf_coil_groups > pfv.n_pf_groups_max:
-            eh.idiags[0] = pfv.n_pf_coil_groups
-            eh.idiags[1] = pfv.n_pf_groups_max
-            eh.report_error(64)
+            raise ProcessValueError(
+                "n_pf_coil_groups is larger than n_pf_groups_max",
+                n_pf_coil_groups=pfv.n_pf_coil_groups,
+                n_pf_groups_max=pfv.n_pf_groups_max,
+            )
 
         # Total the number of PF coils in all groups, and check that none
         # exceeds the limit
         pfv.n_cs_pf_coils = 0
         for i in range(pfv.n_pf_coil_groups):
             if pfv.n_pf_coils_in_group[i] > pfv.n_pf_coils_in_group_max:
-                eh.idiags[0] = i
-                eh.idiags[1] = pfv.n_pf_coils_in_group[i]
-                eh.idiags[2] = pfv.n_pf_coils_in_group_max
-                eh.report_error(65)
+                raise ProcessValueError(
+                    "PFCOIL: Too many coils in a PF coil group",
+                    i=i,
+                    n_pf_coils_in_group=pfv.n_pf_coils_in_group[i],
+                    n_pf_coils_in_group_max=pfv.n_pf_coils_in_group_max,
+                )
 
             pfv.n_cs_pf_coils = pfv.n_cs_pf_coils + pfv.n_pf_coils_in_group[i]
 
@@ -152,9 +157,11 @@ class PFCoil:
             )
 
             if pf.nfxf > pfv.nfixmx:
-                eh.idiags[0] = pf.nfxf
-                eh.idiags[1] = pfv.nfixmx
-                eh.report_error(66)
+                raise ProcessValueError(
+                    "Too many filaments nfxf repesenting the OH coil",
+                    nfxf=pf.nfxf,
+                    nfixmx=pfv.nfixmx,
+                )
 
             # Symmetric up/down Central Solenoid : Find (R,Z) and current of each filament at BOP
 
@@ -239,9 +246,11 @@ class PFCoil:
                     pf.rcls[j, k] = pv.rminor * pfv.rref[j] + pv.rmajor
 
             else:
-                eh.idiags[0] = j
-                eh.idiags[1] = pfv.i_pf_location[j]
-                eh.report_error(67)
+                raise ProcessValueError(
+                    "Illegal i_pf_location value",
+                    j=j,
+                    i_pf_location=pfv.i_pf_location[j],
+                )
 
         # Allocate current to the PF coils:
         # "Flux swing coils" participate in cancellation of the CS
@@ -257,9 +266,11 @@ class PFCoil:
             # Find currents for plasma initiation to null field across plasma
             npts = 32  # Number of test points across plasma midplane
             if npts > pfv.nptsmx:
-                eh.idiags[0] = npts
-                eh.idiags[1] = pfv.nptsmx
-                eh.report_error(68)
+                raise ProcessValueError(
+                    "Too many test points npts across plasma midplane",
+                    npts=npts,
+                    nptsmx=pfv.nptsmx,
+                )
 
             # Position and B-field at each test point
             drpt = 2.0e0 * pv.rminor / (npts - 1)
@@ -301,10 +312,11 @@ class PFCoil:
                     if pfv.i_pf_location[i] == 1:
                         # PF coil is stacked on top of the Central Solenoid
                         pf.ccls[i] = 0.0e0
-                        eh.idiags[0] = i
-                        eh.report_error(69)
+                        raise ProcessValueError(
+                            "i_pf_location(i) should not be 1 if itart=1", i=i
+                        )
 
-                    elif pfv.i_pf_location[i] == 2:
+                    if pfv.i_pf_location[i] == 2:
                         # PF coil is on top of the TF coil
                         pf.ccls[i] = 0.3e0 * pv.aspect**1.6e0 * pv.plasma_current
 
@@ -313,9 +325,11 @@ class PFCoil:
                         pf.ccls[i] = -0.4e0 * pv.plasma_current
 
                     else:
-                        eh.idiags[0] = i
-                        eh.idiags[1] = pfv.i_pf_location[i]
-                        eh.report_error(70)
+                        raise ProcessValueError(
+                            "Illegal value of i_pf_location(i)",
+                            i=i,
+                            i_pf_location=pfv.i_pf_location[i],
+                        )
 
                 # Vertical field (T)
                 pv.bvert = (
@@ -339,7 +353,9 @@ class PFCoil:
                     if pfv.i_pf_location[i] == 1:
                         # Do not allow if no central solenoid
                         if bv.iohcl == 0:
-                            eh.report_error(288)
+                            raise ProcessValueError(
+                                "i_pf_location(i) should not be 1 if iohcl=0"
+                            )
                         # PF coil is stacked on top of the Central Solenoid
                         # This coil is to balance Central Solenoid flux and should not be involved
                         # in equilibrium calculation -- RK 07/12
@@ -384,9 +400,11 @@ class PFCoil:
                         ngrp0 = ngrp0 + 1
 
                     else:
-                        eh.idiags[0] = i
-                        eh.idiags[1] = pfv.i_pf_location[i]
-                        eh.report_error(70)
+                        raise ProcessValueError(
+                            "Illegal value of i_pf_location(i)",
+                            i=i,
+                            i_pf_location=pfv.i_pf_location[i],
+                        )
 
                 for ccount in range(ngrp0):
                     ncls0[ccount] = 2
@@ -1398,8 +1416,9 @@ class PFCoil:
             ):
                 it = 5
             else:
-                eh.idiags[0] = it
-                eh.report_error(72)
+                raise ProcessValueError(
+                    "Illegal value of it; possible rounding error", it=it
+                )
 
             if bv.iohcl == 0:
                 # No Central Solenoid
@@ -3106,24 +3125,9 @@ class PFCoil:
 
         else:
             # Error condition
-            eh.idiag[0] = isumat
-            eh.report_error(156)
-
-            # Issue 1871 MDK. The CS calculation has been removed from the isumat option list,
-            # and only calculated if the CS properties are needed.
-            if bv.iohcl != 0:
-                # CS coil current at EOF
-                ioheof = (
-                    bv.hmax
-                    * pfv.f_z_cs_tf_internal
-                    * bv.dr_cs
-                    * 2.0
-                    * pfv.j_cs_flat_top_end
-                )
-                # CS coil current/copper area calculation for quench protection
-                rcv.copperaoh_m2 = ioheof / (
-                    pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu
-                )
+            raise ProcessValueError(
+                "Illegal value for i_pf_superconductor", isumat=isumat
+            )
 
         #  Critical current density in winding pack
         jcritwp = j_crit_cable

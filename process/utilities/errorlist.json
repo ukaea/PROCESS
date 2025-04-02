@@ -17,12 +17,12 @@
     },
     {
       "no": 2,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 3,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "no": 11,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -82,8 +82,8 @@
     },
     {
       "no": 15,
-      "level": 3,
-      "message": "ITERNB: Imminent negative square root argument; NBI will miss plasma completely"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 16,
@@ -92,62 +92,62 @@
     },
     {
       "no": 17,
-      "level": 3,
-      "message": "ECCDEF: Negative normalised current drive efficiency"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 18,
-      "level": 3,
-      "message": "LEGEND: Invalid argument"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 19,
-      "level": 3,
-      "message": "LEGEND: Solution has not converged"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 20,
-      "level": 3,
-      "message": "CULNBI: Imminent negative square root argument; NBI will miss plasma completely"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 21,
-      "level": 3,
-      "message": "ETANB2: Imminent negative square root argument; NBI will miss plasma completely"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 22,
-      "level": 3,
-      "message": "DIVCALL: Non-positive dz_xpoint_divertor"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 23,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 24,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 25,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 26,
-      "level": 3,
-      "message": "IFEFBS: Illegal fbreed value"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 27,
-      "level": 3,
-      "message": "INIT_IMP_ELEMENT: Illegal impurity number"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 28,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -157,27 +157,27 @@
     },
     {
       "no": 30,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 31,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 32,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 33,
-      "level": 3,
-      "message": "Z2INDEX: Element with the given charge is not in the impurity array"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 34,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -187,7 +187,7 @@
     },
     {
       "no": 36,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -197,7 +197,7 @@
     },
     {
       "no": 38,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -212,27 +212,27 @@
     },
     {
       "no": 41,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 42,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 43,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 44,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 45,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -242,7 +242,7 @@
     },
     {
       "no": 47,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -262,17 +262,17 @@
     },
     {
       "no": 51,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 52,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 53,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -312,8 +312,8 @@
     },
     {
       "no": 61,
-      "level": 3,
-      "message": "RADIALB: fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 62,
@@ -327,38 +327,38 @@
     },
     {
       "no": 64,
-      "level": 3,
-      "message": "PFCOIL: n_pf_coil_groups is larger than n_pf_groups_max"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 65,
-      "level": 3,
-      "message": "PFCOIL: Too many coils in a PF coil group"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 66,
-      "level": 3,
-      "message": "PFCOIL: Too many filaments nfxf repesenting the OH coil"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 67,
-      "level": 3,
-      "message": "PFCOIL: Illegal i_pf_location value"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 68,
-      "level": 3,
-      "message": "PFCOIL: Too many test points npts across plasma midplane"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 69,
-      "level": 3,
-      "message": "PFCOIL: i_pf_location(i) should not be 1 if itart=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 70,
-      "level": 3,
-      "message": "PFCOIL: Illegal value of i_pf_location(i)"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 71,
@@ -367,8 +367,8 @@
     },
     {
       "no": 72,
-      "level": 3,
-      "message": "PEAKB: Illegal value of it; possible rounding error"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 73,
@@ -377,22 +377,22 @@
     },
     {
       "no": 74,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 75,
-      "level": 3,
-      "message": "PHYSICS: Illegal value of i_bootstrap_current"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 76,
-      "level": 3,
-      "message": "BOOTSTRAP_FRACTION_WILSON: Illegal profile value found"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 77,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -402,8 +402,8 @@
     },
     {
       "no": 79,
-      "level": 3,
-      "message": "calculate_density_limit: Illegal value for i_density_limit"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 80,
@@ -412,12 +412,12 @@
     },
     {
       "no": 81,
-      "level": 3,
-      "message": "PCOND: Illegal value for i_confinement_time"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 82,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -427,18 +427,18 @@
     },
     {
       "no": 84,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 85,
-      "level": 3,
-      "message": "OUTPLAS: Illegal value of idivrt"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 86,
-      "level": 3,
-      "message": "OUTPLAS: Illegal value of i_plasma_geometry"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 87,
@@ -452,7 +452,7 @@
     },
     {
       "no": 89,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -462,7 +462,7 @@
     },
     {
       "no": 91,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -477,17 +477,17 @@
     },
     {
       "no": 94,
-      "level": 3,
-      "message": "SCAN: Illegal value of isweep"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 95,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 96,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -532,32 +532,32 @@
     },
     {
       "no": 105,
-      "level": 3,
-      "message": "SUPERCON: Illegal value for i_tf_sc_mat"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 106,
       "level": 2,
-      "message": "BI2212: Fit extrapolated outside of range of validity"
+      "message": "REMOVED"
     },
     {
       "no": 107,
-      "level": 3,
-      "message": "STHEAT: Illegal value for isthtr"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 108,
-      "level": 3,
-      "message": "STDLIM: Negative square root imminent"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 109,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 110,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -582,37 +582,37 @@
     },
     {
       "no": 115,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 116,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 117,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 118,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 119,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 120,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 121,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -622,7 +622,7 @@
     },
     {
       "no": 123,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -632,32 +632,32 @@
     },
     {
       "no": 125,
-      "level": 3,
-      "message": "ACC2253: Illegal value for istore"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 126,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 127,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 128,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 129,
-      "level": 3,
-      "message": "CULLHY: Normalised LH efficiency < 0; use a different value of iefrf"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 130,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -692,7 +692,7 @@
     },
     {
       "no": 137,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -702,12 +702,12 @@
     },
     {
       "no": 139,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 140,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -737,7 +737,7 @@
     },
     {
       "no": 146,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -762,7 +762,7 @@
     },
     {
       "no": 151,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -787,8 +787,8 @@
     },
     {
       "no": 156,
-      "level": 3,
-      "message": "SUPERCONPF: Illegal value for i_pf_superconductor"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 157,
@@ -817,22 +817,22 @@
     },
     {
       "no": 162,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 163,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 164,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 165,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -897,7 +897,7 @@
     },
     {
       "no": 178,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -937,12 +937,12 @@
     },
     {
       "no": 186,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 187,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1067,7 +1067,7 @@
     },
     {
       "no": 212,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1082,12 +1082,12 @@
     },
     {
       "no": 215,
-      "level": 3,
-      "message": "STELLARATOR: i_coolant_pumping = 0 or 1 only"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 216,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1102,7 +1102,7 @@
     },
     {
       "no": 219,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1117,7 +1117,7 @@
     },
     {
       "no": 222,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1147,7 +1147,7 @@
     },
     {
       "no": 228,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1157,18 +1157,18 @@
     },
     {
       "no": 230,
-      "level": 3,
-      "message": "BLD2019: fwdr and v1dr should be zero for 2019 IFE build."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 231,
-      "level": 3,
-      "message": "BLD2019: fwdzu, v1dzu and v2dzu should be zero for 2019 IFE build."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 232,
-      "level": 3,
-      "message": "BLD2019: fwdzl, v1dzl and v2dzl should be zero for 2019 IFE build."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 233,
@@ -1177,12 +1177,12 @@
     },
     {
       "no": 234,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 235,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1197,22 +1197,22 @@
     },
     {
       "no": 238,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 239,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 240,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 241,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1237,17 +1237,17 @@
     },
     {
       "no": 246,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 247,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 248,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1262,27 +1262,27 @@
     },
     {
       "no": 251,
-      "level": 3,
-      "message": "LOADXC: Beta should not be in ixc if istell>0. Use Constraints 24 and 84 instead."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 252,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 253,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 254,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 255,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1302,12 +1302,12 @@
     },
     {
       "no": 259,
-      "level": 3,
-      "message": "CHECK: Constraint equation 10 (CP lifetime) to used with ST desing (itart=1)"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 260,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1327,12 +1327,12 @@
     },
     {
       "no": 264,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 265,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1342,7 +1342,7 @@
     },
     {
       "no": 267,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1352,17 +1352,17 @@
     },
     {
       "no": 269,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 270,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 271,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1372,7 +1372,7 @@
     },
     {
       "no": 273,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1382,7 +1382,7 @@
     },
     {
       "no": 275,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1402,8 +1402,8 @@
     },
     {
       "no": 279,
-      "level": 3,
-      "message": "CHECK: Pressure drops in coolant are too large to be feasable."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 280,
@@ -1412,7 +1412,7 @@
     },
     {
       "no": 281,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1422,12 +1422,12 @@
     },
     {
       "no": 283,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 284,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1447,8 +1447,8 @@
     },
     {
       "no": 288,
-      "level": 3,
-      "message": "PFCOIL: i_pf_location(i) should not be 1 if iohcl=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 289,
