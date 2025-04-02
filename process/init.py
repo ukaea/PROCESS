@@ -283,7 +283,6 @@ def initialise_iterative_variables():
     fortran.define_iteration_variables.init_itv_31()
     fortran.define_iteration_variables.init_itv_32()
     fortran.define_iteration_variables.init_itv_33()
-    fortran.define_iteration_variables.init_itv_34()
     fortran.define_iteration_variables.init_itv_35()
     fortran.define_iteration_variables.init_itv_36()
     fortran.define_iteration_variables.init_itv_37()

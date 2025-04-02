@@ -1078,7 +1078,6 @@ INPUT_VARIABLES = {
     "rhopfbus": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1e-05)),
     "rinboard": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "ripmax": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
-    "rlenmax": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
     "rmajor": InputVariable(fortran.physics_variables, float, range=(0.1, 50.0)),
     "robotics_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
     "robotics_l": InputVariable(

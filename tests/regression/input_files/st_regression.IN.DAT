@@ -799,12 +799,6 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Divertor Heat Model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*rlenmax = 
-* DESCRIPTION:   Maximum value for length ratio (rlclolcn) (`constraintg eqn 22`)
-* JUSTIFICATION: Turned off, not using icc =22
-
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 *icc = 78
 * DESCRIPTION:   Constraint equation for Reinke criterion, divertor impurity fraction lower limit
 * JUSTIFICATION: Turned off, not concerned with lower divertor impurity

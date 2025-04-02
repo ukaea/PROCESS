@@ -70,12 +70,6 @@ module divertor_variables
   real(dp) :: rconl
   !! connection length ratio, outboard side
 
-  real(dp) :: rlclolcn
-  !! ratio of collision length / connection length
-
-  real(dp) :: rlenmax
-  !! maximum value for length ratio (rlclolcn) (`constraintg eqn 22`)
-
   real(dp) :: rsrd
   !! effective separatrix/divertor radius ratio
 
@@ -111,8 +105,6 @@ module divertor_variables
     hldivlim = 5.0D0
     prn1 = 0.285D0
     rconl = 0.0D0
-    rlclolcn = 0.0D0
-    rlenmax = 0.5D0
     rsrd = 0.0D0
     tconl = 0.0D0
     tdiv = 2.0D0

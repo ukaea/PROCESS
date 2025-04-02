@@ -4203,8 +4203,6 @@
         "j_cs_critical_pulse_start": 0.0,
         "j_pf_wp_critical": 0.0,
         "rkind": "double",
-        "rlclolcn": 0.0,
-        "rlenmax": 0.5,
         "ind_plasma_internal_norm": 0.9,
         "ind_plasma": 0.0,
         "rmaj": null,
@@ -10477,8 +10475,6 @@
         "j_cs_critical_pulse_start": "allowable central solenoid current density at beginning of pulse (A/m2)",
         "j_pf_wp_critical": "allowable winding pack current density of PF coil i (A/m2)",
         "rkind": "",
-        "rlclolcn": "ratio of collision length / connection length",
-        "rlenmax": "maximum value for length ratio (rlclolcn) (`constraintg eqn 22`)",
         "ind_plasma_internal_norm": "plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)",
         "ind_plasma": "plasma inductance (H)",
         "rmaj": "",
@@ -14002,10 +13998,6 @@
         "ripmax": {
             "lb": 0.1,
             "ub": 100.0
-        },
-        "rlenmax": {
-            "lb": 0.0,
-            "ub": 1.0
         },
         "ind_plasma_internal_norm": {
             "lb": 0.0,
@@ -17755,8 +17747,6 @@
             "hldivlim",
             "prn1",
             "rconl",
-            "rlclolcn",
-            "rlenmax",
             "rsrd",
             "tconl",
             "tdiv",
@@ -20466,7 +20456,6 @@
         "rinboard": "real_variable",
         "ripmax": "real_variable",
         "j_pf_coil_wp_peak": "real_array",
-        "rlenmax": "real_variable",
         "ind_plasma_internal_norm": "real_variable",
         "rmajor": "real_variable",
         "f_nd_beam_electron": "real_variable",
