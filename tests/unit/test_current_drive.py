@@ -73,7 +73,7 @@ class CudrivParam(NamedTuple):
 
     pwpnb: Any = None
 
-    etanbi: Any = None
+    eta_beam_injector_wall_plug: Any = None
 
     beam_energy: Any = None
 
@@ -229,7 +229,7 @@ class CudrivParam(NamedTuple):
             f_p_beam_orbit_loss=0,
             pinjmw=0,
             pwpnb=0,
-            etanbi=0.29999999999999999,
+            eta_beam_injector_wall_plug=0.29999999999999999,
             beam_energy=1000,
             effcd=0,
             pwplh=0,
@@ -319,7 +319,7 @@ class CudrivParam(NamedTuple):
             f_p_beam_orbit_loss=0,
             pinjmw=120.49600019005746,
             pwpnb=0,
-            etanbi=0.29999999999999999,
+            eta_beam_injector_wall_plug=0.29999999999999999,
             beam_energy=1000,
             effcd=0.05000000000000001,
             pwplh=0,
@@ -462,7 +462,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pwpnb", cudrivparam.pwpnb)
 
-    monkeypatch.setattr(current_drive_variables, "etanbi", cudrivparam.etanbi)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_beam_injector_wall_plug",
+        cudrivparam.eta_beam_injector_wall_plug,
+    )
 
     monkeypatch.setattr(current_drive_variables, "beam_energy", cudrivparam.beam_energy)
 
