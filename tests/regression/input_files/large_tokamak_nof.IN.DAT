@@ -444,7 +444,7 @@ i_hcd_primary = 10
 gamma_ecrh = 0.30
 
 * ECRH wall-plug efficiency
-etaech = 0.5
+eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
 pheat = 75.0

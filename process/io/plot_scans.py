@@ -367,7 +367,7 @@ def main(args=None):
         76: "etath",
         77: "startupratio",
         78: "fkind",
-        79: "etaech",
+        79: "eta_ecrh_injector_wall_plug",
         80: "fcoolcp",
         81: "n_tf_turn",
     }

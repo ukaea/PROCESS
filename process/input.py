@@ -460,7 +460,9 @@ INPUT_VARIABLES = {
     "esbldgm3": InputVariable(
         fortran.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
-    "etaech": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "eta_ecrh_injector_wall_plug": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "etahtp": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "eta_lowhyb_injector_wall_plug": InputVariable(

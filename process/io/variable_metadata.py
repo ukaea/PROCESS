@@ -385,7 +385,7 @@ var_dicts = {
         description="Redundancy factor for gyrotrons",
         units="",
     ),
-    "etaech": VariableMetadata(
+    "eta_ecrh_injector_wall_plug": VariableMetadata(
         latex=r"ECH wall plug to injector efficiency",
         description="Efficiency of electron cyclotron heating",
         units="",

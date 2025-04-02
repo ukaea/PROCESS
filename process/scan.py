@@ -133,7 +133,9 @@ SCAN_VARIABLES = {
     76: ScanVariable("etath", "Thermal conversion eff."),
     77: ScanVariable("startupratio", "Gyrotron redundancy"),
     78: ScanVariable("fkind", "Multiplier for Nth of a kind costs"),
-    79: ScanVariable("etaech", "ECH wall plug to injector efficiency"),
+    79: ScanVariable(
+        "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency"
+    ),
     80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
     81: ScanVariable("n_tf_turn", "Number of turns in TF"),
 }
@@ -1024,7 +1026,7 @@ class Scan:
             case 78:
                 cost_variables.fkind = swp[iscn - 1]
             case 79:
-                current_drive_variables.etaech = swp[iscn - 1]
+                current_drive_variables.eta_ecrh_injector_wall_plug = swp[iscn - 1]
             case 80:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
             case 81:

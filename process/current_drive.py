@@ -297,11 +297,14 @@ class CurrentDrive:
 
                 # Wall plug power
                 heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.pinjfixmw / current_drive_variables.etaech
+                    current_drive_variables.pinjfixmw
+                    / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacdfix = current_drive_variables.etaech
+                current_drive_variables.etacdfix = (
+                    current_drive_variables.eta_ecrh_injector_wall_plug
+                )
 
                 # the fixed auxiliary current
                 auxiliary_cdfix = (
@@ -615,12 +618,15 @@ class CurrentDrive:
 
                 # Wall plug power
                 current_drive_variables.echwpow = (
-                    current_drive_variables.echpwr / current_drive_variables.etaech
+                    current_drive_variables.echpwr
+                    / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
                 pinjwp1 = current_drive_variables.echwpow
-                current_drive_variables.etacd = current_drive_variables.etaech
+                current_drive_variables.etacd = (
+                    current_drive_variables.eta_ecrh_injector_wall_plug
+                )
             elif current_drive_variables.i_hcd_primary in [5, 8]:
                 # MDK. See Gitlab issue #248, and scanned note.
                 power1 = (
@@ -1269,8 +1275,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "ECH wall plug efficiency",
-                "(etaech)",
-                current_drive_variables.etaech,
+                "(eta_ecrh_injector_wall_plug)",
+                current_drive_variables.eta_ecrh_injector_wall_plug,
             )
             po.ovarre(
                 self.outfile,
@@ -1290,8 +1296,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "ECH wall plug efficiency",
-                "(etaech)",
-                current_drive_variables.etaech,
+                "(eta_ecrh_injector_wall_plug)",
+                current_drive_variables.eta_ecrh_injector_wall_plug,
             )
             po.ovarre(
                 self.outfile,

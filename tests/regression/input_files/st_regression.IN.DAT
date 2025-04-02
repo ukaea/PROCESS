@@ -2837,7 +2837,7 @@ wave_mode = 0
 * Electron cyclotron *
 *--------------------*
 
-etaech = 0.45
+eta_ecrh_injector_wall_plug = 0.45
 * DESCRIPTION:   ECRH Wall Plug to Injector Efficiency
 * JUSTIFICATION:   
 

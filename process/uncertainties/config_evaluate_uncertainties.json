@@ -88,7 +88,7 @@
             "hfact",
             "radius_plasma_core_norm",
             "kappa",
-            "etaech",
+            "eta_ecrh_injector_wall_plug",
             "etath",
             "boundl(18)",
             "alstrtf",

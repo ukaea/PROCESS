@@ -114,7 +114,7 @@ module scan_module
   !!         <LI> 76 etath : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
-  !!         <LI> 79 etaech : ECH wall plug to injector efficiency
+  !!         <LI> 79 eta_ecrh_injector_wall_plug : ECH wall plug to injector efficiency
 
   integer :: nsweep_2
   !! nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:
