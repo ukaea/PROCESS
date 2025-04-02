@@ -630,7 +630,7 @@ INPUT_VARIABLES = {
     "foh_stress": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
-    "forbitloss": InputVariable(
+    "f_p_beam_orbit_loss": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 0.999)
     ),
     "fpdivlim": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),

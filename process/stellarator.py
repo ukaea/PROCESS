@@ -4963,10 +4963,11 @@ class Stellarator:
                 current_drive_variables.nbshinef,
             ) = self.current_drive.culnbi()
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
-                1 - current_drive_variables.forbitloss
+                1 - current_drive_variables.f_p_beam_orbit_loss
             )
             current_drive_variables.porbitlossmw = (
-                current_drive_variables.pheat * current_drive_variables.forbitloss
+                current_drive_variables.pheat
+                * current_drive_variables.f_p_beam_orbit_loss
             )
             current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
             current_drive_variables.pinjemw = current_drive_variables.pnbeam * (

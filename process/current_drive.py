@@ -316,14 +316,14 @@ class CurrentDrive:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
-                current_drive_variables.forbitloss = min(
-                    0.999, current_drive_variables.forbitloss
+                current_drive_variables.f_p_beam_orbit_loss = min(
+                    0.999, current_drive_variables.f_p_beam_orbit_loss
                 )  # Should never be needed
 
                 pnbitotfix = current_drive_variables.pinjfixmw / (
                     1.0e0
-                    - current_drive_variables.forbitloss
-                    + current_drive_variables.forbitloss
+                    - current_drive_variables.f_p_beam_orbit_loss
+                    + current_drive_variables.f_p_beam_orbit_loss
                     * current_drive_variables.nbshinef
                 )
 
@@ -331,7 +331,7 @@ class CurrentDrive:
                 nbshinemwfix = pnbitotfix * current_drive_variables.nbshinef
 
                 # First orbit loss
-                porbitlossmwfix = current_drive_variables.forbitloss * (
+                porbitlossmwfix = current_drive_variables.f_p_beam_orbit_loss * (
                     pnbitotfix - nbshinemwfix
                 )
 
@@ -627,14 +627,14 @@ class CurrentDrive:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
-                current_drive_variables.forbitloss = min(
-                    0.999, current_drive_variables.forbitloss
+                current_drive_variables.f_p_beam_orbit_loss = min(
+                    0.999, current_drive_variables.f_p_beam_orbit_loss
                 )  # Should never be needed
 
                 current_drive_variables.p_beam_injected = power1 / (
                     1.0e0
-                    - current_drive_variables.forbitloss
-                    + current_drive_variables.forbitloss
+                    - current_drive_variables.f_p_beam_orbit_loss
+                    + current_drive_variables.f_p_beam_orbit_loss
                     * current_drive_variables.nbshinef
                 )
 
@@ -646,7 +646,7 @@ class CurrentDrive:
 
                 # First orbit loss
                 current_drive_variables.porbitlossmw = (
-                    current_drive_variables.forbitloss
+                    current_drive_variables.f_p_beam_orbit_loss
                     * (
                         current_drive_variables.p_beam_injected
                         - current_drive_variables.p_beam_shine_through_mw

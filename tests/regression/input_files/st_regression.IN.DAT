@@ -2752,7 +2752,7 @@ feffcd = 1.0
 * DESCRIPTION:   Width of neutral beam duct where it passes between the TF coils
 * JUSTIFICATION: Not used as no NBI used
 
-*forbitloss
+*f_p_beam_orbit_loss
 * DESCRIPTION:   NBI power orbit loss fraction
 * JUSTIFICATION: Not used as no NBI used
 

@@ -1974,7 +1974,7 @@
         "fnesep": 1.0,
         "fniterpump": 1.0,
         "foh_stress": 1.0,
-        "forbitloss": 0.0,
+        "f_p_beam_orbit_loss": 0.0,
         "fpdivlim": 1.0,
         "fpe1_": "wpe1_/(2*pi)",
         "fpeakb": 1.0,
@@ -9531,7 +9531,7 @@
         "fnesep": "f-value for Eich critical separatrix density\n (`constraint equation 76`, `iteration variable 144`)",
         "fniterpump": "f-value for constraint that number of pumps < tfno\n (`constraint equation 63`, `iteration variable 111`)",
         "foh_stress": "f-value for Tresca yield criterion in Central Solenoid\n (`constraint equation 72`, `iteration variable 123`)",
-        "forbitloss": "fraction of neutral beam power lost after ionisation but before\n thermalisation (orbit loss fraction)",
+        "f_p_beam_orbit_loss": "fraction of neutral beam power lost after ionisation but before\n thermalisation (orbit loss fraction)",
         "fpdivlim": "F-value for minimum pdivt (`constraint equation 80`)",
         "fpe1_": "",
         "fpeakb": "f-value for maximum toroidal field (`constraint equation 25`, `iteration variable 35`)",
@@ -12643,7 +12643,7 @@
             "lb": 0.001,
             "ub": 1.0
         },
-        "forbitloss": {
+        "f_p_beam_orbit_loss": {
             "lb": 0.0,
             "ub": 0.999
         },
@@ -17640,7 +17640,7 @@
             "pscf_scene",
             "p_beam_shine_through_mw",
             "feffcd",
-            "forbitloss",
+            "f_p_beam_orbit_loss",
             "frbeam",
             "f_tritium_beam",
             "gamcd",
@@ -20098,7 +20098,7 @@
         "fnesep": "real_variable",
         "fniterpump": "real_variable",
         "foh_stress": "real_variable",
-        "forbitloss": "real_variable",
+        "f_p_beam_orbit_loss": "real_variable",
         "fpdivlim": "real_variable",
         "fpeakb": "real_variable",
         "fpinj": "real_variable",
