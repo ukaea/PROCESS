@@ -5066,8 +5066,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Beam duct shielding thickness (m)",
-                    "(nbshield)",
-                    current_drive_variables.nbshield,
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
                 )
                 po.ovarre(
                     self.outfile,

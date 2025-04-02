@@ -101,7 +101,7 @@ class CudrivParam(NamedTuple):
 
     pinjalw: Any = None
 
-    nbshield: Any = None
+    dx_beam_shield: Any = None
 
     frbeam: Any = None
 
@@ -243,7 +243,7 @@ class CudrivParam(NamedTuple):
             bootstrap_current_fraction_max=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
-            nbshield=0.5,
+            dx_beam_shield=0.5,
             frbeam=1.05,
             rtanbeam=0,
             rtanmax=0,
@@ -333,7 +333,7 @@ class CudrivParam(NamedTuple):
             bootstrap_current_fraction_max=0.95000000000000007,
             taubeam=0,
             pinjalw=200,
-            nbshield=0.5,
+            dx_beam_shield=0.5,
             frbeam=1.05,
             rtanbeam=8.4000000000000004,
             rtanmax=13.179564451855533,
@@ -504,7 +504,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pinjalw", cudrivparam.pinjalw)
 
-    monkeypatch.setattr(current_drive_variables, "nbshield", cudrivparam.nbshield)
+    monkeypatch.setattr(
+        current_drive_variables, "dx_beam_shield", cudrivparam.dx_beam_shield
+    )
 
     monkeypatch.setattr(current_drive_variables, "frbeam", cudrivparam.frbeam)
 

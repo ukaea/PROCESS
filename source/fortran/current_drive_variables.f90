@@ -190,7 +190,7 @@ module current_drive_variables
   real(dp) :: f_p_beam_shine_through
   !! neutral beam shine-through fraction
 
-  real(dp) :: nbshield
+  real(dp) :: dx_beam_shield
   !! neutral beam duct shielding thickness (m)
 
   real(dp) :: pheat
@@ -299,7 +299,7 @@ module current_drive_variables
     i_hcd_secondary = 0
     irfcd = 1
     f_p_beam_shine_through = 0.0D0
-    nbshield = 0.5D0
+    dx_beam_shield = 0.5D0
     pheat = 0.0D0
     pheatfix = 0.0D0
     pinjalw = 150.0D0

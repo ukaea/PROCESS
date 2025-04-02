@@ -2825,7 +2825,7 @@ feffcd = 1.0
 * DESCRIPTION:   Leading coeff. for NB beta fraction
 * JUSTIFICATION: Not used as no NBI used
 
-*nbshield
+*dx_beam_shield
 * DESCRIPTION:   Wall thickness of neutral beam duct (m)
 * JUSTIFICATION: Not used as no NBI used
 
