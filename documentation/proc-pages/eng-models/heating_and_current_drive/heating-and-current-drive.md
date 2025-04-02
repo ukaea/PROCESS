@@ -31,7 +31,7 @@ Similarly the lower bound on required heating and current drive power can be set
 
 ### Secondary current drive
 
-It is possible to have more than one type of heating and current drive system in `PROCESS`. This can be enabled by setting the `iefrffix` switch to the desired current drive scheme, following the same numbered selection for `i_hcd_primary`.
+It is possible to have more than one type of heating and current drive system in `PROCESS`. This can be enabled by setting the `i_hcd_secondary` switch to the desired current drive scheme, following the same numbered selection for `i_hcd_primary`.
 The power injected by the secondary current drive scheme has to be set to a fixed value. This value can be set with the `pinjfixmw` variable.
 
 ## Plasma heating only

@@ -529,7 +529,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Secondary_current_drive_efficiency_model________________________________ (iefrffix)____________________              0    
+ Secondary_current_drive_efficiency_model________________________________ (i_hcd_secondary)____________________              0    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      5.1429E+00    

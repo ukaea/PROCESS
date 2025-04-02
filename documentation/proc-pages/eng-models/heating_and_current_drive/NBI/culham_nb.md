@@ -1,6 +1,6 @@
 # Culham Neutral Beam Model | `culnbi()`
 
-- `i_hcd_primary/iefrffix` = 8 
+- `i_hcd_primary/i_hcd_secondary` = 8 
 
 
 

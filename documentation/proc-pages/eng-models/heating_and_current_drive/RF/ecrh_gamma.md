@@ -1,6 +1,6 @@
 # ECRH User Input Gamma Model
 
-- `i_hcd_primary/iefrffix` = 10 
+- `i_hcd_primary/i_hcd_secondary` = 10 
 
 This model allows the user to input a scaling factor to the current drive efficiency with the variable `gamma_ecrh`. The value of this variable should follow the value and form of the expression below:
 
