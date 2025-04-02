@@ -8,6 +8,7 @@ from scipy import optimize
 
 import process.superconductors as superconductors
 from process import process_output as po
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
@@ -812,8 +813,7 @@ class Sctfcoil:
             tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         else:
-            error_handling.idiags[0] = isumat
-            error_handling.report_error(105)
+            raise ProcessValueError("Illegal value for i_tf_sc_mat", isumat=isumat)
 
         # Critical current density in winding pack
         # aturn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)

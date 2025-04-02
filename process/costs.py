@@ -1,6 +1,7 @@
 import numpy as np
 
 from process import process_output as po
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -8,7 +9,6 @@ from process.fortran import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -2594,9 +2594,9 @@ class Costs:
                 )
 
             else:
-                error_handling.idiags[0] = pulse_variables.istore
-
-                error_handling.report_error(125)
+                raise ProcessValueError(
+                    "Illegal value for istore", istore=pulse_variables.istore
+                )
 
         if pulse_variables.istore < 3:
             #  Scale self.c2253 with net electric power
