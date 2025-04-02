@@ -2808,9 +2808,9 @@ feffcd = 1.0
 *icc = 59
 * DESCRIPTION:   Constraint equation for neutral beam shine-through fraction upper limit
 * JUSTIFICATION: Turned off, not using NBI 
-* VARIABLES:     nbshinefmax (maximum neutral beam shine-through fraction). f_p_beam_shine_through calculated in situ
+* VARIABLES:     f_p_beam_shine_through_max (maximum neutral beam shine-through fraction). f_p_beam_shine_through calculated in situ
 
-*nbshinefmax = 
+*f_p_beam_shine_through_max = 
 * DESCRIPTION:   Maximum neutral beam shine-through fraction (`constraint equation 59`) (default = 1.0D-3)
 * JUSTIFICATION: Not set, as not using icc = 59
 

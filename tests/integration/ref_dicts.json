@@ -3333,7 +3333,7 @@
         "n_blkt_outboard_modules_toroidal": 48.0,
         "nbshield": 0.5,
         "f_p_beam_shine_through": 0.0,
-        "nbshinefmax": 0.001,
+        "f_p_beam_shine_through_max": 0.001,
         "p_beam_shine_through_mw": 0.0,
         "ncalls": 0.0,
         "n_pf_cs_plasma_circuits": 0.0,
@@ -10071,7 +10071,7 @@
         "n_blkt_outboard_modules_toroidal": "number of outboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)",
         "nbshield": "neutral beam duct shielding thickness (m)",
         "f_p_beam_shine_through": "neutral beam shine-through fraction",
-        "nbshinefmax": "maximum neutral beam shine-through fraction (`constraint equation 59`)",
+        "f_p_beam_shine_through_max": "maximum neutral beam shine-through fraction (`constraint equation 59`)",
         "p_beam_shine_through_mw": "neutral beam shine-through power",
         "ncalls": "ncalls : number of function calls during solution",
         "n_pf_cs_plasma_circuits": "number of PF circuits (including central solenoid and plasma)",
@@ -13631,7 +13631,7 @@
             "lb": 0.01,
             "ub": 0.5
         },
-        "nbshinefmax": {
+        "f_p_beam_shine_through_max": {
             "lb": 1e-20,
             "ub": 0.1
         },
@@ -17281,7 +17281,7 @@
             "gammax",
             "pflux_fw_rad_max",
             "mvalim",
-            "nbshinefmax",
+            "f_p_beam_shine_through_max",
             "nflutfmax",
             "pdivtlim",
             "f_fw_rad_max",
@@ -20355,7 +20355,7 @@
         "n_blkt_inboard_modules_toroidal": "int_variable",
         "n_blkt_outboard_modules_toroidal": "int_variable",
         "nbshield": "real_variable",
-        "nbshinefmax": "real_variable",
+        "f_p_beam_shine_through_max": "real_variable",
         "n_pf_coils_in_group": "int_array",
         "neped": "real_variable",
         "neqns": "int_variable",

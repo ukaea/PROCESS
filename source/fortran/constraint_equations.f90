@@ -2298,7 +2298,7 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for power through separatrix / major radius upper limit
       !! #=# current_drive
-      !! #=#=# fnbshinef, nbshinefmax
+      !! #=#=# fnbshinef, f_p_beam_shine_through_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpsepr : input real : f-value for maximum Psep/R limit
@@ -2373,13 +2373,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for neutral beam shine-through fraction upper limit
       !! #=# current_drive
-      !! #=#=# fnbshinef, nbshinefmax
+      !! #=#=# fnbshinef, f_p_beam_shine_through_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fnbshinef : input real : f-value for maximum neutral beam shine-through fraction
-      !! nbshinefmax : input real :  maximum neutral beam shine-through fraction
+      !! f_p_beam_shine_through_max : input real :  maximum neutral beam shine-through fraction
       !! f_p_beam_shine_through : input real :  neutral beam shine-through fraction
-      use constraint_variables, only: fnbshinef, nbshinefmax
+      use constraint_variables, only: fnbshinef, f_p_beam_shine_through_max
       use current_drive_variables, only: f_p_beam_shine_through
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2387,8 +2387,8 @@ contains
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc = nbshinef/nbshinefmax - 1.0D0 * f_p_beam_shine_through
-      tmp_con = nbshinefmax * (1.0D0 - tmp_cc)
+      tmp_cc = nbshinef/f_p_beam_shine_through_max - 1.0D0 * f_p_beam_shine_through
+      tmp_con = f_p_beam_shine_through_max * (1.0D0 - tmp_cc)
       tmp_err = f_p_beam_shine_through * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''

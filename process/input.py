@@ -908,7 +908,7 @@ INPUT_VARIABLES = {
     "nbshield": InputVariable(
         fortran.current_drive_variables, float, range=(0.01, 0.5)
     ),
-    "nbshinefmax": InputVariable(
+    "f_p_beam_shine_through_max": InputVariable(
         fortran.constraint_variables, float, range=(1e-20, 0.1)
     ),
     "neped": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
