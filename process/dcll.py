@@ -205,7 +205,7 @@ class DCLL:
             fwbs_variables.p_fw_rad_total_mw
             * build_variables.a_fw_outboard
             / build_variables.a_fw_total
-            + current_drive_variables.porbitlossmw
+            + current_drive_variables.p_beam_orbit_loss
             + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.p_fw_rad_total_mw * (
