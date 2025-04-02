@@ -961,8 +961,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction",
-            "(ps_current_fraction)",
-            current_drive_variables.ps_current_fraction,
+            "(f_c_plasma_pfirsch_schluter)",
+            current_drive_variables.f_c_plasma_pfirsch_schluter,
             "OP ",
         )
         po.ovarrf(
