@@ -241,7 +241,7 @@ module current_drive_variables
   real(dp) :: rtanmax
   !! maximum tangency radius for centreline of beam (m)
 
-  real(dp) :: taubeam
+  real(dp) :: n_beam_decay_lengths_core
   !! neutral beam e-decay lengths to plasma centre
 
   real(dp) :: tbeamin
@@ -316,7 +316,7 @@ module current_drive_variables
     pwpnb = 0.0D0
     rtanbeam = 0.0D0
     rtanmax = 0.0D0
-    taubeam = 0.0D0
+    n_beam_decay_lengths_core = 0.0D0
     tbeamin = 3.0D0
   end subroutine init_current_drive_variables
 end module current_drive_variables

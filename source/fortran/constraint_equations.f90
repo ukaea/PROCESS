@@ -935,9 +935,9 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! taubeam : input real : neutral beam e-decay lengths to plasma centre
+      !! n_beam_decay_lengths_core : input real : neutral beam e-decay lengths to plasma centre
       !! tbeamin : input real : permitted neutral beam e-decay lengths to plasma centre
-      use current_drive_variables, only: taubeam, tbeamin
+      use current_drive_variables, only: n_beam_decay_lengths_core, tbeamin
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -945,7 +945,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - taubeam/tbeamin
+      tmp_cc = 1.0D0 - n_beam_decay_lengths_core/tbeamin
       tmp_con = tbeamin * (1.0D0 - tmp_cc)
       tmp_err = tbeamin * tmp_cc
       tmp_symbol = '='

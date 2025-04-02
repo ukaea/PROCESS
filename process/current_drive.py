@@ -1108,8 +1108,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Beam decay lengths to centre",
-                "(taubeam)",
-                current_drive_variables.taubeam,
+                "(n_beam_decay_lengths_core)",
+                current_drive_variables.n_beam_decay_lengths_core,
                 "OP ",
             )
             po.ovarre(
@@ -1344,7 +1344,9 @@ class CurrentDrive:
         )
 
         # Calculate number of decay lengths to centre
-        current_drive_variables.taubeam = dpath * physics_variables.dene * sigstop
+        current_drive_variables.n_beam_decay_lengths_core = (
+            dpath * physics_variables.dene * sigstop
+        )
 
         # Shine-through fraction of beam
         fshine = np.exp(-2.0 * dpath * physics_variables.dene * sigstop)
@@ -1617,7 +1619,9 @@ class CurrentDrive:
 
         #  Calculate number of decay lengths to centre
 
-        current_drive_variables.taubeam = dpath * physics_variables.dnla * sigstop
+        current_drive_variables.n_beam_decay_lengths_core = (
+            dpath * physics_variables.dnla * sigstop
+        )
 
         #  Shine-through fraction of beam
 

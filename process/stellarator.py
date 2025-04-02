@@ -5101,8 +5101,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Beam decay lengths to centre",
-                    "(taubeam)",
-                    current_drive_variables.taubeam,
+                    "(n_beam_decay_lengths_core)",
+                    current_drive_variables.n_beam_decay_lengths_core,
                 )
 
 

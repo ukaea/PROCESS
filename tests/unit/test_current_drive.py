@@ -97,7 +97,7 @@ class CudrivParam(NamedTuple):
 
     bootstrap_current_fraction_max: Any = None
 
-    taubeam: Any = None
+    n_beam_decay_lengths_core: Any = None
 
     p_hcd_injected_max: Any = None
 
@@ -241,7 +241,7 @@ class CudrivParam(NamedTuple):
             bigq=0,
             bootstrap_current_fraction=0.27635918746616817,
             bootstrap_current_fraction_max=0.95000000000000007,
-            taubeam=0,
+            n_beam_decay_lengths_core=0,
             p_hcd_injected_max=200,
             dx_beam_shield=0.5,
             frbeam=1.05,
@@ -331,7 +331,7 @@ class CudrivParam(NamedTuple):
             bigq=0,
             bootstrap_current_fraction=0.27635918746616817,
             bootstrap_current_fraction_max=0.95000000000000007,
-            taubeam=0,
+            n_beam_decay_lengths_core=0,
             p_hcd_injected_max=200,
             dx_beam_shield=0.5,
             frbeam=1.05,
@@ -520,7 +520,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.bootstrap_current_fraction_max,
     )
 
-    monkeypatch.setattr(current_drive_variables, "taubeam", cudrivparam.taubeam)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "n_beam_decay_lengths_core",
+        cudrivparam.n_beam_decay_lengths_core,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "p_hcd_injected_max", cudrivparam.p_hcd_injected_max
