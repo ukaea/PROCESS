@@ -101,7 +101,7 @@ module divertor_variables
     fdiva = 1.11D0
     flux_exp = 2.0D0
     hldiv = 0.0D0
-    i_hldiv = 0
+    i_hldiv = 2
     hldivlim = 5.0D0
     prn1 = 0.285D0
     rconl = 0.0D0
