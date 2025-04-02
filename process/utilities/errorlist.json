@@ -18,12 +18,12 @@
     {
       "no": 2,
       "level": 3,
-      "message": "CONSTRAINTS: Constraint equation 15 is redundant"
+      "message": "REMOVED"
     },
     {
       "no": 3,
       "level": 3,
-      "message": "CONSTRAINTS: Constraint equation 23 is redundant; use 33 and/or 35 instead"
+      "message": "REMOVED"
     },
     {
       "no": 4,
@@ -63,7 +63,7 @@
     {
       "no": 11,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 47 if irfp=0"
+      "message": "REMOVED"
     },
     {
       "no": 12,
@@ -123,17 +123,17 @@
     {
       "no": 23,
       "level": 3,
-      "message": "FUNFOM: Figure of merit cfactr requires iavail=1"
+      "message": "REMOVED"
     },
     {
       "no": 24,
       "level": 3,
-      "message": "FUNFOM: No such figure of merit"
+      "message": "REMOVED"
     },
     {
       "no": 25,
       "level": 3,
-      "message": "FUNFOM: NaN error in figure of merit calculation"
+      "message": "REMOVED"
     },
     {
       "no": 26,
@@ -148,27 +148,27 @@
     {
       "no": 28,
       "level": 3,
-      "message": "INIT_IMP_ELEMENT: Allocation problem"
+      "message": "REMOVED"
     },
     {
       "no": 29,
       "level": 2,
-      "message": "INIT_IMP_ELEMENT: Impurity datafiles missing; switching to original model"
+      "message": "REMOVED"
     },
     {
       "no": 30,
       "level": 3,
-      "message": "IMPORT_IMPDATA: Problem opening impurity data file"
+      "message": "REMOVED"
     },
     {
       "no": 31,
       "level": 3,
-      "message": "IMPORT_IMPDATA: Problem reading impurity data file header"
+      "message": "REMOVED"
     },
     {
       "no": 32,
       "level": 3,
-      "message": "IMPORT_IMPDATA: Problem reading impurity data file contents"
+      "message": "REMOVED"
     },
     {
       "no": 33,
@@ -178,62 +178,62 @@
     {
       "no": 34,
       "level": 3,
-      "message": "ELEMENT2INDEX: Element with given label not found in impurity array"
+      "message": "REMOVED"
     },
     {
       "no": 35,
       "level": 2,
-      "message": "PIMPDEN: Impurity radiation model is inaccurate at such low temperatures"
+      "message": "REMOVED"
     },
     {
       "no": 36,
       "level": 3,
-      "message": "CHECK: Fuel ion fractions do not sum to 1.0; check f_deuterium, f_tritium, f_helium3 values"
+      "message": "REMOVED"
     },
     {
       "no": 37,
       "level": 2,
-      "message": "CHECK: Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used"
+      "message": "REMOVED"
     },
     {
       "no": 38,
       "level": 3,
-      "message": "CHECK: Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
+      "message": "REMOVED"
     },
     {
       "no": 39,
       "level": 1,
-      "message": "CHECK: Operating with a single null in a double null machine"
+      "message": "REMOVED"
     },
     {
       "no": 40,
       "level": 2,
-      "message": "CHECK: i_plasma_current=2 is not a valid option for a non-TART device"
+      "message": "REMOVED"
     },
     {
       "no": 41,
       "level": 3,
-      "message": "CHECK: n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
+      "message": "REMOVED"
     },
     {
       "no": 42,
       "level": 3,
-      "message": "CHECK: Only 1 divertor coil (i_pf_location = 2) is not a valid configuration"
+      "message": "REMOVED"
     },
     {
       "no": 43,
       "level": 3,
-      "message": "CHECK: More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
+      "message": "REMOVED"
     },
     {
       "no": 44,
       "level": 3,
-      "message": "CHECK: If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
+      "message": "REMOVED"
     },
     {
       "no": 45,
       "level": 3,
-      "message": "CHECK: itart=1 is not a valid option for the RFP model"
+      "message": "REMOVED"
     },
     {
       "no": 46,
@@ -243,7 +243,7 @@
     {
       "no": 47,
       "level": 3,
-      "message": "LOADXC: Do not use cdtfleg as an iteration variable if itfsup=1 or irfp=1"
+      "message": "REMOVED"
     },
     {
       "no": 48,
@@ -263,17 +263,17 @@
     {
       "no": 51,
       "level": 3,
-      "message": "LOADXC: Do not use dx_tf_inboard_out_toroidal as an iteration variable if irfp=0"
+      "message": "REMOVED"
     },
     {
       "no": 52,
       "level": 3,
-      "message": "LOADXC: Do not use helecmw as an iteration variable if ihplant is not 1,2 or 3"
+      "message": "REMOVED"
     },
     {
       "no": 53,
       "level": 3,
-      "message": "LOADXC: Do not use hthermmw as an iteration variable if ihplant < 4"
+      "message": "REMOVED"
     },
     {
       "no": 54,
@@ -378,7 +378,7 @@
     {
       "no": 74,
       "level": 3,
-      "message": "INDUCT: Negative square root imminent; raise dr_cs or its upper limit"
+      "message": "REMOVED"
     },
     {
       "no": 75,
@@ -393,12 +393,12 @@
     {
       "no": 77,
       "level": 3,
-      "message": "CALCULATE_PLASMA_CURRENT: Illegal value for i_plasma_current"
+      "message": "REMOVED"
     },
     {
       "no": 78,
       "level": 2,
-      "message": "PLASMA_COMPOSITION: Fuel ion density is zero or negative; forced to be positive"
+      "message": "REMOVED"
     },
     {
       "no": 79,
@@ -418,7 +418,7 @@
     {
       "no": 82,
       "level": 3,
-      "message": "RADPWR: Illegal value for imprad_model"
+      "message": "REMOVED"
     },
     {
       "no": 83,
@@ -428,7 +428,7 @@
     {
       "no": 84,
       "level": 3,
-      "message": "SGVHOT: Illegal value for iabm"
+      "message": "REMOVED"
     },
     {
       "no": 85,
@@ -448,27 +448,27 @@
     {
       "no": 88,
       "level": 2,
-      "message": "ITERATE_FW: Optimisation has failed within 100 iterations; possible NaN problems"
+      "message": "REMOVED"
     },
     {
       "no": 89,
       "level": 3,
-      "message": "ITERATE_FW: Inner pipe radius radius_fw_channel >= outer pipe radius bfw"
+      "message": "REMOVED"
     },
     {
       "no": 90,
       "level": 2,
-      "message": "THRMAL: Swelling limit exceeded; optimisation failing to find a FW thickness"
+      "message": "REMOVED"
     },
     {
       "no": 91,
       "level": 3,
-      "message": "SMT: No reliable data for SMT stress for temperatures > 600 degrees Celsius"
+      "message": "REMOVED"
     },
     {
       "no": 92,
       "level": 2,
-      "message": "CYCLES: Fatigue data unreliable for T > 649 degrees Celsius"
+      "message": "REMOVED"
     },
     {
       "no": 93,
@@ -483,22 +483,22 @@
     {
       "no": 95,
       "level": 3,
-      "message": "SCAN: Do not scan cfactr if iavail=1"
+      "message": "REMOVED"
     },
     {
       "no": 96,
       "level": 3,
-      "message": "SCAN: Illegal scan variable number nsweep"
+      "message": "REMOVED"
     },
     {
       "no": 97,
       "level": 2,
-      "message": "SCTFCOIL: Negative TF coil current; c_tf_total forced to be positive..."
+      "message": "REMOVED"
     },
     {
       "no": 98,
       "level": 2,
-      "message": "SCTFCOIL: Negative winding pack thickness; increase dr_tf_inboard or its lower bound"
+      "message": "REMOVED"
     },
     {
       "no": 99,
@@ -523,12 +523,12 @@
     {
       "no": 103,
       "level": 2,
-      "message": "SCTFCOIL: Inconsistent TF leg toroidal thickness; should never happen!"
+      "message": "REMOVED"
     },
     {
       "no": 104,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 105,
@@ -553,12 +553,12 @@
     {
       "no": 109,
       "level": 3,
-      "message": "STCOIL: Illegal value for nbticool"
+      "message": "REMOVED"
     },
     {
       "no": 110,
       "level": 3,
-      "message": "STCOIL: Use i_tf_sc_mat = 1 or 3 with the stellarator model"
+      "message": "REMOVED"
     },
     {
       "no": 111,
@@ -583,47 +583,47 @@
     {
       "no": 115,
       "level": 3,
-      "message": "CPOST: Illegal value for rtop"
+      "message": "REMOVED"
     },
     {
       "no": 116,
       "level": 3,
-      "message": "CPOST: Illegal value for ztop"
+      "message": "REMOVED"
     },
     {
       "no": 117,
       "level": 3,
-      "message": "CPOST: Illegal value for rmid"
+      "message": "REMOVED"
     },
     {
       "no": 118,
       "level": 3,
-      "message": "CPOST: Illegal value for hmax"
+      "message": "REMOVED"
     },
     {
       "no": 119,
       "level": 3,
-      "message": "CPOST: Illegal value for fcool"
+      "message": "REMOVED"
     },
     {
       "no": 120,
       "level": 3,
-      "message": "CPOST: rtop < rmid"
+      "message": "REMOVED"
     },
     {
       "no": 121,
       "level": 3,
-      "message": "CPOST: hmax < ztop"
+      "message": "REMOVED"
     },
     {
       "no": 122,
       "level": 2,
-      "message": "CPOST: Silly answers because fcool=1.0..."
+      "message": "REMOVED"
     },
     {
       "no": 123,
       "level": 3,
-      "message": "CPOST: R(Z) is negative"
+      "message": "REMOVED"
     },
     {
       "no": 124,
@@ -638,17 +638,17 @@
     {
       "no": 126,
       "level": 3,
-      "message": "CUDRIV: Illegal value for iefrf"
+      "message": "REMOVED"
     },
     {
       "no": 127,
       "level": 3,
-      "message": "IFE: Illegal value for ifedrv"
+      "message": "REMOVED"
     },
     {
       "no": 128,
       "level": 3,
-      "message": "TBR_BREED: Unknown tritium breeder specified"
+      "message": "REMOVED"
     },
     {
       "no": 129,
@@ -658,12 +658,12 @@
     {
       "no": 130,
       "level": 3,
-      "message": "REPORT_INPUT_ERROR: Error detected in input file - see OUT.DAT for more details"
+      "message": "REMOVED"
     },
     {
       "no": 131,
       "level": 2,
-      "message": "EQSLV: Non-optimisation solver HYBRD returns with ifail /= 1"
+      "message": "REMOVED"
     },
     {
       "no": 132,
@@ -673,7 +673,7 @@
     {
       "no": 133,
       "level": 2,
-      "message": "EQSLV: High final HYBRD constraint residues"
+      "message": "REMOVED"
     },
     {
       "no": 134,
@@ -688,27 +688,27 @@
     {
       "no": 136,
       "level": 2,
-      "message": "BETCOM: Low density... carbon impurity fraction forced to be no more than 0.05"
+      "message": "REMOVED"
     },
     {
       "no": 137,
       "level": 3,
-      "message": "CHECK: Insufficient iteration variables to solve the problem! NVAR < NEQNS"
+      "message": "REMOVED"
     },
     {
       "no": 138,
       "level": 2,
-      "message": "CHECK: Beware; ion power balance may not be correct with new radiation model"
+      "message": "REMOVED"
     },
     {
       "no": 139,
       "level": 3,
-      "message": "CHECK: The number of iteration variables specified is smaller than the number stated in ixc"
+      "message": "REMOVED"
     },
     {
       "no": 140,
       "level": 3,
-      "message": "CHECK: The number of constraints specified is smaller than the number stated in neqns+nineqns"
+      "message": "REMOVED"
     },
     {
       "no": 141,
@@ -738,52 +738,52 @@
     {
       "no": 146,
       "level": 3,
-      "message": "CHECK: temperature pedestal is lower than separatrix temperature"
+      "message": "REMOVED"
     },
     {
       "no": 147,
       "level": 2,
-      "message": "CHECK: temperature pedestal is at plasma edge, but teped differs from tesep"
+      "message": "REMOVED"
     },
     {
       "no": 148,
       "level": 2,
-      "message": "TPROFILE: temperature pedestal is higher than core temperature"
+      "message": "REMOVED"
     },
     {
       "no": 149,
       "level": 2,
-      "message": "CHECK: volume-averaged temperature has been forced to exceed input pedestal height"
+      "message": "REMOVED"
     },
     {
       "no": 150,
       "level": 2,
-      "message": "CHECK: Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped"
+      "message": "REMOVED"
     },
     {
       "no": 151,
       "level": 3,
-      "message": "CHECK: density pedestal is lower than separatrix density"
+      "message": "REMOVED"
     },
     {
       "no": 152,
       "level": 2,
-      "message": "CHECK: density pedestal is at plasma edge, but neped differs from nesep"
+      "message": "REMOVED"
     },
     {
       "no": 153,
       "level": 2,
-      "message": "NPROFILE: density pedestal is higher than core density"
+      "message": "REMOVED"
     },
     {
       "no": 154,
       "level": 2,
-      "message": "CHECK: neped set with fgwped without constraint eq 81 (neped<ne0)"
+      "message": "REMOVED"
     },
     {
       "no": 155,
       "level": 2,
-      "message": "CHECK: dene used as iteration variable without constraint 81 (neped<ne0)"
+      "message": "REMOVED"
     },
     {
       "no": 156,
@@ -793,12 +793,12 @@
     {
       "no": 157,
       "level": 2,
-      "message": "SUPERCON: Temperature margin iteration exited prematurely"
+      "message": "REMOVED"
     },
     {
       "no": 158,
       "level": 2,
-      "message": "SUPERCONPF: Temperature margin iteration exited prematurely"
+      "message": "REMOVED"
     },
     {
       "no": 159,
@@ -813,27 +813,27 @@
     {
       "no": 161,
       "level": 2,
-      "message": "ITERSC: Reduced field brad artificially lowered"
+      "message": "REMOVED"
     },
     {
       "no": 162,
       "level": 3,
-      "message": "CHECK: Constraint no.3 (Ion power balance) is not currently available"
+      "message": "REMOVED"
     },
     {
       "no": 163,
       "level": 3,
-      "message": "CHECK: Constraint no.4 (Electron power balance) is not currently available"
+      "message": "REMOVED"
     },
     {
       "no": 164,
       "level": 3,
-      "message": "CHECK: Minimum cycle time constraint 42 not available"
+      "message": "REMOVED"
     },
     {
       "no": 165,
       "level": 3,
-      "message": "CHECK: Blanket material fractions do not sum to 1.0"
+      "message": "REMOVED"
     },
     {
       "no": 166,
@@ -843,32 +843,32 @@
     {
       "no": 167,
       "level": 2,
-      "message": "PUMPPOWER: Reynolds number outside range 1e4 - 1e7.  Set verbose=1 for more info"
+      "message": "REMOVED"
     },
     {
       "no": 168,
       "level": 2,
-      "message": "INITIALISE_REFPROP: Problem in call to setup(REFPROP)"
+      "message": "REMOVED"
     },
     {
       "no": 169,
       "level": 2,
-      "message": "FLUID_PROPERTIES: Problem in call to tpflsh(REFPROP)"
+      "message": "REMOVED"
     },
     {
       "no": 170,
       "level": 2,
-      "message": "FLUID_PROPERTIES: Problem in call to trnprp(REFPROP)"
+      "message": "REMOVED"
     },
     {
       "no": 171,
       "level": 2,
-      "message": "ENTHALPY_PS: Problem in call to psflsh(REFPROP)"
+      "message": "REMOVED"
     },
     {
       "no": 172,
       "level": 2,
-      "message": "TSAT_REFPROP: Problem in call to satp(REFPROP)"
+      "message": "REMOVED"
     },
     {
       "no": 173,
@@ -878,137 +878,137 @@
     {
       "no": 174,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 175,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 176,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 177,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 178,
       "level": 3,
-      "message": "CHECK: Cannot use Psep/R and PsepB/qAR limits at the same time"
+      "message": "REMOVED"
     },
     {
       "no": 179,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 180,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 181,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 182,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 183,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 184,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 185,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 186,
       "level": 3,
-      "message": "CHECK: Set lower bound of fgwped (it.var 145) to be greater than fgwsep"
+      "message": "REMOVED"
     },
     {
       "no": 187,
       "level": 3,
-      "message": "CHECK: Specify only one variable from contrpovs and contrpovr"
+      "message": "REMOVED"
     },
     {
       "no": 188,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 189,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 190,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 191,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 192,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 193,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 194,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 195,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 196,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 197,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 198,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 199,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 200,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 201,
@@ -1048,27 +1048,27 @@
     {
       "no": 208,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 209,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 210,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 211,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 212,
       "level": 3,
-      "message": "NCORE: Central density is negative"
+      "message": "REMOVED"
     },
     {
       "no": 213,
@@ -1078,7 +1078,7 @@
     {
       "no": 214,
       "level": 0,
-      "message": "OBSOLETE"
+      "message": "REMOVED"
     },
     {
       "no": 215,
@@ -1088,7 +1088,7 @@
     {
       "no": 216,
       "level": 3,
-      "message": "CONSTRAINTS: Do not use tritium breeding ratio constraint 52 if i_blanket_type=1"
+      "message": "REMOVED"
     },
     {
       "no": 217,
@@ -1098,27 +1098,27 @@
     {
       "no": 218,
       "level": 2,
-      "message": "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model"
+      "message": "REMOVED"
     },
     {
       "no": 219,
       "level": 3,
-      "message": "REINKE IMPURITY MODEL: tesep is calculated and cannot be an iteration variable for the Reinke model"
+      "message": "REMOVED"
     },
     {
       "no": 220,
       "level": 1,
-      "message": "CHECK: tauee_in is for use with i_confinement_time=48 only"
+      "message": "REMOVED"
     },
     {
       "no": 221,
       "level": 2,
-      "message": "CHECK: NSTX scaling is for A<1.7"
+      "message": "REMOVED"
     },
     {
       "no": 222,
       "level": 3,
-      "message": "CHECK: Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
+      "message": "REMOVED"
     },
     {
       "no": 223,
@@ -1148,12 +1148,12 @@
     {
       "no": 228,
       "level": 3,
-      "message": "RFP: RFP no longer available."
+      "message": "REMOVED"
     },
     {
       "no": 229,
       "level": 2,
-      "message": "[hcpb.f90][st_centrepost_nuclear_heating] Centrepost shiled thickness out of the neutronics fit range : [0.2-0.35] m"
+      "message": "REMOVED"
     },
     {
       "no": 230,
@@ -1173,17 +1173,17 @@
     {
       "no": 233,
       "level": 1,
-      "message": "CHECK: Joints res not cal. for SC (itart = 1) TF (i_tf_sup = 1),"
+      "message": "REMOVED"
     },
     {
       "no": 234,
       "level": 3,
-      "message": "CHECK: Coolant temperature (tcoolin) cannot be < 0 C (273.15 K) for water cooled copper magents."
+      "message": "REMOVED"
     },
     {
       "no": 235,
       "level": 3,
-      "message": "CHECK: Coolant temperature (tcoolin) should be < 40 K for the cryo-al resistivity to be defined."
+      "message": "REMOVED"
     },
     {
       "no": 236,
@@ -1193,27 +1193,27 @@
     {
       "no": 237,
       "level": 2,
-      "message": "CHECK: Using a variable target temperature might lead to a discontinuity, preventing VMCON to converge. Try using fixed ttarget"
+      "message": "REMOVED"
     },
     {
       "no": 238,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined."
+      "message": "REMOVED"
     },
     {
       "no": 239,
       "level": 3,
-      "message": "CHECK: TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents."
+      "message": "REMOVED"
     },
     {
       "no": 240,
       "level": 3,
-      "message": "CHECK: Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
+      "message": "REMOVED"
     },
     {
       "no": 241,
       "level": 3,
-      "message": "CHECK: Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
+      "message": "REMOVED"
     },
     {
       "no": 242,
@@ -1238,17 +1238,17 @@
     {
       "no": 246,
       "level": 3,
-      "message": "CHECK: Invalid stress model if dr_bore + dr_cs_tf_gap + dr_cs = 0. Don't use constraint 31"
+      "message": "REMOVED"
     },
     {
       "no": 247,
       "level": 3,
-      "message": "CHECK: Bucked and wedged TF design not yet implemented"
+      "message": "REMOVED"
     },
     {
       "no": 248,
       "level": 3,
-      "message": "CHECK: TF cryo-plant efficiency `eff_tf_cryo` must be within [0-1]"
+      "message": "REMOVED"
     },
     {
       "no": 249,
@@ -1268,22 +1268,22 @@
     {
       "no": 252,
       "level": 3,
-      "message": "CHECK: No CS precompression structure for bucked and wedged, use i_cs_precomp = 0."
+      "message": "REMOVED"
     },
     {
       "no": 253,
       "level": 3,
-      "message": "CHECK: Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)."
+      "message": "REMOVED"
     },
     {
       "no": 254,
       "level": 3,
-      "message": "CHECK: integer turns (i_tf_turns_integer = 1) not supported for REBCO (i_tf_sc_mat = 6)"
+      "message": "REMOVED"
     },
     {
       "no": 255,
       "level": 3,
-      "message": "CHECK: The TF coil WP thickness (dr_tf_wp) must be at least"
+      "message": "REMOVED"
     },
     {
       "no": 256,
@@ -1308,7 +1308,7 @@
     {
       "no": 260,
       "level": 3,
-      "message": "CHECK: Al TF coil fluence not calculated properly for Al CP, do not use constraint 85"
+      "message": "REMOVED"
     },
     {
       "no": 261,
@@ -1328,12 +1328,12 @@
     {
       "no": 264,
       "level": 3,
-      "message": "REBCO : turn off CS temperature margin constraint icc = 60 when using REBCO"
+      "message": "REMOVED"
     },
     {
       "no": 265,
       "level": 3,
-      "message": "REBCO : turn off TF temperature margin constraint icc = 36 when using REBCO"
+      "message": "REMOVED"
     },
     {
       "no": 266,
@@ -1343,7 +1343,7 @@
     {
       "no": 267,
       "level": 3,
-      "message": "CHECK: To set the TF CP top value, you must use i_r_cp_top = 1"
+      "message": "REMOVED"
     },
     {
       "no": 268,
@@ -1353,27 +1353,27 @@
     {
       "no": 269,
       "level": 3,
-      "message": "CHECK: Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1) "
+      "message": "REMOVED"
     },
     {
       "no": 270,
       "level": 3,
-      "message": "CHECK: The LTS conductor temperature (tftmp) has to be lower than 10"
+      "message": "REMOVED"
     },
     {
       "no": 271,
       "level": 3,
-      "message": "CHECK: Impossible to set the TF coil turn and cable size simultaneously"
+      "message": "REMOVED"
     },
     {
       "no": 272,
       "level": 2,
-      "message": "Double-null: Upper vertical build forced to match lower"
+      "message": "REMOVED"
     },
     {
       "no": 273,
       "level": 3,
-      "message": "[tfcoil]: temp_tf_cryo should be lower than tftmp"
+      "message": "REMOVED"
     },
     {
       "no": 274,
@@ -1383,7 +1383,7 @@
     {
       "no": 275,
       "level": 3,
-      "message": "CONSTRAINTS: Can't use constraint 88 if i_strain_tf == 0"
+      "message": "REMOVED"
     },
     {
       "no": 276,
@@ -1413,7 +1413,7 @@
     {
       "no": 281,
       "level": 3,
-      "message": "CHECK: Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
+      "message": "REMOVED"
     },
     {
       "no": 282,
@@ -1423,12 +1423,12 @@
     {
       "no": 283,
       "level": 3,
-      "message": "[tfcoil]: Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
+      "message": "REMOVED"
     },
     {
       "no": 284,
       "level": 3,
-      "message": "CHECK: i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling."
+      "message": "REMOVED"
     },
     {
       "no": 285,
