@@ -267,11 +267,14 @@ class CurrentDrive:
 
                 # Wall plug power
                 heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.pinjfixmw / current_drive_variables.etalh
+                    current_drive_variables.pinjfixmw
+                    / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacdfix = current_drive_variables.etalh
+                current_drive_variables.etacdfix = (
+                    current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
 
                 # Normalised current drive efficiency gamma
                 gamcdfix = effrfssfix * (dene20 * physics_variables.rmajor)
@@ -582,12 +585,15 @@ class CurrentDrive:
 
                 # Wall plug power
                 current_drive_variables.pwplh = (
-                    current_drive_variables.plhybd / current_drive_variables.etalh
+                    current_drive_variables.plhybd
+                    / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
                 pinjwp1 = current_drive_variables.pwplh
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacd = current_drive_variables.etalh
+                current_drive_variables.etacd = (
+                    current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
 
                 # Normalised current drive efficiency gamma
                 gamrf = effrfss * (dene20 * physics_variables.rmajor)
@@ -1016,8 +1022,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Lower hybrid wall plug efficiency",
-                "(etalh)",
-                current_drive_variables.etalh,
+                "(eta_lowhyb_injector_wall_plug)",
+                current_drive_variables.eta_lowhyb_injector_wall_plug,
             )
             po.ovarre(
                 self.outfile,

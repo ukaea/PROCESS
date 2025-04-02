@@ -2829,7 +2829,7 @@ wave_mode = 0
 * Lower hybrid *
 *--------------*
 
-*etalh = 
+*eta_lowhyb_injector_wall_plug = 
 * DESCRIPTION:   LH wall plug to plasma efficiency (default = 0.3)
 * JUSTIFICATION: Not used as no LH used
 

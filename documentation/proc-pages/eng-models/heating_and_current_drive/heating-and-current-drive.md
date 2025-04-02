@@ -23,7 +23,7 @@ The fraction of the required plasma current to be produced by non-inductive mean
 !!! Warning "Warning" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.
 
-It is sometimes useful to adjust artificially the current drive efficiency values produced by these routines. This can be achieved by setting the scaling coefficients `feffcd`. The wall plug to plasma efficiencies can also be adjusted, by changing the relevant variable (`etaech`, `etalh`, `eta_beam_injector_wall_plug` or `etaof`).
+It is sometimes useful to adjust artificially the current drive efficiency values produced by these routines. This can be achieved by setting the scaling coefficients `feffcd`. The wall plug to plasma efficiencies can also be adjusted, by changing the relevant variable (`etaech`, `eta_lowhyb_injector_wall_plug`, `eta_beam_injector_wall_plug` or `etaof`).
 
 ### Power limits
 The maximum amount of desired heating and current drive power can be set with `p_hcd_injected_max`. This limit can be enforced by activating constraint equation 30 (`icc=30`).

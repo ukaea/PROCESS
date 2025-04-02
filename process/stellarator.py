@@ -4952,7 +4952,9 @@ class Stellarator:
             current_drive_variables.plhybd = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.plhybd
-            current_drive_variables.etacd = current_drive_variables.etalh
+            current_drive_variables.etacd = (
+                current_drive_variables.eta_lowhyb_injector_wall_plug
+            )
             current_drive_variables.pinjwp = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
             ) / current_drive_variables.etacd

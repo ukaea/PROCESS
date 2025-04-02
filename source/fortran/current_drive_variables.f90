@@ -108,7 +108,7 @@ module current_drive_variables
   real(dp) :: etaech
   !! ECH wall plug to injector efficiency
 
-  real(dp) :: etalh
+  real(dp) :: eta_lowhyb_injector_wall_plug
   !! lower hybrid wall plug to injector efficiency
 
   real(dp) :: eta_beam_injector_wall_plug
