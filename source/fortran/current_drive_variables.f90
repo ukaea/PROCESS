@@ -117,7 +117,7 @@ module current_drive_variables
   real(dp) :: fpion
   !! fraction of beam energy to ions
 
-  real(dp) :: pnbitot
+  real(dp) :: p_beam_injected
   !! neutral beam power entering vacuum vessel
 
   real(dp) :: pscf_scene
