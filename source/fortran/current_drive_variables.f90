@@ -187,7 +187,7 @@ module current_drive_variables
   !! - =0 turned off
   !! - =1 turned on
 
-  real(dp) :: nbshinef
+  real(dp) :: f_p_beam_shine_through
   !! neutral beam shine-through fraction
 
   real(dp) :: nbshield
@@ -298,7 +298,7 @@ module current_drive_variables
     i_hcd_primary = 5
     i_hcd_secondary = 0
     irfcd = 1
-    nbshinef = 0.0D0
+    f_p_beam_shine_through = 0.0D0
     nbshield = 0.5D0
     pheat = 0.0D0
     pheatfix = 0.0D0
