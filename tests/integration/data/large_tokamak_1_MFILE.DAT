@@ -548,7 +548,7 @@
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.3358E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      8.0143E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
- ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      5.0000E-01    
+ ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.6029E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.7728E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8601E+02    
@@ -1648,7 +1648,7 @@ i_hcd_primary = 10
 gamma_ecrh = 0.30
 
 * ECRH wall-plug efficiency
-etaech = 0.5
+eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
 pheat = 75.0
