@@ -85,7 +85,7 @@ class CudrivParam(NamedTuple):
 
     pnbitot: Any = None
 
-    nbshinemw: Any = None
+    p_beam_shine_through_mw: Any = None
 
     pinjemw: Any = None
 
@@ -235,7 +235,7 @@ class CudrivParam(NamedTuple):
             pwplh=0,
             echwpow=0,
             pnbitot=0,
-            nbshinemw=0,
+            p_beam_shine_through_mw=0,
             pinjemw=0,
             pinjimw=0,
             bigq=0,
@@ -325,7 +325,7 @@ class CudrivParam(NamedTuple):
             pwplh=0,
             echwpow=240.99200038011492,
             pnbitot=0,
-            nbshinemw=0,
+            p_beam_shine_through_mw=0,
             pinjemw=120.49600019005746,
             pinjimw=0,
             bigq=0,
@@ -464,7 +464,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pnbitot", cudrivparam.pnbitot)
 
-    monkeypatch.setattr(current_drive_variables, "nbshinemw", cudrivparam.nbshinemw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_beam_shine_through_mw",
+        cudrivparam.p_beam_shine_through_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "pinjemw", cudrivparam.pinjemw)
 
