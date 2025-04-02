@@ -1839,7 +1839,7 @@ class Costs:
                 self.c2233 = (
                     1.0e-6
                     * cost_variables.ucnbi
-                    * (1.0e6 * current_drive_variables.pnbitot) ** exprf
+                    * (1.0e6 * current_drive_variables.p_beam_injected) ** exprf
                 )
 
             if cost_variables.ifueltyp == 1:

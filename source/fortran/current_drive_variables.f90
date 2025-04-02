@@ -117,7 +117,7 @@ module current_drive_variables
   real(dp) :: fpion
   !! fraction of beam energy to ions
 
-  real(dp) :: pnbitot
+  real(dp) :: p_beam_injected
   !! neutral beam power entering vacuum vessel
 
   real(dp) :: pscf_scene
@@ -285,7 +285,7 @@ module current_drive_variables
     etalh = 0.3D0
     etanbi = 0.3D0
     fpion = 0.5D0
-    pnbitot = 0.0D0
+    p_beam_injected = 0.0D0
     pscf_scene = 0.0D0
     p_beam_shine_through_mw = 0.0D0
     feffcd = 1.0D0
