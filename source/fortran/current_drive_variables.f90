@@ -241,7 +241,7 @@ module current_drive_variables
   real(dp) :: rtanmax
   !! maximum tangency radius for centreline of beam (m)
 
-  real(dp) :: taubeam
+  real(dp) :: n_beam_decay_lengths_core
   !! neutral beam e-decay lengths to plasma centre
 
   real(dp) :: tbeamin

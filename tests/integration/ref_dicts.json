@@ -7388,7 +7388,7 @@
         "target_spread": 0.003,
         "targetangle": 30.0,
         "tau2": 0.0,
-        "taubeam": 0.0,
+        "n_beam_decay_lengths_core": 0.0,
         "taucq": 30.0,
         "t_electron_energy_confinement": 0.0,
         "tauee_in": 0.0,
@@ -10657,7 +10657,7 @@
         "target_spread": "increase in SOL power fall-off length due to spreading, mapped to OMP [m]",
         "targetangle": "Angle between field-line and divertor target (degrees)",
         "tau2": "",
-        "taubeam": "neutral beam e-decay lengths to plasma centre",
+        "n_beam_decay_lengths_core": "neutral beam e-decay lengths to plasma centre",
         "taucq": "allowable TF quench time (s)",
         "t_electron_energy_confinement": "electron energy confinement time (sec)",
         "tauee_in": "Input electron energy confinement time (sec) (`i_confinement_time=48 only`)",
@@ -17667,7 +17667,7 @@
             "pwpnb",
             "rtanbeam",
             "rtanmax",
-            "taubeam",
+            "n_beam_decay_lengths_core",
             "tbeamin"
         ],
         "define_iteration_variables": [

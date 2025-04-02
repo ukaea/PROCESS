@@ -37,7 +37,7 @@ Beams topping cross section is calculated via $\mathtt{sigbeam}$ found [here](..
 Calculate number of decay lengths to centre
 
 $$
-\mathtt{taubeam} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
+\mathtt{n_beam_decay_lengths_core} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
 $$
 
 Calculate the shine through fraction of the beam
