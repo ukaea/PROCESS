@@ -51,7 +51,7 @@ class CudrivParam(NamedTuple):
 
     feffcd: Any = None
 
-    fpion: Any = None
+    f_p_beam_injected_ions: Any = None
 
     f_p_beam_shine_through: Any = None
 
@@ -218,7 +218,7 @@ class CudrivParam(NamedTuple):
             pinjfixmw=0,
             irfcd=1,
             feffcd=1,
-            fpion=0.5,
+            f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
             gamcd=0,
             gamma_ecrh=0.30000000000000004,
@@ -308,7 +308,7 @@ class CudrivParam(NamedTuple):
             pinjfixmw=0,
             irfcd=1,
             feffcd=1,
-            fpion=0.5,
+            f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
             gamcd=0.30000000000000004,
             gamma_ecrh=0.30000000000000004,
@@ -434,7 +434,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "feffcd", cudrivparam.feffcd)
 
-    monkeypatch.setattr(current_drive_variables, "fpion", cudrivparam.fpion)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "f_p_beam_injected_ions",
+        cudrivparam.f_p_beam_injected_ions,
+    )
 
     monkeypatch.setattr(
         current_drive_variables,

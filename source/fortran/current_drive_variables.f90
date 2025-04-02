@@ -114,7 +114,7 @@ module current_drive_variables
   real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
 
-  real(dp) :: fpion
+  real(dp) :: f_p_beam_injected_ions
   !! fraction of beam energy to ions
 
   real(dp) :: p_beam_injected

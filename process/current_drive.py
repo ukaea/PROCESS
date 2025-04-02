@@ -121,7 +121,7 @@ class CurrentDrive:
             elif current_drive_variables.i_hcd_secondary == 5:
                 (
                     effnbss,
-                    current_drive_variables.fpion,
+                    current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.iternb()
                 effnbssfix = effnbss * current_drive_variables.feffcd
@@ -140,7 +140,7 @@ class CurrentDrive:
             elif current_drive_variables.i_hcd_secondary == 8:
                 (
                     effnbss,
-                    current_drive_variables.fpion,
+                    current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.culnbi()
                 effnbssfix = effnbss * current_drive_variables.feffcd
@@ -345,8 +345,10 @@ class CurrentDrive:
 
                 # Power deposited
                 pinjmwfix = pnbitotfix - nbshinemwfix - porbitlossmwfix
-                pinjimwfix = pinjmwfix * current_drive_variables.fpion
-                pinjemwfix = pinjmwfix * (1.0e0 - current_drive_variables.fpion)
+                pinjimwfix = pinjmwfix * current_drive_variables.f_p_beam_injected_ions
+                pinjemwfix = pinjmwfix * (
+                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
+                )
 
                 current_drive_variables.pwpnb = (
                     pnbitotfix / current_drive_variables.eta_beam_injector_wall_plug
@@ -422,7 +424,7 @@ class CurrentDrive:
             elif current_drive_variables.i_hcd_primary == 5:
                 (
                     effnbss,
-                    current_drive_variables.fpion,
+                    current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.iternb()
                 effnbss = effnbss * current_drive_variables.feffcd
@@ -441,7 +443,7 @@ class CurrentDrive:
             elif current_drive_variables.i_hcd_primary == 8:
                 (
                     effnbss,
-                    current_drive_variables.fpion,
+                    current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.culnbi()
                 effnbss = effnbss * current_drive_variables.feffcd
@@ -675,8 +677,10 @@ class CurrentDrive:
                     - current_drive_variables.p_beam_shine_through_mw
                     - current_drive_variables.p_beam_orbit_loss
                 )
-                pinjimw1 = pinjmw1 * current_drive_variables.fpion
-                pinjemw1 = pinjmw1 * (1.0e0 - current_drive_variables.fpion)
+                pinjimw1 = pinjmw1 * current_drive_variables.f_p_beam_injected_ions
+                pinjemw1 = pinjmw1 * (
+                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
+                )
 
                 current_drive_variables.pwpnb = (
                     current_drive_variables.p_beam_injected
@@ -1227,8 +1231,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Fraction of beam energy to ions",
-                "(fpion)",
-                current_drive_variables.fpion,
+                "(f_p_beam_injected_ions)",
+                current_drive_variables.f_p_beam_injected_ions,
                 "OP ",
             )
             po.ovarre(
@@ -1311,7 +1315,7 @@ class CurrentDrive:
         """Routine to calculate ITER Neutral Beam current drive parameters
         author: P J Knight, CCFE, Culham Science Centre
         effnbss : output real : neutral beam current drive efficiency (A/W)
-        fpion   : output real : fraction of NB power given to ions
+        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
         fshine  : output real : shine-through fraction of beam
         This routine calculates the current drive parameters for a
         neutral beam system, based on the 1990 ITER model.
@@ -1356,7 +1360,7 @@ class CurrentDrive:
         dent = physics_variables.nd_fuel_ions * current_drive_variables.f_tritium_beam
 
         # Power split to ions / electrons
-        fpion = self.cfnbi(
+        f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
             current_drive_variables.beam_energy,
             physics_variables.ten,
@@ -1380,7 +1384,7 @@ class CurrentDrive:
             physics_variables.zeff,
         )
 
-        return effnbss, fpion, fshine
+        return effnbss, f_p_beam_injected_ions, fshine
 
     def cullhy(self):
         """Routine to calculate Lower Hybrid current drive efficiency
@@ -1585,7 +1589,7 @@ class CurrentDrive:
         """Routine to calculate Neutral Beam current drive parameters
         author: P J Knight, CCFE, Culham Science Centre
         effnbss : output real : neutral beam current drive efficiency (A/W)
-        fpion   : output real : fraction of NB power given to ions
+        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
         fshine  : output real : shine-through fraction of beam
         This routine calculates Neutral Beam current drive parameters
         using the corrections outlined in AEA FUS 172 to the ITER method.
@@ -1636,7 +1640,7 @@ class CurrentDrive:
 
         #  Power split to ions / electrons
 
-        fpion = self.cfnbi(
+        f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
             current_drive_variables.beam_energy,
             physics_variables.ten,
@@ -1665,7 +1669,7 @@ class CurrentDrive:
             physics_variables.zeff,
         )
 
-        return effnbss, fpion, fshine
+        return effnbss, f_p_beam_injected_ions, fshine
 
     def lhrad(self):
         """Routine to calculate Lower Hybrid wave absorption radius
@@ -1966,7 +1970,7 @@ class CurrentDrive:
         nt      : input real : tritium beam density (m**-3)
         zeffai  : input real : mass weighted plasma effective charge
         xlmbda  : input real : ion-electron coulomb logarithm
-        fpion   : output real : fraction of fast particle energy coupled to ions
+        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
         This routine calculates the fast particle energy coupled to
         the ions in the neutral beam system.
         """

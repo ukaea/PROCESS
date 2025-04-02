@@ -4963,7 +4963,7 @@ class Stellarator:
         elif stellarator_variables.isthtr == 3:
             (
                 effnbss,
-                fpion,
+                f_p_beam_injected_ions,
                 current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
             current_drive_variables.pnbeam = current_drive_variables.pheat * (
@@ -4973,9 +4973,11 @@ class Stellarator:
                 current_drive_variables.pheat
                 * current_drive_variables.f_p_beam_orbit_loss
             )
-            current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
+            current_drive_variables.pinjimw = (
+                current_drive_variables.pnbeam * f_p_beam_injected_ions
+            )
             current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
-                1 - fpion
+                1 - f_p_beam_injected_ions
             )
             current_drive_variables.etacd = (
                 current_drive_variables.eta_beam_injector_wall_plug
@@ -5068,7 +5070,10 @@ class Stellarator:
                     current_drive_variables.beam_current,
                 )
                 po.ovarre(
-                    self.outfile, "Fraction of beam energy to ions", "(fpion)", fpion
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    f_p_beam_injected_ions,
                 )
                 po.ovarre(
                     self.outfile,

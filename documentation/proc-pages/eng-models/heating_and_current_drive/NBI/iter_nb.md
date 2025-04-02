@@ -5,7 +5,7 @@
 | Output | Description |
 |----------|-------------|
 | $\mathtt{effnbss}$  | Neutral beam current drive efficiency in $\text{A/W}$ |
-| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 This model calculates the current drive parameters for a neutral beam system, based on the 1990 ITER model.[^1]
