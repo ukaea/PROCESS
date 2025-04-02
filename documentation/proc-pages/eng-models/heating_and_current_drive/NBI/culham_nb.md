@@ -12,7 +12,7 @@ from that of ITER (approx. 2.8).
 | Output | Description |
 |----------|-------------|
 | $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
-| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 $$
@@ -56,7 +56,7 @@ $$
 \mathtt{dent} = n_{\text{ion}} \times \mathtt{f_tritium_beam}
 $$
 
-Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{fpion}$
+Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$
 
 ## Current drive efficiency | `etanb2()`
 

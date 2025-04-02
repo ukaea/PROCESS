@@ -114,7 +114,7 @@ module current_drive_variables
   real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
 
-  real(dp) :: fpion
+  real(dp) :: f_p_beam_injected_ions
   !! fraction of beam energy to ions
 
   real(dp) :: p_beam_injected
@@ -284,7 +284,7 @@ module current_drive_variables
     eta_ecrh_injector_wall_plug = 0.3D0
     eta_lowhyb_injector_wall_plug = 0.3D0
     eta_beam_injector_wall_plug = 0.3D0
-    fpion = 0.5D0
+    f_p_beam_injected_ions = 0.5D0
     p_beam_injected = 0.0D0
     pscf_scene = 0.0D0
     p_beam_shine_through_mw = 0.0D0
