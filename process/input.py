@@ -389,6 +389,9 @@ INPUT_VARIABLES = {
     "dp_liq": InputVariable(
         fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
+    "f_p_fw_blkt_pump": InputVariable(
+        fortran.primary_pumping_variables, float, range=(0.0, 10.0)
+    ),
     "dr_blkt_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_blkt_outboard": InputVariable(
         fortran.build_variables, float, range=(0.0, 10.0)
@@ -1026,6 +1029,7 @@ INPUT_VARIABLES = {
     ),
     "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),
     "q95": InputVariable(fortran.physics_variables, float, range=(1.0, 50.0)),
+    "q95_fixed": InputVariable(fortran.constraint_variables, float, range=(1.0, 50.0)),
     "qnty_sfty_fac": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
     ),
@@ -1473,6 +1477,7 @@ INPUT_VARIABLES = {
     "i_plasma_shape": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_plasma_wall_gap": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_pulsed_plant": InputVariable(fortran.pulse_variables, int, choices=[0, 1]),
+    "i_q95_fixed": InputVariable(fortran.constraint_variables, int, choices=[0, 1]),
     "i_r_cp_top": InputVariable(fortran.build_variables, int, choices=[0, 1, 2]),
     "i_rad_loss": InputVariable(fortran.physics_variables, int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
