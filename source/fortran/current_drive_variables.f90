@@ -148,7 +148,7 @@ module current_drive_variables
   real(dp) :: xi_ebw
   !! User scaling input for EBW plasma heating. Default 0.43
 
-  integer :: iefrf
+  integer :: i_hcd_primary
   !! Switch for current drive efficiency model:
   !!
   !!  - =1 Fenstermacher Lower Hybrid

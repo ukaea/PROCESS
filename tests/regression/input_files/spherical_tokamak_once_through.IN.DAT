@@ -199,7 +199,7 @@ harnum   = 2 * cyclotron harmonic frequency number; used in cut-off function
 wave_mode = 0 * Switch for ECRH wave mode ;
 etaech   = 0.45 * ECH wall plug to injector efficiency
 feffcd   = 1.0 * current drive efficiency fudge factor (`iteration variable 47`)
-iefrf    = 13 * Switch for current drive efficiency model;
+i_hcd_primary    = 13 * Switch for current drive efficiency model;
 irfcd    = 1 * Switch for current drive calculation;
 pinjalw  = 150.0 * maximum allowable value for injected power (MW) (`constraint equation 30`)
 

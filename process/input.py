@@ -1488,7 +1488,7 @@ INPUT_VARIABLES = {
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
-    "iefrf": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
+    "i_hcd_primary": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
     "iefrffix": InputVariable(fortran.current_drive_variables, int, range=(0, 13)),
     "i_blkt_liquid_breeder_channel_type": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]

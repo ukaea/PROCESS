@@ -4,21 +4,21 @@
 
 The use of inductive current drive leads to pulsed plant operation because of the limited flux swing that can be achieved using the central solenoid. This poses problems due to the fact that fatigue failures may result, and there would be a need for thermal storage to maintain output of electricity between pulses, and supply power for starting a new pulse.However, the plasma current can also be produced and maintained (partially or wholly) using non-inductive means which, in principle, removes this restriction. `PROCESS` contains a number of auxiliary current drive schemes, including various RF methods (Lower Hybrid, Electron Cyclotron, Electron Bernstein Wave, and Ion Cyclotron (Fast Wave) current drives) and also Neutral Beam current drive systems. The code calculates the efficiency and the resulting power requirements of the chosen system.
 
-The fraction of the required plasma current to be produced by non-inductive means, `fvsbrnni`, should be set, and flag `irfcd` should be set to 0 for purely inductive scenarios, or 1 otherwise. The current drive efficiency model to be used in this latter case is defined by the value of switch `iefrf`:
+The fraction of the required plasma current to be produced by non-inductive means, `fvsbrnni`, should be set, and flag `irfcd` should be set to 0 for purely inductive scenarios, or 1 otherwise. The current drive efficiency model to be used in this latter case is defined by the value of switch `i_hcd_primary`:
 
-- `iefrf` = 1: [Fenstermacher Lower Hybrid model](RF/fenstermacher_lower_hybrid.md)
-- `iefrf` = 2: [Ion cyclotron model](RF/ic_model.md)[^1],
-- `iefrf` = 3: [Fenstermacher electron cyclotron resonance model](RF/fenstermacher_electron_cyclotron_resonance.md)
-- `iefrf` = 4: [Ehst Lower Hybrid model](RF/ehst_lower_hybrid.md)
-- `iefrf` = 5: [ITER neutral beam model](NBI/iter_nb.md)[^1],[^2],
-- `iefrf` = 6: [Culham Lower Hybrid model](RF/culham_lower_hybrid.md)[^2],
-- `iefrf` = 7: [Culham electron cyclotron model](RF/culham_electron_cyclotron.md)[^2],
-- `iefrf` = 8: [Culham neutral beam model](NBI/culham_nb.md)[^2],
-- `iefrf` = 9: Oscillating Field current drive :warning: (OBSOLETE-REMOVED),
-- `iefrf` = 10: [ECRH user input gamma](RF/ecrh_gamma.md),
-- `iefrf` = 11: ECRH "HARE" model [^3] :warning: (OBSOLETE-REMOVED),
-- `iefrf` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
-- `iefrf` = 13: [ECRH O-mode cutoff with $Z_{\text{eff}}$ and $T_{\text{e}}$](RF/cutoff_ecrh.md) (S. Freethy) [^4],
+- `i_hcd_primary` = 1: [Fenstermacher Lower Hybrid model](RF/fenstermacher_lower_hybrid.md)
+- `i_hcd_primary` = 2: [Ion cyclotron model](RF/ic_model.md)[^1],
+- `i_hcd_primary` = 3: [Fenstermacher electron cyclotron resonance model](RF/fenstermacher_electron_cyclotron_resonance.md)
+- `i_hcd_primary` = 4: [Ehst Lower Hybrid model](RF/ehst_lower_hybrid.md)
+- `i_hcd_primary` = 5: [ITER neutral beam model](NBI/iter_nb.md)[^1],[^2],
+- `i_hcd_primary` = 6: [Culham Lower Hybrid model](RF/culham_lower_hybrid.md)[^2],
+- `i_hcd_primary` = 7: [Culham electron cyclotron model](RF/culham_electron_cyclotron.md)[^2],
+- `i_hcd_primary` = 8: [Culham neutral beam model](NBI/culham_nb.md)[^2],
+- `i_hcd_primary` = 9: Oscillating Field current drive :warning: (OBSOLETE-REMOVED),
+- `i_hcd_primary` = 10: [ECRH user input gamma](RF/ecrh_gamma.md),
+- `i_hcd_primary` = 11: ECRH "HARE" model [^3] :warning: (OBSOLETE-REMOVED),
+- `i_hcd_primary` = 12: [EBW user scaling input. Scaling](RF/ebw_freethy.md) (S. Freethy)
+- `i_hcd_primary` = 13: [ECRH O-mode cutoff with $Z_{\text{eff}}$ and $T_{\text{e}}$](RF/cutoff_ecrh.md) (S. Freethy) [^4],
 
 !!! Warning "Warning" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.
@@ -31,7 +31,7 @@ Similarly the lower bound on required heating and current drive power can be set
 
 ### Secondary current drive
 
-It is possible to have more than one type of heating and current drive system in `PROCESS`. This can be enabled by setting the `iefrffix` switch to the desired current drive scheme, following the same numbered selection for `iefrf`.
+It is possible to have more than one type of heating and current drive system in `PROCESS`. This can be enabled by setting the `iefrffix` switch to the desired current drive scheme, following the same numbered selection for `i_hcd_primary`.
 The power injected by the secondary current drive scheme has to be set to a fixed value. This value can be set with the `pinjfixmw` variable.
 
 ## Plasma heating only

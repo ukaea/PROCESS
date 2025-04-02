@@ -2671,7 +2671,7 @@ irfcd = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Primary H&CD System ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-iefrf = 13
+i_hcd_primary = 13
 * DESCRIPTION   Switch for Current Drive Efficiency Model (10: ECRH User Input gamma)
 * 1 Fenstermacher Lower Hybrid
 * 2 Ion Cyclotron current drive

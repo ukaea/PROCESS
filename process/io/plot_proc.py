@@ -506,7 +506,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
         ("PF coils", "none"),
     ]
 
-    if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
+    if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
         mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
     ):
         labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
@@ -648,8 +648,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
             facecolor=TFC_COLOUR[colour_scheme - 1],
         )
 
-    iefrf = mfile_data.data["iefrf"].get_scan(scan)
-    if (iefrf == 5) or (iefrf == 8):
+    i_hcd_primary = mfile_data.data["i_hcd_primary"].get_scan(scan)
+    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
@@ -3032,23 +3032,29 @@ def plot_current_drive_info(axis, mfile_data, scan):
     xmax = 1
     ymin = -16
     ymax = 1
-    iefrf = mfile_data.data["iefrf"].get_scan(scan)
+    i_hcd_primary = mfile_data.data["i_hcd_primary"].get_scan(scan)
     nbi = False
     ecrh = False
     ebw = False
     lhcd = False
     iccd = False
 
-    if (iefrf == 5) or (iefrf == 8):
+    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11) or (iefrf == 13):
+    if (
+        (i_hcd_primary == 3)
+        or (i_hcd_primary == 7)
+        or (i_hcd_primary == 10)
+        or (i_hcd_primary == 11)
+        or (i_hcd_primary == 13)
+    ):
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
-    if iefrf == 12:
+    if i_hcd_primary == 12:
         ebw = True
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if iefrf in [1, 4, 6]:
+    if i_hcd_primary in [1, 4, 6]:
         lhcd = True
         axis.text(
             -0.05,
@@ -3057,7 +3063,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ha="left",
             va="center",
         )
-    if iefrf == 2:
+    if i_hcd_primary == 2:
         iccd = True
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
@@ -3803,10 +3809,10 @@ def main(args=None):
     global rtanmax
     global beamwd
 
-    iefrf = int(m_file.data["iefrf"].get_scan(scan))
+    i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
     iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
 
-    if (iefrf in [5, 8]) or (iefrffix in [5, 8]):
+    if (i_hcd_primary in [5, 8]) or (iefrffix in [5, 8]):
         nbshield = m_file.data["nbshield"].get_scan(scan)
         rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
         rtanmax = m_file.data["rtanmax"].get_scan(scan)

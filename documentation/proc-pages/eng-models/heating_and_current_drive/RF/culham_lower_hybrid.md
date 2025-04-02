@@ -1,6 +1,6 @@
 # Culham Lower Hybrid | `cullhy()`
 
-- `iefrf/iefrffix` = 6
+- `i_hcd_primary/iefrffix` = 6
 
 This routine calculates the current drive parameters for a
 lower hybrid system, based on the AEA FUS 172 model.

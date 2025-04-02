@@ -1,6 +1,6 @@
 # ECRH with Cutoff
 
-- `iefrf/iefrffix` = 13
+- `i_hcd_primary/iefrffix` = 13
 
 | Input | Description |
 |-------|-------------|

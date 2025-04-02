@@ -1011,8 +1011,8 @@ def check_process(inputs):  # noqa: ARG001
     # If there is no NBI, then hot beam density should be zero
     if fortran.current_drive_variables.irfcd == 1:
         if (
-            fortran.current_drive_variables.iefrf != 5
-            and fortran.current_drive_variables.iefrf != 8
+            fortran.current_drive_variables.i_hcd_primary != 5
+            and fortran.current_drive_variables.i_hcd_primary != 8
         ):
             fortran.physics_variables.f_nd_beam_electron = 0.0
     else:

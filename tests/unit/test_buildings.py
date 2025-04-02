@@ -130,7 +130,7 @@ class BldgsSizesParam(NamedTuple):
     qnty_sfty_fac: Any
     hotcell_h: Any
     hot_sepdist: Any
-    iefrf: Any
+    i_hcd_primary: Any
     n_tf_coils: Any
     i_tf_sup: Any
     r_pf_coil_outer_max: Any
@@ -273,7 +273,7 @@ class BldgsSizesParam(NamedTuple):
             qnty_sfty_fac=2,
             hotcell_h=12,
             hot_sepdist=2,
-            iefrf=10,
+            i_hcd_primary=10,
             n_tf_coils=16,
             i_tf_sup=1,
             r_pf_coil_outer_max=18.98258241468535,
@@ -412,7 +412,7 @@ class BldgsSizesParam(NamedTuple):
             qnty_sfty_fac=2,
             hotcell_h=12,
             hot_sepdist=2,
-            iefrf=10,
+            i_hcd_primary=10,
             n_tf_coils=16,
             i_tf_sup=1,
             r_pf_coil_outer_max=18.982980877139834,
@@ -671,7 +671,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     )
     monkeypatch.setattr(buildings_variables, "hotcell_h", bldgssizesparam.hotcell_h)
     monkeypatch.setattr(buildings_variables, "hot_sepdist", bldgssizesparam.hot_sepdist)
-    monkeypatch.setattr(current_drive_variables, "iefrf", bldgssizesparam.iefrf)
+    monkeypatch.setattr(
+        current_drive_variables, "i_hcd_primary", bldgssizesparam.i_hcd_primary
+    )
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
     monkeypatch.setattr(

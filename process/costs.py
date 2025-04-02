@@ -1814,7 +1814,7 @@ class Costs:
 
             #  Account 223.2 : Lower Hybrid or ICH
 
-            if current_drive_variables.iefrf != 2:
+            if current_drive_variables.i_hcd_primary != 2:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.uclh

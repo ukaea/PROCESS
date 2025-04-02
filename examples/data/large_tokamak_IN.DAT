@@ -454,7 +454,7 @@ t_precharge = 500.0
 bootstrap_current_fraction_max = 0.95
 
 * Switch for current drive efficiency model
-iefrf = 10
+i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
 gamma_ecrh = 0.30

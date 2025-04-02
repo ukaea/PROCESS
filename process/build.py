@@ -2421,7 +2421,7 @@ class Build:
                     radius,
                 )
 
-            if (current_drive_variables.iefrf in [5, 8]) or (
+            if (current_drive_variables.i_hcd_primary in [5, 8]) or (
                 current_drive_variables.iefrffix in [5, 8]
             ):
                 po.ovarre(

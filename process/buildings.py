@@ -440,8 +440,10 @@ class Buildings:
 
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
-        # current_drive_variables.iefrf = switch for current drive model
-        if (current_drive_variables.iefrf == 5) or (current_drive_variables.iefrf == 8):
+        # current_drive_variables.i_hcd_primary = switch for current drive model
+        if (current_drive_variables.i_hcd_primary == 5) or (
+            current_drive_variables.i_hcd_primary == 8
+        ):
             # NBI technology will be situated within the reactor building
             buildings_variables.reactor_hall_l = (
                 buildings_variables.reactor_hall_l
@@ -998,8 +1000,8 @@ class Buildings:
                 "(reactor_hall_h)",
                 buildings_variables.reactor_hall_h,
             )
-            if (current_drive_variables.iefrf == 5) or (
-                current_drive_variables.iefrf == 8
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
             ):
                 po.ocmmnt(
                     self.outfile,
@@ -1092,8 +1094,8 @@ class Buildings:
                 hotcell_vol_ext,
             )
             po.oblnkl(self.outfile)
-            if (current_drive_variables.iefrf != 5) and (
-                current_drive_variables.iefrf != 8
+            if (current_drive_variables.i_hcd_primary != 5) and (
+                current_drive_variables.i_hcd_primary != 8
             ):
                 po.ovarre(
                     self.outfile,
