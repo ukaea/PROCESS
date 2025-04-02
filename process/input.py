@@ -584,7 +584,6 @@ INPUT_VARIABLES = {
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(fortran.divertor_variables, float, range=(0.1, 2.0)),
-    "fdivcol": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fdivwet": InputVariable(fortran.stellarator_variables, float, range=(0.01, 1.0)),
     "fdtmp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fecrh_ignition": InputVariable(

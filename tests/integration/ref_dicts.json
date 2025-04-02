@@ -1907,7 +1907,6 @@
         ],
         "f_ster_div_single": 0.115,
         "fdiva": 1.11,
-        "fdivcol": 1.0,
         "fdivwet": 0.333333333333333,
         "fdtmp": 1.0,
         "fe2": null,
@@ -9482,7 +9481,6 @@
         "fdiags": "",
         "f_ster_div_single": "Solid angle fraction taken by one divertor",
         "fdiva": "divertor area fudge factor (for ITER, Sept 1990)",
-        "fdivcol": "f-value for divertor collisionality (`constraint equation 22`, `iteration variable 34`)",
         "fdivwet": "wetted fraction of the divertor area",
         "fdtmp": "f-value for first wall coolant temperature rise\n (`constraint equation 38`, `iteration variable 62`)",
         "fe2": "",
@@ -12517,10 +12515,6 @@
             "lb": 0.1,
             "ub": 2.0
         },
-        "fdivcol": {
-            "lb": 0.001,
-            "ub": 10.0
-        },
         "fdivwet": {
             "lb": 0.01,
             "ub": 1.0
@@ -15103,10 +15097,6 @@
             "ub": 1.0
         },
         "fdene": {
-            "lb": 0.001,
-            "ub": 1.0
-        },
-        "fdivcol": {
             "lb": 0.001,
             "ub": 1.0
         },
