@@ -129,7 +129,7 @@ module current_drive_variables
   real(dp) :: feffcd
   !! current drive efficiency fudge factor (`iteration variable 47`)
 
-  real(dp) :: forbitloss
+  real(dp) :: f_p_beam_orbit_loss
   !! fraction of neutral beam power lost after ionisation but before
   !! thermalisation (orbit loss fraction)
 
@@ -289,7 +289,7 @@ module current_drive_variables
     pscf_scene = 0.0D0
     p_beam_shine_through_mw = 0.0D0
     feffcd = 1.0D0
-    forbitloss = 0.0D0
+    f_p_beam_orbit_loss = 0.0D0
     frbeam = 1.05D0
     f_tritium_beam = 1.0D-6
     gamcd = 0.0D0

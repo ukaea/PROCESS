@@ -67,7 +67,7 @@ class CudrivParam(NamedTuple):
 
     etaech: Any = None
 
-    forbitloss: Any = None
+    f_p_beam_orbit_loss: Any = None
 
     pinjmw: Any = None
 
@@ -226,7 +226,7 @@ class CudrivParam(NamedTuple):
             etacd=0,
             etacdfix=0,
             etaech=0.5,
-            forbitloss=0,
+            f_p_beam_orbit_loss=0,
             pinjmw=0,
             pwpnb=0,
             etanbi=0.29999999999999999,
@@ -316,7 +316,7 @@ class CudrivParam(NamedTuple):
             etacd=0.5,
             etacdfix=0,
             etaech=0.5,
-            forbitloss=0,
+            f_p_beam_orbit_loss=0,
             pinjmw=120.49600019005746,
             pwpnb=0,
             etanbi=0.29999999999999999,
@@ -446,7 +446,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "etaech", cudrivparam.etaech)
 
-    monkeypatch.setattr(current_drive_variables, "forbitloss", cudrivparam.forbitloss)
+    monkeypatch.setattr(
+        current_drive_variables, "f_p_beam_orbit_loss", cudrivparam.f_p_beam_orbit_loss
+    )
 
     monkeypatch.setattr(current_drive_variables, "pinjmw", cudrivparam.pinjmw)
 
