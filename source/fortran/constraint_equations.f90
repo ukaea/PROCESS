@@ -885,7 +885,8 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fvs * vs_cs_pf_total_pulse/vs_plasma_total_required
+      !! vs_cs_pf_total_pulse is negative, requires sign change
+      tmp_cc =  1.0D0 - fvs * -vs_cs_pf_total_pulse/vs_plasma_total_required
       tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
       tmp_err = vs_plasma_total_required * tmp_cc
       tmp_symbol = '>'
