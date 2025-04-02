@@ -1791,7 +1791,7 @@ class Physics:
         current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
 
         if physics_variables.i_pfirsch_schluter_current == 1:
-            current_drive_variables.ps_current_fraction = (
+            current_drive_variables.f_c_plasma_pfirsch_schluter = (
                 current_drive_variables.pscf_scene
             )
 
@@ -2005,7 +2005,7 @@ class Physics:
             current_drive_variables.plasma_current_internal_fraction = (
                 current_drive_variables.bootstrap_current_fraction
                 + current_drive_variables.diamagnetic_current_fraction
-                + current_drive_variables.ps_current_fraction
+                + current_drive_variables.f_c_plasma_pfirsch_schluter
             )
 
         # Plasma driven current fraction (Bootstrap + Diamagnetic
@@ -5857,8 +5857,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Pfirsch-Schlueter fraction (enforced)",
-                "(ps_current_fraction.)",
-                current_drive_variables.ps_current_fraction,
+                "(f_c_plasma_pfirsch_schluter.)",
+                current_drive_variables.f_c_plasma_pfirsch_schluter,
                 "OP ",
             )
 
