@@ -366,11 +366,11 @@ contains
    subroutine constraint_err_030()
     !! Error in: Equation for injection power upper limit
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use current_drive_variables, only: pinjmw, pinjalw
+    use current_drive_variables, only: pinjmw, p_hcd_injected_max
     use constraint_variables, only: fpinj
     implicit none
     write(*,*) 'fpinj = ', fpinj
-    write(*,*) 'pinjalw = ', pinjalw
+    write(*,*) 'p_hcd_injected_max = ', p_hcd_injected_max
     write(*,*) 'pinjmw = ', pinjmw
    end subroutine
 
@@ -1495,13 +1495,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for injection power upper limit
       !! #=# current_drive
-      !! #=#=# fpinj, pinjalw
+      !! #=#=# fpinj, p_hcd_injected_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! pinjmw : input real : total auxiliary injected power (MW)
       !! fpinj : input real : f-value for injection power
-      !! pinjalw : input real : Maximum allowable value for injected power (MW)
-      use current_drive_variables, only: pinjmw, pinjalw
+      !! p_hcd_injected_max : input real : Maximum allowable value for injected power (MW)
+      use current_drive_variables, only: pinjmw, p_hcd_injected_max
       use constraint_variables, only: fpinj
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1510,9 +1510,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  pinjmw/pinjalw - 1.0D0 * fpinj
-      tmp_con = pinjalw
-      tmp_err = pinjalw  - pinjmw / fpinj
+      tmp_cc =  pinjmw/p_hcd_injected_max - 1.0D0 * fpinj
+      tmp_con = p_hcd_injected_max
+      tmp_err = p_hcd_injected_max  - pinjmw / fpinj
       tmp_symbol = '<'
       tmp_units = 'MW'
 

@@ -960,7 +960,7 @@ INPUT_VARIABLES = {
     ),
     "pibv": InputVariable(fortran.buildings_variables, float, range=(1000.0, 100000.0)),
     "pifecr": InputVariable(fortran.ife_variables, float, range=(0.0, 100.0)),
-    "pinjalw": InputVariable(
+    "p_hcd_injected_max": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "pinjfixmw": InputVariable(

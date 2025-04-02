@@ -26,7 +26,7 @@ The fraction of the required plasma current to be produced by non-inductive mean
 It is sometimes useful to adjust artificially the current drive efficiency values produced by these routines. This can be achieved by setting the scaling coefficients `feffcd`. The wall plug to plasma efficiencies can also be adjusted, by changing the relevant variable (`etaech`, `etalh`, `etanbi` or `etaof`).
 
 ### Power limits
-The maximum amount of desired heating and current drive power can be set with `pinjalw`. This limit can be enforced by activating constraint equation 30 (`icc=30`).
+The maximum amount of desired heating and current drive power can be set with `p_hcd_injected_max`. This limit can be enforced by activating constraint equation 30 (`icc=30`).
 Similarly the lower bound on required heating and current drive power can be set with `auxmin`. This limit can be enforced by activating constraint equation 40 (`icc=40`).
 
 ### Secondary current drive

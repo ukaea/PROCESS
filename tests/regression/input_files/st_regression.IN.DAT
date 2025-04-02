@@ -2701,7 +2701,7 @@ boundu(46) = 1.5
 * DESCRIPTION:   f-value for injected power variation range
 * JUSTIFICATION: Setup to allow the injected power to vary
 
-pinjalw = 150.0 
+p_hcd_injected_max = 150.0 
 * DESCRIPTION:   Maximum Allowable Value for Injected Power (MW) (icc=30)
 * JUSTIFICATION: 
 

@@ -3505,7 +3505,7 @@
         "pibv": 20000.0,
         "piepv": 0.0,
         "pifecr": 10.0,
-        "pinjalw": 150.0,
+        "p_hcd_injected_max": 150.0,
         "pinjemw": 0.0,
         "pinjfixmw": 0.0,
         "pinjht": 0.0,
@@ -10228,7 +10228,7 @@
         "pibv": "power injection building volume (m3)",
         "piepv": "ion/electron equilibration power per volume (MW/m3)",
         "pifecr": "IFE cryogenic power requirements (MW)",
-        "pinjalw": "maximum allowable value for injected power (MW) (`constraint equation 30`)",
+        "p_hcd_injected_max": "maximum allowable value for injected power (MW) (`constraint equation 30`)",
         "pinjemw": "auxiliary injected power to electrons (MW)",
         "pinjfixmw": "secondary total fixed auxiliary injected power (MW)",
         "pinjht": "power dissipated in heating and current drive system (MW)",
@@ -13759,7 +13759,7 @@
             "lb": 0.0,
             "ub": 100.0
         },
-        "pinjalw": {
+        "p_hcd_injected_max": {
             "lb": 0.0,
             "ub": 1000.0
         },
@@ -17653,7 +17653,7 @@
             "dx_beam_shield",
             "pheat",
             "pheatfix",
-            "pinjalw",
+            "p_hcd_injected_max",
             "pinjemw",
             "pinjimw",
             "pinjmw",
@@ -20395,7 +20395,7 @@
         "pheatfix": "real_variable",
         "pibv": "real_variable",
         "pifecr": "real_variable",
-        "pinjalw": "real_variable",
+        "p_hcd_injected_max": "real_variable",
         "pinjfixmw": "real_variable",
         "pinjmax": "real_variable",
         "dx_fw_module": "real_variable",

@@ -45,7 +45,7 @@ icc = 11
 *-----------------------------*
 icc = 30
 * Maximum allowable value for injected power [MW]
-pinjalw = 200.0
+p_hcd_injected_max = 200.0
 
 
 

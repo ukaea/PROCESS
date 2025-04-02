@@ -1138,8 +1138,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Maximum allowable beam power (MW)",
-                    "(pinjalw)",
-                    current_drive_variables.pinjalw,
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1188,8 +1188,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Maximum allowable beam power (MW)",
-                    "(pinjalw)",
-                    current_drive_variables.pinjalw,
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1253,8 +1253,8 @@ class CurrentDrive:
             po.ovarrf(
                 self.outfile,
                 "Maximum allowable ECRH power (MW)",
-                "(pinjalw)",
-                current_drive_variables.pinjalw,
+                "(p_hcd_injected_max)",
+                current_drive_variables.p_hcd_injected_max,
             )
             po.ovarre(
                 self.outfile,

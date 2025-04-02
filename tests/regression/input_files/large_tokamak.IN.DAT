@@ -78,7 +78,7 @@ boundu(103) = 10.0
 icc = 30
 ixc = 46 * fpinj
 * Maximum allowable value for injected power [MW]
-pinjalw = 200.0
+p_hcd_injected_max = 200.0
 
 * Net electric power lower limit *
 *--------------------------------*
