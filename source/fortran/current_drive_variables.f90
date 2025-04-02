@@ -123,7 +123,7 @@ module current_drive_variables
   real(dp) :: pscf_scene
   !! Pfirsch-Schlüter current fraction, SCENE fit
 
-  real(dp) :: nbshinemw
+  real(dp) :: p_beam_shine_through_mw
   !! neutral beam shine-through power
 
   real(dp) :: feffcd

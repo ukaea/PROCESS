@@ -639,7 +639,7 @@ class CurrentDrive:
                 )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
-                current_drive_variables.nbshinemw = (
+                current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.pnbitot * current_drive_variables.nbshinef
                 )
 
@@ -648,14 +648,14 @@ class CurrentDrive:
                     current_drive_variables.forbitloss
                     * (
                         current_drive_variables.pnbitot
-                        - current_drive_variables.nbshinemw
+                        - current_drive_variables.p_beam_shine_through_mw
                     )
                 )
 
                 # Power deposited
                 pinjmw1 = (
                     current_drive_variables.pnbitot
-                    - current_drive_variables.nbshinemw
+                    - current_drive_variables.p_beam_shine_through_mw
                     - current_drive_variables.porbitlossmw
                 )
                 pinjimw1 = pinjmw1 * current_drive_variables.fpion
@@ -1019,7 +1019,7 @@ class CurrentDrive:
                 "OP ",
             )
 
-        # MDK rearranged and added current_drive_variables.nbshinemw
+        # MDK rearranged and added current_drive_variables.p_beam_shine_through_mw
         # if (abs(current_drive_variables.pnbeam) > 1.0e-8) :
         if (
             (current_drive_variables.iefrf == 5)
@@ -1120,8 +1120,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Beam shine-through power [MW]",
-                    "(nbshinemw)",
-                    current_drive_variables.nbshinemw,
+                    "(p_beam_shine_through_mw)",
+                    current_drive_variables.p_beam_shine_through_mw,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1140,9 +1140,9 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Total (MW)",
-                    "(current_drive_variables.porbitlossmw+current_drive_variables.nbshinemw+current_drive_variables.pinjmw)",
+                    "(current_drive_variables.porbitlossmw+current_drive_variables.p_beam_shine_through_mw+current_drive_variables.pinjmw)",
                     current_drive_variables.porbitlossmw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_beam_shine_through_mw
                     + pinjmw1,
                 )
                 po.oblnkl(self.outfile)
