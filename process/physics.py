@@ -1800,7 +1800,7 @@ class Physics:
         # ***************************** #
 
         # Calculate bootstrap current fraction using various models
-        current_drive_variables.bscf_iter89 = (
+        current_drive_variables.f_c_plasma_bootstrap_iter89 = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
@@ -1943,7 +1943,7 @@ class Physics:
         else:
             if physics_variables.i_bootstrap_current == 1:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_iter89
+                    current_drive_variables.f_c_plasma_bootstrap_iter89
                 )
             elif physics_variables.i_bootstrap_current == 2:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5649,8 +5649,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (ITER 1989)",
-                "(bscf_iter89)",
-                current_drive_variables.bscf_iter89,
+                "(f_c_plasma_bootstrap_iter89)",
+                current_drive_variables.f_c_plasma_bootstrap_iter89,
                 "OP ",
             )
 

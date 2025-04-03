@@ -504,7 +504,7 @@
  Start-up_resistive_(Wb)_________________________________________________ (vs_plasma_res_ramp)_______________________      4.9825E+01 OP 
  Flat-top_resistive_(Wb)_________________________________________________ (vs_plasma_burn_required)_______________________      2.6495E+02 OP 
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
- Bootstrap_fraction_(ITER_1989)__________________________________________ (bscf_iter89)_________________      3.7455E-01    
+ Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.7455E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      4.2290E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5275E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.3666E-01    
