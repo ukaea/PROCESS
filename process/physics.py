@@ -1891,7 +1891,7 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-        current_drive_variables.bscf_hoang = (
+        current_drive_variables.f_c_plasma_bootstrap_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1974,7 +1974,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 8:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_hoang
+                    current_drive_variables.f_c_plasma_bootstrap_hoang
                 )
             elif physics_variables.i_bootstrap_current == 9:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5707,8 +5707,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Hoang)",
-                "(bscf_hoang)",
-                current_drive_variables.bscf_hoang,
+                "(f_c_plasma_bootstrap_hoang)",
+                current_drive_variables.f_c_plasma_bootstrap_hoang,
                 "OP ",
             )
             po.ovarrf(
