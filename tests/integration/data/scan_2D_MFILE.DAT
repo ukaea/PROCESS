@@ -513,7 +513,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1061E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4049E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.2523E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2084E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2084E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1130E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.0453E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1061E-01    
@@ -1676,7 +1676,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1146E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4347E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.2711E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2599E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2599E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1485E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.1749E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1146E-01    
@@ -2839,7 +2839,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1238E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4650E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.2922E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.3125E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.3125E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1846E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.3075E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1238E-01    
@@ -4002,7 +4002,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1715E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5110E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3397E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.3186E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.3186E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1924E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.3228E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1715E-01    
@@ -5165,7 +5165,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1531E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4765E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3114E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2692E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2692E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1579E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.1983E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1531E-01    
@@ -6328,7 +6328,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1452E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4491E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.2936E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2193E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2193E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1237E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.0727E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1452E-01    
@@ -7491,7 +7491,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1915E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.4941E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3402E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2251E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2251E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1312E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.0874E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1915E-01    
@@ -8654,7 +8654,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2074E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5274E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3660E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2733E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2733E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1649E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.2087E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2074E-01    
@@ -9817,7 +9817,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2337E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5672E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4013E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.3209E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.3209E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1989E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.3286E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2337E-01    
@@ -10980,7 +10980,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2713E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.6076E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4400E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.3304E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.3304E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.2082E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.3525E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2713E-01    
@@ -12143,7 +12143,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2391E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5644E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4000E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2839E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2839E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1746E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.2353E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2391E-01    
@@ -13306,7 +13306,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2221E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5307E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3736E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2358E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2358E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1408E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.1141E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2221E-01    
@@ -14469,7 +14469,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2611E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5714E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4135E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2439E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2439E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1493E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.1347E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2611E-01    
@@ -15632,7 +15632,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2685E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5999E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4312E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2956E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2956E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1848E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.2650E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2685E-01    
@@ -16795,7 +16795,7 @@
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.2763E-01    
  Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.6295E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.4499E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.3506E-02    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.3506E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.2222E-02    
  Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.4036E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.2763E-01    
