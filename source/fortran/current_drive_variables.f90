@@ -36,7 +36,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_bootstrap_nevins
   !! bootstrap current fraction, Nevins et al model
 
-  real(dp) :: bscf_sauter
+  real(dp) :: f_c_plasma_bootstrap_sauter
   !! bootstrap current fraction, Sauter et al model
 
   real(dp) :: bscf_wilson
@@ -259,7 +259,7 @@ module current_drive_variables
     bootstrap_current_fraction_max = 0.9D0
     f_c_plasma_bootstrap_iter89 = 0.0D0
     f_c_plasma_bootstrap_nevins = 0.0D0
-    bscf_sauter = 0.0D0
+    f_c_plasma_bootstrap_sauter = 0.0D0
     bscf_wilson = 0.0D0
     bscf_sakai = 0.0D0
     bscf_aries = 0.0D0
