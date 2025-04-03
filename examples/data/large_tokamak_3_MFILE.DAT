@@ -539,7 +539,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6488E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1920E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -1647,7 +1647,7 @@ f_c_plasma_bootstrap_max = 0.95
 i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
-gamma_ecrh = 0.30
+eta_cd_norm_ecrh = 0.30
 
 * ECRH wall-plug efficiency
 eta_ecrh_injector_wall_plug = 0.5

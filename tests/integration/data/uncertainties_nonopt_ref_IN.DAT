@@ -167,7 +167,7 @@ ucme     = 3.0d8 * Unit cost of maintenance equipment ($/w**0;3)
 
 f_c_plasma_bootstrap_max  = 0.99 * Maximum fraction of plasma current from bootstrap;
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
-gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
+eta_cd_norm_ecrh = 0.30 * ECRH gamma_CD (user input)
 eta_ecrh_injector_wall_plug = 0.4 * ECRH wall-plug efficiency
 p_hcd_injected_max  = 51.0 * Maximum allowable value for injected power (mw)
 pheat = 50.0

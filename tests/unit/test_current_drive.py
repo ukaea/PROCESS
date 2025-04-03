@@ -57,7 +57,7 @@ class CudrivParam(NamedTuple):
 
     gamcd: Any = None
 
-    gamma_ecrh: Any = None
+    eta_cd_norm_ecrh: Any = None
 
     eta_lowhyb_injector_wall_plug: Any = None
 
@@ -221,7 +221,7 @@ class CudrivParam(NamedTuple):
             f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
             gamcd=0,
-            gamma_ecrh=0.30000000000000004,
+            eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             etacd=0,
             etacdfix=0,
@@ -311,7 +311,7 @@ class CudrivParam(NamedTuple):
             f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
             gamcd=0.30000000000000004,
-            gamma_ecrh=0.30000000000000004,
+            eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             etacd=0.5,
             etacdfix=0,
@@ -448,7 +448,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "gamcd", cudrivparam.gamcd)
 
-    monkeypatch.setattr(current_drive_variables, "gamma_ecrh", cudrivparam.gamma_ecrh)
+    monkeypatch.setattr(
+        current_drive_variables, "eta_cd_norm_ecrh", cudrivparam.eta_cd_norm_ecrh
+    )
 
     monkeypatch.setattr(
         current_drive_variables,

@@ -142,7 +142,7 @@ module current_drive_variables
   real(dp) :: gamcd
   !! normalised current drive efficiency (1.0e20 A/(W m^2))
 
-  real(dp) :: gamma_ecrh
+  real(dp) :: eta_cd_norm_ecrh
   !! User input ECRH gamma (1.0e20 A/(W m^2))
 
   real(dp) :: xi_ebw
@@ -293,7 +293,7 @@ module current_drive_variables
     frbeam = 1.05D0
     f_beam_tritium = 1.0D-6
     gamcd = 0.0D0
-    gamma_ecrh = 0.35D0
+    eta_cd_norm_ecrh = 0.35D0
     xi_ebw = 0.8D0
     i_hcd_primary = 5
     i_hcd_secondary = 0
