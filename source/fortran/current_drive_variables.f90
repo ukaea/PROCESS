@@ -75,7 +75,7 @@ module current_drive_variables
   real(dp) :: diacf_scene
   !! diamagnetic current fraction, SCENE fit
 
-  real(dp) :: diamagnetic_current_fraction
+  real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
   real(dp) :: echpwr
@@ -272,7 +272,7 @@ module current_drive_variables
     c_beam_total = 0.0D0
     f_c_plasma_diamagnetic_hender = 0.0D0
     diacf_scene = 0.0D0
-    diamagnetic_current_fraction = 0.0D0
+    f_c_plasma_diamagnetic = 0.0D0
     echpwr = 0.0D0
     echwpow = 0.0D0
     effcd = 0.0D0
