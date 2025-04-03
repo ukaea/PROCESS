@@ -2865,7 +2865,7 @@ eta_ecrh_injector_wall_plug = 0.45
 * Bootstrap Current *
 *-------------------*
 
-bootstrap_current_fraction_max = 0.9
+f_c_plasma_bootstrap_max = 0.9
 * DESCRIPTION:   Maximum Fraction of Plasma Current from Bootstrap
 * JUSTIFICATION: upper limit set for plasma stability
 *                

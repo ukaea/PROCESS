@@ -225,7 +225,7 @@ INPUT_VARIABLES = {
     ),
     "bmn": InputVariable(fortran.stellarator_variables, float, range=(0.0001, 0.01)),
     "bmxlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 50.0)),
-    "bootstrap_current_fraction_max": InputVariable(
+    "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
     "breeder_f": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),

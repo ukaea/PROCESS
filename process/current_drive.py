@@ -831,8 +831,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Maximum Allowed Bootstrap current fraction",
-            "(bootstrap_current_fraction_max)",
-            current_drive_variables.bootstrap_current_fraction_max,
+            "(f_c_plasma_bootstrap_max)",
+            current_drive_variables.f_c_plasma_bootstrap_max,
         )
         if current_drive_variables.i_hcd_secondary != 0:
             po.ovarre(
@@ -1010,7 +1010,7 @@ class CurrentDrive:
         if (
             abs(
                 current_drive_variables.bootstrap_current_fraction
-                - current_drive_variables.bootstrap_current_fraction_max
+                - current_drive_variables.f_c_plasma_bootstrap_max
             )
             < 1.0e-8
         ):

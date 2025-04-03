@@ -26,9 +26,9 @@ module current_drive_variables
   real(dp) :: bootstrap_current_fraction
   !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
-  real(dp) :: bootstrap_current_fraction_max
-  !! maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`,
-  !! bootstrap fraction = abs(bootstrap_current_fraction_max)
+  real(dp) :: f_c_plasma_bootstrap_max
+  !! maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`,
+  !! bootstrap fraction = abs(f_c_plasma_bootstrap_max)
 
   real(dp) :: f_c_plasma_bootstrap_iter89
   !! bootstrap current fraction, ITER 1989 model
