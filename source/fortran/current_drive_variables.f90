@@ -45,7 +45,7 @@ module current_drive_variables
   real(dp) :: bscf_sakai
   !! Bootstrap current fraction, Sakai et al model
 
-  real(dp) :: bscf_aries
+  real(dp) :: f_c_plasma_bootstrap_aries
   !! Bootstrap current fraction, ARIES model
 
   real(dp) :: bscf_andrade

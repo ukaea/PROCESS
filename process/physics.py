@@ -1871,7 +1871,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_aries = (
+        current_drive_variables.f_c_plasma_bootstrap_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1966,7 +1966,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 6:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_aries
+                    current_drive_variables.f_c_plasma_bootstrap_aries
                 )
             elif physics_variables.i_bootstrap_current == 7:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5693,8 +5693,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (ARIES)",
-                "(bscf_aries)",
-                current_drive_variables.bscf_aries,
+                "(f_c_plasma_bootstrap_aries)",
+                current_drive_variables.f_c_plasma_bootstrap_aries,
                 "OP ",
             )
             po.ovarrf(
