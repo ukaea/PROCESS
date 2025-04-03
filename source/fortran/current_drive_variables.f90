@@ -96,7 +96,7 @@ module current_drive_variables
   !!  - =0 O-mode
   !!  - =1 X-mode
 
-  real(dp) :: beam_energy
+  real(dp) :: e_beam_kev
   !! neutral beam energy (keV) (`iteration variable 19`)
 
   real(dp) :: etacd
@@ -278,7 +278,7 @@ module current_drive_variables
     effcd = 0.0D0
     harnum = 2.0
     wave_mode = 0
-    beam_energy = 1.0D3
+    e_beam_kev = 1.0D3
     etacd = 0.0D0
     etacdfix = 0.0D0
     eta_ecrh_injector_wall_plug = 0.3D0

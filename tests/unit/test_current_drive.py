@@ -75,7 +75,7 @@ class CudrivParam(NamedTuple):
 
     eta_beam_injector_wall_plug: Any = None
 
-    beam_energy: Any = None
+    e_beam_kev: Any = None
 
     effcd: Any = None
 
@@ -230,7 +230,7 @@ class CudrivParam(NamedTuple):
             p_hcd_injected_total_mw=0,
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
-            beam_energy=1000,
+            e_beam_kev=1000,
             effcd=0,
             pwplh=0,
             echwpow=0,
@@ -320,7 +320,7 @@ class CudrivParam(NamedTuple):
             p_hcd_injected_total_mw=120.49600019005746,
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
-            beam_energy=1000,
+            e_beam_kev=1000,
             effcd=0.05000000000000001,
             pwplh=0,
             echwpow=240.99200038011492,
@@ -484,7 +484,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.eta_beam_injector_wall_plug,
     )
 
-    monkeypatch.setattr(current_drive_variables, "beam_energy", cudrivparam.beam_energy)
+    monkeypatch.setattr(current_drive_variables, "e_beam_kev", cudrivparam.e_beam_kev)
 
     monkeypatch.setattr(current_drive_variables, "effcd", cudrivparam.effcd)
 

@@ -72,7 +72,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
 |  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
 |  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
-|  $\mathtt{beam_energy}$      |  neutral beam energy $(\text{keV})$                             |
+|  $\mathtt{e_beam_kev}$      |  neutral beam energy $(\text{keV})$                             |
 |  $\mathtt{frbeam}$      |   R_tangent / R_major for neutral beam injection                            |
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
 |  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
@@ -114,7 +114,7 @@ $$
 Beam energy in MeV
 
 $$
-\mathtt{ebmev} = \frac{\mathtt{beam_energy}}{10^3}
+\mathtt{ebmev} = \frac{\mathtt{e_beam_kev}}{10^3}
 $$
 
 x and y coefficients of function J0(x,y) (IPDG89)

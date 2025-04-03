@@ -89,7 +89,7 @@ DEFAULT_COMPARE_PARAMS = [
     "aux_current_fraction",
     "inductive_current_fraction",
     "gamnb",
-    "beam_energy",
+    "e_beam_kev",
     "p_plasma_loss_mw",
 ]
 
@@ -178,7 +178,7 @@ BASELINE_LIST = [
     "aux_current_fraction",
     "inductive_current_fraction",
     "gamnb",
-    "beam_energy",
+    "e_beam_kev",
     "p_plasma_loss_mw",
     "pdivt",
     "vssoft",
