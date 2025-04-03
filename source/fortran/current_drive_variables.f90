@@ -139,8 +139,8 @@ module current_drive_variables
   real(dp) :: f_beam_tritium
   !! fraction of beam that is tritium
 
-  real(dp) :: gamcd
-  !! normalised current drive efficiency (1.0e20 A/(W m^2))
+  real(dp) :: eta_cd_norm_hcd_primary
+  !! Normalised current drive efficiency for primary HCD system [(1.0e20 A)/(W m^2)]
 
   real(dp) :: eta_cd_norm_hcd_secondary
   !! Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]
@@ -295,7 +295,7 @@ module current_drive_variables
     f_p_beam_orbit_loss = 0.0D0
     frbeam = 1.05D0
     f_beam_tritium = 1.0D-6
-    gamcd = 0.0D0
+    eta_cd_norm_hcd_primary = 0.0D0
     eta_cd_norm_hcd_secondary = 0.0D0
     eta_cd_norm_ecrh = 0.35D0
     xi_ebw = 0.8D0

@@ -3172,7 +3172,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
+                "eta_cd_norm_hcd_primary",
                 "Normalised current drive efficiency of primary HCD system",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
@@ -3201,7 +3201,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
+                "eta_cd_norm_hcd_primary",
                 "Normalised current drive efficiency",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
@@ -3230,7 +3230,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
+                "eta_cd_norm_hcd_primary",
                 "Normalised current drive efficiency",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
