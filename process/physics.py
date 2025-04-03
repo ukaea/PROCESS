@@ -2067,7 +2067,7 @@ class Physics:
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
 
-        if (current_drive_variables.beam_current != 0.0e0) and (
+        if (current_drive_variables.c_beam_total != 0.0e0) and (
             physics_variables.ignite == 0
         ):
             (
@@ -2079,7 +2079,7 @@ class Physics:
                 physics_variables.betbm0,
                 physics_variables.bp,
                 physics_variables.bt,
-                current_drive_variables.beam_current,
+                current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,

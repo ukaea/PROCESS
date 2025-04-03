@@ -35,7 +35,7 @@ class CurrentDrive:
         current_drive_variables.echpwr = 0.0e0
         current_drive_variables.pnbeam = 0.0e0
         current_drive_variables.plhybd = 0.0e0
-        current_drive_variables.beam_current = 0.0e0
+        current_drive_variables.c_beam_total = 0.0e0
         beam_current_fix = 0.0e0
         current_drive_variables.p_beam_orbit_loss = 0.0e0
         porbitlossmwfix = 0.0e0
@@ -692,7 +692,7 @@ class CurrentDrive:
                 )
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
                 current_drive_variables.gamcd = gamnb
-                current_drive_variables.beam_current = (
+                current_drive_variables.c_beam_total = (
                     1.0e-3
                     * (current_drive_variables.p_beam_injected * 1.0e6)
                     / current_drive_variables.beam_energy
@@ -1063,8 +1063,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(beam_current)",
-                    current_drive_variables.beam_current,
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
                     "OP ",
                 )
 

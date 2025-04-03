@@ -66,7 +66,7 @@ module current_drive_variables
   real(dp) :: cboot
   !! bootstrap current fraction multiplier
 
-  real(dp) :: beam_current
+  real(dp) :: c_beam_total
   !! neutral beam current (A)
 
   real(dp) :: diacf_hender

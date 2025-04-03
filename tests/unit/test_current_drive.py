@@ -33,7 +33,7 @@ class CudrivParam(NamedTuple):
 
     plhybd: Any = None
 
-    beam_current: Any = None
+    c_beam_total: Any = None
 
     p_beam_orbit_loss: Any = None
 
@@ -209,7 +209,7 @@ class CudrivParam(NamedTuple):
             echpwr=0,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
+            c_beam_total=0,
             p_beam_orbit_loss=0,
             i_hcd_primary=10,
             i_hcd_secondary=0,
@@ -299,7 +299,7 @@ class CudrivParam(NamedTuple):
             echpwr=120.49600019005746,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
+            c_beam_total=0,
             p_beam_orbit_loss=0,
             i_hcd_primary=10,
             i_hcd_secondary=0,
@@ -409,7 +409,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
 
     monkeypatch.setattr(
-        current_drive_variables, "beam_current", cudrivparam.beam_current
+        current_drive_variables, "c_beam_total", cudrivparam.c_beam_total
     )
 
     monkeypatch.setattr(
