@@ -3285,7 +3285,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         scan --> scan number to use
     """
 
-    boot_ipdg = mfile_data.data["bscf_iter89"].get_scan(scan)
+    boot_ipdg = mfile_data.data["f_c_plasma_bootstrap_iter89"].get_scan(scan)
     boot_sauter = mfile_data.data["bscf_sauter"].get_scan(scan)
     boot_nenins = mfile_data.data["bscf_nevins"].get_scan(scan)
     boot_wilson = mfile_data.data["bscf_wilson"].get_scan(scan)

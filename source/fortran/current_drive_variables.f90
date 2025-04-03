@@ -30,7 +30,7 @@ module current_drive_variables
   !! maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`,
   !! bootstrap fraction = abs(bootstrap_current_fraction_max)
 
-  real(dp) :: bscf_iter89
+  real(dp) :: f_c_plasma_bootstrap_iter89
   !! bootstrap current fraction, ITER 1989 model
 
   real(dp) :: bscf_nevins
