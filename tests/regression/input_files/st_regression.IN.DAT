@@ -2821,7 +2821,7 @@ harnum = 2
 * DESCRIPTION:   Cyclotron harmonic frequency number 
 * JUSTIFICATION: Not set assuming default ==2 
 
-wave_mode = 0
+i_ecrh_wave_mode = 0
 * DESCRIPTION:   EM cutoff wave mode (X or O) 
 * JUSTIFICATION: Not set assuming default ==0 (O-mode)
 

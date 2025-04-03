@@ -196,7 +196,7 @@ output_costs = 1 * Switch for costs output;
 
 f_c_plasma_bootstrap_max = 0.9 * maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`;
 harnum   = 2 * cyclotron harmonic frequency number; used in cut-off function
-wave_mode = 0 * Switch for ECRH wave mode ;
+i_ecrh_wave_mode = 0 * Switch for ECRH wave mode ;
 eta_ecrh_injector_wall_plug   = 0.45 * ECH wall plug to injector efficiency
 feffcd   = 1.0 * current drive efficiency fudge factor (`iteration variable 47`)
 i_hcd_primary    = 13 * Switch for current drive efficiency model;

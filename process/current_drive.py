@@ -237,11 +237,11 @@ class CurrentDrive:
                 )
 
                 # O-mode case
-                if current_drive_variables.wave_mode == 0:
+                if current_drive_variables.i_ecrh_wave_mode == 0:
                     f_cutoff = fp
 
                 # X-mode case
-                elif current_drive_variables.wave_mode == 1:
+                elif current_drive_variables.i_ecrh_wave_mode == 1:
                     f_cutoff = 0.5 * (
                         fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
@@ -542,11 +542,11 @@ class CurrentDrive:
                 )
 
                 # O-mode case
-                if current_drive_variables.wave_mode == 0:
+                if current_drive_variables.i_ecrh_wave_mode == 0:
                     f_cutoff = fp
 
                 # X-mode case
-                elif current_drive_variables.wave_mode == 1:
+                elif current_drive_variables.i_ecrh_wave_mode == 1:
                     f_cutoff = 0.5 * (
                         fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
                     )
@@ -917,8 +917,8 @@ class CurrentDrive:
             po.ovarin(
                 self.outfile,
                 "EC cutoff wave mode switch",
-                "(wave_mode)",
-                current_drive_variables.wave_mode,
+                "(i_ecrh_wave_mode)",
+                current_drive_variables.i_ecrh_wave_mode,
             )
 
         if current_drive_variables.i_hcd_secondary != 0:

@@ -1568,7 +1568,9 @@ INPUT_VARIABLES = {
     "secondary_cycle_liq": InputVariable(fortran.fwbs_variables, int, range=(2, 4)),
     "supercond_cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "i_tf_inside_cs": InputVariable(fortran.build_variables, int, choices=[0, 1]),
-    "wave_mode": InputVariable(fortran.current_drive_variables, int, choices=[0, 1]),
+    "i_ecrh_wave_mode": InputVariable(
+        fortran.current_drive_variables, int, choices=[0, 1]
+    ),
     "i_confinement_time": InputVariable(
         fortran.physics_variables,
         int,
