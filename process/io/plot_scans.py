@@ -438,18 +438,29 @@ def main(args=None):
 
     if len(x_max_input) != len(output_names):
         x_max = []
-        for _ in range(len(output_names)):
+        for i in range(len(output_names)):
             if x_max_input != []:
-                x_max += [np.float64(x_max_input)]
+                j = 0
+                try:
+                    x_max += [float(x_max_input[i])]
+                    j += 1
+                except IndexError:
+                    x_max += [float(x_max_input[j])]
             else:
                 x_max += [None]
     else:
         x_max = np.float64(x_max_input)
+    print(y_max_input)
     if len(y_max_input) != len(output_names):
         y_max = []
-        for _ in range(len(output_names)):
+        for i in range(len(output_names)):
             if y_max_input != []:
-                y_max += [np.float64(y_max_input)]
+                j = 0
+                try:
+                    y_max += [float(y_max_input[i])]
+                    j += 1
+                except IndexError:
+                    y_max += [float(y_max_input[j])]
             else:
                 y_max += [None]
     else:
@@ -457,15 +468,21 @@ def main(args=None):
     if output_names2 != []:
         if len(y_max2_input) != len(output_names):
             y_max2 = []
-            for _ in range(len(output_names)):
+            for i in range(len(output_names)):
                 if y_max2_input != []:
-                    y_max2 += [np.float64(y_max2_input)]
+                    j = 0
+                    try:
+                        y_max2 += [float(y_max2_input[i])]
+                        j += 1
+                    except IndexError:
+                        y_max2 += [float(y_max2_input[j])]
                 else:
                     y_max2 += [None]
         else:
             y_max2 = np.float64(y_max2_input)
     else:
         y_max2 = y_max2_input
+    print(y_max)
     # -------------
 
     # Case of a set of 1D scans
