@@ -659,7 +659,7 @@ def main(args=None):
                     if y_axis_range != []:
                         if y_axis_percentage is False:
                             y_range = y_axis_range
-                        plt.ylim(y_range[0], y_range[1])
+                        ax.set_ylim(y_range[0], y_range[1])
                         ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                     if x_axis_range != []:
                         x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
@@ -715,7 +715,9 @@ def main(args=None):
                         if y_axis_range != []:
                             if y_axis_percentage is False:
                                 y_range = y_axis_range
-                            plt.ylim(y_range[0], y_range[1])
+                            axs[output_names.index(output_name)].set_ylim(
+                                y_range[0], y_range[1]
+                            )
                             axs[
                                 output_names.index(output_name)
                             ].yaxis.set_major_locator(
@@ -778,7 +780,7 @@ def main(args=None):
                         if y_axis_range != []:
                             if y_axis_percentage is False:
                                 y_range = y_axis_range
-                            plt.ylim(y_range[0], y_range[1])
+                            ax.set_ylim(y_range[0], y_range[1])
                             ax.yaxis.set_major_locator(
                                 mtick.MultipleLocator(y_divisions)
                             )
@@ -844,8 +846,8 @@ def main(args=None):
                     if y_axis_range2 != []:
                         if y_axis_percentage2 is False:
                             y_range2 = y_axis_range2
-                        plt.ylim(y_range2[0], y_range2[1])
-                        ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions2))
+                        ax2.set_ylim(y_range2[0], y_range2[1])
+                        ax2.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions2))
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
                     plt.tight_layout()
@@ -1089,7 +1091,7 @@ def main(args=None):
                 if y_axis_range != []:
                     if y_axis_percentage is False:
                         y_range = y_axis_range
-                    plt.ylim(y_range[0], y_range[1])
+                    ax.set_ylim(y_range[0], y_range[1])
                     ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                 if x_axis_range != []:
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
@@ -1185,7 +1187,7 @@ def main(args=None):
                 if y_axis_range != []:
                     if y_axis_percentage is False:
                         y_range = y_axis_range
-                    plt.ylim(y_range[0], y_range[1])
+                    ax.set_ylim(y_range[0], y_range[1])
                     ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                 x_data = [
                     m_file.data[scan_2_var_name].get_scan(i + 1)
