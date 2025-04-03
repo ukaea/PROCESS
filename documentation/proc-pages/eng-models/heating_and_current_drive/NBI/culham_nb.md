@@ -49,11 +49,11 @@ $$
 Deuterium and tritium beam densities
 
 $$
-\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_tritium_beam})
+\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_beam_tritium})
 $$
 
 $$
-\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_tritium_beam}
+\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_beam_tritium}
 $$
 
 Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$

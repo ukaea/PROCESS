@@ -136,7 +136,7 @@ module current_drive_variables
   real(dp) :: frbeam
   !! R_tangential / R_major for neutral beam injection
 
-  real(dp) :: f_tritium_beam
+  real(dp) :: f_beam_tritium
   !! fraction of beam that is tritium
 
   real(dp) :: gamcd
@@ -291,7 +291,7 @@ module current_drive_variables
     feffcd = 1.0D0
     f_p_beam_orbit_loss = 0.0D0
     frbeam = 1.05D0
-    f_tritium_beam = 1.0D-6
+    f_beam_tritium = 1.0D-6
     gamcd = 0.0D0
     gamma_ecrh = 0.35D0
     xi_ebw = 0.8D0
