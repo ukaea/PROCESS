@@ -32,7 +32,9 @@ class Divertor:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-
+        if dv.i_hldiv == 0 and output:
+            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            return
         if dv.i_hldiv == 1:
             self.divtart(
                 pv.rmajor,
