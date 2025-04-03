@@ -3288,7 +3288,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_ipdg = mfile_data.data["f_c_plasma_bootstrap_iter89"].get_scan(scan)
     boot_sauter = mfile_data.data["f_c_plasma_bootstrap_sauter"].get_scan(scan)
     boot_nenins = mfile_data.data["f_c_plasma_bootstrap_nevins"].get_scan(scan)
-    boot_wilson = mfile_data.data["bscf_wilson"].get_scan(scan)
+    boot_wilson = mfile_data.data["f_c_plasma_bootstrap_wilson"].get_scan(scan)
     boot_sakai = mfile_data.data["bscf_sakai"].get_scan(scan)
     boot_aries = mfile_data.data["bscf_aries"].get_scan(scan)
     boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)

@@ -1839,7 +1839,7 @@ class Physics:
             - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         ) * (physics_variables.btot / physics_variables.bp) ** 2
-        current_drive_variables.bscf_wilson = (
+        current_drive_variables.f_c_plasma_bootstrap_wilson = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wilson(
                 physics_variables.alphaj,
@@ -1952,7 +1952,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 3:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_wilson
+                    current_drive_variables.f_c_plasma_bootstrap_wilson
                 )
             elif physics_variables.i_bootstrap_current == 4:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5679,8 +5679,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Wilson)",
-                "(bscf_wilson)",
-                current_drive_variables.bscf_wilson,
+                "(f_c_plasma_bootstrap_wilson)",
+                current_drive_variables.f_c_plasma_bootstrap_wilson,
                 "OP ",
             )
             po.ovarrf(
