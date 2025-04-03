@@ -1766,8 +1766,8 @@ class Physics:
         # ***************************** #
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.f_c_plasma_diamagnetic_hender = diamagnetic_fraction_hender(
-            physics_variables.beta
+        current_drive_variables.f_c_plasma_diamagnetic_hender = (
+            diamagnetic_fraction_hender(physics_variables.beta)
         )
 
         # SCENE scaling for diamagnetic current
@@ -1776,11 +1776,11 @@ class Physics:
         )
 
         if physics_variables.i_diamagnetic_current == 1:
-            current_drive_variables.diamagnetic_current_fraction = (
+            current_drive_variables.f_c_plasma_diamagnetic = (
                 current_drive_variables.f_c_plasma_diamagnetic_hender
             )
         elif physics_variables.i_diamagnetic_current == 2:
-            current_drive_variables.diamagnetic_current_fraction = (
+            current_drive_variables.f_c_plasma_diamagnetic = (
                 current_drive_variables.diacf_scene
             )
 
@@ -2007,7 +2007,7 @@ class Physics:
 
             current_drive_variables.plasma_current_internal_fraction = (
                 current_drive_variables.f_c_plasma_bootstrap
-                + current_drive_variables.diamagnetic_current_fraction
+                + current_drive_variables.f_c_plasma_diamagnetic
                 + current_drive_variables.f_c_plasma_pfirsch_schluter
             )
 
@@ -5857,8 +5857,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (enforced)",
-                "(diamagnetic_current_fraction.)",
-                current_drive_variables.diamagnetic_current_fraction,
+                "(f_c_plasma_diamagnetic.)",
+                current_drive_variables.f_c_plasma_diamagnetic,
                 "OP ",
             )
             po.ovarrf(

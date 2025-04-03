@@ -109,7 +109,7 @@ class CudrivParam(NamedTuple):
 
     rtanmax: Any = None
 
-    diamagnetic_current_fraction: Any = None
+    f_c_plasma_diamagnetic: Any = None
 
     f_c_plasma_pfirsch_schluter: Any = None
 
@@ -247,7 +247,7 @@ class CudrivParam(NamedTuple):
             frbeam=1.05,
             rtanbeam=0,
             rtanmax=0,
-            diamagnetic_current_fraction=0,
+            f_c_plasma_diamagnetic=0,
             f_c_plasma_pfirsch_schluter=0,
             plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
@@ -337,7 +337,7 @@ class CudrivParam(NamedTuple):
             frbeam=1.05,
             rtanbeam=8.4000000000000004,
             rtanmax=13.179564451855533,
-            diamagnetic_current_fraction=0,
+            f_c_plasma_diamagnetic=0,
             f_c_plasma_pfirsch_schluter=0,
             plasma_current_internal_fraction=0.27635918746616817,
             harnum=1,
@@ -542,8 +542,8 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(
         current_drive_variables,
-        "diamagnetic_current_fraction",
-        cudrivparam.diamagnetic_current_fraction,
+        "f_c_plasma_diamagnetic",
+        cudrivparam.f_c_plasma_diamagnetic,
     )
 
     monkeypatch.setattr(

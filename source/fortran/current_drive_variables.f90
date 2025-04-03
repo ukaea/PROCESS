@@ -75,7 +75,7 @@ module current_drive_variables
   real(dp) :: diacf_scene
   !! diamagnetic current fraction, SCENE fit
 
-  real(dp) :: diamagnetic_current_fraction
+  real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
   real(dp) :: echpwr

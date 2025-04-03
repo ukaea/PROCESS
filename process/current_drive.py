@@ -954,8 +954,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction",
-            "(diamagnetic_current_fraction)",
-            current_drive_variables.diamagnetic_current_fraction,
+            "(f_c_plasma_diamagnetic)",
+            current_drive_variables.f_c_plasma_diamagnetic,
             "OP ",
         )
         po.ovarrf(
