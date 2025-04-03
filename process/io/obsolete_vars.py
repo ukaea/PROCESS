@@ -123,7 +123,7 @@ OBS_VARS = {
     "idia": "i_diamagnetic_current",
     "ibss": "i_bootstrap_current",
     "ips": "i_pfirsch_schluter_current",
-    "bootipf": "bootstrap_current_fraction",
+    "bootipf": "f_c_plasma_bootstrap",
     "bscfmax": "f_c_plasma_bootstrap_max",
     "vgap2": "dz_shld_vv_gap",
     "vgap": "dz_xpoint_divertor",

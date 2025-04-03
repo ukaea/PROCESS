@@ -93,7 +93,7 @@ class CudrivParam(NamedTuple):
 
     bigq: Any = None
 
-    bootstrap_current_fraction: Any = None
+    f_c_plasma_bootstrap: Any = None
 
     f_c_plasma_bootstrap_max: Any = None
 
@@ -239,7 +239,7 @@ class CudrivParam(NamedTuple):
             pinjemw=0,
             pinjimw=0,
             bigq=0,
-            bootstrap_current_fraction=0.27635918746616817,
+            f_c_plasma_bootstrap=0.27635918746616817,
             f_c_plasma_bootstrap_max=0.95000000000000007,
             n_beam_decay_lengths_core=0,
             p_hcd_injected_max=200,
@@ -329,7 +329,7 @@ class CudrivParam(NamedTuple):
             pinjemw=120.49600019005746,
             pinjimw=0,
             bigq=0,
-            bootstrap_current_fraction=0.27635918746616817,
+            f_c_plasma_bootstrap=0.27635918746616817,
             f_c_plasma_bootstrap_max=0.95000000000000007,
             n_beam_decay_lengths_core=0,
             p_hcd_injected_max=200,
@@ -510,8 +510,8 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(
         current_drive_variables,
-        "bootstrap_current_fraction",
-        cudrivparam.bootstrap_current_fraction,
+        "f_c_plasma_bootstrap",
+        cudrivparam.f_c_plasma_bootstrap,
     )
 
     monkeypatch.setattr(

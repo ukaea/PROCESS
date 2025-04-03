@@ -1935,57 +1935,57 @@ class Physics:
         )
 
         if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
-            current_drive_variables.bootstrap_current_fraction = abs(
+            current_drive_variables.f_c_plasma_bootstrap = abs(
                 current_drive_variables.f_c_plasma_bootstrap_max
             )
             current_drive_variables.plasma_current_internal_fraction = (
-                current_drive_variables.bootstrap_current_fraction
+                current_drive_variables.f_c_plasma_bootstrap
             )
         else:
             if physics_variables.i_bootstrap_current == 1:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_iter89
                 )
             elif physics_variables.i_bootstrap_current == 2:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_nevins
                 )
             elif physics_variables.i_bootstrap_current == 3:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_wilson
                 )
             elif physics_variables.i_bootstrap_current == 4:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_sauter
                 )
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_sakai
                 )
             elif physics_variables.i_bootstrap_current == 6:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_aries
                 )
             elif physics_variables.i_bootstrap_current == 7:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_andrade
                 )
             elif physics_variables.i_bootstrap_current == 8:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_hoang
                 )
             elif physics_variables.i_bootstrap_current == 9:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.f_c_plasma_bootstrap_wong
                 )
             elif physics_variables.i_bootstrap_current == 10:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.bscf_gi_I
                 )
             elif physics_variables.i_bootstrap_current == 11:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.bscf_gi_II
                 )
             else:
@@ -1996,17 +1996,17 @@ class Physics:
 
             physics_module.err242 = 0
             if (
-                current_drive_variables.bootstrap_current_fraction
+                current_drive_variables.f_c_plasma_bootstrap
                 > current_drive_variables.f_c_plasma_bootstrap_max
             ):
-                current_drive_variables.bootstrap_current_fraction = min(
-                    current_drive_variables.bootstrap_current_fraction,
+                current_drive_variables.f_c_plasma_bootstrap = min(
+                    current_drive_variables.f_c_plasma_bootstrap,
                     current_drive_variables.f_c_plasma_bootstrap_max,
                 )
                 physics_module.err242 = 1
 
             current_drive_variables.plasma_current_internal_fraction = (
-                current_drive_variables.bootstrap_current_fraction
+                current_drive_variables.f_c_plasma_bootstrap
                 + current_drive_variables.diamagnetic_current_fraction
                 + current_drive_variables.f_c_plasma_pfirsch_schluter
             )
@@ -5850,8 +5850,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (enforced)",
-                "(bootstrap_current_fraction.)",
-                current_drive_variables.bootstrap_current_fraction,
+                "(f_c_plasma_bootstrap.)",
+                current_drive_variables.f_c_plasma_bootstrap,
                 "OP ",
             )
             po.ovarrf(
