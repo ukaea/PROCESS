@@ -9,6 +9,7 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.exceptions import ProcessValueError
 from process.fortran import (
     blanket_library,
     build_variables,
@@ -2720,7 +2721,9 @@ class BlanketLibrary:
 
         # Error for pdrop too large
         if fp >= 1:
-            eh.report_error(279)
+            raise ProcessValueError(
+                "Pressure drops in coolant are too large to be feasible"
+            )
 
         if output:
             po.oheadr(self.outfile, "Mechanical Pumping Power for " + label)

@@ -8,12 +8,12 @@ parameters of an Inertial Fusion Energy power plant.
 import numpy as np
 
 from process import process_output
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
     cost_variables,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -870,19 +870,23 @@ class IFE:
         """
         # Check input
         if ife_variables.fwdr > 0 or ife_variables.v1dr > 0:
-            error_handling.report_error(230)
-        elif (
+            raise ProcessValueError("fwdr and v1dr should be zero for 2019 IFE build")
+        if (
             ife_variables.fwdzu > 0
             or ife_variables.v1dzu > 0
             or ife_variables.v2dzu > 0
         ):
-            error_handling.report_error(231)
-        elif (
+            raise ProcessValueError(
+                "fwdzu, v1dzu and v2dzu should be zero for 2019 IFE build"
+            )
+        if (
             ife_variables.fwdzl > 0
             or ife_variables.v1dzl > 0
             or ife_variables.v2dzu > 0
         ):
-            error_handling.report_error(232)
+            raise ProcessValueError(
+                "fwdzl, v1dzl and v2dzl should be zero for 2019 IFE build"
+            )
 
         # Lithium Pump
         # Velocity
@@ -1823,8 +1827,7 @@ class IFE:
         # A fraction FBREED of the total breeder inventory is outside the
         # core region, i.e. is in the rest of the heat transport system
         if (ife_variables.fbreed < 0.0) or (ife_variables.fbreed > 0.999):
-            error_handling.fdiags[0] = ife_variables.fbreed
-            error_handling.report_error(26)
+            raise ProcessValueError("Illegal fbreed value", fbreed=ife_variables.fbreed)
 
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
