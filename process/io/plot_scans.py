@@ -454,15 +454,18 @@ def main(args=None):
                 y_max += [None]
     else:
         y_max = np.float64(y_max_input)
-    if (len(y_max2_input) != len(output_names)) and (output_names2 != []):
-        y_max2 = []
-        for _ in range(len(output_names)):
-            if y_max2_input != []:
-                y_max2 += [np.float64(y_max2_input)]
-            else:
-                y_max2 += [None]
+    if output_names2 != []:
+        if len(y_max2_input) != len(output_names):
+            y_max2 = []
+            for _ in range(len(output_names)):
+                if y_max2_input != []:
+                    y_max2 += [np.float64(y_max2_input)]
+                else:
+                    y_max2 += [None]
+        else:
+            y_max2 = np.float64(y_max2_input)
     else:
-        y_max2 = np.float64(y_max2_input)
+        y_max2 = y_max2_input
     # -------------
 
     # Case of a set of 1D scans
@@ -811,7 +814,7 @@ def main(args=None):
                     if y_axis_percentage2:
                         if y_max2[index] is None:
                             y_max2[index] = max(
-                                np.abs(output_arrays[input_file][output_name])
+                                np.abs(output_arrays2[input_file][output_name2])
                             )
                         yticks2 = mtick.PercentFormatter(y_max2[index])
                         if y_axis_range2 != []:
