@@ -96,7 +96,7 @@ module current_drive_variables
   !!  - =0 O-mode
   !!  - =1 X-mode
 
-  real(dp) :: beam_energy
+  real(dp) :: e_beam_kev
   !! neutral beam energy (keV) (`iteration variable 19`)
 
   real(dp) :: etacd

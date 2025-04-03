@@ -1739,7 +1739,7 @@
         "emult": 1.269,
         "emult_all": 1.17,
         "emultmw": 0.0,
-        "beam_energy": 1000.0,
+        "e_beam_kev": 1000.0,
         "end_of_file": -1.0,
         "end_of_record": -2.0,
         "energypervol": 0.0,
@@ -9343,7 +9343,7 @@
         "emult": "energy multiplication in blanket and shield",
         "emult_all": "",
         "emultmw": "power due to energy multiplication in blanket and shield [MW]",
-        "beam_energy": "neutral beam energy (keV) (`iteration variable 19`)",
+        "e_beam_kev": "neutral beam energy (keV) (`iteration variable 19`)",
         "end_of_file": "",
         "end_of_record": "",
         "energypervol": "input waste (heat) energy cooled per evaporated volume (J/m3)",
@@ -12211,7 +12211,7 @@
             "lb": 1.0,
             "ub": 2.0
         },
-        "beam_energy": {
+        "e_beam_kev": {
             "lb": 1.0,
             "ub": 1000000.0
         },
@@ -15012,7 +15012,7 @@
             "lb": 100000.0,
             "ub": 50000000.0
         },
-        "beam_energy": {
+        "e_beam_kev": {
             "lb": 1.0,
             "ub": 1000000.0
         },
@@ -15571,7 +15571,7 @@
         "dr_tf_wp": 0.0,
         "drveff": 0.28,
         "edrive": 5000000.0,
-        "beam_energy": 1000.0,
+        "e_beam_kev": 1000.0,
         "f_avspace": 1.0,
         "f_coppera_m2": 1.0,
         "f_copperaoh_m2": 1.0,
@@ -16104,7 +16104,7 @@
         },
         "19": {
             "lb": 1.0,
-            "name": "beam_energy",
+            "name": "e_beam_kev",
             "ub": 1000000.0
         },
         "2": {
@@ -16575,7 +16575,7 @@
         "174": "DUMMY",
         "175": "DUMMY",
         "18": "q",
-        "19": "beam_energy",
+        "19": "e_beam_kev",
         "2": "bt",
         "20": "temp_cp_average",
         "21": "ft_burn",
@@ -16672,7 +16672,7 @@
         "dr_tf_wp": "140",
         "drveff": "82",
         "edrive": "81",
-        "beam_energy": "19",
+        "e_beam_kev": "19",
         "f_avspace": "160",
         "f_coppera_m2": "143",
         "f_copperaoh_m2": "166",
@@ -17629,7 +17629,7 @@
             "echwpow",
             "effcd",
             "harnum",
-            "beam_energy",
+            "e_beam_kev",
             "etacd",
             "etacdfix",
             "eta_ecrh_injector_wall_plug",
@@ -19988,7 +19988,7 @@
         "elecstore_l": "real_variable",
         "elecstore_w": "real_variable",
         "emult": "real_variable",
-        "beam_energy": "real_variable",
+        "e_beam_kev": "real_variable",
         "beta_poloidal_eps_max": "real_variable",
         "epsfcn": "real_variable",
         "epsvmc": "real_variable",

@@ -224,7 +224,7 @@ module numerics
   !! <LI> (16) dr_cs
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
-  !! <LI> (19) beam_energy
+  !! <LI> (19) e_beam_kev
   !! <LI> (20) temp_cp_average
   !! <LI> (21) ft_burn (f-value for equation 13)
   !! <LI> (22) NOT USED

@@ -187,7 +187,7 @@ INPUT_VARIABLES = {
     ),
     "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
     "bctmp": InputVariable(fortran.pulse_variables, float, range=(1.0, 800.0)),
-    "beam_energy": InputVariable(
+    "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
     "beamwd": InputVariable(fortran.current_drive_variables, float, range=(0.001, 5.0)),

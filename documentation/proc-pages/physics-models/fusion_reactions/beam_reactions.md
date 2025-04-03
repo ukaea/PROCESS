@@ -4,7 +4,7 @@ The main function called for calculating the fusion reactions produced by neutra
 Due to the small contribution of fusion power from the neutral beams only D-T reactions are taken into account, as D-D additions to fusion power are deemed to be negligible.
 The beam fusion calculations will only run if the calculated beam current is greater than 0. This is done by having a NBI heating and current drive configuration. 
 
-The NBI parameters taken from the current drive module to be used in the beam fusion calculations are the beam current (`c_beam_total`), beam energy (`beam_energy`) and the tritium component of the beam (`f_tritium_beam`).
+The NBI parameters taken from the current drive module to be used in the beam fusion calculations are the beam current (`c_beam_total`), beam energy (`e_beam_kev`) and the tritium component of the beam (`f_tritium_beam`).
 
 Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating-and-current-drive.md) of the docs for more info.
 

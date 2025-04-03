@@ -2085,7 +2085,7 @@ class Physics:
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
-                current_drive_variables.beam_energy,
+                current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
                 current_drive_variables.f_tritium_beam,

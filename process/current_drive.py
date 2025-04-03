@@ -360,7 +360,7 @@ class CurrentDrive:
                 gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
                 gamcdfix = gamnb
                 beam_current_fix = (
-                    1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.beam_energy
+                    1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
                 auxiliary_cdfix = (
                     effnbssfix
@@ -695,7 +695,7 @@ class CurrentDrive:
                 current_drive_variables.c_beam_total = (
                     1.0e-3
                     * (current_drive_variables.p_beam_injected * 1.0e6)
-                    / current_drive_variables.beam_energy
+                    / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
             # Total injected power
@@ -1054,8 +1054,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Neutral beam energy (keV)",
-                "(beam_energy)",
-                current_drive_variables.beam_energy,
+                "(e_beam_kev)",
+                current_drive_variables.e_beam_kev,
             )
             if (current_drive_variables.i_hcd_primary == 5) or (
                 current_drive_variables.i_hcd_primary == 8
@@ -1337,7 +1337,7 @@ class CurrentDrive:
 
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
-            current_drive_variables.beam_energy / physics_variables.m_beam_amu,
+            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
             physics_variables.te,
             physics_variables.dene,
             physics_variables.f_nd_alpha_electron,
@@ -1364,7 +1364,7 @@ class CurrentDrive:
         # Power split to ions / electrons
         f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
-            current_drive_variables.beam_energy,
+            current_drive_variables.e_beam_kev,
             physics_variables.ten,
             physics_variables.dene,
             dend,
@@ -1380,7 +1380,7 @@ class CurrentDrive:
             physics_variables.alphat,
             physics_variables.aspect,
             physics_variables.dene,
-            current_drive_variables.beam_energy,
+            current_drive_variables.e_beam_kev,
             physics_variables.rmajor,
             physics_variables.ten,
             physics_variables.zeff,
@@ -1615,7 +1615,7 @@ class CurrentDrive:
         #  Calculate beam stopping cross-section
 
         sigstop = self.sigbeam(
-            current_drive_variables.beam_energy / physics_variables.m_beam_amu,
+            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
             physics_variables.te,
             physics_variables.dene,
             physics_variables.f_nd_alpha_electron,
@@ -1646,7 +1646,7 @@ class CurrentDrive:
 
         f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
-            current_drive_variables.beam_energy,
+            current_drive_variables.e_beam_kev,
             physics_variables.ten,
             physics_variables.dene,
             dend,
@@ -1664,7 +1664,7 @@ class CurrentDrive:
             physics_variables.aspect,
             physics_variables.dene,
             physics_variables.dnla,
-            current_drive_variables.beam_energy,
+            current_drive_variables.e_beam_kev,
             current_drive_variables.frbeam,
             fshine,
             physics_variables.rmajor,
@@ -1739,7 +1739,7 @@ class CurrentDrive:
         aspect,
         dene,
         dnla,
-        beam_energy,
+        e_beam_kev,
         frbeam,
         fshine,
         rmajor,
@@ -1757,7 +1757,7 @@ class CurrentDrive:
         aspect  : input real : aspect ratio
         dene    : input real : volume averaged electron density (m**-3)
         dnla    : input real : line averaged electron density (m**-3)
-        beam_energy  : input real : neutral beam energy (keV)
+        e_beam_kev  : input real : neutral beam energy (keV)
         frbeam  : input real : R_tangent / R_major for neutral beam injection
         fshine  : input real : shine-through fraction of beam
         rmajor  : input real : plasma major radius (m)
@@ -1789,7 +1789,7 @@ class CurrentDrive:
         ecrit = 0.01 * m_beam_amu * ten
 
         #  Beam energy in MeV
-        ebmev = beam_energy / 1e3
+        ebmev = e_beam_kev / 1e3
 
         #  x and y coefficients of function J0(x,y) (IPDG89)
         xjs = ebmev / (bbd * ecrit)
