@@ -1882,7 +1882,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_andrade = (
+        current_drive_variables.f_c_plasma_bootstrap_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1970,7 +1970,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 7:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_andrade
+                    current_drive_variables.f_c_plasma_bootstrap_andrade
                 )
             elif physics_variables.i_bootstrap_current == 8:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5700,8 +5700,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Andrade)",
-                "(bscf_andrade)",
-                current_drive_variables.bscf_andrade,
+                "(f_c_plasma_bootstrap_andrade)",
+                current_drive_variables.f_c_plasma_bootstrap_andrade,
                 "OP ",
             )
             po.ovarrf(

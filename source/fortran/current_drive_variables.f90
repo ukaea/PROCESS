@@ -48,7 +48,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_bootstrap_aries
   !! Bootstrap current fraction, ARIES model
 
-  real(dp) :: bscf_andrade
+  real(dp) :: f_c_plasma_bootstrap_andrade
   !! Bootstrap current fraction, Andrade et al model
 
   real(dp) :: bscf_hoang

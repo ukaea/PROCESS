@@ -3291,7 +3291,7 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_wilson = mfile_data.data["f_c_plasma_bootstrap_wilson"].get_scan(scan)
     boot_sakai = mfile_data.data["f_c_plasma_bootstrap_sakai"].get_scan(scan)
     boot_aries = mfile_data.data["f_c_plasma_bootstrap_aries"].get_scan(scan)
-    boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
+    boot_andrade = mfile_data.data["f_c_plasma_bootstrap_andrade"].get_scan(scan)
     boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
     boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
     boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)  # noqa: N806
