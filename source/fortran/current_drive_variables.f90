@@ -72,7 +72,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_diamagnetic_hender
   !! diamagnetic current fraction, Hender fit
 
-  real(dp) :: diacf_scene
+  real(dp) :: f_c_plasma_diamagnetic_scene
   !! diamagnetic current fraction, SCENE fit
 
   real(dp) :: f_c_plasma_diamagnetic
