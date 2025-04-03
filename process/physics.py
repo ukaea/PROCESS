@@ -1770,8 +1770,10 @@ class Physics:
         )
 
         # SCENE scaling for diamagnetic current
-        current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
-            physics_variables.beta, physics_variables.q95, physics_variables.q0
+        current_drive_variables.f_c_plasma_diamagnetic_scene = (
+            diamagnetic_fraction_scene(
+                physics_variables.beta, physics_variables.q95, physics_variables.q0
+            )
         )
 
         if physics_variables.i_diamagnetic_current == 1:
@@ -1780,7 +1782,7 @@ class Physics:
             )
         elif physics_variables.i_diamagnetic_current == 2:
             current_drive_variables.f_c_plasma_diamagnetic = (
-                current_drive_variables.diacf_scene
+                current_drive_variables.f_c_plasma_diamagnetic_scene
             )
 
         # ***************************** #
@@ -5736,8 +5738,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (SCENE)",
-                "(diacf_scene)",
-                current_drive_variables.diacf_scene,
+                "(f_c_plasma_diamagnetic_scene)",
+                current_drive_variables.f_c_plasma_diamagnetic_scene,
                 "OP ",
             )
             po.ovarrf(
@@ -5818,7 +5820,7 @@ class Physics:
                     self.outfile, "  (Diamagnetic current fraction not calculated)"
                 )
                 # Error to show if diamagnetic current is above 1% but not used
-                if current_drive_variables.diacf_scene > 0.01e0:
+                if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
                     error_handling.report_error(244)
 
             elif physics_variables.i_diamagnetic_current == 1:
