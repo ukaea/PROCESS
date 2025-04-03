@@ -160,7 +160,7 @@ output_costs = 1 * Switch for costs output;
 
 *-------------Current Drive Variables--------------*
 
-bootstrap_current_fraction_max  = 0.95 * maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`;
+f_c_plasma_bootstrap_max  = 0.95 * maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`;
 eta_ecrh_injector_wall_plug   = 0.5 * ECH wall plug to injector efficiency
 gamma_ecrh = 0.30 * User input ECRH gamma (1;0e20 A/(W m^2))
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
