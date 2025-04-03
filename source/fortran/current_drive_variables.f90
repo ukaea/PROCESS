@@ -84,7 +84,7 @@ module current_drive_variables
   real(dp) :: echwpow
   !! ECH wall plug power (MW)
 
-  real(dp) :: effcd
+  real(dp) :: eta_cd_hcd_primary
   !! current drive efficiency (A/W)
 
   real(dp) :: harnum
@@ -278,7 +278,7 @@ module current_drive_variables
     f_c_plasma_diamagnetic = 0.0D0
     echpwr = 0.0D0
     echwpow = 0.0D0
-    effcd = 0.0D0
+    eta_cd_hcd_primary = 0.0D0
     harnum = 2.0
     i_ecrh_wave_mode = 0
     e_beam_kev = 1.0D3

@@ -538,7 +538,7 @@
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0990E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      9.8586E+03 OP 
- Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6299E-02 OP 
+ Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6299E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    

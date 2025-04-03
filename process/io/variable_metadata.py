@@ -228,7 +228,7 @@ var_dicts = {
     "pheat": VariableMetadata(
         latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW"
     ),
-    "effcd": VariableMetadata(
+    "eta_cd_hcd_primary": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),

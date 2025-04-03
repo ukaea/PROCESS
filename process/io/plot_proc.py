@@ -3116,7 +3116,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "effcd",
+                "eta_cd_hcd_primary",
                 "Current drive efficiency",
                 "A W$^{-1}$",
             ),
