@@ -450,7 +450,6 @@ def main(args=None):
                 x_max += [None]
     else:
         x_max = np.float64(x_max_input)
-    print(y_max_input)
     if len(y_max_input) != len(output_names):
         y_max = []
         for i in range(len(output_names)):
@@ -482,7 +481,6 @@ def main(args=None):
             y_max2 = np.float64(y_max2_input)
     else:
         y_max2 = y_max2_input
-    print(y_max)
     # -------------
 
     # Case of a set of 1D scans
@@ -844,10 +842,10 @@ def main(args=None):
                             )
                         ax2.yaxis.set_major_formatter(yticks2)
                     if y_axis_range2 != []:
-                        if y_axis_percentage is False:
+                        if y_axis_percentage2 is False:
                             y_range2 = y_axis_range2
                         plt.ylim(y_range2[0], y_range2[1])
-                        ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
+                        ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions2))
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
                     plt.tight_layout()
