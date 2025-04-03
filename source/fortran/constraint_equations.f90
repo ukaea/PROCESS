@@ -2042,7 +2042,7 @@ contains
       ! if the machine isn't a ST then report error
       if (itart == 0) call report_error(10)
       cratmx = 1.0D0 + 4.91D0*(eps-0.62D0)
-      tmp_cc =  cratmx * c_tf_total/plasma_current - 1.0D0 * fipir
+      tmp_cc =  (plasma_current / c_tf_total) / cratmx - 1.0D0 * fipir
       tmp_con = cratmx * (1.0D0 - tmp_cc)
       tmp_err = plasma_current/c_tf_total * tmp_cc
       tmp_symbol = '<'
