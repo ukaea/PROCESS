@@ -69,7 +69,7 @@ module current_drive_variables
   real(dp) :: c_beam_total
   !! neutral beam current (A)
 
-  real(dp) :: diacf_hender
+  real(dp) :: f_c_plasma_diamagnetic_hender
   !! diamagnetic current fraction, Hender fit
 
   real(dp) :: diacf_scene
@@ -270,7 +270,7 @@ module current_drive_variables
     bscf_gi_II = 0.0D0
     cboot = 1.0D0
     c_beam_total = 0.0D0
-    diacf_hender = 0.0D0
+    f_c_plasma_diamagnetic_hender = 0.0D0
     diacf_scene = 0.0D0
     diamagnetic_current_fraction = 0.0D0
     echpwr = 0.0D0
