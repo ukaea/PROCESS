@@ -148,7 +148,7 @@ class CurrentDrive:
             # ECRH user input gamma
             elif current_drive_variables.i_hcd_secondary == 10:
                 # Normalised current drive efficiency gamma
-                current_drive_variables.gamcd = current_drive_variables.gamma_ecrh
+                current_drive_variables.gamcd = current_drive_variables.eta_cd_norm_ecrh
 
                 # Absolute current drive efficiency
                 effrfssfix = current_drive_variables.gamcd / (
@@ -450,7 +450,7 @@ class CurrentDrive:
                 current_drive_variables.effcd = effnbss
             # ECRH user input gamma
             elif current_drive_variables.i_hcd_primary == 10:
-                current_drive_variables.gamcd = current_drive_variables.gamma_ecrh
+                current_drive_variables.gamcd = current_drive_variables.eta_cd_norm_ecrh
 
                 # Absolute current drive efficiency
                 effrfss = current_drive_variables.gamcd / (
@@ -896,8 +896,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "ECRH plasma heating efficiency",
-                "(gamma_ecrh)",
-                current_drive_variables.gamma_ecrh,
+                "(eta_cd_norm_ecrh)",
+                current_drive_variables.eta_cd_norm_ecrh,
             )
         if current_drive_variables.i_hcd_primary == 12:
             po.ovarre(

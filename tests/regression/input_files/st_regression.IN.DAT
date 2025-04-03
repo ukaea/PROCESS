@@ -2841,7 +2841,7 @@ eta_ecrh_injector_wall_plug = 0.45
 * DESCRIPTION:   ECRH Wall Plug to Injector Efficiency
 * JUSTIFICATION:   
 
-*gamma_ecrh =
+*eta_cd_norm_ecrh =
 * DESCRIPTION:   User Input ECRH Gamma
 * JUSTIFICATION: 
 
@@ -2853,7 +2853,7 @@ eta_ecrh_injector_wall_plug = 0.45
 * Electron Bernstein Wave *
 *-------------------------*
 
-* xi_ebw = 0.43  * switch in if using EBW, instead of gamma_ecrh *
+* xi_ebw = 0.43  * switch in if using EBW, instead of eta_cd_norm_ecrh *
 * DESCRIPTION:   User Input EBW Gamma
 * JUSTIFICATION: user input for current drive efficiency. Default xi_ebw = 0.43
 

@@ -459,7 +459,7 @@ f_c_plasma_bootstrap_max = 0.95
 i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
-gamma_ecrh = 0.30
+eta_cd_norm_ecrh = 0.30
 
 * ECRH wall-plug efficiency
 eta_ecrh_injector_wall_plug = 0.5

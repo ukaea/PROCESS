@@ -394,7 +394,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -1389,7 +1389,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -2384,7 +2384,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -3379,7 +3379,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -4374,7 +4374,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -5369,7 +5369,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -6364,7 +6364,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -7359,7 +7359,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -8354,7 +8354,7 @@
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      4.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      3.8470E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
@@ -9146,7 +9146,7 @@ ucme     = 3.0d8 * Unit cost of maintenance equipment ($/w**0;3)
 
 f_c_plasma_bootstrap_max  = 0.99 * Maximum fraction of plasma current from bootstrap;
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
-gamma_ecrh = 0.30 * ECRH gamma_CD (user input)
+eta_cd_norm_ecrh = 0.30 * ECRH gamma_CD (user input)
 eta_ecrh_injector_wall_plug = 0.4 * ECRH wall-plug efficiency
 p_hcd_injected_max  = 51.0 * Maximum allowable value for injected power (mw)
 pheat = 50.0

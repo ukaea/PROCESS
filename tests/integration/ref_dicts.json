@@ -2162,7 +2162,7 @@
         ],
         "gamcd": 0.0,
         "ejima_coeff": 0.4,
-        "gamma_ecrh": 0.35,
+        "eta_cd_norm_ecrh": 0.35,
         "gamma_he": 1.667,
         "f_beta_alpha_beam_thermal": 0.0,
         "gammax": 2.0,
@@ -9652,7 +9652,7 @@
         "gainve": "IFE target gain vs driver energy (`ifedrv=-1`)",
         "gamcd": "normalised current drive efficiency (1.0e20 A/(W m^2))",
         "ejima_coeff": "Ejima coefficient for resistive startup V-s formula",
-        "gamma_ecrh": "User input ECRH gamma (1.0e20 A/(W m^2))",
+        "eta_cd_norm_ecrh": "User input ECRH gamma (1.0e20 A/(W m^2))",
         "gamma_he": "ratio of specific heats for helium (`i_coolant_pumping=3`)",
         "f_beta_alpha_beam_thermal": "ratio of (fast alpha + neutral beam beta) to thermal beta",
         "gammax": "maximum current drive gamma (`constraint equation 37`)",
@@ -12943,7 +12943,7 @@
             "lb": 0.1,
             "ub": 1.0
         },
-        "gamma_ecrh": {
+        "eta_cd_norm_ecrh": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -17644,7 +17644,7 @@
             "frbeam",
             "f_beam_tritium",
             "gamcd",
-            "gamma_ecrh",
+            "eta_cd_norm_ecrh",
             "xi_ebw",
             "i_hcd_primary",
             "i_hcd_secondary",
@@ -20175,7 +20175,7 @@
         "fzeffmax": "real_variable",
         "gainve": "real_array",
         "ejima_coeff": "real_variable",
-        "gamma_ecrh": "real_variable",
+        "eta_cd_norm_ecrh": "real_variable",
         "gamma_he": "real_variable",
         "gammax": "real_variable",
         "dr_shld_vv_gap_inboard": "real_variable",

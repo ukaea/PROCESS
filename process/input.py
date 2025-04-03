@@ -725,7 +725,7 @@ INPUT_VARIABLES = {
     "fwdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fzactual": InputVariable(fortran.reinke_variables, float, range=(0.0, 1.0)),
     "fzeffmax": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "gamma_ecrh": InputVariable(
+    "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "gamma_he": InputVariable(

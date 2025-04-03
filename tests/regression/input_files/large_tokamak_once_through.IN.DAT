@@ -162,7 +162,7 @@ output_costs = 1 * Switch for costs output;
 
 f_c_plasma_bootstrap_max  = 0.95 * maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`;
 eta_ecrh_injector_wall_plug   = 0.5 * ECH wall plug to injector efficiency
-gamma_ecrh = 0.30 * User input ECRH gamma (1;0e20 A/(W m^2))
+eta_cd_norm_ecrh = 0.30 * User input ECRH gamma (1;0e20 A/(W m^2))
 i_hcd_primary    = 10 * Switch for current drive efficiency model;
 pheat    = 75.0 * heating power not used for current drive (MW) (`iteration variable 11`)
 p_hcd_injected_max  = 200.0 * maximum allowable value for injected power (MW) (`constraint equation 30`)

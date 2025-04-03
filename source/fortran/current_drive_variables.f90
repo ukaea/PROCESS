@@ -142,7 +142,7 @@ module current_drive_variables
   real(dp) :: gamcd
   !! normalised current drive efficiency (1.0e20 A/(W m^2))
 
-  real(dp) :: gamma_ecrh
+  real(dp) :: eta_cd_norm_ecrh
   !! User input ECRH gamma (1.0e20 A/(W m^2))
 
   real(dp) :: xi_ebw
