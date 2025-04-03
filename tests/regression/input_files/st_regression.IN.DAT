@@ -2662,7 +2662,7 @@ irfcd = 1
 *icc = 37
 * DESCRIPTION:   Constraint equation for current drive gamma upper limit
 * JUSTIFICATION: Turned off, do not care about maximum current drive gamma
-* VARIABLES:     gamcd(1.0e20 A/W-m2) calculated in-situ
+* VARIABLES:     eta_cd_norm_hcd_primary(1.0e20 A/W-m2) calculated in-situ
 
 *gammax =  
 * DESCRIPTION:   Maximum current drive gamma (icc = 37)

@@ -1711,9 +1711,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fgamcd : input real : f-value for current drive gamma
       !! gammax : input real : maximum current drive gamma
-      !! gamcd : input real : normalised current drive efficiency (1.0e20 A/W-m2)
+      !! eta_cd_norm_hcd_primary : input real : normalised current drive efficiency (1.0e20 A/W-m2)
       use constraint_variables, only: fgamcd, gammax
-      use current_drive_variables, only: gamcd
+      use current_drive_variables, only: eta_cd_norm_hcd_primary
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1721,9 +1721,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  gamcd/gammax - 1.0D0 * fgamcd
+      tmp_cc =  eta_cd_norm_hcd_primary/gammax - 1.0D0 * fgamcd
       tmp_con = gammax * (1.0D0 - tmp_cc)
-      tmp_err = gamcd * tmp_cc
+      tmp_err = eta_cd_norm_hcd_primary * tmp_cc
       tmp_symbol = '<'
       tmp_units = '1E20 A/Wm2'
 

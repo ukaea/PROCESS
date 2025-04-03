@@ -452,10 +452,12 @@ class CurrentDrive:
                 current_drive_variables.effcd = effnbss
             # ECRH user input gamma
             elif current_drive_variables.i_hcd_primary == 10:
-                current_drive_variables.gamcd = current_drive_variables.eta_cd_norm_ecrh
+                current_drive_variables.eta_cd_norm_hcd_primary = (
+                    current_drive_variables.eta_cd_norm_ecrh
+                )
 
                 # Absolute current drive efficiency
-                effrfss = current_drive_variables.gamcd / (
+                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
                     dene20 * physics_variables.rmajor
                 )
                 current_drive_variables.effcd = effrfss
@@ -465,12 +467,12 @@ class CurrentDrive:
                 # Ref : PROCESS issue 1262
 
                 # Normalised current drive efficiency gamma
-                current_drive_variables.gamcd = (
+                current_drive_variables.eta_cd_norm_hcd_primary = (
                     current_drive_variables.xi_ebw / 32.7e0
                 ) * physics_variables.te
 
                 # Absolute current drive efficiency
-                effrfss = current_drive_variables.gamcd / (
+                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
                     dene20 * physics_variables.rmajor
                 )
                 current_drive_variables.effcd = effrfss
@@ -604,7 +606,7 @@ class CurrentDrive:
 
                 # Normalised current drive efficiency gamma
                 gamrf = effrfss * (dene20 * physics_variables.rmajor)
-                current_drive_variables.gamcd = gamrf
+                current_drive_variables.eta_cd_norm_hcd_primary = gamrf
             # ECCD
             elif current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
                 # Injected power (set to close to close the Steady-state current equilibrium)
@@ -693,7 +695,7 @@ class CurrentDrive:
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
-                current_drive_variables.gamcd = gamnb
+                current_drive_variables.eta_cd_norm_hcd_primary = gamnb
                 current_drive_variables.c_beam_total = (
                     1.0e-3
                     * (current_drive_variables.p_beam_injected * 1.0e6)
@@ -883,8 +885,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Normalised current drive efficiency of primary HCD system (10^20 A / W m^2)",
-            "(gamcd)",
-            current_drive_variables.gamcd,
+            "(eta_cd_norm_hcd_primary)",
+            current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",
         )
         po.ovarre(

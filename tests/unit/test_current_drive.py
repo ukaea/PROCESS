@@ -55,7 +55,7 @@ class CudrivParam(NamedTuple):
 
     f_p_beam_shine_through: Any = None
 
-    gamcd: Any = None
+    eta_cd_norm_hcd_primary: Any = None
 
     eta_cd_norm_ecrh: Any = None
 
@@ -220,7 +220,7 @@ class CudrivParam(NamedTuple):
             feffcd=1,
             f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
-            gamcd=0,
+            eta_cd_norm_hcd_primary=0,
             eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             etacd=0,
@@ -310,7 +310,7 @@ class CudrivParam(NamedTuple):
             feffcd=1,
             f_p_beam_injected_ions=0.5,
             f_p_beam_shine_through=0,
-            gamcd=0.30000000000000004,
+            eta_cd_norm_hcd_primary=0.30000000000000004,
             eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             etacd=0.5,
@@ -446,7 +446,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.f_p_beam_shine_through,
     )
 
-    monkeypatch.setattr(current_drive_variables, "gamcd", cudrivparam.gamcd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_cd_norm_hcd_primary",
+        cudrivparam.eta_cd_norm_hcd_primary,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "eta_cd_norm_ecrh", cudrivparam.eta_cd_norm_ecrh
@@ -636,7 +640,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     assert current_drive_variables.echpwr == pytest.approx(cudrivparam.expected_echpwr)
 
-    assert current_drive_variables.gamcd == pytest.approx(cudrivparam.expected_gamcd)
+    assert current_drive_variables.eta_cd_norm_hcd_primary == pytest.approx(
+        cudrivparam.expected_gamcd
+    )
 
     assert current_drive_variables.etacd == pytest.approx(cudrivparam.expected_etacd)
 

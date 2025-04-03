@@ -139,8 +139,8 @@ module current_drive_variables
   real(dp) :: f_beam_tritium
   !! fraction of beam that is tritium
 
-  real(dp) :: gamcd
-  !! normalised current drive efficiency (1.0e20 A/(W m^2))
+  real(dp) :: eta_cd_norm_hcd_primary
+  !! Normalised current drive efficiency for primary HCD system [(1.0e20 A)/(W m^2)]
 
   real(dp) :: eta_cd_norm_hcd_secondary
   !! Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]

@@ -536,7 +536,7 @@
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0060E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.3908E+05 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6488E-02 OP 
- Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
+ Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
  Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1920E-01    
