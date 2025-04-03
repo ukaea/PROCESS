@@ -77,7 +77,7 @@ class CudrivParam(NamedTuple):
 
     e_beam_kev: Any = None
 
-    effcd: Any = None
+    eta_cd_hcd_primary: Any = None
 
     pwplh: Any = None
 
@@ -231,7 +231,7 @@ class CudrivParam(NamedTuple):
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
-            effcd=0,
+            eta_cd_hcd_primary=0,
             pwplh=0,
             echwpow=0,
             p_beam_injected=0,
@@ -321,7 +321,7 @@ class CudrivParam(NamedTuple):
             pwpnb=0,
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
-            effcd=0.05000000000000001,
+            eta_cd_hcd_primary=0.05000000000000001,
             pwplh=0,
             echwpow=240.99200038011492,
             p_beam_injected=0,
@@ -492,7 +492,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "e_beam_kev", cudrivparam.e_beam_kev)
 
-    monkeypatch.setattr(current_drive_variables, "effcd", cudrivparam.effcd)
+    monkeypatch.setattr(current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary)
 
     monkeypatch.setattr(current_drive_variables, "pwplh", cudrivparam.pwplh)
 
@@ -650,7 +650,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.expected_p_hcd_injected_total_mw
     )
 
-    assert current_drive_variables.effcd == pytest.approx(cudrivparam.expected_effcd)
+    assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(cudrivparam.expected_effcd)
 
     assert current_drive_variables.echwpow == pytest.approx(
         cudrivparam.expected_echwpow

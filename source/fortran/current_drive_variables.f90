@@ -84,7 +84,7 @@ module current_drive_variables
   real(dp) :: echwpow
   !! ECH wall plug power (MW)
 
-  real(dp) :: effcd
+  real(dp) :: eta_cd_hcd_primary
   !! current drive efficiency (A/W)
 
   real(dp) :: harnum

@@ -383,7 +383,7 @@ class CurrentDrive:
                     / (physics_variables.rmajor * dene20)
                     * current_drive_variables.feffcd
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # Ion-Cyclotron current drive
             elif current_drive_variables.i_hcd_primary == 2:
                 effrfss = (
@@ -394,7 +394,7 @@ class CurrentDrive:
                     / (physics_variables.rmajor * dene20)
                     * current_drive_variables.feffcd
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # Fenstermacher Electron Cyclotron Resonance model
             elif current_drive_variables.i_hcd_primary == 3:
                 effrfss = (
@@ -403,7 +403,7 @@ class CurrentDrive:
                     / (physics_variables.rmajor * dene20 * physics_variables.dlamee)
                     * current_drive_variables.feffcd
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # Ehst Lower Hybrid / Fast Wave current drive
             elif current_drive_variables.i_hcd_primary == 4:
                 effrfss = (
@@ -421,7 +421,7 @@ class CurrentDrive:
                     / 12.507e0
                     * current_drive_variables.feffcd
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # ITER Neutral Beam current drive
             elif current_drive_variables.i_hcd_primary == 5:
                 (
@@ -430,17 +430,17 @@ class CurrentDrive:
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.iternb()
                 effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.effcd = effnbss
+                current_drive_variables.eta_cd_hcd_primary = effnbss
             # Culham Lower Hybrid current drive model
             elif current_drive_variables.i_hcd_primary == 6:
                 effrfss = self.cullhy()
                 effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # Culham ECCD model
             elif current_drive_variables.i_hcd_primary == 7:
                 effrfss = self.culecd()
                 effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # Culham Neutral Beam model
             elif current_drive_variables.i_hcd_primary == 8:
                 (
@@ -449,7 +449,7 @@ class CurrentDrive:
                     current_drive_variables.f_p_beam_shine_through,
                 ) = self.culnbi()
                 effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.effcd = effnbss
+                current_drive_variables.eta_cd_hcd_primary = effnbss
             # ECRH user input gamma
             elif current_drive_variables.i_hcd_primary == 10:
                 current_drive_variables.eta_cd_norm_hcd_primary = (
@@ -460,7 +460,7 @@ class CurrentDrive:
                 effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
                     dene20 * physics_variables.rmajor
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             # EBW scaling
             elif current_drive_variables.i_hcd_primary == 12:
                 # Scaling author Simon Freethy
@@ -475,7 +475,7 @@ class CurrentDrive:
                 effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
                     dene20 * physics_variables.rmajor
                 )
-                current_drive_variables.effcd = effrfss
+                current_drive_variables.eta_cd_hcd_primary = effrfss
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
                 # this behaviour is captured in the following function (ref issue #1262):
                 # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
@@ -504,8 +504,8 @@ class CurrentDrive:
                     1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
                 )
 
-                current_drive_variables.effcd = (
-                    current_drive_variables.effcd * density_factor
+                current_drive_variables.eta_cd_hcd_primary = (
+                    current_drive_variables.eta_cd_hcd_primary * density_factor
                 )
                 effrfss = effrfss * density_factor
 
@@ -564,7 +564,7 @@ class CurrentDrive:
                         * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
                     )
                 )
-                current_drive_variables.effcd = effrfss * cutoff_factor
+                current_drive_variables.eta_cd_hcd_primary = effrfss * cutoff_factor
             else:
                 raise ProcessValueError(
                     f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
@@ -878,8 +878,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Current drive efficiency (A/W)",
-            "(effcd)",
-            current_drive_variables.effcd,
+            "(eta_cd_hcd_primary)",
+            current_drive_variables.eta_cd_hcd_primary,
             "OP ",
         )
         po.ovarre(
