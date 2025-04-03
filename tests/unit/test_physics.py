@@ -125,7 +125,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bootstrap_current_fraction = physics.bootstrap_fraction_iter89(
+    f_c_plasma_bootstrap = physics.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,
@@ -136,7 +136,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         vol_plasma=bootstrapfractioniter89param.vol_plasma,
     )
 
-    assert bootstrap_current_fraction == pytest.approx(
+    assert f_c_plasma_bootstrap == pytest.approx(
         bootstrapfractioniter89param.expected_bootipf
     )
 

@@ -946,8 +946,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Bootstrap fraction",
-            "(bootstrap_current_fraction)",
-            current_drive_variables.bootstrap_current_fraction,
+            "(f_c_plasma_bootstrap)",
+            current_drive_variables.f_c_plasma_bootstrap,
             "OP ",
         )
         po.ovarrf(
@@ -1008,7 +1008,7 @@ class CurrentDrive:
 
         if (
             abs(
-                current_drive_variables.bootstrap_current_fraction
+                current_drive_variables.f_c_plasma_bootstrap
                 - current_drive_variables.f_c_plasma_bootstrap_max
             )
             < 1.0e-8

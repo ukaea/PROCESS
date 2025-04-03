@@ -23,7 +23,7 @@ module current_drive_variables
   real(dp) :: bigq
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
-  real(dp) :: bootstrap_current_fraction
+  real(dp) :: f_c_plasma_bootstrap
   !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
   real(dp) :: f_c_plasma_bootstrap_max
@@ -255,7 +255,7 @@ module current_drive_variables
 
     beamwd = 0.58D0
     bigq = 0.0D0
-    bootstrap_current_fraction = 0.0D0
+    f_c_plasma_bootstrap = 0.0D0
     f_c_plasma_bootstrap_max = 0.9D0
     f_c_plasma_bootstrap_iter89 = 0.0D0
     f_c_plasma_bootstrap_nevins = 0.0D0
