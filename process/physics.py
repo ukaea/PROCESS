@@ -1900,7 +1900,7 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-        current_drive_variables.bscf_wong = (
+        current_drive_variables.f_c_plasma_bootstrap_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1978,7 +1978,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 9:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_wong
+                    current_drive_variables.f_c_plasma_bootstrap_wong
                 )
             elif physics_variables.i_bootstrap_current == 10:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5714,8 +5714,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Wong)",
-                "(bscf_wong)",
-                current_drive_variables.bscf_wong,
+                "(f_c_plasma_bootstrap_wong)",
+                current_drive_variables.f_c_plasma_bootstrap_wong,
                 "OP ",
             )
             po.ovarrf(

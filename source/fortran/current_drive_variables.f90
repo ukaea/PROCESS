@@ -54,7 +54,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_bootstrap_hoang
   !! Bootstrap current fraction, Hoang et al model
 
-  real(dp) :: bscf_wong
+  real(dp) :: f_c_plasma_bootstrap_wong
   !! Bootstrap current fraction, Wong et al model
 
   real(dp) :: bscf_gi_I
