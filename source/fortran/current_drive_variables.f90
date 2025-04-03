@@ -136,7 +136,7 @@ module current_drive_variables
   real(dp) :: frbeam
   !! R_tangential / R_major for neutral beam injection
 
-  real(dp) :: f_tritium_beam
+  real(dp) :: f_beam_tritium
   !! fraction of beam that is tritium
 
   real(dp) :: gamcd

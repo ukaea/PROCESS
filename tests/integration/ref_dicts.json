@@ -2032,7 +2032,7 @@
         "ftoroidalgap": 1.0,
         "ftpeak": 1.0,
         "f_tritium": 0.5,
-        "f_tritium_beam": 1e-06,
+        "f_beam_tritium": 1e-06,
         "fusion_rate_density_total": 0.0,
         "fusion_rate_density_plasma": 0.0,
         "fvdump": 1.0,
@@ -9589,7 +9589,7 @@
         "ftoroidalgap": "F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)",
         "ftpeak": "f-value for first wall peak temperature (`constraint equation 39`, `iteration variable 63`)",
         "f_tritium": "tritium fuel fraction",
-        "f_tritium_beam": "fraction of beam that is tritium",
+        "f_beam_tritium": "fraction of beam that is tritium",
         "fusion_rate_density_total": "fusion reaction rate, from plasma and beams (reactions/m3/sec)",
         "fusion_rate_density_plasma": "fusion reaction rate, just from plasma (reactions/m3/sec)",
         "fvdump": "f-value for dump voltage (`constraint equation 34`, `iteration variable 51`)",
@@ -12819,7 +12819,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "f_tritium_beam": {
+        "f_beam_tritium": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -17642,7 +17642,7 @@
             "feffcd",
             "f_p_beam_orbit_loss",
             "frbeam",
-            "f_tritium_beam",
+            "f_beam_tritium",
             "gamcd",
             "gamma_ecrh",
             "xi_ebw",
@@ -20142,7 +20142,7 @@
         "ftoroidalgap": "real_variable",
         "ftpeak": "real_variable",
         "f_tritium": "real_variable",
-        "f_tritium_beam": "real_variable",
+        "f_beam_tritium": "real_variable",
         "fvdump": "real_variable",
         "fvoldw": "real_variable",
         "fvolsi": "real_variable",

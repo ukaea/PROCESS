@@ -801,7 +801,7 @@ def beam_fusion(
     e_beam_kev: float,
     f_deuterium_plasma: float,
     f_tritium_plasma: float,
-    f_tritium_beam: float,
+    f_beam_tritium: float,
     sigmav_dt_average: float,
     ten: float,
     tin: float,
@@ -826,7 +826,7 @@ def beam_fusion(
                 e_beam_kev (float): Neutral beam energy (keV).
                 f_deuterium_plasma (float): Deuterium fraction of main plasma.
                 f_tritium_plasma (float): Tritium fraction of main plasma.
-                f_tritium_beam (float): Tritium fraction of neutral beam.
+                f_beam_tritium (float): Tritium fraction of neutral beam.
                 sigmav_dt_average (float): Profile averaged <sigma v> for D-T (m^3/s).
                 ten (float): Density-weighted electron temperature (keV).
                 tin (float): Density-weighted ion temperature (keV).
@@ -863,8 +863,8 @@ def beam_fusion(
     beam_slow_time = (
         1.99e19
         * (
-            constants.m_deuteron_amu * (1.0 - f_tritium_beam)
-            + (constants.m_triton_amu * f_tritium_beam)
+            constants.m_deuteron_amu * (1.0 - f_beam_tritium)
+            + (constants.m_triton_amu * f_beam_tritium)
         )
         * (ten**1.5 / dene)
         / ion_electron_coulomb_log
@@ -901,7 +901,7 @@ def beam_fusion(
         critical_energy_deuterium,
         critical_energy_tritium,
         beam_slow_time,
-        f_tritium_beam,
+        f_beam_tritium,
         c_beam_total,
         tin,
         vol_plasma,
@@ -933,7 +933,7 @@ def beamcalc(
     critical_energy_deuterium: float,
     critical_energy_tritium: float,
     beam_slow_time: float,
-    f_tritium_beam: float,
+    f_beam_tritium: float,
     c_beam_total: float,
     ti: float,
     vol_plasma: float,
@@ -953,7 +953,7 @@ def beamcalc(
         critical_energy_deuterium (float): Critical energy for electron/ion slowing down of the beam ion (deuterium neutral beam) (keV).
         critical_energy_tritium (float): Critical energy for beam slowing down (tritium neutral beam) (keV).
         beam_slow_time (float): Beam ion slowing down time on electrons (s).
-        f_tritium_beam (float): Beam tritium fraction (0.0 = deuterium beam).
+        f_beam_tritium (float): Beam tritium fraction (0.0 = deuterium beam).
         c_beam_total (float): Beam current (A).
         ti (float): Thermal ion temperature (keV).
         vol_plasma (float): Plasma volume (m^3).
@@ -990,8 +990,8 @@ def beamcalc(
     """
 
     # D and T beam current fractions
-    beam_current_deuterium = c_beam_total * (1.0 - f_tritium_beam)
-    beam_current_tritium = c_beam_total * f_tritium_beam
+    beam_current_deuterium = c_beam_total * (1.0 - f_beam_tritium)
+    beam_current_tritium = c_beam_total * f_beam_tritium
 
     # At a critical energy the rate of loss to the ions becomes equal to that to the electrons,
     # and at lower energies the loss to the ions predominates.

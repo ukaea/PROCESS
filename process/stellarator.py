@@ -4234,7 +4234,7 @@ class Stellarator:
                 current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
-                current_drive_variables.f_tritium_beam,
+                current_drive_variables.f_beam_tritium,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,

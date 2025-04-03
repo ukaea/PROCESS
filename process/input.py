@@ -525,7 +525,7 @@ INPUT_VARIABLES = {
     "f_sync_reflect": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "f_tritium_beam": InputVariable(
+    "f_beam_tritium": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "f_vforce_inboard": InputVariable(

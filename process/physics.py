@@ -2088,7 +2088,7 @@ class Physics:
                 current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
-                current_drive_variables.f_tritium_beam,
+                current_drive_variables.f_beam_tritium,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
@@ -2988,8 +2988,8 @@ class Physics:
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
-            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
-        ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
+            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_beam_tritium)
+        ) + (constants.m_triton_amu * current_drive_variables.f_beam_tritium)
 
         # ======================================================================
 
@@ -3036,12 +3036,12 @@ class Physics:
             + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
             + (physics_variables.nd_protons / constants.m_proton_amu)
             + (
-                (1.0 - current_drive_variables.f_tritium_beam)
+                (1.0 - current_drive_variables.f_beam_tritium)
                 * physics_variables.nd_beam_ions
                 / constants.m_deuteron_amu
             )
             + (
-                current_drive_variables.f_tritium_beam
+                current_drive_variables.f_beam_tritium
                 * physics_variables.nd_beam_ions
                 / constants.m_triton_amu
             )
