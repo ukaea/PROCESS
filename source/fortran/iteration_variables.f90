@@ -2223,8 +2223,8 @@ contains
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(103) = 'fl_h_threshold     '
-    boundl(103) = 1.000D0
-    boundu(103) = 1.000D6
+    boundl(103) = 0.001D0
+    boundu(103) = 1.000D0
   end subroutine init_itv_103
 
   real(kind(1.d0)) function itv_103()
