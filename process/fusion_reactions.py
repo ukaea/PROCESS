@@ -794,7 +794,7 @@ def beam_fusion(
     betbm0: float,
     bp: float,
     bt: float,
-    beam_current: float,
+    c_beam_total: float,
     dene: float,
     nd_fuel_ions: float,
     ion_electron_coulomb_log: float,
@@ -819,7 +819,7 @@ def beam_fusion(
                 betbm0 (float): Leading coefficient for neutral beam beta fraction.
                 bp (float): Poloidal field (T).
                 bt (float): Toroidal field on axis (T).
-                beam_current (float): Neutral beam current (A).
+                c_beam_total (float): Neutral beam current (A).
                 dene (float): Electron density (m^-3).
                 nd_fuel_ions (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
@@ -902,7 +902,7 @@ def beam_fusion(
         critical_energy_tritium,
         beam_slow_time,
         f_tritium_beam,
-        beam_current,
+        c_beam_total,
         tin,
         vol_plasma,
         sigmav_dt_average,
@@ -934,7 +934,7 @@ def beamcalc(
     critical_energy_tritium: float,
     beam_slow_time: float,
     f_tritium_beam: float,
-    beam_current: float,
+    c_beam_total: float,
     ti: float,
     vol_plasma: float,
     svdt: float,
@@ -954,7 +954,7 @@ def beamcalc(
         critical_energy_tritium (float): Critical energy for beam slowing down (tritium neutral beam) (keV).
         beam_slow_time (float): Beam ion slowing down time on electrons (s).
         f_tritium_beam (float): Beam tritium fraction (0.0 = deuterium beam).
-        beam_current (float): Beam current (A).
+        c_beam_total (float): Beam current (A).
         ti (float): Thermal ion temperature (keV).
         vol_plasma (float): Plasma volume (m^3).
         svdt (float): Profile averaged <sigma v> for D-T (m^3/s).
@@ -990,8 +990,8 @@ def beamcalc(
     """
 
     # D and T beam current fractions
-    beam_current_deuterium = beam_current * (1.0 - f_tritium_beam)
-    beam_current_tritium = beam_current * f_tritium_beam
+    beam_current_deuterium = c_beam_total * (1.0 - f_tritium_beam)
+    beam_current_tritium = c_beam_total * f_tritium_beam
 
     # At a critical energy the rate of loss to the ions becomes equal to that to the electrons,
     # and at lower energies the loss to the ions predominates.

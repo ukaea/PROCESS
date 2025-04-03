@@ -66,7 +66,7 @@ module current_drive_variables
   real(dp) :: cboot
   !! bootstrap current fraction multiplier
 
-  real(dp) :: beam_current
+  real(dp) :: c_beam_total
   !! neutral beam current (A)
 
   real(dp) :: diacf_hender
@@ -269,7 +269,7 @@ module current_drive_variables
     bscf_gi_I = 0.0D0
     bscf_gi_II = 0.0D0
     cboot = 1.0D0
-    beam_current = 0.0D0
+    c_beam_total = 0.0D0
     diacf_hender = 0.0D0
     diacf_scene = 0.0D0
     diamagnetic_current_fraction = 0.0D0
