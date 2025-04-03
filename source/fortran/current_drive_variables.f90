@@ -90,7 +90,7 @@ module current_drive_variables
   real(dp) :: harnum
   !! cyclotron harmonic frequency number, used in cut-off function
 
-  integer :: wave_mode
+  integer :: i_ecrh_wave_mode
   !! Switch for ECRH wave mode :
   !!
   !!  - =0 O-mode
@@ -277,7 +277,7 @@ module current_drive_variables
     echwpow = 0.0D0
     effcd = 0.0D0
     harnum = 2.0
-    wave_mode = 0
+    i_ecrh_wave_mode = 0
     e_beam_kev = 1.0D3
     etacd = 0.0D0
     etacdfix = 0.0D0
