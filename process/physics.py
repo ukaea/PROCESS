@@ -1815,7 +1815,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_nevins = (
+        current_drive_variables.f_c_plasma_bootstrap_nevins = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
@@ -1948,7 +1948,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 2:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_nevins
+                    current_drive_variables.f_c_plasma_bootstrap_nevins
                 )
             elif physics_variables.i_bootstrap_current == 3:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5672,8 +5672,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Nevins et al)",
-                "(bscf_nevins)",
-                current_drive_variables.bscf_nevins,
+                "(f_c_plasma_bootstrap_nevins)",
+                current_drive_variables.f_c_plasma_bootstrap_nevins,
                 "OP ",
             )
             po.ovarrf(

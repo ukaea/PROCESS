@@ -366,7 +366,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -1361,7 +1361,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -2356,7 +2356,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -3351,7 +3351,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -4346,7 +4346,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -5341,7 +5341,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -6336,7 +6336,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -7331,7 +7331,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
@@ -8326,7 +8326,7 @@
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
  Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.4014E-01    
  Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      3.8470E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5123E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5123E-01    
  Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.0136E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.0963E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.0040E-02    
