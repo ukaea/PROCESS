@@ -492,7 +492,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "e_beam_kev", cudrivparam.e_beam_kev)
 
-    monkeypatch.setattr(current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary)
+    monkeypatch.setattr(
+        current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary
+    )
 
     monkeypatch.setattr(current_drive_variables, "pwplh", cudrivparam.pwplh)
 
@@ -650,7 +652,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.expected_p_hcd_injected_total_mw
     )
 
-    assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(cudrivparam.expected_effcd)
+    assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
+        cudrivparam.expected_effcd
+    )
 
     assert current_drive_variables.echwpow == pytest.approx(
         cudrivparam.expected_echwpow
