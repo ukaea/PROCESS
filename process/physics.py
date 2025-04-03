@@ -1853,7 +1853,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_sauter = (
+        current_drive_variables.f_c_plasma_bootstrap_sauter = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
@@ -1956,7 +1956,7 @@ class Physics:
                 )
             elif physics_variables.i_bootstrap_current == 4:
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_sauter
+                    current_drive_variables.f_c_plasma_bootstrap_sauter
                 )
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
@@ -5664,8 +5664,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sauter et al)",
-                "(bscf_sauter)",
-                current_drive_variables.bscf_sauter,
+                "(f_c_plasma_bootstrap_sauter)",
+                current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
 
