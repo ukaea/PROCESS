@@ -42,7 +42,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_bootstrap_wilson
   !! bootstrap current fraction, Wilson et al model
 
-  real(dp) :: bscf_sakai
+  real(dp) :: f_c_plasma_bootstrap_sakai
   !! Bootstrap current fraction, Sakai et al model
 
   real(dp) :: f_c_plasma_bootstrap_aries

@@ -1858,7 +1858,7 @@ class Physics:
             * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
-        current_drive_variables.bscf_sakai = (
+        current_drive_variables.f_c_plasma_bootstrap_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1962,7 +1962,7 @@ class Physics:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
                 current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_sakai
+                    current_drive_variables.f_c_plasma_bootstrap_sakai
                 )
             elif physics_variables.i_bootstrap_current == 6:
                 current_drive_variables.bootstrap_current_fraction = (
@@ -5686,8 +5686,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sakai)",
-                "(bscf_sakai)",
-                current_drive_variables.bscf_sakai,
+                "(f_c_plasma_bootstrap_sakai)",
+                current_drive_variables.f_c_plasma_bootstrap_sakai,
                 "OP ",
             )
             po.ovarrf(
