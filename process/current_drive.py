@@ -148,10 +148,12 @@ class CurrentDrive:
             # ECRH user input gamma
             elif current_drive_variables.i_hcd_secondary == 10:
                 # Normalised current drive efficiency gamma
-                current_drive_variables.gamcd = current_drive_variables.eta_cd_norm_ecrh
+                current_drive_variables.eta_cd_norm_hcd_secondary = (
+                    current_drive_variables.eta_cd_norm_ecrh
+                )
 
                 # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.gamcd / (
+                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
                     dene20 * physics_variables.rmajor
                 )
                 effcdfix = effrfssfix
@@ -160,12 +162,12 @@ class CurrentDrive:
                 # Scaling author Simon Freethy
                 # Ref : PROCESS issue 1262
                 # Normalised current drive efficiency gamma
-                current_drive_variables.gamcd = (
+                current_drive_variables.eta_cd_norm_hcd_secondary = (
                     current_drive_variables.xi_ebw / 32.7e0
                 ) * physics_variables.te
 
                 # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.gamcd / (
+                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
                     dene20 * physics_variables.rmajor
                 )
                 effcdfix = effrfssfix
@@ -880,7 +882,7 @@ class CurrentDrive:
         )
         po.ovarre(
             self.outfile,
-            "Normalised current drive efficiency, gamma (10^20 A/W-m2)",
+            "Normalised current drive efficiency of primary HCD system (10^20 A / W m^2)",
             "(gamcd)",
             current_drive_variables.gamcd,
             "OP ",

@@ -3186,7 +3186,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
                 "gamcd",
-                "Normalised current drive efficiency",
+                "Normalised current drive efficiency of primary HCD system",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
