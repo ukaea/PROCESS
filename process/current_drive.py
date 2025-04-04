@@ -65,10 +65,10 @@ class CurrentDrive:
                 current_drive_variables.p_hcd_secondary_injected_mw
             )
 
-        # current_drive_variables.irfcd |  switch for current drive calculation
+        # current_drive_variables.i_hcd_calculations |  switch for current drive calculation
         # = 0   |  turned off
         # = 1   |  turned on
-        if current_drive_variables.irfcd != 0:
+        if current_drive_variables.i_hcd_calculations != 0:
             # put electron density in desired units (10^-20 m-3)
             dene20 = physics_variables.dene * 1.0e-20
 
@@ -760,7 +760,7 @@ class CurrentDrive:
 
         po.oheadr(self.outfile, "Current Drive System")
 
-        if current_drive_variables.irfcd == 0:
+        if current_drive_variables.i_hcd_calculations == 0:
             po.ocmmnt(self.outfile, "No current drive used")
             po.oblnkl(self.outfile)
             return

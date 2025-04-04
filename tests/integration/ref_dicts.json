@@ -2641,7 +2641,7 @@
         "i_rad_loss": 1.0,
         "ireactor": 1.0,
         "irefprop": 1.0,
-        "irfcd": 1.0,
+        "i_hcd_calculations": 1.0,
         "is_leg_cp_temp_same": 0.0,
         "i_confinement_time": 34.0,
         "iscan_global": 0.0,
@@ -9843,7 +9843,7 @@
         "i_rad_loss": "switch for radiation loss term usage in power balance (see User Guide):\n<ul>\n<li>=0 total power lost is scaling power plus radiation (needed for `ipedestal=2,3`)</li>\n<li>=1 total power lost is scaling power plus core radiation only</li>\n<li>=2 total power lost is scaling power only, with no additional\n   allowance for radiation. This is not recommended for power plant models.</li>\n</ul>",
         "ireactor": "Switch for net electric power and cost of electricity calculations:\n<ul>\n<li>=0 do not calculate MW(electric) or c-o-e</li>\n<li>=1 calculate MW(electric) and c-o-e</li>\n</ul>",
         "irefprop": "Switch to use REFPROP routines (stellarator only)",
-        "irfcd": "Switch for current drive calculation:\n<ul>\n<li>=0 turned off</li>\n<li>=1 turned on</li>\n</ul>",
+        "i_hcd_calculations": "Switch for current drive calculation:\n<ul>\n<li>=0 turned off</li>\n<li>=1 turned on</li>\n</ul>",
         "is_leg_cp_temp_same": "",
         "i_confinement_time": "switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)",
         "iscan_global": "Makes iscan available globally.",
@@ -13343,7 +13343,7 @@
             "lb": 0,
             "ub": 1
         },
-        "irfcd": {
+        "i_hcd_calculations": {
             "lb": 0,
             "ub": 1
         },
@@ -17648,7 +17648,7 @@
             "xi_ebw",
             "i_hcd_primary",
             "i_hcd_secondary",
-            "irfcd",
+            "i_hcd_calculations",
             "f_p_beam_shine_through",
             "dx_beam_shield",
             "pheat",
@@ -20278,7 +20278,7 @@
         "i_rad_loss": "int_variable",
         "ireactor": "int_variable",
         "irefprop": "int_variable",
-        "irfcd": "int_variable",
+        "i_hcd_calculations": "int_variable",
         "i_confinement_time": "int_variable",
         "iscenr": "int_variable",
         "i_plasma_wall_gap": "int_variable",
