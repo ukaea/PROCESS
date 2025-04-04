@@ -4943,22 +4943,28 @@ class Stellarator:
         if stellarator_variables.isthtr == 1:
             current_drive_variables.p_ecrh_injected_mw = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.p_ecrh_injected_mw
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.p_ecrh_injected_mw
+            )
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_ecrh_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
+                current_drive_variables.pinjimw
+                + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
             current_drive_variables.plhybd = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.plhybd
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.plhybd
+            )
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_lowhyb_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
+                current_drive_variables.pinjimw
+                + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
             (
@@ -4976,14 +4982,15 @@ class Stellarator:
             current_drive_variables.pinjimw = (
                 current_drive_variables.pnbeam * f_p_beam_injected_ions
             )
-            current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
-                1 - f_p_beam_injected_ions
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.pnbeam * (1 - f_p_beam_injected_ions)
             )
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_beam_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
+                current_drive_variables.pinjimw
+                + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         else:
             raise ProcessValueError(
@@ -4993,7 +5000,8 @@ class Stellarator:
         #  Total injected power
 
         current_drive_variables.p_hcd_injected_total_mw = (
-            current_drive_variables.pinjemw + current_drive_variables.pinjimw
+            current_drive_variables.p_hcd_injected_electrons_mw
+            + current_drive_variables.pinjimw
         )
 
         #  Calculate neutral beam current

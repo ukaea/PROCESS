@@ -728,7 +728,7 @@ class CurrentDrive:
             )
             pinjmw1 = pinjemw1 + pinjimw1
             pinjmwfix = pinjemwfix + pinjimwfix
-            current_drive_variables.pinjemw = pinjemw1 + pinjemwfix
+            current_drive_variables.p_hcd_injected_electrons_mw = pinjemw1 + pinjemwfix
             current_drive_variables.pinjimw = pinjimw1 + pinjimwfix
             heat_transport_variables.pinjwp = (
                 pinjwp1 + heat_transport_variables.pinjwpfix

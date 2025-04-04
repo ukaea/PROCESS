@@ -1791,7 +1791,9 @@ class Physics:
         # ***************************** #
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(physics_variables.beta)
+        current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
+            physics_variables.beta
+        )
 
         if physics_variables.i_pfirsch_schluter_current == 1:
             current_drive_variables.f_c_plasma_pfirsch_schluter = (
@@ -5006,8 +5008,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Injection power to electrons (MW)",
-            "(pinjemw)",
-            current_drive_variables.pinjemw,
+            "(p_hcd_injected_electrons_mw)",
+            current_drive_variables.p_hcd_injected_electrons_mw,
             "OP ",
         )
         if physics_variables.ignite == 1:
