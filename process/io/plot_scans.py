@@ -301,7 +301,7 @@ def main(args=None):
         9: "te",
         10: "boundu(15)",
         11: "beta_norm_max",
-        12: "bootstrap_current_fraction_max",
+        12: "f_c_plasma_bootstrap_max",
         13: "boundu(10)",
         14: "fiooic",
         15: "fjprot",
@@ -367,7 +367,7 @@ def main(args=None):
         76: "etath",
         77: "startupratio",
         78: "fkind",
-        79: "etaech",
+        79: "eta_ecrh_injector_wall_plug",
         80: "fcoolcp",
         81: "n_tf_turn",
     }

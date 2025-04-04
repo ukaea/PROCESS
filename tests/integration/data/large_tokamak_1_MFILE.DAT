@@ -454,8 +454,8 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8172E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.4013E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.5772E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
- Injection_power_to_electrons_(MW)_______________________________________ (pinjemw)_____________________      8.0143E+01 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
+ Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      8.0143E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.6303E+02 OP 
  Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      2.0378E+01 OP 
@@ -506,16 +506,16 @@
  Start-up_resistive_(Wb)_________________________________________________ (vs_plasma_res_ramp)_______________________      5.0159E+01 OP 
  Flat-top_resistive_(Wb)_________________________________________________ (vs_plasma_burn_required)_______________________      2.7015E+02 OP 
  bootstrap_current_fraction_multiplier___________________________________ (cboot)_______________________      1.0000E+00    
- Bootstrap_fraction_(ITER_1989)__________________________________________ (bscf_iter89)_________________      3.7098E-01    
- Bootstrap_fraction_(Sauter_et_al)_______________________________________ (bscf_sauter)_________________      4.1920E-01    
- Bootstrap_fraction_(Nevins_et_al)_______________________________________ (bscf_nevins)_________________      3.5042E-01    
- Bootstrap_fraction_(Wilson)_____________________________________________ (bscf_wilson)_________________      4.3349E-01    
- Diamagnetic_fraction_(Hender)___________________________________________ (diacf_hender)________________      1.2017E-02    
- Diamagnetic_fraction_(SCENE)____________________________________________ (diacf_scene)_________________      1.1139E-02    
- Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.0283E-03    
+ Bootstrap_fraction_(ITER_1989)__________________________________________ (f_c_plasma_bootstrap_iter89)_________________      3.7098E-01    
+ Bootstrap_fraction_(Sauter_et_al)_______________________________________ (f_c_plasma_bootstrap_sauter)_________________      4.1920E-01    
+ Bootstrap_fraction_(Nevins_et_al)_______________________________________ (f_c_plasma_bootstrap_nevins)_________________      3.5042E-01    
+ Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3349E-01    
+ Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2017E-02    
+ Diamagnetic_fraction_(SCENE)____________________________________________ (f_c_plasma_diamagnetic_scene)_________________      1.1139E-02    
+ Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (f_c_plasma_pfirsch_schluter_scene)__________________     -3.0283E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1920E-01    
  Diamagnetic_fraction_(enforced)_________________________________________ (diaipf.)_____________________      0.0000E+00    
- Pfirsch-Schlueter_fraction_(enforced)___________________________________ (ps_current_fraction.)______________________      0.0000E+00    
+ Pfirsch-Schlueter_fraction_(enforced)___________________________________ (f_c_plasma_pfirsch_schluter.)______________________      0.0000E+00    
  Loop_voltage_during_burn_(V)____________________________________________ (v_plasma_loop_burn)_______________________      3.7450E-02 OP 
  Plasma_resistance_(ohm)_________________________________________________ (res_plasma)_______________________      3.9755E-09 OP 
  Resistive_diffusion_time_(s)____________________________________________ (t_plasma_res_diffusion)____________________      3.0619E+03 OP 
@@ -527,28 +527,28 @@
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.7282E-01    
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
- Current_drive_efficiency_model__________________________________________ (iefrf)_______________________             10    
- Secondary_current_drive_efficiency_model________________________________ (iefrffix)____________________              0    
+ Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
+ Secondary_current_drive_efficiency_model________________________________ (i_hcd_secondary)____________________              0    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      5.1429E+00    
- Maximum_Allowed_Bootstrap_current_fraction______________________________ (bootstrap_current_fraction_max)_____________________      9.5000E-01    
+ Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0060E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.3908E+05 OP 
- Current_drive_efficiency_(A/W)__________________________________________ (effcd)_______________________      4.6488E-02 OP 
- Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (gamcd)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
- ECRH_plasma_heating_efficiency__________________________________________ (gamma_ecrh)__________________      3.0000E-01    
+ Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6488E-02 OP 
+ Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
+ ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1920E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
- Pfirsch-Schlueter_fraction______________________________________________ (ps_current_fraction)_______________________      0.0000E+00    
+ Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
  Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      1.4376E-02    
  Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.6642E-01    
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.3358E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      8.0143E+01 OP 
- Maximum_allowable_ECRH_power_(MW)_______________________________________ (pinjalw)_____________________      2.0000E+02    
- ECH_wall_plug_efficiency________________________________________________ (etaech)______________________      5.0000E-01    
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      8.0143E+01 OP 
+ Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
+ ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.6029E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.7728E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8601E+02    
@@ -1136,11 +1136,11 @@
  Alpha_power_deposited_in_plasma_(MW)____________________________________ (falpha*palpmw)_______________      3.0746E+02    
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)______________ (pchargemw.)__________________      1.2659E+00    
  Ohmic_heating_(MW)______________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.2284E-01    
- Injected_power_deposited_in_plasma_(MW)_________________________________ (pinjmw)______________________      8.0143E+01    
+ Injected_power_deposited_in_plasma_(MW)_________________________________ (p_hcd_injected_total_mw)______________________      8.0143E+01    
  Total_(MW)______________________________________________________________ ______________________________      3.8950E+02    
  Fusion_power_(MW)_______________________________________________________ (fusion_power)______________________      1.6202E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0836E+02    
- Injected_power_(MW)_____________________________________________________ (pinjmw.)_____________________      8.0143E+01    
+ Injected_power_(MW)_____________________________________________________ (p_hcd_injected_total_mw.)_____________________      8.0143E+01    
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.2284E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6576E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1751E+03    
@@ -1265,7 +1265,7 @@ boundu(103) = 10.0
 icc = 30
 ixc = 46 * fpinj
 * Maximum allowable value for injected power [MW]
-pinjalw = 200.0
+p_hcd_injected_max = 200.0
 
 * Net electric power lower limit *
 *--------------------------------*
@@ -1639,19 +1639,19 @@ t_precharge = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bootstrap_current_fraction_max = 0.95
+f_c_plasma_bootstrap_max = 0.95
 
 * Switch for current drive efficiency model
-iefrf = 10
+i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
-gamma_ecrh = 0.30
+eta_cd_norm_ecrh = 0.30
 
 * ECRH wall-plug efficiency
-etaech = 0.5
+eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
-pheat = 75.0
+p_hcd_primary_extra_heat_mw = 75.0
 
 * Impurity radiation *
 **********************

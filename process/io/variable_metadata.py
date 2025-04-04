@@ -31,7 +31,7 @@ var_dicts = {
     "fusion_power": VariableMetadata(
         latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
     ),
-    "pinjemw": VariableMetadata(
+    "p_hcd_injected_electrons_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
     "pnetelmw": VariableMetadata(
@@ -141,7 +141,7 @@ var_dicts = {
         description="Toroidal field lower bound",
         units="A",
     ),
-    "pinjmw": VariableMetadata(
+    "p_hcd_injected_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
     "hldivlim": VariableMetadata(
@@ -225,10 +225,10 @@ var_dicts = {
         description="Central solenoid height / TF coil internal height",
         units="m",
     ),
-    "pheat": VariableMetadata(
+    "p_hcd_primary_extra_heat_mw": VariableMetadata(
         latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW"
     ),
-    "effcd": VariableMetadata(
+    "eta_cd_hcd_primary": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
@@ -238,7 +238,7 @@ var_dicts = {
     "inductive_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
     ),
-    "bootstrap_current_fraction": VariableMetadata(
+    "f_c_plasma_bootstrap": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
     "pdivt": VariableMetadata(
@@ -385,7 +385,7 @@ var_dicts = {
         description="Redundancy factor for gyrotrons",
         units="",
     ),
-    "etaech": VariableMetadata(
+    "eta_ecrh_injector_wall_plug": VariableMetadata(
         latex=r"ECH wall plug to injector efficiency",
         description="Efficiency of electron cyclotron heating",
         units="",

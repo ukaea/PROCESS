@@ -955,7 +955,7 @@ class Costs2015:
         # Increased to 90 Mdollar because of press release
         self.s_cref[40] = 90.0e6
         #  Scale with total aux injected power (MW)
-        self.s_k[40] = current_drive_variables.pinjmw
+        self.s_k[40] = current_drive_variables.p_hcd_injected_total_mw
         self.s_kref[40] = 50.0e0
         self.s_cost[40] = (
             self.s_cost_factor[40]
@@ -1110,7 +1110,7 @@ class Costs2015:
         #  Cost of ITER NB H and CD
         self.s_cref[52] = 814.0e6
         #  Scale with total auxiliary injected power (MW)
-        self.s_k[52] = current_drive_variables.pinjmw
+        self.s_k[52] = current_drive_variables.p_hcd_injected_total_mw
         self.s_kref[52] = 50.0e0
         self.s_cost[52] = (
             self.s_cost_factor[52]

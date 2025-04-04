@@ -24,12 +24,14 @@ def plot_full_sankey(
 
     # Used in [PLASMA]
     fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion power (MW)
-    pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected power (MW)
+    p_hcd_injected_total_mw = m_file.data["p_hcd_injected_total_mw"].get_scan(
+        -1
+    )  # Total auxiliary injected power (MW)
     p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(
         -1
     )  # Ohmic heating power (MW)
     totalplasma = (
-        fusion_power + pinjmw + p_plasma_ohmic_mw
+        fusion_power + p_hcd_injected_total_mw + p_plasma_ohmic_mw
     )  # Total Power in plasma (MW)
     neutron_power_total = m_file.data["neutron_power_total"].get_scan(
         -1
@@ -43,7 +45,9 @@ def plot_full_sankey(
     alpha_power_total = m_file.data["alpha_power_total"].get_scan(
         -1
     )  # Alpha power (MW)
-    palpinjmw = alpha_power_total + pinjmw  # Alpha particle and HC&D power (MW)
+    palpinjmw = (
+        alpha_power_total + p_hcd_injected_total_mw
+    )  # Alpha particle and HC&D power (MW)
 
     # Used in [NEUTRONICS]
     emultmw = m_file.data["emultmw"].get_scan(
@@ -110,7 +114,7 @@ def plot_full_sankey(
         pthermfw_blkt - htpmwblkt - p_blkt_nuclear_heat_total_mw
     )  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
-    # nbshinemw = m_file.data['nbshinemw'].get_scan(-1) # Injection shine-through to 1st wall
+    # p_beam_shine_through_mw = m_file.data['p_beam_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
 
     # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
     y_adj_1 = 0
@@ -131,7 +135,7 @@ def plot_full_sankey(
         # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
         plasma = [
             fusion_power,
-            pinjmw,
+            p_hcd_injected_total_mw,
             p_plasma_ohmic_mw,
             -pcharohmmw,
             -palpinjmw,
@@ -413,7 +417,7 @@ def plot_full_sankey(
         """# ---------------------------------------- HCD - 11 ----------------------------------------
 
         # HCD loss + injected, -injected, -HCD loss
-        HCD = [pinjht+pinjmw, -pinjmw, -pinjht]
+        HCD = [pinjht+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -pinjht]
         assert(sum(HCD)**2 < 0.5)
         sankey.add(flows=HCD,
                    # [down(in), up(out), down(out)]
@@ -451,7 +455,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]-0.2,pos[1]))
             if t == diagrams[0].texts[1]: # H&CD
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(pinjmw/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*(p_hcd_injected_total_mw/totalplasma)-0.05,pos[1]))
             if t == diagrams[0].texts[2]: # Ohmic
                 t.set_horizontalalignment('left')
                 t.set_position((pos[0]+0.5*(p_plasma_ohmic_mw/totalplasma)+0.05,pos[1]))
@@ -466,7 +470,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]+0.5*(alpha_power_total/totalplasma)+0.05,pos[1]-0.1))
             if t == diagrams[1].texts[0]: # H&CD power
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*((pinjht+pinjmw)/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*((pinjht+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
             if t == diagrams[1].texts[2]: # H&CD losses
                 t.set_horizontalalignment('left')
                 t.set_position((pos[0]+(pinjht/totalplasma)+0.05,pos[1]))
@@ -501,12 +505,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
     # Used in [PLASMA]
     fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion Power (MW)
-    pinjmw = m_file.data["pinjmw"].get_scan(-1)  # Total auxiliary injected Power (MW)
+    p_hcd_injected_total_mw = m_file.data["p_hcd_injected_total_mw"].get_scan(
+        -1
+    )  # Total auxiliary injected Power (MW)
     p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(
         -1
     )  # Ohmic heating Power (MW)
     totalplasma = (
-        fusion_power + pinjmw + p_plasma_ohmic_mw
+        fusion_power + p_hcd_injected_total_mw + p_plasma_ohmic_mw
     )  # Total Power in plasma (MW)
 
     # Used in [DEPOSITION]
@@ -643,7 +649,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- PLASMA - 0 --------------------------------------
 
         # Fusion power, Injected power + ohmic power, - total plasma power
-        plasma = [fusion_power, pinjmw + p_plasma_ohmic_mw, -totalplasma]
+        plasma = [
+            fusion_power,
+            p_hcd_injected_total_mw + p_plasma_ohmic_mw,
+            -totalplasma,
+        ]
         sankey.add(
             flows=plasma,
             orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
@@ -764,7 +774,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # --------------------------------------- LOSSES - 6 --------------------------------------
 
         # HCD: Heating system, -Plasma heating, -losses
-        hcd = [pinjwp - ppumpmw, -pinjmw, -pinjwp + pinjmw + ppumpmw]
+        hcd = [
+            pinjwp - ppumpmw,
+            -p_hcd_injected_total_mw,
+            -pinjwp + p_hcd_injected_total_mw + ppumpmw,
+        ]
         sankey.add(
             flows=hcd,
             orientations=[0, -1, 0],  # [left(in), up(out), left(out)]
@@ -848,12 +862,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[6].texts[1]:  # Plasma Heating
                 t.set_horizontalalignment("left")
                 t.set_position((
-                    pos[0] + 0.5 * (pinjmw / totalplasma) + 0.1,
+                    pos[0] + 0.5 * (p_hcd_injected_total_mw / totalplasma) + 0.1,
                     pos[1] - 0.05,
                 ))
             if t == diagrams[6].texts[2]:  # Losses
                 t.set_horizontalalignment("left")
                 t.set_position((
                     pos[0] + 0.15,
-                    pos[1] - 0.5 * ((pinjwp - pinjmw) / totalplasma) - 0.2,
+                    pos[1]
+                    - 0.5 * ((pinjwp - p_hcd_injected_total_mw) / totalplasma)
+                    - 0.2,
                 ))

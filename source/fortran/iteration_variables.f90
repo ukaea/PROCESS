@@ -264,25 +264,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_11
-    !! <LI> (11) pheat
+    !! <LI> (11) p_hcd_primary_extra_heat_mw
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(11) = 'pheat         '
+    lablxc(11) = 'p_hcd_primary_extra_heat_mw         '
     boundl(11) = 1.00D-3
     boundu(11) = 1.000D3
   end subroutine init_itv_11
 
   real(kind(1.d0)) function itv_11()
-    use current_drive_variables, only: pheat
+    use current_drive_variables, only: p_hcd_primary_extra_heat_mw
     implicit none
-    itv_11 = pheat
+    itv_11 = p_hcd_primary_extra_heat_mw
   end function itv_11
 
   subroutine set_itv_11(ratio)
-    use current_drive_variables, only: pheat
+    use current_drive_variables, only: p_hcd_primary_extra_heat_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    pheat = ratio
+    p_hcd_primary_extra_heat_mw = ratio
   end subroutine set_itv_11
 
   !---------------------------------
@@ -461,25 +461,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_19
-    !! <LI> (19) beam_energy
+    !! <LI> (19) e_beam_kev
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(19) = 'beam_energy        '
+    lablxc(19) = 'e_beam_kev        '
     boundl(19) = 1.000D0
     boundu(19) = 1.000D6
   end subroutine init_itv_19
 
   real(kind(1.d0)) function itv_19()
-    use current_drive_variables, only: beam_energy
+    use current_drive_variables, only: e_beam_kev
     implicit none
-    itv_19 = beam_energy
+    itv_19 = e_beam_kev
   end function itv_19
 
   subroutine set_itv_19(ratio)
-    use current_drive_variables, only: beam_energy
+    use current_drive_variables, only: e_beam_kev
     implicit none
     real(kind(1.d0)) :: ratio
-    beam_energy = ratio
+    e_beam_kev = ratio
   end subroutine
 
   !---------------------------------

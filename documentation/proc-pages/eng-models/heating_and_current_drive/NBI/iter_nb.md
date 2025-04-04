@@ -1,11 +1,11 @@
 # ITER Neutral Beam Model | `iternb()`
 
-- `iefrf/iefrffix` = 5
+- `i_hcd_primary/i_hcd_secondary` = 5
 
 | Output | Description |
 |----------|-------------|
 | $\mathtt{effnbss}$  | Neutral beam current drive efficiency in $\text{A/W}$ |
-| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 This model calculates the current drive parameters for a neutral beam system, based on the 1990 ITER model.[^1]
@@ -39,11 +39,11 @@ $$
 
 Deuterium and tritium beam densities:
 $$
-n_D = n_i * (1.0 - \mathtt{f_tritium_beam}) 
+n_D = n_i * (1.0 - \mathtt{f_beam_tritium}) 
 $$
 
 $$
-n_T = n_i * \mathtt{f_tritium_beam}
+n_T = n_i * \mathtt{f_beam_tritium}
 $$
 
 Power split to ions / electrons is calculated via the the `cfnbi` method described [here](nbi_overview.md)

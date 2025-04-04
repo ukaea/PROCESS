@@ -1765,22 +1765,24 @@ class Physics:
         # ***************************** #
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.diacf_hender = diamagnetic_fraction_hender(
-            physics_variables.beta
+        current_drive_variables.f_c_plasma_diamagnetic_hender = (
+            diamagnetic_fraction_hender(physics_variables.beta)
         )
 
         # SCENE scaling for diamagnetic current
-        current_drive_variables.diacf_scene = diamagnetic_fraction_scene(
-            physics_variables.beta, physics_variables.q95, physics_variables.q0
+        current_drive_variables.f_c_plasma_diamagnetic_scene = (
+            diamagnetic_fraction_scene(
+                physics_variables.beta, physics_variables.q95, physics_variables.q0
+            )
         )
 
         if physics_variables.i_diamagnetic_current == 1:
-            current_drive_variables.diamagnetic_current_fraction = (
-                current_drive_variables.diacf_hender
+            current_drive_variables.f_c_plasma_diamagnetic = (
+                current_drive_variables.f_c_plasma_diamagnetic_hender
             )
         elif physics_variables.i_diamagnetic_current == 2:
-            current_drive_variables.diamagnetic_current_fraction = (
-                current_drive_variables.diacf_scene
+            current_drive_variables.f_c_plasma_diamagnetic = (
+                current_drive_variables.f_c_plasma_diamagnetic_scene
             )
 
         # ***************************** #
@@ -1788,11 +1790,13 @@ class Physics:
         # ***************************** #
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
+        current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
+            physics_variables.beta
+        )
 
         if physics_variables.i_pfirsch_schluter_current == 1:
-            current_drive_variables.ps_current_fraction = (
-                current_drive_variables.pscf_scene
+            current_drive_variables.f_c_plasma_pfirsch_schluter = (
+                current_drive_variables.f_c_plasma_pfirsch_schluter_scene
             )
 
         # ***************************** #
@@ -1800,7 +1804,7 @@ class Physics:
         # ***************************** #
 
         # Calculate bootstrap current fraction using various models
-        current_drive_variables.bscf_iter89 = (
+        current_drive_variables.f_c_plasma_bootstrap_iter89 = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
@@ -1814,7 +1818,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_nevins = (
+        current_drive_variables.f_c_plasma_bootstrap_nevins = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
@@ -1838,7 +1842,7 @@ class Physics:
             - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         ) * (physics_variables.btot / physics_variables.bp) ** 2
-        current_drive_variables.bscf_wilson = (
+        current_drive_variables.f_c_plasma_bootstrap_wilson = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wilson(
                 physics_variables.alphaj,
@@ -1852,12 +1856,12 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_sauter = (
+        current_drive_variables.f_c_plasma_bootstrap_sauter = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
-        current_drive_variables.bscf_sakai = (
+        current_drive_variables.f_c_plasma_bootstrap_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1870,7 +1874,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_aries = (
+        current_drive_variables.f_c_plasma_bootstrap_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1881,7 +1885,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_andrade = (
+        current_drive_variables.f_c_plasma_bootstrap_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1890,7 +1894,7 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-        current_drive_variables.bscf_hoang = (
+        current_drive_variables.f_c_plasma_bootstrap_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1899,7 +1903,7 @@ class Physics:
                 inverse_aspect=physics_variables.eps,
             )
         )
-        current_drive_variables.bscf_wong = (
+        current_drive_variables.f_c_plasma_bootstrap_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1933,58 +1937,58 @@ class Physics:
             )
         )
 
-        if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
-            current_drive_variables.bootstrap_current_fraction = abs(
-                current_drive_variables.bootstrap_current_fraction_max
+        if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
+            current_drive_variables.f_c_plasma_bootstrap = abs(
+                current_drive_variables.f_c_plasma_bootstrap_max
             )
-            current_drive_variables.plasma_current_internal_fraction = (
-                current_drive_variables.bootstrap_current_fraction
+            current_drive_variables.f_c_plasma_internal = (
+                current_drive_variables.f_c_plasma_bootstrap
             )
         else:
             if physics_variables.i_bootstrap_current == 1:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_iter89
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_iter89
                 )
             elif physics_variables.i_bootstrap_current == 2:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_nevins
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_nevins
                 )
             elif physics_variables.i_bootstrap_current == 3:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_wilson
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_wilson
                 )
             elif physics_variables.i_bootstrap_current == 4:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_sauter
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_sauter
                 )
             elif physics_variables.i_bootstrap_current == 5:
                 # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
                 # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_sakai
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_sakai
                 )
             elif physics_variables.i_bootstrap_current == 6:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_aries
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_aries
                 )
             elif physics_variables.i_bootstrap_current == 7:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_andrade
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_andrade
                 )
             elif physics_variables.i_bootstrap_current == 8:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_hoang
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_hoang
                 )
             elif physics_variables.i_bootstrap_current == 9:
-                current_drive_variables.bootstrap_current_fraction = (
-                    current_drive_variables.bscf_wong
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_wong
                 )
             elif physics_variables.i_bootstrap_current == 10:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.bscf_gi_I
                 )
             elif physics_variables.i_bootstrap_current == 11:
-                current_drive_variables.bootstrap_current_fraction = (
+                current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.bscf_gi_II
                 )
             else:
@@ -1993,19 +1997,19 @@ class Physics:
 
             physics_module.err242 = 0
             if (
-                current_drive_variables.bootstrap_current_fraction
-                > current_drive_variables.bootstrap_current_fraction_max
+                current_drive_variables.f_c_plasma_bootstrap
+                > current_drive_variables.f_c_plasma_bootstrap_max
             ):
-                current_drive_variables.bootstrap_current_fraction = min(
-                    current_drive_variables.bootstrap_current_fraction,
-                    current_drive_variables.bootstrap_current_fraction_max,
+                current_drive_variables.f_c_plasma_bootstrap = min(
+                    current_drive_variables.f_c_plasma_bootstrap,
+                    current_drive_variables.f_c_plasma_bootstrap_max,
                 )
                 physics_module.err242 = 1
 
-            current_drive_variables.plasma_current_internal_fraction = (
-                current_drive_variables.bootstrap_current_fraction
-                + current_drive_variables.diamagnetic_current_fraction
-                + current_drive_variables.ps_current_fraction
+            current_drive_variables.f_c_plasma_internal = (
+                current_drive_variables.f_c_plasma_bootstrap
+                + current_drive_variables.f_c_plasma_diamagnetic
+                + current_drive_variables.f_c_plasma_pfirsch_schluter
             )
 
         # Plasma driven current fraction (Bootstrap + Diamagnetic
@@ -2014,12 +2018,9 @@ class Physics:
         # produced by non-inductive means (which also includes
         # the current drive proportion)
         physics_module.err243 = 0
-        if (
-            current_drive_variables.plasma_current_internal_fraction
-            > physics_variables.fvsbrnni
-        ):
-            current_drive_variables.plasma_current_internal_fraction = min(
-                current_drive_variables.plasma_current_internal_fraction,
+        if current_drive_variables.f_c_plasma_internal > physics_variables.fvsbrnni:
+            current_drive_variables.f_c_plasma_internal = min(
+                current_drive_variables.f_c_plasma_internal,
                 physics_variables.fvsbrnni,
             )
             physics_module.err243 = 1
@@ -2030,13 +2031,12 @@ class Physics:
         )
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.aux_current_fraction = (
-            physics_variables.fvsbrnni
-            - current_drive_variables.plasma_current_internal_fraction
+            physics_variables.fvsbrnni - current_drive_variables.f_c_plasma_internal
         )
 
         # Auxiliary current drive power calculations
 
-        if current_drive_variables.irfcd != 0:
+        if current_drive_variables.i_hcd_calculations != 0:
             self.current_drive.cudriv(False)
 
         # ***************************** #
@@ -2064,7 +2064,7 @@ class Physics:
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
 
-        if (current_drive_variables.beam_current != 0.0e0) and (
+        if (current_drive_variables.c_beam_total != 0.0e0) and (
             physics_variables.ignite == 0
         ):
             (
@@ -2076,14 +2076,14 @@ class Physics:
                 physics_variables.betbm0,
                 physics_variables.bp,
                 physics_variables.bt,
-                current_drive_variables.beam_current,
+                current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
-                current_drive_variables.beam_energy,
+                current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
-                current_drive_variables.f_tritium_beam,
+                current_drive_variables.f_beam_tritium,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
@@ -2271,7 +2271,11 @@ class Physics:
         # Power transported to the divertor by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
-        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
+        pinj = (
+            current_drive_variables.p_hcd_injected_total_mw
+            if physics_variables.ignite == 0
+            else 0.0
+        )
 
         physics_variables.pdivt = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
@@ -2320,7 +2324,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.i_density_limit,
             physics_variables.pdivt,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             divertor_variables.prn1,
             physics_variables.qstar,
@@ -2355,7 +2359,7 @@ class Physics:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
@@ -2587,7 +2591,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
         physics_module.rad_fraction_lcfs = (
             1.0e6 * physics_variables.p_plasma_rad_mw / physics_module.total_loss_power
@@ -2639,7 +2643,7 @@ class Physics:
         bt: float,
         i_density_limit: int,
         pdivt: float,
-        pinjmw: float,
+        p_hcd_injected_total_mw: float,
         plasma_current: float,
         prn1: float,
         qcyl: float,
@@ -2656,7 +2660,7 @@ class Physics:
             bt (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
             pdivt (float): Power flowing to the edge plasma via charged particles (MW).
-            pinjmw (float): Power injected into the plasma (MW).
+            p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
             plasma_current (float): Plasma current (A).
             prn1 (float): Edge density / average plasma density.
             qcyl (float): Equivalent cylindrical safety factor (qstar).
@@ -2734,7 +2738,7 @@ class Physics:
 
             dlimit[3] = 0.0
         else:
-            dlimit[3] = (1.0e20 * np.sqrt(pinjmw / denom)) / prn1
+            dlimit[3] = (1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -2754,7 +2758,7 @@ class Physics:
         dlimit[7] = (
             1.0e20
             * 0.506
-            * (pinjmw**0.396 * (plasma_current / 1.0e6) ** 0.265)
+            * (p_hcd_injected_total_mw**0.396 * (plasma_current / 1.0e6) ** 0.265)
             / (q95**0.323)
         ) / prn1
 
@@ -2978,8 +2982,8 @@ class Physics:
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
-            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_tritium_beam)
-        ) + (constants.m_triton_amu * current_drive_variables.f_tritium_beam)
+            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_beam_tritium)
+        ) + (constants.m_triton_amu * current_drive_variables.f_beam_tritium)
 
         # ======================================================================
 
@@ -3026,12 +3030,12 @@ class Physics:
             + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
             + (physics_variables.nd_protons / constants.m_proton_amu)
             + (
-                (1.0 - current_drive_variables.f_tritium_beam)
+                (1.0 - current_drive_variables.f_beam_tritium)
                 * physics_variables.nd_beam_ions
                 / constants.m_deuteron_amu
             )
             + (
-                current_drive_variables.f_tritium_beam
+                current_drive_variables.f_beam_tritium
                 * physics_variables.nd_beam_ions
                 / constants.m_triton_amu
             )
@@ -4716,7 +4720,7 @@ class Physics:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
         po.ovarre(
             self.outfile,
@@ -4990,15 +4994,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Injection power to ions (MW)",
-            "(pinjimw)",
-            current_drive_variables.pinjimw,
+            "(p_hcd_injected_ions_mw)",
+            current_drive_variables.p_hcd_injected_ions_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Injection power to electrons (MW)",
-            "(pinjemw)",
-            current_drive_variables.pinjemw,
+            "(p_hcd_injected_electrons_mw)",
+            current_drive_variables.p_hcd_injected_electrons_mw,
             "OP ",
         )
         if physics_variables.ignite == 1:
@@ -5645,66 +5649,66 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (ITER 1989)",
-                "(bscf_iter89)",
-                current_drive_variables.bscf_iter89,
+                "(f_c_plasma_bootstrap_iter89)",
+                current_drive_variables.f_c_plasma_bootstrap_iter89,
                 "OP ",
             )
 
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sauter et al)",
-                "(bscf_sauter)",
-                current_drive_variables.bscf_sauter,
+                "(f_c_plasma_bootstrap_sauter)",
+                current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
 
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Nevins et al)",
-                "(bscf_nevins)",
-                current_drive_variables.bscf_nevins,
+                "(f_c_plasma_bootstrap_nevins)",
+                current_drive_variables.f_c_plasma_bootstrap_nevins,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Wilson)",
-                "(bscf_wilson)",
-                current_drive_variables.bscf_wilson,
+                "(f_c_plasma_bootstrap_wilson)",
+                current_drive_variables.f_c_plasma_bootstrap_wilson,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Sakai)",
-                "(bscf_sakai)",
-                current_drive_variables.bscf_sakai,
+                "(f_c_plasma_bootstrap_sakai)",
+                current_drive_variables.f_c_plasma_bootstrap_sakai,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (ARIES)",
-                "(bscf_aries)",
-                current_drive_variables.bscf_aries,
+                "(f_c_plasma_bootstrap_aries)",
+                current_drive_variables.f_c_plasma_bootstrap_aries,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Andrade)",
-                "(bscf_andrade)",
-                current_drive_variables.bscf_andrade,
+                "(f_c_plasma_bootstrap_andrade)",
+                current_drive_variables.f_c_plasma_bootstrap_andrade,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Hoang)",
-                "(bscf_hoang)",
-                current_drive_variables.bscf_hoang,
+                "(f_c_plasma_bootstrap_hoang)",
+                current_drive_variables.f_c_plasma_bootstrap_hoang,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Wong)",
-                "(bscf_wong)",
-                current_drive_variables.bscf_wong,
+                "(f_c_plasma_bootstrap_wong)",
+                current_drive_variables.f_c_plasma_bootstrap_wong,
                 "OP ",
             )
             po.ovarrf(
@@ -5725,22 +5729,22 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (Hender)",
-                "(diacf_hender)",
-                current_drive_variables.diacf_hender,
+                "(f_c_plasma_diamagnetic_hender)",
+                current_drive_variables.f_c_plasma_diamagnetic_hender,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (SCENE)",
-                "(diacf_scene)",
-                current_drive_variables.diacf_scene,
+                "(f_c_plasma_diamagnetic_scene)",
+                current_drive_variables.f_c_plasma_diamagnetic_scene,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Pfirsch-Schlueter fraction (SCENE)",
-                "(pscf_scene)",
-                current_drive_variables.pscf_scene,
+                "(f_c_plasma_pfirsch_schluter_scene)",
+                current_drive_variables.f_c_plasma_pfirsch_schluter_scene,
                 "OP ",
             )
             # Error to catch if bootstap fraction limit has been enforced
@@ -5751,7 +5755,7 @@ class Physics:
             if physics_module.err243 == 1:
                 error_handling.report_error(243)
 
-            if current_drive_variables.bootstrap_current_fraction_max < 0.0e0:
+            if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
                 po.ocmmnt(
                     self.outfile, "  (User-specified bootstrap current fraction used)"
                 )
@@ -5814,7 +5818,7 @@ class Physics:
                     self.outfile, "  (Diamagnetic current fraction not calculated)"
                 )
                 # Error to show if diamagnetic current is above 1% but not used
-                if current_drive_variables.diacf_scene > 0.01e0:
+                if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
                     error_handling.report_error(244)
 
             elif physics_variables.i_diamagnetic_current == 1:
@@ -5839,22 +5843,22 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (enforced)",
-                "(bootstrap_current_fraction.)",
-                current_drive_variables.bootstrap_current_fraction,
+                "(f_c_plasma_bootstrap.)",
+                current_drive_variables.f_c_plasma_bootstrap,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Diamagnetic fraction (enforced)",
-                "(diamagnetic_current_fraction.)",
-                current_drive_variables.diamagnetic_current_fraction,
+                "(f_c_plasma_diamagnetic.)",
+                current_drive_variables.f_c_plasma_diamagnetic,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Pfirsch-Schlueter fraction (enforced)",
-                "(ps_current_fraction.)",
-                current_drive_variables.ps_current_fraction,
+                "(f_c_plasma_pfirsch_schluter.)",
+                current_drive_variables.f_c_plasma_pfirsch_schluter,
                 "OP ",
             )
 
@@ -5982,7 +5986,7 @@ class Physics:
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
+                current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
@@ -6782,7 +6786,7 @@ class Physics:
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
-                current_drive_variables.pinjmw,
+                current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
@@ -6808,7 +6812,8 @@ class Physics:
             # Take into account whether injected power is included in tau_e calculation (i.e. whether device is ignited)
             if physics_variables.ignite == 0:
                 fhz_value -= (
-                    current_drive_variables.pinjmw / physics_variables.vol_plasma
+                    current_drive_variables.p_hcd_injected_total_mw
+                    / physics_variables.vol_plasma
                 )
 
             # Include the radiation power if requested
@@ -6837,7 +6842,7 @@ class Physics:
         kappa: float,
         kappa95: float,
         non_alpha_charged_power: float,
-        pinjmw: float,
+        p_hcd_injected_total_mw: float,
         plasma_current: float,
         pden_plasma_core_rad_mw: float,
         rmajor: float,
@@ -6866,7 +6871,7 @@ class Physics:
         :param kappa: Plasma elongation
         :param kappa95: Plasma elongation at 95% surface
         :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
-        :param pinjmw: Auxiliary power to ions and electrons (MW)
+        :param p_hcd_injected_total_mw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
         :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
         :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
@@ -6899,7 +6904,7 @@ class Physics:
 
         # If the device is not ignited, add the injected auxiliary power
         if ignite == 0:
-            p_plasma_loss_mw = p_plasma_loss_mw + pinjmw
+            p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
 
         # Include the radiation as a loss term if requested
         if physics_variables.i_rad_loss == 0:

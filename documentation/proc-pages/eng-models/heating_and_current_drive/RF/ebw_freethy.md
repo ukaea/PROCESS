@@ -37,7 +37,7 @@ $$
 
 The EBWs can only couple to the plasma if the cyclotron harmonic is above the plasma density cut-off. In order to capture this behaviour, we introduce an ad-hoc model which reduces the plasma current up to this condition, by way of a tanh function:
 
-Where $\mathtt{fp}$ is the plasma frequency, $\mathtt{fc}$ is the cyclotron frequency, $\mathtt{harnum}$ is the harmonic number and $a$ is a free parameter which defines the sharpness of the transition.
+Where $\mathtt{fp}$ is the plasma frequency, $\mathtt{fc}$ is the cyclotron frequency, $\mathtt{n_ecrh_harmonic}$ is the harmonic number and $a$ is a free parameter which defines the sharpness of the transition.
 
 The effect of this factor can be seen below:
 
@@ -46,7 +46,7 @@ a = 0.1
 $$
 
 $$
-\mathtt{fc} = \frac{\frac{1}{2\pi}\times \mathtt{harnum} \times e B_{\text{T}}}{m_{\text{e}}}
+\mathtt{fc} = \frac{\frac{1}{2\pi}\times \mathtt{n_ecrh_harmonic} \times e B_{\text{T}}}{m_{\text{e}}}
 $$
 
 $$

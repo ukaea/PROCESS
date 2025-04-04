@@ -365,9 +365,31 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Current drive efficiencies
+
+Absolute current drive efficiencies ($\eta_{\text{CD}}$) representing Amps driven per Watt of injected power start with the `eta_cd` prefix.
+
+$$
+\eta_{\text{CD}} = \frac{I_{\text{driven}}}{P_{\text{injected}}}
+$$
+
+Normalized current drive efficiecnies using major radius and volume averaged electron temperature start with the `eta_cd_norm` prefix
+
+$$
+\eta_{\text{CD,norm}} = R_0 n_{\text{e,20}} \eta_{\text{CD}}
+$$
+
+$\eta_{\text{CD,norm}}$ has the units of $\frac{1\times 10^{20} \text{A}}{\text{W} \text{m}^2}$
+
+The above is concurrent with that of general efficiencies given [below](#efficiencies).
+
+--------------
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
+
+###### Efficiencies
 
 Similar to this is variables representing efficiencies.
 

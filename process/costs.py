@@ -1805,7 +1805,7 @@ class Costs:
             self.c2231 = (
                 1.0e-6
                 * cost_variables.ucech
-                * (1.0e6 * current_drive_variables.echpwr) ** exprf
+                * (1.0e6 * current_drive_variables.p_ecrh_injected_mw) ** exprf
             )
 
             if cost_variables.ifueltyp == 1:
@@ -1814,7 +1814,7 @@ class Costs:
 
             #  Account 223.2 : Lower Hybrid or ICH
 
-            if current_drive_variables.iefrf != 2:
+            if current_drive_variables.i_hcd_primary != 2:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.uclh
@@ -1839,7 +1839,7 @@ class Costs:
                 self.c2233 = (
                     1.0e-6
                     * cost_variables.ucnbi
-                    * (1.0e6 * current_drive_variables.pnbitot) ** exprf
+                    * (1.0e6 * current_drive_variables.p_beam_injected_mw) ** exprf
                 )
 
             if cost_variables.ifueltyp == 1:

@@ -314,7 +314,7 @@ class PortszParam(NamedTuple):
 
     rtanmax: Any = None
 
-    nbshield: Any = None
+    dx_beam_shield: Any = None
 
     beamwd: Any = None
 
@@ -339,7 +339,7 @@ class PortszParam(NamedTuple):
             dr_tf_outboard=1.208,
             rtanbeam=0,
             rtanmax=0,
-            nbshield=0.5,
+            dx_beam_shield=0.5,
             beamwd=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
@@ -353,7 +353,7 @@ class PortszParam(NamedTuple):
             dr_tf_outboard=1.208,
             rtanbeam=9.3346050000000016,
             rtanmax=14.735821603386416,
-            nbshield=0.5,
+            dx_beam_shield=0.5,
             beamwd=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
@@ -390,7 +390,9 @@ def test_portsz(portszparam, monkeypatch, build):
 
     monkeypatch.setattr(current_drive_variables, "rtanmax", portszparam.rtanmax)
 
-    monkeypatch.setattr(current_drive_variables, "nbshield", portszparam.nbshield)
+    monkeypatch.setattr(
+        current_drive_variables, "dx_beam_shield", portszparam.dx_beam_shield
+    )
 
     monkeypatch.setattr(current_drive_variables, "beamwd", portszparam.beamwd)
 

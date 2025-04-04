@@ -187,7 +187,7 @@ INPUT_VARIABLES = {
     ),
     "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
     "bctmp": InputVariable(fortran.pulse_variables, float, range=(1.0, 800.0)),
-    "beam_energy": InputVariable(
+    "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
     "beamwd": InputVariable(fortran.current_drive_variables, float, range=(0.001, 5.0)),
@@ -225,7 +225,7 @@ INPUT_VARIABLES = {
     ),
     "bmn": InputVariable(fortran.stellarator_variables, float, range=(0.0001, 0.01)),
     "bmxlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 50.0)),
-    "bootstrap_current_fraction_max": InputVariable(
+    "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
     "breeder_f": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
@@ -460,12 +460,18 @@ INPUT_VARIABLES = {
     "esbldgm3": InputVariable(
         fortran.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
-    "etaech": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "eta_ecrh_injector_wall_plug": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "etahtp": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
-    "etalh": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "eta_lowhyb_injector_wall_plug": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "etali": InputVariable(fortran.ife_variables, float, range=(0.0, 1.0)),
-    "etanbi": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "eta_beam_injector_wall_plug": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "etapsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
@@ -519,7 +525,7 @@ INPUT_VARIABLES = {
     "f_sync_reflect": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "f_tritium_beam": InputVariable(
+    "f_beam_tritium": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "f_vforce_inboard": InputVariable(
@@ -630,7 +636,7 @@ INPUT_VARIABLES = {
     "foh_stress": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
-    "forbitloss": InputVariable(
+    "f_p_beam_orbit_loss": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 0.999)
     ),
     "fpdivlim": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),
@@ -719,7 +725,7 @@ INPUT_VARIABLES = {
     "fwdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fzactual": InputVariable(fortran.reinke_variables, float, range=(0.0, 1.0)),
     "fzeffmax": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "gamma_ecrh": InputVariable(
+    "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "gamma_he": InputVariable(
@@ -739,7 +745,9 @@ INPUT_VARIABLES = {
     "ground_clrnc": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "harnum": InputVariable(fortran.current_drive_variables, float, range=(1.0, 10.0)),
+    "n_ecrh_harmonic": InputVariable(
+        fortran.current_drive_variables, float, range=(1.0, 10.0)
+    ),
     "hastelloy_thickness": InputVariable(
         fortran.rebco_variables, float, range=(1e-08, 0.001)
     ),
@@ -905,10 +913,10 @@ INPUT_VARIABLES = {
     "nbi_sys_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "nbshield": InputVariable(
+    "dx_beam_shield": InputVariable(
         fortran.current_drive_variables, float, range=(0.01, 0.5)
     ),
-    "nbshinefmax": InputVariable(
+    "f_p_beam_shine_through_max": InputVariable(
         fortran.constraint_variables, float, range=(1e-20, 0.1)
     ),
     "neped": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
@@ -954,16 +962,18 @@ INPUT_VARIABLES = {
     ),
     "rho_pf_coil": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 0.0001)),
     "pfusife": InputVariable(fortran.ife_variables, float, range=(0.0, 10000.0)),
-    "pheat": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1000.0)),
-    "pheatfix": InputVariable(
+    "p_hcd_primary_extra_heat_mw": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1000.0)
+    ),
+    "p_hcd_secondary_extra_heat_mw": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "pibv": InputVariable(fortran.buildings_variables, float, range=(1000.0, 100000.0)),
     "pifecr": InputVariable(fortran.ife_variables, float, range=(0.0, 100.0)),
-    "pinjalw": InputVariable(
+    "p_hcd_injected_max": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
-    "pinjfixmw": InputVariable(
+    "p_hcd_secondary_injected_mw": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "pinjmax": InputVariable(
@@ -1488,8 +1498,10 @@ INPUT_VARIABLES = {
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
-    "iefrf": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
-    "iefrffix": InputVariable(fortran.current_drive_variables, int, range=(0, 13)),
+    "i_hcd_primary": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
+    "i_hcd_secondary": InputVariable(
+        fortran.current_drive_variables, int, range=(0, 13)
+    ),
     "i_blkt_liquid_breeder_channel_type": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
@@ -1512,7 +1524,9 @@ INPUT_VARIABLES = {
     ),
     "ireactor": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "irefprop": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
-    "irfcd": InputVariable(fortran.current_drive_variables, int, choices=[0, 1]),
+    "i_hcd_calculations": InputVariable(
+        fortran.current_drive_variables, int, choices=[0, 1]
+    ),
     "iscenr": InputVariable(fortran.pf_power_variables, int, range=(1, 3)),
     "istell": InputVariable(fortran.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(fortran.stellarator_variables, int, range=(1, 3)),
@@ -1560,7 +1574,9 @@ INPUT_VARIABLES = {
     "secondary_cycle_liq": InputVariable(fortran.fwbs_variables, int, range=(2, 4)),
     "supercond_cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "i_tf_inside_cs": InputVariable(fortran.build_variables, int, choices=[0, 1]),
-    "wave_mode": InputVariable(fortran.current_drive_variables, int, choices=[0, 1]),
+    "i_ecrh_wave_mode": InputVariable(
+        fortran.current_drive_variables, int, choices=[0, 1]
+    ),
     "i_confinement_time": InputVariable(
         fortran.physics_variables,
         int,

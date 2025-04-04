@@ -159,7 +159,7 @@ def main(args=None):
         "te",
         "boundu(15)",
         "beta_norm_max",
-        "bootstrap_current_fraction_max",
+        "f_c_plasma_bootstrap_max",
         "boundu(10)",
         "fiooic",
         "fjprot",

@@ -48,7 +48,7 @@ module scan_module
   !!         <LI> 9  te
   !!         <LI> 10 boundu(15: fvs)
   !!         <LI> 11 beta_norm_max
-  !!         <LI> 12 bootstrap_current_fraction_max
+  !!         <LI> 12 f_c_plasma_bootstrap_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
@@ -114,7 +114,7 @@ module scan_module
   !!         <LI> 76 etath : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
-  !!         <LI> 79 etaech : ECH wall plug to injector efficiency
+  !!         <LI> 79 eta_ecrh_injector_wall_plug : ECH wall plug to injector efficiency
 
   integer :: nsweep_2
   !! nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:

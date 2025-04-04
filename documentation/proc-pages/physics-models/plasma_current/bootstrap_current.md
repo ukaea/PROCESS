@@ -695,13 +695,13 @@ $$
 
 ## Setting of maximum desirable bootstrap current fraction
 
-The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
+The variable `f_c_plasma_bootstrap_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `f_c_plasma_bootstrap` for the model selected with `i_bootstrap_current` exceeds this value, then `f_c_plasma_bootstrap` is set to the value of `f_c_plasma_bootstrap_max`.
 
 An error is also raised to the user in the terminal output at the end of the run saying "Bootstrap fraction upper limit enforced".
 
 ## Fixing the bootstrap current fraction
 
-If the user wants to set the value of the bootstrap current fraction directly then the value can be set by assigning the negative of the desired value to `bootstrap_current_fraction_max`.
+If the user wants to set the value of the bootstrap current fraction directly then the value can be set by assigning the negative of the desired value to `f_c_plasma_bootstrap_max`.
 
 
 ```txt
@@ -709,7 +709,7 @@ If the user wants to set the value of the bootstrap current fraction directly th
 
 # Setting a fixed bootstrap current fraction of 80%
 
-bootstrap_current_fraction_max = -0.8
+f_c_plasma_bootstrap_max = -0.8
 ```
 
 
