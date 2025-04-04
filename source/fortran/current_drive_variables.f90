@@ -99,7 +99,7 @@ module current_drive_variables
   real(dp) :: e_beam_kev
   !! neutral beam energy (keV) (`iteration variable 19`)
 
-  real(dp) :: etacd
+  real(dp) :: eta_hcd_primary_injector_wall_plug
   !! auxiliary power wall plug to injector efficiency
 
   real(dp) :: etacdfix
@@ -282,7 +282,7 @@ module current_drive_variables
     n_ecrh_harmonic = 2.0
     i_ecrh_wave_mode = 0
     e_beam_kev = 1.0D3
-    etacd = 0.0D0
+    eta_hcd_primary_injector_wall_plug = 0.0D0
     etacdfix = 0.0D0
     eta_ecrh_injector_wall_plug = 0.3D0
     eta_lowhyb_injector_wall_plug = 0.3D0

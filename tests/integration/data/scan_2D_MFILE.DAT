@@ -539,7 +539,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6662E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1061E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -1702,7 +1702,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6483E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1146E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -2865,7 +2865,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.5902E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6344E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1238E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -4028,7 +4028,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6548E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1715E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -5191,7 +5191,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6564E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1531E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -6354,7 +6354,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6722E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1452E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -7517,7 +7517,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6916E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1915E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -8680,7 +8680,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6867E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2074E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -9843,7 +9843,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6949E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2337E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -11006,7 +11006,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.7010E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2713E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -12169,7 +12169,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6863E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2391E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -13332,7 +13332,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6900E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2221E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -14495,7 +14495,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6986E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2611E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -15658,7 +15658,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6811E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2685E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
@@ -16821,7 +16821,7 @@
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      0.0000E+00 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6629E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
- Wall_plug_to_injector_efficiency________________________________________ (etacd)_______________________      5.0000E-01    
+ Wall_plug_to_injector_efficiency________________________________________ (eta_hcd_primary_injector_wall_plug)_______________________      5.0000E-01    
  ECRH_plasma_heating_efficiency__________________________________________ (eta_cd_norm_ecrh)__________________      3.0000E-01    
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2763E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    

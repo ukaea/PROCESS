@@ -3042,7 +3042,9 @@ def test_acc223(acc223param, monkeypatch, costs):
         current_drive_variables, "i_hcd_primary", acc223param.i_hcd_primary
     )
 
-    monkeypatch.setattr(current_drive_variables, "p_ecrh_injected_mw", acc223param.p_ecrh_injected_mw)
+    monkeypatch.setattr(
+        current_drive_variables, "p_ecrh_injected_mw", acc223param.p_ecrh_injected_mw
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "p_beam_injected_mw", acc223param.p_beam_injected_mw

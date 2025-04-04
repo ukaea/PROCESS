@@ -4932,22 +4932,22 @@ class Stellarator:
             current_drive_variables.p_ecrh_injected_mw = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.p_ecrh_injected_mw
-            current_drive_variables.etacd = (
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_ecrh_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
             current_drive_variables.plhybd = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
             current_drive_variables.pinjemw = current_drive_variables.plhybd
-            current_drive_variables.etacd = (
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_lowhyb_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
             (
                 effnbss,
@@ -4967,12 +4967,12 @@ class Stellarator:
             current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
                 1 - f_p_beam_injected_ions
             )
-            current_drive_variables.etacd = (
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_beam_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
                 current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         else:
             error_handling.idiags[0] = stellarator_variables.isthtr
             error_handling.report_error(107)
