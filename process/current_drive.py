@@ -886,6 +886,46 @@ class LowerHybrid:
 
         return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
 
+    def lower_hybrid_ehst(
+        self, te: float, beta: float, rmajor: float, dene20: float, zeff: float
+    ) -> float:
+        """
+        Calculate the Lower Hybrid current drive efficiency using the Ehst model.
+
+        This function computes the current drive efficiency based on the electron
+        temperature, beta, major radius, electron density, and effective charge.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param beta: Plasma beta value (ratio of plasma pressure to magnetic pressure).
+        :type beta: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+
+        :return: The calculated absolute current drive efficiency in A/W.
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
+              Nuclear Fusion, 31(10), 1933-1949, 1991.
+        """
+        return (
+            ((te**0.77 * (0.034 + 0.196 * beta)) / (rmajor * dene20))
+            * (
+                32.0 / (5.0 + zeff)
+                + 2.0
+                + (12.0 * (6.0 + zeff)) / (5.0 + zeff) / (3.0 + zeff)
+                + 3.76 / zeff
+            )
+            / 12.507
+        )
+
 
 class CurrentDrive:
     def __init__(
@@ -998,18 +1038,13 @@ class CurrentDrive:
             # Ehst Lower Hybrid / Fast Wave current drive
             elif current_drive_variables.i_hcd_secondary == 4:
                 effrfssfix = (
-                    physics_variables.te**0.77e0
-                    * (0.034e0 + 0.196e0 * physics_variables.beta)
-                    / (physics_variables.rmajor * dene20)
-                    * (
-                        32.0e0 / (5.0e0 + physics_variables.zeff)
-                        + 2.0e0
-                        + (12.0e0 * (6.0e0 + physics_variables.zeff))
-                        / (5.0e0 + physics_variables.zeff)
-                        / (3.0e0 + physics_variables.zeff)
-                        + 3.76e0 / physics_variables.zeff
+                    self.lower_hybrid.lower_hybrid_ehst(
+                        te=physics_variables.te,
+                        beta=physics_variables.beta,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        zeff=physics_variables.zeff,
                     )
-                    / 12.507e0
                     * current_drive_variables.feffcd
                 )
                 eta_cd_hcd_secondary = effrfssfix
@@ -1313,18 +1348,13 @@ class CurrentDrive:
             # Ehst Lower Hybrid / Fast Wave current drive
             elif current_drive_variables.i_hcd_primary == 4:
                 effrfss = (
-                    physics_variables.te**0.77e0
-                    * (0.034e0 + 0.196e0 * physics_variables.beta)
-                    / (physics_variables.rmajor * dene20)
-                    * (
-                        32.0e0 / (5.0e0 + physics_variables.zeff)
-                        + 2.0e0
-                        + (12.0e0 * (6.0e0 + physics_variables.zeff))
-                        / (5.0e0 + physics_variables.zeff)
-                        / (3.0e0 + physics_variables.zeff)
-                        + 3.76e0 / physics_variables.zeff
+                    self.lower_hybrid.lower_hybrid_ehst(
+                        te=physics_variables.te,
+                        beta=physics_variables.beta,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        zeff=physics_variables.zeff,
                     )
-                    / 12.507e0
                     * current_drive_variables.feffcd
                 )
                 current_drive_variables.eta_cd_hcd_primary = effrfss
