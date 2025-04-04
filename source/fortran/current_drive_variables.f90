@@ -78,7 +78,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
-  real(dp) :: echpwr
+  real(dp) :: p_ecrh_injected_mw
   !! ECH power (MW)
 
   real(dp) :: echwpow
@@ -276,7 +276,7 @@ module current_drive_variables
     f_c_plasma_diamagnetic_hender = 0.0D0
     f_c_plasma_diamagnetic_scene = 0.0D0
     f_c_plasma_diamagnetic = 0.0D0
-    echpwr = 0.0D0
+    p_ecrh_injected_mw = 0.0D0
     echwpow = 0.0D0
     eta_cd_hcd_primary = 0.0D0
     n_ecrh_harmonic = 2.0
