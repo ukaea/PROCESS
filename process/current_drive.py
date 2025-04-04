@@ -174,14 +174,14 @@ class CurrentDrive:
 
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
                 # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
+                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
                 # constant 'a' controls sharpness of transition
                 a = 0.1e0
 
                 fc = (
                     1.0e0
                     / (2.0e0 * np.pi)
-                    * current_drive_variables.harnum
+                    * current_drive_variables.n_ecrh_harmonic
                     * constants.electron_charge
                     * physics_variables.bt
                     / constants.electron_mass
@@ -245,7 +245,10 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.i_ecrh_wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
+                        fc
+                        + np.sqrt(
+                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
+                        )
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -254,7 +257,11 @@ class CurrentDrive:
                     1
                     + np.tanh(
                         (2 / (a))
-                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                        * (
+                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
+                            / fp
+                            - a
+                        )
                     )
                 )
                 eta_cd_hcd_secondary = effrfssfix * cutoff_factor
@@ -478,14 +485,14 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_primary = effrfss
                 # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
                 # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.harnum = cyclotron harmonic number (fundamental used as default)
+                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
                 # contant 'a' controls sharpness of transition
                 a = 0.1e0
 
                 fc = (
                     1.0e0
                     / (2.0e0 * np.pi)
-                    * current_drive_variables.harnum
+                    * current_drive_variables.n_ecrh_harmonic
                     * constants.electron_charge
                     * physics_variables.bt
                     / constants.electron_mass
@@ -552,7 +559,10 @@ class CurrentDrive:
                 # X-mode case
                 elif current_drive_variables.i_ecrh_wave_mode == 1:
                     f_cutoff = 0.5 * (
-                        fc + np.sqrt(current_drive_variables.harnum * fc**2 + 4 * fp**2)
+                        fc
+                        + np.sqrt(
+                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
+                        )
                     )
 
                 # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
@@ -561,7 +571,11 @@ class CurrentDrive:
                     1
                     + np.tanh(
                         (2 / (a))
-                        * ((current_drive_variables.harnum * fc - f_cutoff) / fp - a)
+                        * (
+                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
+                            / fp
+                            - a
+                        )
                     )
                 )
                 current_drive_variables.eta_cd_hcd_primary = effrfss * cutoff_factor
@@ -914,8 +928,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "EC harmonic number",
-                "(harnum)",
-                current_drive_variables.harnum,
+                "(n_ecrh_harmonic)",
+                current_drive_variables.n_ecrh_harmonic,
             )
         if current_drive_variables.i_hcd_primary == 13:
             po.ovarin(

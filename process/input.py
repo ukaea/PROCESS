@@ -745,7 +745,9 @@ INPUT_VARIABLES = {
     "ground_clrnc": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "harnum": InputVariable(fortran.current_drive_variables, float, range=(1.0, 10.0)),
+    "n_ecrh_harmonic": InputVariable(
+        fortran.current_drive_variables, float, range=(1.0, 10.0)
+    ),
     "hastelloy_thickness": InputVariable(
         fortran.rebco_variables, float, range=(1e-08, 0.001)
     ),

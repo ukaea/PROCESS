@@ -2186,7 +2186,7 @@
         "z_cp_top": 0.0,
         "h_ib": 0.0,
         "h_ob": 0.0,
-        "harnum": 1.0,
+        "n_ecrh_harmonic": 1.0,
         "hastelloy": null,
         "hastelloy_area": 0.0,
         "hastelloy_thickness": 5e-05,
@@ -9675,7 +9675,7 @@
         "z_cp_top": "Vertical distance from the midplane to the top of the tapered section [m]",
         "h_ib": "",
         "h_ob": "",
-        "harnum": "cyclotron harmonic frequency number, used in EBW cut-off",
+        "n_ecrh_harmonic": "cyclotron harmonic frequency number, used in EBW cut-off",
         "hastelloy": "",
         "hastelloy_area": "",
         "hastelloy_thickness": "thickness of Hastelloy layer in tape (m)",
@@ -12987,7 +12987,7 @@
             "lb": 0,
             "ub": 2
         },
-        "harnum": {
+        "n_ecrh_harmonic": {
             "lb": 1.0,
             "ub": 10.0
         },
@@ -17628,7 +17628,7 @@
             "echpwr",
             "echwpow",
             "eta_cd_hcd_primary",
-            "harnum",
+            "n_ecrh_harmonic",
             "e_beam_kev",
             "etacd",
             "etacdfix",
@@ -20186,7 +20186,7 @@
         "gas_buildings_w": "real_variable",
         "ground_clrnc": "real_variable",
         "gtscale": "int_variable",
-        "harnum": "real_variable",
+        "n_ecrh_harmonic": "real_variable",
         "hastelloy_thickness": "real_variable",
         "hccl": "real_variable",
         "hcd_building_h": "real_variable",
