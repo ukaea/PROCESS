@@ -15,6 +15,7 @@ from pyvmcon import (
 )
 
 from process.evaluators import Evaluators
+from process.exceptions import ProcessValueError
 from process.fortran import global_variables, numerics
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -289,7 +290,7 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
         try:
             solver = load_external_solver(solver_name)
         except Exception as e:
-            raise ValueError(
+            raise ProcessValueError(
                 f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"'
             ) from e
 

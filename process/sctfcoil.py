@@ -745,7 +745,7 @@ class Sctfcoil:
             tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
 
         elif isumat == 6:  # "REBCO" 2nd generation HTS superconductor in CrCo strand
-            raise ValueError(
+            raise ProcessValueError(
                 "sctfcoil.supercon has been called but tfcoil_variables.i_tf_sc_mat=6"
             )
 
@@ -3745,7 +3745,7 @@ class Sctfcoil:
             abs(r_tf_inboard_in) < np.finfo(float(r_tf_inboard_in)).eps
             and i_tf_stress_model != 2
         ):
-            raise ValueError("r_tf_inboard_in is ~= 0", 245)
+            raise ProcessValueError("r_tf_inboard_in is ~= 0", 245)
 
         # TODO: following is no longer used/needed?
         # if tfcoil_variables.acstf >= 0.0e0:

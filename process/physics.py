@@ -487,7 +487,7 @@ def calculate_current_coefficient_todd(
         return base_scaling
     if model == 2:
         return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
-    raise ValueError(f"model = {model} is an invalid option")
+    raise ProcessValueError(f"model = {model} is an invalid option")
 
 
 @nb.jit(nopython=True, cache=True)
@@ -3314,7 +3314,7 @@ class Physics:
 
         # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
         if i_plasma_current != 8 and triang < 0.0:
-            raise ValueError(
+            raise ProcessValueError(
                 f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
             )
 
@@ -3365,7 +3365,7 @@ class Physics:
         elif i_plasma_current == 9:
             fq = calculate_current_coefficient_fiesta(eps, kappa, triang)
         else:
-            raise ValueError(f"Invalid value {i_plasma_current=}")
+            raise ProcessValueError(f"Invalid value {i_plasma_current=}")
 
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
@@ -7254,7 +7254,7 @@ class Physics:
         # ==========================================================================
         # Scaling removed
         elif i_confinement_time == 25:
-            raise ValueError("Scaling removed")
+            raise ProcessValueError("Scaling removed")
         # ==========================================================================
 
         # ELM-free: ITERH-97P

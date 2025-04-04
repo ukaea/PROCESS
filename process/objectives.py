@@ -1,5 +1,6 @@
 import numpy as np
 
+from process.exceptions import ProcessValueError
 from process.fortran import (
     cost_variables,
     current_drive_variables,
@@ -96,7 +97,7 @@ def objective_function(minmax: int) -> float:
             objective_metric = times_variables.t_burn / 2.0e4
         case 15:
             if cost_variables.iavail != 1:
-                raise ValueError("minmax=15 requires iavail=1")
+                raise ProcessValueError("minmax=15 requires iavail=1")
             objective_metric = cost_variables.cfactr
         case 16:
             objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (

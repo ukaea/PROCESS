@@ -5,6 +5,7 @@ from scipy.special import comb as combinations
 
 from process import fortran as ft
 from process import process_output as po
+from process.exceptions import ProcessValueError
 from process.fortran import constraint_variables as ctv
 from process.fortran import cost_variables as cv
 from process.fortran import divertor_variables as dv
@@ -55,7 +56,7 @@ class Availability:
 
         if cv.iavail == 3:
             if pv.itart != 1:
-                raise ValueError(
+                raise ProcessValueError(
                     f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model."
                 )
             self.avail_st(output)  # ST model (2023)
