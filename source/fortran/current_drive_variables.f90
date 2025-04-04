@@ -184,7 +184,7 @@ module current_drive_variables
   !! - =11 ECRH "HARE" model (E. Poli, Physics of Plasmas 2019). Removed in #1811.
   !! - =12 EBW user scaling input. Scaling (S. Freethy)
 
-  integer :: irfcd
+  integer :: i_hcd_calculations
   !! Switch for current drive calculation:
   !!
   !! - =0 turned off
@@ -301,7 +301,7 @@ module current_drive_variables
     xi_ebw = 0.8D0
     i_hcd_primary = 5
     i_hcd_secondary = 0
-    irfcd = 1
+    i_hcd_calculations = 1
     f_p_beam_shine_through = 0.0D0
     dx_beam_shield = 0.5D0
     pheat = 0.0D0

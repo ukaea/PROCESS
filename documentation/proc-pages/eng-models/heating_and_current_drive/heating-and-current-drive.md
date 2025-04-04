@@ -4,7 +4,7 @@
 
 The use of inductive current drive leads to pulsed plant operation because of the limited flux swing that can be achieved using the central solenoid. This poses problems due to the fact that fatigue failures may result, and there would be a need for thermal storage to maintain output of electricity between pulses, and supply power for starting a new pulse.However, the plasma current can also be produced and maintained (partially or wholly) using non-inductive means which, in principle, removes this restriction. `PROCESS` contains a number of auxiliary current drive schemes, including various RF methods (Lower Hybrid, Electron Cyclotron, Electron Bernstein Wave, and Ion Cyclotron (Fast Wave) current drives) and also Neutral Beam current drive systems. The code calculates the efficiency and the resulting power requirements of the chosen system.
 
-The fraction of the required plasma current to be produced by non-inductive means, `fvsbrnni`, should be set, and flag `irfcd` should be set to 0 for purely inductive scenarios, or 1 otherwise. The current drive efficiency model to be used in this latter case is defined by the value of switch `i_hcd_primary`:
+The fraction of the required plasma current to be produced by non-inductive means, `fvsbrnni`, should be set, and flag `i_hcd_calculations` should be set to 0 for purely inductive scenarios, or 1 otherwise. The current drive efficiency model to be used in this latter case is defined by the value of switch `i_hcd_primary`:
 
 - `i_hcd_primary` = 1: [Fenstermacher Lower Hybrid model](RF/fenstermacher_lower_hybrid.md)
 - `i_hcd_primary` = 2: [Ion cyclotron model](RF/ic_model.md)[^1],
