@@ -5,7 +5,14 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.fortran import (
     constants,
     current_drive_variables,
@@ -38,7 +45,17 @@ def physics():
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
+    return Physics(
+        PlasmaProfile(),
+        CurrentDrive(
+            PlasmaProfile(),
+            electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
+            ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
+            neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
+            electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
+            lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
+        ),
+    )
 
 
 def test_calculate_poloidal_beta():

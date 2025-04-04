@@ -2,7 +2,14 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.fortran import (
     cost_variables,
     current_drive_variables,
@@ -19,7 +26,14 @@ def current_drive():
     :returns current_drive: initialised CurrentDrive object
     :rtype: process.current_drive.CurrentDrive
     """
-    return CurrentDrive(PlasmaProfile())
+    return CurrentDrive(
+        PlasmaProfile(),
+        electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
+        electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
+        neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
+        lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
+        ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
+    )
 
 
 class CudrivParam(NamedTuple):
@@ -708,6 +722,6 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
 
 def test_sigbeam(current_drive):
-    assert current_drive.sigbeam(
+    assert current_drive.neutral_beam.sigbeam(
         1e3, 13.07, 8.0e-1, 0.1, 1e-4, 1e-4, 1e-4
     ) == pytest.approx(2.013589662302492e-11)
