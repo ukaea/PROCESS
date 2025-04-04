@@ -217,7 +217,7 @@ module current_drive_variables
   real(dp)  :: p_hcd_secondary_injected_mw
   !! secondary total fixed auxiliary injected power (MW)
 
-  real(dp) :: plasma_current_internal_fraction
+  real(dp) :: f_c_plasma_internal
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
   real(dp) :: plhybd
@@ -311,7 +311,7 @@ module current_drive_variables
     pinjimw = 0.0D0
     p_hcd_injected_total_mw = 0.0D0
     p_hcd_secondary_injected_mw = 0.0D0
-    plasma_current_internal_fraction = 0.0D0
+    f_c_plasma_internal = 0.0D0
     plhybd = 0.0D0
     pnbeam = 0.0D0
     p_beam_orbit_loss = 0.0D0
