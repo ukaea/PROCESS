@@ -214,7 +214,7 @@ module current_drive_variables
   real(dp) :: p_hcd_injected_total_mw
   !! total auxiliary injected power (MW)
 
-  real(dp)  :: pinjfixmw
+  real(dp)  :: p_hcd_secondary_injected_mw
   !! secondary total fixed auxiliary injected power (MW)
 
   real(dp) :: plasma_current_internal_fraction

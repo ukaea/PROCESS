@@ -3507,7 +3507,7 @@
         "pifecr": 10.0,
         "p_hcd_injected_max": 150.0,
         "pinjemw": 0.0,
-        "pinjfixmw": 0.0,
+        "p_hcd_secondary_injected_mw": 0.0,
         "pinjht": 0.0,
         "pinjimw": 0.0,
         "pinjmax": 120.0,
@@ -10230,7 +10230,7 @@
         "pifecr": "IFE cryogenic power requirements (MW)",
         "p_hcd_injected_max": "maximum allowable value for injected power (MW) (`constraint equation 30`)",
         "pinjemw": "auxiliary injected power to electrons (MW)",
-        "pinjfixmw": "secondary total fixed auxiliary injected power (MW)",
+        "p_hcd_secondary_injected_mw": "secondary total fixed auxiliary injected power (MW)",
         "pinjht": "power dissipated in heating and current drive system (MW)",
         "pinjimw": "auxiliary injected power to ions (MW)",
         "pinjmax": "maximum injector power during pulse (heating and ramp-up/down phase) (MW)",
@@ -13763,7 +13763,7 @@
             "lb": 0.0,
             "ub": 1000.0
         },
-        "pinjfixmw": {
+        "p_hcd_secondary_injected_mw": {
             "lb": 0.0,
             "ub": 1000.0
         },
@@ -17657,7 +17657,7 @@
             "pinjemw",
             "pinjimw",
             "p_hcd_injected_total_mw",
-            "pinjfixmw",
+            "p_hcd_secondary_injected_mw",
             "plasipf",
             "plhybd",
             "pnbeam",
@@ -20396,7 +20396,7 @@
         "pibv": "real_variable",
         "pifecr": "real_variable",
         "p_hcd_injected_max": "real_variable",
-        "pinjfixmw": "real_variable",
+        "p_hcd_secondary_injected_mw": "real_variable",
         "pinjmax": "real_variable",
         "dx_fw_module": "real_variable",
         "plasma_res_factor": "real_variable",

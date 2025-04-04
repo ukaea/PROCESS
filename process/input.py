@@ -971,7 +971,7 @@ INPUT_VARIABLES = {
     "p_hcd_injected_max": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
-    "pinjfixmw": InputVariable(
+    "p_hcd_secondary_injected_mw": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "pinjmax": InputVariable(

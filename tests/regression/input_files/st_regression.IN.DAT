@@ -2725,7 +2725,7 @@ feffcd = 1.0
 * DESCRIPTION:   Switch for 2nd current drive efficiency model
 * JUSTIFICATION: Not used, ECRH only
 
-*pinjfixmw = 
+*p_hcd_secondary_injected_mw = 
 * DESCRIPTION:   Secondary auxiliary injection power (MW)
 * JUSTIFICATION: Not used, ECRH only
 

@@ -45,7 +45,7 @@ class CudrivParam(NamedTuple):
 
     pheatfix: Any = None
 
-    pinjfixmw: Any = None
+    p_hcd_secondary_injected_mw: Any = None
 
     irfcd: Any = None
 
@@ -215,7 +215,7 @@ class CudrivParam(NamedTuple):
             i_hcd_secondary=0,
             pheat=75,
             pheatfix=0,
-            pinjfixmw=0,
+            p_hcd_secondary_injected_mw=0,
             irfcd=1,
             feffcd=1,
             f_p_beam_injected_ions=0.5,
@@ -305,7 +305,7 @@ class CudrivParam(NamedTuple):
             i_hcd_secondary=0,
             pheat=75,
             pheatfix=0,
-            pinjfixmw=0,
+            p_hcd_secondary_injected_mw=0,
             irfcd=1,
             feffcd=1,
             f_p_beam_injected_ions=0.5,
@@ -428,7 +428,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(current_drive_variables, "pheatfix", cudrivparam.pheatfix)
 
-    monkeypatch.setattr(current_drive_variables, "pinjfixmw", cudrivparam.pinjfixmw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_secondary_injected_mw",
+        cudrivparam.p_hcd_secondary_injected_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "irfcd", cudrivparam.irfcd)
 
