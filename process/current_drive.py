@@ -285,7 +285,7 @@ class CurrentDrive:
                 )
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacdfix = (
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
@@ -315,7 +315,7 @@ class CurrentDrive:
                 )
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacdfix = (
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
@@ -367,7 +367,7 @@ class CurrentDrive:
                     pnbitotfix / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
                 heat_transport_variables.pinjwpfix = current_drive_variables.pwpnb
-                current_drive_variables.etacdfix = (
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
                 gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
@@ -954,8 +954,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Seconday wall plug to injector efficiency",
-                "(etacdfix)",
-                current_drive_variables.etacdfix,
+                "(eta_hcd_secondary_injector_wall_plug)",
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug,
             )
             po.ovarre(
                 self.outfile,

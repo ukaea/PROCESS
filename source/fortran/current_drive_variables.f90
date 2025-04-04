@@ -102,7 +102,7 @@ module current_drive_variables
   real(dp) :: eta_hcd_primary_injector_wall_plug
   !! auxiliary power wall plug to injector efficiency
 
-  real(dp) :: etacdfix
+  real(dp) :: eta_hcd_secondary_injector_wall_plug
   !! secondary auxiliary power wall plug to injector efficiency
 
   real(dp) :: eta_ecrh_injector_wall_plug
@@ -283,7 +283,7 @@ module current_drive_variables
     i_ecrh_wave_mode = 0
     e_beam_kev = 1.0D3
     eta_hcd_primary_injector_wall_plug = 0.0D0
-    etacdfix = 0.0D0
+    eta_hcd_secondary_injector_wall_plug = 0.0D0
     eta_ecrh_injector_wall_plug = 0.3D0
     eta_lowhyb_injector_wall_plug = 0.3D0
     eta_beam_injector_wall_plug = 0.3D0
