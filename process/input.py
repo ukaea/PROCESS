@@ -962,7 +962,7 @@ INPUT_VARIABLES = {
     ),
     "rho_pf_coil": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 0.0001)),
     "pfusife": InputVariable(fortran.ife_variables, float, range=(0.0, 10000.0)),
-    "pheat": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1000.0)),
+    "p_hcd_primary_extra_heat_mw": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1000.0)),
     "pheatfix": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),

@@ -3390,7 +3390,7 @@ contains
       use constraint_variables, only: fecrh_ignition
       use stellarator_variables, only: max_gyrotron_frequency, te0_ecrh_achievable, powerscaling_constraint, powerht_constraint
       use physics_variables, only: ignite
-      use current_drive_variables, only: pheat
+      use current_drive_variables, only: p_hcd_primary_extra_heat_mw
       implicit none
       real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3400,7 +3400,7 @@ contains
 
       ! Achievable ECRH te needs to be larger than needed te for igntion
       if(ignite==0) then
-         tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+pheat)/powerscaling_constraint
+         tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+p_hcd_primary_extra_heat_mw)/powerscaling_constraint
       else
          tmp_cc = 1.0D0 - fecrh_ignition* powerht_constraint/powerscaling_constraint
       endif

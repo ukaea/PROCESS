@@ -3490,7 +3490,7 @@
         "pfwdiv": 0.0,
         "pfwpmw": 0.0,
         "pgrossmw": 0.0,
-        "pheat": 0.0,
+        "p_hcd_primary_extra_heat_mw": 0.0,
         "pheatfix": 0.0,
         "phi_0_n_BZ_IB": 512000000000000.0,
         "phi_0_n_BZ_OB": 565500000000000.0,
@@ -10213,7 +10213,7 @@
         "pfwdiv": "heat removal from first wall/divertor (MW)",
         "pfwpmw": "Total mean wall plug power dissipated in PFC and CS power supplies (MW) (issue #713)",
         "pgrossmw": "gross electric power (MW)",
-        "pheat": "heating power not used for current drive (MW) (`iteration variable 11`)",
+        "p_hcd_primary_extra_heat_mw": "heating power not used for current drive (MW) (`iteration variable 11`)",
         "pheatfix": "secondary fixed heating power not used for current drive (MW)",
         "phi_0_n_BZ_IB": "Pre-exp term in IB BZ [n/cm^2/sec]",
         "phi_0_n_BZ_OB": "Pre-exp term in OB BZ [n/cm^2/sec]",
@@ -13743,7 +13743,7 @@
             "lb": 0.0,
             "ub": 10000.0
         },
-        "pheat": {
+        "p_hcd_primary_extra_heat_mw": {
             "lb": 0.0,
             "ub": 1000.0
         },
@@ -15436,7 +15436,7 @@
             "lb": 500.0,
             "ub": 3000.0
         },
-        "pheat": {
+        "p_hcd_primary_extra_heat_mw": {
             "lb": 0.001,
             "ub": 1000.0
         },
@@ -15666,7 +15666,7 @@
         "dr_cs": 0.811,
         "pdrive": 23000000.0,
         "pfusife": 1000.0,
-        "pheat": 0.0,
+        "p_hcd_primary_extra_heat_mw": 0.0,
         "q": 3.0,
         "qtargettotal": 5000000.0,
         "r_cp_top": 0.0,
@@ -15744,7 +15744,7 @@
         },
         "11": {
             "lb": 0.001,
-            "name": "pheat",
+            "name": "p_hcd_primary_extra_heat_mw",
             "ub": 1000.0
         },
         "110": {
@@ -16503,7 +16503,7 @@
         "107": "favail",
         "108": "breeder_f",
         "109": "f_nd_alpha_electron",
-        "11": "pheat",
+        "11": "p_hcd_primary_extra_heat_mw",
         "110": "falpha_energy_confinement",
         "111": "fniterpump",
         "112": "fzeffmax",
@@ -16779,7 +16779,7 @@
         "dr_cs": "16",
         "pdrive": "85",
         "pfusife": "155",
-        "pheat": "11",
+        "p_hcd_primary_extra_heat_mw": "11",
         "q": "18",
         "qtargettotal": "124",
         "r_cp_top": "162",
@@ -17651,7 +17651,7 @@
             "i_hcd_calculations",
             "f_p_beam_shine_through",
             "dx_beam_shield",
-            "pheat",
+            "p_hcd_primary_extra_heat_mw",
             "pheatfix",
             "p_hcd_injected_max",
             "p_hcd_injected_electrons_mw",
@@ -20391,7 +20391,7 @@
         "pfbldgm3": "real_variable",
         "rho_pf_coil": "real_variable",
         "pfusife": "real_variable",
-        "pheat": "real_variable",
+        "p_hcd_primary_extra_heat_mw": "real_variable",
         "pheatfix": "real_variable",
         "pibv": "real_variable",
         "pifecr": "real_variable",

@@ -196,7 +196,7 @@ module current_drive_variables
   real(dp) :: dx_beam_shield
   !! neutral beam duct shielding thickness (m)
 
-  real(dp) :: pheat
+  real(dp) :: p_hcd_primary_extra_heat_mw
   !! heating power not used for current drive (MW) (`iteration variable 11`)
 
   real(dp) :: pheatfix

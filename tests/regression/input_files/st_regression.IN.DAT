@@ -2708,7 +2708,7 @@ p_hcd_injected_max = 150.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *ixc = 11
-*pheat = 
+*p_hcd_primary_extra_heat_mw = 
 *boundl(11) = 
 *boundu(11) = 
 * DESCRIPTION:   Heating power not used for C.D. (MW)

@@ -36,7 +36,7 @@ The power injected by the secondary current drive scheme has to be set to a fixe
 
 ## Plasma heating only
 
-In addition to current drive, some auxiliary power can be used to only heat the plasma. The value of input parameters `pheat` determines the amount of auxiliary heating power (in MW) to be applied to the plasma. This variable may be used as an iteration variable (`ixc = 11`).
+In addition to current drive, some auxiliary power can be used to only heat the plasma. The value of input parameters `p_hcd_primary_extra_heat_mw` determines the amount of auxiliary heating power (in MW) to be applied to the plasma. This variable may be used as an iteration variable (`ixc = 11`).
 
 ### Secondary heating
 
@@ -44,7 +44,7 @@ Like for a current drive and heating system a fixed amount of heating power that
 
 ## Ignited plasma
 
-Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated injected power does not contribute to the plasma power balance, although the cost of the auxiliary power system is taken into account (the system is then assumed to be required to provide heating etc during the plasma start-up phase only - use `pheat` to indicate the power requirement). If `ignite` = 0, the plasma is not ignited, and the auxiliary power is taken into account in the plasma power balance during the burn phase. Also, constraint equation 28 (`icc = 28`) can be turned on to enforce the fusion gain *Q* to be at least `bigqmin`.
+Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining without the need for any injected auxiliary power during the burn. If `ignite` = 1, the calculated injected power does not contribute to the plasma power balance, although the cost of the auxiliary power system is taken into account (the system is then assumed to be required to provide heating etc during the plasma start-up phase only - use `p_hcd_primary_extra_heat_mw` to indicate the power requirement). If `ignite` = 0, the plasma is not ignited, and the auxiliary power is taken into account in the plasma power balance during the burn phase. Also, constraint equation 28 (`icc = 28`) can be turned on to enforce the fusion gain *Q* to be at least `bigqmin`.
 
 [^1]: N. A. Uckan and ITER Physics Group, *"ITER Physics Design Guidelines: 1989"*, ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 

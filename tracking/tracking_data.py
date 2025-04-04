@@ -90,7 +90,7 @@ class ProcessTracker:
     # Variables in an MFile that hold metadata we want to show on the graph
 
     tracking_variables: ClassVar = {
-        "pheat",
+        "p_hcd_primary_extra_heat_mw",
         "f_c_plasma_bootstrap",
         "p_hcd_injected_total_mw",
         "dr_shld_inboard",

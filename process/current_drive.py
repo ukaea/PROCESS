@@ -606,7 +606,7 @@ class CurrentDrive:
                     )
                     * physics_variables.plasma_current
                     / effrfss
-                    + current_drive_variables.pheat
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
                 pinjimw1 = 0.0e0
                 pinjemw1 = current_drive_variables.plhybd
@@ -637,7 +637,7 @@ class CurrentDrive:
                     )
                     * physics_variables.plasma_current
                     / effrfss
-                    + current_drive_variables.pheat
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
                 pinjemw1 = current_drive_variables.p_ecrh_injected_mw
 
@@ -662,7 +662,7 @@ class CurrentDrive:
                     )
                     * physics_variables.plasma_current
                     / effnbss
-                    + current_drive_variables.pheat
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 # Account for first orbit losses
@@ -840,15 +840,15 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Auxiliary power used for plasma heating only (MW)",
-            "(pheat)",
-            current_drive_variables.pheat + current_drive_variables.pheatfix,
+            "(p_hcd_primary_extra_heat_mw)",
+            current_drive_variables.p_hcd_primary_extra_heat_mw + current_drive_variables.pheatfix,
         )
         po.ovarre(
             self.outfile,
             "Power injected for current drive (MW)",
             "(pcurrentdrivemw)",
             current_drive_variables.p_hcd_injected_total_mw
-            - current_drive_variables.pheat
+            - current_drive_variables.p_hcd_primary_extra_heat_mw
             - current_drive_variables.pheatfix,
         )
         po.ovarre(
@@ -862,7 +862,7 @@ class CurrentDrive:
                 self.outfile,
                 "Power injected for main current drive (MW)",
                 "(pcurrentdrivemw1)",
-                pinjmw1 - current_drive_variables.pheat,
+                pinjmw1 - current_drive_variables.p_hcd_primary_extra_heat_mw,
             )
             po.ovarre(
                 self.outfile,

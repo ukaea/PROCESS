@@ -3123,7 +3123,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if ecrh:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
@@ -3153,7 +3153,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if nbi:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
@@ -3179,7 +3179,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if ebw:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
@@ -3208,7 +3208,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if lhcd:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
@@ -3237,7 +3237,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if iccd:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
