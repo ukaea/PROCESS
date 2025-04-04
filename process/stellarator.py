@@ -4942,7 +4942,7 @@ class Stellarator:
         """
         if stellarator_variables.isthtr == 1:
             current_drive_variables.p_ecrh_injected_mw = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
+            current_drive_variables.p_hcd_injected_ions_mw = 0
             current_drive_variables.p_hcd_injected_electrons_mw = (
                 current_drive_variables.p_ecrh_injected_mw
             )
@@ -4950,12 +4950,12 @@ class Stellarator:
                 current_drive_variables.eta_ecrh_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw
+                current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
             current_drive_variables.plhybd = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
+            current_drive_variables.p_hcd_injected_ions_mw = 0
             current_drive_variables.p_hcd_injected_electrons_mw = (
                 current_drive_variables.plhybd
             )
@@ -4963,7 +4963,7 @@ class Stellarator:
                 current_drive_variables.eta_lowhyb_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw
+                current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
@@ -4979,7 +4979,7 @@ class Stellarator:
                 current_drive_variables.pheat
                 * current_drive_variables.f_p_beam_orbit_loss
             )
-            current_drive_variables.pinjimw = (
+            current_drive_variables.p_hcd_injected_ions_mw = (
                 current_drive_variables.pnbeam * f_p_beam_injected_ions
             )
             current_drive_variables.p_hcd_injected_electrons_mw = (
@@ -4989,7 +4989,7 @@ class Stellarator:
                 current_drive_variables.eta_beam_injector_wall_plug
             )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw
+                current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         else:
@@ -5001,7 +5001,7 @@ class Stellarator:
 
         current_drive_variables.p_hcd_injected_total_mw = (
             current_drive_variables.p_hcd_injected_electrons_mw
-            + current_drive_variables.pinjimw
+            + current_drive_variables.p_hcd_injected_ions_mw
         )
 
         #  Calculate neutral beam current

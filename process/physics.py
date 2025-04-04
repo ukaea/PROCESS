@@ -5001,8 +5001,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Injection power to ions (MW)",
-            "(pinjimw)",
-            current_drive_variables.pinjimw,
+            "(p_hcd_injected_ions_mw)",
+            current_drive_variables.p_hcd_injected_ions_mw,
             "OP ",
         )
         po.ovarre(

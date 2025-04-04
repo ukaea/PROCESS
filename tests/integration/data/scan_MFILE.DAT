@@ -311,7 +311,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -1306,7 +1306,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -2301,7 +2301,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -3296,7 +3296,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -4291,7 +4291,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -5286,7 +5286,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -6281,7 +6281,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -7276,7 +7276,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
@@ -8271,7 +8271,7 @@
  Fraction_of_alpha_power_to_ions_________________________________________ (falpi)_______________________      2.8143E-01    
  Ion_transport_(MW)______________________________________________________ (p_ion_transport_loss_mw)______________________      1.5736E+02 OP 
  Electron_transport_(MW)_________________________________________________ (p_electron_transport_loss_mw)______________________      1.7258E+02 OP 
- Injection_power_to_ions_(MW)____________________________________________ (pinjimw)_____________________      0.0000E+00 OP 
+ Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
  Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 

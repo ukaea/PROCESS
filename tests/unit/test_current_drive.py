@@ -89,7 +89,7 @@ class CudrivParam(NamedTuple):
 
     p_hcd_injected_electrons_mw: Any = None
 
-    pinjimw: Any = None
+    p_hcd_injected_ions_mw: Any = None
 
     bigq: Any = None
 
@@ -237,7 +237,7 @@ class CudrivParam(NamedTuple):
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
             p_hcd_injected_electrons_mw=0,
-            pinjimw=0,
+            p_hcd_injected_ions_mw=0,
             bigq=0,
             f_c_plasma_bootstrap=0.27635918746616817,
             f_c_plasma_bootstrap_max=0.95000000000000007,
@@ -327,7 +327,7 @@ class CudrivParam(NamedTuple):
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
             p_hcd_injected_electrons_mw=120.49600019005746,
-            pinjimw=0,
+            p_hcd_injected_ions_mw=0,
             bigq=0,
             f_c_plasma_bootstrap=0.27635918746616817,
             f_c_plasma_bootstrap_max=0.95000000000000007,
@@ -534,7 +534,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.p_hcd_injected_electrons_mw,
     )
 
-    monkeypatch.setattr(current_drive_variables, "pinjimw", cudrivparam.pinjimw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_ions_mw",
+        cudrivparam.p_hcd_injected_ions_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "bigq", cudrivparam.bigq)
 

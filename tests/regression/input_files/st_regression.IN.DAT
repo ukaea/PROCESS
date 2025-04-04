@@ -2779,7 +2779,7 @@ feffcd = 1.0
 *icc = 3
 * DESCRIPTION:   Global power balance for ions (NBI)
 * JUSTIFICATION: Not used as no NBI used
-* VARIABLES:     pinjimw,ignite, Rest calculated in-situ
+* VARIABLES:     p_hcd_injected_ions_mw,ignite, Rest calculated in-situ
 
 *icc = 7
 * DESCRIPTION:   Equation for hot ion beam density (NBI)
