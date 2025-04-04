@@ -56,8 +56,13 @@ class CurrentDrive:
 
         # check for unphysically large heating in
         # secondary injected power source
-        if current_drive_variables.pheatfix > current_drive_variables.pinjfixmw:
-            current_drive_variables.pheatfix = current_drive_variables.pinjfixmw
+        if (
+            current_drive_variables.pheatfix
+            > current_drive_variables.p_hcd_secondary_injected_mw
+        ):
+            current_drive_variables.pheatfix = (
+                current_drive_variables.p_hcd_secondary_injected_mw
+            )
 
         # current_drive_variables.irfcd |  switch for current drive calculation
         # = 0   |  turned off
@@ -271,11 +276,11 @@ class CurrentDrive:
 
             if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
                 # Injected power
-                pinjemwfix = current_drive_variables.pinjfixmw
+                pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
 
                 # Wall plug power
                 heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.pinjfixmw
+                    current_drive_variables.p_hcd_secondary_injected_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
@@ -291,7 +296,7 @@ class CurrentDrive:
                 auxiliary_cdfix = (
                     effrfssfix
                     * (
-                        current_drive_variables.pinjfixmw
+                        current_drive_variables.p_hcd_secondary_injected_mw
                         - current_drive_variables.pheatfix
                     )
                     * 1.0e6
@@ -301,11 +306,11 @@ class CurrentDrive:
                 )
             elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
                 # Injected power
-                pinjemwfix = current_drive_variables.pinjfixmw
+                pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
 
                 # Wall plug power
                 heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.pinjfixmw
+                    current_drive_variables.p_hcd_secondary_injected_mw
                     / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
@@ -318,7 +323,7 @@ class CurrentDrive:
                 auxiliary_cdfix = (
                     effrfssfix
                     * (
-                        current_drive_variables.pinjfixmw
+                        current_drive_variables.p_hcd_secondary_injected_mw
                         - current_drive_variables.pheatfix
                     )
                     * 1.0e6
@@ -334,7 +339,7 @@ class CurrentDrive:
                     0.999, current_drive_variables.f_p_beam_orbit_loss
                 )  # Should never be needed
 
-                pnbitotfix = current_drive_variables.pinjfixmw / (
+                pnbitotfix = current_drive_variables.p_hcd_secondary_injected_mw / (
                     1.0e0
                     - current_drive_variables.f_p_beam_orbit_loss
                     + current_drive_variables.f_p_beam_orbit_loss
@@ -373,7 +378,7 @@ class CurrentDrive:
                 auxiliary_cdfix = (
                     effnbssfix
                     * (
-                        current_drive_variables.pinjfixmw
+                        current_drive_variables.p_hcd_secondary_injected_mw
                         - current_drive_variables.pheatfix
                     )
                     * 1.0e6
@@ -1307,7 +1312,7 @@ class CurrentDrive:
                 "OP ",
             )
 
-        if abs(current_drive_variables.pinjfixmw) > 1.0e-8:
+        if abs(current_drive_variables.p_hcd_secondary_injected_mw) > 1.0e-8:
             po.ovarrf(
                 self.outfile,
                 "Fixed ECRH power (MW)",
