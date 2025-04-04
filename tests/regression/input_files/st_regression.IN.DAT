@@ -799,17 +799,6 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Divertor Heat Model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*icc = 22
-* DESCRIPTION:   Constraint equation for divertor collision/connection length ratio upper limit 
-* JUSTIFICATION: Turned off, dont care about connection length
-* VARIABLES:     rlenmax  (maximum value for length ratio (rlclolcn)), rlclolcn calculated in-situ
-
-*rlenmax = 
-* DESCRIPTION:   Maximum value for length ratio (rlclolcn) (`constraintg eqn 22`)
-* JUSTIFICATION: Turned off, not using icc =22
-
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 *icc = 78
 * DESCRIPTION:   Constraint equation for Reinke criterion, divertor impurity fraction lower limit
 * JUSTIFICATION: Turned off, not concerned with lower divertor impurity
@@ -837,46 +826,8 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*c1div- c6div = 
-* DESCRIPTION:   Divertor model fitting coefficients
-* JUSTIFICATION: Leaving as default
-
-*delld = 
-* DESCRIPTION:   Coeff for power distribution along main plasma (default = 1.0)
-* JUSTIFICATION: Leaving as default
-
-*divdum = 
-* DESCRIPTION:   switch for divertor Zeff model: (default = 0)
-* =0 calc
-* =1 input
-* JUSTIFICATION: Not yet set
-
-*zeffdiv = 
-* DESCRIPTION:   Zeff in the divertor region (if `divdum/=0`) (default =  1.0)
-* JUSTIFICATION: Not yet set
-
-*fdfs = 
-* DESCRIPTION:   Radial gradient ratio (default = 10.0)
-* JUSTIFICATION: Not yet set
-
-*fififi = 
-* DESCRIPTION:   Coefficient for gamdiv (default = 4.0D-3)
-* JUSTIFICATION: Not yet set
-
 *flux_exp = 
 * DESCRIPTION:   The plasma flux expansion in the divertor (default 2; Wade 2020)
-* JUSTIFICATION: Not yet set
-
-*frrp = 
-* DESCRIPTION:   Fraction of radiated power to plate (default = 0.4)
-* JUSTIFICATION: Not yet set
-
-*ksic = 
-* DESCRIPTION:   Power fraction for outboard double-null scrape-off plasma (default = 0.8)
-* JUSTIFICATION: Not yet set
-
-*omegan = 
-* DESCRIPTION:   Pressure ratio (nT)_plasma / (nT)_scrape-off (default = 1.0)
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
@@ -885,10 +836,6 @@ boundu(97) = 1.0
 
 *tdiv = 
 * DESCRIPTION:   Plasma temperature at divertor (eV) (default =  2.0)
-* JUSTIFICATION: Not yet set
-
-*xparain = 
-* DESCRIPTION:   Parallel heat transport coefficient (m2/s) (default =  2.1D3)
 * JUSTIFICATION: Not yet set
 
 *xpertin = 

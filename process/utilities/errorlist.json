@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 288,
+  "n_errortypes": 289,
   "errors": [
     {
       "no": 1,
@@ -1449,6 +1449,11 @@
       "no": 288,
       "level": 3,
       "message": "PFCOIL: i_pf_location(i) should not be 1 if iohcl=0"
+    },
+    {
+      "no": 289,
+      "level": 3,
+      "message": "CHECK: Constraint equation 22 has been deprecated."
     }
   ]
 }

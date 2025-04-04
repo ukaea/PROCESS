@@ -177,6 +177,9 @@ pinjalw  = 200.0 * maximum allowable value for injected power (MW) (`constraint 
 
 dz_divertor   = 0.62 * divertor structure vertical thickness (m)
 
+* Use Wade divertor heat load model
+i_hldiv = 2
+
 *------------------Error Handling------------------*
 
 

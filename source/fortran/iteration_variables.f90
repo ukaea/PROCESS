@@ -788,27 +788,10 @@ contains
 
   !---------------------------------
 
-  subroutine init_itv_34
-    !! <LI> (34) fdivcol (f-value for equation 22)
-    use numerics, only: lablxc, boundl, boundu
-    implicit none
-    lablxc(34) = 'fdivcol       '
-    boundl(34) = 0.001D0
-    boundu(34) = 1.000D0
-  end subroutine init_itv_34
-
   real(kind(1.d0)) function itv_34()
-    use constraint_variables, only: fdivcol
     implicit none
-    itv_34 = fdivcol
+    write(*,*) 'Iteration variable 34 is no longer in use.'
   end function itv_34
-
-  subroutine set_itv_34(ratio)
-    use constraint_variables, only: fdivcol
-    implicit none
-    real(kind(1.d0)) :: ratio
-    fdivcol = ratio
-  end subroutine set_itv_34
 
   !---------------------------------
 
@@ -4021,7 +4004,7 @@ contains
            case (31);  xcm(i) = itv_31()
            case (32);  xcm(i) = itv_32()
            case (33);  xcm(i) = itv_33()
-           case (34);  xcm(i) = itv_34()
+           case (34);
            case (35);  xcm(i) = itv_35()
            case (36);  xcm(i) = itv_36()
            case (37);  xcm(i) = itv_37()
@@ -4286,7 +4269,7 @@ contains
            case (31);  call set_itv_31(ratio)
            case (32);  call set_itv_32(ratio)
            case (33);  call set_itv_33(ratio)
-           case (34);  call set_itv_34(ratio)
+           case (34);
            case (35);  call set_itv_35(ratio)
            case (36);  call set_itv_36(ratio)
            case (37);  call set_itv_37(ratio)

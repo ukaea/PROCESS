@@ -54,9 +54,6 @@ module constraint_variables
   !! f-value for density limit (`constraint equation 5`, `iteration variable 9`)
   !! (invalid if `ipedestal=3`)
 
-  real(dp) :: fdivcol
-  !! f-value for divertor collisionality (`constraint equation 22`, `iteration variable 34`)
-
   real(dp) :: fdtmp
   !! f-value for first wall coolant temperature rise
   !! (`constraint equation 38`, `iteration variable 62`)
@@ -332,7 +329,6 @@ module constraint_variables
     fcpttf = 1.0D0
    fr_conducting_wall = 1.0D0
     fdene = 1.0D0
-    fdivcol = 1.0D0
     fdtmp = 1.0D0
     fflutf = 1.0D0
     ffuspow = 1.0D0

@@ -148,7 +148,7 @@ contains
         case (20); call constraint_eqn_020(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Equation for minor radius lower limit
         case (21); call constraint_eqn_021(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-	      ! Equation for divertor collision/connection length ratio upper limit
+	      ! Obsolete
         case (22); call constraint_eqn_022(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
 	      ! Equation for conducting shell radius / rminor upper limit
         case (23); call constraint_eqn_023(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
@@ -1195,19 +1195,22 @@ contains
       !! fdivcol : input real : f-value for divertor collisionality
       !! rlenmax : input real : maximum value for length ratio (rlclolcn)
       !! rlclolcn : input real : ratio of collision length / connection length
-      use constraint_variables, only: fdivcol
-      use divertor_variables, only: rlenmax, rlclolcn
+
       implicit none
+
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
+      !! Constraints output
 
-      tmp_cc =  rlclolcn / rlenmax - 1.0D0 * fdivcol
-      tmp_con = rlenmax * (1.0D0 - tmp_cc)
-      tmp_err = rlclolcn * tmp_cc
-      tmp_symbol = '<'
+      ! This constraint is depreciated
+      call report_error(289)
+
+      tmp_con = 1.0D0
+      tmp_err = 0.0D0
+      tmp_symbol = '='
       tmp_units = ''
 
    end subroutine constraint_eqn_022

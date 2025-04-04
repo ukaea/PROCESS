@@ -335,6 +335,9 @@ dr_shld_outboard = 0.800
 * Divertor structure vertical thickness [m]
 dz_divertor = 0.62 
 
+* Use Wade divertor heat load model
+i_hldiv = 2
+
 * Coolant void fraction in shield
 vfshld = 0.60 
 
