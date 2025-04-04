@@ -2387,7 +2387,7 @@ contains
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc = nbshinef/f_p_beam_shine_through_max - 1.0D0 * f_p_beam_shine_through
+      tmp_cc = f_p_beam_shine_through/f_p_beam_shine_through_max - 1.0D0 * fnbshinef
       tmp_con = f_p_beam_shine_through_max * (1.0D0 - tmp_cc)
       tmp_err = f_p_beam_shine_through * tmp_cc
       tmp_symbol = '<'
