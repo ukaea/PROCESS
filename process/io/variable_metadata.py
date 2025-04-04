@@ -31,7 +31,7 @@ var_dicts = {
     "fusion_power": VariableMetadata(
         latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
     ),
-    "pinjemw": VariableMetadata(
+    "p_hcd_injected_electrons_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
     "pnetelmw": VariableMetadata(

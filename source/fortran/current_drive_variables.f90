@@ -205,7 +205,7 @@ module current_drive_variables
   real(dp) :: p_hcd_injected_max
   !! maximum allowable value for injected power (MW) (`constraint equation 30`)
 
-  real(dp) :: pinjemw
+  real(dp) :: p_hcd_injected_electrons_mw
   !! auxiliary injected power to electrons (MW)
 
   real(dp) :: pinjimw
@@ -307,7 +307,7 @@ module current_drive_variables
     pheat = 0.0D0
     pheatfix = 0.0D0
     p_hcd_injected_max = 150.0D0
-    pinjemw = 0.0D0
+    p_hcd_injected_electrons_mw = 0.0D0
     pinjimw = 0.0D0
     p_hcd_injected_total_mw = 0.0D0
     p_hcd_secondary_injected_mw = 0.0D0
