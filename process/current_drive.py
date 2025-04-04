@@ -655,6 +655,41 @@ class IonCyclotron:
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
 
+    def ion_cyclotron_ipdg89(
+        self, ten: float, zeff: float, rmajor: float, dene20: float
+    ) -> float:
+        """
+        Routine to calculate IPDG89 Ion Cyclotron heating efficiency.
+
+        This function computes the ion cyclotron heating efficiency based on
+        the electron temperature, effective charge, major radius, and electron density.
+
+        :param ten: Density weighted average electron temperature keV.
+        :type ten: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene: Volume averaged electron density in 1x10^20 m^-3.
+        :type dene: float
+
+        :return: The calculated ion cyclotron heating efficiency in A/W.
+        :rtype: float
+
+        :notes:
+        - The 0.1 term is to convert the temperature into 10 keV units
+        - The original formula is for the normalised current drive efficnecy
+          hence the addition of the density and majro radius terms to get back to an absolute value
+
+        :references:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+        - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+        """
+
+        return ((0.63e0 * 0.1e0 * ten) / (2.0e0 + zeff)) / (rmajor * dene20)
+
 
 class ElectronBernstein:
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -900,13 +935,15 @@ class CurrentDrive:
             # Ion-Cyclotron current drive
             elif current_drive_variables.i_hcd_secondary == 2:
                 effrfssfix = (
-                    0.63e0
-                    * 0.1e0
-                    * physics_variables.ten
-                    / (2.0e0 + physics_variables.zeff)
-                    / (physics_variables.rmajor * dene20)
+                    self.ion_cyclotron.ion_cyclotron_ipdg89(
+                        ten=physics_variables.ten,
+                        zeff=physics_variables.zeff,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                    )
                     * current_drive_variables.feffcd
                 )
+
                 eta_cd_hcd_secondary = effrfssfix
             # Fenstermacher Electron Cyclotron Resonance model
             elif current_drive_variables.i_hcd_secondary == 3:
@@ -1212,11 +1249,12 @@ class CurrentDrive:
             # Ion-Cyclotron current drive
             elif current_drive_variables.i_hcd_primary == 2:
                 effrfss = (
-                    0.63e0
-                    * 0.1e0
-                    * physics_variables.ten
-                    / (2.0e0 + physics_variables.zeff)
-                    / (physics_variables.rmajor * dene20)
+                    self.ion_cyclotron.ion_cyclotron_ipdg89(
+                        ten=physics_variables.ten,
+                        zeff=physics_variables.zeff,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                    )
                     * current_drive_variables.feffcd
                 )
                 current_drive_variables.eta_cd_hcd_primary = effrfss
