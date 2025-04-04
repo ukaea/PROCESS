@@ -87,7 +87,7 @@ module current_drive_variables
   real(dp) :: eta_cd_hcd_primary
   !! current drive efficiency (A/W)
 
-  real(dp) :: harnum
+  real(dp) :: n_ecrh_harmonic
   !! cyclotron harmonic frequency number, used in cut-off function
 
   integer :: i_ecrh_wave_mode
@@ -279,7 +279,7 @@ module current_drive_variables
     echpwr = 0.0D0
     echwpow = 0.0D0
     eta_cd_hcd_primary = 0.0D0
-    harnum = 2.0
+    n_ecrh_harmonic = 2.0
     i_ecrh_wave_mode = 0
     e_beam_kev = 1.0D3
     etacd = 0.0D0
