@@ -1521,7 +1521,7 @@ def _trapped_particle_fraction_sauter(
             * (np.sqrt((1.0 - eps) / (1.0 + eps)))
         )
 
-    raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
+    raise ProcessValueError(f"fit={fit} is not valid. Must be 1, 2, or 3")
 
 
 class Physics:
