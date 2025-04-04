@@ -102,7 +102,7 @@ module current_drive_variables
   real(dp) :: eta_hcd_primary_injector_wall_plug
   !! auxiliary power wall plug to injector efficiency
 
-  real(dp) :: etacdfix
+  real(dp) :: eta_hcd_secondary_injector_wall_plug
   !! secondary auxiliary power wall plug to injector efficiency
 
   real(dp) :: eta_ecrh_injector_wall_plug

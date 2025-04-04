@@ -63,7 +63,7 @@ class CudrivParam(NamedTuple):
 
     eta_hcd_primary_injector_wall_plug: Any = None
 
-    etacdfix: Any = None
+    eta_hcd_secondary_injector_wall_plug: Any = None
 
     eta_ecrh_injector_wall_plug: Any = None
 
@@ -224,7 +224,7 @@ class CudrivParam(NamedTuple):
             eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             eta_hcd_primary_injector_wall_plug=0,
-            etacdfix=0,
+            eta_hcd_secondary_injector_wall_plug=0,
             eta_ecrh_injector_wall_plug=0.5,
             f_p_beam_orbit_loss=0,
             p_hcd_injected_total_mw=0,
@@ -314,7 +314,7 @@ class CudrivParam(NamedTuple):
             eta_cd_norm_ecrh=0.30000000000000004,
             eta_lowhyb_injector_wall_plug=0.29999999999999999,
             eta_hcd_primary_injector_wall_plug=0.5,
-            etacdfix=0,
+            eta_hcd_secondary_injector_wall_plug=0,
             eta_ecrh_injector_wall_plug=0.5,
             f_p_beam_orbit_loss=0,
             p_hcd_injected_total_mw=120.49600019005746,
@@ -478,7 +478,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.eta_hcd_primary_injector_wall_plug,
     )
 
-    monkeypatch.setattr(current_drive_variables, "etacdfix", cudrivparam.etacdfix)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_hcd_secondary_injector_wall_plug",
+        cudrivparam.eta_hcd_secondary_injector_wall_plug,
+    )
 
     monkeypatch.setattr(
         current_drive_variables,
