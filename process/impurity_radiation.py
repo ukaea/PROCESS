@@ -469,7 +469,9 @@ def element2index(element: str):
             .index(element)
         )
     except ValueError as e:
-        raise ValueError(f"Element {element} is not found in impurity_arr_label") from e
+        raise ProcessValueError(
+            f"Element {element} is not found in impurity_arr_label"
+        ) from e
 
 
 class ImpurityRadiation:

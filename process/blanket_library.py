@@ -112,7 +112,9 @@ class BlanketLibrary:
                 - build_variables.dz_vv_lower
             )
         else:
-            raise ValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
+            raise ProcessValueError(
+                f"{icomponent=} is invalid, it must be either 0,1,2"
+            )
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
@@ -1467,7 +1469,9 @@ class BlanketLibrary:
                 flow_density * fwbs_variables.a_bz_liq * fwbs_variables.b_bz_liq
             )
 
-        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
+        raise ProcessValueError(
+            f"i_channel_shape ={i_channel_shape} is an invalid option."
+        )
 
     def thermo_hydraulic_model(self, output: bool):
         """
@@ -2580,7 +2584,9 @@ class BlanketLibrary:
                 / (fwbs_variables.a_bz_liq + fwbs_variables.b_bz_liq)
             )
 
-        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
+        raise ProcessValueError(
+            f"i_channel_shape ={i_channel_shape} is an invalid option."
+        )
 
     def elbow_coeff(self, r_elbow, ang_elbow, lamda, dh):
         """Function calculates elbow bends coefficients for pressure drop
@@ -2606,7 +2612,7 @@ class BlanketLibrary:
         elif ang_elbow > 100:
             a = 0.7 + (0.35 * np.sin((ang_elbow / 90.0) * (np.pi / 180.0)))
         else:
-            raise ValueError(
+            raise ProcessValueError(
                 "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
             )
 

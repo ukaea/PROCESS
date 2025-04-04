@@ -1462,7 +1462,9 @@ class IFE:
             case 3:
                 ife_variables.etadrv = ife_variables.drveff
             case _:
-                raise ValueError(f"ifedrv={ife_variables.ifedrv} is an invalid option")
+                raise ProcessValueError(
+                    f"ifedrv={ife_variables.ifedrv} is an invalid option"
+                )
 
         if ife_variables.ifedrv != 3:
             # Repetition rate (Hz)

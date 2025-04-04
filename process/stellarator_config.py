@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from process.exceptions import ProcessValueError
 from process.fortran import stellarator_configuration
 
 HELIAS5B = {
@@ -232,12 +233,12 @@ def load_stellarator_config(istell: int, config_file: Path | None):
             machine_config = W7X50
         case 6:
             if config_file is None:
-                raise ValueError("Stellarator config file is None but istell=6")
+                raise ProcessValueError("Stellarator config file is None but istell=6")
 
             with open(config_file) as f:
                 machine_config = json.load(f)
         case _:
-            raise ValueError(f"{istell=} is not an integer in the range [1, 6]")
+            raise ProcessValueError(f"{istell=} is not an integer in the range [1, 6]")
 
     for variable_name, variable_value in machine_config.items():
         setattr(
