@@ -671,7 +671,7 @@ class CurrentDrive:
                     0.999, current_drive_variables.f_p_beam_orbit_loss
                 )  # Should never be needed
 
-                current_drive_variables.p_beam_injected = power1 / (
+                current_drive_variables.p_beam_injected_mw = power1 / (
                     1.0e0
                     - current_drive_variables.f_p_beam_orbit_loss
                     + current_drive_variables.f_p_beam_orbit_loss
@@ -680,7 +680,7 @@ class CurrentDrive:
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 current_drive_variables.p_beam_shine_through_mw = (
-                    current_drive_variables.p_beam_injected
+                    current_drive_variables.p_beam_injected_mw
                     * current_drive_variables.f_p_beam_shine_through
                 )
 
@@ -688,14 +688,14 @@ class CurrentDrive:
                 current_drive_variables.p_beam_orbit_loss = (
                     current_drive_variables.f_p_beam_orbit_loss
                     * (
-                        current_drive_variables.p_beam_injected
+                        current_drive_variables.p_beam_injected_mw
                         - current_drive_variables.p_beam_shine_through_mw
                     )
                 )
 
                 # Power deposited
                 pinjmw1 = (
-                    current_drive_variables.p_beam_injected
+                    current_drive_variables.p_beam_injected_mw
                     - current_drive_variables.p_beam_shine_through_mw
                     - current_drive_variables.p_beam_orbit_loss
                 )
@@ -705,7 +705,7 @@ class CurrentDrive:
                 )
 
                 current_drive_variables.pwpnb = (
-                    current_drive_variables.p_beam_injected
+                    current_drive_variables.p_beam_injected_mw
                     / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
                 pinjwp1 = current_drive_variables.pwpnb
@@ -716,7 +716,7 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_norm_hcd_primary = gamnb
                 current_drive_variables.c_beam_total = (
                     1.0e-3
-                    * (current_drive_variables.p_beam_injected * 1.0e6)
+                    * (current_drive_variables.p_beam_injected_mw * 1.0e6)
                     / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
@@ -1195,8 +1195,8 @@ class CurrentDrive:
                 po.ovarrf(
                     self.outfile,
                     "Beam power entering vacuum vessel (MW)",
-                    "(p_beam_injected)",
-                    current_drive_variables.p_beam_injected,
+                    "(p_beam_injected_mw)",
+                    current_drive_variables.p_beam_injected_mw,
                     "OP ",
                 )
 

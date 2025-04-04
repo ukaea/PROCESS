@@ -117,7 +117,7 @@ module current_drive_variables
   real(dp) :: f_p_beam_injected_ions
   !! fraction of beam energy to ions
 
-  real(dp) :: p_beam_injected
+  real(dp) :: p_beam_injected_mw
   !! neutral beam power entering vacuum vessel
 
   real(dp) :: pscf_scene
@@ -288,7 +288,7 @@ module current_drive_variables
     eta_lowhyb_injector_wall_plug = 0.3D0
     eta_beam_injector_wall_plug = 0.3D0
     f_p_beam_injected_ions = 0.5D0
-    p_beam_injected = 0.0D0
+    p_beam_injected_mw = 0.0D0
     pscf_scene = 0.0D0
     p_beam_shine_through_mw = 0.0D0
     feffcd = 1.0D0
