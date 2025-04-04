@@ -43,7 +43,7 @@ class CudrivParam(NamedTuple):
 
     p_hcd_primary_extra_heat_mw: Any = None
 
-    pheatfix: Any = None
+    p_hcd_secondary_extra_heat_mw: Any = None
 
     p_hcd_secondary_injected_mw: Any = None
 
@@ -214,7 +214,7 @@ class CudrivParam(NamedTuple):
             i_hcd_primary=10,
             i_hcd_secondary=0,
             p_hcd_primary_extra_heat_mw=75,
-            pheatfix=0,
+            p_hcd_secondary_extra_heat_mw=0,
             p_hcd_secondary_injected_mw=0,
             i_hcd_calculations=1,
             feffcd=1,
@@ -304,7 +304,7 @@ class CudrivParam(NamedTuple):
             i_hcd_primary=10,
             i_hcd_secondary=0,
             p_hcd_primary_extra_heat_mw=75,
-            pheatfix=0,
+            p_hcd_secondary_extra_heat_mw=0,
             p_hcd_secondary_injected_mw=0,
             i_hcd_calculations=1,
             feffcd=1,
@@ -428,9 +428,17 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "i_hcd_secondary", cudrivparam.i_hcd_secondary
     )
 
-    monkeypatch.setattr(current_drive_variables, "p_hcd_primary_extra_heat_mw", cudrivparam.p_hcd_primary_extra_heat_mw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_primary_extra_heat_mw",
+        cudrivparam.p_hcd_primary_extra_heat_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pheatfix", cudrivparam.pheatfix)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_secondary_extra_heat_mw",
+        cudrivparam.p_hcd_secondary_extra_heat_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables,

@@ -2729,7 +2729,7 @@ feffcd = 1.0
 * DESCRIPTION:   Secondary auxiliary injection power (MW)
 * JUSTIFICATION: Not used, ECRH only
 
-*pheatfix = 
+*p_hcd_secondary_extra_heat_mw = 
 * DESCRIPTION:   Secondary fixed heating power not used for C.D. (MW)
 * JUSTIFICATION: Not used, ECRH only.
 

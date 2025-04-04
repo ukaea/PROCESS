@@ -53,15 +53,15 @@ class CurrentDrive:
         # To stop issues with input file we force
         # zero secondary heating if no injection method
         if current_drive_variables.i_hcd_secondary == 0:
-            current_drive_variables.pheatfix = 0.0
+            current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
 
         # check for unphysically large heating in
         # secondary injected power source
         if (
-            current_drive_variables.pheatfix
+            current_drive_variables.p_hcd_secondary_extra_heat_mw
             > current_drive_variables.p_hcd_secondary_injected_mw
         ):
-            current_drive_variables.pheatfix = (
+            current_drive_variables.p_hcd_secondary_extra_heat_mw = (
                 current_drive_variables.p_hcd_secondary_injected_mw
             )
 
@@ -298,7 +298,7 @@ class CurrentDrive:
                     effrfssfix
                     * (
                         current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.pheatfix
+                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
                     )
                     * 1.0e6
                 )
@@ -325,7 +325,7 @@ class CurrentDrive:
                     effrfssfix
                     * (
                         current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.pheatfix
+                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
                     )
                     * 1.0e6
                 )
@@ -380,7 +380,7 @@ class CurrentDrive:
                     effnbssfix
                     * (
                         current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.pheatfix
+                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
                     )
                     * 1.0e6
                 )
@@ -841,7 +841,8 @@ class CurrentDrive:
             self.outfile,
             "Auxiliary power used for plasma heating only (MW)",
             "(p_hcd_primary_extra_heat_mw)",
-            current_drive_variables.p_hcd_primary_extra_heat_mw + current_drive_variables.pheatfix,
+            current_drive_variables.p_hcd_primary_extra_heat_mw
+            + current_drive_variables.p_hcd_secondary_extra_heat_mw,
         )
         po.ovarre(
             self.outfile,
@@ -849,7 +850,7 @@ class CurrentDrive:
             "(pcurrentdrivemw)",
             current_drive_variables.p_hcd_injected_total_mw
             - current_drive_variables.p_hcd_primary_extra_heat_mw
-            - current_drive_variables.pheatfix,
+            - current_drive_variables.p_hcd_secondary_extra_heat_mw,
         )
         po.ovarre(
             self.outfile,
@@ -868,7 +869,7 @@ class CurrentDrive:
                 self.outfile,
                 "Power injected for secondary current drive (MW)",
                 "(pcurrentdrivemw2)",
-                pinjmwfix - current_drive_variables.pheatfix,
+                pinjmwfix - current_drive_variables.p_hcd_secondary_extra_heat_mw,
             )
 
         po.ovarre(
