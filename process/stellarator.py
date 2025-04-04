@@ -4941,9 +4941,9 @@ class Stellarator:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if stellarator_variables.isthtr == 1:
-            current_drive_variables.echpwr = current_drive_variables.pheat
+            current_drive_variables.p_ecrh_injected_mw = current_drive_variables.pheat
             current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.echpwr
+            current_drive_variables.pinjemw = current_drive_variables.p_ecrh_injected_mw
             current_drive_variables.etacd = (
                 current_drive_variables.eta_ecrh_injector_wall_plug
             )

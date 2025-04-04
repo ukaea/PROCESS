@@ -549,7 +549,7 @@
  Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.8505E-01    
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.1495E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (echpwr)______________________      7.5213E+01 OP 
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5213E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
  ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5043E+02 OP 

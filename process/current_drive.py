@@ -32,7 +32,7 @@ class CurrentDrive:
         efficiency.
         """
 
-        current_drive_variables.echpwr = 0.0e0
+        current_drive_variables.p_ecrh_injected_mw = 0.0e0
         current_drive_variables.pnbeam = 0.0e0
         current_drive_variables.plhybd = 0.0e0
         current_drive_variables.c_beam_total = 0.0e0
@@ -629,7 +629,7 @@ class CurrentDrive:
             # ECCD
             elif current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
                 # Injected power (set to close to close the Steady-state current equilibrium)
-                current_drive_variables.echpwr = (
+                current_drive_variables.p_ecrh_injected_mw = (
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
@@ -639,11 +639,11 @@ class CurrentDrive:
                     / effrfss
                     + current_drive_variables.pheat
                 )
-                pinjemw1 = current_drive_variables.echpwr
+                pinjemw1 = current_drive_variables.p_ecrh_injected_mw
 
                 # Wall plug power
                 current_drive_variables.echwpow = (
-                    current_drive_variables.echpwr
+                    current_drive_variables.p_ecrh_injected_mw
                     / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
@@ -1285,12 +1285,12 @@ class CurrentDrive:
                 "OP ",
             )
 
-        if abs(current_drive_variables.echpwr) > 1.0e-8:
+        if abs(current_drive_variables.p_ecrh_injected_mw) > 1.0e-8:
             po.ovarre(
                 self.outfile,
                 "Electron cyclotron injected power (MW)",
-                "(echpwr)",
-                current_drive_variables.echpwr,
+                "(p_ecrh_injected_mw)",
+                current_drive_variables.p_ecrh_injected_mw,
                 "OP ",
             )
             po.ovarrf(

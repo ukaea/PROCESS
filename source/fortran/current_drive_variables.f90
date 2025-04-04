@@ -78,7 +78,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
-  real(dp) :: echpwr
+  real(dp) :: p_ecrh_injected_mw
   !! ECH power (MW)
 
   real(dp) :: echwpow
