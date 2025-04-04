@@ -788,6 +788,31 @@ class LowerHybrid:
 
         return rat0
 
+    def lower_hybrid_fenstermacher(
+        self, te: float, rmajor: float, dene20: float
+    ) -> float:
+        """
+        Calculate the lower hybrid frequency using the Fenstermacher formula.
+        This function computes the lower hybrid frequency based on the electron
+        temperature, major radius, and electron density.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+
+        :return: The calculated absolute current drive efficiency in A/W.
+        :rtype: float
+
+        :notes:
+
+        :references:
+        """
+
+        return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
+
 
 class CurrentDrive:
     def __init__(
@@ -865,10 +890,12 @@ class CurrentDrive:
             # Fenstermacher Lower Hybrid model
             if current_drive_variables.i_hcd_secondary == 1:
                 effrfssfix = (
-                    (0.36e0 * (1.0e0 + (physics_variables.te / 25.0e0) ** 1.16e0))
-                    / (physics_variables.rmajor * dene20)
+                    self.lower_hybrid.lower_hybrid_fenstermacher(
+                        physics_variables.te, physics_variables.rmajor, dene20
+                    )
                     * current_drive_variables.feffcd
                 )
+
                 eta_cd_hcd_secondary = effrfssfix
             # Ion-Cyclotron current drive
             elif current_drive_variables.i_hcd_secondary == 2:
@@ -1176,8 +1203,9 @@ class CurrentDrive:
             # Fenstermacher Lower Hybrid model
             if current_drive_variables.i_hcd_primary == 1:
                 effrfss = (
-                    (0.36e0 * (1.0e0 + (physics_variables.te / 25.0e0) ** 1.16e0))
-                    / (physics_variables.rmajor * dene20)
+                    self.lower_hybrid.lower_hybrid_fenstermacher(
+                        physics_variables.te, physics_variables.rmajor, dene20
+                    )
                     * current_drive_variables.feffcd
                 )
                 current_drive_variables.eta_cd_hcd_primary = effrfss

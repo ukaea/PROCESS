@@ -1,4 +1,4 @@
-# Fenstermacher Lower Hybrid
+# Fenstermacher Lower Hybrid | `lower_hybrid_fenstermacher()`
 
 - `i_hcd_primary/i_hcd_secondary` = 1:
 
