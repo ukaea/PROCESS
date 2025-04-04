@@ -35,7 +35,7 @@ class CudrivParam(NamedTuple):
 
     c_beam_total: Any = None
 
-    p_beam_orbit_loss: Any = None
+    p_beam_orbit_loss_mw: Any = None
 
     i_hcd_primary: Any = None
 
@@ -210,7 +210,7 @@ class CudrivParam(NamedTuple):
             pnbeam=0,
             plhybd=0,
             c_beam_total=0,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             i_hcd_primary=10,
             i_hcd_secondary=0,
             pheat=75,
@@ -300,7 +300,7 @@ class CudrivParam(NamedTuple):
             pnbeam=0,
             plhybd=0,
             c_beam_total=0,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             i_hcd_primary=10,
             i_hcd_secondary=0,
             pheat=75,
@@ -413,7 +413,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "p_beam_orbit_loss", cudrivparam.p_beam_orbit_loss
+        current_drive_variables,
+        "p_beam_orbit_loss_mw",
+        cudrivparam.p_beam_orbit_loss_mw,
     )
 
     monkeypatch.setattr(

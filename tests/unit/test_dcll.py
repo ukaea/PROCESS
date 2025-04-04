@@ -29,7 +29,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     a_fw_total: Any = None
 
-    p_beam_orbit_loss: Any = None
+    p_beam_orbit_loss_mw: Any = None
 
     f_ster_div_single: Any = None
 
@@ -92,7 +92,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
             p_div_rad_total_mw=0,
             p_div_nuclear_heat_total_mw=0,
@@ -124,7 +124,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=1168.1172772224481,
             a_fw_total=1891.2865102700493,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
             p_div_rad_total_mw=33.056596978820579,
             p_div_nuclear_heat_total_mw=182.58994516305046,
@@ -178,8 +178,8 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     monkeypatch.setattr(
         current_drive_variables,
-        "p_beam_orbit_loss",
-        dcllneutronicsandpowerparam.p_beam_orbit_loss,
+        "p_beam_orbit_loss_mw",
+        dcllneutronicsandpowerparam.p_beam_orbit_loss_mw,
     )
 
     monkeypatch.setattr(
