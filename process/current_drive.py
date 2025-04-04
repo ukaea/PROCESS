@@ -257,7 +257,7 @@ class CurrentDrive:
                 )
                 effcdfix = effrfssfix * cutoff_factor
             elif current_drive_variables.iefrffix != 0:
-                raise RuntimeError(
+                raise ProcessValueError(
                     f"Current drive switch is invalid: {current_drive_variables.iefrffix = }"
                 )
 
@@ -550,7 +550,7 @@ class CurrentDrive:
                 )
                 current_drive_variables.effcd = effrfss * cutoff_factor
             else:
-                raise RuntimeError(
+                raise ProcessValueError(
                     f"Current drive switch is invalid: {current_drive_variables.iefrf = }"
                 )
 

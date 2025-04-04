@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from scipy import integrate
 
-from process.exceptions import ProcessValueError
+from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import constants, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
@@ -289,9 +289,9 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             lz = np.asarray(header.data, dtype=float)
 
     if Te is None:
-        raise RuntimeError(f"Cannot locate Te data in {lz_file}")
+        raise ProcessError(f"Cannot locate Te data in {lz_file}")
     if lz is None:
-        raise RuntimeError(
+        raise ProcessError(
             f"Cannot locate Lz for infinite confinement data in {lz_file}"
         )
 
@@ -301,7 +301,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             zav = np.asarray(header.data, dtype=float)
 
     if zav is None:
-        raise RuntimeError(
+        raise ProcessError(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 

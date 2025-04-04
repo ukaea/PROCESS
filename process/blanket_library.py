@@ -454,7 +454,7 @@ class BlanketLibrary:
             or fwbs_variables.den_fw_coolant <= 0
             or np.isnan(fwbs_variables.den_fw_coolant)
         ):
-            raise RuntimeError(
+            raise ProcessValueError(
                 f"Error in primary_coolant_properties. {fwbs_variables.den_fw_coolant = }"
             )
         if (
@@ -462,7 +462,7 @@ class BlanketLibrary:
             or fwbs_variables.den_blkt_coolant <= 0
             or np.isnan(fwbs_variables.den_blkt_coolant)
         ):
-            raise RuntimeError(
+            raise ProcessValueError(
                 f"Error in primary_coolant_properties. {fwbs_variables.den_blkt_coolant = }"
             )
 
