@@ -1006,14 +1006,14 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Total",
-            "(plasma_current_internal_fraction+aux_current_fraction+inductive_current_fraction)",
-            current_drive_variables.plasma_current_internal_fraction
+            "(f_c_plasma_internal+aux_current_fraction+inductive_current_fraction)",
+            current_drive_variables.f_c_plasma_internal
             + physics_variables.aux_current_fraction
             + physics_variables.inductive_current_fraction,
         )
         if (
             abs(
-                current_drive_variables.plasma_current_internal_fraction
+                current_drive_variables.f_c_plasma_internal
                 + physics_variables.aux_current_fraction
                 + physics_variables.inductive_current_fraction
                 - 1.0e0

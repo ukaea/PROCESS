@@ -1940,7 +1940,7 @@ class Physics:
             current_drive_variables.f_c_plasma_bootstrap = abs(
                 current_drive_variables.f_c_plasma_bootstrap_max
             )
-            current_drive_variables.plasma_current_internal_fraction = (
+            current_drive_variables.f_c_plasma_internal = (
                 current_drive_variables.f_c_plasma_bootstrap
             )
         else:
@@ -2007,7 +2007,7 @@ class Physics:
                 )
                 physics_module.err242 = 1
 
-            current_drive_variables.plasma_current_internal_fraction = (
+            current_drive_variables.f_c_plasma_internal = (
                 current_drive_variables.f_c_plasma_bootstrap
                 + current_drive_variables.f_c_plasma_diamagnetic
                 + current_drive_variables.f_c_plasma_pfirsch_schluter
@@ -2020,11 +2020,11 @@ class Physics:
         # the current drive proportion)
         physics_module.err243 = 0
         if (
-            current_drive_variables.plasma_current_internal_fraction
+            current_drive_variables.f_c_plasma_internal
             > physics_variables.fvsbrnni
         ):
-            current_drive_variables.plasma_current_internal_fraction = min(
-                current_drive_variables.plasma_current_internal_fraction,
+            current_drive_variables.f_c_plasma_internal = min(
+                current_drive_variables.f_c_plasma_internal,
                 physics_variables.fvsbrnni,
             )
             physics_module.err243 = 1
@@ -2036,7 +2036,7 @@ class Physics:
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.aux_current_fraction = (
             physics_variables.fvsbrnni
-            - current_drive_variables.plasma_current_internal_fraction
+            - current_drive_variables.f_c_plasma_internal
         )
 
         # Auxiliary current drive power calculations
