@@ -17,10 +17,795 @@ from process.fortran import (
 from process.plasma_profiles import PlasmaProfile
 
 
-class CurrentDrive:
+class NeutralBeam:
     def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
+
+    def iternb(self):
+        """Routine to calculate ITER Neutral Beam current drive parameters
+        author: P J Knight, CCFE, Culham Science Centre
+        effnbss : output real : neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
+        fshine  : output real : shine-through fraction of beam
+        This routine calculates the current drive parameters for a
+        neutral beam system, based on the 1990 ITER model.
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        # Check argument sanity
+        if (1 + physics_variables.eps) < current_drive_variables.frbeam:
+            eh.fdiags[0] = physics_variables.eps
+            eh.fdiags[1] = current_drive_variables.frbeam
+            eh.report_error(15)
+
+        # Calculate beam path length to centre
+        dpath = physics_variables.rmajor * np.sqrt(
+            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+        )
+
+        # Calculate beam stopping cross-section
+        sigstop = self.sigbeam(
+            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
+            physics_variables.te,
+            physics_variables.dene,
+            physics_variables.f_nd_alpha_electron,
+            physics_variables.rncne,
+            physics_variables.rnone,
+            physics_variables.rnfene,
+        )
+
+        # Calculate number of decay lengths to centre
+        current_drive_variables.n_beam_decay_lengths_core = (
+            dpath * physics_variables.dene * sigstop
+        )
+
+        # Shine-through fraction of beam
+        fshine = np.exp(-2.0 * dpath * physics_variables.dene * sigstop)
+        fshine = max(fshine, 1e-20)
+
+        # Deuterium and tritium beam densities
+        dend = physics_variables.nd_fuel_ions * (
+            1.0 - current_drive_variables.f_beam_tritium
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
+
+        # Power split to ions / electrons
+        f_p_beam_injected_ions = self.cfnbi(
+            physics_variables.m_beam_amu,
+            current_drive_variables.e_beam_kev,
+            physics_variables.ten,
+            physics_variables.dene,
+            dend,
+            dent,
+            physics_variables.zeffai,
+            physics_variables.dlamie,
+        )
+
+        # Current drive efficiency
+        effnbss = current_drive_variables.frbeam * self.etanb(
+            physics_variables.m_beam_amu,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.aspect,
+            physics_variables.dene,
+            current_drive_variables.e_beam_kev,
+            physics_variables.rmajor,
+            physics_variables.ten,
+            physics_variables.zeff,
+        )
+
+        return effnbss, f_p_beam_injected_ions, fshine
+
+    def culnbi(self):
+        """Routine to calculate Neutral Beam current drive parameters
+        author: P J Knight, CCFE, Culham Science Centre
+        effnbss : output real : neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
+        fshine  : output real : shine-through fraction of beam
+        This routine calculates Neutral Beam current drive parameters
+        using the corrections outlined in AEA FUS 172 to the ITER method.
+        <P>The result cannot be guaranteed for devices with aspect ratios far
+        from that of ITER (approx. 2.8).
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
+            eh.fdiags[0] = physics_variables.eps
+            eh.fdiags[1] = current_drive_variables.frbeam
+            eh.report_error(20)
+
+        #  Calculate beam path length to centre
+
+        dpath = physics_variables.rmajor * np.sqrt(
+            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+        )
+
+        #  Calculate beam stopping cross-section
+
+        sigstop = self.sigbeam(
+            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
+            physics_variables.te,
+            physics_variables.dene,
+            physics_variables.f_nd_alpha_electron,
+            physics_variables.rncne,
+            physics_variables.rnone,
+            physics_variables.rnfene,
+        )
+
+        #  Calculate number of decay lengths to centre
+
+        current_drive_variables.n_beam_decay_lengths_core = (
+            dpath * physics_variables.dnla * sigstop
+        )
+
+        #  Shine-through fraction of beam
+
+        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
+        fshine = max(fshine, 1.0e-20)
+
+        #  Deuterium and tritium beam densities
+
+        dend = physics_variables.nd_fuel_ions * (
+            1.0e0 - current_drive_variables.f_beam_tritium
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
+
+        #  Power split to ions / electrons
+
+        f_p_beam_injected_ions = self.cfnbi(
+            physics_variables.m_beam_amu,
+            current_drive_variables.e_beam_kev,
+            physics_variables.ten,
+            physics_variables.dene,
+            dend,
+            dent,
+            physics_variables.zeffai,
+            physics_variables.dlamie,
+        )
+
+        #  Current drive efficiency
+
+        effnbss = self.etanb2(
+            physics_variables.m_beam_amu,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.aspect,
+            physics_variables.dene,
+            physics_variables.dnla,
+            current_drive_variables.e_beam_kev,
+            current_drive_variables.frbeam,
+            fshine,
+            physics_variables.rmajor,
+            physics_variables.rminor,
+            physics_variables.ten,
+            physics_variables.zeff,
+        )
+
+        return effnbss, f_p_beam_injected_ions, fshine
+
+    def etanb2(
+        self,
+        m_beam_amu,
+        alphan,
+        alphat,
+        aspect,
+        dene,
+        dnla,
+        e_beam_kev,
+        frbeam,
+        fshine,
+        rmajor,
+        rminor,
+        ten,
+        zeff,
+    ):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation, plus correction terms
+        outlined in Culham Report AEA FUS 172
+        author: P J Knight, CCFE, Culham Science Centre
+        m_beam_amu   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        dnla    : input real : line averaged electron density (m**-3)
+        e_beam_kev  : input real : neutral beam energy (keV)
+        frbeam  : input real : R_tangent / R_major for neutral beam injection
+        fshine  : input real : shine-through fraction of beam
+        rmajor  : input real : plasma major radius (m)
+        rminor  : input real : plasma minor radius (m)
+        ten     : input real : density weighted average electron temperature (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency in A/W of
+        a neutral beam system, based on the 1990 ITER model,
+        plus correction terms outlined in Culham Report AEA FUS 172.
+        <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        #  Charge of beam ions
+        zbeam = 1.0
+
+        #  Fitting factor (IPDG89)
+        bbd = 1.0
+
+        #  Volume averaged electron density (10**20 m**-3)
+        dene20 = dene / 1e20
+
+        #  Line averaged electron density (10**20 m**-3)
+        dnla20 = dnla / 1e20
+
+        #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
+        #  N.B. ten is in keV
+        ecrit = 0.01 * m_beam_amu * ten
+
+        #  Beam energy in MeV
+        ebmev = e_beam_kev / 1e3
+
+        #  x and y coefficients of function J0(x,y) (IPDG89)
+        xjs = ebmev / (bbd * ecrit)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / m_beam_amu
+
+        #  Fitting function J0(x,y)
+        j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        #  Effective inverse aspect ratio, with a limit on its maximum value
+        epseff = min(0.2, (0.5 / aspect))
+
+        #  Reduction in the reverse electron current
+        #  due to neoclassical effects
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+
+        # Reduction in the net beam driven current
+        #  due to the reverse electron current
+        ffac = 1.0 - (zbeam / zeff) * (1.0 - gfac)
+
+        #  Normalisation to allow results to be valid for
+        #  non-ITER plasma size and density:
+
+        #  Line averaged electron density (10**20 m**-3) normalised to ITER
+        nnorm = 1.0
+
+        #  Distance along beam to plasma centre
+        r = max(rmajor, rmajor * frbeam)
+        eps1 = rminor / r
+
+        if (1.0 + eps1) < frbeam:
+            eh.fdiags[0] = eps1
+            eh.fdiags[1] = frbeam
+            eh.report_error(21)
+
+        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
+
+        # Distance along beam to plasma centre for ITER
+        # assuming a tangency radius equal to the major radius
+        epsitr = 2.15 / 6.0
+        dnorm = 6.0 * np.sqrt(2.0 * epsitr + epsitr**2)
+
+        #  Normalisation to beam energy (assumes a simplified formula for
+        #  the beam stopping cross-section)
+        ebnorm = ebmev * ((nnorm * dnorm) / (dnla20 * d)) ** (1.0 / 0.78)
+
+        #  A_bd fitting coefficient, after normalisation with ebnorm
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2 * ebnorm + 0.09 * ebnorm**2)
+        )
+
+        #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
+        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
+
+        #  Current drive efficiency (A/W)
+        return gamnb / (dene20 * rmajor)
+
+    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation
+        author: P J Knight, CCFE, Culham Science Centre
+        m_beam_amu   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        ebeam  : input real : neutral beam energy (keV)
+        rmajor  : input real : plasma major radius (m)
+        ten     : input real : density weighted average electron temp. (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency of
+        a neutral beam system, based on the 1990 ITER model.
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+
+        zbeam = 1.0
+        bbd = 1.0
+
+        dene20 = 1e-20 * dene
+
+        # Ratio of E_beam/E_crit
+        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / m_beam_amu
+
+        rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        epseff = 0.5 / aspect
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+        ffac = 1.0 / zbeam - (1.0 - gfac) / zeff
+
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
+        )
+
+        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
+
+    def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
+        """Calculates the stopping cross-section for a hydrogen
+        beam in a fusion plasma
+        author: P J Knight, CCFE, Culham Science Centre
+        eb     : input real : beam energy (kev/amu)
+        te     : input real : electron temperature (keV)
+        ne     : input real : electron density (10^20m-3)
+        rnhe   : input real : alpha density / ne
+        rnc    : input real : carbon density /ne
+        rno    : input real : oxygen density /ne
+        rnfe   : input real : iron density /ne
+        This function calculates the stopping cross-section (m^-2)
+        for a hydrogen beam in a fusion plasma.
+        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
+        """
+        a = np.array([
+            [
+                [4.4, -2.49e-2],
+                [7.46e-2, 2.27e-3],
+                [3.16e-3, -2.78e-5],
+            ],
+            [
+                [2.3e-1, -1.15e-2],
+                [-2.55e-3, -6.2e-4],
+                [1.32e-3, 3.38e-5],
+            ],
+        ])
+
+        b = np.array([
+            [
+                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
+                [
+                    [-0.25, -0.119, -0.108, -0.0558],
+                    [-0.0381, -0.015, -0.0138, -3.72e-3],
+                ],
+            ],
+            [
+                [
+                    [0.849, 0.518, 0.477, 0.322],
+                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
+                ],
+                [
+                    [0.0677, 0.0292, 0.0259, 0.0124],
+                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
+                ],
+            ],
+            [
+                [
+                    [-0.0588, -0.0336, -0.0305, -0.0187],
+                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
+                ],
+                [
+                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
+                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
+                ],
+            ],
+        ])
+
+        z = np.array([2.0, 6.0, 8.0, 26.0])
+        nn = np.array([rnhe, rnc, rno, rnfe])
+
+        nen = ne * 1e-19
+
+        s1 = 0.0
+        for k in range(2):
+            for j in range(3):
+                for i in range(2):
+                    s1 += (
+                        a[i, j, k]
+                        * (np.log(eb)) ** i
+                        * (np.log(nen)) ** j
+                        * (np.log(te)) ** k
+                    )
+
+        sz = 0.0
+        for l in range(4):  # noqa: E741
+            for k in range(2):
+                for j in range(2):
+                    for i in range(3):
+                        sz += (
+                            b[i, j, k, l]
+                            * (np.log(eb)) ** i
+                            * (np.log(nen)) ** j
+                            * (np.log(te)) ** k
+                            * nn[l]
+                            * z[l]
+                            * (z[l] - 1.0)
+                        )
+
+        return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
+
+    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
+        """Routine to calculate the fraction of the fast particle energy
+        coupled to the ions
+        author: P J Knight, CCFE, Culham Science Centre
+        afast   : input real : mass of fast particle (units of proton mass)
+        efast   : input real : energy of fast particle (keV)
+        te      : input real : density weighted average electron temp. (keV)
+        ne      : input real : volume averaged electron density (m**-3)
+        nd      : input real : deuterium beam density (m**-3)
+        nt      : input real : tritium beam density (m**-3)
+        zeffai  : input real : mass weighted plasma effective charge
+        xlmbda  : input real : ion-electron coulomb logarithm
+        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
+        This routine calculates the fast particle energy coupled to
+        the ions in the neutral beam system.
+        """
+        # atmd = 2.0
+        atmdt = 2.5
+        # atmt = 3.0
+        c = 3.0e8
+        me = constants.electron_mass
+        # zd = 1.0
+        # zt = 1.0
+
+        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
+        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
+
+        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
+        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
+
+        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
+        sumln = zeffai * xlmbdai / xlmbda
+        xlnrat = (
+            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
+        ) ** (2.0e0 / 3.0e0)
+        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
+
+        ecritfi = (
+            afast
+            * constants.proton_mass
+            * ve
+            * ve
+            * xlnrat
+            / (2.0e0 * constants.electron_charge * 1.0e3)
+        )
+
+        x = np.sqrt(efast / ecritfi)
+        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
+        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
+        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.arctan(thx) + np.pi / 6.0e0)
+
+        return (t1 + t2) / (3.0e0 * x * x)
+
+    def xlmbdabi(self, mb, mth, eb, t, nelec):
+        """Calculates the Coulomb logarithm for ion-ion collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        mb     : input real : mass of fast particle (units of proton mass)
+        mth    : input real : mass of background ions (units of proton mass)
+        eb     : input real : energy of fast particle (keV)
+        t      : input real : density weighted average electron temp. (keV)
+        nelec  : input real : volume averaged electron density (m**-3)
+        This function calculates the Coulomb logarithm for ion-ion
+        collisions where the relative velocity may be large compared
+        with the background ('mt') thermal velocity.
+        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+        """
+
+        x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
+        x2 = mth / (mth + mb)
+
+        return 23.7 + np.log(x2 * np.sqrt(x1))
+
+
+class ElectronCyclotron:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+    def culecd(self):
+        """Routine to calculate Electron Cyclotron current drive efficiency
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        effrfss : output real : electron cyclotron current drive efficiency (A/W)
+        This routine calculates the current drive parameters for a
+        electron cyclotron system, based on the AEA FUS 172 model.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        rrr = 1.0e0 / 3.0e0
+
+        #  Temperature
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
+            rrr,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+
+        #  Density (10**20 m**-3)
+        dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
+            rrr,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+
+        #  Inverse aspect ratio
+        epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
+
+        #  Effective charge (use average value)
+        zlocal = physics_variables.zeff
+
+        #  Coulomb logarithm for ion-electron collisions
+        #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
+        coulog = 15.2e0 - 0.5e0 * np.log(dlocal) + np.log(tlocal)
+
+        #  Calculate normalised current drive efficiency at four different
+        #  poloidal angles, and average.
+        #  cosang = cosine of the poloidal angle at which ECCD takes place
+        #         = +1 outside, -1 inside.
+        cosang = 1.0e0
+        ecgam1 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = 0.5e0
+        ecgam2 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = -0.5e0
+        ecgam3 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+        cosang = -1.0e0
+        ecgam4 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
+
+        #  Normalised current drive efficiency (A/W m**-2)
+        ecgam = 0.25e0 * (ecgam1 + ecgam2 + ecgam3 + ecgam4)
+
+        #  Current drive efficiency (A/W)
+        return ecgam / (dlocal * physics_variables.rmajor)
+
+    def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
+        """Routine to calculate Electron Cyclotron current drive efficiency
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        tlocal : input real : local electron temperature (keV)
+        epsloc : input real : local inverse aspect ratio
+        zlocal : input real : local plasma effective charge
+        cosang : input real : cosine of the poloidal angle at which ECCD takes
+        place (+1 outside, -1 inside)
+        coulog : input real : local coulomb logarithm for ion-electron collisions
+        ecgam  : output real : normalised current drive efficiency (A/W m**-2)
+        This routine calculates the current drive parameters for a
+        electron cyclotron system, based on the AEA FUS 172 model.
+        It works out the ECCD efficiency using the formula due to Cohen
+        quoted in the ITER Physics Design Guidelines : 1989
+        (but including division by the Coulomb Logarithm omitted from
+        IPDG89). We have assumed gamma**2-1 << 1, where gamma is the
+        relativistic factor. The notation follows that in IPDG89.
+        <P>The answer ECGAM is the normalised efficiency nIR/P with n the
+        local density in 10**20 /m**3, I the driven current in MAmps,
+        R the major radius in metres, and P the absorbed power in MWatts.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        mcsq = (
+            constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)
+        )  # keV
+        f = 16.0e0 * (tlocal / mcsq) ** 2
+
+        #  fp is the derivative of f with respect to gamma, the relativistic
+        #  factor, taken equal to 1 + 2T/(m c**2)
+
+        fp = 16.0e0 * tlocal / mcsq
+
+        #  lam is IPDG89's lambda. LEGEND calculates the Legendre function of
+        #  order alpha and argument lam, palpha, and its derivative, palphap.
+        #  Here alpha satisfies alpha(alpha+1) = -8/(1+zlocal). alpha is of the
+        #  form  (-1/2 + ix), with x a real number and i = sqrt(-1).
+
+        lam = 1.0e0
+        palpha, palphap = self.legend(zlocal, lam)
+
+        lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
+        palphas, _ = self.legend(zlocal, lams)
+
+        #  hp is the derivative of IPDG89's h function with respect to lam
+
+        h = -4.0e0 * lam / (zlocal + 5.0e0) * (1.0e0 - lams * palpha / (lam * palphas))
+        hp = -4.0e0 / (zlocal + 5.0e0) * (1.0e0 - lams * palphap / palphas)
+
+        #  facm is IPDG89's momentum conserving factor
+
+        facm = 1.5e0
+        y = mcsq / (2.0e0 * tlocal) * (1.0e0 + epsloc * cosang)
+
+        #  We take the negative of the IPDG89 expression to get a positive
+        #  number
+
+        ecgam = (
+            -7.8e0
+            * facm
+            * np.sqrt((1.0e0 + epsloc) / (1.0e0 - epsloc))
+            / coulog
+            * (h * fp - 0.5e0 * y * f * hp)
+        )
+
+        if ecgam < 0.0e0:
+            eh.report_error(17)
+        return ecgam
+
+
+class IonCyclotron:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+
+class ElectronBernstein:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+
+class LowerHybrid:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+    def cullhy(self):
+        """Routine to calculate Lower Hybrid current drive efficiency
+        author: P J Knight, CCFE, Culham Science Centre
+        effrfss : output real : lower hybrid current drive efficiency (A/W)
+        This routine calculates the current drive parameters for a
+        lower hybrid system, based on the AEA FUS 172 model.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        rratio = self.lhrad()
+        rpenet = rratio * physics_variables.rminor
+
+        # Local density, temperature, toroidal field at this minor radius
+
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+        blocal = (
+            physics_variables.bt
+            * physics_variables.rmajor
+            / (physics_variables.rmajor - rpenet)
+        )  # Calculated on inboard side
+
+        # Parallel refractive index needed for plasma access
+
+        frac = np.sqrt(dlocal) / blocal
+        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
+
+        # Local inverse aspect ratio
+
+        epslh = rpenet / physics_variables.rmajor
+
+        # LH normalised efficiency (A/W m**-2)
+
+        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
+
+        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
+        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
+        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
+        term04 = 3.5e0 * epslh**0.77e0 + x
+
+        if term03 > term04:
+            eh.fdiags[0] = term03
+            eh.fdiags[1] = term04
+            eh.report_error(129)
+
+        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
+
+        # Current drive efficiency (A/W)
+
+        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
+
+    def lhrad(self):
+        """Routine to calculate Lower Hybrid wave absorption radius
+        author: P J Knight, CCFE, Culham Science Centre
+        rratio  : output real : minor radius of penetration / rminor
+        This routine determines numerically the minor radius at which the
+        damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        #  Correction to refractive index (kept within valid bounds)
+        drfind = min(0.7e0, max(0.1e0, 12.5e0 / physics_variables.te0))
+
+        #  Use Newton-Raphson method to establish the correct minor radius
+        #  ratio. g is calculated as a function of r / r_minor, where g is
+        #  the difference between the results of the two formulae for the
+        #  energy E given in AEA FUS 172, p.58. The required minor radius
+        #  ratio has been found when g is sufficiently close to zero.
+
+        #  Initial guess for the minor radius ratio
+
+        rat0 = 0.8e0
+
+        for _ in range(100):
+            #  Minor radius ratios either side of the latest guess
+
+            r1 = rat0 - 1.0e-3 * rat0
+            r2 = rat0 + 1.0e-3 * rat0
+
+            #  Evaluate g at rat0, r1, r2
+
+            g0 = self.lheval(drfind, rat0)
+            g1 = self.lheval(drfind, r1)
+            g2 = self.lheval(drfind, r2)
+
+            #  Calculate gradient of g with respect to minor radius ratio
+
+            dgdr = (g2 - g1) / (r2 - r1)
+
+            #  New approximation
+
+            rat1 = rat0 - g0 / dgdr
+
+            #  Force this approximation to lie within bounds
+
+            rat1 = max(0.0001e0, rat1)
+            rat1 = min(0.9999e0, rat1)
+
+            if abs(g0) <= 0.01e0:
+                break
+            rat0 = rat1
+
+        else:
+            eh.report_error(16)
+            rat0 = 0.8e0
+
+        return rat0
+
+
+class CurrentDrive:
+    def __init__(
+        self,
+        plasma_profile: PlasmaProfile,
+        electron_cyclotron: ElectronCyclotron,
+        ion_cyclotron: IonCyclotron,
+        lower_hybrid: LowerHybrid,
+        neutral_beam: NeutralBeam,
+        electron_bernstein: ElectronBernstein,
+    ):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+        self.electron_cyclotron = electron_cyclotron
+        self.ion_cyclotron = ion_cyclotron
+        self.lower_hybrid = lower_hybrid
+        self.neutral_beam = neutral_beam
+        self.electron_bernstein = electron_bernstein
 
     def cudriv(self, output: bool):
         """Routine to calculate the current drive power requirements
@@ -128,17 +913,17 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
-                ) = self.iternb()
+                ) = self.neutral_beam.iternb()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 eta_cd_hcd_secondary = effnbssfix
             # Culham Lower Hybrid current drive model
             elif current_drive_variables.i_hcd_secondary == 6:
-                effrfss = self.cullhy()
+                effrfss = self.lower_hybrid.cullhy()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 eta_cd_hcd_secondary = effrfssfix
             # Culham ECCD model
             elif current_drive_variables.i_hcd_secondary == 7:
-                effrfss = self.culecd()
+                effrfss = self.electron_cyclotron.culecd()
                 effrfssfix = effrfss * current_drive_variables.feffcd
                 eta_cd_hcd_secondary = effrfssfix
             # Culham Neutral Beam model
@@ -147,7 +932,7 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
-                ) = self.culnbi()
+                ) = self.neutral_beam.culnbi()
                 effnbssfix = effnbss * current_drive_variables.feffcd
                 eta_cd_hcd_secondary = effnbssfix
             # ECRH user input gamma
@@ -440,17 +1225,17 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
-                ) = self.iternb()
+                ) = self.neutral_beam.iternb()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.eta_cd_hcd_primary = effnbss
             # Culham Lower Hybrid current drive model
             elif current_drive_variables.i_hcd_primary == 6:
-                effrfss = self.cullhy()
+                effrfss = self.lower_hybrid.cullhy()
                 effrfss = effrfss * current_drive_variables.feffcd
                 current_drive_variables.eta_cd_hcd_primary = effrfss
             # Culham ECCD model
             elif current_drive_variables.i_hcd_primary == 7:
-                effrfss = self.culecd()
+                effrfss = self.electron_cyclotron.culecd()
                 effrfss = effrfss * current_drive_variables.feffcd
                 current_drive_variables.eta_cd_hcd_primary = effrfss
             # Culham Neutral Beam model
@@ -459,7 +1244,7 @@ class CurrentDrive:
                     effnbss,
                     current_drive_variables.f_p_beam_injected_ions,
                     current_drive_variables.f_p_beam_shine_through,
-                ) = self.culnbi()
+                ) = self.neutral_beam.culnbi()
                 effnbss = effnbss * current_drive_variables.feffcd
                 current_drive_variables.eta_cd_hcd_primary = effnbss
             # ECRH user input gamma
@@ -1335,548 +2120,6 @@ class CurrentDrive:
                 "OP ",
             )
 
-    def iternb(self):
-        """Routine to calculate ITER Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
-        This routine calculates the current drive parameters for a
-        neutral beam system, based on the 1990 ITER model.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-        # Check argument sanity
-        if (1 + physics_variables.eps) < current_drive_variables.frbeam:
-            raise ProcessValueError(
-                "Imminent negative square root argument; NBI will miss plasma completely",
-                eps=physics_variables.eps,
-                frbeam=current_drive_variables.frbeam,
-            )
-
-        # Calculate beam path length to centre
-        dpath = physics_variables.rmajor * np.sqrt(
-            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
-        )
-
-        # Calculate beam stopping cross-section
-        sigstop = self.sigbeam(
-            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.te,
-            physics_variables.dene,
-            physics_variables.f_nd_alpha_electron,
-            physics_variables.rncne,
-            physics_variables.rnone,
-            physics_variables.rnfene,
-        )
-
-        # Calculate number of decay lengths to centre
-        current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.dene * sigstop
-        )
-
-        # Shine-through fraction of beam
-        fshine = np.exp(-2.0 * dpath * physics_variables.dene * sigstop)
-        fshine = max(fshine, 1e-20)
-
-        # Deuterium and tritium beam densities
-        dend = physics_variables.nd_fuel_ions * (
-            1.0 - current_drive_variables.f_beam_tritium
-        )
-        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
-
-        # Power split to ions / electrons
-        f_p_beam_injected_ions = self.cfnbi(
-            physics_variables.m_beam_amu,
-            current_drive_variables.e_beam_kev,
-            physics_variables.ten,
-            physics_variables.dene,
-            dend,
-            dent,
-            physics_variables.zeffai,
-            physics_variables.dlamie,
-        )
-
-        # Current drive efficiency
-        effnbss = current_drive_variables.frbeam * self.etanb(
-            physics_variables.m_beam_amu,
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.aspect,
-            physics_variables.dene,
-            current_drive_variables.e_beam_kev,
-            physics_variables.rmajor,
-            physics_variables.ten,
-            physics_variables.zeff,
-        )
-
-        return effnbss, f_p_beam_injected_ions, fshine
-
-    def cullhy(self):
-        """Routine to calculate Lower Hybrid current drive efficiency
-        author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : lower hybrid current drive efficiency (A/W)
-        This routine calculates the current drive parameters for a
-        lower hybrid system, based on the AEA FUS 172 model.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        rratio = self.lhrad()
-        rpenet = rratio * physics_variables.rminor
-
-        # Local density, temperature, toroidal field at this minor radius
-
-        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedt,
-            physics_variables.te0,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
-        blocal = (
-            physics_variables.bt
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rpenet)
-        )  # Calculated on inboard side
-
-        # Parallel refractive index needed for plasma access
-
-        frac = np.sqrt(dlocal) / blocal
-        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
-
-        # Local inverse aspect ratio
-
-        epslh = rpenet / physics_variables.rmajor
-
-        # LH normalised efficiency (A/W m**-2)
-
-        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
-
-        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
-        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
-        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
-        term04 = 3.5e0 * epslh**0.77e0 + x
-
-        if term03 > term04:
-            raise ProcessValueError(
-                "Normalised LH efficiency < 0; use a different value of iefrf",
-                term03=term03,
-                term04=term04,
-            )
-
-        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
-
-        # Current drive efficiency (A/W)
-
-        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
-
-    def culecd(self):
-        """Routine to calculate Electron Cyclotron current drive efficiency
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : electron cyclotron current drive efficiency (A/W)
-        This routine calculates the current drive parameters for a
-        electron cyclotron system, based on the AEA FUS 172 model.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        rrr = 1.0e0 / 3.0e0
-
-        #  Temperature
-        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
-            rrr,
-            physics_variables.rhopedt,
-            physics_variables.te0,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
-
-        #  Density (10**20 m**-3)
-        dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
-            rrr,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-
-        #  Inverse aspect ratio
-        epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
-
-        #  Effective charge (use average value)
-        zlocal = physics_variables.zeff
-
-        #  Coulomb logarithm for ion-electron collisions
-        #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
-        coulog = 15.2e0 - 0.5e0 * np.log(dlocal) + np.log(tlocal)
-
-        #  Calculate normalised current drive efficiency at four different
-        #  poloidal angles, and average.
-        #  cosang = cosine of the poloidal angle at which ECCD takes place
-        #         = +1 outside, -1 inside.
-        cosang = 1.0e0
-        ecgam1 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
-        cosang = 0.5e0
-        ecgam2 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
-        cosang = -0.5e0
-        ecgam3 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
-        cosang = -1.0e0
-        ecgam4 = self.eccdef(tlocal, epsloc, zlocal, cosang, coulog)
-
-        #  Normalised current drive efficiency (A/W m**-2)
-        ecgam = 0.25e0 * (ecgam1 + ecgam2 + ecgam3 + ecgam4)
-
-        #  Current drive efficiency (A/W)
-        return ecgam / (dlocal * physics_variables.rmajor)
-
-    def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
-        """Routine to calculate Electron Cyclotron current drive efficiency
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        tlocal : input real : local electron temperature (keV)
-        epsloc : input real : local inverse aspect ratio
-        zlocal : input real : local plasma effective charge
-        cosang : input real : cosine of the poloidal angle at which ECCD takes
-        place (+1 outside, -1 inside)
-        coulog : input real : local coulomb logarithm for ion-electron collisions
-        ecgam  : output real : normalised current drive efficiency (A/W m**-2)
-        This routine calculates the current drive parameters for a
-        electron cyclotron system, based on the AEA FUS 172 model.
-        It works out the ECCD efficiency using the formula due to Cohen
-        quoted in the ITER Physics Design Guidelines : 1989
-        (but including division by the Coulomb Logarithm omitted from
-        IPDG89). We have assumed gamma**2-1 << 1, where gamma is the
-        relativistic factor. The notation follows that in IPDG89.
-        <P>The answer ECGAM is the normalised efficiency nIR/P with n the
-        local density in 10**20 /m**3, I the driven current in MAmps,
-        R the major radius in metres, and P the absorbed power in MWatts.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-        mcsq = (
-            constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)
-        )  # keV
-        f = 16.0e0 * (tlocal / mcsq) ** 2
-
-        #  fp is the derivative of f with respect to gamma, the relativistic
-        #  factor, taken equal to 1 + 2T/(m c**2)
-
-        fp = 16.0e0 * tlocal / mcsq
-
-        #  lam is IPDG89's lambda. LEGEND calculates the Legendre function of
-        #  order alpha and argument lam, palpha, and its derivative, palphap.
-        #  Here alpha satisfies alpha(alpha+1) = -8/(1+zlocal). alpha is of the
-        #  form  (-1/2 + ix), with x a real number and i = sqrt(-1).
-
-        lam = 1.0e0
-        palpha, palphap = self.legend(zlocal, lam)
-
-        lams = np.sqrt(2.0e0 * epsloc / (1.0e0 + epsloc))
-        palphas, _ = self.legend(zlocal, lams)
-
-        #  hp is the derivative of IPDG89's h function with respect to lam
-
-        h = -4.0e0 * lam / (zlocal + 5.0e0) * (1.0e0 - lams * palpha / (lam * palphas))
-        hp = -4.0e0 / (zlocal + 5.0e0) * (1.0e0 - lams * palphap / palphas)
-
-        #  facm is IPDG89's momentum conserving factor
-
-        facm = 1.5e0
-        y = mcsq / (2.0e0 * tlocal) * (1.0e0 + epsloc * cosang)
-
-        #  We take the negative of the IPDG89 expression to get a positive
-        #  number
-
-        ecgam = (
-            -7.8e0
-            * facm
-            * np.sqrt((1.0e0 + epsloc) / (1.0e0 - epsloc))
-            / coulog
-            * (h * fp - 0.5e0 * y * f * hp)
-        )
-
-        if ecgam < 0.0e0:
-            raise ProcessValueError("Negative normalised current drive efficiency")
-        return ecgam
-
-    def culnbi(self):
-        """Routine to calculate Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
-        This routine calculates Neutral Beam current drive parameters
-        using the corrections outlined in AEA FUS 172 to the ITER method.
-        <P>The result cannot be guaranteed for devices with aspect ratios far
-        from that of ITER (approx. 2.8).
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
-            raise ProcessValueError(
-                "Imminent negative square root argument; NBI will miss plasma completely",
-                eps=physics_variables.eps,
-                frbeam=current_drive_variables.frbeam,
-            )
-
-        #  Calculate beam path length to centre
-
-        dpath = physics_variables.rmajor * np.sqrt(
-            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
-        )
-
-        #  Calculate beam stopping cross-section
-
-        sigstop = self.sigbeam(
-            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.te,
-            physics_variables.dene,
-            physics_variables.f_nd_alpha_electron,
-            physics_variables.rncne,
-            physics_variables.rnone,
-            physics_variables.rnfene,
-        )
-
-        #  Calculate number of decay lengths to centre
-
-        current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.dnla * sigstop
-        )
-
-        #  Shine-through fraction of beam
-
-        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
-        fshine = max(fshine, 1.0e-20)
-
-        #  Deuterium and tritium beam densities
-
-        dend = physics_variables.nd_fuel_ions * (
-            1.0e0 - current_drive_variables.f_beam_tritium
-        )
-        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
-
-        #  Power split to ions / electrons
-
-        f_p_beam_injected_ions = self.cfnbi(
-            physics_variables.m_beam_amu,
-            current_drive_variables.e_beam_kev,
-            physics_variables.ten,
-            physics_variables.dene,
-            dend,
-            dent,
-            physics_variables.zeffai,
-            physics_variables.dlamie,
-        )
-
-        #  Current drive efficiency
-
-        effnbss = self.etanb2(
-            physics_variables.m_beam_amu,
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.aspect,
-            physics_variables.dene,
-            physics_variables.dnla,
-            current_drive_variables.e_beam_kev,
-            current_drive_variables.frbeam,
-            fshine,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.ten,
-            physics_variables.zeff,
-        )
-
-        return effnbss, f_p_beam_injected_ions, fshine
-
-    def lhrad(self):
-        """Routine to calculate Lower Hybrid wave absorption radius
-        author: P J Knight, CCFE, Culham Science Centre
-        rratio  : output real : minor radius of penetration / rminor
-        This routine determines numerically the minor radius at which the
-        damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        #  Correction to refractive index (kept within valid bounds)
-        drfind = min(0.7e0, max(0.1e0, 12.5e0 / physics_variables.te0))
-
-        #  Use Newton-Raphson method to establish the correct minor radius
-        #  ratio. g is calculated as a function of r / r_minor, where g is
-        #  the difference between the results of the two formulae for the
-        #  energy E given in AEA FUS 172, p.58. The required minor radius
-        #  ratio has been found when g is sufficiently close to zero.
-
-        #  Initial guess for the minor radius ratio
-
-        rat0 = 0.8e0
-
-        for _ in range(100):
-            #  Minor radius ratios either side of the latest guess
-
-            r1 = rat0 - 1.0e-3 * rat0
-            r2 = rat0 + 1.0e-3 * rat0
-
-            #  Evaluate g at rat0, r1, r2
-
-            g0 = self.lheval(drfind, rat0)
-            g1 = self.lheval(drfind, r1)
-            g2 = self.lheval(drfind, r2)
-
-            #  Calculate gradient of g with respect to minor radius ratio
-
-            dgdr = (g2 - g1) / (r2 - r1)
-
-            #  New approximation
-
-            rat1 = rat0 - g0 / dgdr
-
-            #  Force this approximation to lie within bounds
-
-            rat1 = max(0.0001e0, rat1)
-            rat1 = min(0.9999e0, rat1)
-
-            if abs(g0) <= 0.01e0:
-                break
-            rat0 = rat1
-
-        else:
-            eh.report_error(16)
-            rat0 = 0.8e0
-
-        return rat0
-
-    def etanb2(
-        self,
-        m_beam_amu,
-        alphan,
-        alphat,
-        aspect,
-        dene,
-        dnla,
-        e_beam_kev,
-        frbeam,
-        fshine,
-        rmajor,
-        rminor,
-        ten,
-        zeff,
-    ):
-        """Routine to find neutral beam current drive efficiency
-        using the ITER 1990 formulation, plus correction terms
-        outlined in Culham Report AEA FUS 172
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
-        dnla    : input real : line averaged electron density (m**-3)
-        e_beam_kev  : input real : neutral beam energy (keV)
-        frbeam  : input real : R_tangent / R_major for neutral beam injection
-        fshine  : input real : shine-through fraction of beam
-        rmajor  : input real : plasma major radius (m)
-        rminor  : input real : plasma minor radius (m)
-        ten     : input real : density weighted average electron temperature (keV)
-        zeff    : input real : plasma effective charge
-        This routine calculates the current drive efficiency in A/W of
-        a neutral beam system, based on the 1990 ITER model,
-        plus correction terms outlined in Culham Report AEA FUS 172.
-        <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-        #  Charge of beam ions
-        zbeam = 1.0
-
-        #  Fitting factor (IPDG89)
-        bbd = 1.0
-
-        #  Volume averaged electron density (10**20 m**-3)
-        dene20 = dene / 1e20
-
-        #  Line averaged electron density (10**20 m**-3)
-        dnla20 = dnla / 1e20
-
-        #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
-        #  N.B. ten is in keV
-        ecrit = 0.01 * m_beam_amu * ten
-
-        #  Beam energy in MeV
-        ebmev = e_beam_kev / 1e3
-
-        #  x and y coefficients of function J0(x,y) (IPDG89)
-        xjs = ebmev / (bbd * ecrit)
-        xj = np.sqrt(xjs)
-
-        yj = 0.8 * zeff / m_beam_amu
-
-        #  Fitting function J0(x,y)
-        j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
-
-        #  Effective inverse aspect ratio, with a limit on its maximum value
-        epseff = min(0.2, (0.5 / aspect))
-
-        #  Reduction in the reverse electron current
-        #  due to neoclassical effects
-        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
-
-        # Reduction in the net beam driven current
-        #  due to the reverse electron current
-        ffac = 1.0 - (zbeam / zeff) * (1.0 - gfac)
-
-        #  Normalisation to allow results to be valid for
-        #  non-ITER plasma size and density:
-
-        #  Line averaged electron density (10**20 m**-3) normalised to ITER
-        nnorm = 1.0
-
-        #  Distance along beam to plasma centre
-        r = max(rmajor, rmajor * frbeam)
-        eps1 = rminor / r
-
-        if (1.0 + eps1) < frbeam:
-            raise ProcessValueError(
-                "Imminent negative square root argument; NBI will miss plasma completely",
-                eps=eps1,
-                frbeam=frbeam,
-            )
-
-        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
-
-        # Distance along beam to plasma centre for ITER
-        # assuming a tangency radius equal to the major radius
-        epsitr = 2.15 / 6.0
-        dnorm = 6.0 * np.sqrt(2.0 * epsitr + epsitr**2)
-
-        #  Normalisation to beam energy (assumes a simplified formula for
-        #  the beam stopping cross-section)
-        ebnorm = ebmev * ((nnorm * dnorm) / (dnla20 * d)) ** (1.0 / 0.78)
-
-        #  A_bd fitting coefficient, after normalisation with ebnorm
-        abd = (
-            0.107
-            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
-            * (1.0 - 0.21 * alphat)
-            * (1.0 - 0.2 * ebnorm + 0.09 * ebnorm**2)
-        )
-
-        #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
-        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
-
-        #  Current drive efficiency (A/W)
-        return gamnb / (dene20 * rmajor)
-
     def lheval(self, drfind, rratio):
         """Routine to evaluate the difference between electron energy
         expressions required to find the Lower Hybrid absorption radius
@@ -1941,123 +2184,6 @@ class CurrentDrive:
 
         return e1 - e2
 
-    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
-        """Routine to find neutral beam current drive efficiency
-        using the ITER 1990 formulation
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
-        ebeam  : input real : neutral beam energy (keV)
-        rmajor  : input real : plasma major radius (m)
-        ten     : input real : density weighted average electron temp. (keV)
-        zeff    : input real : plasma effective charge
-        This routine calculates the current drive efficiency of
-        a neutral beam system, based on the 1990 ITER model.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-
-        zbeam = 1.0
-        bbd = 1.0
-
-        dene20 = 1e-20 * dene
-
-        # Ratio of E_beam/E_crit
-        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
-        xj = np.sqrt(xjs)
-
-        yj = 0.8 * zeff / m_beam_amu
-
-        rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
-
-        epseff = 0.5 / aspect
-        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
-        ffac = 1.0 / zbeam - (1.0 - gfac) / zeff
-
-        abd = (
-            0.107
-            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
-            * (1.0 - 0.21 * alphat)
-            * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
-        )
-
-        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
-
-    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
-        """Routine to calculate the fraction of the fast particle energy
-        coupled to the ions
-        author: P J Knight, CCFE, Culham Science Centre
-        afast   : input real : mass of fast particle (units of proton mass)
-        efast   : input real : energy of fast particle (keV)
-        te      : input real : density weighted average electron temp. (keV)
-        ne      : input real : volume averaged electron density (m**-3)
-        nd      : input real : deuterium beam density (m**-3)
-        nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
-        xlmbda  : input real : ion-electron coulomb logarithm
-        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
-        This routine calculates the fast particle energy coupled to
-        the ions in the neutral beam system.
-        """
-        # atmd = 2.0
-        atmdt = 2.5
-        # atmt = 3.0
-        c = 3.0e8
-        me = constants.electron_mass
-        # zd = 1.0
-        # zt = 1.0
-
-        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
-        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
-
-        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
-        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
-
-        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (
-            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
-        ) ** (2.0e0 / 3.0e0)
-        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
-
-        ecritfi = (
-            afast
-            * constants.proton_mass
-            * ve
-            * ve
-            * xlnrat
-            / (2.0e0 * constants.electron_charge * 1.0e3)
-        )
-
-        x = np.sqrt(efast / ecritfi)
-        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
-        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
-        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.arctan(thx) + np.pi / 6.0e0)
-
-        return (t1 + t2) / (3.0e0 * x * x)
-
-    def xlmbdabi(self, mb, mth, eb, t, nelec):
-        """Calculates the Coulomb logarithm for ion-ion collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        mb     : input real : mass of fast particle (units of proton mass)
-        mth    : input real : mass of background ions (units of proton mass)
-        eb     : input real : energy of fast particle (keV)
-        t      : input real : density weighted average electron temp. (keV)
-        nelec  : input real : volume averaged electron density (m**-3)
-        This function calculates the Coulomb logarithm for ion-ion
-        collisions where the relative velocity may be large compared
-        with the background ('mt') thermal velocity.
-        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
-        """
-
-        x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
-        x2 = mth / (mth + mb)
-
-        return 23.7 + np.log(x2 * np.sqrt(x1))
-
     def legend(self, zlocal, arg):
         """Routine to calculate Legendre function and its derivative
         author: M R O'Brien, CCFE, Culham Science Centre
@@ -2117,166 +2243,5 @@ class CurrentDrive:
             palpha = palpha + pterm
             palphap = palphap - n * pterm / (1.0e0 - arg2)
         else:
-            raise ProcessError("legend: Solution has not converged")
-
-    def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
-        """Calculates the stopping cross-section for a hydrogen
-        beam in a fusion plasma
-        author: P J Knight, CCFE, Culham Science Centre
-        eb     : input real : beam energy (kev/amu)
-        te     : input real : electron temperature (keV)
-        ne     : input real : electron density (10^20m-3)
-        rnhe   : input real : alpha density / ne
-        rnc    : input real : carbon density /ne
-        rno    : input real : oxygen density /ne
-        rnfe   : input real : iron density /ne
-        This function calculates the stopping cross-section (m^-2)
-        for a hydrogen beam in a fusion plasma.
-        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
-        """
-        a = np.array([
-            [
-                [4.4, -2.49e-2],
-                [7.46e-2, 2.27e-3],
-                [3.16e-3, -2.78e-5],
-            ],
-            [
-                [2.3e-1, -1.15e-2],
-                [-2.55e-3, -6.2e-4],
-                [1.32e-3, 3.38e-5],
-            ],
-        ])
-
-        b = np.array([
-            [
-                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
-                [
-                    [-0.25, -0.119, -0.108, -0.0558],
-                    [-0.0381, -0.015, -0.0138, -3.72e-3],
-                ],
-            ],
-            [
-                [
-                    [0.849, 0.518, 0.477, 0.322],
-                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
-                ],
-                [
-                    [0.0677, 0.0292, 0.0259, 0.0124],
-                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
-                ],
-            ],
-            [
-                [
-                    [-0.0588, -0.0336, -0.0305, -0.0187],
-                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
-                ],
-                [
-                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
-                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
-                ],
-            ],
-        ])
-
-        z = np.array([2.0, 6.0, 8.0, 26.0])
-        nn = np.array([rnhe, rnc, rno, rnfe])
-
-        nen = ne * 1e-19
-
-        s1 = 0.0
-        for k in range(2):
-            for j in range(3):
-                for i in range(2):
-                    s1 += (
-                        a[i, j, k]
-                        * (np.log(eb)) ** i
-                        * (np.log(nen)) ** j
-                        * (np.log(te)) ** k
-                    )
-
-        sz = 0.0
-        for l in range(4):  # noqa: E741
-            for k in range(2):
-                for j in range(2):
-                    for i in range(3):
-                        sz += (
-                            b[i, j, k, l]
-                            * (np.log(eb)) ** i
-                            * (np.log(nen)) ** j
-                            * (np.log(te)) ** k
-                            * nn[l]
-                            * z[l]
-                            * (z[l] - 1.0)
-                        )
-
-        return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
-
-
-def init_current_drive_variables():
-    """Initialise current drive variables"""
-    current_drive_variables.beamwd = 0.58
-    current_drive_variables.bigq = 0.0
-    current_drive_variables.f_c_plasma_bootstrap = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_max = 0.9
-    current_drive_variables.f_c_plasma_bootstrap_iter89 = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_nevins = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sauter = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_wilson = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sakai = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_aries = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_andrade = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_hoang = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_wong = 0.0
-    current_drive_variables.bscf_gi_i = 0.0
-    current_drive_variables.bscf_gi_ii = 0.0
-    current_drive_variables.cboot = 1.0
-    current_drive_variables.c_beam_total = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic_hender = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic_scene = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic = 0.0
-    current_drive_variables.p_ecrh_injected_mw = 0.0
-    current_drive_variables.echwpow = 0.0
-    current_drive_variables.eta_cd_hcd_primary = 0.0
-    current_drive_variables.n_ecrh_harmonic = 2.0
-    current_drive_variables.i_ecrh_wave_mode = 0
-    current_drive_variables.e_beam_kev = 1.0e3
-    current_drive_variables.eta_hcd_primary_injector_wall_plug = 0.0
-    current_drive_variables.eta_hcd_secondary_injector_wall_plug = 0.0
-    current_drive_variables.eta_ecrh_injector_wall_plug = 0.3
-    current_drive_variables.eta_lowhyb_injector_wall_plug = 0.3
-    current_drive_variables.eta_beam_injector_wall_plug = 0.3
-    current_drive_variables.f_p_beam_injected_ions = 0.5
-    current_drive_variables.p_beam_injected_mw = 0.0
-    current_drive_variables.f_c_plasma_pfirsch_schluter_scene = 0.0
-    current_drive_variables.p_beam_shine_through_mw = 0.0
-    current_drive_variables.feffcd = 1.0
-    current_drive_variables.f_p_beam_orbit_loss = 0.0
-    current_drive_variables.frbeam = 1.05
-    current_drive_variables.f_beam_tritium = 1e-6
-    current_drive_variables.eta_cd_norm_hcd_primary = 0.0
-    current_drive_variables.eta_cd_norm_ecrh = 0.35
-    current_drive_variables.xi_ebw = 0.8
-    current_drive_variables.i_hcd_primary = 5
-    current_drive_variables.i_hcd_secondary = 0
-    current_drive_variables.i_hcd_calculations = 1
-    current_drive_variables.f_p_beam_shine_through = 0.0
-    current_drive_variables.dx_beam_shield = 0.5
-    current_drive_variables.p_hcd_primary_extra_heat_mw = 0.0
-    current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
-    current_drive_variables.p_hcd_injected_max = 150.0
-    current_drive_variables.p_hcd_injected_electrons_mw = 0.0
-    current_drive_variables.p_hcd_injected_ions_mw = 0.0
-    current_drive_variables.p_hcd_injected_total_mw = 0.0
-    current_drive_variables.p_hcd_secondary_injected_mw = 0.0
-    current_drive_variables.f_c_plasma_internal = 0.0
-    current_drive_variables.plhybd = 0.0
-    current_drive_variables.pnbeam = 0.0
-    current_drive_variables.p_beam_orbit_loss_mw = 0.0
-    current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
-    current_drive_variables.pwplh = 0.0
-    current_drive_variables.pwpnb = 0.0
-    current_drive_variables.rtanbeam = 0.0
-    current_drive_variables.rtanmax = 0.0
-    current_drive_variables.n_beam_decay_lengths_core = 0.0
-    current_drive_variables.tbeamin = 3.0
-    current_drive_variables.eta_cd_norm_hcd_secondary = 0.0
-    current_drive_variables.eta_cd_hcd_secondary = 0.0
+            eh.report_error(19)
+            return None
