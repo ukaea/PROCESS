@@ -4929,7 +4929,7 @@ class Stellarator:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if stellarator_variables.isthtr == 1:
-            current_drive_variables.p_ecrh_injected_mw = current_drive_variables.pheat
+            current_drive_variables.p_ecrh_injected_mw = current_drive_variables.p_hcd_primary_extra_heat_mw
             current_drive_variables.p_hcd_injected_ions_mw = 0
             current_drive_variables.p_hcd_injected_electrons_mw = (
                 current_drive_variables.p_ecrh_injected_mw
@@ -4942,7 +4942,7 @@ class Stellarator:
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
-            current_drive_variables.plhybd = current_drive_variables.pheat
+            current_drive_variables.plhybd = current_drive_variables.p_hcd_primary_extra_heat_mw
             current_drive_variables.p_hcd_injected_ions_mw = 0
             current_drive_variables.p_hcd_injected_electrons_mw = (
                 current_drive_variables.plhybd
@@ -4960,11 +4960,11 @@ class Stellarator:
                 f_p_beam_injected_ions,
                 current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
-            current_drive_variables.pnbeam = current_drive_variables.pheat * (
+            current_drive_variables.pnbeam = current_drive_variables.p_hcd_primary_extra_heat_mw * (
                 1 - current_drive_variables.f_p_beam_orbit_loss
             )
             current_drive_variables.p_beam_orbit_loss_mw = (
-                current_drive_variables.pheat
+                current_drive_variables.p_hcd_primary_extra_heat_mw
                 * current_drive_variables.f_p_beam_orbit_loss
             )
             current_drive_variables.p_hcd_injected_ions_mw = (
@@ -5041,8 +5041,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Auxiliary power supplied to plasma (MW)",
-                "(pheat)",
-                current_drive_variables.pheat,
+                "(p_hcd_primary_extra_heat_mw)",
+                current_drive_variables.p_hcd_primary_extra_heat_mw,
             )
             po.ovarre(
                 self.outfile,

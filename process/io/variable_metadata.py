@@ -225,7 +225,7 @@ var_dicts = {
         description="Central solenoid height / TF coil internal height",
         units="m",
     ),
-    "pheat": VariableMetadata(
+    "p_hcd_primary_extra_heat_mw": VariableMetadata(
         latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW"
     ),
     "eta_cd_hcd_primary": VariableMetadata(

@@ -216,7 +216,7 @@ module numerics
   !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact
-  !! <LI> (11) pheat
+  !! <LI> (11) p_hcd_primary_extra_heat_mw
   !! <LI> (12) oacdcp
   !! <LI> (13) dr_tf_inboard (NOT RECOMMENDED)
   !! <LI> (14) fwalld (f-value for equation 8)

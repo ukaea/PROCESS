@@ -105,7 +105,7 @@ beta_min = 0.01    *lower beta limit
 *-------------Current Drive Variables--------------*
 
 eta_ecrh_injector_wall_plug   = 0.7          *ECH wall plug to injector efficiency
-pheat    = 0.0          *Heating power not used for current drive (MW)
+p_hcd_primary_extra_heat_mw    = 0.0          *Heating power not used for current drive (MW)
 
 *----------------Divertor Variables----------------*
 

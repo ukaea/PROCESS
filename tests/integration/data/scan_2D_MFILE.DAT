@@ -532,7 +532,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1129E+01 OP 
@@ -1695,7 +1695,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1326E+01 OP 
@@ -2858,7 +2858,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      5.5891E-01    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1272E+01 OP 
@@ -4021,7 +4021,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1468E+01 OP 
@@ -5184,7 +5184,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1502E+01 OP 
@@ -6347,7 +6347,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1436E+01 OP 
@@ -7510,7 +7510,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1481E+01 OP 
@@ -8673,7 +8673,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1510E+01 OP 
@@ -9836,7 +9836,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1428E+01 OP 
@@ -10999,7 +10999,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1568E+01 OP 
@@ -12162,7 +12162,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1696E+01 OP 
@@ -13325,7 +13325,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1690E+01 OP 
@@ -14488,7 +14488,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1807E+01 OP 
@@ -15651,7 +15651,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.1919E+01 OP 
@@ -16814,7 +16814,7 @@
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
  Ratio_of_power_for_flat-top_to_start-up_(MW)____________________________ (startupratio)________________      1.0000E+00    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      7.5000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      0.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.2037E+01 OP 
@@ -17939,7 +17939,7 @@ eta_cd_norm_ecrh = 0.30
 eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
-pheat = 75.0
+p_hcd_primary_extra_heat_mw = 75.0
 
 * Impurity radiation *
 **********************

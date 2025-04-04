@@ -264,25 +264,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_11
-    !! <LI> (11) pheat
+    !! <LI> (11) p_hcd_primary_extra_heat_mw
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(11) = 'pheat         '
+    lablxc(11) = 'p_hcd_primary_extra_heat_mw         '
     boundl(11) = 1.00D-3
     boundu(11) = 1.000D3
   end subroutine init_itv_11
 
   real(kind(1.d0)) function itv_11()
-    use current_drive_variables, only: pheat
+    use current_drive_variables, only: p_hcd_primary_extra_heat_mw
     implicit none
-    itv_11 = pheat
+    itv_11 = p_hcd_primary_extra_heat_mw
   end function itv_11
 
   subroutine set_itv_11(ratio)
-    use current_drive_variables, only: pheat
+    use current_drive_variables, only: p_hcd_primary_extra_heat_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    pheat = ratio
+    p_hcd_primary_extra_heat_mw = ratio
   end subroutine set_itv_11
 
   !---------------------------------

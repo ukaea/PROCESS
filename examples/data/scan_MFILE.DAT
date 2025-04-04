@@ -386,7 +386,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -1381,7 +1381,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -2376,7 +2376,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -3371,7 +3371,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -4366,7 +4366,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -5361,7 +5361,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -6356,7 +6356,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -7351,7 +7351,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -8346,7 +8346,7 @@
  # Energy confinement times, and required H-factors : #
  # Current Drive System #
  Current_drive_efficiency_model__________________________________________ (i_hcd_primary)_______________________             10    
- Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (pheat)_______________________      5.0000E+01    
+ Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
  Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
@@ -9149,7 +9149,7 @@ i_hcd_primary    = 10 * Switch for current drive efficiency model;
 eta_cd_norm_ecrh = 0.30 * ECRH gamma_CD (user input)
 eta_ecrh_injector_wall_plug = 0.4 * ECRH wall-plug efficiency
 p_hcd_injected_max  = 51.0 * Maximum allowable value for injected power (mw)
-pheat = 50.0
+p_hcd_primary_extra_heat_mw = 50.0
 
 *----------------Divertor Variables----------------*
 
