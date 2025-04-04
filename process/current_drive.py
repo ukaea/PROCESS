@@ -649,6 +649,39 @@ class ElectronCyclotron:
             eh.report_error(17)
         return ecgam
 
+    def electron_cyclotron_fenstermacher(
+        self,
+        ten: float,
+        rmajor: float,
+        dene20: float,
+        dlamee: float,
+    ) -> float:
+        """
+        Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
+
+        :param ten: Density weighted average electron temperature keV.
+        :type ten: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in 1x10^20 m^-3.
+        :type dene20: float
+        :param dlamee: Electron collision frequency in 1/s.
+        :type dlamee: float
+
+        :return: The calculated electron cyclotron heating efficiency in A/W.
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+
+        """
+
+        return (0.21e0 * ten) / (rmajor * dene20 * dlamee)
+
 
 class IonCyclotron:
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -842,8 +875,13 @@ class LowerHybrid:
         :rtype: float
 
         :notes:
+            - This forumla was originally in the Oak RidgeSystems Code, attributed to Fenstermacher
+              and is used in the AEA FUS 172 report.
 
         :references:
+            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+
+            - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
         """
 
         return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
@@ -948,11 +986,14 @@ class CurrentDrive:
             # Fenstermacher Electron Cyclotron Resonance model
             elif current_drive_variables.i_hcd_secondary == 3:
                 effrfssfix = (
-                    0.21e0
-                    * physics_variables.ten
-                    / (physics_variables.rmajor * dene20 * physics_variables.dlamee)
+                    self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        dlamee=physics_variables.dlamee,
+                    )
                     * current_drive_variables.feffcd
                 )
+
                 eta_cd_hcd_secondary = effrfssfix
             # Ehst Lower Hybrid / Fast Wave current drive
             elif current_drive_variables.i_hcd_secondary == 4:
@@ -1261,9 +1302,11 @@ class CurrentDrive:
             # Fenstermacher Electron Cyclotron Resonance model
             elif current_drive_variables.i_hcd_primary == 3:
                 effrfss = (
-                    0.21e0
-                    * physics_variables.ten
-                    / (physics_variables.rmajor * dene20 * physics_variables.dlamee)
+                    self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        dlamee=physics_variables.dlamee,
+                    )
                     * current_drive_variables.feffcd
                 )
                 current_drive_variables.eta_cd_hcd_primary = effrfss
