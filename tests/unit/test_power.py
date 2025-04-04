@@ -2712,7 +2712,7 @@ def test_power2(power2param, monkeypatch, power):
 
 
 class Power3Param(NamedTuple):
-    etacd: Any = None
+    eta_hcd_primary_injector_wall_plug: Any = None
 
     htpmw: Any = None
 
@@ -2755,7 +2755,7 @@ class Power3Param(NamedTuple):
     "power3param",
     (
         Power3Param(
-            etacd=0.40000000000000002,
+            eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             htpmw=234.28554165620102,
             pinjmax=120,
             crypmw=37.900388528497025,
@@ -2782,7 +2782,7 @@ class Power3Param(NamedTuple):
             iprint=0,
         ),
         Power3Param(
-            etacd=0.40000000000000002,
+            eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             htpmw=234.2162627659944,
             pinjmax=120,
             crypmw=108.74512702403499,
@@ -2829,7 +2829,11 @@ def test_power3(power3param, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(current_drive_variables, "etacd", power3param.etacd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_hcd_primary_injector_wall_plug",
+        power3param.eta_hcd_primary_injector_wall_plug,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "htpmw", power3param.htpmw)
 

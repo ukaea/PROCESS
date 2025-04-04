@@ -790,7 +790,7 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/etacd
+        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/eta_hcd_primary_injector_wall_plug
         # heat_transport_variables.pinjwp calculated in current_drive.f90
 
         #  Waste injection power
@@ -2171,10 +2171,19 @@ class Power:
 
         # Heating and current drive electrical power [MWe]
         p_hcd[0] = 0.0e0
-        p_hcd[1] = heat_transport_variables.pinjmax / current_drive_variables.etacd
-        p_hcd[2] = heat_transport_variables.pinjmax / current_drive_variables.etacd
+        p_hcd[1] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
+        p_hcd[2] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
         p_hcd[3] = heat_transport_variables.pinjwp
-        p_hcd[4] = heat_transport_variables.pinjmax / current_drive_variables.etacd
+        p_hcd[4] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
         p_hcd[5] = 0.0e0
 
         # PF coils electrical power [MWe]

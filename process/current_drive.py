@@ -619,7 +619,7 @@ class CurrentDrive:
                 pinjwp1 = current_drive_variables.pwplh
 
                 # Wall plug to injector efficiency
-                current_drive_variables.etacd = (
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
@@ -649,7 +649,7 @@ class CurrentDrive:
 
                 # Wall plug to injector efficiency
                 pinjwp1 = current_drive_variables.echwpow
-                current_drive_variables.etacd = (
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
                 )
             elif current_drive_variables.i_hcd_primary in [5, 8]:
@@ -710,7 +710,7 @@ class CurrentDrive:
                     / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
                 pinjwp1 = current_drive_variables.pwpnb
-                current_drive_variables.etacd = (
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
                 gamnb = effnbss * (dene20 * physics_variables.rmajor)
@@ -911,8 +911,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Wall plug to injector efficiency",
-            "(etacd)",
-            current_drive_variables.etacd,
+            "(eta_hcd_primary_injector_wall_plug)",
+            current_drive_variables.eta_hcd_primary_injector_wall_plug,
         )
 
         if current_drive_variables.i_hcd_primary == 10:

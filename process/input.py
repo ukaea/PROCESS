@@ -1522,7 +1522,9 @@ INPUT_VARIABLES = {
     ),
     "ireactor": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "irefprop": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
-    "i_hcd_calculations": InputVariable(fortran.current_drive_variables, int, choices=[0, 1]),
+    "i_hcd_calculations": InputVariable(
+        fortran.current_drive_variables, int, choices=[0, 1]
+    ),
     "iscenr": InputVariable(fortran.pf_power_variables, int, range=(1, 3)),
     "istell": InputVariable(fortran.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(fortran.stellarator_variables, int, range=(1, 3)),
