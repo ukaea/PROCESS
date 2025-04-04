@@ -199,7 +199,7 @@ module current_drive_variables
   real(dp) :: p_hcd_primary_extra_heat_mw
   !! heating power not used for current drive (MW) (`iteration variable 11`)
 
-  real(dp) :: pheatfix
+  real(dp) :: p_hcd_secondary_extra_heat_mw
   !! secondary fixed heating power not used for current drive (MW)
 
   real(dp) :: p_hcd_injected_max
@@ -305,7 +305,7 @@ module current_drive_variables
     f_p_beam_shine_through = 0.0D0
     dx_beam_shield = 0.5D0
     p_hcd_primary_extra_heat_mw = 0.0D0
-    pheatfix = 0.0D0
+    p_hcd_secondary_extra_heat_mw = 0.0D0
     p_hcd_injected_max = 150.0D0
     p_hcd_injected_electrons_mw = 0.0D0
     p_hcd_injected_ions_mw = 0.0D0

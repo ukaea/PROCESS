@@ -40,7 +40,7 @@ In addition to current drive, some auxiliary power can be used to only heat the 
 
 ### Secondary heating
 
-Like for a current drive and heating system a fixed amount of heating power that does not drive current can be set with the `pheatfix` variable.
+Like for a current drive and heating system a fixed amount of heating power that does not drive current can be set with the `p_hcd_secondary_extra_heat_mw` variable.
 
 ## Ignited plasma
 
