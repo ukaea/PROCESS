@@ -512,7 +512,7 @@
  Bootstrap_fraction_(Wilson)_____________________________________________ (f_c_plasma_bootstrap_wilson)_________________      4.3349E-01    
  Diamagnetic_fraction_(Hender)___________________________________________ (f_c_plasma_diamagnetic_hender)________________      1.2017E-02    
  Diamagnetic_fraction_(SCENE)____________________________________________ (f_c_plasma_diamagnetic_scene)_________________      1.1139E-02    
- Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (pscf_scene)__________________     -3.0283E-03    
+ Pfirsch-Schlueter_fraction_(SCENE)______________________________________ (f_c_plasma_pfirsch_schluter_scene)__________________     -3.0283E-03    
  Bootstrap_fraction_(enforced)___________________________________________ (bootipf.)____________________      4.1920E-01    
  Diamagnetic_fraction_(enforced)_________________________________________ (diaipf.)_____________________      0.0000E+00    
  Pfirsch-Schlueter_fraction_(enforced)___________________________________ (f_c_plasma_pfirsch_schluter.)______________________      0.0000E+00    

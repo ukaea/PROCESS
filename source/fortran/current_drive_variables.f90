@@ -120,7 +120,7 @@ module current_drive_variables
   real(dp) :: p_beam_injected_mw
   !! neutral beam power entering vacuum vessel
 
-  real(dp) :: pscf_scene
+  real(dp) :: f_c_plasma_pfirsch_schluter_scene
   !! Pfirsch-Schlüter current fraction, SCENE fit
 
   real(dp) :: p_beam_shine_through_mw

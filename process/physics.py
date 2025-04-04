@@ -1791,11 +1791,11 @@ class Physics:
         # ***************************** #
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.pscf_scene = ps_fraction_scene(physics_variables.beta)
+        current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(physics_variables.beta)
 
         if physics_variables.i_pfirsch_schluter_current == 1:
             current_drive_variables.f_c_plasma_pfirsch_schluter = (
-                current_drive_variables.pscf_scene
+                current_drive_variables.f_c_plasma_pfirsch_schluter_scene
             )
 
         # ***************************** #
@@ -5748,8 +5748,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Pfirsch-Schlueter fraction (SCENE)",
-                "(pscf_scene)",
-                current_drive_variables.pscf_scene,
+                "(f_c_plasma_pfirsch_schluter_scene)",
+                current_drive_variables.f_c_plasma_pfirsch_schluter_scene,
                 "OP ",
             )
             # Error to catch if bootstap fraction limit has been enforced
