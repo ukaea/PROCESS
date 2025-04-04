@@ -226,7 +226,7 @@ module current_drive_variables
   real(dp) :: pnbeam
   !! neutral beam injection power (MW)
 
-  real(dp) :: p_beam_orbit_loss
+  real(dp) :: p_beam_orbit_loss_mw
   !! neutral beam power lost after ionisation but before thermalisation (orbit loss power) (MW)
 
   real(dp) :: f_c_plasma_pfirsch_schluter

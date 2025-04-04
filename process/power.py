@@ -653,7 +653,7 @@ class Power:
                         * (1 - fwbs_variables.f_nuc_pow_bz_liq)
                     )
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.p_beam_orbit_loss
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
                 )
@@ -664,7 +664,7 @@ class Power:
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.p_beam_orbit_loss
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
                 )
@@ -674,7 +674,7 @@ class Power:
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.p_beam_orbit_loss
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
                 )
@@ -686,7 +686,7 @@ class Power:
                 + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + primary_pumping_variables.htpmw_fw_blkt
-                + current_drive_variables.p_beam_orbit_loss
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
             )
@@ -697,7 +697,7 @@ class Power:
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + heat_transport_variables.htpmw_fw
-                + current_drive_variables.p_beam_orbit_loss
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
             )
@@ -790,13 +790,13 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss + physics_variables.p_fw_alpha_mw)/etacd
+        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/etacd
         # heat_transport_variables.pinjwp calculated in current_drive.f90
 
         #  Waste injection power
         if physics_variables.ignite == 0:
             # MDK
-            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss - physics_variables.p_fw_alpha_mw
+            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
                 heat_transport_variables.pinjwp
                 - current_drive_variables.p_hcd_injected_total_mw

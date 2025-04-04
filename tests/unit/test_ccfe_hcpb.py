@@ -791,7 +791,7 @@ class PowerflowCalcParam(NamedTuple):
 
     a_fw_total: Any = None
 
-    p_beam_orbit_loss: Any = None
+    p_beam_orbit_loss_mw: Any = None
 
     f_ster_div_single: Any = None
 
@@ -884,7 +884,7 @@ class PowerflowCalcParam(NamedTuple):
         PowerflowCalcParam(
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
             p_div_rad_total_mw=0,
             p_fw_hcd_rad_total_mw=0,
@@ -931,7 +931,7 @@ class PowerflowCalcParam(NamedTuple):
         PowerflowCalcParam(
             a_fw_outboard=1168.1172772224481,
             a_fw_total=1891.2865102700493,
-            p_beam_orbit_loss=0,
+            p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
             p_div_rad_total_mw=33.056596978820579,
             p_fw_hcd_rad_total_mw=0,
@@ -998,8 +998,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     monkeypatch.setattr(
         current_drive_variables,
-        "p_beam_orbit_loss",
-        powerflowcalcparam.p_beam_orbit_loss,
+        "p_beam_orbit_loss_mw",
+        powerflowcalcparam.p_beam_orbit_loss_mw,
     )
 
     monkeypatch.setattr(
