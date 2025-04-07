@@ -93,7 +93,7 @@ class CudrivParam(NamedTuple):
 
     eta_cd_hcd_primary: Any = None
 
-    pwplh: Any = None
+    p_hcd_lowhyb_electric_mw: Any = None
 
     p_hcd_ecrh_electric_mw: Any = None
 
@@ -246,7 +246,7 @@ class CudrivParam(NamedTuple):
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
             eta_cd_hcd_primary=0,
-            pwplh=0,
+            p_hcd_lowhyb_electric_mw=0,
             p_hcd_ecrh_electric_mw=0,
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
@@ -336,7 +336,7 @@ class CudrivParam(NamedTuple):
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
             eta_cd_hcd_primary=0.05000000000000001,
-            pwplh=0,
+            p_hcd_lowhyb_electric_mw=0,
             p_hcd_ecrh_electric_mw=240.99200038011492,
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
@@ -552,7 +552,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary
     )
 
-    monkeypatch.setattr(current_drive_variables, "pwplh", cudrivparam.pwplh)
+    monkeypatch.setattr(current_drive_variables, "p_hcd_lowhyb_electric_mw", cudrivparam.p_hcd_lowhyb_electric_mw)
 
     monkeypatch.setattr(
         current_drive_variables,
