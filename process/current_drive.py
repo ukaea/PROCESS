@@ -1153,127 +1153,90 @@ class CurrentDrive:
             # values from user input
             # current_drive_variables.i_hcd_secondary |  switch for fixed current drive efficiency model
 
-            # Fenstermacher Lower Hybrid model
-            if current_drive_variables.i_hcd_secondary == 1:
-                effrfssfix = (
-                    self.lower_hybrid.lower_hybrid_fenstermacher(
-                        physics_variables.te, physics_variables.rmajor, dene20
-                    )
-                    * current_drive_variables.feffcd
+            # Define a dictionary of lambda functions for current drive efficiency models
+            hcd_models = {
+                1: lambda: self.lower_hybrid.lower_hybrid_fenstermacher(
+                    physics_variables.te, physics_variables.rmajor, dene20
                 )
+                * current_drive_variables.feffcd,
+                2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
+                    ten=physics_variables.ten,
+                    zeff=physics_variables.zeff,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                )
+                * current_drive_variables.feffcd,
+                3: lambda: self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    dlamee=physics_variables.dlamee,
+                )
+                * current_drive_variables.feffcd,
+                4: lambda: self.lower_hybrid.lower_hybrid_ehst(
+                    te=physics_variables.te,
+                    beta=physics_variables.beta,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    zeff=physics_variables.zeff,
+                )
+                * current_drive_variables.feffcd,
+                5: lambda: (
+                    self.neutral_beam.iternb()[0] * current_drive_variables.feffcd
+                ),
+                6: lambda: self.lower_hybrid.cullhy() * current_drive_variables.feffcd,
+                7: lambda: self.electron_cyclotron.culecd()
+                * current_drive_variables.feffcd,
+                8: lambda: (
+                    self.neutral_beam.culnbi()[0] * current_drive_variables.feffcd
+                ),
+                10: lambda: current_drive_variables.eta_cd_norm_ecrh
+                / (dene20 * physics_variables.rmajor),
+                12: lambda: self.electron_bernstein.electron_berstein_freethy(
+                    te=physics_variables.te,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    bt=physics_variables.bt,
+                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                    xi_ebw=current_drive_variables.xi_ebw,
+                )
+                * current_drive_variables.feffcd,
+                13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
+                    te=physics_variables.te,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    bt=physics_variables.bt,
+                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                    i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
+                )
+                * current_drive_variables.feffcd,
+            }
 
-                eta_cd_hcd_secondary = effrfssfix
-            # Ion-Cyclotron current drive
-            elif current_drive_variables.i_hcd_secondary == 2:
-                effrfssfix = (
-                    self.ion_cyclotron.ion_cyclotron_ipdg89(
-                        ten=physics_variables.ten,
-                        zeff=physics_variables.zeff,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                    )
-                    * current_drive_variables.feffcd
+            # Assign outputs for models that return multiple values
+            if current_drive_variables.i_hcd_secondary in [5, 8]:
+                effrfssfix, f_p_beam_injected_ions, f_p_beam_shine_through = (
+                    self.neutral_beam.iternb()
+                    if current_drive_variables.i_hcd_secondary == 5
+                    else self.neutral_beam.culnbi()
                 )
+                current_drive_variables.f_p_beam_injected_ions = f_p_beam_injected_ions
+                current_drive_variables.f_p_beam_shine_through = f_p_beam_shine_through
 
-                eta_cd_hcd_secondary = effrfssfix
-            # Fenstermacher Electron Cyclotron Resonance model
-            elif current_drive_variables.i_hcd_secondary == 3:
-                effrfssfix = (
-                    self.electron_cyclotron.electron_cyclotron_fenstermacher(
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        dlamee=physics_variables.dlamee,
-                    )
-                    * current_drive_variables.feffcd
-                )
-
-                eta_cd_hcd_secondary = effrfssfix
-            # Ehst Lower Hybrid / Fast Wave current drive
-            elif current_drive_variables.i_hcd_secondary == 4:
-                effrfssfix = (
-                    self.lower_hybrid.lower_hybrid_ehst(
-                        te=physics_variables.te,
-                        beta=physics_variables.beta,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        zeff=physics_variables.zeff,
-                    )
-                    * current_drive_variables.feffcd
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            elif current_drive_variables.i_hcd_secondary == 5:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.neutral_beam.iternb()
-                effnbssfix = effnbss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effnbssfix
-            # Culham Lower Hybrid current drive model
-            elif current_drive_variables.i_hcd_secondary == 6:
-                effrfss = self.lower_hybrid.cullhy()
-                effrfssfix = effrfss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effrfssfix
-            # Culham ECCD model
-            elif current_drive_variables.i_hcd_secondary == 7:
-                effrfss = self.electron_cyclotron.culecd()
-                effrfssfix = effrfss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effrfssfix
-            # Culham Neutral Beam model
-            elif current_drive_variables.i_hcd_secondary == 8:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.neutral_beam.culnbi()
-                effnbssfix = effnbss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effnbssfix
-            # ECRH user input gamma
-            elif current_drive_variables.i_hcd_secondary == 10:
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_secondary = (
-                    current_drive_variables.eta_cd_norm_ecrh
-                )
-
-                # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
-                    dene20 * physics_variables.rmajor
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            # EBW scaling
-            elif current_drive_variables.i_hcd_secondary == 12:
-                effrfssfix = (
-                    self.electron_bernstein.electron_berstein_freethy(
-                        te=physics_variables.te,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        bt=physics_variables.bt,
-                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                        xi_ebw=current_drive_variables.xi_ebw,
-                    )
-                    * current_drive_variables.feffcd
-                )
-
+            # Calculate eta_cd_hcd_secondary based on the selected model
+            if current_drive_variables.i_hcd_secondary.item() in hcd_models:
+                effrfssfix = hcd_models[
+                    current_drive_variables.i_hcd_secondary.item()
+                ]()
                 eta_cd_hcd_secondary = effrfssfix
 
-            elif current_drive_variables.i_hcd_secondary == 13:
-                effrfssfix = (
-                    self.electron_cyclotron.electron_cyclotron_freethy(
-                        te=physics_variables.te,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        bt=physics_variables.bt,
-                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                        i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
-                    )
-                    * current_drive_variables.feffcd
-                )
+            # Calculate eta_cd_hcd_primary based on the selected model
+            if current_drive_variables.i_hcd_primary.item() in hcd_models:
+                effrfss = hcd_models[current_drive_variables.i_hcd_primary.item()]()
+                current_drive_variables.eta_cd_hcd_primary = effrfss
 
-                eta_cd_hcd_secondary = effrfssfix
-            elif current_drive_variables.i_hcd_secondary != 0:
-                raise ProcessValueError(
-                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
-                )
+            current_drive_variables.eta_cd_norm_hcd_primary = (
+                current_drive_variables.eta_cd_hcd_primary
+                * (dene20 * physics_variables.rmajor)
+            )
 
             if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
                 # Injected power
@@ -1371,141 +1334,11 @@ class CurrentDrive:
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
-                gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
-                gamcdfix = gamnb
+                # gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
+                # gamcdfix = gamnb
                 beam_current_fix = (
                     1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
-                auxiliary_cdfix = (
-                    effnbssfix
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
-                )
-                aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
-                )
-
-            # Fenstermacher Lower Hybrid model
-            if current_drive_variables.i_hcd_primary == 1:
-                effrfss = (
-                    self.lower_hybrid.lower_hybrid_fenstermacher(
-                        physics_variables.te, physics_variables.rmajor, dene20
-                    )
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Ion-Cyclotron current drive
-            elif current_drive_variables.i_hcd_primary == 2:
-                effrfss = (
-                    self.ion_cyclotron.ion_cyclotron_ipdg89(
-                        ten=physics_variables.ten,
-                        zeff=physics_variables.zeff,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                    )
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Fenstermacher Electron Cyclotron Resonance model
-            elif current_drive_variables.i_hcd_primary == 3:
-                effrfss = (
-                    self.electron_cyclotron.electron_cyclotron_fenstermacher(
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        dlamee=physics_variables.dlamee,
-                    )
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Ehst Lower Hybrid / Fast Wave current drive
-            elif current_drive_variables.i_hcd_primary == 4:
-                effrfss = (
-                    self.lower_hybrid.lower_hybrid_ehst(
-                        te=physics_variables.te,
-                        beta=physics_variables.beta,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        zeff=physics_variables.zeff,
-                    )
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # ITER Neutral Beam current drive
-            elif current_drive_variables.i_hcd_primary == 5:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.neutral_beam.iternb()
-                effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effnbss
-            # Culham Lower Hybrid current drive model
-            elif current_drive_variables.i_hcd_primary == 6:
-                effrfss = self.lower_hybrid.cullhy()
-                effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Culham ECCD model
-            elif current_drive_variables.i_hcd_primary == 7:
-                effrfss = self.electron_cyclotron.culecd()
-                effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Culham Neutral Beam model
-            elif current_drive_variables.i_hcd_primary == 8:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.neutral_beam.culnbi()
-                effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effnbss
-            # ECRH user input gamma
-            elif current_drive_variables.i_hcd_primary == 10:
-                current_drive_variables.eta_cd_norm_hcd_primary = (
-                    current_drive_variables.eta_cd_norm_ecrh
-                )
-
-                # Absolute current drive efficiency
-                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
-                    dene20 * physics_variables.rmajor
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # EBW scaling
-            elif current_drive_variables.i_hcd_primary == 12:
-                effrfss = (
-                    self.electron_bernstein.electron_berstein_freethy(
-                        te=physics_variables.te,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        bt=physics_variables.bt,
-                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                        xi_ebw=current_drive_variables.xi_ebw,
-                    )
-                    * current_drive_variables.feffcd
-                )
-
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-
-            elif current_drive_variables.i_hcd_primary == 13:
-                effrfss = (
-                    self.electron_cyclotron.electron_cyclotron_freethy(
-                        te=physics_variables.te,
-                        rmajor=physics_variables.rmajor,
-                        dene20=dene20,
-                        bt=physics_variables.bt,
-                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                        i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
-                    )
-                    * current_drive_variables.feffcd
-                )
-
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            else:
-                raise ProcessValueError(
-                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
-                )
 
             # Compute current drive wall plug and injected powers (MW) and efficiencies
             auxiliary_cd = (
@@ -1571,6 +1404,9 @@ class CurrentDrive:
                     current_drive_variables.eta_ecrh_injector_wall_plug
                 )
             elif current_drive_variables.i_hcd_primary in [5, 8]:
+                eta_cd_norm_hcd_primary = (
+                    current_drive_variables.eta_cd_norm_hcd_primary
+                )
                 # MDK. See Gitlab issue #248, and scanned note.
                 power1 = (
                     1.0e-6
@@ -1579,7 +1415,7 @@ class CurrentDrive:
                         - aux_current_fraction_fix
                     )
                     * physics_variables.plasma_current
-                    / effnbss
+                    / eta_cd_norm_hcd_primary
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
@@ -1631,7 +1467,7 @@ class CurrentDrive:
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
-                gamnb = effnbss * (dene20 * physics_variables.rmajor)
+                gamnb = eta_cd_norm_hcd_primary * (dene20 * physics_variables.rmajor)
                 current_drive_variables.eta_cd_norm_hcd_primary = gamnb
                 current_drive_variables.c_beam_total = (
                     1.0e-3
@@ -2021,27 +1857,6 @@ class CurrentDrive:
                     "OP ",
                 )
 
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarre(
-                    self.outfile, "Beam efficiency (A/W)", "(effnbss)", effnbss, "OP "
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed beam efficiency (A/W)",
-                    "(effnbssfix)",
-                    effnbssfix,
-                    "OP ",
-                )
-
-            po.ovarre(
-                self.outfile, "Beam gamma (10^20 A/W-m2)", "(gamnb)", gamnb, "OP "
-            )
             po.ovarre(
                 self.outfile,
                 "Neutral beam wall plug efficiency",
