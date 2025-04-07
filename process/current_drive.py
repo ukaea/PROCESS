@@ -1148,10 +1148,8 @@ class CurrentDrive:
             # put electron density in desired units (10^-20 m-3)
             dene20 = physics_variables.dene * 1.0e-20
 
-            # If present we must calculate second current drive
-            # efficiencies in units of Amps/Watt using the fixed
-            # values from user input
-            # current_drive_variables.i_hcd_secondary |  switch for fixed current drive efficiency model
+            # Calculate current drive efficiencies
+            # ==============================================================
 
             # Define a dictionary of lambda functions for current drive efficiency models
             hcd_models = {
@@ -1237,6 +1235,13 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_primary
                 * (dene20 * physics_variables.rmajor)
             )
+
+            current_drive_variables.eta_cd_norm_hcd_secondary = (
+                current_drive_variables.eta_cd_hcd_secondary
+                * (dene20 * physics_variables.rmajor)
+            )
+
+            # ==============================================================
 
             if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
                 # Injected power
