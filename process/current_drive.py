@@ -1111,6 +1111,8 @@ class CurrentDrive:
         current_drive_variables.p_ecrh_injected_mw = 0.0e0
         current_drive_variables.p_hcd_beam_injected_total_mw = 0.0e0
         current_drive_variables.p_hcd_lowhyb_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_icrh_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_ebw_injected_total_mw = 0.0e0
         current_drive_variables.c_beam_total = 0.0e0
         beam_current_fix = 0.0e0
         current_drive_variables.p_beam_orbit_loss_mw = 0.0e0
