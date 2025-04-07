@@ -44,6 +44,8 @@ class Divertor:
                 bv.dz_xpoint_divertor,
                 pv.pdivt,
                 output=output,
+                i_single_null=pv.i_single_null,
+                dz_divertor=dv.dz_divertor,
             )
             return
         if dv.i_hldiv == 2:
@@ -72,39 +74,59 @@ class Divertor:
         dz_xpoint_divertor: float,
         pdivt: float,
         output: bool,
+        i_single_null: int,
+        dz_divertor: float,
     ) -> float:
         """Tight aspect ratio tokamak divertor model
         author: P J Knight, CCFE, Culham Science Centre
 
-        This subroutine calculates the divertor heat load for a tight aspect
-        ratio machine, by assuming that the power is evenly spread around the
+        This method calculates the divertor heat load for a tight aspect
+        ratio machine, assuming that the power is evenly distributed around the
         divertor chamber by the action of a gaseous target. Each divertor is
-        assumed to be approximately triangular in the R,Z plane.
-        AEA FUS 64: Figure 2
+        modeled as approximately triangular in the R,Z plane.
 
-        :param rmajor: plasma major radius (m)
+        :param rmajor: Plasma major radius (m)
         :type rmajor: float
 
-        :param rminor: plasma minor radius (m)
+        :param rminor: Plasma minor radius (m)
         :type rminor: float
 
-        :param triang: plasma triangularity
+        :param triang: Plasma triangularity
         :type triang: float
 
-        :param dr_fw_plasma_gap_inboard: inboard scrape-off width (m)
+        :param dr_fw_plasma_gap_inboard: Inboard scrape-off width (m)
         :type dr_fw_plasma_gap_inboard: float
 
-        :param dz_xpoint_divertor: top scrape-off width (m)
+        :param dz_xpoint_divertor: Vertical distance from X-point to divertor (m)
         :type dz_xpoint_divertor: float
 
-        :param pdivt: power to the divertor (MW)
+        :param pdivt: Power to the divertor (MW)
         :type pdivt: float
 
-        :returns: divertor heat load for a tight aspect ratio machine
+        :param output: Indicates whether output should be written to the output file
+        :type output: bool
+
+        :param i_single_null: 1 for single null configuration, 0 for double null
+        :type i_single_null: int
+
+        :param dz_divertor: Vertical height of the divertor (m)
+        :type dz_divertor: float
+
+        :returns: Divertor heat load for a tight aspect ratio machine (MW/m2)
         :rtype: float
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        :notes:
+            - This model assumes a tight aspect ratio tokamak with a gaseous target
+              divertor. The divertor chamber is modeled as triangular in the R,Z plane,
+              and the heat load is calculated based on the total divertor surface area.
+            - The method accounts for both single null and double null configurations.
+
+        :references:
+            - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors".
+              1990. https://inis.iaea.org/records/ey2rf-dah04
+
+            - Y.-K. M. Peng, J. B. Hicks, “Engineering feasibility of tight aspect ratio tokamak (spherical torus) reactors,”
+              Osti.gov, 1991. https://www.osti.gov/biblio/1022679 (accessed Mar. 24, 2025).
         """
 
         #  Thickness of centrepost + first wall at divertor height
@@ -121,11 +143,11 @@ class Divertor:
             eh.fdiags[0] = dz_xpoint_divertor
             eh.report_error(22)
 
-        theta = math.atan(dz_xpoint_divertor / (r2 - r1))
+        theta = math.atan(dz_divertor / (r2 - r1))
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * dz_xpoint_divertor
+        a1 = 2.0e0 * constants.pi * r1 * dz_divertor
 
         #  Horizontal plate area
 
@@ -135,9 +157,15 @@ class Divertor:
 
         a3 = a2 / (math.cos(theta) * math.cos(theta))
 
-        #  Total divertor area (N.B. there are two of them)
+        #  Total divertor area
 
-        areadv = 2.0e0 * (a1 + a2 + a3)
+        # Single null case
+        if i_single_null == 1:
+            areadv = a1 + a2 + a3
+        # Double null case
+        elif i_single_null == 0:
+            areadv = 2.0 * (a1 + a2 + a3)
+
         if dv.i_hldiv == 1:
             dv.hldiv = pdivt / areadv
 
@@ -217,6 +245,14 @@ class Divertor:
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
+
+        :notes:
+
+        :references:
+
+
+
+
         """
 
         # Radius on midplane
