@@ -232,6 +232,9 @@ module current_drive_variables
   real(dp)  :: p_hcd_secondary_injected_mw
   !! secondary total fixed auxiliary injected power (MW)
 
+  real(dp)  :: p_hcd_primary_injected_mw
+  !! primary auxiliary injected power (MW)
+
   real(dp) :: f_c_plasma_internal
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 

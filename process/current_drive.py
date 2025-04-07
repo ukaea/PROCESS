@@ -1225,8 +1225,9 @@ class CurrentDrive:
 
             # Calculate eta_cd_hcd_primary based on the selected model
             if current_drive_variables.i_hcd_primary.item() in hcd_models:
-                effrfss = hcd_models[current_drive_variables.i_hcd_primary.item()]()
-                current_drive_variables.eta_cd_hcd_primary = effrfss
+                current_drive_variables.eta_cd_hcd_primary = hcd_models[
+                    current_drive_variables.i_hcd_primary.item()
+                ]()
 
             # # Calculate the normalised current drive efficieny for the primary heating method
             current_drive_variables.eta_cd_norm_hcd_primary = (
@@ -1359,18 +1360,21 @@ class CurrentDrive:
             # LHCD or ICCD
             if current_drive_variables.i_hcd_primary in [1, 2, 4, 6]:
                 # Injected power
-                current_drive_variables.p_hcd_lowhyb_injected_total_mw = (
+                current_drive_variables.p_hcd_primary_injected_mw = (
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
                         - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
-                    / effrfss
+                    / current_drive_variables.eta_cd_hcd_primary
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
-                pinjimw1 = 0.0e0
-                pinjemw1 = current_drive_variables.p_hcd_lowhyb_injected_total_mw
+
+                pinjemw1 = current_drive_variables.p_hcd_primary_injected_mw
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                )
 
                 # Wall plug power
                 current_drive_variables.pwplh = (
@@ -1386,18 +1390,23 @@ class CurrentDrive:
 
             # ===========================================================
 
-            # ECCD
+            # Electron cyclotron cases
+
             elif current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
                 # Injected power (set to close to close the Steady-state current equilibrium)
-                current_drive_variables.p_ecrh_injected_mw = (
+                current_drive_variables.p_hcd_primary_injected_mw = (
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
                         - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
-                    / effrfss
+                    / current_drive_variables.eta_cd_hcd_primary
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                current_drive_variables.p_ecrh_injected_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
                 )
                 pinjemw1 = current_drive_variables.p_ecrh_injected_mw
 
@@ -1412,19 +1421,18 @@ class CurrentDrive:
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
                 )
+
+            # ===========================================================
+
             elif current_drive_variables.i_hcd_primary in [5, 8]:
-                eta_cd_norm_hcd_primary = (
-                    current_drive_variables.eta_cd_norm_hcd_primary
-                )
-                # MDK. See Gitlab issue #248, and scanned note.
-                power1 = (
+                current_drive_variables.p_hcd_primary_injected_mw = (
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
                         - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
-                    / eta_cd_norm_hcd_primary
+                    / current_drive_variables.eta_cd_norm_hcd_primary
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
@@ -1435,11 +1443,14 @@ class CurrentDrive:
                     0.999, current_drive_variables.f_p_beam_orbit_loss
                 )  # Should never be needed
 
-                current_drive_variables.p_beam_injected_mw = power1 / (
-                    1.0e0
-                    - current_drive_variables.f_p_beam_orbit_loss
-                    + current_drive_variables.f_p_beam_orbit_loss
-                    * current_drive_variables.f_p_beam_shine_through
+                current_drive_variables.p_beam_injected_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    / (
+                        1.0e0
+                        - current_drive_variables.f_p_beam_orbit_loss
+                        + current_drive_variables.f_p_beam_orbit_loss
+                        * current_drive_variables.f_p_beam_shine_through
+                    )
                 )
 
                 # Shinethrough power (atoms that are not ionised) [MW]:
@@ -1476,8 +1487,7 @@ class CurrentDrive:
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
-                gamnb = eta_cd_norm_hcd_primary * (dene20 * physics_variables.rmajor)
-                current_drive_variables.eta_cd_norm_hcd_primary = gamnb
+
                 current_drive_variables.c_beam_total = (
                     1.0e-3
                     * (current_drive_variables.p_beam_injected_mw * 1.0e6)
