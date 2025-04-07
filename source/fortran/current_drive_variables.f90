@@ -253,6 +253,9 @@ module current_drive_variables
   real(dp) :: p_hcd_ebw_injected_total_mw
   !! Total electron bernstein wave injection power (MW)
 
+  real(dp) :: p_beam_plasma_coupled_mw
+  !! Total neutral beam power that is coupled to plasma after losses (MW)
+
   real(dp) :: p_hcd_beam_injected_total_mw
   !! neutral beam injection power (MW)
 
