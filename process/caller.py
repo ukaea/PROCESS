@@ -260,11 +260,15 @@ class Caller:
 
         # Toroidal field coil model
 
-        self.models.tfcoil.run()
+        # Toroidal field coil resistive model
+        if ft.tfcoil_variables.i_tf_sup != 1:
+            self.models.resistive_tf_coil.run(output=False)
 
         # Toroidal field coil superconductor model
         if ft.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
+
+        self.models.build.portsz()
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
