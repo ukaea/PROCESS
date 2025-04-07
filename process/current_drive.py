@@ -729,6 +729,78 @@ class ElectronBernstein:
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
 
+    def electron_berstein_freethy(
+        self,
+        te: float,
+        rmajor: float,
+        dene20: float,
+        bt: float,
+        n_ecrh_harmonic: int,
+        xi_ebw: float,
+    ) -> float:
+        """
+        Calculate the Electron Bernstein Wave (EBW) current drive efficiency using the Freethy model.
+
+        This function computes the EBW current drive efficiency based on the electron temperature,
+        major radius, electron density, magnetic field, harmonic number, and scaling factor.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+        :param bt: Toroidal magnetic field in Tesla.
+        :type bt: float
+        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
+        :type n_ecrh_harmonic: int
+        :param xi_ebw: Scaling factor for EBW efficiency.
+        :type xi_ebw: float
+
+        :return: The calculated absolute EBW current drive efficiency in A/W.
+        :rtype: float
+
+        :notes:
+            - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
+            - The density factor accounts for this behavior.
+
+        :references:
+            - Freethy, S., PROCESS issue #1262.
+        """
+
+        # Normalised current drive efficiency gamma
+        eta_cd_norm = (xi_ebw / 32.7e0) * te
+
+        # Absolute current drive efficiency
+        eta_cd = eta_cd_norm / (dene20 * rmajor)
+
+        # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
+        # this behavior is captured in the following function:
+        # constant 'a' controls sharpness of transition
+        a = 0.1e0
+
+        fc = (
+            1.0e0
+            / (2.0e0 * np.pi)
+            * n_ecrh_harmonic
+            * constants.electron_charge
+            * bt
+            / constants.electron_mass
+        )
+        fp = (
+            1.0e0
+            / (2.0e0 * np.pi)
+            * np.sqrt(
+                dene20
+                * constants.electron_charge**2
+                / (constants.electron_mass * constants.epsilon0)
+            )
+        )
+
+        density_factor = 0.5e0 * (1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a)))
+
+        return eta_cd * density_factor
+
 
 class LowerHybrid:
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -1089,49 +1161,20 @@ class CurrentDrive:
                 eta_cd_hcd_secondary = effrfssfix
             # EBW scaling
             elif current_drive_variables.i_hcd_secondary == 12:
-                # Scaling author Simon Freethy
-                # Ref : PROCESS issue 1262
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_secondary = (
-                    current_drive_variables.xi_ebw / 32.7e0
-                ) * physics_variables.te
-
-                # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
-                    dene20 * physics_variables.rmajor
+                effrfssfix = (
+                    self.electron_bernstein.electron_berstein_freethy(
+                        te=physics_variables.te,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        bt=physics_variables.bt,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        xi_ebw=current_drive_variables.xi_ebw,
+                    )
+                    * current_drive_variables.feffcd
                 )
+
                 eta_cd_hcd_secondary = effrfssfix
 
-                # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
-                # constant 'a' controls sharpness of transition
-                a = 0.1e0
-
-                fc = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * current_drive_variables.n_ecrh_harmonic
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * np.sqrt(
-                        physics_variables.dene
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                density_factor = 0.5e0 * (
-                    1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
-                )
-
-                eta_cd_hcd_secondary = eta_cd_hcd_secondary * density_factor
-                effrfssfix = effrfssfix * density_factor
             elif current_drive_variables.i_hcd_secondary == 13:
                 # ECCD model for O-mode cut-off with added Te and Zeff dependance
                 # Scaling author: Simon Freethy
@@ -1399,51 +1442,19 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_primary = effrfss
             # EBW scaling
             elif current_drive_variables.i_hcd_primary == 12:
-                # Scaling author Simon Freethy
-                # Ref : PROCESS issue 1262
-
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_primary = (
-                    current_drive_variables.xi_ebw / 32.7e0
-                ) * physics_variables.te
-
-                # Absolute current drive efficiency
-                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
-                    dene20 * physics_variables.rmajor
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-                # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
-                # contant 'a' controls sharpness of transition
-                a = 0.1e0
-
-                fc = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * current_drive_variables.n_ecrh_harmonic
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * np.sqrt(
-                        physics_variables.dene
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
+                effrfss = (
+                    self.electron_bernstein.electron_berstein_freethy(
+                        te=physics_variables.te,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        bt=physics_variables.bt,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        xi_ebw=current_drive_variables.xi_ebw,
                     )
+                    * current_drive_variables.feffcd
                 )
 
-                density_factor = 0.5e0 * (
-                    1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
-                )
-
-                current_drive_variables.eta_cd_hcd_primary = (
-                    current_drive_variables.eta_cd_hcd_primary * density_factor
-                )
-                effrfss = effrfss * density_factor
+                current_drive_variables.eta_cd_hcd_primary = effrfss
 
             elif current_drive_variables.i_hcd_primary == 13:
                 # ECCD model for O-mode cut-off with added Te and Zeff dependance
