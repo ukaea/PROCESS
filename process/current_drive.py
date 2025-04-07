@@ -1122,7 +1122,6 @@ class CurrentDrive:
         pinjemw1 = 0.0
         pinjemwfix = 0.0
         pinjimwfix = 0.0
-        aux_current_fraction_fix = 0.0
 
         # To stop issues with input file we force
         # zero secondary heating if no injection method
@@ -1229,21 +1228,27 @@ class CurrentDrive:
                 effrfss = hcd_models[current_drive_variables.i_hcd_primary.item()]()
                 current_drive_variables.eta_cd_hcd_primary = effrfss
 
-            # Calculate the normalised current drive efficiencies
+            # # Calculate the normalised current drive efficieny for the primary heating method
             current_drive_variables.eta_cd_norm_hcd_primary = (
                 current_drive_variables.eta_cd_hcd_primary
                 * (dene20 * physics_variables.rmajor)
             )
-
+            # Calculate the normalised current drive efficieny for the secondary heating method
             current_drive_variables.eta_cd_norm_hcd_secondary = (
                 current_drive_variables.eta_cd_hcd_secondary
                 * (dene20 * physics_variables.rmajor)
             )
 
+            # Calculate the driven current for the secondary heating method
             current_drive_variables.c_hcd_secondary_driven = (
                 current_drive_variables.eta_cd_hcd_secondary
                 * current_drive_variables.p_hcd_secondary_injected_mw
                 * 1.0e6
+            )
+            # Calculate the fraction of the plasma current driven by the secondary heating method
+            current_drive_variables.f_c_plasma_hcd_secondary = (
+                current_drive_variables.c_hcd_secondary_driven
+                / physics_variables.plasma_current
             )
 
             # ==============================================================
@@ -1263,10 +1268,6 @@ class CurrentDrive:
                     current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
-                aux_current_fraction_fix = (
-                    current_drive_variables.c_hcd_secondary_driven
-                    / physics_variables.plasma_current
-                )
             elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
                 # Injected power
                 pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
@@ -1291,10 +1292,7 @@ class CurrentDrive:
                     )
                     * 1.0e6
                 )
-                aux_current_fraction_fix = (
-                    current_drive_variables.c_hcd_secondary_driven
-                    / physics_variables.plasma_current
-                )
+
             elif current_drive_variables.i_hcd_secondary in [5, 8]:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
@@ -1352,7 +1350,7 @@ class CurrentDrive:
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
+                        - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
                     / effrfss
@@ -1383,7 +1381,7 @@ class CurrentDrive:
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
+                        - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
                     / effrfss
@@ -1411,7 +1409,7 @@ class CurrentDrive:
                     1.0e-6
                     * (
                         physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
+                        - current_drive_variables.f_c_plasma_hcd_secondary
                     )
                     * physics_variables.plasma_current
                     / eta_cd_norm_hcd_primary
