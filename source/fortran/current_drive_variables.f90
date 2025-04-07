@@ -81,7 +81,7 @@ module current_drive_variables
   real(dp) :: p_ecrh_injected_mw
   !! ECH power (MW)
 
-  real(dp) :: echwpow
+  real(dp) :: p_hcd_ecrh_electric_mw
   !! ECH wall plug power (MW)
 
   real(dp) :: eta_cd_hcd_primary
