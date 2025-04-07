@@ -126,6 +126,12 @@ module current_drive_variables
   real(dp) :: eta_lowhyb_injector_wall_plug
   !! lower hybrid wall plug to injector efficiency
 
+  real(dp) :: eta_icrh_injector_wall_plug
+  !! Ion cyclotron wall plug to injector efficiency
+
+  real(dp) :: eta_ebw_injector_wall_plug
+  !! Electron bernstein wave wall plug to injector efficiency
+
   real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
 
