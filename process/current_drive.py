@@ -1123,7 +1123,7 @@ class CurrentDrive:
         pinjimw1 = 0.0
         pinjemw1 = 0.0
         p_hcd_secondary_electrons_mw = 0.0
-        pinjimwfix = 0.0
+        p_hcd_secondary_ions_mw = 0.0
 
         # To stop issues with input file we force
         # zero secondary heating if no injection method
@@ -1260,7 +1260,7 @@ class CurrentDrive:
             # ==============================================================
 
             # Lower hybrid cases
-            if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
+            if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1278,6 +1278,30 @@ class CurrentDrive:
                 )
 
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                )
+
+            # ==========================================================
+
+            # Ion cyclotron cases
+            if current_drive_variables.i_hcd_secondary in [2]:
+                # Injected power
+                p_hcd_secondary_ions_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    / current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_icrh_injected_total_mw += (
                     current_drive_variables.p_hcd_secondary_injected_mw
                 )
 
@@ -1332,7 +1356,9 @@ class CurrentDrive:
 
                 # Power deposited
                 pinjmwfix = pnbitotfix - nbshinemwfix - porbitlossmwfix
-                pinjimwfix = pinjmwfix * current_drive_variables.f_p_beam_injected_ions
+                p_hcd_secondary_ions_mw = (
+                    pinjmwfix * current_drive_variables.f_p_beam_injected_ions
+                )
                 p_hcd_secondary_electrons_mw = pinjmwfix * (
                     1.0e0 - current_drive_variables.f_p_beam_injected_ions
                 )
@@ -1359,8 +1385,8 @@ class CurrentDrive:
 
             # ==========================================================
 
-            # LHCD or ICCD
-            if current_drive_variables.i_hcd_primary in [1, 2, 4, 6]:
+            # Lower hybrid cases
+            if current_drive_variables.i_hcd_primary in [1, 4, 6]:
                 # Injected power
                 current_drive_variables.p_hcd_primary_injected_mw = (
                     1.0e-6
@@ -1388,6 +1414,39 @@ class CurrentDrive:
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            # Ion cyclotron cases
+            if current_drive_variables.i_hcd_primary in [2]:
+                # Injected power
+                current_drive_variables.p_hcd_primary_injected_mw = (
+                    1.0e-6
+                    * (
+                        physics_variables.aux_current_fraction
+                        - current_drive_variables.f_c_plasma_hcd_secondary
+                    )
+                    * physics_variables.plasma_current
+                    / current_drive_variables.eta_cd_hcd_primary
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                pinjemw1 = current_drive_variables.p_hcd_primary_injected_mw
+                current_drive_variables.p_hcd_icrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                )
+
+                # Wall plug power
+                current_drive_variables.pwplh = (
+                    current_drive_variables.p_hcd_icrh_injected_total_mw
+                    / current_drive_variables.eta_icrh_injector_wall_plug
+                )
+                pinjwp1 = current_drive_variables.pwplh
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_icrh_injector_wall_plug
                 )
 
             # ===========================================================
@@ -1499,14 +1558,19 @@ class CurrentDrive:
             # Total injected power
             # sum contributions from primary and secondary systems
             current_drive_variables.p_hcd_injected_total_mw = (
-                pinjemw1 + pinjimw1 + p_hcd_secondary_electrons_mw + pinjimwfix
+                pinjemw1
+                + pinjimw1
+                + p_hcd_secondary_electrons_mw
+                + p_hcd_secondary_ions_mw
             )
             pinjmw1 = pinjemw1 + pinjimw1
-            pinjmwfix = p_hcd_secondary_electrons_mw + pinjimwfix
+            pinjmwfix = p_hcd_secondary_electrons_mw + p_hcd_secondary_ions_mw
             current_drive_variables.p_hcd_injected_electrons_mw = (
                 pinjemw1 + p_hcd_secondary_electrons_mw
             )
-            current_drive_variables.p_hcd_injected_ions_mw = pinjimw1 + pinjimwfix
+            current_drive_variables.p_hcd_injected_ions_mw = (
+                pinjimw1 + p_hcd_secondary_ions_mw
+            )
             heat_transport_variables.pinjwp = (
                 pinjwp1 + heat_transport_variables.p_hcd_secondary_electric_mw
             )
