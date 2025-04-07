@@ -1122,9 +1122,7 @@ class CurrentDrive:
         pinjemw1 = 0.0
         pinjemwfix = 0.0
         pinjimwfix = 0.0
-        auxiliary_cdfix = 0.0
         aux_current_fraction_fix = 0.0
-        gamcdfix = 0.0e0
 
         # To stop issues with input file we force
         # zero secondary heating if no injection method
@@ -1211,7 +1209,7 @@ class CurrentDrive:
 
             # Assign outputs for models that return multiple values
             if current_drive_variables.i_hcd_secondary in [5, 8]:
-                effrfssfix, f_p_beam_injected_ions, f_p_beam_shine_through = (
+                eta_cd_hcd_secondary, f_p_beam_injected_ions, f_p_beam_shine_through = (
                     self.neutral_beam.iternb()
                     if current_drive_variables.i_hcd_secondary == 5
                     else self.neutral_beam.culnbi()
@@ -1221,16 +1219,17 @@ class CurrentDrive:
 
             # Calculate eta_cd_hcd_secondary based on the selected model
             if current_drive_variables.i_hcd_secondary.item() in hcd_models:
-                effrfssfix = hcd_models[
+                eta_cd_hcd_secondary = hcd_models[
                     current_drive_variables.i_hcd_secondary.item()
                 ]()
-                current_drive_variables.eta_cd_hcd_secondary = effrfssfix
+                current_drive_variables.eta_cd_hcd_secondary = eta_cd_hcd_secondary
 
             # Calculate eta_cd_hcd_primary based on the selected model
             if current_drive_variables.i_hcd_primary.item() in hcd_models:
                 effrfss = hcd_models[current_drive_variables.i_hcd_primary.item()]()
                 current_drive_variables.eta_cd_hcd_primary = effrfss
 
+            # Calculate the normalised current drive efficiencies
             current_drive_variables.eta_cd_norm_hcd_primary = (
                 current_drive_variables.eta_cd_hcd_primary
                 * (dene20 * physics_variables.rmajor)
@@ -1239,6 +1238,12 @@ class CurrentDrive:
             current_drive_variables.eta_cd_norm_hcd_secondary = (
                 current_drive_variables.eta_cd_hcd_secondary
                 * (dene20 * physics_variables.rmajor)
+            )
+
+            current_drive_variables.c_hcd_secondary_driven = (
+                current_drive_variables.eta_cd_hcd_secondary
+                * current_drive_variables.p_hcd_secondary_injected_mw
+                * 1.0e6
             )
 
             # ==============================================================
@@ -1258,20 +1263,9 @@ class CurrentDrive:
                     current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
-                # Normalised current drive efficiency gamma
-                gamcdfix = effrfssfix * (dene20 * physics_variables.rmajor)
-
-                # the fixed auxiliary current
-                auxiliary_cdfix = (
-                    effrfssfix
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
-                )
                 aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
+                    current_drive_variables.c_hcd_secondary_driven
+                    / physics_variables.plasma_current
                 )
             elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
                 # Injected power
@@ -1289,8 +1283,8 @@ class CurrentDrive:
                 )
 
                 # the fixed auxiliary current
-                auxiliary_cdfix = (
-                    effrfssfix
+                current_drive_variables.c_hcd_secondary_driven = (
+                    eta_cd_hcd_secondary
                     * (
                         current_drive_variables.p_hcd_secondary_injected_mw
                         - current_drive_variables.p_hcd_secondary_extra_heat_mw
@@ -1298,7 +1292,8 @@ class CurrentDrive:
                     * 1.0e6
                 )
                 aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
+                    current_drive_variables.c_hcd_secondary_driven
+                    / physics_variables.plasma_current
                 )
             elif current_drive_variables.i_hcd_secondary in [5, 8]:
                 # Account for first orbit losses
@@ -1339,8 +1334,7 @@ class CurrentDrive:
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
-                # gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
-                # gamcdfix = gamnb
+
                 beam_current_fix = (
                     1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
@@ -1649,8 +1643,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Secondary auxiliary current drive (A)",
-                "(auxiliary_cdfix)",
-                auxiliary_cdfix,
+                "(c_hcd_secondary_driven)",
+                current_drive_variables.c_hcd_secondary_driven,
                 "OP ",
             )
 
@@ -1721,8 +1715,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Normalised secondary current drive efficiency, gamma (10^20 A/W-m2)",
-                "(gamcdfix)",
-                gamcdfix,
+                "(eta_cd_norm_hcd_secondary)",
+                current_drive_variables.eta_cd_norm_hcd_secondary,
                 "OP ",
             )
 
