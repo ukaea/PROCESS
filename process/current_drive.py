@@ -1226,7 +1226,7 @@ class CurrentDrive:
                 effrfssfix = hcd_models[
                     current_drive_variables.i_hcd_secondary.item()
                 ]()
-                eta_cd_hcd_secondary = effrfssfix
+                current_drive_variables.eta_cd_hcd_secondary = effrfssfix
 
             # Calculate eta_cd_hcd_primary based on the selected model
             if current_drive_variables.i_hcd_primary.item() in hcd_models:
@@ -1704,7 +1704,7 @@ class CurrentDrive:
                 self.outfile,
                 "Secondary current drive efficiency (A/W)",
                 "(eta_cd_hcd_secondary)",
-                eta_cd_hcd_secondary,
+                current_drive_variables.eta_cd_hcd_secondary,
                 "OP ",
             )
             po.ovarre(

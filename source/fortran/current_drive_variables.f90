@@ -85,7 +85,10 @@ module current_drive_variables
   !! ECH wall plug power (MW)
 
   real(dp) :: eta_cd_hcd_primary
-  !! current drive efficiency (A/W)
+  !! Current drive efficiency of primary HCD system (A/W)
+
+  real(dp) :: eta_cd_hcd_secondary
+  !! Current drive efficiency of secondary HCD system (A/W)
 
   real(dp) :: n_ecrh_harmonic
   !! cyclotron harmonic frequency number, used in cut-off function
