@@ -90,6 +90,12 @@ module current_drive_variables
   real(dp) :: eta_cd_hcd_secondary
   !! Current drive efficiency of secondary HCD system (A/W)
 
+  real(dp) :: c_hcd_primary_driven
+  !! Current in plasma driven by primary HCD system (A)
+
+  real(dp) :: c_hcd_secondary_driven
+  !! Current in plasma driven by secondary HCD system (A)
+
   real(dp) :: n_ecrh_harmonic
   !! cyclotron harmonic frequency number, used in cut-off function
 
