@@ -1109,7 +1109,7 @@ class CurrentDrive:
         """
 
         current_drive_variables.p_ecrh_injected_mw = 0.0e0
-        current_drive_variables.pnbeam = 0.0e0
+        current_drive_variables.p_hcd_beam_injected_total_mw = 0.0e0
         current_drive_variables.p_hcd_lowhyb_injected_total_mw = 0.0e0
         current_drive_variables.c_beam_total = 0.0e0
         beam_current_fix = 0.0e0
@@ -1272,6 +1272,10 @@ class CurrentDrive:
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
                 )
 
             # ==========================================================
@@ -1827,7 +1831,7 @@ class CurrentDrive:
             )
 
         # MDK rearranged and added current_drive_variables.p_beam_shine_through_mw
-        # if (abs(current_drive_variables.pnbeam) > 1.0e-8) :
+        # if (abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1.0e-8) :
         if (
             (current_drive_variables.i_hcd_primary == 5)
             or (current_drive_variables.i_hcd_primary == 8)

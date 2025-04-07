@@ -238,7 +238,7 @@ module current_drive_variables
   real(dp) :: p_hcd_lowhyb_injected_total_mw
   !! lower hybrid injection power (MW)
 
-  real(dp) :: pnbeam
+  real(dp) :: p_hcd_beam_injected_total_mw
   !! neutral beam injection power (MW)
 
   real(dp) :: p_beam_orbit_loss_mw
