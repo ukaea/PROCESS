@@ -1258,7 +1258,7 @@ class CurrentDrive:
                 pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
 
                 # Wall plug power
-                heat_transport_variables.pinjwpfix = (
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
@@ -1273,7 +1273,7 @@ class CurrentDrive:
                 pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
 
                 # Wall plug power
-                heat_transport_variables.pinjwpfix = (
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
@@ -1281,16 +1281,6 @@ class CurrentDrive:
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
-                )
-
-                # the fixed auxiliary current
-                current_drive_variables.c_hcd_secondary_driven = (
-                    eta_cd_hcd_secondary
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
                 )
 
             elif current_drive_variables.i_hcd_secondary in [5, 8]:
@@ -1328,7 +1318,9 @@ class CurrentDrive:
                 current_drive_variables.pwpnb = (
                     pnbitotfix / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
-                heat_transport_variables.pinjwpfix = current_drive_variables.pwpnb
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.pwpnb
+                )
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
@@ -1482,7 +1474,7 @@ class CurrentDrive:
             current_drive_variables.p_hcd_injected_electrons_mw = pinjemw1 + pinjemwfix
             current_drive_variables.p_hcd_injected_ions_mw = pinjimw1 + pinjimwfix
             heat_transport_variables.pinjwp = (
-                pinjwp1 + heat_transport_variables.pinjwpfix
+                pinjwp1 + heat_transport_variables.p_hcd_secondary_electric_mw
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
@@ -2060,8 +2052,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Secondary fixed ECH wall plug power (MW)",
-                "(pinjwpfix)",
-                current_drive_variables.pinjwpfix,
+                "(p_hcd_secondary_electric_mw)",
+                current_drive_variables.p_hcd_secondary_electric_mw,
                 "OP ",
             )
 

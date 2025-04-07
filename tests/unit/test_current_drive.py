@@ -37,7 +37,7 @@ def current_drive():
 
 
 class CudrivParam(NamedTuple):
-    pinjwpfix: Any = None
+    p_hcd_secondary_electric_mw: Any = None
 
     pinjwp: Any = None
 
@@ -218,7 +218,7 @@ class CudrivParam(NamedTuple):
     "cudrivparam",
     (
         CudrivParam(
-            pinjwpfix=0,
+            p_hcd_secondary_electric_mw=0,
             pinjwp=0,
             p_ecrh_injected_mw=0,
             pnbeam=0,
@@ -308,7 +308,7 @@ class CudrivParam(NamedTuple):
             expected_bigq=0,
         ),
         CudrivParam(
-            pinjwpfix=0,
+            p_hcd_secondary_electric_mw=0,
             pinjwp=240.99200038011492,
             p_ecrh_injected_mw=120.49600019005746,
             pnbeam=0,
@@ -412,7 +412,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwpfix", cudrivparam.pinjwpfix)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_secondary_electric_mw",
+        cudrivparam.p_hcd_secondary_electric_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pinjwp", cudrivparam.pinjwp)
 

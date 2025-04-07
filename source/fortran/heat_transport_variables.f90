@@ -136,8 +136,8 @@ module heat_transport_variables
     real(dp) :: pinjwp
     !! injector wall plug power (MW)
 
-    real(dp) :: pinjwpfix
-    !! secondary injector wall plug power (MW)
+    real(dp) :: p_hcd_secondary_electric_mw
+    !! Secondary HCD system injector wall plug power (MW)
 
     real(dp) :: pnetelmw
     !! net electric power (MW)
