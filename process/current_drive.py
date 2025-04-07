@@ -1278,6 +1278,7 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_secondary_injected_mw
                 )
 
+
                 # Wall plug power
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1428,20 +1429,29 @@ class CurrentDrive:
 
             # Lower hybrid cases
             if current_drive_variables.i_hcd_primary in [1, 4, 6]:
+                
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
+                
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
 
                 # Wall plug power
-                current_drive_variables.pwplh = (
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    / current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_lowhyb_electric_mw = (
                     current_drive_variables.p_hcd_lowhyb_injected_total_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
+                
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.pwplh
+                    current_drive_variables.p_hcd_lowhyb_electric_mw
                 )
 
                 # Wall plug to injector efficiency
@@ -1461,12 +1471,12 @@ class CurrentDrive:
                 )
 
                 # Wall plug power
-                current_drive_variables.pwplh = (
+                current_drive_variables.p_hcd_lowhyb_electric_mw = (
                     current_drive_variables.p_hcd_icrh_injected_total_mw
                     / current_drive_variables.eta_icrh_injector_wall_plug
                 )
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.pwplh
+                    current_drive_variables.p_hcd_lowhyb_electric_mw
                 )
 
                 # Wall plug to injector efficiency
@@ -1936,8 +1946,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "Lower hybrid wall plug power (MW)",
-                "(pwplh)",
-                current_drive_variables.pwplh,
+                "(p_hcd_lowhyb_electric_mw)",
+                current_drive_variables.p_hcd_lowhyb_electric_mw,
                 "OP ",
             )
 

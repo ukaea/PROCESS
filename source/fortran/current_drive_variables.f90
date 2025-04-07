@@ -268,7 +268,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_pfirsch_schluter
   !! Pfirsch-Schlüter current fraction
 
-  real(dp) :: pwplh
+  real(dp) :: p_hcd_lowhyb_electric_mw
   !! lower hybrid wall plug power (MW)
 
   real(dp) :: pwpnb
