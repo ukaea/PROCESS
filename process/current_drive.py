@@ -1308,7 +1308,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron cyclotron cases
-            elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
+            if current_drive_variables.i_hcd_secondary in [3, 7, 10, 13]:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1323,6 +1323,26 @@ class CurrentDrive:
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+            # ==========================================================
+
+            # Electron berstein cases
+            if current_drive_variables.i_hcd_secondary in [12]:
+                # Injected power
+                p_hcd_secondary_electrons_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    / current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_ebw_injector_wall_plug
                 )
 
             # ==========================================================
@@ -1457,7 +1477,7 @@ class CurrentDrive:
 
             # Electron cyclotron cases
 
-            elif current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
+            if current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
                 # Injected power (set to close to close the Steady-state current equilibrium)
                 current_drive_variables.p_hcd_primary_injected_mw = (
                     1.0e-6
@@ -1487,6 +1507,41 @@ class CurrentDrive:
                 )
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            # Electron bernstein cases
+
+            if current_drive_variables.i_hcd_primary in [12]:
+                current_drive_variables.p_hcd_primary_injected_mw = (
+                    1.0e-6
+                    * (
+                        physics_variables.aux_current_fraction
+                        - current_drive_variables.f_c_plasma_hcd_secondary
+                    )
+                    * physics_variables.plasma_current
+                    / current_drive_variables.eta_cd_hcd_primary
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                current_drive_variables.p_ecrh_injected_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                )
+                pinjemw1 = current_drive_variables.p_ebw_injected_mw
+
+                # Wall plug power
+                current_drive_variables.echwpow = (
+                    current_drive_variables.p_ecrh_injected_mw
+                    / current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                # Wall plug to injector efficiency
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.echwpow
+                )
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_ebw_injector_wall_plug
                 )
 
             # ===========================================================
