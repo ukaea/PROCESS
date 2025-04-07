@@ -551,7 +551,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9996E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8403E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9617E+02    
@@ -1714,7 +1714,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0647E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8362E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0338E+02    
@@ -2877,7 +2877,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5559E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5112E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5112E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1163E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8300E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0929E+02    
@@ -4040,7 +4040,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1107E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8204E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0982E+02    
@@ -5203,7 +5203,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0691E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8323E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
@@ -6366,7 +6366,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9993E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8374E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9690E+02    
@@ -7529,7 +7529,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9926E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8284E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9732E+02    
@@ -8692,7 +8692,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0503E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8182E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0426E+02    
@@ -9855,7 +9855,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1023E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8018E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1131E+02    
@@ -11018,7 +11018,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1014E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.7989E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1157E+02    
@@ -12181,7 +12181,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0509E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8184E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0431E+02    
@@ -13344,7 +13344,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9941E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8291E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9741E+02    
@@ -14507,7 +14507,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9920E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8251E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9768E+02    
@@ -15670,7 +15670,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0529E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8208E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
@@ -16833,7 +16833,7 @@
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1139E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8166E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1092E+02    

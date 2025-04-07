@@ -1326,6 +1326,10 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_secondary_injected_mw
                 )
 
+                current_drive_variables.p_ecrh_injected_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                )
+
                 # Wall plug power
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1479,17 +1483,19 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
 
-                p_hcd_primary_electrons_mw = current_drive_variables.p_ecrh_injected_mw
-                # current_drive_variables.p_ecrh_injected_mw = 1000.0
+                p_hcd_primary_electrons_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                )
+
                 # Wall plug power
-                current_drive_variables.echwpow = (
+                current_drive_variables.p_hcd_ecrh_electric_mw = (
                     current_drive_variables.p_ecrh_injected_mw
                     / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.echwpow
+                    current_drive_variables.p_hcd_ecrh_electric_mw
                 )
 
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
@@ -1507,14 +1513,14 @@ class CurrentDrive:
                 p_hcd_primary_electrons_mw = current_drive_variables.p_ebw_injected_mw
 
                 # Wall plug power
-                current_drive_variables.echwpow = (
+                current_drive_variables.p_hcd_ecrh_electric_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     / current_drive_variables.eta_ebw_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.echwpow
+                    current_drive_variables.p_hcd_ecrh_electric_mw
                 )
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ebw_injector_wall_plug
@@ -2133,8 +2139,8 @@ class CurrentDrive:
             po.ovarre(
                 self.outfile,
                 "ECH wall plug power (MW)",
-                "(echwpow)",
-                current_drive_variables.echwpow,
+                "(p_hcd_ecrh_electric_mw)",
+                current_drive_variables.p_hcd_ecrh_electric_mw,
                 "OP ",
             )
 
