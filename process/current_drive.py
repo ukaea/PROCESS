@@ -1571,13 +1571,13 @@ class CurrentDrive:
             current_drive_variables.p_hcd_injected_ions_mw = (
                 pinjimw1 + p_hcd_secondary_ions_mw
             )
-            heat_transport_variables.pinjwp = (
+            heat_transport_variables.p_hcd_electric_total_mw = (
                 pinjwp1 + heat_transport_variables.p_hcd_secondary_electric_mw
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
             if physics_variables.ignite == 1:
-                heat_transport_variables.pinjwp = 0.0e0
+                heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
             if (

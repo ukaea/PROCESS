@@ -2473,7 +2473,7 @@ class Costs:
         if cost_variables.ireactor == 0:
             pwrrej = (
                 physics_variables.fusion_power
-                + heat_transport_variables.pinjwp
+                + heat_transport_variables.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )
         else:

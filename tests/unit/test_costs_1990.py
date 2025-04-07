@@ -602,7 +602,7 @@ def acc26_param(**kwargs):
     defaults = {
         "ireactor": 0,
         "fusion_power": 2000.0,
-        "pinjwp": 250.0,
+        "p_hcd_electric_total_mw": 250.0,
         "tfcmw": 50.0,
         "pthermmw": htv.pthermmw,
         "pgrossmw": htv.pgrossmw,
@@ -627,7 +627,7 @@ def acc26_params():
         acc26_param(
             ireactor=1,
             fusion_power=fortran.physics_variables.fusion_power,
-            pinjwp=htv.pinjwp,
+            p_hcd_electric_total_mw=htv.p_hcd_electric_total_mw,
             tfcmw=fortran.tfcoil_variables.tfcmw,
             pthermmw=3000.0,
             pgrossmw=700.0,
@@ -655,7 +655,9 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(
         fortran.physics_variables, "fusion_power", param["fusion_power"]
     )
-    monkeypatch.setattr(htv, "pinjwp", param["pinjwp"])
+    monkeypatch.setattr(
+        htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
+    )
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])
     monkeypatch.setattr(htv, "pgrossmw", param["pgrossmw"])
@@ -5147,7 +5149,7 @@ class Acc26Param(NamedTuple):
 
     pthermmw: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electric_total_mw: Any = None
 
     pgrossmw: Any = None
 
@@ -5168,7 +5170,7 @@ class Acc26Param(NamedTuple):
             uchrs=87900000,
             lsa=2,
             pthermmw=2620.2218111502593,
-            pinjwp=129.94611930107126,
+            p_hcd_electric_total_mw=129.94611930107126,
             pgrossmw=982.58317918134742,
             fusion_power=1985.785106643267,
             tfcmw=0,
@@ -5180,7 +5182,7 @@ class Acc26Param(NamedTuple):
             uchrs=87900000,
             lsa=2,
             pthermmw=2619.4223856129224,
-            pinjwp=129.94611930107126,
+            p_hcd_electric_total_mw=129.94611930107126,
             pgrossmw=982.28339460484608,
             fusion_power=1985.1653095257811,
             tfcmw=0,
@@ -5210,7 +5212,11 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc26param.pthermmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", acc26param.pinjwp)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electric_total_mw",
+        acc26param.p_hcd_electric_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pgrossmw", acc26param.pgrossmw)
 
