@@ -1254,6 +1254,18 @@ class CurrentDrive:
                 / physics_variables.plasma_current
             )
 
+            # Calculate the driven current for the primary heating method
+            current_drive_variables.p_hcd_primary_injected_mw = (
+                1.0e-6
+                * (
+                    physics_variables.aux_current_fraction
+                    - current_drive_variables.f_c_plasma_hcd_secondary
+                )
+                * physics_variables.plasma_current
+                / current_drive_variables.eta_cd_norm_hcd_primary
+                + current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+
             # ===========================================================
 
             # Calculate the wall plug power for the secondary heating method
@@ -1407,18 +1419,6 @@ class CurrentDrive:
 
             # Lower hybrid cases
             if current_drive_variables.i_hcd_primary in [1, 4, 6]:
-                # Injected power
-                current_drive_variables.p_hcd_primary_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - current_drive_variables.f_c_plasma_hcd_secondary
-                    )
-                    * physics_variables.plasma_current
-                    / current_drive_variables.eta_cd_hcd_primary
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
                 pinjemw1 = current_drive_variables.p_hcd_primary_injected_mw
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
@@ -1442,18 +1442,6 @@ class CurrentDrive:
 
             # Ion cyclotron cases
             if current_drive_variables.i_hcd_primary in [2]:
-                # Injected power
-                current_drive_variables.p_hcd_primary_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - current_drive_variables.f_c_plasma_hcd_secondary
-                    )
-                    * physics_variables.plasma_current
-                    / current_drive_variables.eta_cd_hcd_primary
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
                 pinjemw1 = current_drive_variables.p_hcd_primary_injected_mw
                 current_drive_variables.p_hcd_icrh_injected_total_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
@@ -1478,18 +1466,6 @@ class CurrentDrive:
             # Electron cyclotron cases
 
             if current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
-                # Injected power (set to close to close the Steady-state current equilibrium)
-                current_drive_variables.p_hcd_primary_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - current_drive_variables.f_c_plasma_hcd_secondary
-                    )
-                    * physics_variables.plasma_current
-                    / current_drive_variables.eta_cd_hcd_primary
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
                 current_drive_variables.p_ecrh_injected_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
@@ -1514,17 +1490,6 @@ class CurrentDrive:
             # Electron bernstein cases
 
             if current_drive_variables.i_hcd_primary in [12]:
-                current_drive_variables.p_hcd_primary_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - current_drive_variables.f_c_plasma_hcd_secondary
-                    )
-                    * physics_variables.plasma_current
-                    / current_drive_variables.eta_cd_hcd_primary
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
                 current_drive_variables.p_ecrh_injected_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
@@ -1547,17 +1512,6 @@ class CurrentDrive:
             # ===========================================================
 
             elif current_drive_variables.i_hcd_primary in [5, 8]:
-                current_drive_variables.p_hcd_primary_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - current_drive_variables.f_c_plasma_hcd_secondary
-                    )
-                    * physics_variables.plasma_current
-                    / current_drive_variables.eta_cd_norm_hcd_primary
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
