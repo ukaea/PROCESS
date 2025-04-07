@@ -84,6 +84,9 @@ module current_drive_variables
   real(dp) :: p_hcd_ecrh_electric_mw
   !! ECH wall plug power (MW)
 
+  real(dp) :: p_hcd_ebw_electric_mw
+  !! Electron bernstein wall plug power (MW)
+
   real(dp) :: eta_cd_hcd_primary
   !! Current drive efficiency of primary HCD system (A/W)
 
