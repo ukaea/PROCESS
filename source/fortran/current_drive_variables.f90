@@ -239,7 +239,13 @@ module current_drive_variables
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
   real(dp) :: p_hcd_lowhyb_injected_total_mw
-  !! lower hybrid injection power (MW)
+  !! Total lower hybrid injection power (MW)
+
+  real(dp) :: p_hcd_icrh_injected_total_mw
+  !! Total ion cyclotron injection power (MW)
+
+  real(dp) :: p_hcd_ebw_injected_total_mw
+  !! Total electron bernstein wave injection power (MW)
 
   real(dp) :: p_hcd_beam_injected_total_mw
   !! neutral beam injection power (MW)
