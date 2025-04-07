@@ -1409,7 +1409,9 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_lowhyb_injected_total_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
-                pinjwp1 = current_drive_variables.pwplh
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.pwplh
+                )
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
@@ -1442,7 +1444,9 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_icrh_injected_total_mw
                     / current_drive_variables.eta_icrh_injector_wall_plug
                 )
-                pinjwp1 = current_drive_variables.pwplh
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.pwplh
+                )
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
@@ -1478,7 +1482,9 @@ class CurrentDrive:
                 )
 
                 # Wall plug to injector efficiency
-                pinjwp1 = current_drive_variables.echwpow
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.echwpow
+                )
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
                 )
@@ -1544,7 +1550,9 @@ class CurrentDrive:
                     current_drive_variables.p_beam_injected_mw
                     / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
-                pinjwp1 = current_drive_variables.pwpnb
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.pwpnb
+                )
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_beam_injector_wall_plug
                 )
@@ -1572,7 +1580,8 @@ class CurrentDrive:
                 pinjimw1 + p_hcd_secondary_ions_mw
             )
             heat_transport_variables.p_hcd_electric_total_mw = (
-                pinjwp1 + heat_transport_variables.p_hcd_secondary_electric_mw
+                heat_transport_variables.p_hcd_primary_electric_mw
+                + heat_transport_variables.p_hcd_secondary_electric_mw
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
