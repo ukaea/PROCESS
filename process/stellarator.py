@@ -4951,7 +4951,7 @@ class Stellarator:
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_ecrh_injector_wall_plug
             )
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electric_total_mw = (
                 current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
@@ -4966,7 +4966,7 @@ class Stellarator:
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_lowhyb_injector_wall_plug
             )
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electric_total_mw = (
                 current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
@@ -4995,7 +4995,7 @@ class Stellarator:
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_beam_injector_wall_plug
             )
-            current_drive_variables.pinjwp = (
+            current_drive_variables.p_hcd_electric_total_mw = (
                 current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug

@@ -1954,11 +1954,13 @@ class IFE:
 
         # Wall plug driver power (MW)
 
-        heat_transport_variables.pinjwp = pdrvmw / ife_variables.etadrv
+        heat_transport_variables.p_hcd_electric_total_mw = pdrvmw / ife_variables.etadrv
 
         # Waste driver power (MW)
 
-        heat_transport_variables.pinjht = heat_transport_variables.pinjwp - pdrvmw
+        heat_transport_variables.pinjht = (
+            heat_transport_variables.p_hcd_electric_total_mw - pdrvmw
+        )
 
         # Cryogenic power (MW)
         # Cryogenic temperature is assumed to be 4.5K
@@ -2053,8 +2055,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Driver wall plug power (MW)",
-                "(pinjwp)",
-                heat_transport_variables.pinjwp,
+                "(p_hcd_electric_total_mw)",
+                heat_transport_variables.p_hcd_electric_total_mw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2175,7 +2177,7 @@ class IFE:
             + ife_variables.tfacmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.pinjwp
+            + heat_transport_variables.p_hcd_electric_total_mw
             + basemw
             + (buildings_variables.efloor * pmwpm2)
             + ife_variables.lipmw
@@ -2216,8 +2218,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Driver power supplies (MW)",
-            "(pinjwp)",
-            heat_transport_variables.pinjwp,
+            "(p_hcd_electric_total_mw)",
+            heat_transport_variables.p_hcd_electric_total_mw,
         )
         process_output.ovarre(
             self.outfile,

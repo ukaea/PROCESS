@@ -441,7 +441,9 @@ class Power:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
-        pheatingmw = heat_transport_variables.pinjwp  # Should be zero if ignite==1
+        pheatingmw = (
+            heat_transport_variables.p_hcd_electric_total_mw
+        )  # Should be zero if ignite==1
 
         #  Power to cryogenic comp. motors, MW
         crymw = heat_transport_variables.crypmw
@@ -790,15 +792,15 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/eta_hcd_primary_injector_wall_plug
-        # heat_transport_variables.pinjwp calculated in current_drive.f90
+        # heat_transport_variables.p_hcd_electric_total_mw = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/eta_hcd_primary_injector_wall_plug
+        # heat_transport_variables.p_hcd_electric_total_mw calculated in current_drive.f90
 
         #  Waste injection power
         if physics_variables.ignite == 0:
             # MDK
-            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
+            # pinjht = heat_transport_variables.p_hcd_electric_total_mw - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
-                heat_transport_variables.pinjwp
+                heat_transport_variables.p_hcd_electric_total_mw
                 - current_drive_variables.p_hcd_injected_total_mw
             )
         else:
@@ -944,7 +946,7 @@ class Power:
             #  Total recirculating power
             heat_transport_variables.precircmw = (
                 self.pcoresystems
-                + heat_transport_variables.pinjwp
+                + heat_transport_variables.p_hcd_electric_total_mw
                 + heat_transport_variables.htpmw
             )
 
@@ -1918,8 +1920,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for heating and current drive (MW)",
-            "(pinjwp)",
-            heat_transport_variables.pinjwp,
+            "(p_hcd_electric_total_mw)",
+            heat_transport_variables.p_hcd_electric_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1971,7 +1973,7 @@ class Power:
         )
         total_plant_power = (
             heat_transport_variables.pnetelmw
-            + heat_transport_variables.pinjwp
+            + heat_transport_variables.p_hcd_electric_total_mw
             + heat_transport_variables.htpmw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
@@ -2179,7 +2181,7 @@ class Power:
             heat_transport_variables.pinjmax
             / current_drive_variables.eta_hcd_primary_injector_wall_plug
         )
-        p_hcd[3] = heat_transport_variables.pinjwp
+        p_hcd[3] = heat_transport_variables.p_hcd_electric_total_mw
         p_hcd[4] = (
             heat_transport_variables.pinjmax
             / current_drive_variables.eta_hcd_primary_injector_wall_plug

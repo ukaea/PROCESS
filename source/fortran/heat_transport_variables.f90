@@ -133,7 +133,7 @@ module heat_transport_variables
     real(dp) :: pinjmax
     !! maximum injector power during pulse (heating and ramp-up/down phase) (MW)
 
-    real(dp) :: pinjwp
+    real(dp) :: p_hcd_electric_total_mw
     !! injector wall plug power (MW)
 
     real(dp) :: p_hcd_secondary_electric_mw
