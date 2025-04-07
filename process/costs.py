@@ -1820,13 +1820,15 @@ class Costs:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.uclh
-                    * (1.0e6 * current_drive_variables.plhybd) ** exprf
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                 )
             else:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.ucich
-                    * (1.0e6 * current_drive_variables.plhybd) ** exprf
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                 )
 
             if cost_variables.ifueltyp == 1:

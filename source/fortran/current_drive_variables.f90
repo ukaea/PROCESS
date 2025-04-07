@@ -235,7 +235,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_internal
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
-  real(dp) :: plhybd
+  real(dp) :: p_hcd_lowhyb_injected_total_mw
   !! lower hybrid injection power (MW)
 
   real(dp) :: pnbeam

@@ -4958,12 +4958,12 @@ class Stellarator:
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
-            current_drive_variables.plhybd = (
+            current_drive_variables.p_hcd_lowhyb_injected_total_mw = (
                 current_drive_variables.p_hcd_primary_extra_heat_mw
             )
             current_drive_variables.p_hcd_injected_ions_mw = 0
             current_drive_variables.p_hcd_injected_electrons_mw = (
-                current_drive_variables.plhybd
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw
             )
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_lowhyb_injector_wall_plug
