@@ -682,6 +682,87 @@ class ElectronCyclotron:
 
         return (0.21e0 * ten) / (rmajor * dene20 * dlamee)
 
+    def electron_cyclotron_freethy(
+        self,
+        te: float,
+        zeff: float,
+        rmajor: float,
+        dene: float,
+        bt: float,
+        n_ecrh_harmonic: int,
+        i_ecrh_wave_mode: int,
+    ) -> float:
+        """
+        Calculate the Electron Cyclotron current drive efficiency using the Freethy model.
+
+        This function computes the ECCD efficiency based on the electron temperature,
+        effective charge, major radius, electron density, magnetic field, harmonic number,
+        and wave mode.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene: Volume averaged electron density in m^-3.
+        :type dene: float
+        :param bt: Toroidal magnetic field in Tesla.
+        :type bt: float
+        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
+        :type n_ecrh_harmonic: int
+        :param i_ecrh_wave_mode: Wave mode switch (0 for O-mode, 1 for X-mode).
+        :type i_ecrh_wave_mode: int
+
+        :return: The calculated absolute ECCD efficiency in A/W.
+        :rtype: float
+
+        :notes:
+            - Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic.
+            - The density factor accounts for this behavior.
+
+        :references:
+            - Freethy, S., PROCESS issue #2994.
+        """
+
+        # Cyclotron frequency
+        fc = 1 / (2 * np.pi) * constants.electron_charge * bt / constants.electron_mass
+
+        # Plasma frequency
+        fp = (
+            1
+            / (2 * np.pi)
+            * np.sqrt(
+                (dene / 1.0e19)
+                * constants.electron_charge**2
+                / (constants.electron_mass * constants.epsilon0)
+            )
+        )
+
+        # Scaling factor for ECCD efficiency
+        xi_CD = 0.18e0  # Tuned to the results of a GRAY study
+        xi_CD *= 4.8e0 / (2 + zeff)  # Zeff correction
+
+        # ECCD efficiency
+        eta_cd = xi_CD * te / (3.27e0 * rmajor * (dene / 1.0e19))
+
+        # Determine the cut-off frequency based on wave mode
+        if i_ecrh_wave_mode == 0:  # O-mode case
+            f_cutoff = fp
+        elif i_ecrh_wave_mode == 1:  # X-mode case
+            f_cutoff = 0.5 * (fc + np.sqrt(n_ecrh_harmonic * fc**2 + 4 * fp**2))
+        else:
+            raise ValueError("Invalid wave mode. Use 0 for O-mode or 1 for X-mode.")
+
+        # Plasma coupling factor
+        a = 0.1  # Controls sharpness of the transition
+        cutoff_factor = 0.5 * (
+            1 + np.tanh((2 / a) * ((n_ecrh_harmonic * fc - f_cutoff) / fp - a))
+        )
+
+        # Final ECCD efficiency
+        return eta_cd * cutoff_factor
+
 
 class IonCyclotron:
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -1176,68 +1257,19 @@ class CurrentDrive:
                 eta_cd_hcd_secondary = effrfssfix
 
             elif current_drive_variables.i_hcd_secondary == 13:
-                # ECCD model for O-mode cut-off with added Te and Zeff dependance
-                # Scaling author: Simon Freethy
-                # Ref : PROCESS issue #2994
-
-                fc = (
-                    1
-                    / (2 * np.pi)
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1
-                    / (2 * np.pi)
-                    * np.sqrt(
-                        (physics_variables.dene / 1.0e19)
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
-                xi_CD = xi_CD * (
-                    4.8e0 / (2 + physics_variables.zeff)
-                )  # Zeff correction
                 effrfssfix = (
-                    xi_CD
-                    * physics_variables.te
-                    / (
-                        3.27e0
-                        * physics_variables.rmajor
-                        * (physics_variables.dene / 1.0e19)
+                    self.electron_cyclotron.electron_cyclotron_freethy(
+                        te=physics_variables.te,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        bt=physics_variables.bt,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
                     )
+                    * current_drive_variables.feffcd
                 )
 
-                # O-mode case
-                if current_drive_variables.i_ecrh_wave_mode == 0:
-                    f_cutoff = fp
-
-                # X-mode case
-                elif current_drive_variables.i_ecrh_wave_mode == 1:
-                    f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
-                        )
-                    )
-
-                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
-                a = 0.1  # This controls how sharply the transition is reached
-                cutoff_factor = 0.5 * (
-                    1
-                    + np.tanh(
-                        (2 / (a))
-                        * (
-                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
-                            / fp
-                            - a
-                        )
-                    )
-                )
-                eta_cd_hcd_secondary = effrfssfix * cutoff_factor
+                eta_cd_hcd_secondary = effrfssfix
             elif current_drive_variables.i_hcd_secondary != 0:
                 raise ProcessValueError(
                     f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
@@ -1457,68 +1489,19 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_primary = effrfss
 
             elif current_drive_variables.i_hcd_primary == 13:
-                # ECCD model for O-mode cut-off with added Te and Zeff dependance
-                # Scaling author: Simon Freethy
-                # Ref : PROCESS issue #2994
-
-                fc = (
-                    1
-                    / (2 * np.pi)
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1
-                    / (2 * np.pi)
-                    * np.sqrt(
-                        (physics_variables.dene / 1.0e19)
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
-                xi_CD = xi_CD * (
-                    4.8e0 / (2 + physics_variables.zeff)
-                )  # Zeff correction
                 effrfss = (
-                    xi_CD
-                    * physics_variables.te
-                    / (
-                        3.27e0
-                        * physics_variables.rmajor
-                        * (physics_variables.dene / 1.0e19)
+                    self.electron_cyclotron.electron_cyclotron_freethy(
+                        te=physics_variables.te,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        bt=physics_variables.bt,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
                     )
+                    * current_drive_variables.feffcd
                 )
 
-                # O-mode case
-                if current_drive_variables.i_ecrh_wave_mode == 0:
-                    f_cutoff = fp
-
-                # X-mode case
-                elif current_drive_variables.i_ecrh_wave_mode == 1:
-                    f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
-                        )
-                    )
-
-                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
-                a = 0.1  # This controls how sharply the transition is reached
-                cutoff_factor = 0.5 * (
-                    1
-                    + np.tanh(
-                        (2 / (a))
-                        * (
-                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
-                            / fp
-                            - a
-                        )
-                    )
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss * cutoff_factor
+                current_drive_variables.eta_cd_hcd_primary = effrfss
             else:
                 raise ProcessValueError(
                     f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
