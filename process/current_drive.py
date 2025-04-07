@@ -1495,7 +1495,8 @@ class CurrentDrive:
 
                 # Wall plug to injector efficiency
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.p_hcd_ecrh_electric_mw
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
@@ -1513,15 +1514,17 @@ class CurrentDrive:
                 p_hcd_primary_electrons_mw = current_drive_variables.p_ebw_injected_mw
 
                 # Wall plug power
-                current_drive_variables.p_hcd_ecrh_electric_mw = (
+                current_drive_variables.p_hcd_ebw_electric_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     / current_drive_variables.eta_ebw_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.p_hcd_ecrh_electric_mw
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    / current_drive_variables.eta_ebw_injector_wall_plug
                 )
+
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ebw_injector_wall_plug
                 )
