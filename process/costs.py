@@ -1837,7 +1837,7 @@ class Costs:
 
                 #  Account 223.3 : Neutral Beam
 
-                # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*pnbeam)**exprf
+                # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
                 # #327
 
                 self.c2233 = (

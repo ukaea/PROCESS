@@ -43,7 +43,7 @@ class CudrivParam(NamedTuple):
 
     p_ecrh_injected_mw: Any = None
 
-    pnbeam: Any = None
+    p_hcd_beam_injected_total_mw: Any = None
 
     p_hcd_lowhyb_injected_total_mw: Any = None
 
@@ -221,7 +221,7 @@ class CudrivParam(NamedTuple):
             p_hcd_secondary_electric_mw=0,
             pinjwp=0,
             p_ecrh_injected_mw=0,
-            pnbeam=0,
+            p_hcd_beam_injected_total_mw=0,
             p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
             p_beam_orbit_loss_mw=0,
@@ -311,7 +311,7 @@ class CudrivParam(NamedTuple):
             p_hcd_secondary_electric_mw=0,
             pinjwp=240.99200038011492,
             p_ecrh_injected_mw=120.49600019005746,
-            pnbeam=0,
+            p_hcd_beam_injected_total_mw=0,
             p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
             p_beam_orbit_loss_mw=0,
@@ -424,7 +424,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "p_ecrh_injected_mw", cudrivparam.p_ecrh_injected_mw
     )
 
-    monkeypatch.setattr(current_drive_variables, "pnbeam", cudrivparam.pnbeam)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_beam_injected_total_mw",
+        cudrivparam.p_hcd_beam_injected_total_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables,
