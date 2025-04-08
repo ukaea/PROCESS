@@ -41,7 +41,7 @@ module divertor_variables
   real(dp) :: divplt
   !! divertor plate thickness (m) (from Spears, Sept 1990)
 
-  real(dp) :: divsur
+  real(dp) :: a_div_surface_total
   !! divertor surface area (m2)
 
   real(dp) :: fdiva

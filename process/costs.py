@@ -1389,7 +1389,7 @@ class Costs:
         and the replacement divertor costs ae treated as a fuel cost,
         """
         if ife_variables.ife != 1:
-            self.c2215 = 1.0e-6 * divertor_variables.divsur * cost_variables.ucdiv
+            self.c2215 = 1.0e-6 * divertor_variables.a_div_surface_total * cost_variables.ucdiv
             self.c2215 = cost_variables.fkind * self.c2215
 
             if cost_variables.ifueltyp == 1:

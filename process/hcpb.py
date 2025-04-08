@@ -223,7 +223,7 @@ class CCFE_HCPB:
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
         coolvol = (
-            divertor_variables.divsur
+            divertor_variables.a_div_surface_total
             * divertor_variables.divclfr
             * divertor_variables.divplt
         )
@@ -271,7 +271,7 @@ class CCFE_HCPB:
         # Component masses
 
         # Divertor mass (kg)
-        divertor_variables.divsur = (
+        divertor_variables.a_div_surface_total = (
             divertor_variables.fdiva
             * 2.0
             * np.pi
@@ -279,9 +279,9 @@ class CCFE_HCPB:
             * physics_variables.rminor
         )
         if physics_variables.idivrt == 2:
-            divertor_variables.divsur = divertor_variables.divsur * 2.0
+            divertor_variables.a_div_surface_total = divertor_variables.a_div_surface_total * 2.0
         divertor_variables.divmas = (
-            divertor_variables.divsur
+            divertor_variables.a_div_surface_total
             * divertor_variables.divdens
             * (1.0 - divertor_variables.divclfr)
             * divertor_variables.divplt
@@ -1463,8 +1463,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Divertor area (m2)",
-            "(divsur)",
-            divertor_variables.divsur,
+            "(a_div_surface_total)",
+            divertor_variables.a_div_surface_total,
         )
         po.ovarre(
             self.outfile,

@@ -920,7 +920,7 @@ class Stellarator:
         #  Transfer to global variables
 
         divertor_variables.pflux_div_heat_load_mw = q_div
-        divertor_variables.divsur = darea
+        divertor_variables.a_div_surface_total = darea
 
         fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
@@ -1598,15 +1598,15 @@ class Stellarator:
         #  fwbs_variables.blktmodel
 
         #  Divertor mass
-        #  N.B. divertor_variables.divsur is calculated in stdiv after this point, so will
+        #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
         #  be zero on first lap, hence the initial approximation
 
         if self.first_call_stfwbs:
-            divertor_variables.divsur = 50.0e0
+            divertor_variables.a_div_surface_total = 50.0e0
             self.first_call_stfwbs = False
 
         divertor_variables.divmas = (
-            divertor_variables.divsur
+            divertor_variables.a_div_surface_total
             * divertor_variables.divdens
             * (1.0e0 - divertor_variables.divclfr)
             * divertor_variables.divplt
@@ -1616,7 +1616,7 @@ class Stellarator:
         #  Divertor coolant volume (m3)
 
         coolvol = (
-            divertor_variables.divsur
+            divertor_variables.a_div_surface_total
             * divertor_variables.divclfr
             * divertor_variables.divplt
         )
@@ -2307,8 +2307,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Divertor area (m2)",
-                "(divsur)",
-                divertor_variables.divsur,
+                "(a_div_surface_total)",
+                divertor_variables.a_div_surface_total,
             )
             po.ovarre(
                 self.outfile,

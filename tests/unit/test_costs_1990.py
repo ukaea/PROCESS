@@ -1640,7 +1640,7 @@ class Acc2215Param(NamedTuple):
 
     ucdiv: Any = None
 
-    divsur: Any = None
+    a_div_surface_total: Any = None
 
     ife: Any = None
 
@@ -1659,7 +1659,7 @@ class Acc2215Param(NamedTuple):
             divcst=0,
             fkind=1,
             ucdiv=500000,
-            divsur=177.80928909705162,
+            a_div_surface_total=177.80928909705162,
             ife=0,
             c22=0,
             c2215=0,
@@ -1670,7 +1670,7 @@ class Acc2215Param(NamedTuple):
             divcst=88.904644548525795,
             fkind=1,
             ucdiv=500000,
-            divsur=177.80928909705162,
+            a_div_surface_total=177.80928909705162,
             ife=0,
             c22=3474.7391916096453,
             c2215=0,
@@ -1699,7 +1699,7 @@ def test_acc2215(acc2215param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "ucdiv", acc2215param.ucdiv)
 
-    monkeypatch.setattr(divertor_variables, "divsur", acc2215param.divsur)
+    monkeypatch.setattr(divertor_variables, "a_div_surface_total", acc2215param.a_div_surface_total)
 
     monkeypatch.setattr(ife_variables, "ife", acc2215param.ife)
 
