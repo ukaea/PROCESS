@@ -53,7 +53,7 @@ module divertor_variables
   real(dp) :: hldiv
   !! divertor heat load (MW/m2)
 
-  integer :: i_hldiv
+  integer :: i_div_heat_load
   !! switch for user input hldiv:
   !!
   !! - = 0: divtart model turned off and user inputs hldiv
@@ -101,7 +101,7 @@ module divertor_variables
     fdiva = 1.11D0
     flux_exp = 2.0D0
     hldiv = 0.0D0
-    i_hldiv = 2
+    i_div_heat_load = 2
     hldivlim = 5.0D0
     prn1 = 0.285D0
     rconl = 0.0D0

@@ -14,9 +14,9 @@ geometry at present.
 
 The Harrison-Kukushkin-Hotston divertor model[^1] developed for ITER is available, but is unlikely to be relevant for a reactor.
 
-The divertor heat flux `hldiv` can be calculated or it can be input by the user. Options are selected using the switch `i_hldiv`:
+The divertor heat flux `hldiv` can be calculated or it can be input by the user. Options are selected using the switch `i_div_heat_load`:
 
-| `i_hldiv` | Description |
+| `i_div_heat_load` | Description |
 | :-: | - |
 | 0 | the user inputs the value for `hldiv` |
 | 1 | the Peng chamber model (`divtart`) is called to calculate `hldiv` |
@@ -27,7 +27,7 @@ The divertor heat flux `hldiv` can be calculated or it can be input by the user.
 ## Peng Chamber model | `divtart()`
 
 !!! Note ""
-    `i_hldiv == 1`
+    `i_div_heat_load == 1`
 
 The tight aspect ratio tokamak divertor model (`divtart()`) [^5] calculates the divertor heat flux by 
 assuming that the power is evenly spread around the divertor chamber by the action of a gaseous 
@@ -167,7 +167,7 @@ The interactive graph below can be used to investigate how changing the key pram
 ## Wade Heat Flux Model
 
 !!! Note ""
-    `i_hldiv == 2`
+    `i_div_heat_load == 2`
 
 A divertor heat flux model is provided in Appendix A.II. of [^2].  This uses the Eich scaling 
 [^3] and S-factor [^4] to calculate the SOL width at the outboard divertor, mapped to the midplane:

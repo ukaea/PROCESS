@@ -689,7 +689,7 @@ i_single_null = 0
 * DESCRIPTION:   Switch for Divertor Configuration (0: Double-null, 1: Single-Null)
 * JUSTIFICATION: Design choice, STs generally always double-null
 
-*i_hldiv = 
+*i_div_heat_load = 
 * DESCRIPTION:   switch for user input hldiv: (default = 0)
 * = 0: divtart model turned off and user inputs hldiv
 * = 1: divtart model calculates hldiv

@@ -318,7 +318,7 @@ dr_shld_outboard = 0.800
 dz_divertor = 0.62 
 
 * Use Wade divertor heat load model
-i_hldiv = 2
+i_div_heat_load = 2
 
 * Coolant void fraction in shield
 vfshld = 0.60 
