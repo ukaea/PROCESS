@@ -71,7 +71,7 @@ module constraint_variables
   real(dp) :: fgamcd
   !! f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)
 
-  real(dp) :: fhldiv
+  real(dp) :: fpflux_div_heat_load_mw
   !! f-value for divertor heat load (`constraint equation 18`, `iteration variable 27`)
 
   real(dp) :: fiooic
@@ -333,7 +333,7 @@ module constraint_variables
     fflutf = 1.0D0
     ffuspow = 1.0D0
     fgamcd = 1.0D0
-    fhldiv = 1.0D0
+    fpflux_div_heat_load_mw = 1.0D0
     fiooic = 0.5D0
     fipir = 1.0D0
     q95_fixed = 3.0D0

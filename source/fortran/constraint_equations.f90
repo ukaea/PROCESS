@@ -1064,13 +1064,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for divertor heat load upper limit
       !! #=# divertor
-      !! #=#=# fhldiv, hldivlim
+      !! #=#=# fpflux_div_heat_load_mw, hldivlim
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fhldiv : input real : f-value for divertor heat load
+      !! fpflux_div_heat_load_mw : input real : f-value for divertor heat load
       !! hldivlim : input real : heat load limit (MW/m2)
       !! pflux_div_heat_load_mw : input real : divertor heat load (MW/m2)
-      use constraint_variables, only: fhldiv
+      use constraint_variables, only: fpflux_div_heat_load_mw
       use divertor_variables, only: hldivlim, pflux_div_heat_load_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1079,7 +1079,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  pflux_div_heat_load_mw/hldivlim - 1.0D0 * fhldiv
+      tmp_cc =  pflux_div_heat_load_mw/hldivlim - 1.0D0 * fpflux_div_heat_load_mw
       tmp_con = hldivlim * (1.0D0 - tmp_cc)
       tmp_err = pflux_div_heat_load_mw * tmp_cc
       tmp_symbol = '<'

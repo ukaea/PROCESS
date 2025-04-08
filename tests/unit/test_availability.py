@@ -205,7 +205,11 @@ def calc_u_planned_fix(request, monkeypatch):
 
     # Mock all module variables used by calc_u_planned()
     # Some are parameterised
-    monkeypatch.setattr(fortran.divertor_variables, "pflux_div_heat_load_mw", param["pflux_div_heat_load_mw"])
+    monkeypatch.setattr(
+        fortran.divertor_variables,
+        "pflux_div_heat_load_mw",
+        param["pflux_div_heat_load_mw"],
+    )
     monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", 0.0)
     monkeypatch.setattr(
         fortran.physics_variables, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
