@@ -49,7 +49,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "life_dpa", 40.0)
     monkeypatch.setattr(cv, "adivflnc", 8.0)
-    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(tv, "t_cycle", 5.0)
     monkeypatch.setattr(cv, "iavail", 0)
     monkeypatch.setattr(cv, "cfactr", 0.8)
@@ -152,7 +152,7 @@ def calc_u_planned_param(**kwargs):
         "tlife": 30.0,
         "num_rh_systems": 5,
         "pflux_fw_neutron_mw": 1.0,
-        "hldiv": 10.0,
+        "pflux_div_heat_load_mw": 10.0,
         "itart": 0,
         "expected": approx(0.3, abs=0.05),
     }
@@ -178,7 +178,7 @@ def calc_u_planned_params():
             tlife=30.0,
             num_rh_systems=4,
             pflux_fw_neutron_mw=1.0,
-            hldiv=1.0,
+            pflux_div_heat_load_mw=1.0,
             itart=1,
             expected=approx(0.03, abs=0.005),
         ),  # Nominal ST
@@ -205,7 +205,7 @@ def calc_u_planned_fix(request, monkeypatch):
 
     # Mock all module variables used by calc_u_planned()
     # Some are parameterised
-    monkeypatch.setattr(fortran.divertor_variables, "hldiv", param["hldiv"])
+    monkeypatch.setattr(fortran.divertor_variables, "pflux_div_heat_load_mw", param["pflux_div_heat_load_mw"])
     monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", 0.0)
     monkeypatch.setattr(
         fortran.physics_variables, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
@@ -571,7 +571,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(tv, "t_burn", 5.0)
     monkeypatch.setattr(tv, "t_cycle", 9000.0)
     monkeypatch.setattr(cv, "adivflnc", 10.0)
-    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(cv, "ibkt_life", 0)
     monkeypatch.setattr(cv, "abktflnc", 10.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
@@ -619,7 +619,7 @@ def test_divertor_lifetime(monkeypatch, availability):
     """
 
     monkeypatch.setattr(cv, "adivflnc", 100.0)
-    monkeypatch.setattr(dv, "hldiv", 10.0)
+    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
 
     divlife_obs = availability.divertor_lifetime()
