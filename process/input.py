@@ -777,7 +777,9 @@ INPUT_VARIABLES = {
     "pflux_div_heat_load_mw": InputVariable(
         fortran.divertor_variables, float, range=(0.0, 10.0)
     ),
-    "hldivlim": InputVariable(fortran.divertor_variables, float, range=(0.1, 20.0)),
+    "pflux_div_heat_load_max_mw": InputVariable(
+        fortran.divertor_variables, float, range=(0.1, 20.0)
+    ),
     "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
     "htpmw_blkt": InputVariable(

@@ -144,7 +144,7 @@ var_dicts = {
     "p_hcd_injected_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "hldivlim": VariableMetadata(
+    "pflux_div_heat_load_max_mw": VariableMetadata(
         latex=r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]",
         description="Maximum divertor heat load",
         units="MW.m^{-2}",

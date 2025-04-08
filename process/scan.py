@@ -45,7 +45,7 @@ class ScanVariable:
 
 SCAN_VARIABLES = {
     1: ScanVariable("aspect", "Aspect_ratio"),
-    2: ScanVariable("hldivlim", "Div_heat_limit_(MW/m2)"),
+    2: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)"),
     3: ScanVariable("pnetelin", "Net_electric_power_(MW)"),
     4: ScanVariable("hfact", "Confinement_H_factor"),
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
@@ -882,7 +882,7 @@ class Scan:
             case 1:
                 physics_variables.aspect = swp[iscn - 1]
             case 2:
-                divertor_variables.hldivlim = swp[iscn - 1]
+                divertor_variables.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
                 constraint_variables.pnetelin = swp[iscn - 1]
             case 4:

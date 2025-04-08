@@ -165,7 +165,7 @@ p_hcd_primary_extra_heat_mw    = 0. * heating power not used for current drive (
 *----------------Divertor Variables----------------*
 
 anginc   = 0.035 * angle of incidence of field line on plate (rad)
-hldivlim = 15 * heat load limit (MW/m2)
+pflux_div_heat_load_max_mw = 15 * heat load limit (MW/m2)
 tdiv     = 3. * temperature at divertor (eV) (input for stellarator only; calculated for tokamaks)
 xpertin  = 1.5 * perpendicular heat transport coefficient (m2/s)
 

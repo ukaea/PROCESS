@@ -176,7 +176,7 @@ p_hcd_primary_extra_heat_mw = 50.0
 
 divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
 dz_divertor   = 0.621 * Divertor structure vertical thickness (m)
-hldivlim = 10 * Heat load limit (mw/m2)
+pflux_div_heat_load_max_mw = 10 * Heat load limit (mw/m2)
 ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma
 prn1     = 0.4 * N-scrape-off / n-average plasma;
 zeffdiv  = 3.5 * Zeff in the divertor region (if divdum /= 0)

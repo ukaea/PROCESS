@@ -168,7 +168,7 @@ After following the instruction to add an input variable, you can make the varia
   integer :: nsweep = 1
   !! nsweep /1/ : switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
-  !!         <LI> 2  hldivlim
+  !!         <LI> 2  pflux_div_heat_load_max_mw
   ...
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>

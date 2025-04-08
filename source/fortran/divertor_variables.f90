@@ -60,7 +60,7 @@ module divertor_variables
   !! - = 1: divtart model calculates pflux_div_heat_load_mw
   !! - = 2: divwade model calculates pflux_div_heat_load_mw
 
-  real(dp) :: hldivlim
+  real(dp) :: pflux_div_heat_load_max_mw
   !! heat load limit (MW/m2)
 
   real(dp) :: prn1
