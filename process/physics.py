@@ -2036,7 +2036,7 @@ class Physics:
             1.0e-10, (1.0e0 - physics_variables.f_c_plasma_non_inductive)
         )
         #  Fraction of plasma current produced by auxiliary current drive
-        physics_variables.aux_current_fraction = (
+        physics_variables.f_c_plasma_auxiliary = (
             physics_variables.f_c_plasma_non_inductive
             - current_drive_variables.f_c_plasma_internal
         )

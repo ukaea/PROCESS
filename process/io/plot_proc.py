@@ -3125,7 +3125,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pinjie, "Steady state auxiliary power", "MW"),
             ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
             ("f_c_plasma_inductive", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
@@ -3155,7 +3155,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pinjie, "Steady state auxiliary power", "MW"),
             ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
             ("f_c_plasma_inductive", "Inductive fraction", ""),
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
             ("e_beam_kev", "NB energy", "keV"),
@@ -3181,7 +3181,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pinjie, "Steady state auxiliary power", "MW"),
             ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
             ("f_c_plasma_inductive", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
@@ -3210,7 +3210,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pinjie, "Steady state auxiliary power", "MW"),
             ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
             ("f_c_plasma_inductive", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
@@ -3239,7 +3239,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (pinjie, "Steady state auxiliary power", "MW"),
             ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
             ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("aux_current_fraction", "Auxiliary fraction", ""),
+            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
             ("f_c_plasma_inductive", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (

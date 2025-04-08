@@ -208,7 +208,7 @@ module physics_variables
   real(dp) :: eps
   !! inverse aspect ratio
 
-  real(dp) :: aux_current_fraction
+  real(dp) :: f_c_plasma_auxiliary
   !! fraction of plasma current produced by auxiliary current drive
 
   real(dp) :: f_c_plasma_inductive
