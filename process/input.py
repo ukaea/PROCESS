@@ -367,7 +367,7 @@ INPUT_VARIABLES = {
         fortran.divertor_variables, float, range=(0.1, 100000.0)
     ),
     "dz_divertor": InputVariable(fortran.divertor_variables, float, range=(0.1, 5.0)),
-    "divplt": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
+    "dx_div_plate": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
     "dp_blkt": InputVariable(
         fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),

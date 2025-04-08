@@ -768,7 +768,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Divertor structure density (kg/m3) (default = 1.0D4)
 * JUSTIFICATION: Not yet set
 
-*divplt = 
+*dx_div_plate = 
 * DESCRIPTION:   Divertor plate thickness (m) (default = 0.035)
 * JUSTIFICATION: Not yet set
 

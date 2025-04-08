@@ -1638,7 +1638,7 @@
         "dz_divertor": 0.2,
         "divlife": 0.0,
         "m_div_plate": 0.0,
-        "divplt": 0.035,
+        "dx_div_plate": 0.035,
         "a_div_surface_total": 0.0,
         "dlamee": 0.0,
         "dlamie": 0.0,
@@ -9255,7 +9255,7 @@
         "dz_divertor": "divertor structure vertical thickness (m)",
         "divlife": "Full power lifetime of divertor (y)",
         "m_div_plate": "divertor plate mass (kg)",
-        "divplt": "divertor plate thickness (m) (from Spears, Sept 1990)",
+        "dx_div_plate": "divertor plate thickness (m) (from Spears, Sept 1990)",
         "a_div_surface_total": "divertor surface area (m2)",
         "dlamee": "electron-electron coulomb logarithm",
         "dlamie": "ion-electron coulomb logarithm",
@@ -12123,7 +12123,7 @@
             "lb": 0.1,
             "ub": 5.0
         },
-        "divplt": {
+        "dx_div_plate": {
             "lb": 0.01,
             "ub": 1.0
         },
@@ -17740,7 +17740,7 @@
             "den_div_structure",
             "dz_divertor",
             "m_div_plate",
-            "divplt",
+            "dx_div_plate",
             "a_div_surface_total",
             "fdiva",
             "pflux_div_heat_load_mw",
@@ -19966,7 +19966,7 @@
         "divclfr": "real_variable",
         "den_div_structure": "real_variable",
         "dz_divertor": "real_variable",
-        "divplt": "real_variable",
+        "dx_div_plate": "real_variable",
         "beta_norm_max": "real_variable",
         "dp_he": "real_variable",
         "dr_tf_wp": "real_variable",
