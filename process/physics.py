@@ -2074,7 +2074,7 @@ class Physics:
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
                 physics_variables.alpha_power_beams,
-            ) = physics_funcs.beam_fusion(
+            ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,

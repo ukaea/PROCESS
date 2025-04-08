@@ -810,7 +810,7 @@ class ElectronBernstein:
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
 
-    def electron_berstein_freethy(
+    def electron_bernstein_freethy(
         self,
         te: float,
         rmajor: float,
@@ -868,6 +868,7 @@ class ElectronBernstein:
             * bt
             / constants.electron_mass
         )
+
         fp = (
             1.0e0
             / (2.0e0 * np.pi)
@@ -1008,6 +1009,70 @@ class LowerHybrid:
             rat0 = 0.8e0
 
         return rat0
+
+    def lheval(self, drfind, rratio):
+        """Routine to evaluate the difference between electron energy
+        expressions required to find the Lower Hybrid absorption radius
+        author: P J Knight, CCFE, Culham Science Centre
+        drfind  : input real : correction to parallel refractive index
+        rratio  : input real : guess for radius of penetration / rminor
+        ediff   : output real : difference between the E values (keV)
+        This routine evaluates the difference between the values calculated
+        from the two equations for the electron energy E, given in
+        AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
+        wave absorption radius via a Newton-Raphson method, in calling
+        routine <A HREF="lhrad.html">lhrad</A>.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        """
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+
+        #  Local electron temperature
+
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+
+        #  Local toroidal field (evaluated at the inboard region of the flux surface)
+
+        blocal = (
+            physics_variables.bt
+            * physics_variables.rmajor
+            / (physics_variables.rmajor - rratio * physics_variables.rminor)
+        )
+
+        #  Parallel refractive index needed for plasma access
+
+        frac = np.sqrt(dlocal) / blocal
+        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
+
+        #  Total parallel refractive index
+
+        refind = nplacc + drfind
+
+        #  First equation for electron energy E
+
+        e1 = 511.0e0 * (np.sqrt(1.0e0 + 1.0e0 / (refind * refind)) - 1.0e0)
+
+        #  Second equation for E
+
+        e2 = 7.0e0 * tlocal
+
+        #  Difference
+
+        return e1 - e2
 
     def lower_hybrid_fenstermacher(
         self, te: float, rmajor: float, dene20: float
@@ -1164,6 +1229,7 @@ class CurrentDrive:
                 )
                 * current_drive_variables.feffcd,
                 3: lambda: self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                    ten=physics_variables.ten,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                     dlamee=physics_variables.dlamee,
@@ -1188,7 +1254,7 @@ class CurrentDrive:
                 ),
                 10: lambda: current_drive_variables.eta_cd_norm_ecrh
                 / (dene20 * physics_variables.rmajor),
-                12: lambda: self.electron_bernstein.electron_berstein_freethy(
+                12: lambda: self.electron_bernstein.electron_bernstein_freethy(
                     te=physics_variables.te,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
@@ -1199,8 +1265,9 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
                     te=physics_variables.te,
+                    zeff=physics_variables.zeff,
                     rmajor=physics_variables.rmajor,
-                    dene20=dene20,
+                    dene=physics_variables.dene,
                     bt=physics_variables.bt,
                     n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
                     i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
@@ -1210,7 +1277,7 @@ class CurrentDrive:
 
             # Assign outputs for models that return multiple values
             if current_drive_variables.i_hcd_secondary in [5, 8]:
-                eta_cd_hcd_secondary, f_p_beam_injected_ions, f_p_beam_shine_through = (
+                _, f_p_beam_injected_ions, f_p_beam_shine_through = (
                     self.neutral_beam.iternb()
                     if current_drive_variables.i_hcd_secondary == 5
                     else self.neutral_beam.culnbi()
@@ -1220,10 +1287,9 @@ class CurrentDrive:
 
             # Calculate eta_cd_hcd_secondary based on the selected model
             if current_drive_variables.i_hcd_secondary.item() in hcd_models:
-                eta_cd_hcd_secondary = hcd_models[
+                current_drive_variables.eta_cd_hcd_secondary = hcd_models[
                     current_drive_variables.i_hcd_secondary.item()
                 ]()
-                current_drive_variables.eta_cd_hcd_secondary = eta_cd_hcd_secondary
 
             # Calculate eta_cd_hcd_primary based on the selected model
             if current_drive_variables.i_hcd_primary.item() in hcd_models:
@@ -1254,7 +1320,7 @@ class CurrentDrive:
                 / physics_variables.plasma_current
             )
 
-            # Calculate the driven current for the primary heating method
+            # Calculate the injected power for the primary heating method
             current_drive_variables.p_hcd_primary_injected_mw = (
                 1.0e-6
                 * (
@@ -1264,6 +1330,13 @@ class CurrentDrive:
                 * physics_variables.plasma_current
                 / current_drive_variables.eta_cd_norm_hcd_primary
                 + current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+
+            # Calculate the driven current for the primary heating method
+            current_drive_variables.c_hcd_primary_driven = (
+                current_drive_variables.eta_cd_hcd_primary
+                * current_drive_variables.p_hcd_primary_injected_mw
+                * 1.0e6
             )
 
             # ===========================================================
@@ -1277,7 +1350,6 @@ class CurrentDrive:
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                 )
-
 
                 # Wall plug power
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
@@ -1429,11 +1501,10 @@ class CurrentDrive:
 
             # Lower hybrid cases
             if current_drive_variables.i_hcd_primary in [1, 4, 6]:
-                
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
-                
+
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
@@ -1449,7 +1520,7 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_lowhyb_injected_total_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
-                
+
                 heat_transport_variables.p_hcd_primary_electric_mw = (
                     current_drive_variables.p_hcd_lowhyb_electric_mw
                 )
@@ -1651,12 +1722,32 @@ class CurrentDrive:
         if not output:
             return
 
-        po.oheadr(self.outfile, "Current Drive System")
+        po.oheadr(self.outfile, "Heating & Current Drive System")
+
+        if physics_variables.ignite == 1:
+            po.ocmmnt(
+                self.outfile,
+                "Ignited plasma; injected power only used for start-up phase",
+            )
+
+        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
+            po.ocmmnt(
+                self.outfile,
+                "Current is driven by both inductive and non-inductive means.",
+            )
+            po.oblnkl(self.outfile)
 
         if current_drive_variables.i_hcd_calculations == 0:
             po.ocmmnt(self.outfile, "No current drive used")
             po.oblnkl(self.outfile)
             return
+
+        po.ovarin(
+            self.outfile,
+            "Primary current drive efficiency model",
+            "(i_hcd_primary)",
+            current_drive_variables.i_hcd_primary,
+        )
 
         if current_drive_variables.i_hcd_primary in [1, 4, 6]:
             po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
@@ -1668,21 +1759,55 @@ class CurrentDrive:
             po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
         elif current_drive_variables.i_hcd_primary == 10:
             po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
+                self.outfile,
+                "Electron Cyclotron Current Drive (input normalised efficiency)",
             )
         elif current_drive_variables.i_hcd_primary == 12:
-            po.ocmmnt(self.outfile, "EBW current drive")
+            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
         elif current_drive_variables.i_hcd_primary == 13:
             po.ocmmnt(
                 self.outfile,
-                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
+                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
             )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Absolute current drive efficiency of primary system [A/W]",
+            "(eta_cd_hcd_primary)",
+            current_drive_variables.eta_cd_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Normalised current drive efficiency of primary system [10^20 A / Wm^2]",
+            "(eta_cd_norm_hcd_primary)",
+            current_drive_variables.eta_cd_norm_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power injected into plasma by primary system (MW)",
+            "(p_hcd_primary_injected_mw)",
+            current_drive_variables.p_hcd_primary_injected_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Current driven in plasma by primary system (A)",
+            "(c_hcd_primary_driven)",
+            current_drive_variables.c_hcd_primary_driven,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
 
         po.ovarin(
             self.outfile,
-            "Current drive efficiency model",
-            "(i_hcd_primary)",
-            current_drive_variables.i_hcd_primary,
+            "Secondary current drive efficiency model",
+            "(i_hcd_secondary)",
+            current_drive_variables.i_hcd_secondary,
         )
 
         if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
@@ -1695,34 +1820,49 @@ class CurrentDrive:
             po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
         elif current_drive_variables.i_hcd_secondary == 10:
             po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
+                self.outfile,
+                "Electron Cyclotron Current Drive (input normalised efficiency)",
             )
         elif current_drive_variables.i_hcd_secondary == 12:
-            po.ocmmnt(self.outfile, "EBW current drive")
+            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
         elif current_drive_variables.i_hcd_secondary == 13:
             po.ocmmnt(
                 self.outfile,
-                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
+                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
             )
-
-        po.ovarin(
-            self.outfile,
-            "Secondary current drive efficiency model",
-            "(i_hcd_secondary)",
-            current_drive_variables.i_hcd_secondary,
-        )
-
-        if physics_variables.ignite == 1:
-            po.ocmmnt(
-                self.outfile,
-                "Ignited plasma; injected power only used for start-up phase",
-            )
-
         po.oblnkl(self.outfile)
 
-        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
-            po.ocmmnt(self.outfile, "Current is driven by both inductive")
-            po.ocmmnt(self.outfile, "and non-inductive means.")
+        po.ovarre(
+            self.outfile,
+            "Absolute current drive efficiency of secondary system [A/W]",
+            "(eta_cd_hcd_secondary)",
+            current_drive_variables.eta_cd_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
+            "(eta_cd_norm_hcd_secondary)",
+            current_drive_variables.eta_cd_norm_hcd_secondary,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Power injected into plasma by secondary system (MW)",
+            "(p_hcd_secondary_injected_mw)",
+            current_drive_variables.p_hcd_secondary_injected_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Current driven in plasma by secondary system (A)",
+            "(c_hcd_secondary_driven)",
+            current_drive_variables.c_hcd_secondary_driven,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
@@ -2156,91 +2296,6 @@ class CurrentDrive:
                 current_drive_variables.p_hcd_ecrh_electric_mw,
                 "OP ",
             )
-
-        if abs(current_drive_variables.p_hcd_secondary_injected_mw) > 1.0e-8:
-            po.ovarrf(
-                self.outfile,
-                "Fixed ECRH power (MW)",
-                "(pinjmwfix)",
-                current_drive_variables.pinjmwfix,
-            )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug efficiency",
-                "(eta_ecrh_injector_wall_plug)",
-                current_drive_variables.eta_ecrh_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Secondary fixed ECH wall plug power (MW)",
-                "(p_hcd_secondary_electric_mw)",
-                current_drive_variables.p_hcd_secondary_electric_mw,
-                "OP ",
-            )
-
-    def lheval(self, drfind, rratio):
-        """Routine to evaluate the difference between electron energy
-        expressions required to find the Lower Hybrid absorption radius
-        author: P J Knight, CCFE, Culham Science Centre
-        drfind  : input real : correction to parallel refractive index
-        rratio  : input real : guess for radius of penetration / rminor
-        ediff   : output real : difference between the E values (keV)
-        This routine evaluates the difference between the values calculated
-        from the two equations for the electron energy E, given in
-        AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
-        wave absorption radius via a Newton-Raphson method, in calling
-        routine <A HREF="lhrad.html">lhrad</A>.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-
-        #  Local electron temperature
-
-        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedt,
-            physics_variables.te0,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
-
-        #  Local toroidal field (evaluated at the inboard region of the flux surface)
-
-        blocal = (
-            physics_variables.bt
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rratio * physics_variables.rminor)
-        )
-
-        #  Parallel refractive index needed for plasma access
-
-        frac = np.sqrt(dlocal) / blocal
-        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
-
-        #  Total parallel refractive index
-
-        refind = nplacc + drfind
-
-        #  First equation for electron energy E
-
-        e1 = 511.0e0 * (np.sqrt(1.0e0 + 1.0e0 / (refind * refind)) - 1.0e0)
-
-        #  Second equation for E
-
-        e2 = 7.0e0 * tlocal
-
-        #  Difference
-
-        return e1 - e2
 
     def legend(self, zlocal, arg):
         """Routine to calculate Legendre function and its derivative

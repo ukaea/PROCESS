@@ -552,7 +552,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary
     )
 
-    monkeypatch.setattr(current_drive_variables, "p_hcd_lowhyb_electric_mw", cudrivparam.p_hcd_lowhyb_electric_mw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_lowhyb_electric_mw",
+        cudrivparam.p_hcd_lowhyb_electric_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables,
