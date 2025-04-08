@@ -1357,7 +1357,7 @@ class ComponentMassesParam(NamedTuple):
     divplt: Any = None
     fdiva: Any = None
     m_div_plate: Any = None
-    divdens: Any = None
+    den_div_structure: Any = None
     rminor: Any = None
     rmajor: Any = None
     idivrt: Any = None
@@ -1448,7 +1448,7 @@ class ComponentMassesParam(NamedTuple):
             divplt=0.035000000000000003,
             fdiva=1.1100000000000001,
             m_div_plate=0,
-            divdens=10000,
+            den_div_structure=10000,
             rminor=2.6666666666666665,
             rmajor=8,
             idivrt=1,
@@ -1554,7 +1554,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         divertor_variables, "m_div_plate", componentmassesparam.m_div_plate
     )
-    monkeypatch.setattr(divertor_variables, "divdens", componentmassesparam.divdens)
+    monkeypatch.setattr(
+        divertor_variables, "den_div_structure", componentmassesparam.den_div_structure
+    )
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(physics_variables, "idivrt", componentmassesparam.idivrt)

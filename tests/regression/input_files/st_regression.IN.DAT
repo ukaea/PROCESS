@@ -764,7 +764,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Divertor coolant fraction (default = 0.3)
 * JUSTIFICATION: Not yet set
 
-*divdens = 
+*den_div_structure = 
 * DESCRIPTION:   Divertor structure density (kg/m3) (default = 1.0D4)
 * JUSTIFICATION: Not yet set
 

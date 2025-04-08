@@ -363,7 +363,9 @@ INPUT_VARIABLES = {
     "div_prob_fail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "div_umain_time": InputVariable(fortran.cost_variables, float, range=(0.1, 2.0)),
     "divclfr": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
-    "divdens": InputVariable(fortran.divertor_variables, float, range=(0.1, 100000.0)),
+    "den_div_structure": InputVariable(
+        fortran.divertor_variables, float, range=(0.1, 100000.0)
+    ),
     "dz_divertor": InputVariable(fortran.divertor_variables, float, range=(0.1, 5.0)),
     "divplt": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
     "dp_blkt": InputVariable(

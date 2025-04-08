@@ -284,7 +284,7 @@ class CCFE_HCPB:
             )
         divertor_variables.m_div_plate = (
             divertor_variables.a_div_surface_total
-            * divertor_variables.divdens
+            * divertor_variables.den_div_structure
             * (1.0 - divertor_variables.divclfr)
             * divertor_variables.divplt
         )

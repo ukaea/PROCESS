@@ -29,7 +29,7 @@ module divertor_variables
   real(dp) :: divclfr
   !! divertor coolant fraction
 
-  real(dp) :: divdens
+  real(dp) :: den_div_structure
   !! divertor structure density (kg/m3)
 
   real(dp) :: dz_divertor
