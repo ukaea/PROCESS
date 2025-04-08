@@ -177,7 +177,7 @@ class Pulse:
         v_plasma_loop_burn = (
             physics_variables.plasma_current
             * physics_variables.res_plasma
-            * physics_variables.inductive_current_fraction
+            * physics_variables.f_c_plasma_inductive
             * physics_variables.csawth
         )
 

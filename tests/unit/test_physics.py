@@ -1738,7 +1738,7 @@ class VoltSecondReqParam(NamedTuple):
 
     eps: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
     ejima_coeff: Any = None
 
@@ -1777,7 +1777,7 @@ class VoltSecondReqParam(NamedTuple):
         VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
@@ -1797,7 +1797,7 @@ class VoltSecondReqParam(NamedTuple):
         VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
@@ -1837,7 +1837,7 @@ def test_vscalc(voltsecondreqparam):
     ) = calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
-        inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
+        f_c_plasma_inductive=voltsecondreqparam.f_c_plasma_inductive,
         ejima_coeff=voltsecondreqparam.ejima_coeff,
         kappa=voltsecondreqparam.kappa,
         plasma_current=voltsecondreqparam.plasma_current,
@@ -2031,7 +2031,7 @@ class PohmParam(NamedTuple):
 
     plasma_res_factor: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
     kappa95: Any = None
 
@@ -2062,7 +2062,7 @@ class PohmParam(NamedTuple):
         PohmParam(
             aspect=3,
             plasma_res_factor=0.70000000000000007,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             kappa95=1.6517857142857142,
             plasma_current=18398455.678867526,
             rmajor=8,
@@ -2102,7 +2102,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         f_res_plasma_neo,
         res_plasma,
     ) = physics.plasma_ohmic_heating(
-        inductive_current_fraction=pohmparam.inductive_current_fraction,
+        f_c_plasma_inductive=pohmparam.f_c_plasma_inductive,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,
         rmajor=pohmparam.rmajor,

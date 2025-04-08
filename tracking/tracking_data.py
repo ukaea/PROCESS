@@ -126,7 +126,7 @@ class ProcessTracker:
         "q95",
         "te",
         "beta",
-        "inductive_current_fraction",
+        "f_c_plasma_inductive",
         "zeff",
         "bt",
         "hfact",
