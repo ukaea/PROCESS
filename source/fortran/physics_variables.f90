@@ -226,7 +226,7 @@ module physics_variables
   real(dp) :: f_deuterium
   !! deuterium fuel fraction
 
-  real(dp) :: ftar
+  real(dp) :: f_p_div_lower
   !! fraction of power to the lower divertor in double null configuration
   !! (`i_single_null = 0` only) (default assumes SN)
 
@@ -982,7 +982,7 @@ module physics_variables
     f_alpha_plasma = 0.95D0
     f_alpha_ion = 0.0D0
     f_deuterium = 0.5D0
-    ftar = 1.0D0
+    f_p_div_lower = 1.0D0
     ffwal = 0.92D0
     fgwped = 0.85D0
     fgwsep = 0.50D0

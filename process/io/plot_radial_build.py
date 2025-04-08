@@ -198,7 +198,7 @@ def main(args=None):
         "n_pancake",
         "n_layer",
         "fimp(13)",
-        "ftar",
+        "f_p_div_lower",
         "rad_fraction_sol",
         "",
         "b_crit_upper_nbti",

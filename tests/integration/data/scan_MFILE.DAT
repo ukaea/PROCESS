@@ -298,7 +298,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -1293,7 +1293,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -2288,7 +2288,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -3283,7 +3283,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -4278,7 +4278,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -5273,7 +5273,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -6268,7 +6268,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -7263,7 +7263,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
@@ -8258,7 +8258,7 @@
  Peak_radiation_wall_load_(MW/m^2)_______________________________________ (pflux_fw_rad_max_mw)_____________      5.3457E-01 OP 
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)__________ (pflux_fw_neutron_mw)______________________      9.8928E-01 OP 
  Power_incident_on_the_divertor_targets_(MW)_____________________________ (ptarmw)______________________      3.4795E+01 OP 
- Fraction_of_power_to_the_lower_divertor_________________________________ (ftar)________________________      1.0000E+00 IP 
+ Fraction_of_power_to_the_lower_divertor_________________________________ (f_p_div_lower)________________________      1.0000E+00 IP 
  Outboard_side_heat_flux_decay_length_(m)________________________________ (lambdaio)____________________      1.5700E-03 OP 
  Fraction_of_power_on_the_inner_targets__________________________________ (fio)_________________________      4.1000E-01 OP 
  Fraction_of_power_incident_on_the_lower_inner_target____________________ (fLI)_________________________      4.1000E-01 OP 
