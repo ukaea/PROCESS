@@ -81,6 +81,9 @@ module current_drive_variables
   real(dp) :: p_ecrh_injected_mw
   !! ECH power (MW)
 
+  real(dp) :: p_ebw_injected_mw
+  !! Electron bernstein power (MW)
+
   real(dp) :: p_hcd_ecrh_electric_mw
   !! ECH wall plug power (MW)
 
