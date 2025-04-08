@@ -716,9 +716,9 @@ class Power:
 
         #  Total thermal power deposited in divertor coolant (MW)
         #  = (conduction to divertor, less radiation) + (neutron and radiation power)
-        #  using physics_variables.pdivt as calculated in physics.f90
+        #  using physics_variables.p_plasma_separatrix_mw as calculated in physics.f90
         self.pthermdiv = (
-            physics_variables.pdivt
+            physics_variables.p_plasma_separatrix_mw
             + (
                 fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
@@ -1065,7 +1065,7 @@ class Power:
             fwbs_variables.emult,
         )
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             po.ovarre(
                 self.outfile,
@@ -1089,7 +1089,7 @@ class Power:
             fwbs_variables.f_a_fw_hcd,
         )
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             po.ovarre(
                 self.outfile,
@@ -1436,7 +1436,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{physics_variables.pdivt * self.iprimdiv} {physics_variables.pdivt * (1 - self.iprimdiv)} {physics_variables.pdivt}"
+                f"{physics_variables.p_plasma_separatrix_mw * self.iprimdiv} {physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)} {physics_variables.p_plasma_separatrix_mw}"
             ),
         )
         po.write(
@@ -1455,14 +1455,14 @@ class Power:
         primsum = (
             primsum
             + fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv
-            + physics_variables.pdivt * self.iprimdiv
+            + physics_variables.p_plasma_separatrix_mw * self.iprimdiv
             + fwbs_variables.p_div_rad_total_mw * self.iprimdiv
             + heat_transport_variables.htpmw_div * self.iprimdiv
         )
         secsum = (
             secsum
             + fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)
-            + physics_variables.pdivt * (1 - self.iprimdiv)
+            + physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)
             + fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)
             + heat_transport_variables.htpmw_div * (1 - self.iprimdiv)
         )

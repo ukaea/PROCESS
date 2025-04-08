@@ -11,10 +11,10 @@ for the scaling laws listed [below](#l-h-scaling-options), in routine `l_h_thres
 
 Depending on the value of the chosen scaling by setting `i_l_h_threshold`, a different L-H threshold power is set to the `p_l_h_threshold_mw` variable.
 
-We define the net power across the seperatrix for the scaling as `pdivt` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
+We define the net power across the seperatrix for the scaling as `p_plasma_separatrix_mw` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
 
 $$
-\mathtt{pdivt} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
+\mathtt{p_plasma_separatrix_mw} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
 $$
 
 There are two separate constraint equations for enforcing the L-H threshold.
@@ -28,7 +28,7 @@ This constraint can be activated by stating `icc = 15` in the input file.
 The scaling value `fl_h_threshold (ixc=103)` can be varied to set the required margin around the threshold.
 
 $$
-1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{pdivt}}
+1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{p_plasma_separatrix_mw}}
 $$
 
 
@@ -50,7 +50,7 @@ and therefore the machine remains in L-mode.
 This constraint can be activated by stating `icc = 73` in the input file.
 
 $$
-1.0 - \mathtt{fplhsep} \times \frac{\mathtt{pdivt}}{
+1.0 - \mathtt{fplhsep} \times \frac{\mathtt{p_plasma_separatrix_mw}}{
 \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
 $$
 

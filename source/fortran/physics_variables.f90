@@ -226,7 +226,7 @@ module physics_variables
   real(dp) :: f_deuterium
   !! deuterium fuel fraction
 
-  real(dp) :: ftar
+  real(dp) :: f_p_div_lower
   !! fraction of power to the lower divertor in double null configuration
   !! (`i_single_null = 0` only) (default assumes SN)
 
@@ -256,8 +256,8 @@ module physics_variables
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
 
-  real(dp) :: fpdivlim
-  !! F-value for minimum pdivt (`constraint equation 80`)
+  real(dp) :: fp_plasma_separatrix_min_mw
+  !! F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)
 
   real(dp) :: fne0
   !! f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
@@ -345,7 +345,7 @@ module physics_variables
   !! - =7 Greenwald limit
   !! - =8 ASDEX New
 
-  integer :: idivrt
+  integer :: n_divertors
   !! number of divertors (calculated from `i_single_null`)
 
   integer :: i_beta_fast_alpha
@@ -615,7 +615,7 @@ module physics_variables
   real(dp) :: dhe3_power
   !! deuterium-helium3 fusion power (MW)
 
-  real(dp) :: pdivt
+  real(dp) :: p_plasma_separatrix_mw
   !! power to conducted to the divertor region (MW)
 
   real(dp) :: pdivl
@@ -982,7 +982,7 @@ module physics_variables
     f_alpha_plasma = 0.95D0
     f_alpha_ion = 0.0D0
     f_deuterium = 0.5D0
-    ftar = 1.0D0
+    f_p_div_lower = 1.0D0
     ffwal = 0.92D0
     fgwped = 0.85D0
     fgwsep = 0.50D0
@@ -990,7 +990,7 @@ module physics_variables
     figmer = 0.0D0
     fkzohm = 1.0D0
     fplhsep = 1.0D0
-    fpdivlim = 1.0D0
+    fp_plasma_separatrix_min_mw = 1.0D0
     fne0 = 1.0D0
     f_tritium = 0.5D0
     fusion_rate_density_total = 0.0D0
@@ -1006,7 +1006,7 @@ module physics_variables
     i_plasma_current = 4
     i_diamagnetic_current = 0
     i_density_limit = 8
-    idivrt = 2
+    n_divertors = 2
     i_beta_fast_alpha = 1
     ignite = 0
     ipedestal = 1
@@ -1056,7 +1056,7 @@ module physics_variables
     pden_plasma_core_rad_mw = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0
-    pdivt = 0.0D0
+    p_plasma_separatrix_mw = 0.0D0
     pdivl = 0.0D0
     pdivu = 0.0D0
     pdivmax = 0.0D0

@@ -140,7 +140,7 @@ INPUT_VARIABLES = {
         fortran.physics_variables, float, range=(0.01, 10.0)
     ),
     "f_alpha_plasma": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "ftar": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "f_p_div_lower": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_deuterium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "ffwal": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
     "fgwped": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
@@ -363,9 +363,11 @@ INPUT_VARIABLES = {
     "div_prob_fail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "div_umain_time": InputVariable(fortran.cost_variables, float, range=(0.1, 2.0)),
     "divclfr": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
-    "divdens": InputVariable(fortran.divertor_variables, float, range=(0.1, 100000.0)),
+    "den_div_structure": InputVariable(
+        fortran.divertor_variables, float, range=(0.1, 100000.0)
+    ),
     "dz_divertor": InputVariable(fortran.divertor_variables, float, range=(0.1, 5.0)),
-    "divplt": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
+    "dx_div_plate": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
     "dp_blkt": InputVariable(
         fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
@@ -594,7 +596,9 @@ INPUT_VARIABLES = {
     "ffuspow": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fgamcd": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_a_fw_hcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
-    "fhldiv": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fpflux_div_heat_load_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fhole": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fhts": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1.0)),
     "fiooic": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -633,7 +637,9 @@ INPUT_VARIABLES = {
     "forbitloss": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 0.999)
     ),
-    "fpdivlim": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),
+    "fp_plasma_separatrix_min_mw": InputVariable(
+        fortran.physics_variables, float, range=(0.001, 1.0)
+    ),
     "fpeakb": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fpinj": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fpnetel": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -764,8 +770,12 @@ INPUT_VARIABLES = {
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "hfact": InputVariable(fortran.physics_variables, float, range=(0.01, 10.0)),
-    "hldiv": InputVariable(fortran.divertor_variables, float, range=(0.0, 10.0)),
-    "hldivlim": InputVariable(fortran.divertor_variables, float, range=(0.1, 20.0)),
+    "pflux_div_heat_load_mw": InputVariable(
+        fortran.divertor_variables, float, range=(0.0, 10.0)
+    ),
+    "pflux_div_heat_load_max_mw": InputVariable(
+        fortran.divertor_variables, float, range=(0.1, 20.0)
+    ),
     "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
     "htpmw_blkt": InputVariable(
@@ -945,7 +955,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "pbase": InputVariable(fortran.vacuum_variables, float, range=(1e-08, 0.001)),
-    "pdivtlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 1000.0)),
+    "p_plasma_separatrix_min_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.1, 1000.0)
+    ),
     "pdrive": InputVariable(
         fortran.ife_variables, float, range=(1000000.0, 200000000.0)
     ),
@@ -1448,7 +1460,9 @@ INPUT_VARIABLES = {
     "i_diamagnetic_current": InputVariable(
         fortran.physics_variables, int, choices=[0, 1, 2]
     ),
-    "i_hldiv": InputVariable(fortran.divertor_variables, int, choices=[0, 1, 2]),
+    "i_div_heat_load": InputVariable(
+        fortran.divertor_variables, int, choices=[0, 1, 2]
+    ),
     "i_l_h_threshold": InputVariable(fortran.physics_variables, int, range=(1, 21)),
     "i_pf_current": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1, 2]),
     "i_pfirsch_schluter_current": InputVariable(

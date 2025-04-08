@@ -121,7 +121,7 @@ class DCLL:
              - f_nuc_pow_bz_liq
         """
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             covf = (
                 1 - (2 * fwbs_variables.f_ster_div_single) - fwbs_variables.f_a_fw_hcd
@@ -158,7 +158,7 @@ class DCLL:
 
         # Divertor
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (
@@ -318,7 +318,7 @@ class DCLL:
                 heat_transport_variables.fpumpshld * 0.0
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -328,7 +328,7 @@ class DCLL:
             self.blanket_library.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )

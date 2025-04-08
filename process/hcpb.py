@@ -140,7 +140,9 @@ class CCFE_HCPB:
 
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
-            1 - physics_variables.idivrt * fwbs_variables.f_ster_div_single - f_geom_cp
+            1
+            - physics_variables.n_divertors * fwbs_variables.f_ster_div_single
+            - f_geom_cp
         )
 
         # Power to the first wall (MW)
@@ -225,9 +227,9 @@ class CCFE_HCPB:
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
         coolvol = (
-            divertor_variables.divsur
+            divertor_variables.a_div_surface_total
             * divertor_variables.divclfr
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         # Blanket coolant volume (m3)
@@ -273,20 +275,22 @@ class CCFE_HCPB:
         # Component masses
 
         # Divertor mass (kg)
-        divertor_variables.divsur = (
+        divertor_variables.a_div_surface_total = (
             divertor_variables.fdiva
             * 2.0
             * np.pi
             * physics_variables.rmajor
             * physics_variables.rminor
         )
-        if physics_variables.idivrt == 2:
-            divertor_variables.divsur = divertor_variables.divsur * 2.0
-        divertor_variables.divmas = (
-            divertor_variables.divsur
-            * divertor_variables.divdens
+        if physics_variables.n_divertors == 2:
+            divertor_variables.a_div_surface_total = (
+                divertor_variables.a_div_surface_total * 2.0
+            )
+        divertor_variables.m_div_plate = (
+            divertor_variables.a_div_surface_total
+            * divertor_variables.den_div_structure
             * (1.0 - divertor_variables.divclfr)
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         # Shield mass (kg)
@@ -637,7 +641,7 @@ class CCFE_HCPB:
         # f_ster_div_single = 0.115D0
 
         # Nuclear heating in the divertor just the neutron power times f_ster_div_single
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
                 0.8
@@ -660,7 +664,7 @@ class CCFE_HCPB:
         Calculations for powerflow
         """
         # Radiation power incident on divertor (MW)
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw
@@ -729,7 +733,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -746,7 +750,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -794,7 +798,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -1465,12 +1469,12 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Divertor area (m2)",
-            "(divsur)",
-            divertor_variables.divsur,
+            "(a_div_surface_total)",
+            divertor_variables.a_div_surface_total,
         )
         po.ovarre(
             self.outfile,
             "Divertor mass (kg)",
-            "(divmas)",
-            divertor_variables.divmas,
+            "(m_div_plate)",
+            divertor_variables.m_div_plate,
         )

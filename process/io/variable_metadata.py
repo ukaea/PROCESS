@@ -144,7 +144,7 @@ var_dicts = {
     "pinjmw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "hldivlim": VariableMetadata(
+    "pflux_div_heat_load_max_mw": VariableMetadata(
         latex=r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]",
         description="Maximum divertor heat load",
         units="MW.m^{-2}",
@@ -241,7 +241,7 @@ var_dicts = {
     "bootstrap_current_fraction": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
-    "pdivt": VariableMetadata(
+    "p_plasma_separatrix_mw": VariableMetadata(
         latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
     ),
     "p_plasma_rad_mw": VariableMetadata(

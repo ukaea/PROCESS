@@ -722,7 +722,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     p_fw_hcd_nuclear_heat_mw: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     fusion_power: Any = None
 
@@ -738,7 +738,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
-            idivrt=1,
+            n_divertors=1,
             fusion_power=1986.0623241661431,
             ip=0,
             expected_p_div_nuclear_heat_total_mw=182.71773382328519,
@@ -747,7 +747,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=182.71773382328519,
             p_fw_hcd_nuclear_heat_mw=0,
-            idivrt=1,
+            n_divertors=1,
             fusion_power=1985.4423932312809,
             ip=0,
             expected_p_div_nuclear_heat_total_mw=182.66070017727785,
@@ -785,7 +785,9 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
         nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", nuclearheatingdivertorparam.n_divertors
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
@@ -857,13 +859,13 @@ class PowerflowCalcParam(NamedTuple):
 
     fpumpdiv: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     p_plasma_rad_mw: Any = None
 
     p_fw_alpha_mw: Any = None
 
-    pdivt: Any = None
+    p_plasma_separatrix_mw: Any = None
 
     p_he: Any = None
 
@@ -928,10 +930,10 @@ class PowerflowCalcParam(NamedTuple):
             fpumpshld=0.0050000000000000001,
             htpmw_div=0,
             fpumpdiv=0.0050000000000000001,
-            idivrt=1,
+            n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
-            pdivt=143.6315222649435,
+            p_plasma_separatrix_mw=143.6315222649435,
             p_he=8000000,
             dp_he=550000,
             gamma_he=1.667,
@@ -977,10 +979,10 @@ class PowerflowCalcParam(NamedTuple):
             fpumpshld=0.0050000000000000001,
             htpmw_div=1.7970292653352464,
             fpumpdiv=0.0050000000000000001,
-            idivrt=1,
+            n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
-            pdivt=143.51338080047339,
+            p_plasma_separatrix_mw=143.51338080047339,
             p_he=8000000,
             dp_he=550000,
             gamma_he=1.667,
@@ -1118,7 +1120,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         heat_transport_variables, "fpumpdiv", powerflowcalcparam.fpumpdiv
     )
 
-    monkeypatch.setattr(physics_variables, "idivrt", powerflowcalcparam.idivrt)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", powerflowcalcparam.n_divertors
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
@@ -1128,7 +1132,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         physics_variables, "p_fw_alpha_mw", powerflowcalcparam.p_fw_alpha_mw
     )
 
-    monkeypatch.setattr(physics_variables, "pdivt", powerflowcalcparam.pdivt)
+    monkeypatch.setattr(
+        physics_variables,
+        "p_plasma_separatrix_mw",
+        powerflowcalcparam.p_plasma_separatrix_mw,
+    )
 
     monkeypatch.setattr(primary_pumping_variables, "p_he", powerflowcalcparam.p_he)
 
@@ -1376,15 +1384,15 @@ def test_st_centrepost_nuclear_heating(
 
 
 class ComponentMassesParam(NamedTuple):
-    divsur: Any = None
+    a_div_surface_total: Any = None
     divclfr: Any = None
-    divplt: Any = None
+    dx_div_plate: Any = None
     fdiva: Any = None
-    divmas: Any = None
-    divdens: Any = None
+    m_div_plate: Any = None
+    den_div_structure: Any = None
     rminor: Any = None
     rmajor: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     a_plasma_surface: Any = None
     dr_blkt_inboard: Any = None
     blbuith: Any = None
@@ -1442,8 +1450,8 @@ class ComponentMassesParam(NamedTuple):
     f_vol_blkt_steel: Any = None
     f_vol_blkt_li4sio4: Any = None
     f_vol_blkt_tibe12: Any = None
-    expected_divsur: Any = None
-    expected_divmas: Any = None
+    expected_a_div_surface_total: Any = None
+    expected_m_div_plate: Any = None
     expected_m_blkt_beryllium: Any = None
     expected_m_blkt_steel_total: Any = None
     expected_m_blkt_total: Any = None
@@ -1467,15 +1475,15 @@ class ComponentMassesParam(NamedTuple):
     "componentmassesparam",
     (
         ComponentMassesParam(
-            divsur=0,
+            a_div_surface_total=0,
             divclfr=0.29999999999999999,
-            divplt=0.035000000000000003,
+            dx_div_plate=0.035000000000000003,
             fdiva=1.1100000000000001,
-            divmas=0,
-            divdens=10000,
+            m_div_plate=0,
+            den_div_structure=10000,
             rminor=2.6666666666666665,
             rmajor=8,
-            idivrt=1,
+            n_divertors=1,
             a_plasma_surface=1173.8427771245592,
             dr_blkt_inboard=0.70000000000000007,
             blbuith=0.36499999999999999,
@@ -1533,8 +1541,8 @@ class ComponentMassesParam(NamedTuple):
             f_vol_blkt_steel=0,
             f_vol_blkt_li4sio4=0,
             f_vol_blkt_tibe12=0,
-            expected_divsur=148.78582807401261,
-            expected_divmas=36452.527878133093,
+            expected_a_div_surface_total=148.78582807401261,
+            expected_m_div_plate=36452.527878133093,
             expected_m_blkt_beryllium=1002205.5121936026,
             expected_m_blkt_steel_total=895173.51112145756,
             expected_m_blkt_total=2961668.0628126911,
@@ -1567,15 +1575,27 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(divertor_variables, "divsur", componentmassesparam.divsur)
+    monkeypatch.setattr(
+        divertor_variables,
+        "a_div_surface_total",
+        componentmassesparam.a_div_surface_total,
+    )
     monkeypatch.setattr(divertor_variables, "divclfr", componentmassesparam.divclfr)
-    monkeypatch.setattr(divertor_variables, "divplt", componentmassesparam.divplt)
+    monkeypatch.setattr(
+        divertor_variables, "dx_div_plate", componentmassesparam.dx_div_plate
+    )
     monkeypatch.setattr(divertor_variables, "fdiva", componentmassesparam.fdiva)
-    monkeypatch.setattr(divertor_variables, "divmas", componentmassesparam.divmas)
-    monkeypatch.setattr(divertor_variables, "divdens", componentmassesparam.divdens)
+    monkeypatch.setattr(
+        divertor_variables, "m_div_plate", componentmassesparam.m_div_plate
+    )
+    monkeypatch.setattr(
+        divertor_variables, "den_div_structure", componentmassesparam.den_div_structure
+    )
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
-    monkeypatch.setattr(physics_variables, "idivrt", componentmassesparam.idivrt)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", componentmassesparam.n_divertors
+    )
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
     )
@@ -1700,11 +1720,11 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.component_masses()
 
-    assert divertor_variables.divsur == pytest.approx(
-        componentmassesparam.expected_divsur
+    assert divertor_variables.a_div_surface_total == pytest.approx(
+        componentmassesparam.expected_a_div_surface_total
     )
-    assert divertor_variables.divmas == pytest.approx(
-        componentmassesparam.expected_divmas
+    assert divertor_variables.m_div_plate == pytest.approx(
+        componentmassesparam.expected_m_div_plate
     )
     assert fwbs_variables.m_blkt_beryllium == pytest.approx(
         componentmassesparam.expected_m_blkt_beryllium

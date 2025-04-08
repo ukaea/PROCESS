@@ -621,25 +621,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_27
-    !! <LI> (27) fhldiv (f-value for equation 18)
+    !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(27) = 'fhldiv        '
+    lablxc(27) = 'fpflux_div_heat_load_mw        '
     boundl(27) = 0.001D0
     boundu(27) = 1.000D0
   end subroutine init_itv_27
 
   real(kind(1.d0)) function itv_27()
-    use constraint_variables, only: fhldiv
+    use constraint_variables, only: fpflux_div_heat_load_mw
     implicit none
-    itv_27 =  fhldiv
+    itv_27 =  fpflux_div_heat_load_mw
   end function itv_27
 
   subroutine set_itv_27(ratio)
-    use constraint_variables, only: fhldiv
+    use constraint_variables, only: fpflux_div_heat_load_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    fhldiv = ratio
+    fpflux_div_heat_load_mw = ratio
   end subroutine set_itv_27
 
   !---------------------------------
@@ -3363,25 +3363,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_153
-    !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
+    !! <LI> (153) fp_plasma_separatrix_min_mw : F-value for minimum p_plasma_separatrix_mw (con. 80)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(153) = 'fpdivlim      '
+    lablxc(153) = 'fp_plasma_separatrix_min_mw      '
     boundl(153) = 0.001D0
     boundu(153) = 1.000D0
   end subroutine init_itv_153
 
   real(kind(1.d0)) function itv_153()
-    use physics_variables, only: fpdivlim
+    use physics_variables, only: fp_plasma_separatrix_min_mw
     implicit none
-    itv_153 = fpdivlim
+    itv_153 = fp_plasma_separatrix_min_mw
   end function itv_153
 
   subroutine set_itv_153(ratio)
-    use physics_variables, only: fpdivlim
+    use physics_variables, only: fp_plasma_separatrix_min_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    fpdivlim = ratio
+    fp_plasma_separatrix_min_mw = ratio
   end subroutine set_itv_153
 
   !---------------------------------

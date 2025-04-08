@@ -32,35 +32,40 @@ class Divertor:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if dv.i_hldiv == 0 and output:
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+        if dv.i_div_heat_load == 0 and output:
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
             return
-        if dv.i_hldiv == 1:
+        if dv.i_div_heat_load == 1:
             self.divtart(
                 pv.rmajor,
                 pv.rminor,
                 pv.triang,
                 bv.dr_fw_plasma_gap_inboard,
                 bv.dz_xpoint_divertor,
-                pv.pdivt,
+                pv.p_plasma_separatrix_mw,
                 output=output,
                 i_single_null=pv.i_single_null,
                 dz_divertor=dv.dz_divertor,
             )
             return
-        if dv.i_hldiv == 2:
+        if dv.i_div_heat_load == 2:
             self.divwade(
                 pv.rmajor,
                 pv.rminor,
                 pv.aspect,
                 pv.bt,
                 pv.bp,
-                pv.pdivt,
+                pv.p_plasma_separatrix_mw,
                 dv.flux_exp,
                 pv.nesep,
                 dv.beta_div,
                 pv.rad_fraction_sol,
-                pv.ftar,
+                pv.f_p_div_lower,
                 output=output,
             )
             return
@@ -72,7 +77,7 @@ class Divertor:
         triang: float,
         dr_fw_plasma_gap_inboard: float,
         dz_xpoint_divertor: float,
-        pdivt: float,
+        p_plasma_separatrix_mw: float,
         output: bool,
         i_single_null: int,
         dz_divertor: float,
@@ -100,8 +105,8 @@ class Divertor:
         :param dz_xpoint_divertor: Vertical distance from X-point to divertor (m)
         :type dz_xpoint_divertor: float
 
-        :param pdivt: Power to the divertor (MW)
-        :type pdivt: float
+        :param p_plasma_separatrix_mw: Power to the divertor (MW)
+        :type p_plasma_separatrix_mw: float
 
         :param output: Indicates whether output should be written to the output file
         :type output: bool
@@ -166,22 +171,42 @@ class Divertor:
         elif i_single_null == 0:
             areadv = 2.0 * (a1 + a2 + a3)
 
-        if dv.i_hldiv == 1:
-            dv.hldiv = pdivt / areadv
+        if dv.i_div_heat_load == 1:
+            dv.pflux_div_heat_load_mw = p_plasma_separatrix_mw / areadv
 
-        if output and dv.i_hldiv == 1:
+        if output and dv.i_div_heat_load == 1:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
-            po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
+            po.ovarre(
+                self.outfile,
+                "Power to the divertor (MW)",
+                "(p_plasma_separatrix_mw.)",
+                p_plasma_separatrix_mw,
+            )
             po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
 
         elif output:
             po.osubhd(self.outfile, "Divertor Heat Load")
-            po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
-        return dv.hldiv
+            po.ovarre(
+                self.outfile,
+                "Power to the divertor (MW)",
+                "(p_plasma_separatrix_mw.)",
+                p_plasma_separatrix_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
+        return dv.pflux_div_heat_load_mw
 
     def divwade(
         self,
@@ -190,12 +215,12 @@ class Divertor:
         aspect: float,
         bt: float,
         bp: float,
-        pdivt: float,
+        p_plasma_separatrix_mw: float,
         flux_exp: float,
         nesep: float,
         beta_div: float,
         rad_fraction_sol: float,
-        ftar: float,
+        f_p_div_lower: float,
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
@@ -222,8 +247,8 @@ class Divertor:
         :param bp: poloidal field (T)
         :type bp: float
 
-        :param pdivt: power to divertor (MW)
-        :type pdivt: float
+        :param p_plasma_separatrix_mw: power to divertor (MW)
+        :type p_plasma_separatrix_mw: float
 
         :param flux_exp: plasma flux expansion in divertor
         :type flux_exp: float
@@ -237,8 +262,8 @@ class Divertor:
         :param rad_fraction_sol: SOL radiation fraction
         :type rad_fraction_sol: float
 
-        :param ftar: fraction of power to the lower divertor in double null configuration
-        :type ftar: float
+        :param f_p_div_lower: fraction of power to the lower divertor in double null configuration
+        :type f_p_div_lower: float
 
         :returns: divertor heat load for a tight aspect ratio machine
         :rtype: float
@@ -264,11 +289,21 @@ class Divertor:
         Bt_omp = -bt * rmajor / r_omp
 
         # Eich scaling for lambda_q
-        lambda_eich = 1.35 * pdivt**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
+        lambda_eich = (
+            1.35
+            * p_plasma_separatrix_mw**-0.02
+            * rmajor**0.04
+            * bp**-0.92
+            * aspect**0.42
+        )
 
         # Spreading factor
         spread_fact = (
-            0.12 * (nesep / 1e19) ** -0.02 * pdivt**-0.21 * rmajor**0.71 * bp**-0.82
+            0.12
+            * (nesep / 1e19) ** -0.02
+            * p_plasma_separatrix_mw**-0.21
+            * rmajor**0.71
+            * bp**-0.82
         )
 
         # SOL width
@@ -289,15 +324,15 @@ class Divertor:
         )
 
         # Divertor heat load
-        hldiv_base = pdivt * (1 - rad_fraction_sol) / area_wetted
+        hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
 
         # For double null, calculate heat loads to upper and lower divertors and use the highest
-        if pv.idivrt == 2:
-            hldiv_lower = ftar * hldiv_base
-            hldiv_upper = (1.0 - ftar) * hldiv_base
-            dv.hldiv = max(hldiv_lower, hldiv_upper)
+        if pv.n_divertors == 2:
+            hldiv_lower = f_p_div_lower * hldiv_base
+            hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
+            dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
-            dv.hldiv = hldiv_base
+            dv.pflux_div_heat_load_mw = hldiv_base
 
         if output:
             po.osubhd(self.outfile, "Divertor Heat Load")
@@ -310,5 +345,10 @@ class Divertor:
                 "(beta_div)",
                 beta_div,
             )
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
-        return dv.hldiv
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
+        return dv.pflux_div_heat_load_mw
