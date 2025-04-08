@@ -29,7 +29,7 @@ module divertor_variables
   real(dp) :: divclfr
   !! divertor coolant fraction
 
-  real(dp) :: divdens
+  real(dp) :: den_div_structure
   !! divertor structure density (kg/m3)
 
   real(dp) :: dz_divertor
@@ -93,7 +93,7 @@ module divertor_variables
     betai = 1.0D0
     betao = 1.0D0
     divclfr = 0.3D0
-    divdens = 1.0D4
+    den_div_structure = 1.0D4
     dz_divertor = 0.2D0
     m_div_plate = 0.0D0
     divplt = 0.035D0

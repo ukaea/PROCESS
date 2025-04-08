@@ -1634,7 +1634,7 @@
         "div_umain_time": 0.25,
         "divclfr": 0.3,
         "divcst": 0.0,
-        "divdens": 10000.0,
+        "den_div_structure": 10000.0,
         "dz_divertor": 0.2,
         "divlife": 0.0,
         "m_div_plate": 0.0,
@@ -9251,7 +9251,7 @@
         "div_umain_time": "Divertor unplanned maintenance time (years)",
         "divclfr": "divertor coolant fraction",
         "divcst": "divertor direct cost (M$)",
-        "divdens": "divertor structure density (kg/m3)",
+        "den_div_structure": "divertor structure density (kg/m3)",
         "dz_divertor": "divertor structure vertical thickness (m)",
         "divlife": "Full power lifetime of divertor (y)",
         "m_div_plate": "divertor plate mass (kg)",
@@ -12115,7 +12115,7 @@
             "lb": 0.0,
             "ub": 1.0
         },
-        "divdens": {
+        "den_div_structure": {
             "lb": 0.1,
             "ub": 100000.0
         },
@@ -17737,7 +17737,7 @@
             "betai",
             "betao",
             "divclfr",
-            "divdens",
+            "den_div_structure",
             "dz_divertor",
             "m_div_plate",
             "divplt",
@@ -19964,7 +19964,7 @@
         "div_prob_fail": "real_variable",
         "div_umain_time": "real_variable",
         "divclfr": "real_variable",
-        "divdens": "real_variable",
+        "den_div_structure": "real_variable",
         "dz_divertor": "real_variable",
         "divplt": "real_variable",
         "beta_norm_max": "real_variable",
