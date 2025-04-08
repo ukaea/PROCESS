@@ -225,7 +225,7 @@ class CCFE_HCPB:
         coolvol = (
             divertor_variables.a_div_surface_total
             * divertor_variables.divclfr
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         # Blanket coolant volume (m3)
@@ -286,7 +286,7 @@ class CCFE_HCPB:
             divertor_variables.a_div_surface_total
             * divertor_variables.den_div_structure
             * (1.0 - divertor_variables.divclfr)
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         # Shield mass (kg)

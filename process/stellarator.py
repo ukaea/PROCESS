@@ -1609,7 +1609,7 @@ class Stellarator:
             divertor_variables.a_div_surface_total
             * divertor_variables.den_div_structure
             * (1.0e0 - divertor_variables.divclfr)
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         #  Start adding components of the coolant mass:
@@ -1618,7 +1618,7 @@ class Stellarator:
         coolvol = (
             divertor_variables.a_div_surface_total
             * divertor_variables.divclfr
-            * divertor_variables.divplt
+            * divertor_variables.dx_div_plate
         )
 
         #  Blanket mass, excluding coolant

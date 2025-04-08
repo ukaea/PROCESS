@@ -38,7 +38,7 @@ module divertor_variables
   real(dp) :: m_div_plate
   !! divertor plate mass (kg)
 
-  real(dp) :: divplt
+  real(dp) :: dx_div_plate
   !! divertor plate thickness (m) (from Spears, Sept 1990)
 
   real(dp) :: a_div_surface_total
