@@ -291,6 +291,9 @@ OBS_VARS = {
     "xparain": None,
     "zeffdiv": None,
     "divdum": None,
+    "casths": "dx_tf_side_case",
+    "thkcas": "dr_tf_nose_case",
+    "tmpcry": "temp_tf_cryo",
 }
 
 OBS_VARS_HELP = {
