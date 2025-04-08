@@ -388,7 +388,7 @@ class ComponentHalfHeightParam(NamedTuple):
     dz_vv_upper: Any = None
     z_plasma_xpoint_lower: Any = None
     z_plasma_xpoint_upper: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     dz_divertor: Any = None
     icomponent: Any = None
     expected_icomponent: Any = None
@@ -412,7 +412,7 @@ class ComponentHalfHeightParam(NamedTuple):
             dz_vv_upper=0.30000000000000004,
             z_plasma_xpoint_lower=4.93333333333333333,
             z_plasma_xpoint_upper=4.93333333333333333,
-            idivrt=1,
+            n_divertors=1,
             dz_divertor=0.62000000000000011,
             icomponent=0,
             expected_icomponent=0,
@@ -483,7 +483,7 @@ def test_component_half_height(
         "z_plasma_xpoint_upper",
         componenthalfheightparam.z_plasma_xpoint_upper,
     )
-    monkeypatch.setattr(physics_variables, "idivrt", componenthalfheightparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", componenthalfheightparam.n_divertors)
     monkeypatch.setattr(
         divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
     )
@@ -1180,7 +1180,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     volshld: Any = None
     vol_vv: Any = None
     fvoldw: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     volshldi: Any = None
     volshldo: Any = None
     expected_blareaob: Any = None
@@ -1214,7 +1214,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             volshld=1124.4621612595051,
             vol_vv=584.07334775041659,
             fvoldw=1.74,
-            idivrt=1,
+            n_divertors=1,
             volshldi=177.89822933168091,
             volshldo=946.56393192782434,
             expected_blareaob=898.23806738434075,
@@ -1269,7 +1269,7 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
-    monkeypatch.setattr(physics_variables, "idivrt", applycoveragefactorsparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", applycoveragefactorsparam.n_divertors)
     monkeypatch.setattr(blanket_library, "volshldi", applycoveragefactorsparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", applycoveragefactorsparam.volshldo)
 
@@ -1313,7 +1313,7 @@ class BlanketModPolHeightParam(NamedTuple):
     n_blkt_outboard_modules_poloidal: Any = None
     itart: Any = None
     rminor: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     rmajor: Any = None
     triang: Any = None
     bllengi: Any = None
@@ -1335,7 +1335,7 @@ class BlanketModPolHeightParam(NamedTuple):
             n_blkt_outboard_modules_poloidal=8,
             itart=0,
             rminor=2.6666666666666665,
-            idivrt=1,
+            n_divertors=1,
             rmajor=8,
             triang=0.5,
             bllengi=0,
@@ -1353,7 +1353,7 @@ class BlanketModPolHeightParam(NamedTuple):
             n_blkt_outboard_modules_poloidal=8,
             itart=1,
             rminor=2.5,
-            idivrt=2,
+            n_divertors=2,
             rmajor=4.5,
             triang=0.5,
             bllengi=0,
@@ -1410,7 +1410,7 @@ def test_blanket_mod_pol_height(
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "idivrt", blanketmodpolheightparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", blanketmodpolheightparam.n_divertors)
     monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
     monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
     monkeypatch.setattr(blanket_library, "bllengi", blanketmodpolheightparam.bllengi)

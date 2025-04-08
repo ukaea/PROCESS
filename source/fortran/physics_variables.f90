@@ -345,7 +345,7 @@ module physics_variables
   !! - =7 Greenwald limit
   !! - =8 ASDEX New
 
-  integer :: idivrt
+  integer :: n_divertors
   !! number of divertors (calculated from `i_single_null`)
 
   integer :: i_beta_fast_alpha

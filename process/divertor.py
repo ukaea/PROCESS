@@ -308,7 +308,7 @@ class Divertor:
         hldiv_base = pdivt * (1 - rad_fraction_sol) / area_wetted
 
         # For double null, calculate heat loads to upper and lower divertors and use the highest
-        if pv.idivrt == 2:
+        if pv.n_divertors == 2:
             hldiv_lower = f_p_div_lower * hldiv_base
             hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
             dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)

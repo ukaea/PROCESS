@@ -138,7 +138,7 @@ class CCFE_HCPB:
 
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
-            1 - physics_variables.idivrt * fwbs_variables.f_ster_div_single - f_geom_cp
+            1 - physics_variables.n_divertors * fwbs_variables.f_ster_div_single - f_geom_cp
         )
 
         # Power to the first wall (MW)
@@ -278,7 +278,7 @@ class CCFE_HCPB:
             * physics_variables.rmajor
             * physics_variables.rminor
         )
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             divertor_variables.a_div_surface_total = (
                 divertor_variables.a_div_surface_total * 2.0
             )
@@ -637,7 +637,7 @@ class CCFE_HCPB:
         # f_ster_div_single = 0.115D0
 
         # Nuclear heating in the divertor just the neutron power times f_ster_div_single
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
                 0.8
@@ -660,7 +660,7 @@ class CCFE_HCPB:
         Calculations for powerflow
         """
         # Radiation power incident on divertor (MW)
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             fwbs_variables.p_div_rad_total_mw = (
                 physics_variables.p_plasma_rad_mw

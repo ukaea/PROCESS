@@ -714,7 +714,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     p_fw_hcd_nuclear_heat_mw: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     fusion_power: Any = None
 
@@ -728,7 +728,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
-            idivrt=1,
+            n_divertors=1,
             fusion_power=1986.0623241661431,
             expected_p_div_nuclear_heat_total_mw=182.71773382328519,
         ),
@@ -736,7 +736,7 @@ class NuclearHeatingDivertorParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_nuclear_heat_total_mw=182.71773382328519,
             p_fw_hcd_nuclear_heat_mw=0,
-            idivrt=1,
+            n_divertors=1,
             fusion_power=1985.4423932312809,
             expected_p_div_nuclear_heat_total_mw=182.66070017727785,
         ),
@@ -773,7 +773,7 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
         nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "idivrt", nuclearheatingdivertorparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", nuclearheatingdivertorparam.n_divertors)
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
@@ -843,7 +843,7 @@ class PowerflowCalcParam(NamedTuple):
 
     fpumpdiv: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     p_plasma_rad_mw: Any = None
 
@@ -910,7 +910,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpshld=0.0050000000000000001,
             htpmw_div=0,
             fpumpdiv=0.0050000000000000001,
-            idivrt=1,
+            n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
             pdivt=143.6315222649435,
@@ -957,7 +957,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpshld=0.0050000000000000001,
             htpmw_div=1.7970292653352464,
             fpumpdiv=0.0050000000000000001,
-            idivrt=1,
+            n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
             pdivt=143.51338080047339,
@@ -1098,7 +1098,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         heat_transport_variables, "fpumpdiv", powerflowcalcparam.fpumpdiv
     )
 
-    monkeypatch.setattr(physics_variables, "idivrt", powerflowcalcparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", powerflowcalcparam.n_divertors)
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
@@ -1360,7 +1360,7 @@ class ComponentMassesParam(NamedTuple):
     den_div_structure: Any = None
     rminor: Any = None
     rmajor: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     a_plasma_surface: Any = None
     dr_blkt_inboard: Any = None
     blbuith: Any = None
@@ -1451,7 +1451,7 @@ class ComponentMassesParam(NamedTuple):
             den_div_structure=10000,
             rminor=2.6666666666666665,
             rmajor=8,
-            idivrt=1,
+            n_divertors=1,
             a_plasma_surface=1173.8427771245592,
             dr_blkt_inboard=0.70000000000000007,
             blbuith=0.36499999999999999,
@@ -1561,7 +1561,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     )
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
-    monkeypatch.setattr(physics_variables, "idivrt", componentmassesparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", componentmassesparam.n_divertors)
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
     )

@@ -68,7 +68,7 @@ class Vacuum:
                 tfv.n_tf_coils,
                 tv.t_between_pulse,
                 pv.dene,
-                pv.idivrt,
+                pv.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
