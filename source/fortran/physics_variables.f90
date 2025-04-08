@@ -272,7 +272,7 @@ module physics_variables
   real(dp) :: fusion_rate_density_plasma
   !! fusion reaction rate, just from plasma (reactions/m3/sec)
 
-  real(dp) :: fvsbrnni
+  real(dp) :: f_c_plasma_non_inductive
   !! fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 
   real(dp) :: ejima_coeff

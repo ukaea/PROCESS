@@ -2889,7 +2889,7 @@ i_bootstrap_current = 4
 * JUSTIFICATION: Not used.
 
 *ixc = 44
-*fvsbrnni = 
+*f_c_plasma_non_inductive = 
 *boundl(44) = 
 *boundu(44) = 
 * DESCRIPTION:   Non-inductive volt-sec burn fraction, fraction of the plasma current produced by non-inductive means

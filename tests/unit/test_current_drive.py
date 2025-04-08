@@ -187,7 +187,7 @@ class CudrivParam(NamedTuple):
 
     inductive_current_fraction: Any = None
 
-    fvsbrnni: Any = None
+    f_c_plasma_non_inductive: Any = None
 
     startupratio: Any = None
 
@@ -293,7 +293,7 @@ class CudrivParam(NamedTuple):
             p_plasma_ohmic_mw=0,
             fusion_power=0,
             inductive_current_fraction=0.59999999999999998,
-            fvsbrnni=0.40000000000000002,
+            f_c_plasma_non_inductive=0.40000000000000002,
             startupratio=1,
             iprint=0,
             outfile=11,
@@ -383,7 +383,7 @@ class CudrivParam(NamedTuple):
             p_plasma_ohmic_mw=0.76707314489379119,
             fusion_power=1051.6562748933977,
             inductive_current_fraction=0.59999999999999998,
-            fvsbrnni=0.40000000000000002,
+            f_c_plasma_non_inductive=0.40000000000000002,
             startupratio=1,
             iprint=0,
             outfile=11,
@@ -706,7 +706,11 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.inductive_current_fraction,
     )
 
-    monkeypatch.setattr(physics_variables, "fvsbrnni", cudrivparam.fvsbrnni)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_c_plasma_non_inductive",
+        cudrivparam.f_c_plasma_non_inductive,
+    )
 
     monkeypatch.setattr(cost_variables, "startupratio", cudrivparam.startupratio)
 
