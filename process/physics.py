@@ -2280,7 +2280,7 @@ class Physics:
             else 0.0
         )
 
-        physics_variables.pdivt = (
+        physics_variables.p_plasma_separatrix_mw = (
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + pinj
@@ -2288,11 +2288,12 @@ class Physics:
             - physics_variables.p_plasma_rad_mw
         )
 
-        # KLUDGE: Ensure pdivt is continuously positive (physical, rather than
+        # KLUDGE: Ensure p_plasma_separatrix_mw is continuously positive (physical, rather than
         # negative potential power), as required by other models (e.g.
         # Physics.calculate_density_limit())
-        physics_variables.pdivt = physics_variables.pdivt / (
-            1 - np.exp(-physics_variables.pdivt)
+        physics_variables.p_plasma_separatrix_mw = (
+            physics_variables.p_plasma_separatrix_mw
+            / (1 - np.exp(-physics_variables.p_plasma_separatrix_mw))
         )
 
         # if double null configuration share the power
@@ -2300,11 +2301,11 @@ class Physics:
         # the factor of power conducted to the lower divertor
         if physics_variables.n_divertors == 2:
             physics_variables.pdivl = (
-                physics_variables.f_p_div_lower * physics_variables.pdivt
+                physics_variables.f_p_div_lower * physics_variables.p_plasma_separatrix_mw
             )
             physics_variables.pdivu = (
                 1.0e0 - physics_variables.f_p_div_lower
-            ) * physics_variables.pdivt
+            ) * physics_variables.p_plasma_separatrix_mw
             physics_variables.pdivmax = max(
                 physics_variables.pdivl, physics_variables.pdivu
             )
@@ -2328,7 +2329,7 @@ class Physics:
         ) = self.calculate_density_limit(
             physics_variables.bt,
             physics_variables.i_density_limit,
-            physics_variables.pdivt,
+            physics_variables.p_plasma_separatrix_mw,
             current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             divertor_variables.prn1,
@@ -2499,15 +2500,21 @@ class Physics:
             if physics_variables.n_divertors == 2:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.pflux_fw_rad_mw = (
-                    1.0e0
-                    - fwbs_variables.f_a_fw_hcd
-                    - 2.0e0 * fwbs_variables.f_ster_div_single
-                ) * physics_variables.p_plasma_rad_mw / build_variables.a_fw_total + (
-                    1.0e0
-                    - fwbs_variables.f_a_fw_hcd
-                    - 2.0e0 * fwbs_variables.f_ster_div_single
-                ) * physics_variables.rad_fraction_sol * physics_variables.pdivt / (
-                    build_variables.a_fw_total
+                    (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - 2.0e0 * fwbs_variables.f_ster_div_single
+                    )
+                    * physics_variables.p_plasma_rad_mw
+                    / build_variables.a_fw_total
+                    + (
+                        1.0e0
+                        - fwbs_variables.f_a_fw_hcd
+                        - 2.0e0 * fwbs_variables.f_ster_div_single
+                    )
+                    * physics_variables.rad_fraction_sol
+                    * physics_variables.p_plasma_separatrix_mw
+                    / (build_variables.a_fw_total)
                 )
             else:
                 # Single null configuration - including SoL radaition
@@ -2525,7 +2532,7 @@ class Physics:
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.rad_fraction_sol
-                    * physics_variables.pdivt
+                    * physics_variables.p_plasma_separatrix_mw
                     / build_variables.a_fw_total
                 )
 
@@ -2535,7 +2542,7 @@ class Physics:
 
         # Calculate the target imbalances
         # find the total power into the targets
-        physics_module.ptarmw = physics_variables.pdivt * (
+        physics_module.ptarmw = physics_variables.p_plasma_separatrix_mw * (
             1.0e0 - physics_variables.rad_fraction_sol
         )
         # use physics_variables.f_p_div_lower to find deltarsep
@@ -2613,7 +2620,7 @@ class Physics:
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
-            physics_variables.rad_fraction_sol * physics_variables.pdivt
+            physics_variables.rad_fraction_sol * physics_variables.p_plasma_separatrix_mw
         )
 
         if any(numerics.icc == 78):
@@ -2653,7 +2660,7 @@ class Physics:
     def calculate_density_limit(
         bt: float,
         i_density_limit: int,
-        pdivt: float,
+        p_plasma_separatrix_mw: float,
         p_hcd_injected_total_mw: float,
         plasma_current: float,
         prn1: float,
@@ -2670,7 +2677,7 @@ class Physics:
         Args:
             bt (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
-            pdivt (float): Power flowing to the edge plasma via charged particles (MW).
+            p_plasma_separatrix_mw (float): Power flowing to the edge plasma via charged particles (MW).
             p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
             plasma_current (float): Plasma current (A).
             prn1 (float): Edge density / average plasma density.
@@ -2712,7 +2719,7 @@ class Physics:
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
 
-        p_perp = pdivt / a_plasma_surface
+        p_perp = p_plasma_separatrix_mw / a_plasma_surface
 
         # Old ASDEX density limit formula
         # This applies to the density at the plasma edge, so must be scaled
@@ -2756,7 +2763,7 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[4] = (0.237e20 * bt * np.sqrt(pdivt) / rmajor) / prn1
+        dlimit[4] = (0.237e20 * bt * np.sqrt(p_plasma_separatrix_mw) / rmajor) / prn1
 
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
@@ -5034,13 +5041,13 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Power into divertor zone via charged particles (MW)",
-            "(pdivt)",
-            physics_variables.pdivt,
+            "(p_plasma_separatrix_mw)",
+            physics_variables.p_plasma_separatrix_mw,
             "OP ",
         )
 
-        if physics_variables.pdivt <= 0.001e0:
-            error_handling.fdiags[0] = physics_variables.pdivt
+        if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
+            error_handling.fdiags[0] = physics_variables.p_plasma_separatrix_mw
             error_handling.report_error(87)
             po.oblnkl(self.outfile)
             po.ocmmnt(
@@ -5083,8 +5090,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Psep / R ratio (MW/m)",
-                "(pdivt/rmajor)",
-                physics_variables.pdivt / physics_variables.rmajor,
+                "(p_plasma_separatrix_mw/rmajor)",
+                physics_variables.p_plasma_separatrix_mw / physics_variables.rmajor,
                 "OP ",
             )
             po.ovarre(
@@ -5092,7 +5099,7 @@ class Physics:
                 "Psep Bt / qAR ratio (MWT/m)",
                 "(pdivtbt_over_qar)",
                 (
-                    (physics_variables.pdivt * physics_variables.bt)
+                    (physics_variables.p_plasma_separatrix_mw * physics_variables.bt)
                     / (
                         physics_variables.q95
                         * physics_variables.aspect

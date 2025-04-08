@@ -483,7 +483,9 @@ def test_component_half_height(
         "z_plasma_xpoint_upper",
         componenthalfheightparam.z_plasma_xpoint_upper,
     )
-    monkeypatch.setattr(physics_variables, "n_divertors", componenthalfheightparam.n_divertors)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", componenthalfheightparam.n_divertors
+    )
     monkeypatch.setattr(
         divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
     )
@@ -1269,7 +1271,9 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
-    monkeypatch.setattr(physics_variables, "n_divertors", applycoveragefactorsparam.n_divertors)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", applycoveragefactorsparam.n_divertors
+    )
     monkeypatch.setattr(blanket_library, "volshldi", applycoveragefactorsparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", applycoveragefactorsparam.volshldo)
 
@@ -1410,7 +1414,9 @@ def test_blanket_mod_pol_height(
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "n_divertors", blanketmodpolheightparam.n_divertors)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", blanketmodpolheightparam.n_divertors
+    )
     monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
     monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
     monkeypatch.setattr(blanket_library, "bllengi", blanketmodpolheightparam.bllengi)

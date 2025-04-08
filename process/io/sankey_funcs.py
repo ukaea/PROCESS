@@ -71,7 +71,7 @@ def plot_full_sankey(
     ptfnuc = m_file.data["ptfnuc"].get_scan(-1)  # Nuclear heating in the TF coil (MW)
 
     # Used in [CHARGEP]
-    pdivt = m_file.data["pdivt"].get_scan(
+    p_plasma_separatrix_mw = m_file.data["p_plasma_separatrix_mw"].get_scan(
         -1
     )  # Charged particle power deposited on divertor (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
@@ -203,7 +203,13 @@ def plot_full_sankey(
         # --------------------------------- CHARGED PARTICLES - 2 ---------------------------------
 
         # Charge P.+Ohmic, Alpha+Injected, -Divertor, -1st Wall, -Photons
-        chargedp = [pcharohmmw, palpinjmw, -pdivt, -p_fw_alpha_mw, -p_plasma_rad_mw]
+        chargedp = [
+            pcharohmmw,
+            palpinjmw,
+            -p_plasma_separatrix_mw,
+            -p_fw_alpha_mw,
+            -p_plasma_rad_mw,
+        ]
         sankey.add(
             flows=chargedp,
             # down(in), down(in), up(out), up(out), right(out)
@@ -275,7 +281,7 @@ def plot_full_sankey(
 
         # Charged P., Neutrons, Photons, Coolant Pumping, Total Divertor
         divertor = [
-            pdivt,
+            p_plasma_separatrix_mw,
             p_div_nuclear_heat_total_mw,
             p_div_rad_total_mw,
             htpmw_div,
@@ -488,7 +494,7 @@ def plot_full_sankey(
                 t.set_position((pos[0],pos[1]+0.5*(p_fw_rad_total_mw/totalplasma)+0.15))
             if t == diagrams[3].texts[3]: # Charged P.
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*((pdivt+p_fw_alpha_mw)/totalplasma)+0.1,pos[1]+0.05))
+                t.set_position((pos[0]+0.5*((p_plasma_separatrix_mw+p_fw_alpha_mw)/totalplasma)+0.1,pos[1]+0.05))
             if t == diagrams[3].texts[4]: # Rad. Div.
                 t.set_horizontalalignment('right')
                 t.set_position((pos[0]-0.5*(p_div_rad_total_mw/totalplasma)-0.1,pos[1]))
@@ -541,7 +547,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_fw_rad_total_mw = (
         p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
     )  # Radiation deposited in the blanket (MW)
-    pdivt = m_file.data["pdivt"].get_scan(
+    p_plasma_separatrix_mw = m_file.data["p_plasma_separatrix_mw"].get_scan(
         -1
     )  # power to conducted to the divertor region (MW)
     p_div_nuclear_heat_total_mw = m_file.data["p_div_nuclear_heat_total_mw"].get_scan(
@@ -574,7 +580,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
-    totaldivetc = pdivt + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
+    totaldivetc = p_plasma_separatrix_mw + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
     # Power deposited on Blanket (MW)
     totalblktetc = (
         p_fw_nuclear_heat_total_mw

@@ -88,7 +88,7 @@ $$
 The divertor heat load is then found as:
 
 $$
-\mathtt{pflux_div_heat_load_mw} = \frac{\mathtt{pdivt}}{A_{\text{div}}}
+\mathtt{pflux_div_heat_load_mw} = \frac{\mathtt{p_plasma_separatrix_mw}}{A_{\text{div}}}
 $$
 
 !!! warning "Radiated power area"

@@ -849,7 +849,7 @@ class Stellarator:
         """
         Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
         r = physics_variables.rmajor
-        p_div = physics_variables.pdivt
+        p_div = physics_variables.p_plasma_separatrix_mw
         alpha = divertor_variables.anginc
         xi_p = divertor_variables.xpertin
         T_scrape = divertor_variables.tdiv
@@ -930,8 +930,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Power to divertor (MW)",
-                "(pdivt.)",
-                physics_variables.pdivt,
+                "(p_plasma_separatrix_mw.)",
+                physics_variables.p_plasma_separatrix_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -1242,7 +1242,7 @@ class Stellarator:
                 heat_transport_variables.htpmw_div = (
                     heat_transport_variables.fpumpdiv
                     * (
-                        physics_variables.pdivt
+                        physics_variables.p_plasma_separatrix_mw
                         + fwbs_variables.p_div_nuclear_heat_total_mw
                         + fwbs_variables.p_div_rad_total_mw
                     )
@@ -1578,7 +1578,7 @@ class Stellarator:
                     heat_transport_variables.htpmw_div = (
                         heat_transport_variables.fpumpdiv
                         * (
-                            physics_variables.pdivt
+                            physics_variables.p_plasma_separatrix_mw
                             + fwbs_variables.p_div_nuclear_heat_total_mw
                             + fwbs_variables.p_div_rad_total_mw
                         )
@@ -4414,7 +4414,7 @@ class Stellarator:
 
         # The SOL radiation needs to be smaller than the physics_variables.p_plasma_rad_mw
         physics_variables.psolradmw = stellarator_variables.f_rad * powht
-        physics_variables.pdivt = powht - physics_variables.psolradmw
+        physics_variables.p_plasma_separatrix_mw = powht - physics_variables.psolradmw
 
         # Add SOL Radiation to total
         physics_variables.p_plasma_rad_mw = (
@@ -4425,7 +4425,9 @@ class Stellarator:
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
         #  this may not be quite correct for stellarators)
-        physics_variables.pdivt = max(0.001e0, physics_variables.pdivt)
+        physics_variables.p_plasma_separatrix_mw = max(
+            0.001e0, physics_variables.p_plasma_separatrix_mw
+        )
 
         #  Power transported to the first wall by escaped alpha particles
 

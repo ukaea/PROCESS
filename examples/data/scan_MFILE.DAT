@@ -314,8 +314,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -1309,8 +1309,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -2304,8 +2304,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -3299,8 +3299,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -4294,8 +4294,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -5289,8 +5289,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -6284,8 +6284,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -7279,8 +7279,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 
@@ -8274,8 +8274,8 @@
  Injection_power_to_ions_(MW)____________________________________________ (p_hcd_injected_ions_mw)_____________________      0.0000E+00 OP 
  Injection_power_to_electrons_(MW)_______________________________________ (p_hcd_injected_electrons_mw)_____________________      5.1000E+01 OP 
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (pdivt)_______________________      1.7397E+02 OP 
- Psep_/_R_ratio_(MW/m)___________________________________________________ (pdivt/rmajor)________________      1.8956E+01 OP 
+ Power_into_divertor_zone_via_charged_particles_(MW)_____________________ (p_plasma_separatrix_mw)_______________________      1.7397E+02 OP 
+ Psep_/_R_ratio_(MW/m)___________________________________________________ (p_plasma_separatrix_mw/rmajor)________________      1.8956E+01 OP 
  Psep_Bt_/_qAR_ratio_(MWT/m)_____________________________________________ (pdivtbt/qar)_________________      9.2000E+00 OP 
  ITER_1996_scaling:_nominal_(MW)_________________________________________ (l_h_threshold_powers(1))___________________      1.5461E+02 OP 
  ITER_1996_scaling:_upper_bound_(MW)_____________________________________ (l_h_threshold_powers(2))___________________      3.5370E+02 OP 

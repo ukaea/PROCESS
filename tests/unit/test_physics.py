@@ -2111,7 +2111,7 @@ class CalculateDensityLimitParam(NamedTuple):
 
     bt: Any = None
 
-    pdivt: Any = None
+    p_plasma_separatrix_mw: Any = None
 
     p_hcd_injected_total_mw: Any = None
 
@@ -2142,7 +2142,7 @@ class CalculateDensityLimitParam(NamedTuple):
         CalculateDensityLimitParam(
             i_density_limit=7,
             bt=5.1847188735686647,
-            pdivt=162.32943903093374,
+            p_plasma_separatrix_mw=162.32943903093374,
             p_hcd_injected_total_mw=79.928763793309031,
             plasma_current=16702766.338258133,
             prn1=0.4614366315228275,
@@ -2182,7 +2182,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     dlimit, dnelimt = physics.calculate_density_limit(
         i_density_limit=calculatedensitylimitparam.i_density_limit,
         bt=calculatedensitylimitparam.bt,
-        pdivt=calculatedensitylimitparam.pdivt,
+        p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
         p_hcd_injected_total_mw=calculatedensitylimitparam.p_hcd_injected_total_mw,
         plasma_current=calculatedensitylimitparam.plasma_current,
         prn1=calculatedensitylimitparam.prn1,

@@ -241,7 +241,7 @@ var_dicts = {
     "f_c_plasma_bootstrap": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
-    "pdivt": VariableMetadata(
+    "p_plasma_separatrix_mw": VariableMetadata(
         latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
     ),
     "p_plasma_rad_mw": VariableMetadata(

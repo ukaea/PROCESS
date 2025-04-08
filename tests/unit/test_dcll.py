@@ -264,7 +264,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     monkeypatch.setattr(fwbs_variables, "ptfnuc", dcllneutronicsandpowerparam.ptfnuc)
 
-    monkeypatch.setattr(physics_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
+    )
 
     monkeypatch.setattr(
         physics_variables,

@@ -241,7 +241,7 @@ module constraint_variables
   !! To set the CP lifetime (`constraint equation 85`)
 
   real(dp) :: pdivtlim
-  !! Minimum pdivt [MW] (`constraint equation 80`)
+  !! Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)
 
   real(dp) :: f_fw_rad_max
   !! peaking factor for radiation wall load (`constraint equation 67`)

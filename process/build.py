@@ -1947,7 +1947,9 @@ class Build:
             - build_variables.dz_blkt_upper
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
-        if physics_variables.n_divertors == 2:  # (i.e. physics_variables.i_single_null=0)
+        if (
+            physics_variables.n_divertors == 2
+        ):  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
         else:
             htop = (

@@ -443,7 +443,7 @@
     {
       "no": 87,
       "level": 2,
-      "message": "OUTPLAS: Possible problem with high radiation power, forcing pdivt to odd values"
+      "message": "OUTPLAS: Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values"
     },
     {
       "no": 88,
