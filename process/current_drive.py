@@ -2055,12 +2055,12 @@ class CurrentDrive:
         ):
             po.ocmmnt(self.outfile, "ERROR: current drive fractions do not add to 1")
 
-        # MDK Add physics_variables.fvsbrnni as it can be an iteration variable
+        # MDK Add physics_variables.f_c_plasma_non_inductive as it can be an iteration variable
         po.ovarrf(
             self.outfile,
             "Fraction of the plasma current produced by non-inductive means",
-            "(fvsbrnni)",
-            physics_variables.fvsbrnni,
+            "(f_c_plasma_non_inductive)",
+            physics_variables.f_c_plasma_non_inductive,
         )
 
         if (

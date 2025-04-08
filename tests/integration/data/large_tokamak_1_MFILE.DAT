@@ -545,7 +545,7 @@
  Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      1.4376E-02    
  Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.6642E-01    
  Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.3358E-01 ITV
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.3358E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      8.0143E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
@@ -1425,9 +1425,9 @@ ixc = 29
 boundl(29) = 0.1
 dr_bore = 2.0
 
-* fvsbrnni
+* f_c_plasma_non_inductive
 ixc = 44
-fvsbrnni = 0.4
+f_c_plasma_non_inductive = 0.4
 
 * tdmptf [s]
 ixc = 56

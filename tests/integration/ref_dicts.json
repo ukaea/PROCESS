@@ -2040,7 +2040,7 @@
         "fvolsi": 1.0,
         "fvolso": 0.64,
         "fvs": 1.0,
-        "fvsbrnni": 1.0,
+        "f_c_plasma_non_inductive": 1.0,
         "fvs_cs_pf_total_ramp": 1.0,
         "fvvhe": 1.0,
         "fw_armour_mass": 0.0,
@@ -9597,7 +9597,7 @@
         "fvolsi": "area coverage factor for inboard shield volume",
         "fvolso": "area coverage factor for outboard shield volume",
         "fvs": "f-value for flux-swing (V-s) requirement (STEADY STATE)\n (`constraint equation 12`, `iteration variable 15`)",
-        "fvsbrnni": "fraction of the plasma current produced by non-inductive means (`iteration variable 44`)",
+        "f_c_plasma_non_inductive": "fraction of the plasma current produced by non-inductive means (`iteration variable 44`)",
         "fvs_cs_pf_total_ramp": "F-value for `constraint equation 51`",
         "fvvhe": "f-value for vacuum vessel He concentration limit (`i_blanket_type = 2`)\n (`constraint equation 55`, `iteration variable 96`)",
         "fw_armour_mass": "first wall armour mass (kg)",
@@ -12843,7 +12843,7 @@
             "lb": 0.001,
             "ub": 10.0
         },
-        "fvsbrnni": {
+        "f_c_plasma_non_inductive": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -15360,7 +15360,7 @@
             "lb": 0.001,
             "ub": 1.0
         },
-        "fvsbrnni": {
+        "f_c_plasma_non_inductive": {
             "lb": 0.001,
             "ub": 1.0
         },
@@ -15647,7 +15647,7 @@
         "ftpeak": 1.0,
         "fvdump": 1.0,
         "fvs": 1.0,
-        "fvsbrnni": 1.0,
+        "f_c_plasma_non_inductive": 1.0,
         "fvs_cs_pf_total_ramp": 1.0,
         "fvvhe": 1.0,
         "len_fw_channel": 4.0,
@@ -16229,7 +16229,7 @@
         },
         "44": {
             "lb": 0.001,
-            "name": "fvsbrnni",
+            "name": "f_c_plasma_non_inductive",
             "ub": 1.0
         },
         "45": {
@@ -16600,7 +16600,7 @@
         "40": "fgamcd",
         "41": "f_j_cs_start_pulse_end_flat_top",
         "42": "dr_cs_tf_gap",
-        "44": "fvsbrnni",
+        "44": "f_c_plasma_non_inductive",
         "45": "fqval",
         "46": "fpinj",
         "47": "feffcd",
@@ -16760,7 +16760,7 @@
         "ftpeak": "63",
         "fvdump": "51",
         "fvs": "15",
-        "fvsbrnni": "44",
+        "f_c_plasma_non_inductive": "44",
         "fvs_cs_pf_total_ramp": "157",
         "fvvhe": "96",
         "len_fw_channel": "114",
@@ -18922,7 +18922,7 @@
             "f_tritium",
             "fusion_rate_density_total",
             "fusion_rate_density_plasma",
-            "fvsbrnni",
+            "f_c_plasma_non_inductive",
             "ejima_coeff",
             "f_beta_alpha_beam_thermal",
             "gtscale",
@@ -20148,7 +20148,7 @@
         "fvolsi": "real_variable",
         "fvolso": "real_variable",
         "fvs": "real_variable",
-        "fvsbrnni": "real_variable",
+        "f_c_plasma_non_inductive": "real_variable",
         "fvs_cs_pf_total_ramp": "real_variable",
         "fvvhe": "real_variable",
         "fw_armour_thickness": "real_variable",
@@ -20704,7 +20704,7 @@
     "IFAIL_SUCCESS": 1,
     "NON_F_VALUES": [
         "f_j_cs_start_pulse_end_flat_top",
-        "fvsbrnni",
+        "f_c_plasma_non_inductive",
         "feffcd",
         "fcutfsu"
     ],

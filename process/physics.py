@@ -2021,20 +2021,24 @@ class Physics:
         # produced by non-inductive means (which also includes
         # the current drive proportion)
         physics_module.err243 = 0
-        if current_drive_variables.f_c_plasma_internal > physics_variables.fvsbrnni:
+        if (
+            current_drive_variables.f_c_plasma_internal
+            > physics_variables.f_c_plasma_non_inductive
+        ):
             current_drive_variables.f_c_plasma_internal = min(
                 current_drive_variables.f_c_plasma_internal,
-                physics_variables.fvsbrnni,
+                physics_variables.f_c_plasma_non_inductive,
             )
             physics_module.err243 = 1
 
         # Fraction of plasma current produced by inductive means
         physics_variables.inductive_current_fraction = max(
-            1.0e-10, (1.0e0 - physics_variables.fvsbrnni)
+            1.0e-10, (1.0e0 - physics_variables.f_c_plasma_non_inductive)
         )
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.aux_current_fraction = (
-            physics_variables.fvsbrnni - current_drive_variables.f_c_plasma_internal
+            physics_variables.f_c_plasma_non_inductive
+            - current_drive_variables.f_c_plasma_internal
         )
 
         # Auxiliary current drive power calculations
