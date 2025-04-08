@@ -722,9 +722,9 @@ i_single_null = 0
 *icc = 80
 * DESCRIPTION:   Constraint equation for p_plasma_separatrix_mw lower limit
 * JUSTIFICATION: Turned off, not needing a minimum p_plasma_separatrix_mw
-* VARIABLES:     pdivtlim (Minimum power crossing separatrix p_plasma_separatrix_mw [MW]). p_plasma_separatrix_mw calculated in-situ
+* VARIABLES:     p_plasma_separatrix_min_mw (Minimum power crossing separatrix p_plasma_separatrix_mw [MW]). p_plasma_separatrix_mw calculated in-situ
 
-*pdivtlim = 
+*p_plasma_separatrix_min_mw = 
 * DESCRIPTION:   Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)
 * JUSTIFICATION: Not set, not using icc = 80
 

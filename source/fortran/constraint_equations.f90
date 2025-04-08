@@ -3043,10 +3043,10 @@ contains
       !! #=#=# fpdivlim, p_plasma_separatrix_mw
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpdivlim : input : F-value for lower limit on p_plasma_separatrix_mw (cons. 80, itvar 153)
-      !! pdivtlim : input : Minimum power crossing separatrix p_plasma_separatrix_mw [MW]
+      !! p_plasma_separatrix_min_mw : input : Minimum power crossing separatrix p_plasma_separatrix_mw [MW]
       !! p_plasma_separatrix_mw : input : Power crossing separatrix [MW]
       use physics_variables, only: fpdivlim, p_plasma_separatrix_mw
-      use constraint_variables, only : pdivtlim
+      use constraint_variables, only : p_plasma_separatrix_min_mw
       implicit none
 
             real(dp), intent(out) :: tmp_cc
@@ -3054,8 +3054,8 @@ contains
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc     = 1.0D0 - fpdivlim * p_plasma_separatrix_mw / pdivtlim
-      tmp_con    = pdivtlim
+      tmp_cc     = 1.0D0 - fpdivlim * p_plasma_separatrix_mw / p_plasma_separatrix_min_mw
+      tmp_con    = p_plasma_separatrix_min_mw
       tmp_err    = p_plasma_separatrix_mw * tmp_cc
       tmp_symbol = '>'
       tmp_units  = 'MW'

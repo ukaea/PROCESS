@@ -3467,7 +3467,7 @@
         "pdivl": 0.0,
         "pdivmax": 0.0,
         "p_plasma_separatrix_mw": 0.0,
-        "pdivtlim": 150.0,
+        "p_plasma_separatrix_min_mw": 150.0,
         "pdivu": 0.0,
         "pdrive": 23000000.0,
         "dt_power_total": 0.0,
@@ -10191,7 +10191,7 @@
         "pdivl": "power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)",
         "pdivmax": "power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)",
         "p_plasma_separatrix_mw": "power to conducted to the divertor region (MW)",
-        "pdivtlim": "Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)",
+        "p_plasma_separatrix_min_mw": "Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)",
         "pdivu": "power conducted to the upper divertor region (calculated if `i_single_null = 0`) (MW)",
         "pdrive": "IFE driver power reaching target (W) (`iteration variable 85`)",
         "dt_power_total": "deuterium-tritium fusion power, from plasma and beams (MW)",
@@ -13715,7 +13715,7 @@
             "lb": 1e-08,
             "ub": 0.001
         },
-        "pdivtlim": {
+        "p_plasma_separatrix_min_mw": {
             "lb": 0.1,
             "ub": 1000.0
         },
@@ -17283,7 +17283,7 @@
             "mvalim",
             "nbshinefmax",
             "nflutfmax",
-            "pdivtlim",
+            "p_plasma_separatrix_min_mw",
             "f_fw_rad_max",
             "pflux_fw_rad_max_mw",
             "pnetelin",
@@ -20384,7 +20384,7 @@
         "output_costs": "int_variable",
         "p_he": "real_variable",
         "pbase": "real_variable",
-        "pdivtlim": "real_variable",
+        "p_plasma_separatrix_min_mw": "real_variable",
         "pdrive": "real_variable",
         "f_fw_rad_max": "real_variable",
         "f_fw_peak": "real_variable",
