@@ -268,7 +268,7 @@ OBS_VARS = {
     "li6enrich": "f_blkt_li6_enrichment",
     "nblktmodto": "n_blkt_outboard_modules_toroidal",
     "i_bb_liq": "i_blkt_liquid_breeder_type",
-    "icooldual": "i_blkt_coolant_dual",
+    "icooldual": "i_blkt_dual_coolant",
     "ifci": "i_blkt_liquid_breeder_channel_type",
     "ipump": "i_fw_blkt_shared_coolant",
     "coolwh": "i_blkt_coolant_type",
