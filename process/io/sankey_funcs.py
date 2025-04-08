@@ -580,7 +580,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
-    totaldivetc = p_plasma_separatrix_mw + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
+    totaldivetc = (
+        p_plasma_separatrix_mw + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
+    )
     # Power deposited on Blanket (MW)
     totalblktetc = (
         p_fw_nuclear_heat_total_mw

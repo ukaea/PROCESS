@@ -2301,7 +2301,8 @@ class Physics:
         # the factor of power conducted to the lower divertor
         if physics_variables.n_divertors == 2:
             physics_variables.pdivl = (
-                physics_variables.f_p_div_lower * physics_variables.p_plasma_separatrix_mw
+                physics_variables.f_p_div_lower
+                * physics_variables.p_plasma_separatrix_mw
             )
             physics_variables.pdivu = (
                 1.0e0 - physics_variables.f_p_div_lower
@@ -2620,7 +2621,8 @@ class Physics:
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
-            physics_variables.rad_fraction_sol * physics_variables.p_plasma_separatrix_mw
+            physics_variables.rad_fraction_sol
+            * physics_variables.p_plasma_separatrix_mw
         )
 
         if any(numerics.icc == 78):

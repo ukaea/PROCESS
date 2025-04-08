@@ -291,7 +291,11 @@ class Divertor:
 
         # Eich scaling for lambda_q
         lambda_eich = (
-            1.35 * p_plasma_separatrix_mw**-0.02 * rmajor**0.04 * bp**-0.92 * aspect**0.42
+            1.35
+            * p_plasma_separatrix_mw**-0.02
+            * rmajor**0.04
+            * bp**-0.92
+            * aspect**0.42
         )
 
         # Spreading factor

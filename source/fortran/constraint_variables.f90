@@ -240,7 +240,7 @@ module constraint_variables
   !! Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
   !! To set the CP lifetime (`constraint equation 85`)
 
-  real(dp) :: pdivtlim
+  real(dp) :: p_plasma_separatrix_min_mw
   !! Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)
 
   real(dp) :: f_fw_rad_max
@@ -382,7 +382,7 @@ module constraint_variables
     mvalim = 40.0D0
     f_p_beam_shine_through_max = 1.0D-3
     nflutfmax = 1.0D23
-    pdivtlim = 150.0D0
+    p_plasma_separatrix_min_mw = 150.0D0
     f_fw_rad_max = 3.33D0
     pflux_fw_rad_max_mw = 0.0D0
     pnetelin = 1.0D3

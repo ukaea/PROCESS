@@ -961,7 +961,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "pbase": InputVariable(fortran.vacuum_variables, float, range=(1e-08, 0.001)),
-    "pdivtlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 1000.0)),
+    "p_plasma_separatrix_min_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.1, 1000.0)
+    ),
     "pdrive": InputVariable(
         fortran.ife_variables, float, range=(1000000.0, 200000000.0)
     ),

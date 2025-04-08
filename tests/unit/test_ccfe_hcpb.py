@@ -1113,7 +1113,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_separatrix_mw", powerflowcalcparam.p_plasma_separatrix_mw
+        physics_variables,
+        "p_plasma_separatrix_mw",
+        powerflowcalcparam.p_plasma_separatrix_mw,
     )
 
     monkeypatch.setattr(primary_pumping_variables, "p_he", powerflowcalcparam.p_he)
