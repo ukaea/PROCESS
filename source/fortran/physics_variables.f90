@@ -256,7 +256,7 @@ module physics_variables
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
 
-  real(dp) :: fpdivlim
+  real(dp) :: fp_plasma_separatrix_min_mw
   !! F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)
 
   real(dp) :: fne0
