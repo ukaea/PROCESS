@@ -58,7 +58,7 @@ class Structure:
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
             bv.hmax,
             fwbsv.whtshld,
-            divv.divmas,
+            divv.m_div_plate,
             total_weight_pf,
             tfv.m_tf_coils_total,
             fwbsv.m_fw_total,

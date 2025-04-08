@@ -35,7 +35,7 @@ module divertor_variables
   real(dp) :: dz_divertor
   !! divertor structure vertical thickness (m)
 
-  real(dp) :: divmas
+  real(dp) :: m_div_plate
   !! divertor plate mass (kg)
 
   real(dp) :: divplt

@@ -1699,7 +1699,9 @@ def test_acc2215(acc2215param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "ucdiv", acc2215param.ucdiv)
 
-    monkeypatch.setattr(divertor_variables, "a_div_surface_total", acc2215param.a_div_surface_total)
+    monkeypatch.setattr(
+        divertor_variables, "a_div_surface_total", acc2215param.a_div_surface_total
+    )
 
     monkeypatch.setattr(ife_variables, "ife", acc2215param.ife)
 

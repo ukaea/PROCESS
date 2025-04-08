@@ -279,8 +279,10 @@ class CCFE_HCPB:
             * physics_variables.rminor
         )
         if physics_variables.idivrt == 2:
-            divertor_variables.a_div_surface_total = divertor_variables.a_div_surface_total * 2.0
-        divertor_variables.divmas = (
+            divertor_variables.a_div_surface_total = (
+                divertor_variables.a_div_surface_total * 2.0
+            )
+        divertor_variables.m_div_plate = (
             divertor_variables.a_div_surface_total
             * divertor_variables.divdens
             * (1.0 - divertor_variables.divclfr)
@@ -1469,8 +1471,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Divertor mass (kg)",
-            "(divmas)",
-            divertor_variables.divmas,
+            "(m_div_plate)",
+            divertor_variables.m_div_plate,
         )
 
 

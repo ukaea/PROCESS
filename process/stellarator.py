@@ -1605,7 +1605,7 @@ class Stellarator:
             divertor_variables.a_div_surface_total = 50.0e0
             self.first_call_stfwbs = False
 
-        divertor_variables.divmas = (
+        divertor_variables.m_div_plate = (
             divertor_variables.a_div_surface_total
             * divertor_variables.divdens
             * (1.0e0 - divertor_variables.divclfr)
@@ -2313,8 +2313,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Divertor mass (kg)",
-                "(divmas)",
-                divertor_variables.divmas,
+                "(m_div_plate)",
+                divertor_variables.m_div_plate,
             )
 
     def sctfcoil_nuclear_heating_iter90(self):

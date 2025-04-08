@@ -1356,7 +1356,7 @@ class ComponentMassesParam(NamedTuple):
     divclfr: Any = None
     divplt: Any = None
     fdiva: Any = None
-    divmas: Any = None
+    m_div_plate: Any = None
     divdens: Any = None
     rminor: Any = None
     rmajor: Any = None
@@ -1419,7 +1419,7 @@ class ComponentMassesParam(NamedTuple):
     f_vol_blkt_li4sio4: Any = None
     f_vol_blkt_tibe12: Any = None
     expected_a_div_surface_total: Any = None
-    expected_divmas: Any = None
+    expected_m_div_plate: Any = None
     expected_m_blkt_beryllium: Any = None
     expected_m_blkt_steel_total: Any = None
     expected_m_blkt_total: Any = None
@@ -1447,7 +1447,7 @@ class ComponentMassesParam(NamedTuple):
             divclfr=0.29999999999999999,
             divplt=0.035000000000000003,
             fdiva=1.1100000000000001,
-            divmas=0,
+            m_div_plate=0,
             divdens=10000,
             rminor=2.6666666666666665,
             rmajor=8,
@@ -1510,7 +1510,7 @@ class ComponentMassesParam(NamedTuple):
             f_vol_blkt_li4sio4=0,
             f_vol_blkt_tibe12=0,
             expected_a_div_surface_total=148.78582807401261,
-            expected_divmas=36452.527878133093,
+            expected_m_div_plate=36452.527878133093,
             expected_m_blkt_beryllium=1002205.5121936026,
             expected_m_blkt_steel_total=895173.51112145756,
             expected_m_blkt_total=2961668.0628126911,
@@ -1543,11 +1543,17 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(divertor_variables, "a_div_surface_total", componentmassesparam.a_div_surface_total)
+    monkeypatch.setattr(
+        divertor_variables,
+        "a_div_surface_total",
+        componentmassesparam.a_div_surface_total,
+    )
     monkeypatch.setattr(divertor_variables, "divclfr", componentmassesparam.divclfr)
     monkeypatch.setattr(divertor_variables, "divplt", componentmassesparam.divplt)
     monkeypatch.setattr(divertor_variables, "fdiva", componentmassesparam.fdiva)
-    monkeypatch.setattr(divertor_variables, "divmas", componentmassesparam.divmas)
+    monkeypatch.setattr(
+        divertor_variables, "m_div_plate", componentmassesparam.m_div_plate
+    )
     monkeypatch.setattr(divertor_variables, "divdens", componentmassesparam.divdens)
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
@@ -1679,8 +1685,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert divertor_variables.a_div_surface_total == pytest.approx(
         componentmassesparam.expected_a_div_surface_total
     )
-    assert divertor_variables.divmas == pytest.approx(
-        componentmassesparam.expected_divmas
+    assert divertor_variables.m_div_plate == pytest.approx(
+        componentmassesparam.expected_m_div_plate
     )
     assert fwbs_variables.m_blkt_beryllium == pytest.approx(
         componentmassesparam.expected_m_blkt_beryllium
