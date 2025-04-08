@@ -3363,7 +3363,7 @@ contains
   !---------------------------------
 
   subroutine init_itv_153
-    !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
+    !! <LI> (153) fpdivlim : F-value for minimum p_plasma_separatrix_mw (con. 80)
     use numerics, only: lablxc, boundl, boundu
     implicit none
     lablxc(153) = 'fpdivlim      '

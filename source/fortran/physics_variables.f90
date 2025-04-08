@@ -257,7 +257,7 @@ module physics_variables
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
 
   real(dp) :: fpdivlim
-  !! F-value for minimum pdivt (`constraint equation 80`)
+  !! F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)
 
   real(dp) :: fne0
   !! f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
@@ -615,7 +615,7 @@ module physics_variables
   real(dp) :: dhe3_power
   !! deuterium-helium3 fusion power (MW)
 
-  real(dp) :: pdivt
+  real(dp) :: p_plasma_separatrix_mw
   !! power to conducted to the divertor region (MW)
 
   real(dp) :: pdivl
@@ -1056,7 +1056,7 @@ module physics_variables
     pden_plasma_core_rad_mw = 0.0D0
     dd_power = 0.0D0
     dhe3_power = 0.0D0
-    pdivt = 0.0D0
+    p_plasma_separatrix_mw = 0.0D0
     pdivl = 0.0D0
     pdivu = 0.0D0
     pdivmax = 0.0D0

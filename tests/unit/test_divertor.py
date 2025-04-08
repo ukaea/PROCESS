@@ -37,7 +37,7 @@ class TestDivertor:
         triang = 0.5
         dr_fw_plasma_gap_inboard = 0.09595
         dz_xpoint_divertor = 0.5
-        pdivt = 7.7197999809272062
+        p_plasma_separatrix_mw = 7.7197999809272062
         i_single_null = 0
         dz_divertor = 0.5
         monkeypatch.setattr(dv, "i_div_heat_load", 1)
@@ -50,7 +50,7 @@ class TestDivertor:
             triang,
             dr_fw_plasma_gap_inboard,
             dz_xpoint_divertor,
-            pdivt,
+            p_plasma_separatrix_mw,
             False,
             i_single_null,
             dz_divertor,
@@ -77,7 +77,7 @@ class TestDivertor:
         aspect = 2.0
         bt = 0.5
         bp = 0.09595
-        pdivt = 1.0e2
+        p_plasma_separatrix_mw = 1.0e2
         flux_exp = 2
         nesep = 1.0e19
         beta_div = 5.0
@@ -92,7 +92,7 @@ class TestDivertor:
             aspect,
             bt,
             bp,
-            pdivt,
+            p_plasma_separatrix_mw,
             flux_exp,
             nesep,
             beta_div,

@@ -140,7 +140,9 @@ class CCFE_HCPB:
 
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
-            1 - physics_variables.n_divertors * fwbs_variables.f_ster_div_single - f_geom_cp
+            1
+            - physics_variables.n_divertors * fwbs_variables.f_ster_div_single
+            - f_geom_cp
         )
 
         # Power to the first wall (MW)
@@ -731,7 +733,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -748,7 +750,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
@@ -796,7 +798,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh
             )
             heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.pdivt
+                physics_variables.p_plasma_separatrix_mw
                 + fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
