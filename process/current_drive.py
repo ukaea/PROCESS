@@ -1730,7 +1730,7 @@ class CurrentDrive:
                 "Ignited plasma; injected power only used for start-up phase",
             )
 
-        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
+        if abs(physics_variables.f_c_plasma_inductive) > 1.0e-8:
             po.ocmmnt(
                 self.outfile,
                 "Current is driven by both inductive and non-inductive means.",
@@ -2031,24 +2031,24 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Inductive fraction",
-            "(inductive_current_fraction)",
-            physics_variables.inductive_current_fraction,
+            "(f_c_plasma_inductive)",
+            physics_variables.f_c_plasma_inductive,
             "OP ",
         )
         # Add total error check.
         po.ovarrf(
             self.outfile,
             "Total",
-            "(f_c_plasma_internal+aux_current_fraction+inductive_current_fraction)",
+            "(f_c_plasma_internal+aux_current_fraction+f_c_plasma_inductive)",
             current_drive_variables.f_c_plasma_internal
             + physics_variables.aux_current_fraction
-            + physics_variables.inductive_current_fraction,
+            + physics_variables.f_c_plasma_inductive,
         )
         if (
             abs(
                 current_drive_variables.f_c_plasma_internal
                 + physics_variables.aux_current_fraction
-                + physics_variables.inductive_current_fraction
+                + physics_variables.f_c_plasma_inductive
                 - 1.0e0
             )
             > 1.0e-8

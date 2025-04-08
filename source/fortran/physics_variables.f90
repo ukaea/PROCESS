@@ -211,7 +211,7 @@ module physics_variables
   real(dp) :: aux_current_fraction
   !! fraction of plasma current produced by auxiliary current drive
 
-  real(dp) :: inductive_current_fraction
+  real(dp) :: f_c_plasma_inductive
   !! fraction of plasma current produced inductively
 
   real(dp) :: f_alpha_electron
