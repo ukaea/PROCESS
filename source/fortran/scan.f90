@@ -38,7 +38,7 @@ module scan_module
   integer :: nsweep
   !! Switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
-  !!         <LI> 2  hldivlim
+  !!         <LI> 2  pflux_div_heat_load_max_mw
   !!         <LI> 3  pnetelin
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp

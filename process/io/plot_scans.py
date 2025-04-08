@@ -291,7 +291,7 @@ def main(args=None):
     # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
     nsweep_dict = {
         1: "aspect",
-        2: "hldivlim",
+        2: "pflux_div_heat_load_max_mw",
         3: "pnetelmw",
         4: "hfact",
         5: "oacdcp",

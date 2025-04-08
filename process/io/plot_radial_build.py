@@ -149,7 +149,7 @@ def main(args=None):
 
     nsweep_list = [
         "aspect",
-        "hldivlim",
+        "pflux_div_heat_load_max_mw",
         "pnetelmw",
         "hfact",
         "oacdcp",
