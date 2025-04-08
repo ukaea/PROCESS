@@ -1549,7 +1549,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         componentmassesparam.a_div_surface_total,
     )
     monkeypatch.setattr(divertor_variables, "divclfr", componentmassesparam.divclfr)
-    monkeypatch.setattr(divertor_variables, "dx_div_plate", componentmassesparam.dx_div_plate)
+    monkeypatch.setattr(
+        divertor_variables, "dx_div_plate", componentmassesparam.dx_div_plate
+    )
     monkeypatch.setattr(divertor_variables, "fdiva", componentmassesparam.fdiva)
     monkeypatch.setattr(
         divertor_variables, "m_div_plate", componentmassesparam.m_div_plate

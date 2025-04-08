@@ -82,7 +82,7 @@ class TestDivertor:
         nesep = 1.0e19
         beta_div = 5.0
         rad_fraction_sol = 8.0e-1
-        ftar = 1.0
+        f_p_div_lower = 1.0
 
         expected_pflux_div_heat_load_mw = 0.58898578
 
@@ -97,7 +97,7 @@ class TestDivertor:
             nesep,
             beta_div,
             rad_fraction_sol,
-            ftar,
+            f_p_div_lower,
             False,
         )
 

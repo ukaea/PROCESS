@@ -621,8 +621,8 @@ def check_process(inputs):  # noqa: ARG001
 
         # Check if a single null divertor is used in double null machine
         if fortran.physics_variables.i_single_null == 0 and (
-            fortran.physics_variables.ftar == 1.0
-            or fortran.physics_variables.ftar == 0.0
+            fortran.physics_variables.f_p_div_lower == 1.0
+            or fortran.physics_variables.f_p_div_lower == 0.0
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
 

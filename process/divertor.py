@@ -65,7 +65,7 @@ class Divertor:
                 pv.nesep,
                 dv.beta_div,
                 pv.rad_fraction_sol,
-                pv.ftar,
+                pv.f_p_div_lower,
                 output=output,
             )
             return
@@ -211,7 +211,7 @@ class Divertor:
         nesep: float,
         beta_div: float,
         rad_fraction_sol: float,
-        ftar: float,
+        f_p_div_lower: float,
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
@@ -253,8 +253,8 @@ class Divertor:
         :param rad_fraction_sol: SOL radiation fraction
         :type rad_fraction_sol: float
 
-        :param ftar: fraction of power to the lower divertor in double null configuration
-        :type ftar: float
+        :param f_p_div_lower: fraction of power to the lower divertor in double null configuration
+        :type f_p_div_lower: float
 
         :returns: divertor heat load for a tight aspect ratio machine
         :rtype: float
@@ -309,8 +309,8 @@ class Divertor:
 
         # For double null, calculate heat loads to upper and lower divertors and use the highest
         if pv.idivrt == 2:
-            hldiv_lower = ftar * hldiv_base
-            hldiv_upper = (1.0 - ftar) * hldiv_base
+            hldiv_lower = f_p_div_lower * hldiv_base
+            hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
             dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
             dv.pflux_div_heat_load_mw = hldiv_base

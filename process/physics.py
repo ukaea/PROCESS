@@ -2296,12 +2296,14 @@ class Physics:
         )
 
         # if double null configuration share the power
-        # over the upper and lower divertor, where physics_variables.ftar gives
+        # over the upper and lower divertor, where physics_variables.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
         if physics_variables.idivrt == 2:
-            physics_variables.pdivl = physics_variables.ftar * physics_variables.pdivt
+            physics_variables.pdivl = (
+                physics_variables.f_p_div_lower * physics_variables.pdivt
+            )
             physics_variables.pdivu = (
-                1.0e0 - physics_variables.ftar
+                1.0e0 - physics_variables.f_p_div_lower
             ) * physics_variables.pdivt
             physics_variables.pdivmax = max(
                 physics_variables.pdivl, physics_variables.pdivu
@@ -2536,20 +2538,22 @@ class Physics:
         physics_module.ptarmw = physics_variables.pdivt * (
             1.0e0 - physics_variables.rad_fraction_sol
         )
-        # use physics_variables.ftar to find deltarsep
+        # use physics_variables.f_p_div_lower to find deltarsep
         # Parameters taken from double null machine
         # D. Brunner et al
         physics_module.lambdaio = 1.57e-3
 
         # Issue #1559 Infinities in physics_module.drsep when running single null in a double null machine
         # C W Ashe
-        if physics_variables.ftar < 4.5e-5:
+        if physics_variables.f_p_div_lower < 4.5e-5:
             physics_module.drsep = 1.5e-2
-        elif physics_variables.ftar > (1.0e0 - 4.5e-5):
+        elif physics_variables.f_p_div_lower > (1.0e0 - 4.5e-5):
             physics_module.drsep = -1.5e-2
         else:
             physics_module.drsep = (
-                -2.0e0 * 1.5e-3 * math.atanh(2.0e0 * (physics_variables.ftar - 0.5e0))
+                -2.0e0
+                * 1.5e-3
+                * math.atanh(2.0e0 * (physics_variables.f_p_div_lower - 0.5e0))
             )
         # Model Taken from D3-D paper for conventional divertor
         # Journal of Nuclear Materials
@@ -2570,10 +2574,14 @@ class Physics:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
-            physics_module.fli = physics_variables.ftar * physics_module.fio
-            physics_module.flo = physics_variables.ftar * (1.0e0 - physics_module.fio)
-            physics_module.fui = (1.0e0 - physics_variables.ftar) * physics_module.fio
-            physics_module.fuo = (1.0e0 - physics_variables.ftar) * (
+            physics_module.fli = physics_variables.f_p_div_lower * physics_module.fio
+            physics_module.flo = physics_variables.f_p_div_lower * (
+                1.0e0 - physics_module.fio
+            )
+            physics_module.fui = (
+                1.0e0 - physics_variables.f_p_div_lower
+            ) * physics_module.fio
+            physics_module.fuo = (1.0e0 - physics_variables.f_p_div_lower) * (
                 1.0e0 - physics_module.fio
             )
             # power into each target
@@ -4868,8 +4876,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Fraction of power to the lower divertor",
-                "(ftar)",
-                physics_variables.ftar,
+                "(f_p_div_lower)",
+                physics_variables.f_p_div_lower,
                 "IP ",
             )
             po.ovarre(

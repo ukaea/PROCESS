@@ -340,7 +340,7 @@ def main(args=None):
         48: "n_pancake",
         49: "n_layer",
         50: "fimp(13)",
-        51: "ftar",
+        51: "f_p_div_lower",
         52: "rad_fraction_sol",
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",

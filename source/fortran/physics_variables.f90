@@ -226,7 +226,7 @@ module physics_variables
   real(dp) :: f_deuterium
   !! deuterium fuel fraction
 
-  real(dp) :: ftar
+  real(dp) :: f_p_div_lower
   !! fraction of power to the lower divertor in double null configuration
   !! (`i_single_null = 0` only) (default assumes SN)
 

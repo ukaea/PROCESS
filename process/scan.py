@@ -87,7 +87,7 @@ SCAN_VARIABLES = {
     48: ScanVariable("n_pancake", "TF Coil - n_pancake"),
     49: ScanVariable("n_layer", "TF Coil - n_layer"),
     50: ScanVariable("fimp(13)", "Xenon fraction"),
-    51: ScanVariable("ftar", "lower_divertor_power_fraction"),
+    51: ScanVariable("f_p_div_lower", "lower_divertor_power_fraction"),
     52: ScanVariable("rad_fraction_sol", "SoL radiation fraction"),
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
     54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
@@ -970,7 +970,7 @@ class Scan:
                     impurity_radiation_module.fimp[12]
                 )
             case 51:
-                physics_variables.ftar = swp[iscn - 1]
+                physics_variables.f_p_div_lower = swp[iscn - 1]
             case 52:
                 physics_variables.rad_fraction_sol = swp[iscn - 1]
             case 53:
