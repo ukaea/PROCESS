@@ -33,7 +33,12 @@ class Divertor:
         :type output: boolean
         """
         if dv.i_div_heat_load == 0 and output:
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
             return
         if dv.i_div_heat_load == 1:
             self.divtart(
@@ -175,12 +180,22 @@ class Divertor:
             po.oblnkl(self.outfile)
             po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
             po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
 
         elif output:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
         return dv.pflux_div_heat_load_mw
 
     def divwade(
@@ -310,5 +325,10 @@ class Divertor:
                 "(beta_div)",
                 beta_div,
             )
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+            po.ovarre(
+                self.outfile,
+                "Divertor heat load (MW/m2)",
+                "(pflux_div_heat_load_mw)",
+                dv.pflux_div_heat_load_mw,
+            )
         return dv.pflux_div_heat_load_mw

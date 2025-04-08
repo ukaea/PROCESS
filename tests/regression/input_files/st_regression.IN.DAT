@@ -709,7 +709,7 @@ i_single_null = 0
 * JUSTIFICATION: Turned off, not used
 
 *ixc = 27
-*fhldiv = 
+*fpflux_div_heat_load_mw = 
 * DESCRIPTION:   f-value for divertor heat load
 * JUSTIFICATION: Used with icc=18 to enforce max divertor heat load, not used
 

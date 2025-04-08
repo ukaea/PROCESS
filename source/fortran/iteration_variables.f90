@@ -621,25 +621,25 @@ contains
   !---------------------------------
 
   subroutine init_itv_27
-    !! <LI> (27) fhldiv (f-value for equation 18)
+    !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
     use numerics, only: lablxc, boundl, boundu
     implicit none
-    lablxc(27) = 'fhldiv        '
+    lablxc(27) = 'fpflux_div_heat_load_mw        '
     boundl(27) = 0.001D0
     boundu(27) = 1.000D0
   end subroutine init_itv_27
 
   real(kind(1.d0)) function itv_27()
-    use constraint_variables, only: fhldiv
+    use constraint_variables, only: fpflux_div_heat_load_mw
     implicit none
-    itv_27 =  fhldiv
+    itv_27 =  fpflux_div_heat_load_mw
   end function itv_27
 
   subroutine set_itv_27(ratio)
-    use constraint_variables, only: fhldiv
+    use constraint_variables, only: fpflux_div_heat_load_mw
     implicit none
     real(kind(1.d0)) :: ratio
-    fhldiv = ratio
+    fpflux_div_heat_load_mw = ratio
   end subroutine set_itv_27
 
   !---------------------------------
