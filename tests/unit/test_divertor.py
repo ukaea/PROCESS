@@ -42,9 +42,9 @@ class TestDivertor:
         dz_divertor = 0.5
         monkeypatch.setattr(dv, "i_div_heat_load", 1)
 
-        expected_hldiv = 0.087770426974167357
+        expected_pflux_div_heat_load_mw = 0.087770426974167357
 
-        hldiv = divertor.divtart(
+        pflux_div_heat_load_mw = divertor.divtart(
             rmajor,
             rminor,
             triang,
@@ -56,7 +56,7 @@ class TestDivertor:
             dz_divertor,
         )
 
-        assert hldiv == pytest.approx(expected_hldiv)
+        assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)
 
     def test_divwade(self, monkeypatch, divertor):
         """Test the divwade subroutine.
@@ -84,9 +84,9 @@ class TestDivertor:
         rad_fraction_sol = 8.0e-1
         ftar = 1.0
 
-        expected_hldiv = 0.58898578
+        expected_pflux_div_heat_load_mw = 0.58898578
 
-        hldiv = divertor.divwade(
+        pflux_div_heat_load_mw = divertor.divwade(
             rmajor,
             rminor,
             aspect,
@@ -101,4 +101,4 @@ class TestDivertor:
             False,
         )
 
-        assert hldiv == pytest.approx(expected_hldiv)
+        assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)

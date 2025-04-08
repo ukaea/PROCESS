@@ -14,13 +14,13 @@ geometry at present.
 
 The Harrison-Kukushkin-Hotston divertor model[^1] developed for ITER is available, but is unlikely to be relevant for a reactor.
 
-The divertor heat flux `hldiv` can be calculated or it can be input by the user. Options are selected using the switch `i_div_heat_load`:
+The divertor heat flux `pflux_div_heat_load_mw` can be calculated or it can be input by the user. Options are selected using the switch `i_div_heat_load`:
 
 | `i_div_heat_load` | Description |
 | :-: | - |
-| 0 | the user inputs the value for `hldiv` |
-| 1 | the Peng chamber model (`divtart`) is called to calculate `hldiv` |
-| 2 | the Wade heat flux model (`divwade`) is called to calculate `hldiv` |
+| 0 | the user inputs the value for `pflux_div_heat_load_mw` |
+| 1 | the Peng chamber model (`divtart`) is called to calculate `pflux_div_heat_load_mw` |
+| 2 | the Wade heat flux model (`divwade`) is called to calculate `pflux_div_heat_load_mw` |
 
 ---------------
 
@@ -88,7 +88,7 @@ $$
 The divertor heat load is then found as:
 
 $$
-\mathtt{hldiv} = \frac{\mathtt{pdivt}}{A_{\text{div}}}
+\mathtt{pflux_div_heat_load_mw} = \frac{\mathtt{pdivt}}{A_{\text{div}}}
 $$
 
 !!! warning "Radiated power area"

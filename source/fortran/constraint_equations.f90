@@ -1069,9 +1069,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fhldiv : input real : f-value for divertor heat load
       !! hldivlim : input real : heat load limit (MW/m2)
-      !! hldiv : input real : divertor heat load (MW/m2)
+      !! pflux_div_heat_load_mw : input real : divertor heat load (MW/m2)
       use constraint_variables, only: fhldiv
-      use divertor_variables, only: hldivlim, hldiv
+      use divertor_variables, only: hldivlim, pflux_div_heat_load_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1079,9 +1079,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  hldiv/hldivlim - 1.0D0 * fhldiv
+      tmp_cc =  pflux_div_heat_load_mw/hldivlim - 1.0D0 * fhldiv
       tmp_con = hldivlim * (1.0D0 - tmp_cc)
-      tmp_err = hldiv * tmp_cc
+      tmp_err = pflux_div_heat_load_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW/m2'
 

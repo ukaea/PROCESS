@@ -120,9 +120,9 @@ class Availability:
                     )  # DEMO
 
             # TODO Issue #834
-            # Add a test for hldiv=0
-            if dv.hldiv < 1.0e-10:
-                dv.hldiv = 1.0e-10
+            # Add a test for pflux_div_heat_load_mw=0
+            if dv.pflux_div_heat_load_mw < 1.0e-10:
+                dv.pflux_div_heat_load_mw = 1.0e-10
 
             # Divertor lifetime (years)
             cv.divlife = self.divertor_lifetime()
@@ -1307,4 +1307,4 @@ class Availability:
         """
         # Divertor lifetime
         # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant
-        return max(0.0, min(cv.adivflnc / dv.hldiv, cv.tlife))
+        return max(0.0, min(cv.adivflnc / dv.pflux_div_heat_load_mw, cv.tlife))

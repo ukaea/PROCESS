@@ -50,15 +50,15 @@ module divertor_variables
   real(dp) :: flux_exp
   !! The plasma flux expansion in the divertor (default 2; Wade 2020)
 
-  real(dp) :: hldiv
+  real(dp) :: pflux_div_heat_load_mw
   !! divertor heat load (MW/m2)
 
   integer :: i_div_heat_load
-  !! switch for user input hldiv:
+  !! switch for user input pflux_div_heat_load_mw:
   !!
-  !! - = 0: divtart model turned off and user inputs hldiv
-  !! - = 1: divtart model calculates hldiv
-  !! - = 2: divwade model calculates hldiv
+  !! - = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
+  !! - = 1: divtart model calculates pflux_div_heat_load_mw
+  !! - = 2: divwade model calculates pflux_div_heat_load_mw
 
   real(dp) :: hldivlim
   !! heat load limit (MW/m2)

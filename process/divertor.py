@@ -33,7 +33,7 @@ class Divertor:
         :type output: boolean
         """
         if dv.i_div_heat_load == 0 and output:
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
             return
         if dv.i_div_heat_load == 1:
             self.divtart(
@@ -168,7 +168,7 @@ class Divertor:
             areadv = 2.0 * (a1 + a2 + a3)
 
         if dv.i_div_heat_load == 1:
-            dv.hldiv = pdivt / areadv
+            dv.pflux_div_heat_load_mw = pdivt / areadv
 
         if output and dv.i_div_heat_load == 1:
             po.osubhd(self.outfile, "Divertor Heat Load")
@@ -176,13 +176,13 @@ class Divertor:
             po.oblnkl(self.outfile)
             po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
             po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
+            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
 
         elif output:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ovarre(self.outfile, "Power to the divertor (MW)", "(pdivt.)", pdivt)
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
-        return dv.hldiv
+            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+        return dv.pflux_div_heat_load_mw
 
     def divwade(
         self,
@@ -296,9 +296,9 @@ class Divertor:
         if pv.idivrt == 2:
             hldiv_lower = ftar * hldiv_base
             hldiv_upper = (1.0 - ftar) * hldiv_base
-            dv.hldiv = max(hldiv_lower, hldiv_upper)
+            dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
-            dv.hldiv = hldiv_base
+            dv.pflux_div_heat_load_mw = hldiv_base
 
         if output:
             po.osubhd(self.outfile, "Divertor Heat Load")
@@ -311,8 +311,8 @@ class Divertor:
                 "(beta_div)",
                 beta_div,
             )
-            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
-        return dv.hldiv
+            po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(pflux_div_heat_load_mw)", dv.pflux_div_heat_load_mw)
+        return dv.pflux_div_heat_load_mw
 
 
 def init_divertor_variables():

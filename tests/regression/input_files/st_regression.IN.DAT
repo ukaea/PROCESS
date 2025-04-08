@@ -690,10 +690,10 @@ i_single_null = 0
 * JUSTIFICATION: Design choice, STs generally always double-null
 
 *i_div_heat_load = 
-* DESCRIPTION:   switch for user input hldiv: (default = 0)
-* = 0: divtart model turned off and user inputs hldiv
-* = 1: divtart model calculates hldiv
-* = 2: divwade model calculates hldiv
+* DESCRIPTION:   switch for user input pflux_div_heat_load_mw: (default = 0)
+* = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
+* = 1: divtart model calculates pflux_div_heat_load_mw
+* = 2: divwade model calculates pflux_div_heat_load_mw
 * JUSTIFICATION: Not yet set
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Protection Constraints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -702,9 +702,9 @@ i_single_null = 0
 *icc = 18 
 * DESCRIPTION:   Equation for divertor heat load upper limit
 * JUSTIFICATION: Turned off, Psep/R (icc=56) used instead
-* VARIABLES:     hldiv calculated in-situ
+* VARIABLES:     pflux_div_heat_load_mw calculated in-situ
 
-*hldiv = 
+*pflux_div_heat_load_mw = 
 * DESCRIPTION:   Divertor heat load (MW/m2)
 * JUSTIFICATION: Turned off, not used
 

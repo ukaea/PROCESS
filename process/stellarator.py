@@ -919,7 +919,7 @@ class Stellarator:
 
         #  Transfer to global variables
 
-        divertor_variables.hldiv = q_div
+        divertor_variables.pflux_div_heat_load_mw = q_div
         divertor_variables.divsur = darea
 
         fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
@@ -1022,8 +1022,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Peak heat load (MW/m2)",
-                "(hldiv)",
-                divertor_variables.hldiv,
+                "(pflux_div_heat_load_mw)",
+                divertor_variables.pflux_div_heat_load_mw,
             )
 
     def blanket_neutronics(self):
