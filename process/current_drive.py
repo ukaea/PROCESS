@@ -1847,6 +1847,135 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
+        if current_drive_variables.i_hcd_primary in [5, 8]:
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Neutral beam power balance :")
+            po.ocmmnt(self.outfile, "----------------------------")
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam energy (keV)",
+                "(e_beam_kev)",
+                current_drive_variables.e_beam_kev,
+            )
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Neutral beam current (A)",
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
+                    "OP ",
+                )
+
+            if (current_drive_variables.i_hcd_secondary == 5) or (
+                current_drive_variables.i_hcd_secondary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Secondary fixed neutral beam current (A)",
+                    "(beam_current_fix)",
+                    beam_current_fix,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam wall plug efficiency",
+                "(eta_beam_injector_wall_plug)",
+                current_drive_variables.eta_beam_injector_wall_plug,
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam decay lengths to centre",
+                "(n_beam_decay_lengths_core)",
+                current_drive_variables.n_beam_decay_lengths_core,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam shine-through fraction",
+                "(f_p_beam_shine_through)",
+                current_drive_variables.f_p_beam_shine_through,
+                "OP ",
+            )
+
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarrf(
+                    self.outfile,
+                    "Beam first orbit loss power (MW)",
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam shine-through power [MW]",
+                    "(p_beam_shine_through_mw)",
+                    current_drive_variables.p_beam_shine_through_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power deposited in plasma (MW)",
+                    "(p_hcd_injected_total_mw)",
+                    pinjmw1,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Maximum allowable beam power (MW)",
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
+                )
+                po.oblnkl(self.outfile)
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power entering vacuum vessel (MW)",
+                    "(p_beam_injected_mw)",
+                    current_drive_variables.p_beam_injected_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    current_drive_variables.f_p_beam_injected_ions,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam duct shielding thickness (m)",
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam tangency radius / Plasma major radius",
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam centreline tangency radius (m)",
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Maximum possible tangency radius (m)",
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
+                    "OP ",
+                )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarin(
             self.outfile,
             "Secondary current drive efficiency model",
@@ -1936,6 +2065,134 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
+        if current_drive_variables.i_hcd_secondary in [5, 8]:
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Neutral beam power balance :")
+            po.ocmmnt(self.outfile, "----------------------------")
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam energy (keV)",
+                "(e_beam_kev)",
+                current_drive_variables.e_beam_kev,
+            )
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Neutral beam current (A)",
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
+                    "OP ",
+                )
+
+            if (current_drive_variables.i_hcd_secondary == 5) or (
+                current_drive_variables.i_hcd_secondary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Secondary fixed neutral beam current (A)",
+                    "(beam_current_fix)",
+                    beam_current_fix,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam wall plug efficiency",
+                "(eta_beam_injector_wall_plug)",
+                current_drive_variables.eta_beam_injector_wall_plug,
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam decay lengths to centre",
+                "(n_beam_decay_lengths_core)",
+                current_drive_variables.n_beam_decay_lengths_core,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam shine-through fraction",
+                "(f_p_beam_shine_through)",
+                current_drive_variables.f_p_beam_shine_through,
+                "OP ",
+            )
+
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarrf(
+                    self.outfile,
+                    "Beam first orbit loss power (MW)",
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam shine-through power [MW]",
+                    "(p_beam_shine_through_mw)",
+                    current_drive_variables.p_beam_shine_through_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power deposited in plasma (MW)",
+                    "(p_hcd_injected_total_mw)",
+                    pinjmw1,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Maximum allowable beam power (MW)",
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
+                )
+                po.oblnkl(self.outfile)
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power entering vacuum vessel (MW)",
+                    "(p_beam_injected_mw)",
+                    current_drive_variables.p_beam_injected_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    current_drive_variables.f_p_beam_injected_ions,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam duct shielding thickness (m)",
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam tangency radius / Plasma major radius",
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam centreline tangency radius (m)",
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Maximum possible tangency radius (m)",
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
+                    "OP ",
+                )
+
+        po.ocmmnt(self.outfile, "----------------------------")
+
         po.osubhd(self.outfile, "Totals :")
 
         po.ovarre(
@@ -1950,6 +2207,34 @@ class CurrentDrive:
             "Upper limit on total plasma injected power (MW)",
             "(p_hcd_injected_max)",
             current_drive_variables.p_hcd_injected_max,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.oblnkl(self.outfile)
+
+        po.osubhd(self.outfile, "Contributions:")
+
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from lower hybrid systems (MW)",
+            "(p_hcd_lowhyb_injected_total_mw)",
+            current_drive_variables.p_hcd_lowhyb_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from ion cyclotron systems (MW)",
+            "(p_hcd_icrh_injected_total_mw)",
+            current_drive_variables.p_hcd_icrh_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from lower hybrid systems (MW)",
+            "(p_hcd_ebw_injected_total_mw)",
+            current_drive_variables.p_hcd_ebw_injected_total_mw,
             "OP ",
         )
 
@@ -2075,233 +2360,38 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if abs(current_drive_variables.p_hcd_lowhyb_injected_total_mw) > 1.0e-8:
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid injected power (MW)",
-                "(p_hcd_lowhyb_injected_total_mw)",
-                current_drive_variables.p_hcd_lowhyb_injected_total_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid wall plug efficiency",
-                "(eta_lowhyb_injector_wall_plug)",
-                current_drive_variables.eta_lowhyb_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid wall plug power (MW)",
-                "(p_hcd_lowhyb_electric_mw)",
-                current_drive_variables.p_hcd_lowhyb_electric_mw,
-                "OP ",
-            )
-
         # MDK rearranged and added current_drive_variables.p_beam_shine_through_mw
         # if (abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1.0e-8) :
-        if (
-            (current_drive_variables.i_hcd_primary == 5)
-            or (current_drive_variables.i_hcd_primary == 8)
-            or (current_drive_variables.i_hcd_secondary == 5)
-            or (current_drive_variables.i_hcd_secondary == 8)
+
+        if (current_drive_variables.i_hcd_secondary == 5) or (
+            current_drive_variables.i_hcd_secondary == 8
         ):
-            po.ovarre(
-                self.outfile,
-                "Neutral beam energy (keV)",
-                "(e_beam_kev)",
-                current_drive_variables.e_beam_kev,
-            )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam current (A)",
-                    "(c_beam_total)",
-                    current_drive_variables.c_beam_total,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed neutral beam current (A)",
-                    "(beam_current_fix)",
-                    beam_current_fix,
-                    "OP ",
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Neutral beam wall plug efficiency",
-                "(eta_beam_injector_wall_plug)",
-                current_drive_variables.eta_beam_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam decay lengths to centre",
-                "(n_beam_decay_lengths_core)",
-                current_drive_variables.n_beam_decay_lengths_core,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam shine-through fraction",
-                "(f_p_beam_shine_through)",
-                current_drive_variables.f_p_beam_shine_through,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Neutral beam wall plug power (MW)",
-                "(pwpnb)",
-                current_drive_variables.pwpnb,
-                "OP ",
-            )
-
             po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "Neutral beam power balance :")
+            po.ocmmnt(self.outfile, "Secondary fixed neutral beam power balance :")
             po.ocmmnt(self.outfile, "----------------------------")
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarrf(
-                    self.outfile,
-                    "Beam first orbit loss power (MW)",
-                    "(p_beam_orbit_loss_mw)",
-                    current_drive_variables.p_beam_orbit_loss_mw,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Beam shine-through power [MW]",
-                    "(p_beam_shine_through_mw)",
-                    current_drive_variables.p_beam_shine_through_mw,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Beam power deposited in plasma (MW)",
-                    "(p_hcd_injected_total_mw)",
-                    pinjmw1,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Maximum allowable beam power (MW)",
-                    "(p_hcd_injected_max)",
-                    current_drive_variables.p_hcd_injected_max,
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Total (MW)",
-                    "(current_drive_variables.p_beam_orbit_loss_mw+current_drive_variables.p_beam_shine_through_mw+current_drive_variables.p_hcd_injected_total_mw)",
-                    current_drive_variables.p_beam_orbit_loss_mw
-                    + current_drive_variables.p_beam_shine_through_mw
-                    + pinjmw1,
-                )
-                po.oblnkl(self.outfile)
-                po.ovarrf(
-                    self.outfile,
-                    "Beam power entering vacuum vessel (MW)",
-                    "(p_beam_injected_mw)",
-                    current_drive_variables.p_beam_injected_mw,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.oblnkl(self.outfile)
-                po.ocmmnt(self.outfile, "Secondary fixed neutral beam power balance :")
-                po.ocmmnt(self.outfile, "----------------------------")
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed beam first orbit loss power (MW)",
-                    "(porbitlossmwfix)",
-                    porbitlossmwfix,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed beam power deposited in plasma (MW)",
-                    "(pinjmwfix)",
-                    pinjmwfix,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Maximum allowable beam power (MW)",
-                    "(p_hcd_injected_max)",
-                    current_drive_variables.p_hcd_injected_max,
-                )
-                po.oblnkl(self.outfile)
-
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
+            po.ovarrf(
                 self.outfile,
-                "Fraction of beam energy to ions",
-                "(f_p_beam_injected_ions)",
-                current_drive_variables.f_p_beam_injected_ions,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam duct shielding thickness (m)",
-                "(dx_beam_shield)",
-                current_drive_variables.dx_beam_shield,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam tangency radius / Plasma major radius",
-                "(frbeam)",
-                current_drive_variables.frbeam,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam centreline tangency radius (m)",
-                "(rtanbeam)",
-                current_drive_variables.rtanbeam,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Maximum possible tangency radius (m)",
-                "(rtanmax)",
-                current_drive_variables.rtanmax,
-                "OP ",
-            )
-
-        if abs(current_drive_variables.p_ecrh_injected_mw) > 1.0e-8:
-            po.ovarre(
-                self.outfile,
-                "Electron cyclotron injected power (MW)",
-                "(p_ecrh_injected_mw)",
-                current_drive_variables.p_ecrh_injected_mw,
+                "Secondary fixed beam first orbit loss power (MW)",
+                "(porbitlossmwfix)",
+                porbitlossmwfix,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "Maximum allowable ECRH power (MW)",
+                "Secondary fixed beam power deposited in plasma (MW)",
+                "(pinjmwfix)",
+                pinjmwfix,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Maximum allowable beam power (MW)",
                 "(p_hcd_injected_max)",
                 current_drive_variables.p_hcd_injected_max,
             )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug efficiency",
-                "(eta_ecrh_injector_wall_plug)",
-                current_drive_variables.eta_ecrh_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug power (MW)",
-                "(p_hcd_ecrh_electric_mw)",
-                current_drive_variables.p_hcd_ecrh_electric_mw,
-                "OP ",
-            )
+            po.oblnkl(self.outfile)
+
+        po.oblnkl(self.outfile)
 
     def legend(self, zlocal, arg):
         """Routine to calculate Legendre function and its derivative
