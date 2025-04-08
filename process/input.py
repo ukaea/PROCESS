@@ -1458,7 +1458,9 @@ INPUT_VARIABLES = {
     "i_diamagnetic_current": InputVariable(
         fortran.physics_variables, int, choices=[0, 1, 2]
     ),
-    "i_hldiv": InputVariable(fortran.divertor_variables, int, choices=[0, 1, 2]),
+    "i_div_heat_load": InputVariable(
+        fortran.divertor_variables, int, choices=[0, 1, 2]
+    ),
     "i_l_h_threshold": InputVariable(fortran.physics_variables, int, range=(1, 21)),
     "i_pf_current": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1, 2]),
     "i_pfirsch_schluter_current": InputVariable(

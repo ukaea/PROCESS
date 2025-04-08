@@ -32,10 +32,10 @@ class Divertor:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        if dv.i_hldiv == 0 and output:
+        if dv.i_div_heat_load == 0 and output:
             po.ovarre(self.outfile, "Divertor heat load (MW/m2)", "(hldiv)", dv.hldiv)
             return
-        if dv.i_hldiv == 1:
+        if dv.i_div_heat_load == 1:
             self.divtart(
                 pv.rmajor,
                 pv.rminor,
@@ -48,7 +48,7 @@ class Divertor:
                 dz_divertor=dv.dz_divertor,
             )
             return
-        if dv.i_hldiv == 2:
+        if dv.i_div_heat_load == 2:
             self.divwade(
                 pv.rmajor,
                 pv.rminor,
@@ -167,10 +167,10 @@ class Divertor:
         elif i_single_null == 0:
             areadv = 2.0 * (a1 + a2 + a3)
 
-        if dv.i_hldiv == 1:
+        if dv.i_div_heat_load == 1:
             dv.hldiv = pdivt / areadv
 
-        if output and dv.i_hldiv == 1:
+        if output and dv.i_div_heat_load == 1:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
