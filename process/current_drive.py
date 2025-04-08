@@ -1786,11 +1786,25 @@ class CurrentDrive:
             current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",
         )
+        if current_drive_variables.i_hcd_primary == 10:
+            po.ovarre(
+                self.outfile,
+                "ECRH plasma heating efficiency",
+                "(eta_cd_norm_ecrh)",
+                current_drive_variables.eta_cd_norm_ecrh,
+            )
         po.ovarre(
             self.outfile,
-            "Power injected into plasma by primary system (MW)",
+            "Power injected into plasma by primary system for current drive (MW)",
             "(p_hcd_primary_injected_mw)",
             current_drive_variables.p_hcd_primary_injected_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Extra power injected into plasma by primary system  (MW)",
+            "(p_hcd_primary_extra_heat_mw)",
+            current_drive_variables.p_hcd_primary_extra_heat_mw,
             "OP ",
         )
         po.ovarre(
@@ -1800,6 +1814,36 @@ class CurrentDrive:
             current_drive_variables.c_hcd_primary_driven,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Wall plug to injector efficiency of primary system",
+            "(eta_hcd_primary_injector_wall_plug)",
+            current_drive_variables.eta_hcd_primary_injector_wall_plug,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug electric power of primary system",
+            "(p_hcd_primary_electric_mw)",
+            heat_transport_variables.p_hcd_primary_electric_mw,
+            "OP ",
+        )
+
+        if current_drive_variables.i_hcd_primary in [12, 13]:
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "ECRH / EBW harmonic number",
+                "(n_ecrh_harmonic)",
+                current_drive_variables.n_ecrh_harmonic,
+            )
+        if current_drive_variables.i_hcd_primary == 13:
+            po.ovarin(
+                self.outfile,
+                "Electron cyclotron cutoff wave mode switch",
+                "(i_ecrh_wave_mode)",
+                current_drive_variables.i_ecrh_wave_mode,
+            )
 
         po.oblnkl(self.outfile)
 
@@ -1846,6 +1890,13 @@ class CurrentDrive:
             current_drive_variables.eta_cd_norm_hcd_secondary,
             "OP ",
         )
+        if current_drive_variables.i_hcd_secondary == 10:
+            po.ovarre(
+                self.outfile,
+                "ECRH plasma heating efficiency",
+                "(eta_cd_norm_ecrh)",
+                current_drive_variables.eta_cd_norm_ecrh,
+            )
 
         po.ovarre(
             self.outfile,
@@ -1856,9 +1907,49 @@ class CurrentDrive:
         )
         po.ovarre(
             self.outfile,
+            "Extra power injected into plasma by secondary system  (MW)",
+            "(p_hcd_secondary_extra_heat_mw)",
+            current_drive_variables.p_hcd_secondary_extra_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Current driven in plasma by secondary system (A)",
             "(c_hcd_secondary_driven)",
             current_drive_variables.c_hcd_secondary_driven,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug to injector efficiency of secondary system",
+            "(eta_hcd_secondary_injector_wall_plug)",
+            current_drive_variables.eta_hcd_secondary_injector_wall_plug,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug electric power of secondary system",
+            "(p_hcd_secondary_electric_mw)",
+            heat_transport_variables.p_hcd_secondary_electric_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.osubhd(self.outfile, "Totals :")
+
+        po.ovarre(
+            self.outfile,
+            "Total injected heating power across all systems (MW)",
+            "(p_hcd_injected_total_mw)",
+            current_drive_variables.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on total plasma injected power (MW)",
+            "(p_hcd_injected_max)",
+            current_drive_variables.p_hcd_injected_max,
             "OP ",
         )
 
@@ -1891,19 +1982,6 @@ class CurrentDrive:
             "(f_c_plasma_bootstrap_max)",
             current_drive_variables.f_c_plasma_bootstrap_max,
         )
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Power injected for main current drive (MW)",
-                "(pcurrentdrivemw1)",
-                pinjmw1 - current_drive_variables.p_hcd_primary_extra_heat_mw,
-            )
-            po.ovarre(
-                self.outfile,
-                "Power injected for secondary current drive (MW)",
-                "(pcurrentdrivemw2)",
-                pinjmwfix - current_drive_variables.p_hcd_secondary_extra_heat_mw,
-            )
 
         po.ovarre(
             self.outfile,
@@ -1912,85 +1990,13 @@ class CurrentDrive:
             current_drive_variables.bigq,
             "OP ",
         )
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Secondary auxiliary current drive (A)",
-                "(c_hcd_secondary_driven)",
-                current_drive_variables.c_hcd_secondary_driven,
-                "OP ",
-            )
 
-        po.ovarre(
-            self.outfile,
-            "Current drive efficiency (A/W)",
-            "(eta_cd_hcd_primary)",
-            current_drive_variables.eta_cd_hcd_primary,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Normalised current drive efficiency of primary HCD system (10^20 A / W m^2)",
-            "(eta_cd_norm_hcd_primary)",
-            current_drive_variables.eta_cd_norm_hcd_primary,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Wall plug to injector efficiency",
-            "(eta_hcd_primary_injector_wall_plug)",
-            current_drive_variables.eta_hcd_primary_injector_wall_plug,
-        )
-
-        if current_drive_variables.i_hcd_primary == 10:
-            po.ovarre(
-                self.outfile,
-                "ECRH plasma heating efficiency",
-                "(eta_cd_norm_ecrh)",
-                current_drive_variables.eta_cd_norm_ecrh,
-            )
         if current_drive_variables.i_hcd_primary == 12:
             po.ovarre(
                 self.outfile,
                 "EBW plasma heating efficiency",
                 "(xi_ebw)",
                 current_drive_variables.xi_ebw,
-            )
-        if current_drive_variables.i_hcd_primary in [12, 13]:
-            po.ovarre(
-                self.outfile,
-                "EC harmonic number",
-                "(n_ecrh_harmonic)",
-                current_drive_variables.n_ecrh_harmonic,
-            )
-        if current_drive_variables.i_hcd_primary == 13:
-            po.ovarin(
-                self.outfile,
-                "EC cutoff wave mode switch",
-                "(i_ecrh_wave_mode)",
-                current_drive_variables.i_ecrh_wave_mode,
-            )
-
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Secondary current drive efficiency (A/W)",
-                "(eta_cd_hcd_secondary)",
-                current_drive_variables.eta_cd_hcd_secondary,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Seconday wall plug to injector efficiency",
-                "(eta_hcd_secondary_injector_wall_plug)",
-                current_drive_variables.eta_hcd_secondary_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Normalised secondary current drive efficiency, gamma (10^20 A/W-m2)",
-                "(eta_cd_norm_hcd_secondary)",
-                current_drive_variables.eta_cd_norm_hcd_secondary,
-                "OP ",
             )
 
         po.osubhd(self.outfile, "Fractions of current drive :")
