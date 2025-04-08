@@ -2163,7 +2163,7 @@ class Physics:
                 / physics_variables.a_plasma_surface
             )
         else:
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 # Double null configuration
                 physics_variables.pflux_fw_neutron_mw = (
                     (
@@ -2291,7 +2291,7 @@ class Physics:
         # if double null configuration share the power
         # over the upper and lower divertor, where physics_variables.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             physics_variables.pdivl = (
                 physics_variables.f_p_div_lower * physics_variables.pdivt
             )
@@ -2489,7 +2489,7 @@ class Physics:
                 / physics_variables.a_plasma_surface
             )
         else:
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.pflux_fw_rad_mw = (
                     1.0e0
@@ -2563,7 +2563,7 @@ class Physics:
                 )
             )
         )
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
@@ -3518,14 +3518,14 @@ class Physics:
         po.oheadr(self.outfile, "Plasma")
 
         if stellarator_variables.istell == 0:
-            if physics_variables.idivrt == 0:
+            if physics_variables.n_divertors == 0:
                 po.ocmmnt(self.outfile, "Plasma configuration = limiter")
-            elif physics_variables.idivrt == 1:
+            elif physics_variables.n_divertors == 1:
                 po.ocmmnt(self.outfile, "Plasma configuration = single null divertor")
-            elif physics_variables.idivrt == 2:
+            elif physics_variables.n_divertors == 2:
                 po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
             else:
-                error_handling.idiags[0] = physics_variables.idivrt
+                error_handling.idiags[0] = physics_variables.n_divertors
                 po.report_error(85)
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
@@ -4876,7 +4876,7 @@ class Physics:
                 physics_module.lambdaio,
                 "OP ",
             )
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Midplane seperation of the two magnetic closed flux surfaces (m)",
@@ -4906,7 +4906,7 @@ class Physics:
                 physics_module.flo,
                 "OP ",
             )
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Fraction of power incident on the upper inner target",
@@ -4936,7 +4936,7 @@ class Physics:
                 physics_module.plomw,
                 "OP ",
             )
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Power incident on the upper innner target (MW)",
@@ -5044,7 +5044,7 @@ class Physics:
             )
             po.oblnkl(self.outfile)
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,

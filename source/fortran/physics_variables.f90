@@ -345,7 +345,7 @@ module physics_variables
   !! - =7 Greenwald limit
   !! - =8 ASDEX New
 
-  integer :: idivrt
+  integer :: n_divertors
   !! number of divertors (calculated from `i_single_null`)
 
   integer :: i_beta_fast_alpha
@@ -1006,7 +1006,7 @@ module physics_variables
     i_plasma_current = 4
     i_diamagnetic_current = 0
     i_density_limit = 8
-    idivrt = 2
+    n_divertors = 2
     i_beta_fast_alpha = 1
     ignite = 0
     ipedestal = 1

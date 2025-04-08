@@ -121,7 +121,7 @@ class DCLL:
              - f_nuc_pow_bz_liq
         """
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             covf = (
                 1 - (2 * fwbs_variables.f_ster_div_single) - fwbs_variables.f_a_fw_hcd
@@ -158,7 +158,7 @@ class DCLL:
 
         # Divertor
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (

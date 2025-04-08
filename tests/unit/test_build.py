@@ -45,7 +45,7 @@ class DivgeomParam(NamedTuple):
 
     rminor: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     kappa: Any = None
 
@@ -113,7 +113,7 @@ class RippleAmplitudeParam(NamedTuple):
             itart=0,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
-            idivrt=1,
+            n_divertors=1,
             kappa=1.8480000000000001,
             triang=0.5,
             iprint=0,
@@ -132,7 +132,7 @@ class RippleAmplitudeParam(NamedTuple):
             itart=0,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
-            idivrt=1,
+            n_divertors=1,
             kappa=1.8480000000000001,
             triang=0.5,
             iprint=0,
@@ -179,7 +179,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
 
-    monkeypatch.setattr(physics_variables, "idivrt", divgeomparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", divgeomparam.n_divertors)
 
     monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
 

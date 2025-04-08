@@ -1065,7 +1065,7 @@ class Power:
             fwbs_variables.emult,
         )
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             po.ovarre(
                 self.outfile,
@@ -1089,7 +1089,7 @@ class Power:
             fwbs_variables.f_a_fw_hcd,
         )
 
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # Double null configuration
             po.ovarre(
                 self.outfile,

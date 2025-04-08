@@ -433,7 +433,7 @@
     {
       "no": 85,
       "level": 3,
-      "message": "OUTPLAS: Illegal value of idivrt"
+      "message": "OUTPLAS: Illegal value of n_divertors"
     },
     {
       "no": 86,
