@@ -256,7 +256,7 @@ module physics_variables
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
 
-  real(dp) :: fpdivlim
+  real(dp) :: fp_plasma_separatrix_min_mw
   !! F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)
 
   real(dp) :: fne0
@@ -990,7 +990,7 @@ module physics_variables
     figmer = 0.0D0
     fkzohm = 1.0D0
     fplhsep = 1.0D0
-    fpdivlim = 1.0D0
+    fp_plasma_separatrix_min_mw = 1.0D0
     fne0 = 1.0D0
     f_tritium = 0.5D0
     fusion_rate_density_total = 0.0D0
