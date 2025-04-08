@@ -139,7 +139,7 @@ class ProcessTracker:
         "dene",
         "p_plasma_rad_mw",
         "ne0",
-        "aux_current_fraction",
+        "f_c_plasma_auxiliary",
         "nd_impurities",
         "t_energy_confinement",
         "te0",

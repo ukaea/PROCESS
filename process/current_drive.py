@@ -1324,7 +1324,7 @@ class CurrentDrive:
             current_drive_variables.p_hcd_primary_injected_mw = (
                 1.0e-6
                 * (
-                    physics_variables.aux_current_fraction
+                    physics_variables.f_c_plasma_auxiliary
                     - current_drive_variables.f_c_plasma_hcd_secondary
                 )
                 * physics_variables.plasma_current
@@ -2024,8 +2024,8 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Auxiliary current drive fraction",
-            "(aux_current_fraction)",
-            physics_variables.aux_current_fraction,
+            "(f_c_plasma_auxiliary)",
+            physics_variables.f_c_plasma_auxiliary,
             "OP ",
         )
         po.ovarrf(
@@ -2039,15 +2039,15 @@ class CurrentDrive:
         po.ovarrf(
             self.outfile,
             "Total",
-            "(f_c_plasma_internal+aux_current_fraction+f_c_plasma_inductive)",
+            "(f_c_plasma_internal+f_c_plasma_auxiliary+f_c_plasma_inductive)",
             current_drive_variables.f_c_plasma_internal
-            + physics_variables.aux_current_fraction
+            + physics_variables.f_c_plasma_auxiliary
             + physics_variables.f_c_plasma_inductive,
         )
         if (
             abs(
                 current_drive_variables.f_c_plasma_internal
-                + physics_variables.aux_current_fraction
+                + physics_variables.f_c_plasma_auxiliary
                 + physics_variables.f_c_plasma_inductive
                 - 1.0e0
             )

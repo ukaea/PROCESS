@@ -542,9 +542,9 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1920E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      1.4376E-02    
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      1.4376E-02    
  Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.6642E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+f_c_plasma_inductive)_________      1.0000E+00    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
  Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.3358E-01 ITV
  Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      8.0143E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
