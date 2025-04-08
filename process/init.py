@@ -32,10 +32,10 @@ from process.physics import (
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.pulse import init_pulse_variables
 from process.scan import init_scan_module
-from process.sctfcoil import init_rebco_variables, init_sctfcoil_module
 from process.stellarator import init_stellarator_module, init_stellarator_variables
 from process.structure import init_structure_variables
-from process.tfcoil import init_tfcoil_variables
+from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_module
+from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.vacuum import init_vacuum_variables
 from process.water_use import init_watuse_variables
