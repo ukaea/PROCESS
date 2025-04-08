@@ -35,7 +35,7 @@ module divertor_variables
   real(dp) :: dz_divertor
   !! divertor structure vertical thickness (m)
 
-  real(dp) :: divmas
+  real(dp) :: m_div_plate
   !! divertor plate mass (kg)
 
   real(dp) :: divplt
@@ -95,7 +95,7 @@ module divertor_variables
     divclfr = 0.3D0
     divdens = 1.0D4
     dz_divertor = 0.2D0
-    divmas = 0.0D0
+    m_div_plate = 0.0D0
     divplt = 0.035D0
     a_div_surface_total = 0.0D0
     fdiva = 1.11D0
