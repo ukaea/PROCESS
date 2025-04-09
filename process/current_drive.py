@@ -2166,8 +2166,8 @@ def init_current_drive_variables():
     current_drive_variables.bscf_andrade = 0.0
     current_drive_variables.bscf_hoang = 0.0
     current_drive_variables.bscf_wong = 0.0
-    current_drive_variables.bscf_gi_I = 0.0
-    current_drive_variables.bscf_gi_II = 0.0
+    current_drive_variables.bscf_gi_i = 0.0
+    current_drive_variables.bscf_gi_ii = 0.0
     current_drive_variables.cboot = 1.0
     current_drive_variables.beam_current = 0.0
     current_drive_variables.diacf_hender = 0.0
