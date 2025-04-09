@@ -1426,7 +1426,7 @@ INPUT_VARIABLES = {
     "coppera_m2_max": InputVariable(
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
-    "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
+    "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
     "dwell_pump": InputVariable(fortran.vacuum_variables, int, choices=[0, 1, 2]),
     "i_fw_blkt_vv_shape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "hcdportsize": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
