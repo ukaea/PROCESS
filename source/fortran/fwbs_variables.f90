@@ -317,7 +317,7 @@ module fwbs_variables
   real(dp) :: temp_fw_peak
   !! peak first wall temperature [K]
 
-  real(dp) :: roughness
+  real(dp) :: roughness_fw_channel
   !! first wall channel roughness epsilon [m]
 
   real(dp) :: len_fw_channel
@@ -725,7 +725,7 @@ module fwbs_variables
     temp_fw_coolant_out = 823.0D0
     pres_fw_coolant = 15.5D6
     temp_fw_peak = 873.0D0
-    roughness = 1.0D-6
+    roughness_fw_channel = 1.0D-6
     len_fw_channel = 4.0D0
     f_fw_peak = 1.0D0
     pres_blkt_coolant = 15.50D6
