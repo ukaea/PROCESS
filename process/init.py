@@ -8,9 +8,37 @@ from warnings import warn
 import process
 import process.fortran as fortran
 import process.process_output as process_output
+from process.blanket_library import init_blanket_library, init_primary_pumping_variables
+from process.build import init_build_variables
+from process.buildings import init_buildings_variables
+from process.costs import init_cost_variables
+from process.cs_fatigue import init_cs_fatigue_variables
+from process.current_drive import init_current_drive_variables
+from process.dcll import init_dcll_module
+from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
+from process.fw import init_fwbs_variables
+from process.hcpb import init_ccfe_hcpb_module
+from process.ife import init_ife_variables
+from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
+from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
+from process.physics import (
+    init_physics_module,
+    init_physics_variables,
+    init_reinke_variables,
+    init_times_variables,
+)
+from process.power import init_heat_transport_variables, init_pf_power_variables
+from process.pulse import init_pulse_variables
+from process.scan import init_scan_module
+from process.stellarator import init_stellarator_module, init_stellarator_variables
+from process.structure import init_structure_variables
+from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_module
+from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.vacuum import init_vacuum_variables
+from process.water_use import init_watuse_variables
 
 
 def init_process():
@@ -208,42 +236,42 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     fortran.numerics.init_numerics()
-    fortran.buildings_variables.init_buildings_variables()
-    fortran.cost_variables.init_cost_variables()
-    fortran.divertor_variables.init_divertor_variables()
+    init_buildings_variables()
+    init_cost_variables()
+    init_divertor_variables()
     fortran.error_handling.init_error_handling()
-    fortran.fwbs_variables.init_fwbs_variables()
+    init_fwbs_variables()
     fortran.global_variables.init_global_variables()
-    fortran.ccfe_hcpb_module.init_ccfe_hcpb_module()
-    fortran.heat_transport_variables.init_heat_transport_variables()
-    fortran.ife_variables.init_ife_variables()
-    fortran.impurity_radiation_module.init_impurity_radiation_module()
-    fortran.pfcoil_module.init_pfcoil_module()
-    fortran.physics_module.init_physics_module()
-    fortran.physics_variables.init_physics_variables()
-    fortran.scan_module.init_scan_module()
-    fortran.sctfcoil_module.init_sctfcoil_module()
-    fortran.stellarator_module.init_stellarator_module()
-    fortran.stellarator_variables.init_stellarator_variables()
-    fortran.tfcoil_variables.init_tfcoil_variables()
-    fortran.times_variables.init_times_variables()
+    init_ccfe_hcpb_module()
+    init_heat_transport_variables()
+    init_ife_variables()
+    init_impurity_radiation_module()
+    init_pfcoil_module()
+    init_physics_module()
+    init_physics_variables()
+    init_scan_module()
+    init_sctfcoil_module()
+    init_stellarator_module()
+    init_stellarator_variables()
+    init_tfcoil_variables()
+    init_times_variables()
     fortran.constants.init_constants()
-    fortran.current_drive_variables.init_current_drive_variables()
-    fortran.primary_pumping_variables.init_primary_pumping_variables()
-    fortran.pfcoil_variables.init_pfcoil_variables()
-    fortran.structure_variables.init_structure_variables()
-    fortran.vacuum_variables.init_vacuum_variables()
-    fortran.pf_power_variables.init_pf_power_variables()
-    fortran.build_variables.init_build_variables()
+    init_current_drive_variables()
+    init_primary_pumping_variables()
+    init_pfcoil_variables()
+    init_structure_variables()
+    init_vacuum_variables()
+    init_pf_power_variables()
+    init_build_variables()
     fortran.constraint_variables.init_constraint_variables()
-    fortran.pulse_variables.init_pulse_variables()
-    fortran.rebco_variables.init_rebco_variables()
-    fortran.reinke_variables.init_reinke_variables()
+    init_pulse_variables()
+    init_rebco_variables()
+    init_reinke_variables()
     fortran.define_iteration_variables.init_define_iteration_variables()
-    fortran.water_usage_variables.init_watuse_variables()
-    fortran.cs_fatigue_variables.init_cs_fatigue_variables()
-    fortran.blanket_library.init_blanket_library()
-    fortran.dcll_module.init_dcll_module()
+    init_watuse_variables()
+    init_cs_fatigue_variables()
+    init_blanket_library()
+    init_dcll_module()
 
     fortran.init_module.init_fortran_modules()
 

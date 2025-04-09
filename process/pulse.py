@@ -222,3 +222,12 @@ class Pulse:
                     self.outfile,
                     "   Error... burn time is zero; insufficient volt-seconds#",
                 )
+
+
+def init_pulse_variables():
+    """Initialise the pulse variables"""
+    pulse_variables.bctmp = 320.0
+    pulse_variables.dtstor = 300.0
+    pulse_variables.istore = 1
+    pulse_variables.itcycl = 1
+    pulse_variables.i_pulsed_plant = 0

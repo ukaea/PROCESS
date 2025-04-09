@@ -129,21 +129,4 @@ module scan_module
   ! each new run
   logical :: first_call_1d
   logical :: first_call_2d
-
-contains
-
-  subroutine init_scan_module
-    !! Initialise module variables
-    implicit none
-
-    scan_dim = 1
-    isweep = 0
-    isweep_2 = 0
-    nsweep = 1
-    nsweep_2 = 3
-    sweep = 0.0D0
-    sweep_2 = 0.0D0
-    first_call_1d = .true.
-    first_call_2d = .true.
-  end subroutine init_scan_module
 end module scan_module

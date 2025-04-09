@@ -82,10 +82,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     verbose: Any = None
 
-    ip: Any = None
-
-    ofile: Any = None
-
     armour_density: Any = None
 
     fw_density: Any = None
@@ -155,8 +151,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             whttf=19649856.627845347,
             whttflgs=0,
             verbose=0,
-            ip=0,
-            ofile=11,
             armour_density=0,
             fw_density=0,
             blanket_density=0,
@@ -204,8 +198,6 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             whttf=19662548.210142396,
             whttflgs=0,
             verbose=0,
-            ip=0,
-            ofile=11,
             armour_density=13202.434141839649,
             fw_density=5349.557730199961,
             blanket_density=2504.4899999999998,
@@ -334,10 +326,6 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     )
 
     monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingmagnetsparam.ip)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ofile", nuclearheatingmagnetsparam.ofile)
 
     monkeypatch.setattr(
         ccfe_hcpb_module, "armour_density", nuclearheatingmagnetsparam.armour_density
@@ -726,8 +714,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
 
     fusion_power: Any = None
 
-    ip: Any = None
-
     expected_p_div_nuclear_heat_total_mw: Any = None
 
 
@@ -740,7 +726,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
             p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1986.0623241661431,
-            ip=0,
             expected_p_div_nuclear_heat_total_mw=182.71773382328519,
         ),
         NuclearHeatingDivertorParam(
@@ -749,7 +734,6 @@ class NuclearHeatingDivertorParam(NamedTuple):
             p_fw_hcd_nuclear_heat_mw=0,
             idivrt=1,
             fusion_power=1985.4423932312809,
-            ip=0,
             expected_p_div_nuclear_heat_total_mw=182.66070017727785,
         ),
     ),
@@ -790,8 +774,6 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     monkeypatch.setattr(
         physics_variables, "fusion_power", nuclearheatingdivertorparam.fusion_power
     )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", nuclearheatingdivertorparam.ip)
 
     ccfe_hcpb.nuclear_heating_divertor()
 
@@ -877,10 +859,6 @@ class PowerflowCalcParam(NamedTuple):
 
     htpmw_fw_blkt: Any = None
 
-    ip: Any = None
-
-    ofile: Any = None
-
     expected_p_div_rad_total_mw: Any = None
 
     expected_p_fw_rad_total_mw: Any = None
@@ -938,8 +916,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             htpmw_fw_blkt=0,
-            ip=0,
-            ofile=11,
             expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
@@ -987,8 +963,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             htpmw_fw_blkt=202.00455086503842,
-            ip=0,
-            ofile=11,
             expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
@@ -1149,10 +1123,6 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         primary_pumping_variables, "htpmw_fw_blkt", powerflowcalcparam.htpmw_fw_blkt
     )
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ip", powerflowcalcparam.ip)
-
-    monkeypatch.setattr(ccfe_hcpb_module, "ofile", powerflowcalcparam.ofile)
 
     ccfe_hcpb.powerflow_calc(False)
 

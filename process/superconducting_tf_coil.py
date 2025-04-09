@@ -3829,3 +3829,76 @@ def _inductance_factor(
         + 0.7629 * aspect_ratio**2
         - 0.06298 * (theta1 / 90)
     )
+
+
+def init_sctfcoil_module():
+    sctfcoil_module.is_leg_cp_temp_same = 0
+    sctfcoil_module.tf_fit_t = 0.0
+    sctfcoil_module.tf_fit_z = 0.0
+    sctfcoil_module.tf_fit_y = 0.0
+    sctfcoil_module.tfc_current = 0.0
+    sctfcoil_module.awpc = 0.0
+    sctfcoil_module.awptf = 0.0
+    sctfcoil_module.a_tf_steel = 0.0
+    sctfcoil_module.a_tf_ins = 0.0
+    sctfcoil_module.f_tf_steel = 0.0
+    sctfcoil_module.f_tf_ins = 0.0
+    sctfcoil_module.h_cp_top = 0.0
+    sctfcoil_module.r_tf_outboard_in = 0.0
+    sctfcoil_module.r_tf_outboard_out = 0.0
+    sctfcoil_module.r_wp_inner = 0.0
+    sctfcoil_module.r_wp_outer = 0.0
+    sctfcoil_module.r_wp_centre = 0.0
+    sctfcoil_module.dr_tf_wp_top = 0.0
+    sctfcoil_module.vol_ins_cp = 0.0
+    sctfcoil_module.vol_gr_ins_cp = 0.0
+    sctfcoil_module.vol_case_cp = 0.0
+    sctfcoil_module.t_wp_toroidal = 0.0
+    sctfcoil_module.t_wp_toroidal_av = 0.0
+    sctfcoil_module.t_lat_case_av = 0.0
+    sctfcoil_module.a_case_front = 0.0
+    sctfcoil_module.a_case_nose = 0.0
+    sctfcoil_module.a_ground_ins = 0.0
+    sctfcoil_module.a_leg_ins = 0.0
+    sctfcoil_module.a_leg_gr_ins = 0.0
+    sctfcoil_module.a_leg_cond = 0.0
+    sctfcoil_module.theta_coil = 0.0
+    sctfcoil_module.tan_theta_coil = 0.0
+    sctfcoil_module.t_conductor_radial = 0.0
+    sctfcoil_module.t_conductor_toroidal = 0.0
+    sctfcoil_module.t_cable_radial = 0.0
+    sctfcoil_module.t_cable_toroidal = 0.0
+    sctfcoil_module.t_turn_radial = 0.0
+    sctfcoil_module.t_turn_toroidal = 0.0
+    sctfcoil_module.t_cable = 0.0
+    sctfcoil_module.vforce_inboard_tot = 0.0
+    sctfcoil_module.t1 = 0.0
+    sctfcoil_module.time2 = 0.0
+    sctfcoil_module.tau2 = 0.0
+    sctfcoil_module.estotft = 0.0
+
+
+def init_rebco_variables():
+    """Initialise the REBCO variables"""
+    rebco_variables.rebco_thickness = 1.0e-6
+    rebco_variables.copper_thick = 100.0e-6
+    rebco_variables.hastelloy_thickness = 50.0e-6
+    rebco_variables.tape_width = 4.0e-3
+    rebco_variables.croco_od = 0.0
+    rebco_variables.croco_id = 0.0
+    rebco_variables.croco_thick = 2.5e-3
+    rebco_variables.copper_rrr = 100.0
+    rebco_variables.coppera_m2_max = 1.0e8
+    rebco_variables.f_coppera_m2 = 1.0
+    rebco_variables.tape_thickness = 6.5e-5
+    rebco_variables.stack_thickness = 0.0
+    rebco_variables.tapes = 0.0
+    rebco_variables.rebco_area = 0.0
+    rebco_variables.copper_area = 0.0
+    rebco_variables.hastelloy_area = 0.0
+    rebco_variables.solder_area = 0.0
+    rebco_variables.croco_area = 0.0
+    rebco_variables.copperA_m2 = 0.0
+    rebco_variables.copperaoh_m2_max = 1.0e8
+    rebco_variables.f_copperaoh_m2 = 1.0
+    rebco_variables.copperaoh_m2 = 0.0

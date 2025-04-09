@@ -441,10 +441,6 @@ def pimpden(imp_element_index, neprofile, teprofile):
     pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
         imp_element_index, 0
     ]
-    # if not impurity_radiation_module.toolow:  # Only print warning once during a run
-    #     impurity_radiation_module.toolow = True
-    #     error_handling.fdiags[0] = teprofile
-    #     error_handling.report_error(35)
 
     greater_than_imp_temp_mask = (
         teprofile
@@ -567,3 +563,47 @@ class ImpurityRadiation:
         self.map_imprad_profile()
         self.calculate_radiation_loss_profiles()
         self.integrate_radiation_loss_profiles()
+
+
+def init_impurity_radiation_module():
+    impurity_radiation_module.radius_plasma_core_norm = 0.6
+    impurity_radiation_module.coreradiationfraction = 1.0
+    impurity_radiation_module.fimp = [
+        1.0,
+        0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    ]
+    impurity_radiation_module.imp_label = [
+        "H_",
+        "He",
+        "Be",
+        "C_",
+        "N_",
+        "O_",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W_",
+    ]
+    impurity_radiation_module.impurity_arr_label[:] = "  "
+    impurity_radiation_module.impurity_arr_z[:] = 0
+    impurity_radiation_module.impurity_arr_amass[:] = 0.0
+    impurity_radiation_module.impurity_arr_len_tab[:] = 0.0
+    impurity_radiation_module.impurity_arr_temp_kev[:] = 0.0
+    impurity_radiation_module.impurity_arr_lz_wm3[:] = 0.0
+    impurity_radiation_module.impurity_arr_zav[:] = 0.0

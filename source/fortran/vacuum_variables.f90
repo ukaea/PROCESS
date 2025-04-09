@@ -90,32 +90,4 @@ module vacuum_variables
 
   real(dp) :: outgasfactor
   !! outgassing prefactor kw: outgassing rate at 1 s per unit area (Pa m s-1)
-
-  contains
-
-  subroutine init_vacuum_variables
-    !! Initialise module variables
-    implicit none
-
-    vacuum_model = 'old'
-    niterpump = 0.0D0
-    ntype = 1
-    nvduct = 0
-    dlscal = 0.0D0
-    pbase = 5.0D-4
-    prdiv = 0.36D0
-    pumptp = 1.2155D22
-    rat = 1.3D-8
-    tn = 300.0D0
-    vacdshm = 0.0D0
-    vcdimax = 0.0D0
-    vpumpn = 0
-    dwell_pump = 0
-    pumpareafraction = 0.0203D0
-    pumpspeedmax = 27.3D0
-    pumpspeedfactor = 0.167D0
-    initialpressure = 1.0D0
-    outgasindex = 1.0D0
-    outgasfactor = 0.0235D0
-  end subroutine init_vacuum_variables
 end module vacuum_variables

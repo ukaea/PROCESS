@@ -52,27 +52,4 @@ module primary_pumping_variables
 
   real(dp) :: f_p_fw_blkt_pump
   !! Pumping power for FW and Blanket multiplier factor
-
-  contains
-
-  subroutine init_primary_pumping_variables
-    !! Initialise module variables
-    implicit none
-
-    !! initialise variables with default values in the absence of a value in the input file.
-    gamma_he = 1.667D0 ! Ratio of specific heats  Helium
-    !! cp_he = 5.195.0D3 ! Specific Heat J/kg K (disabled at the moment)
-    t_in_bb = 573.13D0 ! K
-    t_out_bb = 773.13D0 ! K
-    p_he = 8.0D6 ! Pa
-    dp_he = 5.5D5 ! Pa
-    dp_fw_blkt = 1.5D5 ! Pa
-    dp_fw = 1.5D5 ! Pa
-    dp_blkt = 3.5D3 ! Pa
-    dp_liq = 1.0D7 ! Pa
-    htpmw_fw_blkt = 0.0D0
-    f_p_fw_blkt_pump = 1.0D0
-
-  end subroutine init_primary_pumping_variables
-
 end module primary_pumping_variables

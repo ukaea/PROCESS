@@ -1031,3 +1031,16 @@ class Scan:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
         return SCAN_VARIABLES[int(nwp)]
+
+
+def init_scan_module():
+    """Initialise the scan module"""
+    scan_module.scan_dim = 1
+    scan_module.isweep = 0
+    scan_module.isweep_2 = 0
+    scan_module.nsweep = 1
+    scan_module.nsweep_2 = 3
+    scan_module.sweep[:] = 0.0
+    scan_module.sweep_2[:] = 0.0
+    scan_module.first_call_1d = True
+    scan_module.first_call_2d = True

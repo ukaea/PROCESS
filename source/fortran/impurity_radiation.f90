@@ -21,30 +21,24 @@ module impurity_radiation_module
 #endif
   implicit none
 
-  private
-  public :: init_impurity_radiation_module, impurity_arr_amass, impurity_arr_frac, &
-   impurity_arr_Label,impurity_arr_len_tab, impurity_arr_Lz_Wm3, &
-   impurity_arr_Temp_keV, impurity_arr_Z, impurity_arr_Zav
-
-
   !! (It is recommended to turn on
   !! constraint eqn.17 with iteration variable 28: fradpwr.)
 
-  integer, public, parameter :: n_impurities = 14
+  integer, parameter :: n_impurities = 14
   !! n_impurities /14/ FIX : number of ion species in impurity radiation model
 
-  real(dp), public :: radius_plasma_core_norm
+  real(dp) :: radius_plasma_core_norm
   !! radius_plasma_core_norm /0.6/ : normalised radius defining the 'core' region
 
-  real(dp), public :: coreradiationfraction
+  real(dp) :: coreradiationfraction
   !! coreradiationfraction /1.0/ : fraction of radiation from 'core' region that is subtracted from the loss power
 
   !! fimp(n_impurities) /1.0,0.1,0.02,0.0,0.0,0.0,0.0,0.0,0.0016,0.0,0.0,0.0,0.0,0.0/ :
   !!        impurity number density fractions relative to electron density
   !!
-  real(dp), public, dimension(n_impurities) :: fimp
+  real(dp), dimension(n_impurities) :: fimp
 
-  character*2, public, dimension(n_impurities) :: imp_label
+  character*2, dimension(n_impurities) :: imp_label
   !! imp_label(n_impurities) : impurity ion species names:<UL>
   !! <LI> ( 1)  Hydrogen  (fraction calculated by code)
   !! <LI> ( 2)  Helium
@@ -97,51 +91,5 @@ module impurity_radiation_module
   real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Temp_keV
   real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Lz_Wm3
   real(dp), dimension(n_impurities, all_array_hotfix_len) :: impurity_arr_Zav
-
-
-!   type(imp_dat),  dimension(n_impurities), save, public :: impurity_arr
-
-  logical, public :: toolow
-  !! Used for reporting error in function pimpden
-
-contains
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine init_impurity_radiation_module
-    !! Initialise module variables
-    implicit none
-
-    radius_plasma_core_norm = 0.6D0
-    coreradiationfraction = 1.0D0
-    fimp = (/ 1.0D0, 0.1D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, &
-      0.0D0, 0.00D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0, 0.0D0 /)
-    imp_label = (/ &
-      'H_', &
-      'He', &
-      'Be', &
-      'C_', &
-      'N_', &
-      'O_', &
-      'Ne', &
-      'Si', &
-      'Ar', &
-      'Fe', &
-      'Ni', &
-      'Kr', &
-      'Xe', &
-      'W_'/)
-      toolow = .false.
-      impurity_arr_Label = "  "
-      impurity_arr_Z = 0
-      impurity_arr_amass = 0.0D0
-      impurity_arr_len_tab = 0.0D0
-      impurity_arr_Temp_keV = 0.0D0
-      impurity_arr_Lz_Wm3 = 0.0D0
-      impurity_arr_Zav = 0.0D0
-      ! Re-initialise entire array
-  end subroutine init_impurity_radiation_module
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 end module impurity_radiation_module

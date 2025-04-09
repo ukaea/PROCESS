@@ -36,17 +36,4 @@ module reinke_variables
   !!
   !! - =0 H-mode
   !! - =1 I-mode
-
-  contains
-
-  subroutine init_reinke_variables
-    !! Initialise module variables
-    implicit none
-
-    impvardiv = 9
-    lhat = 4.33D0
-    fzmin = 0.0D0
-    fzactual = 0.001D0
-    reinke_mode = 0
-  end subroutine init_reinke_variables
 end module reinke_variables

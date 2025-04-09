@@ -2952,3 +2952,167 @@ class Costs:
                 )
             else:
                 cost_variables.cplife_cal = cost_variables.cplife
+
+
+def init_cost_variables():
+    cost_variables.abktflnc = 5.0
+    cost_variables.adivflnc = 7.0
+    cost_variables.blkcst = 0.0
+    cost_variables.c221 = 0.0
+    cost_variables.c222 = 0.0
+    cost_variables.capcost = 0.0
+    cost_variables.cconfix = 80.0
+    cost_variables.cconshpf = 70.0
+    cost_variables.cconshtf = 75.0
+    cost_variables.cdcost = 0.0
+    cost_variables.cdirt = 0.0
+    cost_variables.cdrlife = 0.0
+    cost_variables.cdrlife_cal = 0.0
+    cost_variables.cfactr = 0.75
+    cost_variables.cpfact = 0.0
+    cost_variables.cfind = [0.244, 0.244, 0.244, 0.29]
+    cost_variables.cland = 19.2
+    cost_variables.coe = 0.0
+    cost_variables.coecap = 0.0
+    cost_variables.coefuelt = 0.0
+    cost_variables.coeoam = 0.0
+    cost_variables.concost = 0.0
+    cost_variables.costexp = 0.8
+    cost_variables.costexp_pebbles = 0.6
+    cost_variables.cost_factor_buildings = 1.0
+    cost_variables.cost_factor_land = 1.0
+    cost_variables.cost_factor_tf_coils = 1.0
+    cost_variables.cost_factor_fwbs = 1.0
+    cost_variables.cost_factor_rh = 1.0
+    cost_variables.cost_factor_vv = 1.0
+    cost_variables.cost_factor_bop = 1.0
+    cost_variables.cost_factor_misc = 1.0
+    cost_variables.maintenance_fwbs = 0.2
+    cost_variables.maintenance_gen = 0.05
+    cost_variables.amortization = 13.6
+    cost_variables.cost_model = 1
+    cost_variables.cowner = 0.15
+    cost_variables.cplife = 0.0
+    cost_variables.cplife_cal = 0.0
+    cost_variables.cpstcst = 0.0
+    cost_variables.cpstflnc = 10.0
+    cost_variables.crctcore = 0.0
+    cost_variables.csi = 16.0
+    cost_variables.cturbb = 38.0
+    cost_variables.decomf = 0.1
+    cost_variables.dintrt = 0.0
+    cost_variables.divcst = 0.0
+    cost_variables.divlife = 0.0
+    cost_variables.divlife_cal = 0.0
+    cost_variables.dtlife = 0.0
+    cost_variables.fcap0 = 1.165
+    cost_variables.fcap0cp = 1.08
+    cost_variables.fcdfuel = 0.1
+    cost_variables.fcontng = 0.195
+    cost_variables.fcr0 = 0.0966
+    cost_variables.fkind = 1.0
+    cost_variables.fwallcst = 0.0
+    cost_variables.iavail = 2
+    cost_variables.ibkt_life = 0
+    cost_variables.life_dpa = 50
+    cost_variables.bktcycles = 1.0e3
+    cost_variables.avail_min = 0.75
+    cost_variables.tok_build_cost_per_vol = 1283.0
+    cost_variables.light_build_cost_per_vol = 270.0
+    cost_variables.favail = 1.0
+    cost_variables.num_rh_systems = 4
+    cost_variables.conf_mag = 0.99
+    cost_variables.div_prob_fail = 0.0002
+    cost_variables.div_umain_time = 0.25
+    cost_variables.div_nref = 7000.0
+    cost_variables.div_nu = 14000.0
+    cost_variables.fwbs_nref = 20000.0
+    cost_variables.fwbs_nu = 40000.0
+    cost_variables.fwbs_prob_fail = 0.0002
+    cost_variables.fwbs_umain_time = 0.25
+    cost_variables.redun_vacp = 25.0
+    cost_variables.redun_vac = 0
+    cost_variables.t_operation = 0.0
+    cost_variables.tbktrepl = 0.5
+    cost_variables.tcomrepl = 0.5
+    cost_variables.tdivrepl = 0.25
+    cost_variables.uubop = 0.02
+    cost_variables.uucd = 0.02
+    cost_variables.uudiv = 0.04
+    cost_variables.uufuel = 0.02
+    cost_variables.uufw = 0.04
+    cost_variables.uumag = 0.02
+    cost_variables.uuves = 0.04
+    cost_variables.ifueltyp = 0
+    cost_variables.ipnet = 0
+    cost_variables.ireactor = 1
+    cost_variables.lsa = 4
+    cost_variables.moneyint = 0.0
+    cost_variables.output_costs = 1
+    cost_variables.discount_rate = 0.0435
+    cost_variables.startupratio = 1.0
+    cost_variables.startuppwr = 0.0
+    cost_variables.tlife = 30.0
+    cost_variables.ucblbe = 260.0
+    cost_variables.ucblbreed = 875.0
+    cost_variables.ucblli = 875.0
+    cost_variables.ucblli2o = 600.0
+    cost_variables.ucbllipb = 10.3
+    cost_variables.ucblss = 90.0
+    cost_variables.ucblvd = 200.0
+    cost_variables.ucbus = 0.123
+    cost_variables.uccase = 50.0
+    cost_variables.uccpcl1 = 250.0
+    cost_variables.uccpclb = 150.0
+    cost_variables.uccry = 9.3e4
+    cost_variables.uccryo = 32.0
+    cost_variables.uccu = 75.0
+    cost_variables.ucdiv = 2.8e5
+    cost_variables.ucech = 3.0
+    cost_variables.ucf1 = 2.23e7
+    cost_variables.ucfnc = 35.0
+    cost_variables.ucfuel = 3.45
+    cost_variables.uche3 = 1.0e6
+    cost_variables.uchrs = 87.9e6
+    cost_variables.uchts = [15.3, 19.1]
+    cost_variables.uciac = 1.5e8
+    cost_variables.ucich = 3.0
+    cost_variables.uclh = 3.3
+    cost_variables.ucme = 1.25e8
+    cost_variables.ucmisc = 2.5e7
+    cost_variables.ucnbi = 3.3
+    cost_variables.ucoam = [68.8, 68.8, 68.8, 74.4]
+    cost_variables.ucpens = 32.0
+    cost_variables.ucpfb = 210.0
+    cost_variables.ucpfbk = 1.66e4
+    cost_variables.ucpfbs = 4.9e3
+    cost_variables.ucpfcb = 7.5e4
+    cost_variables.ucpfdr1 = 150.0
+    cost_variables.ucpfic = 1.0e4
+    cost_variables.ucpfps = 3.5e4
+    cost_variables.ucrb = 400.0
+    cost_variables.ucsc = [
+        600.0,
+        600.0,
+        300.0,
+        600.0,
+        600.0,
+        600.0,
+        300.0,
+        1200.0,
+        1200.0,
+    ]
+    cost_variables.sc_mat_cost_0 = [4.8, 2.0, 1.0, 4.8, 4.8, 47.4, 1.0, 47.4, 47.4]
+    cost_variables.supercond_cost_model = 0
+    cost_variables.ucshld = 32.0
+    cost_variables.uctfbr = 1.22
+    cost_variables.uctfbus = 100.0
+    cost_variables.uctfps = 24.0
+    cost_variables.uctfsw = 1.0
+    cost_variables.ucturb = [230.0e6, 245.0e6]
+    cost_variables.ucwindpf = 465.0
+    cost_variables.ucwindtf = 480.0
+    cost_variables.ucwst = [0.0, 3.94, 5.91, 7.88]
+    cost_variables.u_unplanned_cp = 0.0
+    cost_variables.i_cp_lifetime = 0
+    cost_variables.cplife_input = 2.0

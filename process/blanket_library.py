@@ -2917,3 +2917,71 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     vout = v2 - v1
 
     return vin, vout, vin + vout
+
+
+def init_blanket_library():
+    blanket_library.hblnkt = 0.0
+    blanket_library.hshld = 0.0
+    blanket_library.dz_pf_cryostat = 0.0
+    blanket_library.hvv = 0.0
+    blanket_library.volshldi = 0.0
+    blanket_library.volshldo = 0.0
+    blanket_library.vol_vv_inboard = 0.0
+    blanket_library.vol_vv_outboard = 0.0
+    blanket_library.bldepti = 0.0
+    blanket_library.bldepto = 0.0
+    blanket_library.blwidti = 0.0
+    blanket_library.blwidto = 0.0
+    blanket_library.bllengi = 0.0
+    blanket_library.bllengo = 0.0
+    blanket_library.len_blkt_inboard_channel_total = 0.0
+    blanket_library.bzfllengi_liq = 0.0
+    blanket_library.bzfllengo_liq = 0.0
+    blanket_library.len_blkt_outboard_channel_total = 0.0
+    blanket_library.p_fw_inboard_nuclear_heat_mw = 0.0
+    blanket_library.p_fw_outboard_nuclear_heat_mw = 0.0
+    blanket_library.temp_fw_inboard_peak = 0.0
+    blanket_library.temp_fw_outboard_peak = 0.0
+    blanket_library.mflow_fw_inboard_coolant_total = 0.0
+    blanket_library.mflow_fw_outboard_coolant_total = 0.0
+    blanket_library.mflow_fw_coolant_total = 0.0
+    blanket_library.n_fw_inboard_channels = 0.0
+    blanket_library.n_fw_outboard_channels = 0.0
+    blanket_library.mflow_fw_inboard_coolant_channel = 0.0
+    blanket_library.mflow_fw_outboard_coolant_channel = 0.0
+    blanket_library.p_blkt_nuclear_heat_inboard_mw = 0.0
+    blanket_library.p_blkt_nuclear_heat_outboard_mw = 0.0
+    blanket_library.mflow_blkt_inboard_coolant = 0.0
+    blanket_library.mflow_blkt_outboard_coolant = 0.0
+    blanket_library.mfblkti_liq = 0.0
+    blanket_library.mfblkto_liq = 0.0
+    blanket_library.mfblkt_liq = 0.0
+    blanket_library.mflow_blkt_coolant_total = 0.0
+    blanket_library.mftotal = 0.0
+    blanket_library.n_blkt_inboard_channels = 0.0
+    blanket_library.n_blkt_outboard_channels = 0.0
+    blanket_library.mfblktpi = 0.0
+    blanket_library.mfblktpo = 0.0
+    blanket_library.vel_blkt_inboard_coolant = 0.0
+    blanket_library.vel_blkt_outboard_coolant = 0.0
+    blanket_library.htpmw_fwi = 0.0
+    blanket_library.htpmw_fwo = 0.0
+    blanket_library.htpmw_blkti = 0.0
+    blanket_library.htpmw_blkto = 0.0
+    blanket_library.vfblkti = 0.0
+    blanket_library.vfblkto = 0.0
+
+
+def init_primary_pumping_variables():
+    """Initialise primary pumping variables"""
+    primary_pumping_variables.gamma_he = 1.667  # Ratio of specific heats  Helium
+    primary_pumping_variables.t_in_bb = 573.13  # K
+    primary_pumping_variables.t_out_bb = 773.13  # K
+    primary_pumping_variables.p_he = 8.0e6  # Pa
+    primary_pumping_variables.dp_he = 5.5e5  # Pa
+    primary_pumping_variables.dp_fw_blkt = 1.5e5  # Pa
+    primary_pumping_variables.dp_fw = 1.5e5  # Pa
+    primary_pumping_variables.dp_blkt = 3.5e3  # Pa
+    primary_pumping_variables.dp_liq = 1.0e7  # Pa
+    primary_pumping_variables.htpmw_fw_blkt = 0.0
+    primary_pumping_variables.f_p_fw_blkt_pump = 1.0

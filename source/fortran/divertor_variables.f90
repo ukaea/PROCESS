@@ -82,32 +82,7 @@ module divertor_variables
   real(dp) :: xpertin
   !! perpendicular heat transport coefficient (m2/s)
 
-  contains
+  real(dp) :: zeffdiv
+  !! Zeff in the divertor region (if `divdum/=0`)
 
-  subroutine init_divertor_variables
-    !! Initialise divertor_variables
-    implicit none
-
-    anginc = 0.262D0
-    beta_div = 1.0D0
-    betai = 1.0D0
-    betao = 1.0D0
-    divclfr = 0.3D0
-    divdens = 1.0D4
-    dz_divertor = 0.2D0
-    divmas = 0.0D0
-    divplt = 0.035D0
-    divsur = 0.0D0
-    fdiva = 1.11D0
-    flux_exp = 2.0D0
-    hldiv = 0.0D0
-    i_hldiv = 2
-    hldivlim = 5.0D0
-    prn1 = 0.285D0
-    rconl = 0.0D0
-    rsrd = 0.0D0
-    tconl = 0.0D0
-    tdiv = 2.0D0
-    xpertin = 2.0D0
-  end subroutine init_divertor_variables
 end module divertor_variables

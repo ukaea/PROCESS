@@ -936,3 +936,39 @@ class DCLL:
             fwbs_variables.vol_vv,
             "OP ",
         )
+
+
+def init_dcll_module():
+    dcll_module.r_fci = 0.0
+    dcll_module.r_backwall = 0.0
+    dcll_module.bz_r_ib = 0.0
+    dcll_module.bz_r_ob = 0.0
+    dcll_module.f_vol_stff_plates = 0.0
+    dcll_module.f_vol_stl_bz_struct = 0.0
+    dcll_module.f_vol_stl_back_wall = 0.0
+    dcll_module.f_vol_stl_fw = 0.0
+    dcll_module.f_vol_mfbss_stl = 0.0
+    dcll_module.f_vol_mfbss_he = 0.0
+    dcll_module.f_vol_mfbss_pbli = 0.0
+    dcll_module.vol_fci = 0.0
+    dcll_module.vol_bz_struct = 0.0
+    dcll_module.vol_bz_liq = 0.0
+    dcll_module.vol_bz_liq_ib = 0.0
+    dcll_module.vol_bz_liq_ob = 0.0
+    dcll_module.vol_bw = 0.0
+    dcll_module.vol_bss = 0.0
+    dcll_module.wht_cer = 0.0
+    dcll_module.wht_stl_struct = 0.0
+    dcll_module.wht_cool_struct = 0.0
+    dcll_module.wht_bw_stl = 0.0
+    dcll_module.wht_bw_cool = 0.0
+    dcll_module.wht_mfbss_stl = 0.0
+    dcll_module.wht_mfbss_cool = 0.0
+    dcll_module.wht_mfbss_pbli = 0.0
+    dcll_module.fwmass_stl = 0.0
+    dcll_module.fwmass_cool = 0.0
+    dcll_module.mass_cool_blanket = 0.0
+    dcll_module.mass_liq_blanket = 0.0
+    dcll_module.mass_stl_blanket = 0.0
+    dcll_module.mass_segm_ib = 0.0
+    dcll_module.mass_segm_ob = 0.0

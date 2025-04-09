@@ -242,3 +242,12 @@ class Structure:
             po.ovarre(self.outfile, "Ring legs mass (kg)", "(gsm3)", gsm3, "OP ")
 
         return fncmass, aintmass, clgsmass, coldmass, gsm
+
+
+def init_structure_variables():
+    """Initialise structure variables"""
+    stv.aintmass = 0.0
+    stv.clgsmass = 0.0
+    stv.coldmass = 0.0
+    stv.fncmass = 0.0
+    stv.gsmass = 0.0
