@@ -2081,3 +2081,56 @@ def test_brookscoil(pfcoil):
     # Self-inductance of 1m Brooks coil: PROCESS formula
 
     assert (l_self / l_self_p < 1.05e0) and (l_self / l_self_p > 0.95e0)
+
+
+@pytest.mark.parametrize(
+    "dz_cs_half, dr_bore, dr_cs, expected",
+    [
+        (
+            5.0,
+            2.0,
+            1.0,
+            (
+                2.5,  # r_cs_middle
+                10.0,  # a_cs_poloidal
+                5.0,  # z_cs_coil_upper
+                -5.0,  # z_cs_coil_lower
+                2.5,  # r_cs_middle (repeated)
+                0.0,  # z_cs_coil_middle
+                3.0,  # r_cs_coil_outer
+                2.0,  # r_cs_coil_inner
+            ),
+        ),
+        (
+            10.0,
+            3.0,
+            2.0,
+            (
+                4.0,  # r_cs_middle
+                40.0,  # a_cs_poloidal
+                10.0,  # z_cs_coil_upper
+                -10.0,  # z_cs_coil_lower
+                4.0,  # r_cs_middle (repeated)
+                0.0,  # z_cs_coil_middle
+                5.0,  # r_cs_coil_outer
+                3.0,  # r_cs_coil_inner
+            ),
+        ),
+    ],
+)
+def test_set_cs_coil_geometry(pfcoil, dz_cs_half, dr_bore, dr_cs, expected):
+    """Test set_cs_coil_geometry method.
+
+    :param pfcoil: PFCoil object
+    :type pfcoil: process.pfcoil.PFCoil
+    :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+    :type dz_cs_half: float
+    :param dr_bore: Bore diameter of the central solenoid coil (m)
+    :type dr_bore: float
+    :param dr_cs: Radial thickness of the central solenoid coil (m)
+    :type dr_cs: float
+    :param expected: Expected output tuple
+    :type expected: tuple
+    """
+    result = pfcoil.set_cs_coil_geometry(dz_cs_half, dr_bore, dr_cs)
+    assert result == pytest.approx(expected)
