@@ -104,7 +104,7 @@ icc = 9
 * JUSTIFICATION: Working to target fusion
 * VARIABLES:     fusion_power (fusion power) calculated in-situ
 
-*ixc = 26
+ixc = 26
 ffuspow = 1.0
 *boundl(26) = 0.9
 *boundu(26) = 1.1
@@ -119,17 +119,17 @@ powfmax = 2500.0
 * Net-electric Power*
 *-------------------*
 
-* icc = 16
+icc = 16
 * DESCRIPTION:   Net electric power lower limit
 * JUSTIFICATION: Required to generate 100MW
 * VARIABLES:     pnetelmw (net electric power) calculated in-situ
 
-*pnetelin = 
+pnetelin = 100.0
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)
 * JUSTIFICATION: Not used in this run
 
-* ixc = 25
-* fpnetel = 1.0 
+ixc = 25
+fpnetel = 1.0 
 * boundl(25) = 
 * boundu(25) = 
 * DESCRIPTION:   f-value for net electric power (constraint equation 16)

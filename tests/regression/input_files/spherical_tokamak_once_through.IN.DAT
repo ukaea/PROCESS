@@ -21,6 +21,7 @@ icc = 11 * Radial build
 icc = 67 * Simple Radiation Wall load limit
 icc = 30 * Injection power upper limit
 icc = 46 * Equation for Ip
+icc = 16 * Net electric lower limit
 
 *---------------Iteration Variables----------------*
 
@@ -96,6 +97,7 @@ boundl(152) = 0.001
 boundu(152) = 0.1
 ixc = 154 * fne0
 boundu(154) = 0.99
+ixc = 26
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -174,6 +176,7 @@ powfmax  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
 pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 falpha_energy_confinement = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
+pnetelin = 100.0 * minimum net electric
 
 *-------------------Constraints--------------------*
 
