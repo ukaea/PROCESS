@@ -3851,14 +3851,14 @@ def init_sctfcoil_module():
     sctfcoil_module.tf_fit_t = 0.0
     sctfcoil_module.tf_fit_z = 0.0
     sctfcoil_module.tf_fit_y = 0.0
-    sctfcoil_module.tfc_current = 0.0
+    sctfcoil_module.c_tf_coil = 0.0
     sctfcoil_module.awpc = 0.0
     sctfcoil_module.awptf = 0.0
     sctfcoil_module.a_tf_steel = 0.0
     sctfcoil_module.a_tf_ins = 0.0
     sctfcoil_module.f_tf_steel = 0.0
     sctfcoil_module.f_tf_ins = 0.0
-    sctfcoil_module.h_cp_top = 0.0
+    sctfcoil_module.z_cp_top = 0.0
     sctfcoil_module.r_tf_outboard_in = 0.0
     sctfcoil_module.r_tf_outboard_out = 0.0
     sctfcoil_module.r_wp_inner = 0.0
@@ -3877,7 +3877,7 @@ def init_sctfcoil_module():
     sctfcoil_module.a_leg_ins = 0.0
     sctfcoil_module.a_leg_gr_ins = 0.0
     sctfcoil_module.a_leg_cond = 0.0
-    sctfcoil_module.theta_coil = 0.0
+    sctfcoil_module.rad_tf_coil_toroidal = 0.0
     sctfcoil_module.tan_theta_coil = 0.0
     sctfcoil_module.t_conductor_radial = 0.0
     sctfcoil_module.t_conductor_toroidal = 0.0
@@ -3890,7 +3890,7 @@ def init_sctfcoil_module():
     sctfcoil_module.t1 = 0.0
     sctfcoil_module.time2 = 0.0
     sctfcoil_module.tau2 = 0.0
-    sctfcoil_module.estotft = 0.0
+    sctfcoil_module.e_tf_magnetic_stored_total = 0.0
 
 
 def init_rebco_variables():

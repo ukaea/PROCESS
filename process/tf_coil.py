@@ -3727,7 +3727,7 @@ def init_tfcoil_variables():
     tfv.acond = 0.0
     tfv.acstf = 0.0
     tfv.insulation_area = 0.0
-    tfv.aiwp = 0.0
+    tfv.a_tf_coil_wp_turn_insulation = 0.0
     tfv.sig_tf_case_max = 6.0e8
     tfv.sig_tf_wp_max = 6.0e8
     tfv.a_tf_leg_outboard = 0.0
@@ -3735,13 +3735,13 @@ def init_tfcoil_variables():
     tfv.avwp = 0.0
     tfv.awphec = 0.0
     tfv.bcritsc = 24.0
-    tfv.bmaxtf = 0.0
+    tfv.b_tf_inboard_peak = 0.0
     tfv.bmaxtfrp = 0.0
     tfv.casestr = 0.0
     tfv.casthi = 0.0
     tfv.casthi_fraction = 0.05
     tfv.casthi_is_fraction = False
-    tfv.casths = 0.0
+    tfv.dx_tf_side_case = 0.0
     tfv.casths_fraction = 0.06
     tfv.t_conductor = 0.0
     tfv.t_cable_tf = 0.0
@@ -3799,7 +3799,7 @@ def init_tfcoil_variables():
     ]
     tfv.jwdgcrt = 0.0
     tfv.jwdgpro = 0.0
-    tfv.jwptf = 0.0
+    tfv.j_tf_wp = 0.0
     tfv.oacdcp = 0.0
     tfv.eyoung_ins = 1.0e8
     tfv.eyoung_steel = 2.05e11
@@ -3814,7 +3814,7 @@ def init_tfcoil_variables():
     tfv.poisson_ins = 0.34
     tfv.poisson_cond_axial = 0.3
     tfv.poisson_cond_trans = 0.3
-    tfv.rbmax = 0.0
+    tfv.r_b_tf_inboard_peak = 0.0
     tfv.res_tf_leg = 0.0
     tfv.toroidalgap = 1.0  # [m]
     tfv.ftoroidalgap = 1.0
@@ -3841,7 +3841,7 @@ def init_tfcoil_variables():
     tfv.time1 = 0
     tfv.tcritsc = 16.0
     tfv.tdmptf = 10.0
-    tfv.tfareain = 0.0
+    tfv.a_tf_coil_inboard = 0.0
     tfv.len_tf_bus = 300.0
     tfv.m_tf_bus = 0.0
     tfv.tfckw = 0.0
@@ -3850,7 +3850,7 @@ def init_tfcoil_variables():
     tfv.tfjtsmw = 0.0
     tfv.tfcryoarea = 0.0
     tfv.tficrn = 0.0
-    tfv.tfind = 0.0
+    tfv.ind_tf_coil = 0.0
     tfv.tfinsgap = 0.01
     tfv.tflegmw = 0.0
     tfv.rho_cp = 0.0
@@ -3870,10 +3870,10 @@ def init_tfcoil_variables():
     tfv.tfsai = 0.0
     tfv.tfsao = 0.0
     tfv.tftmp = 4.5
-    tfv.tftort = 1.0
+    tfv.dx_tf_inboard_out_toroidal = 1.0
     tfv.thicndut = 8e-4
     tfv.layer_ins = 0.0
-    tfv.thkcas = 0.3
+    tfv.dr_tf_nose_case = 0.3
     tfv.dr_tf_wp = 0.0
     tfv.thwcndut = 8e-3
     tfv.tinstf = 0.018
@@ -3885,7 +3885,7 @@ def init_tfcoil_variables():
     tfv.tmaxpro = 150.0
     tfv.tmax_croco = 200.0
     tfv.croco_quench_temperature = 0.0
-    tfv.tmpcry = 4.5
+    tfv.temp_tf_cryo = 4.5
     tfv.n_tf_turn = 0.0
     tfv.vdalw = 20.0
     tfv.vforce = 0.0
@@ -3901,9 +3901,9 @@ def init_tfcoil_variables():
     tfv.whtconal = 0.0
     tfv.whtconin = 0.0
     tfv.whtconsc = 0.0
-    tfv.whtconsh = 0.0
+    tfv.m_tf_turn_steel = 0.0
     tfv.whtgw = 0.0
-    tfv.whttf = 0.0
+    tfv.m_tf_coils_total = 0.0
     tfv.wwp1 = 0.0
     tfv.wwp2 = 0.0
     tfv.dthet[:] = 0.0
