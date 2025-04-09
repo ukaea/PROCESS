@@ -855,6 +855,10 @@ class PFCoil:
                 pfv.r_out_cst,
                 pfv.f_a_cs_steel,
                 pfv.f_a_cs_void,
+                pfv.j_cs_pulse_start,
+                pfv.j_cs_flat_top_end,
+                pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1],
+                pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1],
             )
             (
                 pfv.b_cs_peak_flat_top_end,
@@ -1217,6 +1221,10 @@ class PFCoil:
         r_out_cst: float,
         f_a_cs_steel: float,
         f_a_cs_void: float,
+        j_cs_pulse_start: float,
+        j_cs_flat_top_end: float,
+        c_cs_coil_peak_ma: float,
+        c_cs_turn_peak_input: float,
     ) -> tuple[float, float, float, float, float, float, float, float]:
         """Set the geometry of the central solenoid coil turns.
 
@@ -1230,6 +1238,14 @@ class PFCoil:
         :type f_a_cs_steel: float
         :param f_a_cs_void: Fraction of the cross-sectional area that is void
         :type f_a_cs_void: float
+        :param j_cs_pulse_start: Current density at the beginning of the pulse (A/m^2)
+        :type j_cs_pulse_start: float
+        :param j_cs_flat_top_end: Current density at the end of the flat-top (A/m^2)
+        :type j_cs_flat_top_end: float
+        :param c_cs_coil_peak_ma: Peak current in the central solenoid coil (MA)
+        :type c_cs_coil_peak_ma: float
+        :param c_cs_turn_peak_input: Peak current per turn in the central solenoid coil (A)
+        :type c_cs_turn_peak_input: float
         :return: A tuple containing:
             - n_cs_coil_turns (float): Number of turns in the central solenoid coil
             - a_cs_turn (float): Turn vertical cross-sectional area (m^2)
@@ -1246,23 +1262,15 @@ class PFCoil:
             Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
         """
-        if pfv.j_cs_pulse_start > pfv.j_cs_flat_top_end:
+        if j_cs_pulse_start > j_cs_flat_top_end:
             sgn = 1.0e0
-            pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
-                sgn * 1.0e-6 * pfv.j_cs_pulse_start * pfv.a_cs_poloidal
-            )
+            c_cs_coil_peak_ma = sgn * 1.0e-6 * j_cs_pulse_start * a_cs_poloidal
         else:
             sgn = -1.0e0
-            pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1] = (
-                sgn * 1.0e-6 * pfv.j_cs_flat_top_end * pfv.a_cs_poloidal
-            )
+            c_cs_coil_peak_ma = sgn * 1.0e-6 * j_cs_flat_top_end * a_cs_poloidal
 
         # Number of turns
-        n_cs_coil_turns = (
-            1.0e6
-            * abs(pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1])
-            / pfv.c_pf_coil_turn_peak_input[pfv.n_cs_pf_coils - 1]
-        )
+        n_cs_coil_turns = 1.0e6 * abs(c_cs_coil_peak_ma) / c_cs_turn_peak_input
 
         # Turn vertical cross-sectionnal area
         a_cs_turn = a_cs_poloidal / n_cs_coil_turns
