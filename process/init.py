@@ -823,7 +823,7 @@ def check_process(inputs):  # noqa: ARG001
         fortran.tfcoil_variables.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user
-    if fortran.tfcoil_variables.casthi < 0.1e-10:
+    if fortran.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
         fortran.tfcoil_variables.casthi_is_fraction = True
 
     # Setting the default cryo-plants efficiencies

@@ -299,7 +299,7 @@ t_precharge = 500.0
 
 fpeakb = 1.0
 bmxlim = 11.2
-casthi   = 0.06 * Inboard tf coil case inner \(plasma side) thickness (m)
+dr_tf_plasma_case   = 0.06 * Inboard tf coil case inner \(plasma side) thickness (m)
 dx_tf_side_case   = 0.05 * Inboard tf coil sidewall case thickness (m)
 cpttf    = 6.5e+04 * Tf coil current per turn (a);
 ripmax   = 0.6 * Maximum allowable toroidal field ripple amplitude

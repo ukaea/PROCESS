@@ -190,7 +190,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_graded_layers,
                 tfcoil_variables.c_tf_total,
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
@@ -1942,7 +1942,7 @@ class SuperconductingTFCoil(TFCoil):
         else:
             # Straight front case
             sctfcoil_module.a_case_front = (
-                (sctfcoil_module.r_wp_outer + tfcoil_variables.casthi) ** 2
+                (sctfcoil_module.r_wp_outer + tfcoil_variables.dr_tf_plasma_case) ** 2
                 - sctfcoil_module.r_wp_outer**2
             ) * sctfcoil_module.tan_theta_coil
 

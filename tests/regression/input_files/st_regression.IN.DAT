@@ -1039,7 +1039,7 @@ boundu(57) = 0.5
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*casthi = 0.0 
+*dr_tf_plasma_case = 0.0 
 * DESCRIPTION:   TF coil case inner thickness (m)
 * JUSTIFICATION: Not used, using casths_fraction instead
 

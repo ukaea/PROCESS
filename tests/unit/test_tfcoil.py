@@ -360,7 +360,7 @@ def test_tf_global_geometry(
 
 
 class TfCurrentParam(NamedTuple):
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     c_tf_total: Any = None
 
@@ -425,7 +425,7 @@ class TfCurrentParam(NamedTuple):
     "tfcurrentparam",
     (
         TfCurrentParam(
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             c_tf_total=0,
             r_b_tf_inboard_peak=0,
             i_tf_sup=1,
@@ -474,7 +474,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", tfcurrentparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", tfcurrentparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfcurrentparam.c_tf_total)
 
@@ -650,7 +652,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     i_cp_joints: Any = None
 
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     r_tf_outboard_in: Any = None
 
@@ -698,7 +700,7 @@ class TfFieldAndForceParam(NamedTuple):
             dr_tf_wp=0.15483000000000002,
             tfinsgap=0.01,
             i_cp_joints=1,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.0914285714285716,
             r_wp_inner=0,
             r_wp_outer=0.14708850000000001,
@@ -733,7 +735,7 @@ class TfFieldAndForceParam(NamedTuple):
             dr_tf_wp=0.14708850000000001,
             tfinsgap=0.01,
             i_cp_joints=1,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.1094285714285714,
             r_wp_inner=0,
             r_wp_outer=0.14708850000000001,
@@ -815,7 +817,9 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         tfcoil_variables, "i_cp_joints", tffieldandforceparam.i_cp_joints
     )
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", tffieldandforceparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", tffieldandforceparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "r_tf_outboard_in", tffieldandforceparam.r_tf_outboard_in
@@ -1547,7 +1551,7 @@ class StressclParam(NamedTuple):
 
     i_tf_turns_integer: Any = None
 
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     acond: Any = None
 
@@ -1685,7 +1689,7 @@ class StressclParam(NamedTuple):
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
             awphec=0.015707963267948974,
@@ -1808,7 +1812,7 @@ class StressclParam(NamedTuple):
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
             awphec=0.015707963267948974,
@@ -1994,7 +1998,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.fcoolcp,
         stressclparam.n_tf_graded_layers,
         stressclparam.c_tf_total,
-        stressclparam.casthi,
+        stressclparam.dr_tf_plasma_case,
         stressclparam.i_tf_stress_model,
         stressclparam.vforce_inboard_tot,
         stressclparam.i_tf_tresca,

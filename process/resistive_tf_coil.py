@@ -163,7 +163,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_graded_layers,
                 tfcoil_variables.c_tf_total,
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
@@ -249,14 +249,14 @@ class ResistiveTFCoil(TFCoil):
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
         sctfcoil_module.r_wp_outer = (
-            build_variables.r_tf_inboard_out - tfcoil_variables.casthi
+            build_variables.r_tf_inboard_out - tfcoil_variables.dr_tf_plasma_case
         )
 
         # Conductor layer radial thickness at centercollumn top [m]
         if physics_variables.itart == 1:
             sctfcoil_module.dr_tf_wp_top = (
                 build_variables.r_cp_top
-                - tfcoil_variables.casthi
+                - tfcoil_variables.dr_tf_plasma_case
                 - tfcoil_variables.dr_tf_nose_case
                 - build_variables.r_tf_inboard_in
             )
@@ -281,7 +281,7 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_case_front = (
             np.pi
             * (
-                (sctfcoil_module.r_wp_outer + tfcoil_variables.casthi) ** 2
+                (sctfcoil_module.r_wp_outer + tfcoil_variables.dr_tf_plasma_case) ** 2
                 - sctfcoil_module.r_wp_outer**2
             )
             / tfcoil_variables.n_tf_coils
@@ -464,7 +464,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.z_cp_top,
                 build_variables.hmax + build_variables.dr_tf_outboard,
                 tfcoil_variables.dr_tf_nose_case,
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.tinstf,
                 tfcoil_variables.thicndut,
                 tfcoil_variables.n_tf_turn,
