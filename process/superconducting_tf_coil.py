@@ -50,7 +50,8 @@ class SuperconductingTFCoil(TFCoil):
         Routine to call the superconductor module for the TF coils
         """
         self.iprint = 0
-        self.tf_global_geometry()
+        super().build_generic_tf_coil()
+
         self.tf_current()
         self.tf_coil_shape_inner()
         self.sc_tf_internal_geom(
