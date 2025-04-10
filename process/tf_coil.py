@@ -41,6 +41,7 @@ class TFCoil:
         self.outfile = ft.constants.nout  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
+        self.a_tf_coil_inboard = tfcoil_variables.a_tf_coil_inboard
 
     def build_generic_tf_coil(self):
         (
@@ -51,9 +52,17 @@ class TFCoil:
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
+            tfcoil_variables.dr_tf_plasma_case,
+            tfcoil_variables.dx_tf_side_case,
         ) = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
+            casthi_is_fraction=tfcoil_variables.casthi_is_fraction,
+            casthi_fraction=tfcoil_variables.casthi_fraction,
+            tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
+            casths_fraction=tfcoil_variables.casths_fraction,
             n_tf_coils=tfcoil_variables.n_tf_coils,
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_nose_case=build_variables.dr_tf_nose_case,
             r_tf_inboard_out=build_variables.r_tf_inboard_out,
             r_tf_inboard_in=build_variables.r_tf_inboard_in,
             r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
@@ -279,42 +288,75 @@ class TFCoil:
     def tf_global_geometry(
         self,
         i_tf_case_geom: int,
+        casthi_is_fraction: bool,
+        casthi_fraction: float,
+        tfc_sidewall_is_fraction: bool,
+        casths_fraction: float,
         n_tf_coils: int,
+        dr_tf_inboard: float,
+        dr_tf_nose_case: float,
         r_tf_inboard_out: float,
         r_tf_inboard_in: float,
         r_tf_outboard_mid: float,
         dr_tf_outboard: float,
-    ) -> tuple[float, float, float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float, float, float, float, float]:
         """
-        Calculate the global geometry of the TF coil.
+        Calculate the global geometry of the Toroidal Field (TF) coil.
 
-        This method computes the overall geometry of the Toroidal Field (TF) coil, including:
+        This method computes the overall geometry of the TF coil, including:
 
-        - Radii and toroidal plane areas.
-        - Excludes the Winding Pack (WP) geometry.
+        - Toroidal angular spacing and tangent of the angle.
+        - Cross-sectional areas of the inboard and outboard legs.
+        - Radii and widths of the inboard and outboard legs.
+        - Case thicknesses for plasma-facing and sidewall regions.
 
-        :param i_tf_case_geom: int
-            Geometry type of the TF coil case (e.g., circular or straight front case).
-        :param n_tf_coils: int
+        :param i_tf_case_geom:
+            Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
+        :type i_tf_case_geom: int
+        :param casthi_is_fraction:
+            Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
+        :type casthi_is_fraction: bool
+        :param casthi_fraction:
+            Fraction of the inboard thickness used for the plasma-facing case thickness.
+        :type casthi_fraction: float
+        :param tfc_sidewall_is_fraction:
+            Whether the sidewall case thickness is specified as a fraction of the inboard radius.
+        :type tfc_sidewall_is_fraction: bool
+        :param casths_fraction:
+            Fraction of the inboard radius used for the sidewall case thickness.
+        :type casths_fraction: float
+        :param n_tf_coils:
             Number of TF coils.
-        :param r_tf_inboard_out: float
+        :type n_tf_coils: int
+        :param dr_tf_inboard:
+            Radial thickness of the inboard leg of the TF coil [m].
+        :type dr_tf_inboard: float
+        :param dr_tf_nose_case:
+            Thickness of the inboard leg case at the nose region [m].
+        :type dr_tf_nose_case: float
+        :param r_tf_inboard_out:
             Outer radius of the inboard leg of the TF coil [m].
-        :param r_tf_inboard_in: float
+        :type r_tf_inboard_out: float
+        :param r_tf_inboard_in:
             Inner radius of the inboard leg of the TF coil [m].
-        :param r_tf_outboard_mid: float
+        :type r_tf_inboard_in: float
+        :param r_tf_outboard_mid:
             Mid-plane radius of the outboard leg of the TF coil [m].
-        :param dr_tf_outboard: float
+        :type r_tf_outboard_mid: float
+        :param dr_tf_outboard:
             Radial thickness of the outboard leg of the TF coil [m].
+        :type dr_tf_outboard: float
 
-        :returns: tuple
+        :returns:
             A tuple containing:
-            - rad_tf_coil_toroidal (float): Toroidal angle of the TF coil [radians].
-            - tan_theta_coil (float): Tangent of the toroidal angle.
-            - a_tf_coil_inboard (float): Cross-sectional area of the inboard leg of the TF coil [m²].
-            - r_tf_outboard_in (float): Inner radius of the outboard leg of the TF coil [m].
-            - r_tf_outboard_out (float): Outer radius of the outboard leg of the TF coil [m].
-            - dx_tf_inboard_out_toroidal (float): Width of the inboard leg at outside edge in the toroidal direction [m].
-            - a_tf_leg_outboard (float): Cross-sectional area of the outboard leg of the TF coil [m²].
+            - **rad_tf_coil_toroidal** (*float*): Toroidal angular spacing of each TF coil [radians].
+            - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
+            - **a_tf_coil_inboard** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
+            - **r_tf_outboard_in** (*float*): Inner radius of the outboard leg of the TF coil [m].
+            - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
+            - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
+            - **a_tf_leg_outboard** (*float*): Cross-sectional area of the outboard leg of the TF coil [m²].
+        :rtype: tuple
         """
 
         # The angular space of each TF coil in the toroidal direction [rad]
@@ -346,11 +388,27 @@ class TFCoil:
         # Outer leg geometry
         # Mid-plane inner/out radial position of the TF coil outer leg [m]
 
-        r_tf_outboard_in = r_tf_outboard_mid - dr_tf_outboard * 0.5e0
-        r_tf_outboard_out = r_tf_outboard_mid + dr_tf_outboard * 0.5e0
+        r_tf_outboard_in = r_tf_outboard_mid - (dr_tf_outboard * 0.5e0)
+        r_tf_outboard_out = r_tf_outboard_mid + (dr_tf_outboard * 0.5e0)
 
         # Area of rectangular cross-section TF outboard leg [m^2]
         a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
+
+        # Plasma facing front case thickness [m]
+        if casthi_is_fraction:
+            dr_tf_plasma_case = casthi_fraction * dr_tf_inboard
+        else:
+            dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
+
+        # Case thickness of side wall [m]
+        if tfc_sidewall_is_fraction:
+            dx_tf_side_case = (
+                casths_fraction
+                * (r_tf_inboard_in + dr_tf_nose_case)
+                * np.tan(np.pi / n_tf_coils)
+            )
+        else:
+            dx_tf_side_case = tfcoil_variables.dx_tf_side_case
 
         return (
             rad_tf_coil_toroidal,
@@ -360,24 +418,14 @@ class TFCoil:
             r_tf_outboard_out,
             dx_tf_inboard_out_toroidal,
             a_tf_leg_outboard,
+            dr_tf_plasma_case,
+            dx_tf_side_case,
         )
 
     def tf_current(self):
         """
         Calculation of the maximum B field and the corresponding TF current
         """
-        if tfcoil_variables.casthi_is_fraction:
-            tfcoil_variables.dr_tf_plasma_case = (
-                tfcoil_variables.casthi_fraction * build_variables.dr_tf_inboard
-            )
-
-        # Case thickness of side wall [m]
-        if tfcoil_variables.tfc_sidewall_is_fraction:
-            tfcoil_variables.dx_tf_side_case = (
-                tfcoil_variables.casths_fraction
-                * (build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case)
-                * np.tan(np.pi / tfcoil_variables.n_tf_coils)
-            )
 
         # Radial position of peak toroidal field [m]
         if tfcoil_variables.i_tf_sup == 1:
