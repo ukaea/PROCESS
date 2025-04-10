@@ -240,99 +240,57 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     assert pytest.approx(tfv.ppump) == cntrpst_asset.expected_ppump
 
 
-class TfGlobalGeometryParam(NamedTuple):
-    r_tf_outboard_mid: Any = None
-
-    r_cp_top: Any = None
-
-    r_tf_inboard_in: Any = None
-
-    r_tf_inboard_out: Any = None
-
-    dr_tf_outboard: Any = None
-
-    a_tf_coil_inboard: Any = None
-
-    c_tf_total: Any = None
-
-    dx_tf_inboard_out_toroidal: Any = None
-
-    n_tf_coils: Any = None
-
-    a_tf_leg_outboard: Any = None
-
-    i_tf_sup: Any = None
-
-    dztop: Any = None
-
-    i_tf_case_geom: Any = None
-
-    itart: Any = None
-
-    kappa: Any = None
-
-    rminor: Any = None
-
-    z_cp_top: Any = None
-
-    r_tf_outboard_in: Any = None
-
-    r_tf_outboard_out: Any = None
-
-    rad_tf_coil_toroidal: Any = None
-
-    tan_theta_coil: Any = None
-
-    expected_a_tf_coil_inboard: Any = None
-
-    expected_dx_tf_inboard_out_toroidal: Any = None
-
-    expected_a_tf_leg_outboard: Any = None
-
-    expected_r_tf_outboard_in: Any = None
-
-    expected_r_tf_outboard_out: Any = None
-
-    expected_theta_coil: Any = None
-
-    expected_tan_theta_coil: Any = None
-
-
 @pytest.mark.parametrize(
-    "i_tf_case_geom, n_tf_coils, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
+    "i_tf_case_geom, casthi_is_fraction, casthi_fraction, tfc_sidewall_is_fraction, casths_fraction, n_tf_coils, dr_tf_inboard, dr_tf_nose_case, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
     [
         (
-            0,
+            0,  # Circular plasma-facing front case
+            False,
+            0.0,
+            False,
+            0.0,
             16,
-            4.0,
-            3.0,
-            10.0,
+            0.5,
+            0.1,
             2.0,
+            1.5,
+            5.0,
+            0.3,
             (
                 pytest.approx(0.19634954084936207),  # rad_tf_coil_toroidal
-                pytest.approx(0.19891236737965801),  # tan_theta_coil
-                pytest.approx(21.991148575128552),  # a_tf_coil_inboard
-                pytest.approx(9.0),  # r_tf_outboard_in
-                pytest.approx(11.0),  # r_tf_outboard_out
-                pytest.approx(1.560722576129026),  # dx_tf_inboard_out_toroidal
-                pytest.approx(3.121445152258052),  # a_tf_leg_outboard
+                pytest.approx(0.198912367379658),  # tan_theta_coil
+                pytest.approx(5.497787143782138),  # a_tf_coil_inboard
+                pytest.approx(4.85),  # r_tf_outboard_in
+                pytest.approx(5.15),  # r_tf_outboard_out
+                pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
+                pytest.approx(0.2341083864193539),  # a_tf_leg_outboard
+                pytest.approx(0.0),  # dr_tf_plasma_case
+                pytest.approx(0.0),  # dx_tf_side_case
             ),
         ),
         (
-            1,
-            8,
-            5.0,
-            4.0,
-            12.0,
-            3.0,
+            1,  # Straight plasma-facing front case
+            True,
+            0.1,
+            True,
+            0.05,
+            12,
+            0.4,
+            0.05,
+            1.8,
+            1.4,
+            4.5,
+            0.25,
             (
-                pytest.approx(0.39269908169872414),  # rad_tf_coil_toroidal
-                pytest.approx(0.41421356237309503),  # tan_theta_coil
-                pytest.approx(20.445195661218065),  # a_tf_coil_inboard
-                pytest.approx(10.5),  # r_tf_outboard_in
-                pytest.approx(13.5),  # r_tf_outboard_out
-                pytest.approx(3.826834323650898),  # dx_tf_inboard_out_toroidal
-                pytest.approx(11.480502970952694),  # a_tf_leg_outboard
+                pytest.approx(0.2617993877991494),  # rad_tf_coil_toroidal
+                pytest.approx(0.2679491924311227),  # tan_theta_coil
+                pytest.approx(3.562478398964007),  # a_tf_coil_inboard
+                pytest.approx(4.375),  # r_tf_outboard_in
+                pytest.approx(4.625),  # r_tf_outboard_out
+                pytest.approx(0.9317485623690747),  # dx_tf_inboard_out_toroidal
+                pytest.approx(0.23293714059226867),  # a_tf_leg_outboard
+                pytest.approx(0.04),  # dr_tf_plasma_case
+                pytest.approx(0.019426316451256392),  # dx_tf_side_case
             ),
         ),
     ],
@@ -340,7 +298,13 @@ class TfGlobalGeometryParam(NamedTuple):
 def test_tf_global_geometry(
     tfcoil,
     i_tf_case_geom,
+    casthi_is_fraction,
+    casthi_fraction,
+    tfc_sidewall_is_fraction,
+    casths_fraction,
     n_tf_coils,
+    dr_tf_inboard,
+    dr_tf_nose_case,
     r_tf_inboard_out,
     r_tf_inboard_in,
     r_tf_outboard_mid,
@@ -350,7 +314,13 @@ def test_tf_global_geometry(
     """Test the tf_global_geometry method."""
     result = tfcoil.tf_global_geometry(
         i_tf_case_geom,
+        casthi_is_fraction,
+        casthi_fraction,
+        tfc_sidewall_is_fraction,
+        casths_fraction,
         n_tf_coils,
+        dr_tf_inboard,
+        dr_tf_nose_case,
         r_tf_inboard_out,
         r_tf_inboard_in,
         r_tf_outboard_mid,
