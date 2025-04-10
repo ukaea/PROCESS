@@ -692,7 +692,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.3156E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7457E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.4632E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6707E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.3122E+05 OP 
@@ -1855,7 +1855,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.2321E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7766E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.3536E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5744E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1884E+05 OP 
@@ -3018,7 +3018,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.1642E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.8027E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.2777E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5098E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.0995E+05 OP 
@@ -4181,7 +4181,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.1709E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.8000E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.2827E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5136E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1061E+05 OP 
@@ -5344,7 +5344,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.2348E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7782E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.3358E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5568E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1735E+05 OP 
@@ -6507,7 +6507,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.3058E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7373E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.4242E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6314E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2805E+05 OP 
@@ -7670,7 +7670,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.3152E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7350E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.4300E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6359E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2885E+05 OP 
@@ -8833,7 +8833,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.2402E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7615E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.3537E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5713E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1963E+05 OP 
@@ -9996,7 +9996,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.1680E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7870E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.2844E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5136E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1119E+05 OP 
@@ -11159,7 +11159,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.1713E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7851E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.2875E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5159E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1159E+05 OP 
@@ -12322,7 +12322,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.2448E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7599E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.3536E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5705E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1979E+05 OP 
@@ -13485,7 +13485,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.3158E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7326E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.4262E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6317E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2865E+05 OP 
@@ -14648,7 +14648,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.3202E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7305E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.4299E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6346E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2915E+05 OP 
@@ -15811,7 +15811,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.2421E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7556E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.3582E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5747E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2028E+05 OP 
@@ -16974,7 +16974,7 @@
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_ins*n_tf_coils)_______________      8.1641E-01    
  Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.7820E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (acasetf)_____________________      5.2861E-01    
- Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (casthi)______________________      6.0000E-02    
+ Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5148E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1143E+05 OP 
@@ -18054,7 +18054,7 @@ i_cs_superconductor = 1
 ***********
 
 * Inboard TF coil plasma-facing case thickness [m]
-casthi = 0.06
+dr_tf_plasma_case = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
 dx_tf_side_case = 0.05
