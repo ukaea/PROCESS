@@ -237,8 +237,8 @@
     },
     {
       "no": 46,
-      "level": 3,
-      "message": "LOADXC: Do not use dr_tf_inboard as an iteration variable if istell=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 47,
@@ -247,18 +247,18 @@
     },
     {
       "no": 48,
-      "level": 3,
-      "message": "LOADXC: Do not use dr_tf_nose_case as an iteration variable if istell=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 49,
-      "level": 3,
-      "message": "LOADXC: Do not use cpttf as an iteration variable if itfsup=0 or istell=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 50,
       "level": 3,
-      "message": "LOADXC: Do not use t_current_ramp_up as an iteration variable if i_pulsed_plant /= 1"
+      "message": "REMOVED"
     },
     {
       "no": 51,
@@ -277,18 +277,18 @@
     },
     {
       "no": 54,
-      "level": 3,
-      "message": "LOADXC: Illegal iteration variable number"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 55,
-      "level": 3,
-      "message": "LOADXC: Iteration variable is zero; change its initial value or lower bound"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 56,
-      "level": 3,
-      "message": "LOADXC: NaN error for iteration variable"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 57,
