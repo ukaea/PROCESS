@@ -27,7 +27,7 @@ class ResistiveTFCoil(TFCoil):
     def run(self, output: bool):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
-        self.tf_global_geometry()
+        super().build_generic_tf_coil()
         self.tf_current()
         self.tf_coil_shape_inner()
         self.res_tf_internal_geom()

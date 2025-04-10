@@ -42,10 +42,28 @@ class TFCoil:
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
 
+    def build_generic_tf_coil(self):
+        (
+            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.tan_theta_coil,
+            tfcoil_variables.a_tf_coil_inboard,
+            sctfcoil_module.r_tf_outboard_in,
+            sctfcoil_module.r_tf_outboard_out,
+            tfcoil_variables.dx_tf_inboard_out_toroidal,
+            tfcoil_variables.a_tf_leg_outboard,
+        ) = self.tf_global_geometry(
+            i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+        )
+
     def run(self, output):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
-        self.tf_global_geometry()
+
         self.tf_current()
         self.tf_coil_shape_inner()
 
@@ -258,79 +276,91 @@ class TFCoil:
         self.iprint = 1
         self.tfcoil(output=bool(self.iprint))
 
-    def tf_global_geometry(self):
-        """Subroutine for calculating the TF coil geometry
-        This includes:
-        - Overall geometry of coil (radii and toroidal planes area)
-        - Winding Pack NOT included
+    def tf_global_geometry(
+        self,
+        i_tf_case_geom: int,
+        n_tf_coils: int,
+        r_tf_inboard_out: float,
+        r_tf_inboard_in: float,
+        r_tf_outboard_mid: float,
+        dr_tf_outboard: float,
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """
+        Calculate the global geometry of the TF coil.
+
+        This method computes the overall geometry of the Toroidal Field (TF) coil, including:
+
+        - Radii and toroidal plane areas.
+        - Excludes the Winding Pack (WP) geometry.
+
+        :param i_tf_case_geom: int
+            Geometry type of the TF coil case (e.g., circular or straight front case).
+        :param n_tf_coils: int
+            Number of TF coils.
+        :param r_tf_inboard_out: float
+            Outer radius of the inboard leg of the TF coil [m].
+        :param r_tf_inboard_in: float
+            Inner radius of the inboard leg of the TF coil [m].
+        :param r_tf_outboard_mid: float
+            Mid-plane radius of the outboard leg of the TF coil [m].
+        :param dr_tf_outboard: float
+            Radial thickness of the outboard leg of the TF coil [m].
+
+        :returns: tuple
+            A tuple containing:
+            - rad_tf_coil_toroidal (float): Toroidal angle of the TF coil [radians].
+            - tan_theta_coil (float): Tangent of the toroidal angle.
+            - a_tf_coil_inboard (float): Cross-sectional area of the inboard leg of the TF coil [m²].
+            - r_tf_outboard_in (float): Inner radius of the outboard leg of the TF coil [m].
+            - r_tf_outboard_out (float): Outer radius of the outboard leg of the TF coil [m].
+            - dx_tf_inboard_out_toroidal (float): Width of the inboard leg at outside edge in the toroidal direction [m].
+            - a_tf_leg_outboard (float): Cross-sectional area of the outboard leg of the TF coil [m²].
         """
 
-        sctfcoil_module.rad_tf_coil_toroidal = np.pi / tfcoil_variables.n_tf_coils
-        sctfcoil_module.tan_theta_coil = np.tan(sctfcoil_module.rad_tf_coil_toroidal)
+        # The angular space of each TF coil in the toroidal direction [rad]
+        # The angular space between each coil is the same as that of the coils
 
-        # TF coil inboard legs mid-plane cross-section area (WP + casing ) [m2]
-        if tfcoil_variables.i_tf_case_geom == 0:
-            # Circular front case
-            tfcoil_variables.a_tf_coil_inboard = np.pi * (
-                build_variables.r_tf_inboard_out**2 - build_variables.r_tf_inboard_in**2
-            )
+        rad_tf_coil_toroidal = np.pi / n_tf_coils
+        tan_theta_coil = np.tan(rad_tf_coil_toroidal)
+
+        # TF coil inboard legs total mid-plane cross-section area [m^2]
+        if i_tf_case_geom == 0:
+            # Circular plasma facing front case
+            a_tf_coil_inboard = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
         else:
-            # Straight front case
-            tfcoil_variables.a_tf_coil_inboard = (
-                tfcoil_variables.n_tf_coils
-                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
-                * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
-                * build_variables.r_tf_inboard_out**2
-                - np.pi * build_variables.r_tf_inboard_in**2
+            # Straight plasma facing front case
+            a_tf_coil_inboard = (
+                n_tf_coils
+                * np.sin(rad_tf_coil_toroidal)
+                * np.cos(rad_tf_coil_toroidal)
+                * r_tf_inboard_out**2
+                - np.pi * r_tf_inboard_in**2
             )
-
-        # Vertical distance from the midplane to the top of the tapered section [m]
-        if physics_variables.itart == 1:
-            sctfcoil_module.z_cp_top = (
-                build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
-            )
-        # ---
-
-        # Outer leg geometry
-        # ---
-        # Mid-plane inner/out radial position of the TF coil outer leg [m]
-
-        sctfcoil_module.r_tf_outboard_in = (
-            build_variables.r_tf_outboard_mid - build_variables.dr_tf_outboard * 0.5e0
-        )
-        sctfcoil_module.r_tf_outboard_out = (
-            build_variables.r_tf_outboard_mid + build_variables.dr_tf_outboard * 0.5e0
-        )
 
         # TF coil width in toroidal direction at inboard leg outer edge [m]
-        # ***
-        # Sliding joints geometry
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
-            tfcoil_variables.dx_tf_inboard_out_toroidal = (
-                2.0e0
-                * build_variables.r_cp_top
-                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
-            )
 
-        # Default thickness, initially written for DEMO SC magnets
-        elif physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 1:
-            tfcoil_variables.dx_tf_inboard_out_toroidal = (
-                2.0e0
-                * build_variables.r_tf_inboard_out
-                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
-            )
-        else:
-            tfcoil_variables.dx_tf_inboard_out_toroidal = (
-                2.0e0
-                * build_variables.r_tf_inboard_out
-                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
-            )
-
-        # Area of rectangular cross-section TF outboard leg [m2]
-        tfcoil_variables.a_tf_leg_outboard = (
-            tfcoil_variables.dx_tf_inboard_out_toroidal * build_variables.dr_tf_outboard
+        dx_tf_inboard_out_toroidal = (
+            2.0e0 * r_tf_inboard_out * np.sin(rad_tf_coil_toroidal)
         )
-        # ---
+
+        # Outer leg geometry
+        # Mid-plane inner/out radial position of the TF coil outer leg [m]
+
+        r_tf_outboard_in = r_tf_outboard_mid - dr_tf_outboard * 0.5e0
+        r_tf_outboard_out = r_tf_outboard_mid + dr_tf_outboard * 0.5e0
+
+        # Area of rectangular cross-section TF outboard leg [m^2]
+        a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
+
+        return (
+            rad_tf_coil_toroidal,
+            tan_theta_coil,
+            a_tf_coil_inboard,
+            r_tf_outboard_in,
+            r_tf_outboard_out,
+            dx_tf_inboard_out_toroidal,
+            a_tf_leg_outboard,
+        )
 
     def tf_current(self):
         """
@@ -1974,6 +2004,19 @@ class TFCoil:
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
         """
+
+        # Vertical distance from the midplane to the top of the tapered section [m]
+        if physics_variables.itart == 1:
+            sctfcoil_module.z_cp_top = (
+                build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
+            )
+
+        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+            tfcoil_variables.dx_tf_inboard_out_toroidal = (
+                2.0e0
+                * build_variables.r_cp_top
+                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
+            )
 
         # Temperature margin used in calculations (K)
         tmarg = 10.0e0
