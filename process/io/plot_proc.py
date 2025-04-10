@@ -1927,6 +1927,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["dr_tf_inboard"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
+    r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
 
     if integer_turns == 1:
         turn_layers = mfile_data.data["n_layer"].get_scan(scan)
@@ -2234,6 +2236,15 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     ),
                 )
             )
+
+        # Plot a dot for the location of the peak field
+        axis.plot(
+            r_b_tf_inboard_peak,
+            0,
+            marker="o",
+            color="red",
+            label=f"Peak Field: {b_tf_inboard_peak:.2f} T",
+        )
 
         axis.minorticks_on()
         axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
