@@ -43,7 +43,7 @@ OBS_VARS = {
     "awptf": "a_tf_wp",
     "dr_tf_case_in": "dr_tf_nose_case",
     "f_tf_case_out": "casthi_fraction",
-    "dr_tf_case_out": "casthi",
+    "dr_tf_case_out": "dr_tf_plasma_case",
     "eyoung_reinforced_al": "eyoung_nibron",
     "thkwp": "dr_tf_wp",
     "leni": "t_cable",
