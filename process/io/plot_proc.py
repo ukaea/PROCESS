@@ -1915,16 +1915,16 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
     wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
     dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
-    side_case_dx = mfile_data.data["casths"].get_scan(scan)
+    side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
     wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
-    nose_thickness = mfile_data.data["thkcas"].get_scan(scan)
-    side_thickness = mfile_data.data["casths"].get_scan(scan)
+    nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
+    side_thickness = mfile_data.data["dx_tf_side_case"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
-    jwptf = round(mfile_data.data["jwptf"].get_scan(scan)) / 1e6
+    j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["dr_tf_inboard"].get_scan(scan)
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
 
@@ -2103,7 +2103,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (wp_toridal_dxbig - (2 * tinstf)),
                     color="blue",
                     label=(
-                        f"Winding pack:  \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"Winding pack:  \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 )
@@ -2175,7 +2175,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     wp_toridal_dxbig - (2 * tinstf),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n$"
+                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 ),
@@ -2229,7 +2229,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     xy=list(zip(x, y, strict=False)),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{jwptf:.4f} MA/m$^2$ \n"
+                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
                         f"$\\Delta$R= {dr_tf_wp:.4f} m \n  "
                     ),
                 )
@@ -2882,7 +2882,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("whttf/n_tf_coils", "Mass per TF coil", "kg"),
+            ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
         ]
 
     else:
@@ -2902,7 +2902,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("bmaxtf", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak", "Peak field at conductor (w. rip.)", "T"),
             ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),
@@ -3772,7 +3772,7 @@ def main(args=None):
     global wwp2
     global dr_tf_wp
     global tinstf
-    global thkcas
+    global dr_tf_nose_case
     global casthi
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
@@ -3782,7 +3782,7 @@ def main(args=None):
             wwp2 = m_file.data["wwp2"].get_scan(scan)
         dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
         tinstf = m_file.data["tinstf"].get_scan(scan)
-        thkcas = m_file.data["thkcas"].get_scan(scan)
+        dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
 
         # To be re-inergrated to resistives when in-plane stresses is integrated
         casthi = m_file.data["casthi"].get_scan(scan)

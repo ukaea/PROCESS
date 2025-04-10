@@ -26,13 +26,13 @@ class ResTfInternalGeomParam(NamedTuple):
 
     thicndut: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     dr_tf_wp: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
-    tfareain: Any = None
+    a_tf_coil_inboard: Any = None
 
     c_tf_total: Any = None
 
@@ -44,7 +44,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     casthi: Any = None
 
-    aiwp: Any = None
+    a_tf_coil_wp_turn_insulation: Any = None
 
     acasetf: Any = None
 
@@ -68,7 +68,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     expected_cdtfleg: Any = None
 
-    expected_aiwp: Any = None
+    expected_a_tf_coil_wp_turn_insulation: Any = None
 
     expected_acasetf: Any = None
 
@@ -79,16 +79,16 @@ class ResTfInternalGeomParam(NamedTuple):
         ResTfInternalGeomParam(
             n_tf_turn=0,
             thicndut=0.00080000000000000004,
-            thkcas=0,
+            dr_tf_nose_case=0,
             dr_tf_wp=0.15483000000000002,
-            tftort=0.45367650933034859,
-            tfareain=0.0753112923616783,
+            dx_tf_inboard_out_toroidal=0.45367650933034859,
+            a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
             cpttf=70000,
             cdtfleg=0,
             casthi=0.0077415000000000019,
-            aiwp=0,
+            a_tf_coil_wp_turn_insulation=0,
             acasetf=0,
             tinstf=0,
             n_tf_coils=12,
@@ -100,22 +100,22 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_n_tf_turn=1,
             expected_cpttf=2125000,
             expected_cdtfleg=421788350.27812088,
-            expected_aiwp=0.00030678028680367151,
+            expected_a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             expected_acasetf=0.00061190425043863676,
         ),
         ResTfInternalGeomParam(
             n_tf_turn=1,
             thicndut=0.00080000000000000004,
-            thkcas=0,
+            dr_tf_nose_case=0,
             dr_tf_wp=0.14708850000000001,
-            tftort=0.44435902370665786,
-            tfareain=0.0753112923616783,
+            dx_tf_inboard_out_toroidal=0.44435902370665786,
+            a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
             cpttf=2125000,
             cdtfleg=421788350.27812088,
             casthi=0.0077415000000000019,
-            aiwp=0.00030678028680367151,
+            a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             acasetf=0.00061190425043863676,
             tinstf=0,
             n_tf_coils=12,
@@ -127,7 +127,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_n_tf_turn=1,
             expected_cpttf=2125000,
             expected_cdtfleg=430664525.98439038,
-            expected_aiwp=0.00029439388680367086,
+            expected_a_tf_coil_wp_turn_insulation=0.00029439388680367086,
             expected_acasetf=0.00061190425043863676,
         ),
     ),
@@ -152,13 +152,21 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "thicndut", restfinternalgeomparam.thicndut)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", restfinternalgeomparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", restfinternalgeomparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", restfinternalgeomparam.dr_tf_wp)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", restfinternalgeomparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        restfinternalgeomparam.dx_tf_inboard_out_toroidal,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "tfareain", restfinternalgeomparam.tfareain)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_coil_inboard", restfinternalgeomparam.a_tf_coil_inboard
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "c_tf_total", restfinternalgeomparam.c_tf_total
@@ -172,7 +180,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "casthi", restfinternalgeomparam.casthi)
 
-    monkeypatch.setattr(tfcoil_variables, "aiwp", restfinternalgeomparam.aiwp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_wp_turn_insulation",
+        restfinternalgeomparam.a_tf_coil_wp_turn_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "acasetf", restfinternalgeomparam.acasetf)
 
@@ -212,7 +224,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
+    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
+    )
 
     assert tfcoil_variables.acasetf == pytest.approx(
         restfinternalgeomparam.expected_acasetf
@@ -230,7 +244,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.aiwp == pytest.approx(restfinternalgeomparam.expected_aiwp)
+    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
+    )
 
     assert tfcoil_variables.acasetf == pytest.approx(
         restfinternalgeomparam.expected_acasetf
@@ -245,8 +261,8 @@ class TfResHeatingParam(NamedTuple):
     rho_tf_leg: Any = None
     vol_cond_cp: Any = None
     n_tf_turn: Any = None
-    thkcas: Any = None
-    tftort: Any = None
+    dr_tf_nose_case: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
     len_tf_coil: Any = None
     res_tf_leg: Any = None
     temp_cp_average: Any = None
@@ -275,7 +291,7 @@ class TfResHeatingParam(NamedTuple):
     r_tf_inboard_in: Any = None
     r_tf_inboard_out: Any = None
     itart: Any = None
-    h_cp_top: Any = None
+    z_cp_top: Any = None
     is_leg_cp_temp_same: Any = None
     expected_rho_cp: Any = None
     expected_rho_tf_leg: Any = None
@@ -299,8 +315,8 @@ class TfResHeatingParam(NamedTuple):
             rho_tf_leg=0,
             vol_cond_cp=0,
             n_tf_turn=1,
-            thkcas=0,
-            tftort=0.45367650933034859,
+            dr_tf_nose_case=0,
+            dx_tf_inboard_out_toroidal=0.45367650933034859,
             len_tf_coil=15.582502857142856,
             res_tf_leg=0,
             temp_cp_average=347.13,
@@ -329,7 +345,7 @@ class TfResHeatingParam(NamedTuple):
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=0,
             expected_rho_cp=2.0721414e-08,
             expected_rho_tf_leg=2.0721414e-08,
@@ -349,8 +365,8 @@ class TfResHeatingParam(NamedTuple):
             rho_tf_leg=2.0721414e-08,
             vol_cond_cp=12.020160732580297,
             n_tf_turn=1,
-            thkcas=0,
-            tftort=0.44435902370665786,
+            dr_tf_nose_case=0,
+            dx_tf_inboard_out_toroidal=0.44435902370665786,
             len_tf_coil=15.654502857142857,
             res_tf_leg=5.647653956699231e-06,
             temp_cp_average=347.13,
@@ -379,7 +395,7 @@ class TfResHeatingParam(NamedTuple):
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             is_leg_cp_temp_same=1,
             expected_rho_cp=2.0721414e-08,
             expected_rho_tf_leg=2.0721414e-08,
@@ -426,9 +442,15 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", tfresheatingparam.n_tf_turn)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", tfresheatingparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfresheatingparam.dr_tf_nose_case
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", tfresheatingparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        tfresheatingparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_coil", tfresheatingparam.len_tf_coil)
 
@@ -508,7 +530,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
 
-    monkeypatch.setattr(sctfcoil_module, "h_cp_top", tfresheatingparam.h_cp_top)
+    monkeypatch.setattr(sctfcoil_module, "z_cp_top", tfresheatingparam.z_cp_top)
 
     monkeypatch.setattr(
         sctfcoil_module, "is_leg_cp_temp_same", tfresheatingparam.is_leg_cp_temp_same

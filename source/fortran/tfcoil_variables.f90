@@ -35,7 +35,7 @@ module tfcoil_variables
   real(dp) :: insulation_area
   !! single turn insulation area (m2)
 
-  real(dp) :: aiwp
+  real(dp) :: a_tf_coil_wp_turn_insulation
   !! winding pack turn insulation area per coil (m2)
 
   real(dp) :: sig_tf_case_max
@@ -64,7 +64,7 @@ module tfcoil_variables
   !! upper critical field (T) for Nb3Sn superconductor at zero temperature and
   !! strain (`i_tf_sc_mat=4, =bc20m`)
 
-  real(dp) :: bmaxtf
+  real(dp) :: b_tf_inboard_peak
   !! mean peak field at TF coil (T)
 
   real(dp) :: bmaxtfrp
@@ -82,14 +82,14 @@ module tfcoil_variables
   logical :: casthi_is_fraction
   !! logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)
 
-  real(dp) :: casths
+  real(dp) :: dx_tf_side_case
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
-  !! inboard TF coil sidewall case thickness as a fraction of tftort
+  !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
-  !! logical switch to make casths a fraction of TF coil thickness (`casths_fraction`)
+  !! logical switch to make dx_tf_side_case a fraction of TF coil thickness (`casths_fraction`)
 
   real(dp) :: t_conductor
   !! Conductor (cable + steel conduit) area averaged dimension [m]
@@ -322,7 +322,7 @@ module tfcoil_variables
   real(dp) :: jwdgpro
   !! allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)
 
-  real(dp) :: jwptf
+  real(dp) :: j_tf_wp
   !! winding pack engineering current density (A/m2)
 
   real(dp) :: oacdcp
@@ -378,7 +378,7 @@ module tfcoil_variables
   real(dp) :: poisson_cond_trans
   !! SC TF coil conductor Poisson's ratio in the transverse-transverse direction
 
-  real(dp) :: rbmax
+  real(dp) :: r_b_tf_inboard_peak
   !! Radius of maximum TF B-field (m)
 
   real(dp) :: res_tf_leg
@@ -388,7 +388,7 @@ module tfcoil_variables
   !! Minimal distance between two toroidal coils. (m)
 
   real(dp) :: ftoroidalgap
-  !! F-value for minimum tftort (`constraint equation 82`)
+  !! F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 
   real(dp) :: ripmax
   !! aximum allowable toroidal field ripple amplitude at plasma edge (%)
@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: tfareain
+  real(dp) :: a_tf_coil_inboard
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus
@@ -526,7 +526,7 @@ module tfcoil_variables
   real(dp) :: tficrn
   !! TF coil half-width - inner dr_bore (m)
 
-  real(dp) :: tfind
+  real(dp) :: ind_tf_coil
   !! TF coil inductance (H)
 
   real(dp) :: tfinsgap
@@ -601,7 +601,7 @@ module tfcoil_variables
   real(dp) :: tftmp
   !! peak helium coolant temperature in TF coils and PF coils (K)
 
-  real(dp) :: tftort
+  real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
   real(dp) :: thicndut
@@ -610,7 +610,7 @@ module tfcoil_variables
   real(dp) :: layer_ins
   !! Additional insulation thickness between layers (m)
 
-  real(dp) :: thkcas
+  real(dp) :: dr_tf_nose_case
   !! inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
   !! (calculated for stellarators)
 
@@ -650,7 +650,7 @@ module tfcoil_variables
   real(dp) :: croco_quench_temperature
   !! CroCo strand: Actual temp reached during a quench (K)
 
-  real(dp) :: tmpcry
+  real(dp) :: temp_tf_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
   real(dp) :: n_tf_turn
@@ -702,13 +702,13 @@ module tfcoil_variables
   real(dp) :: whtconsc
   !! superconductor mass in TF coil cable (kg/coil)
 
-  real(dp) :: whtconsh
+  real(dp) :: m_tf_turn_steel_conduit
   !! steel conduit mass in TF coil conductor (kg/coil)
 
   real(dp) :: whtgw
   !! mass of ground-wall insulation layer per coil (kg/coil)
 
-  real(dp) :: whttf
+  real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
   real(dp) :: wwp1

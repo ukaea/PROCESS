@@ -18,7 +18,8 @@ OBS_VARS = {
     "itfsup": "i_tf_sup",
     "r_tf_inleg_mid": "r_tf_inboard_mid",
     "rtot": "r_tf_outboard_mid",
-    "a_tf_inboard": "tfareain",
+    "a_tf_inboard": "a_tf_coil_inboard",
+    "tfareain": "a_tf_coil_inboard",
     "r_tf_inleg_in": "r_tf_inleg_in",
     "r_tf_inleg_out": "r_tf_inleg_out",
     "a_tf_wp": "awpc",
@@ -40,7 +41,7 @@ OBS_VARS = {
     "isumattf": "i_tf_sc_mat",
     "turnstf": "n_tf_turn",
     "awptf": "a_tf_wp",
-    "dr_tf_case_in": "thkcas",
+    "dr_tf_case_in": "dr_tf_nose_case",
     "f_tf_case_out": "casthi_fraction",
     "dr_tf_case_out": "casthi",
     "eyoung_reinforced_al": "eyoung_nibron",
@@ -291,6 +292,9 @@ OBS_VARS = {
     "xparain": None,
     "zeffdiv": None,
     "divdum": None,
+    "casths": "dx_tf_side_case",
+    "thkcas": "dr_tf_nose_case",
+    "tmpcry": "temp_tf_cryo",
 }
 
 OBS_VARS_HELP = {

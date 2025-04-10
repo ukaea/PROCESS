@@ -31,7 +31,7 @@ module sctfcoil_module
    real(dp) :: tf_fit_y
 !! Ratio of peak field with ripple to nominal axisymmetric peak field
 
-   real(dp) :: tfc_current
+   real(dp) :: c_tf_coil
 !! Current in each TF coil
 
    real(dp) :: awpc
@@ -54,7 +54,7 @@ module sctfcoil_module
    real(dp) :: f_tf_ins
 !! Inboard coil insulation fraction [-]
 
-   real(dp) :: h_cp_top
+   real(dp) :: z_cp_top
 !! Vertical distance from the midplane to the top of the tapered section [m]
 
    real(dp) :: r_tf_outboard_in
@@ -112,7 +112,7 @@ module sctfcoil_module
    real(dp) :: a_leg_cond
 !! Exact TF ouboard leg conductor area [m2]
 
-   real(dp) :: theta_coil
+   real(dp) :: rad_tf_coil_toroidal
 !! Half toroidal angular extent of a single TF coil inboard leg
 
    real(dp) :: tan_theta_coil
@@ -162,7 +162,7 @@ module sctfcoil_module
    real(dp) :: conductor_area
 !! Area of cable space inside jacket
 
-   real(dp):: T1, time2, tau2, estotft
+   real(dp):: T1, time2, tau2, e_tf_magnetic_stored_total
 ! (OBSOLETE, but leave for moment)
 ! real (kind(1.0D0)) ::croco_quench_factor
 ! real(dp):: jwdgpro_1, jwdgpro_2,  etamax

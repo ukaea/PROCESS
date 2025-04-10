@@ -152,7 +152,7 @@ class ProcessTracker:
         "pgrossmw",
         "tftmp",
         "n_tf_coils",
-        "bmaxtf",
+        "b_tf_inboard_peak",
         "vs_cs_pf_total_pulse",
         "nd_ions_total",
         "t_burn",

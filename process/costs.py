@@ -2201,7 +2201,7 @@ class Costs:
             1.0e-6
             * cost_variables.uccry
             * 4.5e0
-            / tfcoil_variables.tmpcry
+            / tfcoil_variables.temp_tf_cryo
             * heat_transport_variables.helpow**expcry
         )
 

@@ -184,7 +184,7 @@ BASELINE_LIST = [
     "vssoft",
     "vs_cs_pf_total_pulse",
     "t_burn",
-    "bmaxtf",
+    "b_tf_inboard_peak",
     "iooic",
     "tmarg",
     "tftmp",

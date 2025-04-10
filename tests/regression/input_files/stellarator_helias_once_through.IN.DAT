@@ -367,14 +367,14 @@ sig_tf_wp_max = 4.e8 * Allowable maximum shear stress (Tresca criterion) in TF c
 t_turn_tf = 0.037 * TF coil turn edge length including turn insulation [m]
 fcutfsu  = 0.7630096974258808 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 8 * Switch for superconductor material in TF coils;
-ftoroidalgap = 1. * F-value for minimum tftort (`constraint equation 82`)
+ftoroidalgap = 1. * F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 tdmptf   = 7.400147540321247 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 tftmp    = 4.5 * peak helium coolant temperature in TF coils and PF coils (K)
 thicndut = 0.001 * conduit insulation thickness (m)
-thkcas   = 0.05 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
+dr_tf_nose_case   = 0.05 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 thwcndut = 0.006 * TF coil conduit case thickness (m) (`iteration variable 58`)
 tinstf   = 0.01 * Thickness of the ground insulation layer surrounding (m)
-tmpcry   = 4.5 * coil temperature for cryogenic plant power calculation (K)
+temp_tf_cryo   = 4.5 * coil temperature for cryogenic plant power calculation (K)
 vdalw    = 12.5 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 

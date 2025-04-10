@@ -807,8 +807,8 @@ contains
       !! #=#=# consistency
       !! rmajor |  plasma major radius (m)
       !! bt     |  toroidal field on axis (T)
-      !! rbmax  |  radius of maximum toroidal field (m)
-      !! bmaxtf |  peak field at toroidal field coil (T)
+      !! r_b_tf_inboard_peak  |  radius of maximum toroidal field (m)
+      !! b_tf_inboard_peak |  peak field at toroidal field coil (T)
 
       !! This constraint is depreciated
 
@@ -1331,9 +1331,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpeakb : input real : f-value for maximum toroidal field
       !! bmxlim : input real : maximum peak toroidal field (T)
-      !! bmaxtf : input real : mean peak field at TF coil (T)
+      !! b_tf_inboard_peak : input real : mean peak field at TF coil (T)
       use constraint_variables, only: fpeakb, bmxlim
-      use tfcoil_variables, only: bmaxtf
+      use tfcoil_variables, only: b_tf_inboard_peak
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1341,9 +1341,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  bmaxtf/bmxlim - 1.0D0 * fpeakb
+      tmp_cc =  b_tf_inboard_peak/bmxlim - 1.0D0 * fpeakb
       tmp_con = bmxlim * (1.0D0 - tmp_cc)
-      tmp_err = bmaxtf * tmp_cc
+      tmp_err = b_tf_inboard_peak * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'T'
 
@@ -1590,9 +1590,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fiooic : input real : f-value for TF coil operating current / critical
       !! jwdgcrt : input real : critical current density for winding pack (A/m2)
-      !! jwptf : input real : winding pack current density (A/m2)
+      !! j_tf_wp : input real : winding pack current density (A/m2)
       use constraint_variables, only: fiooic
-      use tfcoil_variables, only: jwdgcrt, jwptf
+      use tfcoil_variables, only: jwdgcrt, j_tf_wp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1601,9 +1601,9 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       if (fiooic > 0.7D0) call report_error(285)
-      tmp_cc =  jwptf/jwdgcrt - 1.0D0 * fiooic
+      tmp_cc =  j_tf_wp/jwdgcrt - 1.0D0 * fiooic
       tmp_con = jwdgcrt * (1.0D0 - tmp_cc)
-      tmp_err = jwptf * tmp_cc
+      tmp_err = j_tf_wp * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
@@ -1651,9 +1651,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fjprot : input real : f-value for TF coil winding pack current density
       !! jwdgpro : input real : allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)
-      !! jwptf : input real : winding pack current density (A/m2)
+      !! j_tf_wp : input real : winding pack current density (A/m2)
       use constraint_variables, only: fjprot
-      use tfcoil_variables, only: jwdgpro, jwptf
+      use tfcoil_variables, only: jwdgpro, j_tf_wp
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1661,9 +1661,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  jwptf/jwdgpro - 1.0D0 * fjprot
+      tmp_cc =  j_tf_wp/jwdgpro - 1.0D0 * fjprot
       tmp_con = jwdgpro
-      tmp_err =  jwptf - jwdgpro
+      tmp_err =  j_tf_wp - jwdgpro
       tmp_symbol = '<'
       tmp_units = 'A/m2'
 
@@ -3096,14 +3096,14 @@ contains
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
       !! residual error in physical units; output string; units string
-      !! toroidalgap > tftort
+      !! toroidalgap > dx_tf_inboard_out_toroidal
       !! #=# tfcoil
-      !! #=#=# tftort, ftoroidalgap
+      !! #=#=# dx_tf_inboard_out_toroidal, ftoroidalgap
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ftoroidalgap : input real : f-value for constraint toroidalgap > tftort
+      !! ftoroidalgap : input real : f-value for constraint toroidalgap > dx_tf_inboard_out_toroidal
       !! toroidalgap : input real :  minimal gap between two stellarator coils
-      !! tftort : input real :  total toroidal width of a tf coil
-      use tfcoil_variables, only: tftort,ftoroidalgap,toroidalgap
+      !! dx_tf_inboard_out_toroidal : input real :  total toroidal width of a tf coil
+      use tfcoil_variables, only: dx_tf_inboard_out_toroidal,ftoroidalgap,toroidalgap
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3111,9 +3111,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - ftoroidalgap * toroidalgap/tftort
+      tmp_cc =  1.0D0 - ftoroidalgap * toroidalgap/dx_tf_inboard_out_toroidal
       tmp_con = toroidalgap
-      tmp_err = toroidalgap - tftort/ftoroidalgap
+      tmp_err = toroidalgap - dx_tf_inboard_out_toroidal/ftoroidalgap
       tmp_symbol = '<'
       tmp_units = 'm'
 

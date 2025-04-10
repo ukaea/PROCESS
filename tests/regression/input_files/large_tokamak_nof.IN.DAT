@@ -226,9 +226,9 @@ fvsbrnni = 0.4
 ixc = 56
 tdmptf = 25.0
 
-* thkcas [m]
+* dr_tf_nose_case [m]
 ixc = 57
-thkcas = 0.5
+dr_tf_nose_case = 0.5
 
 * TF coil conduit thickness [m]
 ixc = 58
@@ -568,7 +568,7 @@ i_cs_superconductor = 1
 casthi = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
-casths = 0.05
+dx_tf_side_case = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
 ripmax = 0.6

@@ -186,7 +186,7 @@ module numerics
   !!  <LI> (79) Peak CS field upper limit (itv  149 fb_cs_limit_max)
   !!  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
-  !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
+  !!  <LI> (82) toroidalgap >  dx_tf_inboard_out_toroidal constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
   !!  <LI> (84) Lower limit for beta (itv 173 fbeta_min)
   !!  <LI> (85) Constraint for CP lifetime
@@ -262,7 +262,7 @@ module numerics
   !! <LI> (54) ftmargtf (f-value for equation 36)
   !! <LI> (55) NOT USED
   !! <LI> (56) tdmptf
-  !! <LI> (57) thkcas
+  !! <LI> (57) dr_tf_nose_case
   !! <LI> (58) thwcndut
   !! <LI> (59) fcutfsu
   !! <LI> (60) cpttf
@@ -364,7 +364,7 @@ module numerics
   !! <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
   !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
-  !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
+  !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)
   !! <LI> (161) fbeta_min (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
@@ -377,7 +377,7 @@ module numerics
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
   !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
-  !! <LI> (172) casths : TF side case thickness [m]
+  !! <LI> (172) dx_tf_side_case : TF side case thickness [m]
   !! <LI> (173) f_deuterium : Deuterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
@@ -551,7 +551,7 @@ contains
       'Peak CS field upper limit        ', &
       'pdivt lower limit                ', &
       'ne0 > neped                      ', &
-      'toroidalgap >  tftort            ', &
+      'toroidalgap > dx_tf_inboard_out_t', &
       'available_space > required_space ', &
       'beta > beta_min                  ', &
       'CP lifetime                      ', &

@@ -309,7 +309,7 @@ This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-e
 
 **Input**: `MFILE.DAT`
 
-**Output** `scan_var1_vs_var2.pdf` (var1 by default is `bmaxtf`, var2 specified by user)
+**Output** `scan_var1_vs_var2.pdf` (var1 by default is `b_tf_inboard_peak`, var2 specified by user)
 
 ### Usage
 

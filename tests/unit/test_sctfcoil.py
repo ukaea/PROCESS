@@ -397,7 +397,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tfin: Any = None
 
-    bmaxtf: Any = None
+    b_tf_inboard_peak: Any = None
 
     expected_tf_fit_t: Any = None
 
@@ -421,7 +421,7 @@ class PeakTfWithRippleParam(NamedTuple):
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
-            bmaxtf=11.717722779177526,
+            b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -436,7 +436,7 @@ class PeakTfWithRippleParam(NamedTuple):
             wwp1=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
-            bmaxtf=11.717722779177526,
+            b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -469,7 +469,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         wwp1=peaktfwithrippleparam.wwp1,
         dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
         tfin=peaktfwithrippleparam.tfin,
-        bmaxtf=peaktfwithrippleparam.bmaxtf,
+        b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
     )
 
     assert sctfcoil_module.tf_fit_t == pytest.approx(
@@ -500,9 +500,9 @@ class TfWpGeomParam(NamedTuple):
 
     casthi: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     wwp1: Any = None
 
@@ -528,7 +528,7 @@ class TfWpGeomParam(NamedTuple):
 
     a_ground_ins: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -562,8 +562,8 @@ class TfWpGeomParam(NamedTuple):
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
-            thkcas=0.52465000000000006,
-            casths=0.05000000000000001,
+            dr_tf_nose_case=0.52465000000000006,
+            dx_tf_side_case=0.05000000000000001,
             wwp1=0,
             wwp2=0,
             tinstf=0.0080000000000000019,
@@ -576,7 +576,7 @@ class TfWpGeomParam(NamedTuple):
             t_wp_toroidal=0,
             t_wp_toroidal_av=0,
             a_ground_ins=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
@@ -595,8 +595,8 @@ class TfWpGeomParam(NamedTuple):
             r_tf_inboard_out=4.20194118510911,
             dr_tf_wp=0.54261087836601019,
             casthi=0.060000000000000012,
-            thkcas=0.52465000000000006,
-            casths=0.05000000000000001,
+            dr_tf_nose_case=0.52465000000000006,
+            dx_tf_side_case=0.05000000000000001,
             wwp1=1.299782604942499,
             wwp2=0,
             tinstf=0.0080000000000000019,
@@ -609,7 +609,7 @@ class TfWpGeomParam(NamedTuple):
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             a_ground_ins=0.028582295732936136,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
@@ -651,9 +651,13 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tfwpgeomparam.casthi)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", tfwpgeomparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfwpgeomparam.dr_tf_nose_case
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "casths", tfwpgeomparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", tfwpgeomparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "wwp1", tfwpgeomparam.wwp1)
 
@@ -681,7 +685,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "a_ground_ins", tfwpgeomparam.a_ground_ins)
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfwpgeomparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module, "rad_tf_coil_toroidal", tfwpgeomparam.rad_tf_coil_toroidal
+    )
 
     monkeypatch.setattr(sctfcoil_module, "tan_theta_coil", tfwpgeomparam.tan_theta_coil)
 
@@ -725,11 +731,11 @@ class TfCaseGeomParam(NamedTuple):
 
     a_tf_leg_outboard: Any = None
 
-    tfareain: Any = None
+    a_tf_coil_inboard: Any = None
 
     n_tf_coils: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     casthi: Any = None
 
@@ -751,7 +757,7 @@ class TfCaseGeomParam(NamedTuple):
 
     a_case_nose: Any = None
 
-    theta_coil: Any = None
+    rad_tf_coil_toroidal: Any = None
 
     tan_theta_coil: Any = None
 
@@ -777,9 +783,9 @@ class TfCaseGeomParam(NamedTuple):
             acasetf=0,
             acasetfo=0,
             a_tf_leg_outboard=1.9805354702921749,
-            tfareain=27.308689677971632,
+            a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -790,7 +796,7 @@ class TfCaseGeomParam(NamedTuple):
             t_lat_case_av=0,
             a_case_front=0,
             a_case_nose=0,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
@@ -804,9 +810,9 @@ class TfCaseGeomParam(NamedTuple):
             acasetf=1.0015169239205168,
             acasetfo=1.2752592893394648,
             a_tf_leg_outboard=1.9805354702921749,
-            tfareain=27.308689677971632,
+            a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
-            casths=0.05000000000000001,
+            dx_tf_side_case=0.05000000000000001,
             casthi=0.060000000000000012,
             dr_tf_wp=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -817,7 +823,7 @@ class TfCaseGeomParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
             a_case_nose=0.70261616505511615,
-            theta_coil=0.19634954084936207,
+            rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
@@ -850,11 +856,15 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "a_tf_leg_outboard", tfcasegeomparam.a_tf_leg_outboard
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfareain", tfcasegeomparam.tfareain)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_coil_inboard", tfcasegeomparam.a_tf_coil_inboard
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcasegeomparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "casths", tfcasegeomparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", tfcasegeomparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "casthi", tfcasegeomparam.casthi)
 
@@ -880,7 +890,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "a_case_nose", tfcasegeomparam.a_case_nose)
 
-    monkeypatch.setattr(sctfcoil_module, "theta_coil", tfcasegeomparam.theta_coil)
+    monkeypatch.setattr(
+        sctfcoil_module, "rad_tf_coil_toroidal", tfcasegeomparam.rad_tf_coil_toroidal
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "tan_theta_coil", tfcasegeomparam.tan_theta_coil
@@ -919,7 +931,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     t_turn_tf: Any = None
 
-    tfc_current: Any = None
+    c_tf_coil: Any = None
 
     t_wp_toroidal: Any = None
 
@@ -983,7 +995,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             tfinsgap=0.01,
             t_conductor=0,
             t_turn_tf=0,
-            tfc_current=14805350.287500001,
+            c_tf_coil=14805350.287500001,
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0,
             t_conductor_toroidal=0,
@@ -1017,7 +1029,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             tfinsgap=0.01,
             t_conductor=0.052553108427885735,
             t_turn_tf=0.056579413904423038,
-            tfc_current=14805350.287500001,
+            c_tf_coil=14805350.287500001,
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0.046661087836601015,
             t_conductor_toroidal=0.059189130247124938,
@@ -1072,9 +1084,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "t_turn_tf", tfintegerturngeomparam.t_turn_tf)
 
-    monkeypatch.setattr(
-        sctfcoil_module, "tfc_current", tfintegerturngeomparam.tfc_current
-    )
+    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfintegerturngeomparam.c_tf_coil)
 
     monkeypatch.setattr(
         sctfcoil_module, "t_wp_toroidal", tfintegerturngeomparam.t_wp_toroidal
@@ -1195,7 +1205,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     i_tf_sc_mat: Any = None
 
-    jwptf: Any = None
+    j_tf_wp: Any = None
 
     thwcndut: Any = None
 
@@ -1236,7 +1246,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0,
             t_cable=0,
             i_tf_sc_mat=5,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             thwcndut=0.0080000000000000019,
             thicndut=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
@@ -1262,7 +1272,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.049532469413859428,
             t_cable=0.031932469413859424,
             i_tf_sc_mat=5,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             thwcndut=0.0080000000000000019,
             thicndut=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
@@ -1288,7 +1298,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
-            jwptf=2.301e07,
+            j_tf_wp=2.301e07,
             thwcndut=8.015e-03,
             thicndut=8.0e-4,
             expected_t_conductor=5.712e-02,
@@ -1314,7 +1324,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
-            jwptf=2.673e07,
+            j_tf_wp=2.673e07,
             thwcndut=8.148e-03,
             thicndut=8.0e-4,
             expected_t_conductor=0.058296,
@@ -1386,7 +1396,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     acstf, acndttf, insulation_area, n_tf_turn = sctfcoil.tf_averaged_turn_geom(
         i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
-        jwptf=tfaveragedturngeomparam.jwptf,
+        j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         thwcndut=tfaveragedturngeomparam.thwcndut,
         thicndut=tfaveragedturngeomparam.thicndut,
     )
@@ -1427,11 +1437,11 @@ class TfWpCurrentsParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    jwptf: Any = None
+    j_tf_wp: Any = None
 
     awptf: Any = None
 
-    expected_jwptf: Any = None
+    expected_j_tf_wp: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1440,16 +1450,16 @@ class TfWpCurrentsParam(NamedTuple):
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            jwptf=0,
+            j_tf_wp=0,
             awptf=0.60510952642236249,
-            expected_jwptf=26493137.688284047,
+            expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            jwptf=26493137.688284047,
+            j_tf_wp=26493137.688284047,
             awptf=0.60510952642236249,
-            expected_jwptf=26493137.688284047,
+            expected_j_tf_wp=26493137.688284047,
         ),
     ),
 )
@@ -1470,13 +1480,13 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfwpcurrentsparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "jwptf", tfwpcurrentsparam.jwptf)
+    monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
     monkeypatch.setattr(sctfcoil_module, "awptf", tfwpcurrentsparam.awptf)
 
     sctfcoil.tf_wp_currents()
 
-    assert tfcoil_variables.jwptf == pytest.approx(tfwpcurrentsparam.expected_jwptf)
+    assert tfcoil_variables.j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
 
 
 def test_vv_stress_on_quench():
@@ -1569,7 +1579,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
-    monkeypatch.setattr(sctfcoil_module, "tfc_current", 83200 * 192)  # Section 3
+    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", 83200 * 192)  # Section 3
 
     monkeypatch.setattr(
         build_variables, "r_vv_inboard_out", 4.45 + (build_variables.dr_vv_inboard / 2)

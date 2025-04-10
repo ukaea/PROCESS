@@ -67,13 +67,13 @@ class RippleAmplitudeParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
-    casths: Any = None
+    dx_tf_side_case: Any = None
 
     dr_tf_wp: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     casths_fraction: Any = None
 
@@ -198,10 +198,10 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             rmajor=8.8901000000000003,
             tinstf=0.0080000000000000019,
             n_tf_coils=16,
-            tftort=1,
-            casths=0.05000000000000001,
+            dx_tf_inboard_out_toroidal=1,
+            dx_tf_side_case=0.05000000000000001,
             dr_tf_wp=0.54261087836601019,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
@@ -219,10 +219,10 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             rmajor=8.8901000000000003,
             tinstf=0.0080000000000000019,
             n_tf_coils=16,
-            tftort=1,
-            casths=0.05000000000000001,
+            dx_tf_inboard_out_toroidal=1,
+            dx_tf_side_case=0.05000000000000001,
             dr_tf_wp=0.54261087836601019,
-            thkcas=0.52465000000000006,
+            dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
@@ -261,13 +261,21 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", rippleamplitudeparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        rippleamplitudeparam.dx_tf_inboard_out_toroidal,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "casths", rippleamplitudeparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_side_case", rippleamplitudeparam.dx_tf_side_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", rippleamplitudeparam.dr_tf_wp)
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", rippleamplitudeparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", rippleamplitudeparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "casths_fraction", rippleamplitudeparam.casths_fraction
@@ -322,7 +330,7 @@ class PortszParam(NamedTuple):
 
     rmajor: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     n_tf_coils: Any = None
 
@@ -343,7 +351,7 @@ class PortszParam(NamedTuple):
             beamwd=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
-            tftort=1.6395161177915356,
+            dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
             expected_rtanbeam=9.3346050000000016,
             expected_rtanmax=14.735821603386416,
@@ -357,7 +365,7 @@ class PortszParam(NamedTuple):
             beamwd=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
-            tftort=1.6395161177915356,
+            dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
             expected_rtanbeam=9.3346050000000016,
             expected_rtanmax=14.735821603386416,
@@ -398,7 +406,11 @@ def test_portsz(portszparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rmajor", portszparam.rmajor)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", portszparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        portszparam.dx_tf_inboard_out_toroidal,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", portszparam.n_tf_coils)
 

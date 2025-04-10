@@ -306,7 +306,7 @@ def main(args=None):
         14: "fiooic",
         15: "fjprot",
         16: "rmajor",
-        17: "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
+        17: "b_tf_inboard_peak",  # bmxlim the maximum T field upper limit is the scan variable
         18: "gammax",
         19: "boundl(16)",
         20: "cnstv.t_burn_min",

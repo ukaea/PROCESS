@@ -76,7 +76,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     itart: Any = None
 
-    whttf: Any = None
+    m_tf_coils_total: Any = None
 
     whttflgs: Any = None
 
@@ -148,7 +148,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             f_a_fw_coolant_outboard=0,
             fusion_power=1986.0623241661431,
             itart=0,
-            whttf=19649856.627845347,
+            m_tf_coils_total=19649856.627845347,
             whttflgs=0,
             verbose=0,
             armour_density=0,
@@ -195,7 +195,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             f_a_fw_coolant_outboard=0.31415926535897931,
             fusion_power=1985.4423932312809,
             itart=0,
-            whttf=19662548.210142396,
+            m_tf_coils_total=19662548.210142396,
             whttflgs=0,
             verbose=0,
             armour_density=13202.434141839649,
@@ -319,7 +319,11 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
 
-    monkeypatch.setattr(tfcoil_variables, "whttf", nuclearheatingmagnetsparam.whttf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coils_total",
+        nuclearheatingmagnetsparam.m_tf_coils_total,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "whttflgs", nuclearheatingmagnetsparam.whttflgs
@@ -1156,7 +1160,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
 
 class StCpAngleFractionParam(NamedTuple):
-    h_cp_top: Any = None
+    z_cp_top: Any = None
 
     r_cp_top: Any = None
 
@@ -1171,14 +1175,14 @@ class StCpAngleFractionParam(NamedTuple):
     "stcpanglefractionparam",
     (
         StCpAngleFractionParam(
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             r_cp_top=0.92643571428571436,
             r_cp_mid=0.20483000000000001,
             rmajor=1.7000000000000002,
             expected_f_geom_cp=0.08375588625302606,
         ),
         StCpAngleFractionParam(
-            h_cp_top=2.6714285714285717,
+            z_cp_top=2.6714285714285717,
             r_cp_top=0.92643571428571436,
             r_cp_mid=0.20483000000000001,
             rmajor=1.7000000000000002,
@@ -1197,7 +1201,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
 
     f_geom_cp = ccfe_hcpb.st_cp_angle_fraction(
-        h_cp_top=stcpanglefractionparam.h_cp_top,
+        z_cp_top=stcpanglefractionparam.z_cp_top,
         r_cp_top=stcpanglefractionparam.r_cp_top,
         r_cp_mid=stcpanglefractionparam.r_cp_mid,
         rmajor=stcpanglefractionparam.rmajor,

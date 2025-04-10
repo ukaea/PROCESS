@@ -483,7 +483,7 @@ class CCFE_HCPB:
                 e
                 * np.exp(-a * ccfe_hcpb_module.x_blanket)
                 * np.exp(-b * ccfe_hcpb_module.x_shield)
-                * tfcoil_variables.whttf
+                * tfcoil_variables.m_tf_coils_total
             )
 
         # Total heating (MW)
@@ -528,8 +528,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "total mass of the TF coils (kg)",
-                "(whttf)",
-                tfcoil_variables.whttf,
+                "(m_tf_coils_total)",
+                tfcoil_variables.m_tf_coils_total,
             )
 
     def nuclear_heating_fw(self):
@@ -865,7 +865,7 @@ class CCFE_HCPB:
                     "OP ",
                 )
 
-    def st_cp_angle_fraction(self, h_cp_top, r_cp_mid, r_cp_top, rmajor):
+    def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
         """Author : S. Kahn, CCFE, Culham science centre
         Estimates the CP angular solid angle coverage fration
         Equation (1-3) from
@@ -873,7 +873,7 @@ class CCFE_HCPB:
         Initial, but undocumented calculation kept as commented section
         without any talor expansion approximation
 
-        :param h_cp_top: Centrepost shield half height [m]
+        :param z_cp_top: Centrepost shield half height [m]
         :param r_cp_top: Centrepost top radius [m]
         :param r_cp_mid: Centrepost mid-plane radius [m]
         :param rmajor: Plasma major radius [m]
@@ -911,7 +911,7 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_1 = 1.0 / np.sqrt(
-                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             phy_cp_calc = phy_cp_calc + d_phy_cp
@@ -922,12 +922,12 @@ class CCFE_HCPB:
                 int_calc_3 = 0.0
 
             int_calc_2 = 1.0 / np.sqrt(
-                h_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
+                z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
             cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
 
-        cp_sol_angle = cp_sol_angle * 4.0 * h_cp_top
+        cp_sol_angle = cp_sol_angle * 4.0 * z_cp_top
 
         # Solid angle fraction covered by the CP (OUTPUT) [-]
         return 0.25 * cp_sol_angle / np.pi

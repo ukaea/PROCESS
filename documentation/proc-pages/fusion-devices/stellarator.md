@@ -200,7 +200,7 @@ This file needs to be prepared by hand or can be written automatically by the pr
 Alternatively `istell = 1,2,3,4,5` allow for pre-selected stellarator machines.
 
 ![alt text](../images/stellartor_windingpack.png "Thingy")
-*Figure 3: Differences of the stellarator coil cross section in PROCESS compared to the tokamak description. Note the identical `thkcas` around the cable area.*
+*Figure 3: Differences of the stellarator coil cross section in PROCESS compared to the tokamak description. Note the identical `dr_tf_nose_case` around the cable area.*
 
 The stellarator coil model[^6] uses scaling aspects based on a reference calculation of the stellarator configuration, using numerical calculations at a reference point.
 Examples for these calculations are inductances, peak field calculations or stellarator forces.
@@ -209,7 +209,7 @@ The fully three-dimensional shape of the coils is assumed to be fixed, but the s
 
 The stellarator coils are assumed to be superconducting - no resistive coil calculations are performed. The critical field at the superconductor is calculated using circular approximations for the coils in the inductance and field calculations, and the limit is enforced automatically. All superconductor materials that are available for tokamaks are also available for stellarators.
 
-The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `thkcas`, no. 57; `cpttf`, no. 60 and `tftort`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`thkcas` is required as input); the code will stop with an error message of this is attempted.
+The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `dr_tf_nose_case`, no. 57; `cpttf`, no. 60 and `dx_tf_inboard_out_toroidal`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`dr_tf_nose_case` is required as input); the code will stop with an error message of this is attempted.
 The conduit insulation thickness (`thicndut`), as well as the steel thickness around each conductor (`thwcndut`) should be given as input parameters together with the dimension of the conductor area (`t_turn_tf`).
 
 
@@ -224,12 +224,12 @@ i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 sig_tf_wp_max = 4.e8 * Maximal allowable Stress level on Ground insulation for a simple stellarator coil stress module (Pa)
 fcutfsu = 0.7 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
-tmpcry = 4.75 * Temperature in TF coils, required for plant efficiency (K)
+temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 vdalw = 12.64 * Max voltage across tf coil during quench (kV)
 tdmptf = 20 * Dump time (should be iteration variable)
-thkcas = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
+dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
 t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
 thicndut = 0.0015 * Conduit insulation thickness (one side) (m)
 thwcndut = 0.006 * thickness of steel around each conductor (one side) (m)

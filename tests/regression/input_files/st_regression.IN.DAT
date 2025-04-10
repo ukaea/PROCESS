@@ -953,7 +953,7 @@ i_tf_sc_mat = 9
 icc = 33 
 * DESCRIPTION:   TF superconductor operating current / critical current density
 * JUSTIFICATION: A quench must be avoided
-* VARIABLES:     jwptf & jwdgcrt (critical current) calculated in-situ
+* VARIABLES:     j_tf_wp & jwdgcrt (critical current) calculated in-situ
 
 ixc = 50
 fiooic = 1.0
@@ -967,7 +967,7 @@ boundu(50) = 1.0
 *icc = 35
 * DESCRIPTION:   Constraint equation for TF coil J_wp/J_prot upper limit (SCTF)
 * JUSTIFICATION: Turned off, do not care about winding pack current density
-* VARIABLES:     jwptf calculated in-situ
+* VARIABLES:     j_tf_wp calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1031,7 +1031,7 @@ i_tf_case_geom = 0
 * JUSTIFICATION: Not set, assuming default
 
 ixc = 57
-thkcas = 0.4
+dr_tf_nose_case = 0.4
 boundl(57) = 0.01 
 boundu(57) = 0.5 
 * DESCRIPTION:   Inboard TF Coil Case Outer (Nose case) thickness (m)
@@ -1059,7 +1059,7 @@ casths_fraction = 0.65
 
 * Use one or the other *
 
-*casths = 0.05 
+*dx_tf_side_case = 0.05 
 * DESCRIPTION:   TF coil case sidewall thickness (m)
 * JUSTIFICATION: Not used, using casths_fraction instead
 
@@ -1374,7 +1374,7 @@ boundu(49) = 1.0
 *icc = 25
 * DESCRIPTION:   Constraint equation for peak toroidal field upper limit 
 * JUSTIFICATION: Turned off, dont care toridal field limit
-* VARIABLES:     bmaxtf calculated in-situ
+* VARIABLES:     b_tf_inboard_peak calculated in-situ
 
 * bmxlim  = 
 * DESCRIPTION:   Maximum peak toroidal field (T) (`constraint equation 25`) (default = 12)
@@ -1400,7 +1400,7 @@ boundu(49) = 1.0
 * DESCRIPTION:   TF coil cryo-plant efficiency
 * JUSTIFICATION: Not yet set, assuming default
 
-tmpcry = 20.0 
+temp_tf_cryo = 20.0 
 * DESCRIPTION:   Coil temperature for cryogenic plant power calculation (K)
 * JUSTIFICATION: 
 
