@@ -240,252 +240,97 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     assert pytest.approx(tfv.ppump) == cntrpst_asset.expected_ppump
 
 
-class TfGlobalGeometryParam(NamedTuple):
-    r_tf_outboard_mid: Any = None
-
-    r_cp_top: Any = None
-
-    r_tf_inboard_in: Any = None
-
-    r_tf_inboard_out: Any = None
-
-    dr_tf_outboard: Any = None
-
-    a_tf_coil_inboard: Any = None
-
-    c_tf_total: Any = None
-
-    dx_tf_inboard_out_toroidal: Any = None
-
-    n_tf_coils: Any = None
-
-    a_tf_leg_outboard: Any = None
-
-    i_tf_sup: Any = None
-
-    dztop: Any = None
-
-    i_tf_case_geom: Any = None
-
-    itart: Any = None
-
-    kappa: Any = None
-
-    rminor: Any = None
-
-    z_cp_top: Any = None
-
-    r_tf_outboard_in: Any = None
-
-    r_tf_outboard_out: Any = None
-
-    rad_tf_coil_toroidal: Any = None
-
-    tan_theta_coil: Any = None
-
-    expected_a_tf_coil_inboard: Any = None
-
-    expected_dx_tf_inboard_out_toroidal: Any = None
-
-    expected_a_tf_leg_outboard: Any = None
-
-    expected_r_tf_outboard_in: Any = None
-
-    expected_r_tf_outboard_out: Any = None
-
-    expected_theta_coil: Any = None
-
-    expected_tan_theta_coil: Any = None
-
-
 @pytest.mark.parametrize(
-    "tfglobalgeometryparam",
-    (
-        TfGlobalGeometryParam(
-            r_tf_outboard_mid=16.519405859443332,
-            r_cp_top=4.20194118510911,
-            r_tf_inboard_in=2.9939411851091102,
-            r_tf_inboard_out=4.20194118510911,
-            dr_tf_outboard=1.208,
-            a_tf_coil_inboard=0,
-            c_tf_total=0,
-            dx_tf_inboard_out_toroidal=1,
-            n_tf_coils=16,
-            a_tf_leg_outboard=0,
-            i_tf_sup=1,
-            dztop=0,
-            i_tf_case_geom=0,
-            itart=0,
-            kappa=1.8480000000000001,
-            rminor=2.8677741935483869,
-            z_cp_top=0,
-            r_tf_outboard_in=0,
-            r_tf_outboard_out=0,
-            rad_tf_coil_toroidal=0,
-            tan_theta_coil=0,
-            expected_a_tf_coil_inboard=27.308689677971632,
-            expected_dx_tf_inboard_out_toroidal=1.6395161177915356,
-            expected_a_tf_leg_outboard=1.9805354702921749,
-            expected_r_tf_outboard_in=15.915405859443332,
-            expected_r_tf_outboard_out=17.123405859443331,
-            expected_theta_coil=0.19634954084936207,
-            expected_tan_theta_coil=0.19891236737965801,
+    "i_tf_case_geom, casthi_is_fraction, casthi_fraction, tfc_sidewall_is_fraction, casths_fraction, n_tf_coils, dr_tf_inboard, dr_tf_nose_case, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
+    [
+        (
+            0,  # Circular plasma-facing front case
+            False,
+            0.0,
+            False,
+            0.0,
+            16,
+            0.5,
+            0.1,
+            2.0,
+            1.5,
+            5.0,
+            0.3,
+            (
+                pytest.approx(0.19634954084936207),  # rad_tf_coil_toroidal
+                pytest.approx(0.198912367379658),  # tan_theta_coil
+                pytest.approx(5.497787143782138),  # a_tf_coil_inboard
+                pytest.approx(4.85),  # r_tf_outboard_in
+                pytest.approx(5.15),  # r_tf_outboard_out
+                pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
+                pytest.approx(0.2341083864193539),  # a_tf_leg_outboard
+                pytest.approx(0.0),  # dr_tf_plasma_case
+                pytest.approx(0.0),  # dx_tf_side_case
+            ),
         ),
-        TfGlobalGeometryParam(
-            r_tf_outboard_mid=17.063351291812893,
-            r_cp_top=4.4822055399518357,
-            r_tf_inboard_in=2.9538679176819831,
-            r_tf_inboard_out=4.4822055399518357,
-            dr_tf_outboard=1.5283376222698528,
-            a_tf_coil_inboard=35.703669036223495,
-            c_tf_total=241812532.66279837,
-            dx_tf_inboard_out_toroidal=1.7488698442633552,
-            n_tf_coils=16,
-            a_tf_leg_outboard=2.6728635794409041,
-            i_tf_sup=1,
-            dztop=0,
-            i_tf_case_geom=0,
-            itart=0,
-            kappa=1.8480000000000001,
-            rminor=2.9620024998595755,
-            z_cp_top=0,
-            r_tf_outboard_in=16.299182480677967,
-            r_tf_outboard_out=17.827520102947819,
-            rad_tf_coil_toroidal=0.19634954084936207,
-            tan_theta_coil=0.19891236737965801,
-            expected_a_tf_coil_inboard=35.703669036223495,
-            expected_dx_tf_inboard_out_toroidal=1.7488698442633552,
-            expected_a_tf_leg_outboard=2.6728635794409041,
-            expected_r_tf_outboard_in=16.299182480677967,
-            expected_r_tf_outboard_out=17.827520102947819,
-            expected_theta_coil=0.19634954084936207,
-            expected_tan_theta_coil=0.19891236737965801,
+        (
+            1,  # Straight plasma-facing front case
+            True,
+            0.1,
+            True,
+            0.05,
+            12,
+            0.4,
+            0.05,
+            1.8,
+            1.4,
+            4.5,
+            0.25,
+            (
+                pytest.approx(0.2617993877991494),  # rad_tf_coil_toroidal
+                pytest.approx(0.2679491924311227),  # tan_theta_coil
+                pytest.approx(3.562478398964007),  # a_tf_coil_inboard
+                pytest.approx(4.375),  # r_tf_outboard_in
+                pytest.approx(4.625),  # r_tf_outboard_out
+                pytest.approx(0.9317485623690747),  # dx_tf_inboard_out_toroidal
+                pytest.approx(0.23293714059226867),  # a_tf_leg_outboard
+                pytest.approx(0.04),  # dr_tf_plasma_case
+                pytest.approx(0.019426316451256392),  # dx_tf_side_case
+            ),
         ),
-    ),
+    ],
 )
-def test_tf_global_geometry(tfglobalgeometryparam, monkeypatch, tfcoil):
-    """
-    Automatically generated Regression Unit Test for tf_global_geometry.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param tfglobalgeometryparam: the data used to mock and assert in this test.
-    :type tfglobalgeometryparam: tfglobalgeometryparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-
-    :param sctfcoil: initialised SuperconductingTFCoil object
-    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
-    """
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfglobalgeometryparam.r_tf_outboard_mid
+def test_tf_global_geometry(
+    tfcoil,
+    i_tf_case_geom,
+    casthi_is_fraction,
+    casthi_fraction,
+    tfc_sidewall_is_fraction,
+    casths_fraction,
+    n_tf_coils,
+    dr_tf_inboard,
+    dr_tf_nose_case,
+    r_tf_inboard_out,
+    r_tf_inboard_in,
+    r_tf_outboard_mid,
+    dr_tf_outboard,
+    expected,
+):
+    """Test the tf_global_geometry method."""
+    result = tfcoil.tf_global_geometry(
+        i_tf_case_geom,
+        casthi_is_fraction,
+        casthi_fraction,
+        tfc_sidewall_is_fraction,
+        casths_fraction,
+        n_tf_coils,
+        dr_tf_inboard,
+        dr_tf_nose_case,
+        r_tf_inboard_out,
+        r_tf_inboard_in,
+        r_tf_outboard_mid,
+        dr_tf_outboard,
     )
-
-    monkeypatch.setattr(build_variables, "r_cp_top", tfglobalgeometryparam.r_cp_top)
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfglobalgeometryparam.r_tf_inboard_in
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfglobalgeometryparam.r_tf_inboard_out
-    )
-
-    monkeypatch.setattr(
-        build_variables, "dr_tf_outboard", tfglobalgeometryparam.dr_tf_outboard
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "a_tf_coil_inboard", tfglobalgeometryparam.a_tf_coil_inboard
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "c_tf_total", tfglobalgeometryparam.c_tf_total
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_inboard_out_toroidal",
-        tfglobalgeometryparam.dx_tf_inboard_out_toroidal,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coils", tfglobalgeometryparam.n_tf_coils
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "a_tf_leg_outboard", tfglobalgeometryparam.a_tf_leg_outboard
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfglobalgeometryparam.i_tf_sup)
-
-    monkeypatch.setattr(tfcoil_variables, "dztop", tfglobalgeometryparam.dztop)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "i_tf_case_geom", tfglobalgeometryparam.i_tf_case_geom
-    )
-
-    monkeypatch.setattr(physics_variables, "itart", tfglobalgeometryparam.itart)
-
-    monkeypatch.setattr(physics_variables, "kappa", tfglobalgeometryparam.kappa)
-
-    monkeypatch.setattr(physics_variables, "rminor", tfglobalgeometryparam.rminor)
-
-    monkeypatch.setattr(sctfcoil_module, "z_cp_top", tfglobalgeometryparam.z_cp_top)
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_in", tfglobalgeometryparam.r_tf_outboard_in
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_out", tfglobalgeometryparam.r_tf_outboard_out
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "rad_tf_coil_toroidal",
-        tfglobalgeometryparam.rad_tf_coil_toroidal,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfglobalgeometryparam.tan_theta_coil
-    )
-
-    tfcoil.tf_global_geometry()
-
-    assert tfcoil_variables.a_tf_coil_inboard == pytest.approx(
-        tfglobalgeometryparam.expected_a_tf_coil_inboard
-    )
-
-    assert tfcoil_variables.dx_tf_inboard_out_toroidal == pytest.approx(
-        tfglobalgeometryparam.expected_dx_tf_inboard_out_toroidal
-    )
-
-    assert tfcoil_variables.a_tf_leg_outboard == pytest.approx(
-        tfglobalgeometryparam.expected_a_tf_leg_outboard
-    )
-
-    assert sctfcoil_module.r_tf_outboard_in == pytest.approx(
-        tfglobalgeometryparam.expected_r_tf_outboard_in
-    )
-
-    assert sctfcoil_module.r_tf_outboard_out == pytest.approx(
-        tfglobalgeometryparam.expected_r_tf_outboard_out
-    )
-
-    assert sctfcoil_module.rad_tf_coil_toroidal == pytest.approx(
-        tfglobalgeometryparam.expected_theta_coil
-    )
-
-    assert sctfcoil_module.tan_theta_coil == pytest.approx(
-        tfglobalgeometryparam.expected_tan_theta_coil
-    )
+    assert result == expected
 
 
 class TfCurrentParam(NamedTuple):
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     c_tf_total: Any = None
 
@@ -550,7 +395,7 @@ class TfCurrentParam(NamedTuple):
     "tfcurrentparam",
     (
         TfCurrentParam(
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             c_tf_total=0,
             r_b_tf_inboard_peak=0,
             i_tf_sup=1,
@@ -599,7 +444,9 @@ def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", tfcurrentparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", tfcurrentparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfcurrentparam.c_tf_total)
 
@@ -775,7 +622,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     i_cp_joints: Any = None
 
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     r_tf_outboard_in: Any = None
 
@@ -823,7 +670,7 @@ class TfFieldAndForceParam(NamedTuple):
             dr_tf_wp=0.15483000000000002,
             tfinsgap=0.01,
             i_cp_joints=1,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.0914285714285716,
             r_wp_inner=0,
             r_wp_outer=0.14708850000000001,
@@ -858,7 +705,7 @@ class TfFieldAndForceParam(NamedTuple):
             dr_tf_wp=0.14708850000000001,
             tfinsgap=0.01,
             i_cp_joints=1,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.1094285714285714,
             r_wp_inner=0,
             r_wp_outer=0.14708850000000001,
@@ -940,7 +787,9 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         tfcoil_variables, "i_cp_joints", tffieldandforceparam.i_cp_joints
     )
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", tffieldandforceparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", tffieldandforceparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "r_tf_outboard_in", tffieldandforceparam.r_tf_outboard_in
@@ -1672,7 +1521,7 @@ class StressclParam(NamedTuple):
 
     i_tf_turns_integer: Any = None
 
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     acond: Any = None
 
@@ -1810,7 +1659,7 @@ class StressclParam(NamedTuple):
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
             awphec=0.015707963267948974,
@@ -1933,7 +1782,7 @@ class StressclParam(NamedTuple):
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
-            casthi=0.060000000000000012,
+            dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
             awphec=0.015707963267948974,
@@ -2119,7 +1968,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.fcoolcp,
         stressclparam.n_tf_graded_layers,
         stressclparam.c_tf_total,
-        stressclparam.casthi,
+        stressclparam.dr_tf_plasma_case,
         stressclparam.i_tf_stress_model,
         stressclparam.vforce_inboard_tot,
         stressclparam.i_tf_tresca,

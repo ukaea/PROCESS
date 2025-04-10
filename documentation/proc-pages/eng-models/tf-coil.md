@@ -58,7 +58,7 @@ The TF coils are assumed to be supporting each other against the net centering f
 #### TF coil inboard radial size
 
 <p style='text-align: justify;'> 
-  Following the geometry and its parametrization presented in <em>Figure 1</em>, the TF total thickness <em>dr_tf_inboard</em> \( \left( \Delta R_\mathrm{TF} \right) \) is related with the inner and outer case radial thicknesses (<em>dr_tf_nose_case</em>, \(  \Delta R_\mathrm{case}^\mathrm{in} \) and <em>casthi</em>, \( \Delta R_\mathrm{case}^\mathrm{out} \) respectively) and the WP radial thickness <em>dr_tf_wp</em> \(\Delta R_\mathrm{WP}\) by the following equation :
+  Following the geometry and its parametrization presented in <em>Figure 1</em>, the TF total thickness <em>dr_tf_inboard</em> \( \left( \Delta R_\mathrm{TF} \right) \) is related with the inner and outer case radial thicknesses (<em>dr_tf_nose_case</em>, \(  \Delta R_\mathrm{case}^\mathrm{in} \) and <em>dr_tf_plasma_case</em>, \( \Delta R_\mathrm{case}^\mathrm{out} \) respectively) and the WP radial thickness <em>dr_tf_wp</em> \(\Delta R_\mathrm{WP}\) by the following equation :
 </p>
 
 $$ 
@@ -95,7 +95,7 @@ $$
     **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case`. The user can either directly specify `dx_tf_side_case` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_wp_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case` value will be overwritten.
   </p>
 - <p style='text-align: justify;'> 
-    **Plasma side casing:** this section corresponds to the case section separating the WP with the plasma. As the geometry of this section is rounded, its thickness is set by its minimal value `casthi` (user input). This parameter can also be defined as a fraction of the total TF coil thickness `dr_tf_inboard` using `casthi_fraction`. If the `casthi_fraction` parametrization is used, the `casthi` value will be overwritten.
+    **Plasma side casing:** this section corresponds to the case section separating the WP with the plasma. As the geometry of this section is rounded, its thickness is set by its minimal value `dr_tf_plasma_case` (user input). This parameter can also be defined as a fraction of the total TF coil thickness `dr_tf_inboard` using `casthi_fraction`. If the `casthi_fraction` parametrization is used, the `dr_tf_plasma_case` value will be overwritten.
   </p>
 
 Two different plasma side casing shapes can be selected using the `i_tf_case_geom` integer switch:
@@ -270,7 +270,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
 
 - **The bucking cylinder:** radial thickness `dr_tf_nose_case` (iteration variable 57), is present to support the centering forces.  Its presence is however not mandatory and can be can be removed setting TODO.
 - **The conductor area:** radial thickness `dr_tf_wp` (iteration variable 140). Ground insulation, corresponding to the dark grey area in *Figure 6* is included in this section by convention.
-- **The outer cylinder:** radial thickness `casthi`. This cylinder plays no role in the structural models in PROCESS.
+- **The outer cylinder:** radial thickness `dr_tf_plasma_case`. This cylinder plays no role in the structural models in PROCESS.
   
 <figure>
     <center>
@@ -1262,8 +1262,8 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `dr_tf_nose_case` | Nose/inner case radial thickness | ixc = 57 | 0.3 | m |
 | `dx_tf_side_case` | Minimal sidewall casing thickness | - | - | m |
 | `casths_fraction` | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value | - | 0.03 | - |
-| `casthi` | Minimal plasma side casing thickness | - | - | m |
-| `casthi_fraction` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value | - | 0.05 | - |
+| `dr_tf_plasma_case` | Minimal plasma side casing thickness | - | - | m |
+| `casthi_fraction` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value | - | 0.05 | - |
 | `i_tf_case_geom` | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing | - | 0 | - |
 | `i_tf_wp_geom` | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal | - | Integer turn : 0  <br> otherwise : 1  | - |
 | `tinstf` | WP ground insulation thickness | - | 0.018 | m |

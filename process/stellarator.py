@@ -2392,7 +2392,9 @@ class Stellarator:
                 fact[0]
                 * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
-                * np.exp(-decay[5, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[5, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Total nuclear heating (MW)
@@ -2407,7 +2409,9 @@ class Stellarator:
                 fact[0]
                 * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
-                * np.exp(-decay[5, ishmat] * (dshoeq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[5, ishmat] * (dshoeq + tfcoil_variables.dr_tf_plasma_case)
+                )
                 * tfcoil_variables.tfsao
                 * (1.0 - np.exp(-decay[0, ishmat] * wpthk))
                 / decay[0, ishmat]
@@ -2424,7 +2428,7 @@ class Stellarator:
             pheci = (
                 htheci
                 * tfcoil_variables.tfsai
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.casthi))
+                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             pheco = (
@@ -2433,7 +2437,7 @@ class Stellarator:
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshoeq)
                 * tfcoil_variables.tfsao
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.casthi))
+                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             ptfi = ptfiwp + pheci
@@ -2454,7 +2458,9 @@ class Stellarator:
                 * fpsdt
                 * fact[2]
                 * physics_variables.pflux_fw_neutron_mw
-                * np.exp(-decay[2, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[2, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Maximum neutron fluence in superconductor (n/m**2)
@@ -2464,7 +2470,9 @@ class Stellarator:
                 * fact[3]
                 * physics_variables.pflux_fw_neutron_mw
                 * coef[3, ishmat]
-                * np.exp(-decay[3, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[3, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Atomic displacement in copper stabilizer
@@ -2474,7 +2482,9 @@ class Stellarator:
                 * fact[4]
                 * physics_variables.pflux_fw_neutron_mw
                 * coef[4, ishmat]
-                * np.exp(-decay[4, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[4, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
         return (
@@ -2676,7 +2686,7 @@ class Stellarator:
         # case_thickness_constant = tfcoil_variables.dr_tf_nose_case #0.2e0 # #? Leave this constant for now... Check this## Should be scaled with forces I think.
         #  For now assumed to be constant in a bolted plate model.
         #
-        tfcoil_variables.casthi = (
+        tfcoil_variables.dr_tf_plasma_case = (
             tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness outboard distance (radial)
         # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
@@ -2743,13 +2753,13 @@ class Stellarator:
         build_variables.dr_tf_inboard = (
             tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
-            + tfcoil_variables.casthi
+            + tfcoil_variables.dr_tf_plasma_case
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of inboard leg in radial direction
         build_variables.dr_tf_outboard = (
             tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
-            + tfcoil_variables.casthi
+            + tfcoil_variables.dr_tf_plasma_case
             + 2.0e0 * tfcoil_variables.tinstf
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
         tfcoil_variables.a_tf_leg_outboard = (
@@ -4010,8 +4020,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case thickness, plasma side (m)",
-            "(casthi)",
-            tfcoil_variables.casthi,
+            "(dr_tf_plasma_case)",
+            tfcoil_variables.dr_tf_plasma_case,
         )
         po.ovarre(
             self.outfile,
