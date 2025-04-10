@@ -302,7 +302,7 @@ OBS_VARS = {
     "etanbi": "eta_beam_injector_wall_plug",
     "f_tritium_beam": "f_tritium_beam",
     "forbitloss": "f_p_beam_orbit_loss",
-    "gammaecrh": "eta_cd_norm_ecrh",
+    "gamma_ecrh": "eta_cd_norm_ecrh",
     "harnum": "n_ecrh_harmonic",
     "nbshield": "dx_beam_shield",
     "nbshinefmax": "f_p_beam_shine_through_max",
@@ -313,6 +313,7 @@ OBS_VARS = {
     "iefrffix": "i_hcd_secondary",
     "irfcd": "i_hcd_calculations",
     "wave_mode": "i_ecrh_wave_mode",
+    "pheatfix": "p_hcd_secondary_extra_heat_mw",
 }
 
 OBS_VARS_HELP = {

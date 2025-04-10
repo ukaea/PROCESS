@@ -56,7 +56,7 @@ $$
 \mathtt{dent} = n_{\text{ion}} \times \mathtt{f_beam_tritium}
 $$
 
-Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$
+Power split to the ions and electrons is calculated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$
 
 ## Current drive efficiency | `etanb2()`
 
