@@ -300,7 +300,7 @@ OBS_VARS = {
     "etaech": "eta_ecrh_injector_wall_plug",
     "etalh": "eta_lowhyb_injector_wall_plug",
     "etanbi": "eta_beam_injector_wall_plug",
-    "f_tritium_beam": "f_tritium_beam",
+    "f_tritium_beam": "f_beam_tritium",
     "forbitloss": "f_p_beam_orbit_loss",
     "gamma_ecrh": "eta_cd_norm_ecrh",
     "harnum": "n_ecrh_harmonic",
