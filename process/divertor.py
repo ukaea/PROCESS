@@ -1,10 +1,10 @@
 import math
 
 from process import process_output as po
+from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import divertor_variables as dv
-from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 
@@ -140,8 +140,9 @@ class Divertor:
         #  Angle of diagonal divertor plate from horizontal
 
         if dz_xpoint_divertor <= 0.0e0:
-            eh.fdiags[0] = dz_xpoint_divertor
-            eh.report_error(22)
+            raise ProcessValueError(
+                "Non-positive dz_xpoint_divertor", dz_xpoint_divertor=dz_xpoint_divertor
+            )
 
         theta = math.atan(dz_divertor / (r2 - r1))
 

@@ -4,6 +4,7 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
@@ -549,7 +550,7 @@ class CCFE_HCPB:
         )
 
         if fwbs_variables.p_fw_nuclear_heat_total_mw < 0:
-            raise RuntimeError(
+            raise ProcessValueError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.p_fw_nuclear_heat_total_mw = },
                 {physics_variables.fusion_power = }, {fwbs_variables.m_fw_total = }"""
             )

@@ -9,6 +9,7 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.exceptions import ProcessValueError
 from process.fortran import (
     blanket_library,
     build_variables,
@@ -111,7 +112,9 @@ class BlanketLibrary:
                 - build_variables.dz_vv_lower
             )
         else:
-            raise ValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
+            raise ProcessValueError(
+                f"{icomponent=} is invalid, it must be either 0,1,2"
+            )
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
@@ -451,7 +454,7 @@ class BlanketLibrary:
             or fwbs_variables.den_fw_coolant <= 0
             or np.isnan(fwbs_variables.den_fw_coolant)
         ):
-            raise RuntimeError(
+            raise ProcessValueError(
                 f"Error in primary_coolant_properties. {fwbs_variables.den_fw_coolant = }"
             )
         if (
@@ -459,7 +462,7 @@ class BlanketLibrary:
             or fwbs_variables.den_blkt_coolant <= 0
             or np.isnan(fwbs_variables.den_blkt_coolant)
         ):
-            raise RuntimeError(
+            raise ProcessValueError(
                 f"Error in primary_coolant_properties. {fwbs_variables.den_blkt_coolant = }"
             )
 
@@ -1466,7 +1469,9 @@ class BlanketLibrary:
                 flow_density * fwbs_variables.a_bz_liq * fwbs_variables.b_bz_liq
             )
 
-        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
+        raise ProcessValueError(
+            f"i_channel_shape ={i_channel_shape} is an invalid option."
+        )
 
     def thermo_hydraulic_model(self, output: bool):
         """
@@ -2579,7 +2584,9 @@ class BlanketLibrary:
                 / (fwbs_variables.a_bz_liq + fwbs_variables.b_bz_liq)
             )
 
-        raise ValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
+        raise ProcessValueError(
+            f"i_channel_shape ={i_channel_shape} is an invalid option."
+        )
 
     def elbow_coeff(self, r_elbow, ang_elbow, lamda, dh):
         """Function calculates elbow bends coefficients for pressure drop
@@ -2605,7 +2612,7 @@ class BlanketLibrary:
         elif ang_elbow > 100:
             a = 0.7 + (0.35 * np.sin((ang_elbow / 90.0) * (np.pi / 180.0)))
         else:
-            raise ValueError(
+            raise ProcessValueError(
                 "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
             )
 
@@ -2720,7 +2727,9 @@ class BlanketLibrary:
 
         # Error for pdrop too large
         if fp >= 1:
-            eh.report_error(279)
+            raise ProcessValueError(
+                "Pressure drops in coolant are too large to be feasible"
+            )
 
         if output:
             po.oheadr(self.outfile, "Mechanical Pumping Power for " + label)

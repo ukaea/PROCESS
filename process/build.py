@@ -4,6 +4,7 @@ import numpy as np
 
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -2039,9 +2040,11 @@ class Build:
         )
 
         if build_variables.a_fw_outboard <= 0.0e0:
-            error_handling.fdiags[0] = fwbs_variables.f_ster_div_single
-            error_handling.fdiags[1] = fwbs_variables.f_a_fw_hcd
-            error_handling.report_error(61)
+            raise ProcessValueError(
+                "fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area",
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+                f_a_fw_hcd=fwbs_variables.f_a_fw_hcd,
+            )
 
         #
 

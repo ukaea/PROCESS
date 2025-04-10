@@ -7,6 +7,7 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
@@ -1758,7 +1759,7 @@ class TFCoil:
             abs(r_tf_inboard_in) < np.finfo(float(r_tf_inboard_in)).eps
             and i_tf_stress_model != 2
         ):
-            raise ValueError("r_tf_inboard_in is ~= 0", 245)
+            raise ProcessValueError("r_tf_inboard_in is ~= 0", 245)
 
         # TODO: following is no longer used/needed?
         # if tfcoil_variables.acstf >= 0.0e0:

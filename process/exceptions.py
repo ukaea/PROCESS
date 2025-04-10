@@ -24,4 +24,4 @@ class ProcessValidationError(ProcessError):
 
 
 class ProcessValueError(ProcessError, ValueError):
-    pass
+    """A ValueError in a PROCESS model."""

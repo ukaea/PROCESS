@@ -14,6 +14,7 @@ import process.physics_functions as physics_funcs
 from process import (
     process_output as po,
 )
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
@@ -486,7 +487,7 @@ def calculate_current_coefficient_todd(
         return base_scaling
     if model == 2:
         return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
-    raise ValueError(f"model = {model} is an invalid option")
+    raise ProcessValueError(f"model = {model} is an invalid option")
 
 
 @nb.jit(nopython=True, cache=True)
@@ -1520,7 +1521,7 @@ def _trapped_particle_fraction_sauter(
             * (np.sqrt((1.0 - eps) / (1.0 + eps)))
         )
 
-    raise RuntimeError(f"fit={fit} is not valid. Must be 1, 2, or 3")
+    raise ProcessValueError(f"fit={fit} is not valid. Must be 1, 2, or 3")
 
 
 class Physics:
@@ -1988,8 +1989,10 @@ class Physics:
                     current_drive_variables.bscf_gi_II
                 )
             else:
-                error_handling.idiags[0] = physics_variables.i_bootstrap_current
-                error_handling.report_error(75)
+                raise ProcessValueError(
+                    "Illegal value of i_bootstrap_current",
+                    i_bootstrap_current=physics_variables.i_bootstrap_current,
+                )
 
             physics_module.err242 = 0
             if (
@@ -2688,8 +2691,9 @@ class Physics:
         """
 
         if i_density_limit < 1 or i_density_limit > 7:
-            error_handling.idiags[0] = i_density_limit
-            error_handling.report_error(79)
+            raise ProcessValueError(
+                "Illegal value for i_density_limit", i_density_limit=i_density_limit
+            )
 
         dlimit = np.empty((8,))
 
@@ -3310,7 +3314,7 @@ class Physics:
 
         # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
         if i_plasma_current != 8 and triang < 0.0:
-            raise ValueError(
+            raise ProcessValueError(
                 f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
             )
 
@@ -3361,7 +3365,7 @@ class Physics:
         elif i_plasma_current == 9:
             fq = calculate_current_coefficient_fiesta(eps, kappa, triang)
         else:
-            raise ValueError(f"Invalid value {i_plasma_current=}")
+            raise ProcessValueError(f"Invalid value {i_plasma_current=}")
 
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
@@ -3517,8 +3521,9 @@ class Physics:
             elif physics_variables.idivrt == 2:
                 po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
             else:
-                error_handling.idiags[0] = physics_variables.idivrt
-                po.report_error(85)
+                raise ProcessValueError(
+                    "Illegal value of idivrt", idivrt=physics_variables.idivrt
+                )
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
 
@@ -3633,8 +3638,10 @@ class Physics:
                     "OP ",
                 )
             else:
-                error_handling.idiags[0] = physics_variables.i_plasma_geometry
-                po.report_error(86)
+                raise ProcessValueError(
+                    "Illegal value of i_plasma_geometry",
+                    i_plasma_geometry=physics_variables.i_plasma_geometry,
+                )
 
             if physics_variables.i_plasma_geometry in [4, 5, 7]:
                 po.ovarrf(
@@ -6114,12 +6121,9 @@ class Physics:
 
         # Crude check for NaN errors or other illegal values.
         if np.isnan(aj) or np.isnan(alfpnw) or np.isnan(alftnw) or aj < 0:
-            error_handling.fdiags[0] = aj
-            error_handling.fdiags[1] = alfpnw
-            error_handling.fdiags[2] = alftnw
-            error_handling.fdiags[3] = aj
-
-            error_handling.report_error(76)
+            raise ProcessValueError(
+                "Illegal profile value found", aj=aj, alfpnw=alfpnw, alftnw=alftnw
+            )
 
         # Ratio of ionic charge to electron charge
 
@@ -7250,7 +7254,7 @@ class Physics:
         # ==========================================================================
         # Scaling removed
         elif i_confinement_time == 25:
-            raise ValueError("Scaling removed")
+            raise ProcessValueError("Scaling removed")
         # ==========================================================================
 
         # ELM-free: ITERH-97P
@@ -7620,8 +7624,10 @@ class Physics:
         # ==========================================================================
 
         else:
-            error_handling.idiags[0] = i_confinement_time
-            error_handling.report_error(81)
+            raise ProcessValueError(
+                "Illegal value for i_confinement_time",
+                i_confinement_time=i_confinement_time,
+            )
 
         # Apply H-factor correction to chosen scaling
         t_electron_energy_confinement = hfact * t_electron_confinement

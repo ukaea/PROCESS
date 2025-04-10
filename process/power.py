@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from process import process_output as po
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -2534,7 +2535,7 @@ class Power:
 
             return 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
 
-        raise ValueError(
+        raise ProcessValueError(
             f"secondary_cycle_liq ={fwbs_variables.secondary_cycle_liq} is an invalid option."
         )
 
