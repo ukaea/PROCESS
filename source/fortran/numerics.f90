@@ -383,7 +383,7 @@ module numerics
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
 
-  character(len=14), dimension(:), allocatable :: name_xc
+  character*14, dimension(ipnvars) :: name_xc
 
   real(dp) :: sqsumsq
   !!  sqsumsq : sqrt of the sum of the square of the constraint residuals
@@ -597,8 +597,6 @@ contains
     xcm = 0.0D0
     xcs = 0.0D0
     vlam = 0.0D0
-    if (allocated(name_xc)) deallocate(name_xc)
-    allocate(name_xc(1))
     name_xc = ""
   end subroutine init_numerics
 
