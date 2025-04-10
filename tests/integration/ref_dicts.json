@@ -1272,7 +1272,7 @@
         "calpha": null,
         "capcost": 0.0,
         "casestr": 0.0,
-        "casthi": 0.0,
+        "dr_tf_plasma_case": 0.0,
         "casthi_fraction": 0.05,
         "casthi_is_fraction": ".false.",
         "dx_tf_side_case": 0.0,
@@ -9024,9 +9024,9 @@
         "calpha": "",
         "capcost": "total capital cost including interest (M$)",
         "casestr": "case strain",
-        "casthi": "inboard TF coil case plasma side thickness (m) (calculated for stellarators)",
+        "dr_tf_plasma_case": "inboard TF coil case plasma side thickness (m) (calculated for stellarators)",
         "casthi_fraction": "inboard TF coil case plasma side thickness as a fraction of dr_tf_inboard",
-        "casthi_is_fraction": "logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)",
+        "casthi_is_fraction": "logical switch to make dr_tf_plasma_case a fraction of TF coil thickness (`casthi_fraction`)",
         "dx_tf_side_case": "inboard TF coil sidewall case thickness (m) (calculated for stellarators)",
         "casths_fraction": "inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal",
         "cboot": "bootstrap current fraction multiplier (`i_bootstrap_current=1`)",
@@ -11723,7 +11723,7 @@
             "lb": 0.215,
             "ub": 0.99
         },
-        "casthi": {
+        "dr_tf_plasma_case": {
             "lb": 0.0,
             "ub": 1.0
         },
@@ -19334,7 +19334,7 @@
             "b_tf_inboard_peak",
             "bmaxtfrp",
             "casestr",
-            "casthi",
+            "dr_tf_plasma_case",
             "casthi_fraction",
             "casthi_is_fraction",
             "dx_tf_side_case",
@@ -19860,7 +19860,7 @@
         "bootstrap_current_fraction_max": "real_variable",
         "bt": "real_variable",
         "cable_helium_fraction": "real_variable",
-        "casthi": "real_variable",
+        "dr_tf_plasma_case": "real_variable",
         "casthi_fraction": "real_variable",
         "dx_tf_side_case": "real_variable",
         "casths_fraction": "real_variable",

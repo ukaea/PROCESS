@@ -196,7 +196,7 @@ class TFCoil:
                 tfcoil_variables.fcoolcp,
                 tfcoil_variables.n_tf_graded_layers,
                 tfcoil_variables.c_tf_total,
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
@@ -366,7 +366,7 @@ class TFCoil:
         Calculation of the maximum B field and the corresponding TF current
         """
         if tfcoil_variables.casthi_is_fraction:
-            tfcoil_variables.casthi = (
+            tfcoil_variables.dr_tf_plasma_case = (
                 tfcoil_variables.casthi_fraction * build_variables.dr_tf_inboard
             )
 
@@ -385,7 +385,7 @@ class TFCoil:
             tfcoil_variables.r_b_tf_inboard_peak = (
                 build_variables.r_tf_inboard_out
                 * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
-                - tfcoil_variables.casthi
+                - tfcoil_variables.dr_tf_plasma_case
                 - tfcoil_variables.tinstf
                 - tfcoil_variables.tfinsgap
             )
@@ -394,7 +394,7 @@ class TFCoil:
             # The turn insulation th (tfcoil_variables.thicndut) is also subtracted too here
             tfcoil_variables.r_b_tf_inboard_peak = (
                 build_variables.r_tf_inboard_out
-                - tfcoil_variables.casthi
+                - tfcoil_variables.dr_tf_plasma_case
                 - tfcoil_variables.thicndut
                 - tfcoil_variables.tinstf
             )
@@ -927,8 +927,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inboard leg case plasma side wall thickness (m)",
-                "(casthi)",
-                tfcoil_variables.casthi,
+                "(dr_tf_plasma_case)",
+                tfcoil_variables.dr_tf_plasma_case,
             )
             po.ovarre(
                 self.outfile,
@@ -1263,8 +1263,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inboard leg case plasma side wall thickness (m)",
-                "(casthi)",
-                tfcoil_variables.casthi,
+                "(dr_tf_plasma_case)",
+                tfcoil_variables.dr_tf_plasma_case,
             )
             po.ovarre(
                 self.outfile,
@@ -1771,13 +1771,13 @@ class TFCoil:
                 "(tfinsgap)",
             )
 
-            radius = radius + tfcoil_variables.casthi
+            radius = radius + tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side case min radius",
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 radius,
-                "(casthi)",
+                "(dr_tf_plasma_case)",
             )
 
             radius = radius / np.cos(np.pi / tfcoil_variables.n_tf_coils)
@@ -1840,13 +1840,13 @@ class TFCoil:
                 "(tinstf)",
             )
 
-            radius = radius + tfcoil_variables.casthi
+            radius = radius + tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side TF coil support",
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 radius,
-                "(casthi)",
+                "(dr_tf_plasma_case)",
             )
 
         # Radial build consistency check
@@ -1947,13 +1947,13 @@ class TFCoil:
                 "(tinstf)",
             )
 
-            radius = radius + tfcoil_variables.casthi
+            radius = radius + tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side TF coil support",
-                tfcoil_variables.casthi,
+                tfcoil_variables.dr_tf_plasma_case,
                 radius,
-                "(casthi)",
+                "(dr_tf_plasma_case)",
             )
 
             # Consistency check
@@ -2351,7 +2351,7 @@ class TFCoil:
         if tfcoil_variables.i_tf_sup == 1:
             r_in_outwp = (
                 sctfcoil_module.r_tf_outboard_in
-                + tfcoil_variables.casthi
+                + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.tinstf
                 + tfcoil_variables.tfinsgap
             )
@@ -3086,7 +3086,7 @@ class TFCoil:
         fcoolcp,
         n_tf_graded_layers,
         c_tf_total,
-        casthi,
+        dr_tf_plasma_case,
         i_tf_stress_model,
         vforce_inboard_tot,
         i_tf_tresca,
@@ -3585,7 +3585,7 @@ class TFCoil:
         poisson_axial[n_tf_layer - 1] = poisson_steel
 
         # last layer radius
-        radtf[n_tf_layer] = r_wp_outer_eff + casthi
+        radtf[n_tf_layer] = r_wp_outer_eff + dr_tf_plasma_case
 
         # The ratio between the true cross sectional area of the
         # front case, and that considered by the plane strain solver
@@ -5177,7 +5177,7 @@ def init_tfcoil_variables():
     tfv.b_tf_inboard_peak = 0.0
     tfv.bmaxtfrp = 0.0
     tfv.casestr = 0.0
-    tfv.casthi = 0.0
+    tfv.dr_tf_plasma_case = 0.0
     tfv.casthi_fraction = 0.05
     tfv.casthi_is_fraction = False
     tfv.dx_tf_side_case = 0.0

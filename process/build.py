@@ -1688,7 +1688,7 @@ class Build:
                 build_variables.dr_tf_inboard = (
                     build_variables.r_tf_inboard_in
                     + tfcoil_variables.dr_tf_wp
-                    + tfcoil_variables.casthi
+                    + tfcoil_variables.dr_tf_plasma_case
                     + tfcoil_variables.dr_tf_nose_case
                 ) / np.cos(
                     np.pi / tfcoil_variables.n_tf_coils
@@ -1698,7 +1698,7 @@ class Build:
             else:
                 build_variables.dr_tf_inboard = (
                     tfcoil_variables.dr_tf_wp
-                    + tfcoil_variables.casthi
+                    + tfcoil_variables.dr_tf_plasma_case
                     + tfcoil_variables.dr_tf_nose_case
                 )
 
@@ -1721,7 +1721,7 @@ class Build:
                     np.cos(np.pi / tfcoil_variables.n_tf_coils)
                     * build_variables.r_tf_inboard_out
                     - build_variables.r_tf_inboard_in
-                    - tfcoil_variables.casthi
+                    - tfcoil_variables.dr_tf_plasma_case
                     - tfcoil_variables.dr_tf_nose_case
                 )
 
@@ -1729,7 +1729,7 @@ class Build:
             else:
                 tfcoil_variables.dr_tf_wp = (
                     build_variables.dr_tf_inboard
-                    - tfcoil_variables.casthi
+                    - tfcoil_variables.dr_tf_plasma_case
                     - tfcoil_variables.dr_tf_nose_case
                 )
 
