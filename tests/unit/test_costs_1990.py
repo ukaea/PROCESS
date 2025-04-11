@@ -2887,7 +2887,7 @@ class Acc223Param(NamedTuple):
 
     i_hcd_primary: Any = None
 
-    p_ecrh_injected_mw: Any = None
+    p_hcd_ecrh_injected_total_mw: Any = None
 
     p_beam_injected_mw: Any = None
 
@@ -2948,7 +2948,7 @@ class Acc223Param(NamedTuple):
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
-            p_ecrh_injected_mw=51.978447720428512,
+            p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_beam_injected_mw=0,
             dcdrv2=59.899999999999999,
             mcdriv=1,
@@ -2983,7 +2983,7 @@ class Acc223Param(NamedTuple):
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
-            p_ecrh_injected_mw=51.978447720428512,
+            p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_beam_injected_mw=0,
             dcdrv2=59.899999999999999,
             mcdriv=1,
@@ -3049,7 +3049,9 @@ def test_acc223(acc223param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "p_ecrh_injected_mw", acc223param.p_ecrh_injected_mw
+        current_drive_variables,
+        "p_hcd_ecrh_injected_total_mw",
+        acc223param.p_hcd_ecrh_injected_total_mw,
     )
 
     monkeypatch.setattr(
