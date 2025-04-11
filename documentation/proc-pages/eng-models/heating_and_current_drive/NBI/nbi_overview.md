@@ -1,4 +1,4 @@
-# Neutral Beam Injection Heating
+# Neutral Beam Injection Heating | `NeutralBeam`
 
 !!! Warning "NBI Models" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.

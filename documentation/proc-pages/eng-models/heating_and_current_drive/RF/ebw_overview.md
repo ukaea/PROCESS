@@ -1,4 +1,4 @@
-# Electron Bernstein Wave Heating
+# Electron Bernstein Wave Heating | `ElectronBernstein`
 
 Crawford et al. initially demonstrated the experimental verification of Electron Bernstein Waves (EBWs) in 1964. Subsequent experiments focused on measuring the transmission and emission of EBWs in linear low-temperature plasma devices, with Crawford providing an overview of these foundational experiments. Among these, two notable examples stand out.
 

@@ -1,4 +1,4 @@
-# Electron Cyclotron Heating
+# Electron Cyclotron Heating | `ElectronCyclotron`
 
 Electron cyclotron resonance heating is the simplest of the radio frequency heating methods. In contrast to ion cyclotron and lower hybrid heating, there is no evanescent region between the antenna and the plasma,although cut-offs can exist within the plasma. 
 As a result, the antenna can be retracted into a less hostile environment than for the other schemes. Electron cyclotron heating has been made possible by the invention of the gyrotron millimetre wave source. This and related devices have only emerged since the mid-1970s. Gyrotron tubes capable of 0.5-1 MW out- put and with frequencies in the range 100-200 GHz are now under intense development. The frequency required for a reactor would be in the range 100-200 GHz which corresponds to vacuum wavelengths of 1-2 mm.

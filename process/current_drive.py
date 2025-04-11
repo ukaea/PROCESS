@@ -6,7 +6,6 @@ from process import (
 from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import (
     constants,
-    cost_variables,
     current_drive_variables,
     heat_transport_variables,
     physics_variables,
@@ -1264,16 +1263,6 @@ class CurrentDrive:
         if current_drive_variables.i_hcd_secondary == 0:
             current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
 
-        # check for unphysically large heating in
-        # secondary injected power source
-        if (
-            current_drive_variables.p_hcd_secondary_extra_heat_mw
-            > current_drive_variables.p_hcd_secondary_injected_mw
-        ):
-            current_drive_variables.p_hcd_secondary_extra_heat_mw = (
-                current_drive_variables.p_hcd_secondary_injected_mw
-            )
-
         # current_drive_variables.i_hcd_calculations |  switch for current drive calculation
         # = 0   |  turned off
         # = 1   |  turned on
@@ -1406,7 +1395,6 @@ class CurrentDrive:
                 )
                 * physics_variables.plasma_current
                 / current_drive_variables.eta_cd_norm_hcd_primary
-                + current_drive_variables.p_hcd_primary_extra_heat_mw
             )
 
             # Calculate the driven current for the primary heating method
@@ -1589,6 +1577,7 @@ class CurrentDrive:
                 # Wall plug power
                 heat_transport_variables.p_hcd_primary_electric_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
@@ -1813,6 +1802,15 @@ class CurrentDrive:
                 "Current is driven by both inductive and non-inductive means.",
             )
             po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Fusion gain factor Q",
+            "(bigq)",
+            current_drive_variables.bigq,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
 
         if current_drive_variables.i_hcd_calculations == 0:
             po.ocmmnt(self.outfile, "No current drive used")
@@ -2050,7 +2048,6 @@ class CurrentDrive:
                     "OP ",
                 )
 
-        po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
         po.ovarin(
@@ -2289,8 +2286,6 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        po.oblnkl(self.outfile)
-
         po.osubhd(self.outfile, "Contributions:")
 
         po.ovarre(
@@ -2319,38 +2314,11 @@ class CurrentDrive:
 
         po.ovarre(
             self.outfile,
-            "Ratio of power for flat-top to start-up (MW)",
-            "(startupratio)",
-            cost_variables.startupratio,
-        )
-        po.ovarre(
-            self.outfile,
-            "Auxiliary power used for plasma heating only (MW)",
-            "(p_hcd_primary_extra_heat_mw)",
-            current_drive_variables.p_hcd_primary_extra_heat_mw
-            + current_drive_variables.p_hcd_secondary_extra_heat_mw,
-        )
-        po.ovarre(
-            self.outfile,
             "Power injected for current drive (MW)",
             "(pcurrentdrivemw)",
             current_drive_variables.p_hcd_injected_total_mw
             - current_drive_variables.p_hcd_primary_extra_heat_mw
             - current_drive_variables.p_hcd_secondary_extra_heat_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Maximum Allowed Bootstrap current fraction",
-            "(f_c_plasma_bootstrap_max)",
-            current_drive_variables.f_c_plasma_bootstrap_max,
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Fusion gain factor Q",
-            "(bigq)",
-            current_drive_variables.bigq,
-            "OP ",
         )
 
         if current_drive_variables.i_hcd_primary == 12:
@@ -2397,25 +2365,6 @@ class CurrentDrive:
             physics_variables.f_c_plasma_inductive,
             "OP ",
         )
-        # Add total error check.
-        po.ovarrf(
-            self.outfile,
-            "Total",
-            "(f_c_plasma_internal+f_c_plasma_auxiliary+f_c_plasma_inductive)",
-            current_drive_variables.f_c_plasma_internal
-            + physics_variables.f_c_plasma_auxiliary
-            + physics_variables.f_c_plasma_inductive,
-        )
-        if (
-            abs(
-                current_drive_variables.f_c_plasma_internal
-                + physics_variables.f_c_plasma_auxiliary
-                + physics_variables.f_c_plasma_inductive
-                - 1.0e0
-            )
-            > 1.0e-8
-        ):
-            po.ocmmnt(self.outfile, "ERROR: current drive fractions do not add to 1")
 
         # MDK Add physics_variables.f_c_plasma_non_inductive as it can be an iteration variable
         po.ovarrf(
