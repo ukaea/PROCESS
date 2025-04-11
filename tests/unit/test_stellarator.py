@@ -7,7 +7,14 @@ from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.buildings import Buildings
 from process.costs import Costs
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.fortran import (
     build_variables,
     cost_variables,
@@ -44,8 +51,25 @@ def stellarator():
         Power(),
         PlasmaProfile(),
         CCFE_HCPB(BlanketLibrary(Fw())),
-        CurrentDrive(PlasmaProfile()),
-        Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile())),
+        CurrentDrive(
+            PlasmaProfile(),
+            ElectronCyclotron(plasma_profile=PlasmaProfile()),
+            IonCyclotron(plasma_profile=PlasmaProfile()),
+            NeutralBeam(plasma_profile=PlasmaProfile()),
+            LowerHybrid(plasma_profile=PlasmaProfile()),
+            ElectronBernstein(plasma_profile=PlasmaProfile()),
+        ),
+        Physics(
+            PlasmaProfile(),
+            CurrentDrive(
+                PlasmaProfile(),
+                ElectronCyclotron(plasma_profile=PlasmaProfile()),
+                IonCyclotron(plasma_profile=PlasmaProfile()),
+                NeutralBeam(plasma_profile=PlasmaProfile()),
+                LowerHybrid(plasma_profile=PlasmaProfile()),
+                ElectronBernstein(plasma_profile=PlasmaProfile()),
+            ),
+        ),
         Neoclassics(),
     )
 

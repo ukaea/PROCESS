@@ -1818,13 +1818,15 @@ class Costs:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.uclh
-                    * (1.0e6 * current_drive_variables.plhybd) ** exprf
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                 )
             else:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.ucich
-                    * (1.0e6 * current_drive_variables.plhybd) ** exprf
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                 )
 
             if cost_variables.ifueltyp == 1:
@@ -1833,7 +1835,7 @@ class Costs:
 
                 #  Account 223.3 : Neutral Beam
 
-                # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*pnbeam)**exprf
+                # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
                 # #327
 
                 self.c2233 = (
@@ -2469,7 +2471,7 @@ class Costs:
         if cost_variables.ireactor == 0:
             pwrrej = (
                 physics_variables.fusion_power
-                + heat_transport_variables.pinjwp
+                + heat_transport_variables.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )
         else:

@@ -236,9 +236,9 @@ ixc = 29
 boundl(29) = 0.1
 dr_bore = 2.0
 
-* fvsbrnni
+* f_c_plasma_non_inductive
 ixc = 44
-fvsbrnni = 0.4
+f_c_plasma_non_inductive = 0.4
 
 * tdmptf [s]
 ixc = 56

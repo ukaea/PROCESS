@@ -208,10 +208,10 @@ module physics_variables
   real(dp) :: eps
   !! inverse aspect ratio
 
-  real(dp) :: aux_current_fraction
+  real(dp) :: f_c_plasma_auxiliary
   !! fraction of plasma current produced by auxiliary current drive
 
-  real(dp) :: inductive_current_fraction
+  real(dp) :: f_c_plasma_inductive
   !! fraction of plasma current produced inductively
 
   real(dp) :: f_alpha_electron
@@ -272,7 +272,7 @@ module physics_variables
   real(dp) :: fusion_rate_density_plasma
   !! fusion reaction rate, just from plasma (reactions/m3/sec)
 
-  real(dp) :: fvsbrnni
+  real(dp) :: f_c_plasma_non_inductive
   !! fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 
   real(dp) :: ejima_coeff

@@ -76,7 +76,7 @@ class BurnParam(NamedTuple):
 
     plasma_current: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
     csawth: Any = None
 
@@ -1290,7 +1290,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             vs_cs_pf_total_burn=0,
             vs_cs_pf_total_pulse=-718.91787876294552,
             plasma_current=17721306.969367817,
-            inductive_current_fraction=0.60433999999999999,
+            f_c_plasma_inductive=0.60433999999999999,
             csawth=1,
             i_pulsed_plant=1,
             t_burn=0,
@@ -1306,7 +1306,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
             vs_cs_pf_total_pulse=-718.9849676846776,
             vs_cs_pf_total_burn=-354.76231817639609,
             plasma_current=17721306.969367817,
-            inductive_current_fraction=0.60433999999999999,
+            f_c_plasma_inductive=0.60433999999999999,
             csawth=1,
             i_pulsed_plant=1,
             t_burn=10234.092022756307,
@@ -1352,8 +1352,8 @@ def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
 
     monkeypatch.setattr(
         physics_variables,
-        "inductive_current_fraction",
-        burnparam.inductive_current_fraction,
+        "f_c_plasma_inductive",
+        burnparam.f_c_plasma_inductive,
     )
 
     monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)

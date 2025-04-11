@@ -2,7 +2,14 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.fortran import (
     cost_variables,
     current_drive_variables,
@@ -19,19 +26,26 @@ def current_drive():
     :returns current_drive: initialised CurrentDrive object
     :rtype: process.current_drive.CurrentDrive
     """
-    return CurrentDrive(PlasmaProfile())
+    return CurrentDrive(
+        PlasmaProfile(),
+        electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
+        electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
+        neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
+        lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
+        ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
+    )
 
 
 class CudrivParam(NamedTuple):
-    pinjwpfix: Any = None
+    p_hcd_secondary_electric_mw: Any = None
 
-    pinjwp: Any = None
+    p_hcd_electric_total_mw: Any = None
 
     p_ecrh_injected_mw: Any = None
 
-    pnbeam: Any = None
+    p_hcd_beam_injected_total_mw: Any = None
 
-    plhybd: Any = None
+    p_hcd_lowhyb_injected_total_mw: Any = None
 
     c_beam_total: Any = None
 
@@ -79,9 +93,9 @@ class CudrivParam(NamedTuple):
 
     eta_cd_hcd_primary: Any = None
 
-    pwplh: Any = None
+    p_hcd_lowhyb_electric_mw: Any = None
 
-    echwpow: Any = None
+    p_hcd_ecrh_electric_mw: Any = None
 
     p_beam_injected_mw: Any = None
 
@@ -163,7 +177,7 @@ class CudrivParam(NamedTuple):
 
     ipedestal: Any = None
 
-    aux_current_fraction: Any = None
+    f_c_plasma_auxiliary: Any = None
 
     ignite: Any = None
 
@@ -171,9 +185,9 @@ class CudrivParam(NamedTuple):
 
     fusion_power: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
-    fvsbrnni: Any = None
+    f_c_plasma_non_inductive: Any = None
 
     startupratio: Any = None
 
@@ -181,7 +195,7 @@ class CudrivParam(NamedTuple):
 
     outfile: Any = None
 
-    expected_pinjwp: Any = None
+    expected_p_hcd_electric_total_mw: Any = None
 
     expected_p_ecrh_injected_mw: Any = None
 
@@ -193,7 +207,7 @@ class CudrivParam(NamedTuple):
 
     expected_effcd: Any = None
 
-    expected_echwpow: Any = None
+    expected_p_hcd_ecrh_electric_mw: Any = None
 
     expected_p_hcd_injected_electrons_mw: Any = None
 
@@ -204,11 +218,11 @@ class CudrivParam(NamedTuple):
     "cudrivparam",
     (
         CudrivParam(
-            pinjwpfix=0,
-            pinjwp=0,
+            p_hcd_secondary_electric_mw=0,
+            p_hcd_electric_total_mw=0,
             p_ecrh_injected_mw=0,
-            pnbeam=0,
-            plhybd=0,
+            p_hcd_beam_injected_total_mw=0,
+            p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
             p_beam_orbit_loss_mw=0,
             i_hcd_primary=10,
@@ -232,8 +246,8 @@ class CudrivParam(NamedTuple):
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
             eta_cd_hcd_primary=0,
-            pwplh=0,
-            echwpow=0,
+            p_hcd_lowhyb_electric_mw=0,
+            p_hcd_ecrh_electric_mw=0,
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
             p_hcd_injected_electrons_mw=0,
@@ -274,31 +288,31 @@ class CudrivParam(NamedTuple):
             tbeta=2,
             plasma_current=18398455.678867526,
             ipedestal=1,
-            aux_current_fraction=0.12364081253383186,
+            f_c_plasma_auxiliary=0.12364081253383186,
             ignite=0,
             p_plasma_ohmic_mw=0,
             fusion_power=0,
-            inductive_current_fraction=0.59999999999999998,
-            fvsbrnni=0.40000000000000002,
+            f_c_plasma_inductive=0.59999999999999998,
+            f_c_plasma_non_inductive=0.40000000000000002,
             startupratio=1,
             iprint=0,
             outfile=11,
-            expected_pinjwp=240.99200038011492,
+            expected_p_hcd_electric_total_mw=240.99200038011492,
             expected_p_ecrh_injected_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
             expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
-            expected_echwpow=240.99200038011492,
+            expected_p_hcd_ecrh_electric_mw=240.99200038011492,
             expected_p_hcd_injected_electrons_mw=120.49600019005746,
             expected_bigq=0,
         ),
         CudrivParam(
-            pinjwpfix=0,
-            pinjwp=240.99200038011492,
+            p_hcd_secondary_electric_mw=0,
+            p_hcd_electric_total_mw=240.99200038011492,
             p_ecrh_injected_mw=120.49600019005746,
-            pnbeam=0,
-            plhybd=0,
+            p_hcd_beam_injected_total_mw=0,
+            p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
             p_beam_orbit_loss_mw=0,
             i_hcd_primary=10,
@@ -322,8 +336,8 @@ class CudrivParam(NamedTuple):
             eta_beam_injector_wall_plug=0.29999999999999999,
             e_beam_kev=1000,
             eta_cd_hcd_primary=0.05000000000000001,
-            pwplh=0,
-            echwpow=240.99200038011492,
+            p_hcd_lowhyb_electric_mw=0,
+            p_hcd_ecrh_electric_mw=240.99200038011492,
             p_beam_injected_mw=0,
             p_beam_shine_through_mw=0,
             p_hcd_injected_electrons_mw=120.49600019005746,
@@ -364,22 +378,22 @@ class CudrivParam(NamedTuple):
             tbeta=2,
             plasma_current=18398455.678867526,
             ipedestal=1,
-            aux_current_fraction=0.12364081253383186,
+            f_c_plasma_auxiliary=0.12364081253383186,
             ignite=0,
             p_plasma_ohmic_mw=0.76707314489379119,
             fusion_power=1051.6562748933977,
-            inductive_current_fraction=0.59999999999999998,
-            fvsbrnni=0.40000000000000002,
+            f_c_plasma_inductive=0.59999999999999998,
+            f_c_plasma_non_inductive=0.40000000000000002,
             startupratio=1,
             iprint=0,
             outfile=11,
-            expected_pinjwp=240.99200038011492,
+            expected_p_hcd_electric_total_mw=240.99200038011492,
             expected_p_ecrh_injected_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
             expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
-            expected_echwpow=240.99200038011492,
+            expected_p_hcd_ecrh_electric_mw=240.99200038011492,
             expected_p_hcd_injected_electrons_mw=120.49600019005746,
             expected_bigq=8.6725187311435423,
         ),
@@ -398,17 +412,33 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwpfix", cudrivparam.pinjwpfix)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_secondary_electric_mw",
+        cudrivparam.p_hcd_secondary_electric_mw,
+    )
 
-    monkeypatch.setattr(heat_transport_variables, "pinjwp", cudrivparam.pinjwp)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electric_total_mw",
+        cudrivparam.p_hcd_electric_total_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "p_ecrh_injected_mw", cudrivparam.p_ecrh_injected_mw
     )
 
-    monkeypatch.setattr(current_drive_variables, "pnbeam", cudrivparam.pnbeam)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_beam_injected_total_mw",
+        cudrivparam.p_hcd_beam_injected_total_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_lowhyb_injected_total_mw",
+        cudrivparam.p_hcd_lowhyb_injected_total_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "c_beam_total", cudrivparam.c_beam_total
@@ -522,9 +552,17 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary
     )
 
-    monkeypatch.setattr(current_drive_variables, "pwplh", cudrivparam.pwplh)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_lowhyb_electric_mw",
+        cudrivparam.p_hcd_lowhyb_electric_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "echwpow", cudrivparam.echwpow)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_ecrh_electric_mw",
+        cudrivparam.p_hcd_ecrh_electric_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "p_beam_injected_mw", cudrivparam.p_beam_injected_mw
@@ -651,7 +689,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     monkeypatch.setattr(physics_variables, "ipedestal", cudrivparam.ipedestal)
 
     monkeypatch.setattr(
-        physics_variables, "aux_current_fraction", cudrivparam.aux_current_fraction
+        physics_variables, "f_c_plasma_auxiliary", cudrivparam.f_c_plasma_auxiliary
     )
 
     monkeypatch.setattr(physics_variables, "ignite", cudrivparam.ignite)
@@ -664,17 +702,23 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(
         physics_variables,
-        "inductive_current_fraction",
-        cudrivparam.inductive_current_fraction,
+        "f_c_plasma_inductive",
+        cudrivparam.f_c_plasma_inductive,
     )
 
-    monkeypatch.setattr(physics_variables, "fvsbrnni", cudrivparam.fvsbrnni)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_c_plasma_non_inductive",
+        cudrivparam.f_c_plasma_non_inductive,
+    )
 
     monkeypatch.setattr(cost_variables, "startupratio", cudrivparam.startupratio)
 
     current_drive.cudriv(output=False)
 
-    assert heat_transport_variables.pinjwp == pytest.approx(cudrivparam.expected_pinjwp)
+    assert heat_transport_variables.p_hcd_electric_total_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_electric_total_mw
+    )
 
     assert current_drive_variables.p_ecrh_injected_mw == pytest.approx(
         cudrivparam.expected_p_ecrh_injected_mw
@@ -696,8 +740,8 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.expected_effcd
     )
 
-    assert current_drive_variables.echwpow == pytest.approx(
-        cudrivparam.expected_echwpow
+    assert current_drive_variables.p_hcd_ecrh_electric_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_ecrh_electric_mw
     )
 
     assert current_drive_variables.p_hcd_injected_electrons_mw == pytest.approx(
@@ -708,6 +752,6 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
 
 def test_sigbeam(current_drive):
-    assert current_drive.sigbeam(
+    assert current_drive.neutral_beam.sigbeam(
         1e3, 13.07, 8.0e-1, 0.1, 1e-4, 1e-4, 1e-4
     ) == pytest.approx(2.013589662302492e-11)
