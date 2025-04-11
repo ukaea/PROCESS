@@ -35,9 +35,11 @@ class NeutralBeam:
         """
         # Check argument sanity
         if (1 + physics_variables.eps) < current_drive_variables.frbeam:
-            eh.fdiags[0] = physics_variables.eps
-            eh.fdiags[1] = current_drive_variables.frbeam
-            eh.report_error(15)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=physics_variables.eps,
+                frbeam=current_drive_variables.frbeam,
+            )
 
         # Calculate beam path length to centre
         dpath = physics_variables.rmajor * np.sqrt(
@@ -110,9 +112,11 @@ class NeutralBeam:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
-            eh.fdiags[0] = physics_variables.eps
-            eh.fdiags[1] = current_drive_variables.frbeam
-            eh.report_error(20)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=physics_variables.eps,
+                frbeam=current_drive_variables.frbeam,
+            )
 
         #  Calculate beam path length to centre
 
@@ -274,9 +278,11 @@ class NeutralBeam:
         eps1 = rminor / r
 
         if (1.0 + eps1) < frbeam:
-            eh.fdiags[0] = eps1
-            eh.fdiags[1] = frbeam
-            eh.report_error(21)
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=eps1,
+                frbeam=frbeam,
+            )
 
         d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
 
@@ -646,7 +652,7 @@ class ElectronCyclotron:
         )
 
         if ecgam < 0.0e0:
-            eh.report_error(17)
+            raise ProcessValueError("Negative normalised current drive efficiency")
         return ecgam
 
     def electron_cyclotron_fenstermacher(
@@ -944,9 +950,11 @@ class LowerHybrid:
         term04 = 3.5e0 * epslh**0.77e0 + x
 
         if term03 > term04:
-            eh.fdiags[0] = term03
-            eh.fdiags[1] = term04
-            eh.report_error(129)
+            raise ProcessValueError(
+                "Normalised LH efficiency < 0; use a different value of i_hcd_primary",
+                term03=term03,
+                term04=term04,
+            )
 
         gamlh = term01 * term02 * (1.0e0 - term03 / term04)
 
@@ -1290,12 +1298,20 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_secondary = hcd_models[
                     current_drive_variables.i_hcd_secondary.item()
                 ]()
+            elif current_drive_variables.i_hcd_secondary != 0:
+                raise ProcessValueError(
+                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
+                )
 
             # Calculate eta_cd_hcd_primary based on the selected model
             if current_drive_variables.i_hcd_primary.item() in hcd_models:
                 current_drive_variables.eta_cd_hcd_primary = hcd_models[
                     current_drive_variables.i_hcd_primary.item()
                 ]()
+            else:
+                raise ProcessValueError(
+                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
+                )
 
             # # Calculate the normalised current drive efficieny for the primary heating method
             current_drive_variables.eta_cd_norm_hcd_primary = (
@@ -2452,5 +2468,75 @@ class CurrentDrive:
             palpha = palpha + pterm
             palphap = palphap - n * pterm / (1.0e0 - arg2)
         else:
-            eh.report_error(19)
-            return None
+            raise ProcessError("legend: Solution has not converged")
+
+
+def init_current_drive_variables():
+    """Initialise current drive variables"""
+    current_drive_variables.beamwd = 0.58
+    current_drive_variables.bigq = 0.0
+    current_drive_variables.f_c_plasma_bootstrap = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_max = 0.9
+    current_drive_variables.f_c_plasma_bootstrap_iter89 = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_nevins = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_sauter = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_wilson = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_sakai = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_aries = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_andrade = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_hoang = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_wong = 0.0
+    current_drive_variables.bscf_gi_i = 0.0
+    current_drive_variables.bscf_gi_ii = 0.0
+    current_drive_variables.cboot = 1.0
+    current_drive_variables.c_beam_total = 0.0
+    current_drive_variables.f_c_plasma_diamagnetic_hender = 0.0
+    current_drive_variables.f_c_plasma_diamagnetic_scene = 0.0
+    current_drive_variables.f_c_plasma_diamagnetic = 0.0
+    current_drive_variables.p_ecrh_injected_mw = 0.0
+    current_drive_variables.echwpow = 0.0
+    current_drive_variables.eta_cd_hcd_primary = 0.0
+    current_drive_variables.n_ecrh_harmonic = 2.0
+    current_drive_variables.i_ecrh_wave_mode = 0
+    current_drive_variables.e_beam_kev = 1.0e3
+    current_drive_variables.eta_hcd_primary_injector_wall_plug = 0.0
+    current_drive_variables.eta_hcd_secondary_injector_wall_plug = 0.0
+    current_drive_variables.eta_ecrh_injector_wall_plug = 0.3
+    current_drive_variables.eta_lowhyb_injector_wall_plug = 0.3
+    current_drive_variables.eta_beam_injector_wall_plug = 0.3
+    current_drive_variables.f_p_beam_injected_ions = 0.5
+    current_drive_variables.p_beam_injected_mw = 0.0
+    current_drive_variables.f_c_plasma_pfirsch_schluter_scene = 0.0
+    current_drive_variables.p_beam_shine_through_mw = 0.0
+    current_drive_variables.feffcd = 1.0
+    current_drive_variables.f_p_beam_orbit_loss = 0.0
+    current_drive_variables.frbeam = 1.05
+    current_drive_variables.f_beam_tritium = 1e-6
+    current_drive_variables.eta_cd_norm_hcd_primary = 0.0
+    current_drive_variables.eta_cd_norm_ecrh = 0.35
+    current_drive_variables.xi_ebw = 0.8
+    current_drive_variables.i_hcd_primary = 5
+    current_drive_variables.i_hcd_secondary = 0
+    current_drive_variables.i_hcd_calculations = 1
+    current_drive_variables.f_p_beam_shine_through = 0.0
+    current_drive_variables.dx_beam_shield = 0.5
+    current_drive_variables.p_hcd_primary_extra_heat_mw = 0.0
+    current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
+    current_drive_variables.p_hcd_injected_max = 150.0
+    current_drive_variables.p_hcd_injected_electrons_mw = 0.0
+    current_drive_variables.p_hcd_injected_ions_mw = 0.0
+    current_drive_variables.p_hcd_injected_total_mw = 0.0
+    current_drive_variables.p_hcd_secondary_injected_mw = 0.0
+    current_drive_variables.f_c_plasma_internal = 0.0
+    current_drive_variables.p_hcs_lowhyb_injected_total_mw = 0.0
+    current_drive_variables.p_hcd_beam_injected_mw = 0.0
+    current_drive_variables.p_beam_orbit_loss_mw = 0.0
+    current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
+    current_drive_variables.pwplh = 0.0
+    current_drive_variables.pwpnb = 0.0
+    current_drive_variables.rtanbeam = 0.0
+    current_drive_variables.rtanmax = 0.0
+    current_drive_variables.n_beam_decay_lengths_core = 0.0
+    current_drive_variables.tbeamin = 3.0
+    current_drive_variables.eta_cd_norm_hcd_secondary = 0.0
+    current_drive_variables.eta_cd_hcd_secondary = 0.0
