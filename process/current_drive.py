@@ -1231,7 +1231,7 @@ class CurrentDrive:
         self.neutral_beam = neutral_beam
         self.electron_bernstein = electron_bernstein
 
-    def cudriv(self, output: bool) -> None:
+    def cudriv(self) -> None:
         """
         Calculate the current drive power requirements.
 
@@ -1250,7 +1250,6 @@ class CurrentDrive:
         current_drive_variables.p_hcd_icrh_injected_total_mw = 0.0e0
         current_drive_variables.p_hcd_ebw_injected_total_mw = 0.0e0
         current_drive_variables.c_beam_total = 0.0e0
-        beam_current_fix = 0.0e0
         current_drive_variables.p_beam_orbit_loss_mw = 0.0e0
 
         pinjmw1 = 0.0
@@ -1422,8 +1421,7 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     + current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    / current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_lowhyb_injector_wall_plug
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
@@ -1432,6 +1430,7 @@ class CurrentDrive:
 
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
             # ==========================================================
@@ -1447,8 +1446,7 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     + current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    / current_drive_variables.eta_icrh_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_icrh_injector_wall_plug
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
@@ -1457,6 +1455,7 @@ class CurrentDrive:
 
                 current_drive_variables.p_hcd_icrh_injected_total_mw += (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
             # ==========================================================
@@ -1468,20 +1467,20 @@ class CurrentDrive:
                     current_drive_variables.p_hcd_secondary_injected_mw
                 )
 
-                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
-                    current_drive_variables.p_hcd_secondary_injected_mw
-                )
-
                 # Wall plug power
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     + current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    / current_drive_variables.eta_ecrh_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_ecrh_injector_wall_plug
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
             # ==========================================================
@@ -1497,12 +1496,16 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_secondary_electric_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     + current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    / current_drive_variables.eta_ebw_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_ebw_injector_wall_plug
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
                     current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ebw_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
             # ==========================================================
@@ -1568,6 +1571,11 @@ class CurrentDrive:
                     / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
+                current_drive_variables.p_hcd_beam_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
             # ==========================================================
 
             # Lower hybrid cases
@@ -1584,8 +1592,7 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_primary_electric_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
-                    / current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_lowhyb_injector_wall_plug
 
                 # Wall plug power
                 current_drive_variables.p_hcd_lowhyb_electric_mw = (
@@ -1609,17 +1616,14 @@ class CurrentDrive:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                 )
-                current_drive_variables.p_hcd_icrh_injected_total_mw += (
-                    current_drive_variables.p_hcd_primary_injected_mw
-                )
 
                 # Wall plug power
-                current_drive_variables.p_hcd_lowhyb_electric_mw = (
+                current_drive_variables.p_hcd_icrh_electric_mw = (
                     current_drive_variables.p_hcd_icrh_injected_total_mw
                     / current_drive_variables.eta_icrh_injector_wall_plug
                 )
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.p_hcd_lowhyb_electric_mw
+                    current_drive_variables.p_hcd_icrh_electric_mw
                 )
 
                 # Wall plug to injector efficiency
@@ -1627,34 +1631,39 @@ class CurrentDrive:
                     current_drive_variables.eta_icrh_injector_wall_plug
                 )
 
+                current_drive_variables.p_hcd_icrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
             # ===========================================================
 
             # Electron cyclotron cases
 
             if current_drive_variables.i_hcd_primary in [3, 7, 10, 13]:
-                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
-                    current_drive_variables.p_hcd_primary_injected_mw
-                )
-
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
-                )
-
-                # Wall plug power
-                current_drive_variables.p_hcd_ecrh_electric_mw = (
-                    current_drive_variables.p_hcd_ecrh_injected_total_mw
-                    / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
                 # Wall plug to injector efficiency
                 heat_transport_variables.p_hcd_primary_electric_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
-                    / current_drive_variables.eta_ecrh_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_ecrh_injector_wall_plug
 
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_ecrh_electric_mw = (
+                    current_drive_variables.p_hcd_ecrh_injected_total_mw
+                    / current_drive_variables.eta_ecrh_injector_wall_plug
                 )
 
             # ===========================================================
@@ -1677,11 +1686,15 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_primary_electric_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
-                    / current_drive_variables.eta_ebw_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_ebw_injector_wall_plug
 
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                     current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ebw_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
             # ===========================================================
@@ -1742,6 +1755,11 @@ class CurrentDrive:
                     / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
+                current_drive_variables.p_hcd_beam_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
             # ===========================================================
 
             # Total injected power that contributed to heating
@@ -1797,8 +1815,11 @@ class CurrentDrive:
                     + physics_variables.p_plasma_ohmic_mw
                 )
 
-        if not output:
-            return
+    def output_current_drive(self):
+        """
+        Output the current drive information to the output file.
+        This method writes the current drive information to the output file.
+        """
 
         po.oheadr(self.outfile, "Heating & Current Drive System")
 
@@ -1960,17 +1981,6 @@ class CurrentDrive:
                     "Neutral beam current (A)",
                     "(c_beam_total)",
                     current_drive_variables.c_beam_total,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed neutral beam current (A)",
-                    "(beam_current_fix)",
-                    beam_current_fix,
                     "OP ",
                 )
 
@@ -2177,17 +2187,6 @@ class CurrentDrive:
                     "Neutral beam current (A)",
                     "(c_beam_total)",
                     current_drive_variables.c_beam_total,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed neutral beam current (A)",
-                    "(beam_current_fix)",
-                    beam_current_fix,
                     "OP ",
                 )
 

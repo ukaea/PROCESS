@@ -2044,7 +2044,7 @@ class Physics:
         # Auxiliary current drive power calculations
 
         if current_drive_variables.i_hcd_calculations != 0:
-            self.current_drive.cudriv(False)
+            self.current_drive.cudriv()
 
         # ***************************** #
         #        FUSION REACTIONS       #
