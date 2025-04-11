@@ -716,7 +716,7 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(cost_variables, "startupratio", cudrivparam.startupratio)
 
-    current_drive.cudriv(output=False)
+    current_drive.cudriv()
 
     assert heat_transport_variables.p_hcd_electric_total_mw == pytest.approx(
         cudrivparam.expected_p_hcd_electric_total_mw
