@@ -83,7 +83,9 @@ ITERATION_VARIABLES = {
         "f_j_cs_start_pulse_end_flat_top", fortran.pfcoil_variables, 0.001, 1.0
     ),
     42: IterationVariable("dr_cs_tf_gap", fortran.build_variables, 0.001, 10.00),
-    44: IterationVariable("fvsbrnni", fortran.physics_variables, 0.001, 1.0),
+    44: IterationVariable(
+        "f_c_plasma_non_inductive", fortran.physics_variables, 0.001, 1.0
+    ),
     45: IterationVariable("fqval", fortran.constraint_variables, 0.001, 1.0),
     46: IterationVariable("fpinj", fortran.constraint_variables, 0.001, 1.0),
     47: IterationVariable("feffcd", fortran.current_drive_variables, 0.001, 1.0),

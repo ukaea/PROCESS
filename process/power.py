@@ -3105,8 +3105,8 @@ def init_heat_transport_variables():
     heat_transport_variables.pgrossmw = 0.0
     heat_transport_variables.pinjht = 0.0
     heat_transport_variables.pinjmax = 120.0
-    heat_transport_variables.pinjwp = 0.0
-    heat_transport_variables.pinjwpfix = 0.0
+    heat_transport_variables.p_hcd_electric_total_mw = 0.0
+    heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
     heat_transport_variables.pnetelmw = 0.0
     heat_transport_variables.precircmw = 0.0
     heat_transport_variables.priheat = 0.0

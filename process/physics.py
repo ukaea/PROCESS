@@ -8063,8 +8063,8 @@ def init_physics_variables():
     physics_variables.nd_impurities = 0.0
     physics_variables.beta_poloidal_eps_max = 1.38
     physics_variables.eps = 0.34399724802
-    physics_variables.aux_current_fraction = 0.0
-    physics_variables.inductive_current_fraction = 0.0
+    physics_variables.f_c_plasma_auxiliary = 0.0
+    physics_variables.f_c_plasma_inductive = 0.0
     physics_variables.f_alpha_electron = 0.0
     physics_variables.f_alpha_plasma = 0.95
     physics_variables.f_alpha_ion = 0.0
@@ -8082,7 +8082,7 @@ def init_physics_variables():
     physics_variables.f_tritium = 0.5
     physics_variables.fusion_rate_density_total = 0.0
     physics_variables.fusion_rate_density_plasma = 0.0
-    physics_variables.fvsbrnni = 1.0
+    physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4
     physics_variables.f_beta_alpha_beam_thermal = 0.0
     physics_variables.hfac[:] = 0.0
