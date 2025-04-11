@@ -769,6 +769,67 @@ class ElectronCyclotron:
         # Final ECCD efficiency
         return eta_cd * cutoff_factor
 
+    def legend(self, zlocal, arg):
+        """Routine to calculate Legendre function and its derivative
+        author: M R O'Brien, CCFE, Culham Science Centre
+        author: P J Knight, CCFE, Culham Science Centre
+        zlocal  : input real : local plasma effective charge
+        arg     : input real : argument of Legendre function
+        palpha  : output real : value of Legendre function
+        palphap : output real : derivative of Legendre function
+        This routine calculates the Legendre function <CODE>palpha</CODE>
+        of argument <CODE>arg</CODE> and order
+        <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
+        and its derivative <CODE>palphap</CODE>.
+        <P>This Legendre function is a conical function and we use the series
+        in <CODE>xisq</CODE> given in Abramowitz and Stegun. The
+        derivative is calculated from the derivative of this series.
+        <P>The derivatives were checked by calculating <CODE>palpha</CODE> for
+        neighbouring arguments. The calculation of <CODE>palpha</CODE> for zero
+        argument was checked by comparison with the expression
+        <CODE>palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2</CODE>
+        (Abramowitz and Stegun, eqn 8.6.1). Here <CODE>gam1</CODE> and
+        <CODE>gam2</CODE> are the Gamma functions of arguments
+        <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
+        Abramowitz and Stegun, equation 8.12.1
+        """
+        if abs(arg) > (1.0e0 + 1.0e-10):
+            eh.fdiags[0] = arg
+            raise ProcessValueError("Invalid argument", arg=arg)
+
+        arg2 = min(arg, (1.0e0 - 1.0e-10))
+        sinsq = 0.5e0 * (1.0e0 - arg2)
+        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
+        palpha = 1.0e0
+        pold = 1.0e0
+        pterm = 1.0e0
+        palphap = 0.0e0
+        poldp = 0.0e0
+
+        for n in range(10000):
+            #  Check for convergence every 20 iterations
+
+            if (n > 1) and ((n % 20) == 1):
+                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
+                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
+
+                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
+                    return palpha, palphap
+
+                pold = palpha
+                poldp = palphap
+
+            pterm = (
+                pterm
+                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
+                / (2.0e0 * n) ** 2
+                * sinsq
+            )
+            palpha = palpha + pterm
+            palphap = palphap - n * pterm / (1.0e0 - arg2)
+        else:
+            raise ProcessError("legend: Solution has not converged")
+
 
 class IonCyclotron:
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -2408,67 +2469,6 @@ class CurrentDrive:
             po.oblnkl(self.outfile)
 
         po.oblnkl(self.outfile)
-
-    def legend(self, zlocal, arg):
-        """Routine to calculate Legendre function and its derivative
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        zlocal  : input real : local plasma effective charge
-        arg     : input real : argument of Legendre function
-        palpha  : output real : value of Legendre function
-        palphap : output real : derivative of Legendre function
-        This routine calculates the Legendre function <CODE>palpha</CODE>
-        of argument <CODE>arg</CODE> and order
-        <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
-        and its derivative <CODE>palphap</CODE>.
-        <P>This Legendre function is a conical function and we use the series
-        in <CODE>xisq</CODE> given in Abramowitz and Stegun. The
-        derivative is calculated from the derivative of this series.
-        <P>The derivatives were checked by calculating <CODE>palpha</CODE> for
-        neighbouring arguments. The calculation of <CODE>palpha</CODE> for zero
-        argument was checked by comparison with the expression
-        <CODE>palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2</CODE>
-        (Abramowitz and Stegun, eqn 8.6.1). Here <CODE>gam1</CODE> and
-        <CODE>gam2</CODE> are the Gamma functions of arguments
-        <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
-        Abramowitz and Stegun, equation 8.12.1
-        """
-        if abs(arg) > (1.0e0 + 1.0e-10):
-            eh.fdiags[0] = arg
-            raise ProcessValueError("Invalid argument", arg=arg)
-
-        arg2 = min(arg, (1.0e0 - 1.0e-10))
-        sinsq = 0.5e0 * (1.0e0 - arg2)
-        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
-        palpha = 1.0e0
-        pold = 1.0e0
-        pterm = 1.0e0
-        palphap = 0.0e0
-        poldp = 0.0e0
-
-        for n in range(10000):
-            #  Check for convergence every 20 iterations
-
-            if (n > 1) and ((n % 20) == 1):
-                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
-                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
-
-                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
-                    return palpha, palphap
-
-                pold = palpha
-                poldp = palphap
-
-            pterm = (
-                pterm
-                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
-                / (2.0e0 * n) ** 2
-                * sinsq
-            )
-            palpha = palpha + pterm
-            palphap = palphap - n * pterm / (1.0e0 - arg2)
-        else:
-            raise ProcessError("legend: Solution has not converged")
 
 
 def init_current_drive_variables():
