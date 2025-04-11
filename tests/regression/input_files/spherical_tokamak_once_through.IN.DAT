@@ -194,14 +194,14 @@ output_costs = 1 * Switch for costs output;
 
 *-------------Current Drive Variables--------------*
 
-bootstrap_current_fraction_max = 0.9 * maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`;
-harnum   = 2 * cyclotron harmonic frequency number; used in cut-off function
-wave_mode = 0 * Switch for ECRH wave mode ;
-etaech   = 0.45 * ECH wall plug to injector efficiency
+f_c_plasma_bootstrap_max = 0.9 * maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`;
+n_ecrh_harmonic   = 2 * cyclotron harmonic frequency number; used in cut-off function
+i_ecrh_wave_mode = 0 * Switch for ECRH wave mode ;
+eta_ecrh_injector_wall_plug   = 0.45 * ECH wall plug to injector efficiency
 feffcd   = 1.0 * current drive efficiency fudge factor (`iteration variable 47`)
-iefrf    = 13 * Switch for current drive efficiency model;
-irfcd    = 1 * Switch for current drive calculation;
-pinjalw  = 150.0 * maximum allowable value for injected power (MW) (`constraint equation 30`)
+i_hcd_primary    = 13 * Switch for current drive efficiency model;
+i_hcd_calculations    = 1 * Switch for current drive calculation;
+p_hcd_injected_max  = 150.0 * maximum allowable value for injected power (MW) (`constraint equation 30`)
 
 *-------------------Dcll Module--------------------*
 

@@ -653,9 +653,9 @@ class Power:
                         * (1 - fwbs_variables.f_nuc_pow_bz_liq)
                     )
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_beam_shine_through_mw
                 )
             elif fwbs_variables.i_blkt_dual_coolant == 1:
                 self.pthermfw_blkt = (
@@ -664,9 +664,9 @@ class Power:
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_beam_shine_through_mw
                 )
             else:
                 self.pthermfw_blkt = (
@@ -674,9 +674,9 @@ class Power:
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
                     + primary_pumping_variables.htpmw_fw_blkt
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.nbshinemw
+                    + current_drive_variables.p_beam_shine_through_mw
                 )
 
         elif fwbs_variables.i_coolant_pumping == 3:
@@ -686,9 +686,9 @@ class Power:
                 + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + primary_pumping_variables.htpmw_fw_blkt
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.nbshinemw
+                + current_drive_variables.p_beam_shine_through_mw
             )
 
         else:
@@ -697,9 +697,9 @@ class Power:
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + heat_transport_variables.htpmw_fw
-                + current_drive_variables.porbitlossmw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.nbshinemw
+                + current_drive_variables.p_beam_shine_through_mw
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
             self.pthermblkt = (
@@ -790,15 +790,16 @@ class Power:
         #  Secondary heat (some of it... rest calculated in POWER2)
         #  Wall plug injection power
         # MDK
-        # heat_transport_variables.pinjwp = (current_drive_variables.pinjmw + current_drive_variables.porbitlossmw + physics_variables.p_fw_alpha_mw)/etacd
+        # heat_transport_variables.pinjwp = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/eta_hcd_primary_injector_wall_plug
         # heat_transport_variables.pinjwp calculated in current_drive.f90
 
         #  Waste injection power
         if physics_variables.ignite == 0:
             # MDK
-            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.pinjmw - current_drive_variables.porbitlossmw - physics_variables.p_fw_alpha_mw
+            # pinjht = heat_transport_variables.pinjwp - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
-                heat_transport_variables.pinjwp - current_drive_variables.pinjmw
+                heat_transport_variables.pinjwp
+                - current_drive_variables.p_hcd_injected_total_mw
             )
         else:
             heat_transport_variables.pinjht = 0.0e0
@@ -1342,7 +1343,11 @@ class Power:
             "------------------------------------------------------------------",
         )
 
-        pinj = current_drive_variables.pinjmw if physics_variables.ignite == 0 else 0.0
+        pinj = (
+            current_drive_variables.p_hcd_injected_total_mw
+            if physics_variables.ignite == 0
+            else 0.0
+        )
 
         primsum = 0.0e0
         secsum = 0.0e0
@@ -1727,7 +1732,7 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Injected power deposited in plasma (MW)",
-            "(pinjmw)",
+            "(p_hcd_injected_total_mw)",
             pinj,
             "OP ",
         )
@@ -1781,7 +1786,13 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Injected power (MW)", "(pinjmw.)", pinj, "OP ")
+        po.ovarrf(
+            self.outfile,
+            "Injected power (MW)",
+            "(p_hcd_injected_total_mw.)",
+            pinj,
+            "OP ",
+        )
         po.ovarrf(
             self.outfile,
             "Ohmic power (MW)",
@@ -2160,10 +2171,19 @@ class Power:
 
         # Heating and current drive electrical power [MWe]
         p_hcd[0] = 0.0e0
-        p_hcd[1] = heat_transport_variables.pinjmax / current_drive_variables.etacd
-        p_hcd[2] = heat_transport_variables.pinjmax / current_drive_variables.etacd
+        p_hcd[1] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
+        p_hcd[2] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
         p_hcd[3] = heat_transport_variables.pinjwp
-        p_hcd[4] = heat_transport_variables.pinjmax / current_drive_variables.etacd
+        p_hcd[4] = (
+            heat_transport_variables.pinjmax
+            / current_drive_variables.eta_hcd_primary_injector_wall_plug
+        )
         p_hcd[5] = 0.0e0
 
         # PF coils electrical power [MWe]

@@ -506,8 +506,8 @@ def color_key(axis, mfile_data, scan, colour_scheme):
         ("PF coils", "none"),
     ]
 
-    if (mfile_data.data["iefrf"].get_scan(scan) in [5, 8]) or (
-        mfile_data.data["iefrffix"].get_scan(scan) in [5, 8]
+    if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
+        mfile_data.data["i_hcd_secondary"].get_scan(scan) in [5, 8]
     ):
         labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
         labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
@@ -634,7 +634,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
             n_tf_coils=n_tf_coils,
             r3=r3,
             r4=r4,
-            w=w + nbshield,
+            w=w + dx_beam_shield,
             facecolor=NBSHIELD_COLOUR[colour_scheme - 1],
         )
         # Overlay TF coil segments
@@ -648,12 +648,12 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
             facecolor=TFC_COLOUR[colour_scheme - 1],
         )
 
-    iefrf = mfile_data.data["iefrf"].get_scan(scan)
-    if (iefrf == 5) or (iefrf == 8):
+    i_hcd_primary = mfile_data.data["i_hcd_primary"].get_scan(scan)
+    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
-        c = beamwd + 2 * nbshield
+        c = beamwd + 2 * dx_beam_shield
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
         # Coordinates of the inner and outer edges of the beam at its tangency point
@@ -666,12 +666,12 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         youter = router * np.sin(beta)
         # Corner of TF coils
         xcorner = r4
-        ycorner = w + nbshield
+        ycorner = w + dx_beam_shield
         axis.plot(
             [xinner, xcorner], [yinner, ycorner], linestyle="dotted", color="black"
         )
-        x = xcorner + c * np.cos(beta) - nbshield * np.cos(beta)
-        y = ycorner + c * np.sin(beta) - nbshield * np.sin(beta)
+        x = xcorner + c * np.cos(beta) - dx_beam_shield * np.cos(beta)
+        y = ycorner + c * np.sin(beta) - dx_beam_shield * np.sin(beta)
         axis.plot([xouter, x], [youter, y], linestyle="dotted", color="black")
 
     # Ranges
@@ -3032,23 +3032,29 @@ def plot_current_drive_info(axis, mfile_data, scan):
     xmax = 1
     ymin = -16
     ymax = 1
-    iefrf = mfile_data.data["iefrf"].get_scan(scan)
+    i_hcd_primary = mfile_data.data["i_hcd_primary"].get_scan(scan)
     nbi = False
     ecrh = False
     ebw = False
     lhcd = False
     iccd = False
 
-    if (iefrf == 5) or (iefrf == 8):
+    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (iefrf == 3) or (iefrf == 7) or (iefrf == 10) or (iefrf == 11) or (iefrf == 13):
+    if (
+        (i_hcd_primary == 3)
+        or (i_hcd_primary == 7)
+        or (i_hcd_primary == 10)
+        or (i_hcd_primary == 11)
+        or (i_hcd_primary == 13)
+    ):
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
-    if iefrf == 12:
+    if i_hcd_primary == 12:
         ebw = True
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if iefrf in [1, 4, 6]:
+    if i_hcd_primary in [1, 4, 6]:
         lhcd = True
         axis.text(
             -0.05,
@@ -3057,29 +3063,29 @@ def plot_current_drive_info(axis, mfile_data, scan):
             ha="left",
             va="center",
         )
-    if iefrf == 2:
+    if i_hcd_primary == 2:
         iccd = True
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
-    if "iefrffix" in mfile_data.data:
+    if "i_hcd_secondary" in mfile_data.data:
         secondary_heating = ""
-        iefrffix = mfile_data.data["iefrffix"].get_scan(scan)
+        i_hcd_secondary = mfile_data.data["i_hcd_secondary"].get_scan(scan)
 
-        if (iefrffix == 5) or (iefrffix == 8):
+        if (i_hcd_secondary == 5) or (i_hcd_secondary == 8):
             secondary_heating = "NBI"
         if (
-            (iefrffix == 3)
-            or (iefrffix == 7)
-            or (iefrffix == 10)
-            or (iefrffix == 11)
-            or (iefrffix == 13)
+            (i_hcd_secondary == 3)
+            or (i_hcd_secondary == 7)
+            or (i_hcd_secondary == 10)
+            or (i_hcd_secondary == 11)
+            or (i_hcd_secondary == 13)
         ):
             secondary_heating = "ECH"
-        if iefrffix == 12:
+        if i_hcd_secondary == 12:
             secondary_heating = "EBW"
-        if iefrffix in [1, 4, 6]:
+        if i_hcd_secondary in [1, 4, 6]:
             secondary_heating = "LHCD"
-        if iefrffix == 2:
+        if i_hcd_secondary == 2:
             secondary_heating = "ICCD"
 
     axis.set_ylim([ymin, ymax])
@@ -3088,11 +3094,11 @@ def plot_current_drive_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    pinjie = mfile_data.data["pinjmw"].get_scan(scan)
+    pinjie = mfile_data.data["p_hcd_injected_total_mw"].get_scan(scan)
     pdivt = mfile_data.data["pdivt"].get_scan(scan)
     pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
 
-    if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+    if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
         pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
 
     pdivnr = (
@@ -3117,13 +3123,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if ecrh:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
-            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "effcd",
+                "eta_cd_hcd_primary",
                 "Current drive efficiency",
                 "A W$^{-1}$",
             ),
@@ -3136,8 +3142,8 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        # iefrffix is now always in the MFILE with = 0 meaning no fixed heating
-        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        # i_hcd_secondary is now always in the MFILE with = 0 meaning no fixed heating
+        if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3147,12 +3153,12 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if nbi:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
-            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
-            ("beam_energy", "NB energy", "keV"),
+            ("e_beam_kev", "NB energy", "keV"),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
             (
@@ -3163,7 +3169,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if mfile_data.data["iefrffix"].get_scan(scan) != 0:
+        if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3173,14 +3179,14 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if ebw:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
-            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
-                "Normalised current drive efficiency",
+                "eta_cd_norm_hcd_primary",
+                "Normalised current drive efficiency of primary HCD system",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
             (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
@@ -3192,7 +3198,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3202,13 +3208,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if lhcd:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
-            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
+                "eta_cd_norm_hcd_primary",
                 "Normalised current drive efficiency",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
@@ -3221,7 +3227,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3231,13 +3237,13 @@ def plot_current_drive_info(axis, mfile_data, scan):
     if iccd:
         data = [
             (pinjie, "Steady state auxiliary power", "MW"),
-            ("pheat", "Power for heating only", "MW"),
-            ("bootstrap_current_fraction", "Bootstrap fraction", ""),
+            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
             ("aux_current_fraction", "Auxiliary fraction", ""),
             ("inductive_current_fraction", "Inductive fraction", ""),
             ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
             (
-                "gamcd",
+                "eta_cd_norm_hcd_primary",
                 "Normalised current drive efficiency",
                 "(10$^{20}$ A/(Wm$^{2}$))",
             ),
@@ -3250,7 +3256,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
             (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
             (hstar, "H* (non-rad. corr.)", ""),
         ]
-        if "iefrffix" in mfile_data.data:
+        if "i_hcd_secondary" in mfile_data.data:
             data.insert(
                 1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
             )
@@ -3279,15 +3285,15 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         scan --> scan number to use
     """
 
-    boot_ipdg = mfile_data.data["bscf_iter89"].get_scan(scan)
-    boot_sauter = mfile_data.data["bscf_sauter"].get_scan(scan)
-    boot_nenins = mfile_data.data["bscf_nevins"].get_scan(scan)
-    boot_wilson = mfile_data.data["bscf_wilson"].get_scan(scan)
-    boot_sakai = mfile_data.data["bscf_sakai"].get_scan(scan)
-    boot_aries = mfile_data.data["bscf_aries"].get_scan(scan)
-    boot_andrade = mfile_data.data["bscf_andrade"].get_scan(scan)
-    boot_hoang = mfile_data.data["bscf_hoang"].get_scan(scan)
-    boot_wong = mfile_data.data["bscf_wong"].get_scan(scan)
+    boot_ipdg = mfile_data.data["f_c_plasma_bootstrap_iter89"].get_scan(scan)
+    boot_sauter = mfile_data.data["f_c_plasma_bootstrap_sauter"].get_scan(scan)
+    boot_nenins = mfile_data.data["f_c_plasma_bootstrap_nevins"].get_scan(scan)
+    boot_wilson = mfile_data.data["f_c_plasma_bootstrap_wilson"].get_scan(scan)
+    boot_sakai = mfile_data.data["f_c_plasma_bootstrap_sakai"].get_scan(scan)
+    boot_aries = mfile_data.data["f_c_plasma_bootstrap_aries"].get_scan(scan)
+    boot_andrade = mfile_data.data["f_c_plasma_bootstrap_andrade"].get_scan(scan)
+    boot_hoang = mfile_data.data["f_c_plasma_bootstrap_hoang"].get_scan(scan)
+    boot_wong = mfile_data.data["f_c_plasma_bootstrap_wong"].get_scan(scan)
     boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)  # noqa: N806
     boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)  # noqa: N806
 
@@ -3798,21 +3804,21 @@ def main(args=None):
         # To be re-inergrated to resistives when in-plane stresses is integrated
         casthi = m_file.data["casthi"].get_scan(scan)
 
-    global nbshield
+    global dx_beam_shield
     global rtanbeam
     global rtanmax
     global beamwd
 
-    iefrf = int(m_file.data["iefrf"].get_scan(scan))
-    iefrffix = int(m_file.data["iefrffix"].get_scan(scan))
+    i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
+    i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
 
-    if (iefrf in [5, 8]) or (iefrffix in [5, 8]):
-        nbshield = m_file.data["nbshield"].get_scan(scan)
+    if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
+        dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
         rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
         rtanmax = m_file.data["rtanmax"].get_scan(scan)
         beamwd = m_file.data["beamwd"].get_scan(scan)
     else:
-        nbshield = rtanbeam = rtanmax = beamwd = 0.0
+        dx_beam_shield = rtanbeam = rtanmax = beamwd = 0.0
 
     # Pedestal profile parameters
     global ipedestal

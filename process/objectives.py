@@ -73,8 +73,8 @@ def objective_function(minmax: int) -> float:
             ) / 10.0
         case 5:
             objective_metric = physics_variables.fusion_power / (
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
         case 6:
@@ -92,7 +92,7 @@ def objective_function(minmax: int) -> float:
         case 10:
             objective_metric = physics_variables.bt
         case 11:
-            objective_metric = current_drive_variables.pinjmw
+            objective_metric = current_drive_variables.p_hcd_injected_total_mw
         case 14:
             objective_metric = times_variables.t_burn / 2.0e4
         case 15:

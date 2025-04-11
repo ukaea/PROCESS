@@ -48,7 +48,9 @@ ITERATION_VARIABLES = {
     ),
     9: IterationVariable("fdene", fortran.constraint_variables, 0.001, 1.0),
     10: IterationVariable("hfact", fortran.physics_variables, 0.1, 3.0),
-    11: IterationVariable("pheat", fortran.current_drive_variables, 1.0e-3, 1.0e3),
+    11: IterationVariable(
+        "p_hcd_primary_extra_heat_mw", fortran.current_drive_variables, 1.0e-3, 1.0e3
+    ),
     12: IterationVariable("oacdcp", fortran.tfcoil_variables, 1.0e5, 1.50e8),
     13: IterationVariable("dr_tf_inboard", fortran.build_variables, 0.1, 5.0),
     14: IterationVariable("fwalld", fortran.constraint_variables, 0.001, 1.0),
@@ -56,7 +58,7 @@ ITERATION_VARIABLES = {
     16: IterationVariable("dr_cs", fortran.build_variables, 0.01, 10.00),
     17: IterationVariable("t_between_pulse", fortran.times_variables, 0.1, 1.0e8),
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
-    19: IterationVariable("beam_energy", fortran.current_drive_variables, 1.0, 1.0e6),
+    19: IterationVariable("e_beam_kev", fortran.current_drive_variables, 1.0, 1.0e6),
     20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
     21: IterationVariable("ft_burn", fortran.constraint_variables, 0.001, 1.0),
     23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),

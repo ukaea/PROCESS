@@ -55,7 +55,7 @@ SCAN_VARIABLES = {
     9: ScanVariable("te", "Electron_temperature_keV"),
     10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
     11: ScanVariable("beta_norm_max", "Beta_coefficient"),
-    12: ScanVariable("bootstrap_current_fraction_max", "Bootstrap_fraction"),
+    12: ScanVariable("f_c_plasma_bootstrap_max", "Bootstrap_fraction"),
     13: ScanVariable("boundu(10)", "H_factor_upper_bound"),
     14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
     15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
@@ -133,7 +133,9 @@ SCAN_VARIABLES = {
     76: ScanVariable("etath", "Thermal conversion eff."),
     77: ScanVariable("startupratio", "Gyrotron redundancy"),
     78: ScanVariable("fkind", "Multiplier for Nth of a kind costs"),
-    79: ScanVariable("etaech", "ECH wall plug to injector efficiency"),
+    79: ScanVariable(
+        "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency"
+    ),
     80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
     81: ScanVariable("n_tf_turn", "Number of turns in TF"),
 }
@@ -900,7 +902,7 @@ class Scan:
             case 11:
                 physics_variables.beta_norm_max = swp[iscn - 1]
             case 12:
-                current_drive_variables.bootstrap_current_fraction_max = swp[iscn - 1]
+                current_drive_variables.f_c_plasma_bootstrap_max = swp[iscn - 1]
             case 13:
                 numerics.boundu[9] = swp[iscn - 1]
             case 14:
@@ -1024,7 +1026,7 @@ class Scan:
             case 78:
                 cost_variables.fkind = swp[iscn - 1]
             case 79:
-                current_drive_variables.etaech = swp[iscn - 1]
+                current_drive_variables.eta_ecrh_injector_wall_plug = swp[iscn - 1]
             case 80:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
             case 81:

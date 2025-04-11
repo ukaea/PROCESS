@@ -74,12 +74,12 @@ icc = 1
 icc = 2
 * DESCRIPTION:   Global Power Balance Consistency
 * JUSTIFICATION: Consistency equations should always be on
-* VARIABLES:     pinjmw, Rest calculated in-situ
+* VARIABLES:     p_hcd_injected_total_mw, Rest calculated in-situ
 
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
-* VARIABLES:     i_rad_loss,ignite,pinjemw, Rest calculated in-situ
+* VARIABLES:     i_rad_loss,ignite,p_hcd_injected_electrons_mw, Rest calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Performance ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -2635,7 +2635,7 @@ boundu(116) = 1.0
 *---------------------------Heating & Current Drive--------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-irfcd = 1
+i_hcd_calculations = 1
 * DESCRIPTION:   Switch for current drive calculation
 * JUSTIFICATION: Consistency equation, should always be on.
 
@@ -2645,7 +2645,7 @@ irfcd = 1
 *icc = 40
 * DESCRIPTION:   Constraint equation for auxiliary power lower limit
 * JUSTIFICATION: Turned off, do not care about auxiliary power lower limit 
-* VARIABLES:     pinjmw (MW) calculated in-situ
+* VARIABLES:     p_hcd_injected_total_mw (MW) calculated in-situ
 
 *auxmin =  
 * DESCRIPTION:   Minimum required auxiliary power (MW)
@@ -2662,7 +2662,7 @@ irfcd = 1
 *icc = 37
 * DESCRIPTION:   Constraint equation for current drive gamma upper limit
 * JUSTIFICATION: Turned off, do not care about maximum current drive gamma
-* VARIABLES:     gamcd(1.0e20 A/W-m2) calculated in-situ
+* VARIABLES:     eta_cd_norm_hcd_primary(1.0e20 A/W-m2) calculated in-situ
 
 *gammax =  
 * DESCRIPTION:   Maximum current drive gamma (icc = 37)
@@ -2671,7 +2671,7 @@ irfcd = 1
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Primary H&CD System ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-iefrf = 13
+i_hcd_primary = 13
 * DESCRIPTION   Switch for Current Drive Efficiency Model (10: ECRH User Input gamma)
 * 1 Fenstermacher Lower Hybrid
 * 2 Ion Cyclotron current drive
@@ -2692,7 +2692,7 @@ iefrf = 13
 icc = 30
 * DESCRIPTION:   Injection Power Upper Limit
 * JUSTIFICATION: Limit for plasma stability
-* VARIABLES:     pinjmw (total auxiliary injected power (MW)) summed from all injected power sources
+* VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
 
 ixc = 46
 fpinj = 1.0
@@ -2701,14 +2701,14 @@ boundu(46) = 1.5
 * DESCRIPTION:   f-value for injected power variation range
 * JUSTIFICATION: Setup to allow the injected power to vary
 
-pinjalw = 150.0 
+p_hcd_injected_max = 150.0 
 * DESCRIPTION:   Maximum Allowable Value for Injected Power (MW) (icc=30)
 * JUSTIFICATION: 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *ixc = 11
-*pheat = 
+*p_hcd_primary_extra_heat_mw = 
 *boundl(11) = 
 *boundu(11) = 
 * DESCRIPTION:   Heating power not used for C.D. (MW)
@@ -2721,22 +2721,22 @@ feffcd = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Secondary H&CD System ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*iefrffix = 
+*i_hcd_secondary = 
 * DESCRIPTION:   Switch for 2nd current drive efficiency model
 * JUSTIFICATION: Not used, ECRH only
 
-*pinjfixmw = 
+*p_hcd_secondary_injected_mw = 
 * DESCRIPTION:   Secondary auxiliary injection power (MW)
 * JUSTIFICATION: Not used, ECRH only
 
-*pheatfix = 
+*p_hcd_secondary_extra_heat_mw = 
 * DESCRIPTION:   Secondary fixed heating power not used for C.D. (MW)
 * JUSTIFICATION: Not used, ECRH only.
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Neutral Beam Injection ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*beam_energy = 
+*e_beam_kev = 
 * DESCRIPTION:   Neutral beam energy (keV)
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2744,7 +2744,7 @@ feffcd = 1.0
 * DESCRIPTION:   Number of NB decay lengths to plasma centre
 * JUSTIFICATION: Not used as no NBI used
 
-*etanbi = 
+*eta_beam_injector_wall_plug = 
 * DESCRIPTION:   NBI wall plug to injector efficiency
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2752,7 +2752,7 @@ feffcd = 1.0
 * DESCRIPTION:   Width of neutral beam duct where it passes between the TF coils
 * JUSTIFICATION: Not used as no NBI used
 
-*forbitloss
+*f_p_beam_orbit_loss
 * DESCRIPTION:   NBI power orbit loss fraction
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2760,7 +2760,7 @@ feffcd = 1.0
 * DESCRIPTION:   R_tan / R_major for NBI
 * JUSTIFICATION: Not used as no NBI used
 
-*f_tritium_beam
+*f_beam_tritium
 * DESCRIPTION:   Tritium fraction of beam
 * JUSTIFICATION: Not used as no NBI used
 
@@ -2772,14 +2772,14 @@ feffcd = 1.0
 * DESCRIPTION:   Leading coeff. for NB beta fraction
 * JUSTIFICATION: Not used as no NBI used
 
-*nbshield
+*dx_beam_shield
 * DESCRIPTION:   Wall thickness of neutral beam duct (m)
 * JUSTIFICATION: Not used as no NBI used
 
 *icc = 3
 * DESCRIPTION:   Global power balance for ions (NBI)
 * JUSTIFICATION: Not used as no NBI used
-* VARIABLES:     pinjimw,ignite, Rest calculated in-situ
+* VARIABLES:     p_hcd_injected_ions_mw,ignite, Rest calculated in-situ
 
 *icc = 7
 * DESCRIPTION:   Equation for hot ion beam density (NBI)
@@ -2808,20 +2808,20 @@ feffcd = 1.0
 *icc = 59
 * DESCRIPTION:   Constraint equation for neutral beam shine-through fraction upper limit
 * JUSTIFICATION: Turned off, not using NBI 
-* VARIABLES:     nbshinefmax (maximum neutral beam shine-through fraction). nbshinef calculated in situ
+* VARIABLES:     f_p_beam_shine_through_max (maximum neutral beam shine-through fraction). f_p_beam_shine_through calculated in situ
 
-*nbshinefmax = 
+*f_p_beam_shine_through_max = 
 * DESCRIPTION:   Maximum neutral beam shine-through fraction (`constraint equation 59`) (default = 1.0D-3)
 * JUSTIFICATION: Not set, as not using icc = 59
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radio Frequency Heating ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-harnum = 2
+n_ecrh_harmonic = 2
 * DESCRIPTION:   Cyclotron harmonic frequency number 
 * JUSTIFICATION: Not set assuming default ==2 
 
-wave_mode = 0
+i_ecrh_wave_mode = 0
 * DESCRIPTION:   EM cutoff wave mode (X or O) 
 * JUSTIFICATION: Not set assuming default ==0 (O-mode)
 
@@ -2829,7 +2829,7 @@ wave_mode = 0
 * Lower hybrid *
 *--------------*
 
-*etalh = 
+*eta_lowhyb_injector_wall_plug = 
 * DESCRIPTION:   LH wall plug to plasma efficiency (default = 0.3)
 * JUSTIFICATION: Not used as no LH used
 
@@ -2837,11 +2837,11 @@ wave_mode = 0
 * Electron cyclotron *
 *--------------------*
 
-etaech = 0.45
+eta_ecrh_injector_wall_plug = 0.45
 * DESCRIPTION:   ECRH Wall Plug to Injector Efficiency
 * JUSTIFICATION:   
 
-*gamma_ecrh =
+*eta_cd_norm_ecrh =
 * DESCRIPTION:   User Input ECRH Gamma
 * JUSTIFICATION: 
 
@@ -2853,7 +2853,7 @@ etaech = 0.45
 * Electron Bernstein Wave *
 *-------------------------*
 
-* xi_ebw = 0.43  * switch in if using EBW, instead of gamma_ecrh *
+* xi_ebw = 0.43  * switch in if using EBW, instead of eta_cd_norm_ecrh *
 * DESCRIPTION:   User Input EBW Gamma
 * JUSTIFICATION: user input for current drive efficiency. Default xi_ebw = 0.43
 
@@ -2865,7 +2865,7 @@ etaech = 0.45
 * Bootstrap Current *
 *-------------------*
 
-bootstrap_current_fraction_max = 0.9
+f_c_plasma_bootstrap_max = 0.9
 * DESCRIPTION:   Maximum Fraction of Plasma Current from Bootstrap
 * JUSTIFICATION: upper limit set for plasma stability
 *                

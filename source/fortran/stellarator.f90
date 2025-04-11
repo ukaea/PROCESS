@@ -39,7 +39,7 @@ contains
     ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     use build_variables, only: dr_cs_tf_gap, iohcl, dr_cs, tfootfi
-    use current_drive_variables, only: irfcd
+    use current_drive_variables, only: i_hcd_calculations
     use pfcoil_variables, only: f_z_cs_tf_internal
     use physics_variables, only: aspect, beta_norm_max, kappa, kappa95, q95, rmajor, &
       triang, hfac, labels_confinement_scalings
@@ -92,7 +92,7 @@ contains
 
     !  Turn off current drive
 
-    irfcd = 0
+    i_hcd_calculations = 0
 
     !  Times for different phases
 

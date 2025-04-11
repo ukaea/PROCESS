@@ -1230,7 +1230,7 @@ class Stellarator:
                 heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
-                    + current_drive_variables.porbitlossmw
+                    + current_drive_variables.p_beam_orbit_loss_mw
                 )
                 heat_transport_variables.htpmw_blkt = (
                     heat_transport_variables.fpumpblkt
@@ -1485,7 +1485,7 @@ class Stellarator:
                             + p_fw_outboard_nuclear_heat_mw
                             + psurffwi
                             + psurffwo
-                            + current_drive_variables.porbitlossmw
+                            + current_drive_variables.p_beam_orbit_loss_mw
                         )
                     )
                     heat_transport_variables.htpmw_blkt = (
@@ -4227,14 +4227,14 @@ class Stellarator:
                 physics_variables.betbm0,
                 physics_variables.bp,
                 physics_variables.bt,
-                current_drive_variables.beam_current,
+                current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
-                current_drive_variables.beam_energy,
+                current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
-                current_drive_variables.f_tritium_beam,
+                current_drive_variables.f_beam_tritium,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
@@ -4401,7 +4401,7 @@ class Stellarator:
 
         if physics_variables.ignite == 0:
             powht = (
-                powht + current_drive_variables.pinjmw
+                powht + current_drive_variables.p_hcd_injected_total_mw
             )  # if not ignited add the auxiliary power
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
@@ -4467,7 +4467,7 @@ class Stellarator:
             physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
 
         #  Calculate transport losses and energy confinement time using the
@@ -4496,7 +4496,7 @@ class Stellarator:
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
@@ -4941,41 +4941,62 @@ class Stellarator:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if stellarator_variables.isthtr == 1:
-            current_drive_variables.echpwr = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.echpwr
-            current_drive_variables.etacd = current_drive_variables.etaech
+            current_drive_variables.p_ecrh_injected_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+            current_drive_variables.p_hcd_injected_ions_mw = 0
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.p_ecrh_injected_mw
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_ecrh_injector_wall_plug
+            )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
-            current_drive_variables.plhybd = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.plhybd
-            current_drive_variables.etacd = current_drive_variables.etalh
+            current_drive_variables.plhybd = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+            current_drive_variables.p_hcd_injected_ions_mw = 0
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.plhybd
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_lowhyb_injector_wall_plug
+            )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
             (
                 effnbss,
-                fpion,
-                current_drive_variables.nbshinef,
+                f_p_beam_injected_ions,
+                current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
-            current_drive_variables.pnbeam = current_drive_variables.pheat * (
-                1 - current_drive_variables.forbitloss
+            current_drive_variables.pnbeam = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+                * (1 - current_drive_variables.f_p_beam_orbit_loss)
             )
-            current_drive_variables.porbitlossmw = (
-                current_drive_variables.pheat * current_drive_variables.forbitloss
+            current_drive_variables.p_beam_orbit_loss_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+                * current_drive_variables.f_p_beam_orbit_loss
             )
-            current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
-            current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
-                1 - fpion
+            current_drive_variables.p_hcd_injected_ions_mw = (
+                current_drive_variables.pnbeam * f_p_beam_injected_ions
             )
-            current_drive_variables.etacd = current_drive_variables.etanbi
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.pnbeam * (1 - f_p_beam_injected_ions)
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_beam_injector_wall_plug
+            )
             current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         else:
             raise ProcessValueError(
                 "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
@@ -4983,27 +5004,28 @@ class Stellarator:
 
         #  Total injected power
 
-        current_drive_variables.pinjmw = (
-            current_drive_variables.pinjemw + current_drive_variables.pinjimw
+        current_drive_variables.p_hcd_injected_total_mw = (
+            current_drive_variables.p_hcd_injected_electrons_mw
+            + current_drive_variables.p_hcd_injected_ions_mw
         )
 
         #  Calculate neutral beam current
 
         if abs(current_drive_variables.pnbeam) > 1e-8:
-            current_drive_variables.beam_current = (
+            current_drive_variables.c_beam_total = (
                 1e-3
                 * (current_drive_variables.pnbeam * 1e6)
-                / current_drive_variables.beam_energy
+                / current_drive_variables.e_beam_kev
             )
         else:
-            current_drive_variables.beam_current = 0
+            current_drive_variables.c_beam_total = 0
 
         #  Ratio of fusion to input (injection+ohmic) power
 
         if (
             abs(
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
             < 1e-6
@@ -5011,8 +5033,8 @@ class Stellarator:
             current_drive_variables.bigq = 1e18
         else:
             current_drive_variables.bigq = physics_variables.fusion_power / (
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
 
@@ -5037,8 +5059,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Auxiliary power supplied to plasma (MW)",
-                "(pheat)",
-                current_drive_variables.pheat,
+                "(p_hcd_primary_extra_heat_mw)",
+                current_drive_variables.p_hcd_primary_extra_heat_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -5057,29 +5079,32 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(beam_current)",
-                    current_drive_variables.beam_current,
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
                 )
                 po.ovarre(
-                    self.outfile, "Fraction of beam energy to ions", "(fpion)", fpion
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    f_p_beam_injected_ions,
                 )
                 po.ovarre(
                     self.outfile,
                     "Neutral beam shine-through fraction",
-                    "(nbshinef)",
-                    current_drive_variables.nbshinef,
+                    "(f_p_beam_shine_through)",
+                    current_drive_variables.f_p_beam_shine_through,
                 )
                 po.ovarre(
                     self.outfile,
                     "Neutral beam orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam duct shielding thickness (m)",
-                    "(nbshield)",
-                    current_drive_variables.nbshield,
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5102,8 +5127,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Beam decay lengths to centre",
-                    "(taubeam)",
-                    current_drive_variables.taubeam,
+                    "(n_beam_decay_lengths_core)",
+                    current_drive_variables.n_beam_decay_lengths_core,
                 )
 
 

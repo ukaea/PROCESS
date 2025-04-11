@@ -78,7 +78,7 @@ boundu(103) = 10.0
 icc = 30
 ixc = 46 * fpinj
 * Maximum allowable value for injected power [MW]
-pinjalw = 200.0
+p_hcd_injected_max = 200.0
 
 * Net electric power lower limit *
 *--------------------------------*
@@ -451,19 +451,19 @@ t_precharge = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bootstrap_current_fraction_max = 0.95
+f_c_plasma_bootstrap_max = 0.95
 
 * Switch for current drive efficiency model
-iefrf = 10
+i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
-gamma_ecrh = 0.30
+eta_cd_norm_ecrh = 0.30
 
 * ECRH wall-plug efficiency
-etaech = 0.5
+eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
-pheat = 75.0
+p_hcd_primary_extra_heat_mw = 75.0
 
 * Impurity radiation *
 **********************

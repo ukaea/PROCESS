@@ -1,6 +1,6 @@
 # Culham Neutral Beam Model | `culnbi()`
 
-- `iefrf/iefrffix` = 8 
+- `i_hcd_primary/i_hcd_secondary` = 8 
 
 
 
@@ -12,7 +12,7 @@ from that of ITER (approx. 2.8).
 | Output | Description |
 |----------|-------------|
 | $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
-| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 $$
@@ -37,7 +37,7 @@ Beams topping cross section is calculated via $\mathtt{sigbeam}$ found [here](..
 Calculate number of decay lengths to centre
 
 $$
-\mathtt{taubeam} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
+\mathtt{n_beam_decay_lengths_core} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
 $$
 
 Calculate the shine through fraction of the beam
@@ -49,14 +49,14 @@ $$
 Deuterium and tritium beam densities
 
 $$
-\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_tritium_beam})
+\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_beam_tritium})
 $$
 
 $$
-\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_tritium_beam}
+\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_beam_tritium}
 $$
 
-Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{fpion}$
+Power split to the ions and electrons is calculated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$
 
 ## Current drive efficiency | `etanb2()`
 
@@ -72,7 +72,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
 |  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
 |  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
-|  $\mathtt{beam_energy}$      |  neutral beam energy $(\text{keV})$                             |
+|  $\mathtt{e_beam_kev}$      |  neutral beam energy $(\text{keV})$                             |
 |  $\mathtt{frbeam}$      |   R_tangent / R_major for neutral beam injection                            |
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
 |  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
@@ -114,7 +114,7 @@ $$
 Beam energy in MeV
 
 $$
-\mathtt{ebmev} = \frac{\mathtt{beam_energy}}{10^3}
+\mathtt{ebmev} = \frac{\mathtt{e_beam_kev}}{10^3}
 $$
 
 x and y coefficients of function J0(x,y) (IPDG89)

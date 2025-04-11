@@ -68,7 +68,10 @@ class Build:
             b = 1e10
 
         #  Width of beam duct, including shielding on both sides (m)
-        c = current_drive_variables.beamwd + 2.0e0 * current_drive_variables.nbshield
+        c = (
+            current_drive_variables.beamwd
+            + 2.0e0 * current_drive_variables.dx_beam_shield
+        )
 
         #  Major radius of inner edge of outboard TF coil (m)
         d = build_variables.r_tf_outboard_mid - 0.5e0 * b
@@ -2421,8 +2424,8 @@ class Build:
                     radius,
                 )
 
-            if (current_drive_variables.iefrf in [5, 8]) or (
-                current_drive_variables.iefrffix in [5, 8]
+            if (current_drive_variables.i_hcd_primary in [5, 8]) or (
+                current_drive_variables.i_hcd_secondary in [5, 8]
             ):
                 po.ovarre(
                     self.mfile,

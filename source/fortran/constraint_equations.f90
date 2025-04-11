@@ -366,12 +366,12 @@ contains
    subroutine constraint_err_030()
     !! Error in: Equation for injection power upper limit
     !! author: P B Lloyd, CCFE, Culham Science Centre
-    use current_drive_variables, only: pinjmw, pinjalw
+    use current_drive_variables, only: p_hcd_injected_total_mw, p_hcd_injected_max
     use constraint_variables, only: fpinj
     implicit none
     write(*,*) 'fpinj = ', fpinj
-    write(*,*) 'pinjalw = ', pinjalw
-    write(*,*) 'pinjmw = ', pinjmw
+    write(*,*) 'p_hcd_injected_max = ', p_hcd_injected_max
+    write(*,*) 'p_hcd_injected_total_mw = ', p_hcd_injected_total_mw
    end subroutine
 
    subroutine constraint_err_066()
@@ -455,13 +455,13 @@ contains
     !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
     !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
     !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
-    !! pinjmw : input real : total auxiliary injected power (MW)
+    !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
     !! vol_plasma : input real : plasma volume (m3)
 
     use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
                                   pden_plasma_core_rad_mw, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
-    use current_drive_variables, only: pinjmw
+    use current_drive_variables, only: p_hcd_injected_total_mw
 
     implicit none
 
@@ -487,7 +487,7 @@ contains
 
     ! if plasma not ignited include injected power
     if (ignite == 0) then
-      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + pinjmw/vol_plasma
+      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
     else
       ! if plasma ignited
       pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw
@@ -518,10 +518,10 @@ contains
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
-      !! pinjimw : input real : auxiliary injected power to ions (MW)
+      !! p_hcd_injected_ions_mw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: ignite, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
-      use current_drive_variables, only: pinjimw
+      use current_drive_variables, only: p_hcd_injected_ions_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -531,9 +531,9 @@ contains
 
 	   ! No assume plasma ignition:
       if (ignite == 0) then
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + pinjimw/vol_plasma) * tmp_cc
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma)
+         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
@@ -573,11 +573,11 @@ contains
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
       !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
-      !! pinjemw : input real : auxiliary injected power to electrons (MW)
+      !! p_hcd_injected_electrons_mw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: i_rad_loss, ignite, pden_electron_transport_loss_mw, pden_plasma_core_rad_mw, f_alpha_plasma, &
                                  alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
-      use current_drive_variables, only: pinjemw
+      use current_drive_variables, only: p_hcd_injected_electrons_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -600,7 +600,7 @@ contains
 
       ! if plasma not ignited include injected power
       if (ignite == 0) then
-         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + pinjemw/vol_plasma
+         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + p_hcd_injected_electrons_mw/vol_plasma
       else
       ! if plasma ignited
          pdenom = f_alpha_plasma*alpha_power_electron_density + piepv
@@ -935,9 +935,9 @@ contains
       !! #=#=# consistency
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! taubeam : input real : neutral beam e-decay lengths to plasma centre
+      !! n_beam_decay_lengths_core : input real : neutral beam e-decay lengths to plasma centre
       !! tbeamin : input real : permitted neutral beam e-decay lengths to plasma centre
-      use current_drive_variables, only: taubeam, tbeamin
+      use current_drive_variables, only: n_beam_decay_lengths_core, tbeamin
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -945,7 +945,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0D0 - taubeam/tbeamin
+      tmp_cc = 1.0D0 - n_beam_decay_lengths_core/tbeamin
       tmp_con = tbeamin * (1.0D0 - tmp_cc)
       tmp_err = tbeamin * tmp_cc
       tmp_symbol = '='
@@ -1028,7 +1028,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
-      !! pinjmw : input real : total auxiliary injected power (MW)
+      !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
       !! vol_plasma : input real : plasma volume (m3)
       !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
       !! charged_power_density :  input real : non-alpha charged particle fusion power per volume (MW/m3)
@@ -1036,7 +1036,7 @@ contains
       !! fradpwr : input real : f-value for core radiation power limit
       !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
       use physics_variables, only: f_alpha_plasma, vol_plasma, alpha_power_density_total, charged_power_density, pden_plasma_ohmic_mw, pden_plasma_rad_mw
-      use current_drive_variables, only: pinjmw
+      use current_drive_variables, only: p_hcd_injected_total_mw
       use constraint_variables, only: fradpwr
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1048,7 +1048,7 @@ contains
       real(dp) :: pradmaxpv
       !! Maximum possible power/vol_plasma that can be radiated (local)
 
-      pradmaxpv = pinjmw/vol_plasma + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
+      pradmaxpv = p_hcd_injected_total_mw/vol_plasma + alpha_power_density_total*f_alpha_plasma + charged_power_density + pden_plasma_ohmic_mw
       tmp_cc =  pden_plasma_rad_mw/pradmaxpv - 1.0D0 * fradpwr
       tmp_con = pradmaxpv * (1.0D0 - tmp_cc)
       tmp_err = pden_plasma_rad_mw * tmp_cc
@@ -1495,13 +1495,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for injection power upper limit
       !! #=# current_drive
-      !! #=#=# fpinj, pinjalw
+      !! #=#=# fpinj, p_hcd_injected_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! pinjmw : input real : total auxiliary injected power (MW)
+      !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
       !! fpinj : input real : f-value for injection power
-      !! pinjalw : input real : Maximum allowable value for injected power (MW)
-      use current_drive_variables, only: pinjmw, pinjalw
+      !! p_hcd_injected_max : input real : Maximum allowable value for injected power (MW)
+      use current_drive_variables, only: p_hcd_injected_total_mw, p_hcd_injected_max
       use constraint_variables, only: fpinj
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1510,9 +1510,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  pinjmw/pinjalw - 1.0D0 * fpinj
-      tmp_con = pinjalw
-      tmp_err = pinjalw  - pinjmw / fpinj
+      tmp_cc =  p_hcd_injected_total_mw/p_hcd_injected_max - 1.0D0 * fpinj
+      tmp_con = p_hcd_injected_max
+      tmp_err = p_hcd_injected_max  - p_hcd_injected_total_mw / fpinj
       tmp_symbol = '<'
       tmp_units = 'MW'
 
@@ -1711,9 +1711,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fgamcd : input real : f-value for current drive gamma
       !! gammax : input real : maximum current drive gamma
-      !! gamcd : input real : normalised current drive efficiency (1.0e20 A/W-m2)
+      !! eta_cd_norm_hcd_primary : input real : normalised current drive efficiency (1.0e20 A/W-m2)
       use constraint_variables, only: fgamcd, gammax
-      use current_drive_variables, only: gamcd
+      use current_drive_variables, only: eta_cd_norm_hcd_primary
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1721,9 +1721,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  gamcd/gammax - 1.0D0 * fgamcd
+      tmp_cc =  eta_cd_norm_hcd_primary/gammax - 1.0D0 * fgamcd
       tmp_con = gammax * (1.0D0 - tmp_cc)
-      tmp_err = gamcd * tmp_cc
+      tmp_err = eta_cd_norm_hcd_primary * tmp_cc
       tmp_symbol = '<'
       tmp_units = '1E20 A/Wm2'
 
@@ -1795,10 +1795,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fauxmn : input real : f-value for minimum auxiliary power
-      !! pinjmw : input real : total auxiliary injected power (MW)
+      !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
       !! auxmin : input real : minimum auxiliary power (MW)
       use constraint_variables, only: fauxmn, auxmin
-      use current_drive_variables, only: pinjmw
+      use current_drive_variables, only: p_hcd_injected_total_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1806,7 +1806,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fauxmn * pinjmw/auxmin
+      tmp_cc =  1.0D0 - fauxmn * p_hcd_injected_total_mw/auxmin
       tmp_con = auxmin * (1.0D0 - tmp_cc)
       tmp_err = auxmin * tmp_cc
       tmp_symbol = '>'
@@ -2298,7 +2298,7 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for power through separatrix / major radius upper limit
       !! #=# current_drive
-      !! #=#=# fnbshinef, nbshinefmax
+      !! #=#=# fnbshinef, f_p_beam_shine_through_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpsepr : input real : f-value for maximum Psep/R limit
@@ -2373,23 +2373,23 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for neutral beam shine-through fraction upper limit
       !! #=# current_drive
-      !! #=#=# fnbshinef, nbshinefmax
+      !! #=#=# fnbshinef, f_p_beam_shine_through_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fnbshinef : input real : f-value for maximum neutral beam shine-through fraction
-      !! nbshinefmax : input real :  maximum neutral beam shine-through fraction
-      !! nbshinef : input real :  neutral beam shine-through fraction
-      use constraint_variables, only: fnbshinef, nbshinefmax
-      use current_drive_variables, only: nbshinef
+      !! f_p_beam_shine_through_max : input real :  maximum neutral beam shine-through fraction
+      !! f_p_beam_shine_through : input real :  neutral beam shine-through fraction
+      use constraint_variables, only: fnbshinef, f_p_beam_shine_through_max
+      use current_drive_variables, only: f_p_beam_shine_through
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc = nbshinef/nbshinefmax - 1.0D0 * fnbshinef
-      tmp_con = nbshinefmax * (1.0D0 - tmp_cc)
-      tmp_err = nbshinef * tmp_cc
+      tmp_cc = f_p_beam_shine_through/f_p_beam_shine_through_max - 1.0D0 * fnbshinef
+      tmp_con = f_p_beam_shine_through_max * (1.0D0 - tmp_cc)
+      tmp_err = f_p_beam_shine_through * tmp_cc
       tmp_symbol = '<'
       tmp_units = ''
    end subroutine constraint_eqn_059
@@ -2820,9 +2820,9 @@ contains
       !! fplhsep : input real : F-value for Psep >= Plh + Paux : for consistency of two values of separatrix power
       !! p_l_h_threshold_mw : input real : L-H mode power threshold (MW)
       !! pdivt : input real : power to be conducted to the divertor region (MW)
-      !! pinjmw : inout real : total auxiliary injected power (MW)
+      !! p_hcd_injected_total_mw : inout real : total auxiliary injected power (MW)
       use physics_variables, only: fplhsep, p_l_h_threshold_mw, pdivt
-      use current_drive_variables, only: pinjmw
+      use current_drive_variables, only: p_hcd_injected_total_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2830,7 +2830,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fplhsep * pdivt / (p_l_h_threshold_mw+pinjmw)
+      tmp_cc = 1.0d0 - fplhsep * pdivt / (p_l_h_threshold_mw+p_hcd_injected_total_mw)
       tmp_con = pdivt
       tmp_err = pdivt * tmp_cc
       tmp_symbol = '>'
@@ -3390,7 +3390,7 @@ contains
       use constraint_variables, only: fecrh_ignition
       use stellarator_variables, only: max_gyrotron_frequency, te0_ecrh_achievable, powerscaling_constraint, powerht_constraint
       use physics_variables, only: ignite
-      use current_drive_variables, only: pheat
+      use current_drive_variables, only: p_hcd_primary_extra_heat_mw
       implicit none
       real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3400,7 +3400,7 @@ contains
 
       ! Achievable ECRH te needs to be larger than needed te for igntion
       if(ignite==0) then
-         tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+pheat)/powerscaling_constraint
+         tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+p_hcd_primary_extra_heat_mw)/powerscaling_constraint
       else
          tmp_cc = 1.0D0 - fecrh_ignition* powerht_constraint/powerscaling_constraint
       endif

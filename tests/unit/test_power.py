@@ -2039,7 +2039,7 @@ class Power2Param(NamedTuple):
 
     ireactor: Any = None
 
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     emultmw: Any = None
 
@@ -2241,7 +2241,7 @@ class Power2Param(NamedTuple):
             pnetelin=500,
             ipnet=0,
             ireactor=1,
-            pinjmw=51.978447720428512,
+            p_hcd_injected_total_mw=51.978447720428512,
             emultmw=377.93233088402548,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
@@ -2343,7 +2343,7 @@ class Power2Param(NamedTuple):
             pnetelin=500,
             ipnet=0,
             ireactor=1,
-            pinjmw=51.978447720428512,
+            p_hcd_injected_total_mw=51.978447720428512,
             emultmw=377.8143718115644,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
@@ -2462,7 +2462,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(cost_variables, "ireactor", power2param.ireactor)
 
-    monkeypatch.setattr(current_drive_variables, "pinjmw", power2param.pinjmw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_total_mw",
+        power2param.p_hcd_injected_total_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "emultmw", power2param.emultmw)
 
@@ -2708,7 +2712,7 @@ def test_power2(power2param, monkeypatch, power):
 
 
 class Power3Param(NamedTuple):
-    etacd: Any = None
+    eta_hcd_primary_injector_wall_plug: Any = None
 
     htpmw: Any = None
 
@@ -2751,7 +2755,7 @@ class Power3Param(NamedTuple):
     "power3param",
     (
         Power3Param(
-            etacd=0.40000000000000002,
+            eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             htpmw=234.28554165620102,
             pinjmax=120,
             crypmw=37.900388528497025,
@@ -2778,7 +2782,7 @@ class Power3Param(NamedTuple):
             iprint=0,
         ),
         Power3Param(
-            etacd=0.40000000000000002,
+            eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             htpmw=234.2162627659944,
             pinjmax=120,
             crypmw=108.74512702403499,
@@ -2825,7 +2829,11 @@ def test_power3(power3param, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(current_drive_variables, "etacd", power3param.etacd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_hcd_primary_injector_wall_plug",
+        power3param.eta_hcd_primary_injector_wall_plug,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "htpmw", power3param.htpmw)
 

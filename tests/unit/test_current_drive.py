@@ -27,81 +27,81 @@ class CudrivParam(NamedTuple):
 
     pinjwp: Any = None
 
-    echpwr: Any = None
+    p_ecrh_injected_mw: Any = None
 
     pnbeam: Any = None
 
     plhybd: Any = None
 
-    beam_current: Any = None
+    c_beam_total: Any = None
 
-    porbitlossmw: Any = None
+    p_beam_orbit_loss_mw: Any = None
 
-    iefrf: Any = None
+    i_hcd_primary: Any = None
 
-    iefrffix: Any = None
+    i_hcd_secondary: Any = None
 
-    pheat: Any = None
+    p_hcd_primary_extra_heat_mw: Any = None
 
-    pheatfix: Any = None
+    p_hcd_secondary_extra_heat_mw: Any = None
 
-    pinjfixmw: Any = None
+    p_hcd_secondary_injected_mw: Any = None
 
-    irfcd: Any = None
+    i_hcd_calculations: Any = None
 
     feffcd: Any = None
 
-    fpion: Any = None
+    f_p_beam_injected_ions: Any = None
 
-    nbshinef: Any = None
+    f_p_beam_shine_through: Any = None
 
-    gamcd: Any = None
+    eta_cd_norm_hcd_primary: Any = None
 
-    gamma_ecrh: Any = None
+    eta_cd_norm_ecrh: Any = None
 
-    etalh: Any = None
+    eta_lowhyb_injector_wall_plug: Any = None
 
-    etacd: Any = None
+    eta_hcd_primary_injector_wall_plug: Any = None
 
-    etacdfix: Any = None
+    eta_hcd_secondary_injector_wall_plug: Any = None
 
-    etaech: Any = None
+    eta_ecrh_injector_wall_plug: Any = None
 
-    forbitloss: Any = None
+    f_p_beam_orbit_loss: Any = None
 
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     pwpnb: Any = None
 
-    etanbi: Any = None
+    eta_beam_injector_wall_plug: Any = None
 
-    beam_energy: Any = None
+    e_beam_kev: Any = None
 
-    effcd: Any = None
+    eta_cd_hcd_primary: Any = None
 
     pwplh: Any = None
 
     echwpow: Any = None
 
-    pnbitot: Any = None
+    p_beam_injected_mw: Any = None
 
-    nbshinemw: Any = None
+    p_beam_shine_through_mw: Any = None
 
-    pinjemw: Any = None
+    p_hcd_injected_electrons_mw: Any = None
 
-    pinjimw: Any = None
+    p_hcd_injected_ions_mw: Any = None
 
     bigq: Any = None
 
-    bootstrap_current_fraction: Any = None
+    f_c_plasma_bootstrap: Any = None
 
-    bootstrap_current_fraction_max: Any = None
+    f_c_plasma_bootstrap_max: Any = None
 
-    taubeam: Any = None
+    n_beam_decay_lengths_core: Any = None
 
-    pinjalw: Any = None
+    p_hcd_injected_max: Any = None
 
-    nbshield: Any = None
+    dx_beam_shield: Any = None
 
     frbeam: Any = None
 
@@ -109,13 +109,13 @@ class CudrivParam(NamedTuple):
 
     rtanmax: Any = None
 
-    diamagnetic_current_fraction: Any = None
+    f_c_plasma_diamagnetic: Any = None
 
-    ps_current_fraction: Any = None
+    f_c_plasma_pfirsch_schluter: Any = None
 
-    plasma_current_internal_fraction: Any = None
+    f_c_plasma_internal: Any = None
 
-    harnum: Any = None
+    n_ecrh_harmonic: Any = None
 
     xi_ebw: Any = None
 
@@ -183,19 +183,19 @@ class CudrivParam(NamedTuple):
 
     expected_pinjwp: Any = None
 
-    expected_echpwr: Any = None
+    expected_p_ecrh_injected_mw: Any = None
 
     expected_gamcd: Any = None
 
     expected_etacd: Any = None
 
-    expected_pinjmw: Any = None
+    expected_p_hcd_injected_total_mw: Any = None
 
     expected_effcd: Any = None
 
     expected_echwpow: Any = None
 
-    expected_pinjemw: Any = None
+    expected_p_hcd_injected_electrons_mw: Any = None
 
     expected_bigq: Any = None
 
@@ -206,51 +206,51 @@ class CudrivParam(NamedTuple):
         CudrivParam(
             pinjwpfix=0,
             pinjwp=0,
-            echpwr=0,
+            p_ecrh_injected_mw=0,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
-            porbitlossmw=0,
-            iefrf=10,
-            iefrffix=0,
-            pheat=75,
-            pheatfix=0,
-            pinjfixmw=0,
-            irfcd=1,
+            c_beam_total=0,
+            p_beam_orbit_loss_mw=0,
+            i_hcd_primary=10,
+            i_hcd_secondary=0,
+            p_hcd_primary_extra_heat_mw=75,
+            p_hcd_secondary_extra_heat_mw=0,
+            p_hcd_secondary_injected_mw=0,
+            i_hcd_calculations=1,
             feffcd=1,
-            fpion=0.5,
-            nbshinef=0,
-            gamcd=0,
-            gamma_ecrh=0.30000000000000004,
-            etalh=0.29999999999999999,
-            etacd=0,
-            etacdfix=0,
-            etaech=0.5,
-            forbitloss=0,
-            pinjmw=0,
+            f_p_beam_injected_ions=0.5,
+            f_p_beam_shine_through=0,
+            eta_cd_norm_hcd_primary=0,
+            eta_cd_norm_ecrh=0.30000000000000004,
+            eta_lowhyb_injector_wall_plug=0.29999999999999999,
+            eta_hcd_primary_injector_wall_plug=0,
+            eta_hcd_secondary_injector_wall_plug=0,
+            eta_ecrh_injector_wall_plug=0.5,
+            f_p_beam_orbit_loss=0,
+            p_hcd_injected_total_mw=0,
             pwpnb=0,
-            etanbi=0.29999999999999999,
-            beam_energy=1000,
-            effcd=0,
+            eta_beam_injector_wall_plug=0.29999999999999999,
+            e_beam_kev=1000,
+            eta_cd_hcd_primary=0,
             pwplh=0,
             echwpow=0,
-            pnbitot=0,
-            nbshinemw=0,
-            pinjemw=0,
-            pinjimw=0,
+            p_beam_injected_mw=0,
+            p_beam_shine_through_mw=0,
+            p_hcd_injected_electrons_mw=0,
+            p_hcd_injected_ions_mw=0,
             bigq=0,
-            bootstrap_current_fraction=0.27635918746616817,
-            bootstrap_current_fraction_max=0.95000000000000007,
-            taubeam=0,
-            pinjalw=200,
-            nbshield=0.5,
+            f_c_plasma_bootstrap=0.27635918746616817,
+            f_c_plasma_bootstrap_max=0.95000000000000007,
+            n_beam_decay_lengths_core=0,
+            p_hcd_injected_max=200,
+            dx_beam_shield=0.5,
             frbeam=1.05,
             rtanbeam=0,
             rtanmax=0,
-            diamagnetic_current_fraction=0,
-            ps_current_fraction=0,
-            plasma_current_internal_fraction=0.27635918746616817,
-            harnum=1,
+            f_c_plasma_diamagnetic=0,
+            f_c_plasma_pfirsch_schluter=0,
+            f_c_plasma_internal=0.27635918746616817,
+            n_ecrh_harmonic=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
             te=12,
@@ -284,63 +284,63 @@ class CudrivParam(NamedTuple):
             iprint=0,
             outfile=11,
             expected_pinjwp=240.99200038011492,
-            expected_echpwr=120.49600019005746,
+            expected_p_ecrh_injected_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
-            expected_pinjmw=120.49600019005746,
+            expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
             expected_echwpow=240.99200038011492,
-            expected_pinjemw=120.49600019005746,
+            expected_p_hcd_injected_electrons_mw=120.49600019005746,
             expected_bigq=0,
         ),
         CudrivParam(
             pinjwpfix=0,
             pinjwp=240.99200038011492,
-            echpwr=120.49600019005746,
+            p_ecrh_injected_mw=120.49600019005746,
             pnbeam=0,
             plhybd=0,
-            beam_current=0,
-            porbitlossmw=0,
-            iefrf=10,
-            iefrffix=0,
-            pheat=75,
-            pheatfix=0,
-            pinjfixmw=0,
-            irfcd=1,
+            c_beam_total=0,
+            p_beam_orbit_loss_mw=0,
+            i_hcd_primary=10,
+            i_hcd_secondary=0,
+            p_hcd_primary_extra_heat_mw=75,
+            p_hcd_secondary_extra_heat_mw=0,
+            p_hcd_secondary_injected_mw=0,
+            i_hcd_calculations=1,
             feffcd=1,
-            fpion=0.5,
-            nbshinef=0,
-            gamcd=0.30000000000000004,
-            gamma_ecrh=0.30000000000000004,
-            etalh=0.29999999999999999,
-            etacd=0.5,
-            etacdfix=0,
-            etaech=0.5,
-            forbitloss=0,
-            pinjmw=120.49600019005746,
+            f_p_beam_injected_ions=0.5,
+            f_p_beam_shine_through=0,
+            eta_cd_norm_hcd_primary=0.30000000000000004,
+            eta_cd_norm_ecrh=0.30000000000000004,
+            eta_lowhyb_injector_wall_plug=0.29999999999999999,
+            eta_hcd_primary_injector_wall_plug=0.5,
+            eta_hcd_secondary_injector_wall_plug=0,
+            eta_ecrh_injector_wall_plug=0.5,
+            f_p_beam_orbit_loss=0,
+            p_hcd_injected_total_mw=120.49600019005746,
             pwpnb=0,
-            etanbi=0.29999999999999999,
-            beam_energy=1000,
-            effcd=0.05000000000000001,
+            eta_beam_injector_wall_plug=0.29999999999999999,
+            e_beam_kev=1000,
+            eta_cd_hcd_primary=0.05000000000000001,
             pwplh=0,
             echwpow=240.99200038011492,
-            pnbitot=0,
-            nbshinemw=0,
-            pinjemw=120.49600019005746,
-            pinjimw=0,
+            p_beam_injected_mw=0,
+            p_beam_shine_through_mw=0,
+            p_hcd_injected_electrons_mw=120.49600019005746,
+            p_hcd_injected_ions_mw=0,
             bigq=0,
-            bootstrap_current_fraction=0.27635918746616817,
-            bootstrap_current_fraction_max=0.95000000000000007,
-            taubeam=0,
-            pinjalw=200,
-            nbshield=0.5,
+            f_c_plasma_bootstrap=0.27635918746616817,
+            f_c_plasma_bootstrap_max=0.95000000000000007,
+            n_beam_decay_lengths_core=0,
+            p_hcd_injected_max=200,
+            dx_beam_shield=0.5,
             frbeam=1.05,
             rtanbeam=8.4000000000000004,
             rtanmax=13.179564451855533,
-            diamagnetic_current_fraction=0,
-            ps_current_fraction=0,
-            plasma_current_internal_fraction=0.27635918746616817,
-            harnum=1,
+            f_c_plasma_diamagnetic=0,
+            f_c_plasma_pfirsch_schluter=0,
+            f_c_plasma_internal=0.27635918746616817,
+            n_ecrh_harmonic=1,
             xi_ebw=0.80000000000000004,
             dene=7.5e19,
             te=12,
@@ -374,13 +374,13 @@ class CudrivParam(NamedTuple):
             iprint=0,
             outfile=11,
             expected_pinjwp=240.99200038011492,
-            expected_echpwr=120.49600019005746,
+            expected_p_ecrh_injected_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
-            expected_pinjmw=120.49600019005746,
+            expected_p_hcd_injected_total_mw=120.49600019005746,
             expected_effcd=0.05000000000000001,
             expected_echwpow=240.99200038011492,
-            expected_pinjemw=120.49600019005746,
+            expected_p_hcd_injected_electrons_mw=120.49600019005746,
             expected_bigq=8.6725187311435423,
         ),
     ),
@@ -402,93 +402,179 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(heat_transport_variables, "pinjwp", cudrivparam.pinjwp)
 
-    monkeypatch.setattr(current_drive_variables, "echpwr", cudrivparam.echpwr)
+    monkeypatch.setattr(
+        current_drive_variables, "p_ecrh_injected_mw", cudrivparam.p_ecrh_injected_mw
+    )
 
     monkeypatch.setattr(current_drive_variables, "pnbeam", cudrivparam.pnbeam)
 
     monkeypatch.setattr(current_drive_variables, "plhybd", cudrivparam.plhybd)
 
     monkeypatch.setattr(
-        current_drive_variables, "beam_current", cudrivparam.beam_current
+        current_drive_variables, "c_beam_total", cudrivparam.c_beam_total
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "porbitlossmw", cudrivparam.porbitlossmw
+        current_drive_variables,
+        "p_beam_orbit_loss_mw",
+        cudrivparam.p_beam_orbit_loss_mw,
     )
 
-    monkeypatch.setattr(current_drive_variables, "iefrf", cudrivparam.iefrf)
+    monkeypatch.setattr(
+        current_drive_variables, "i_hcd_primary", cudrivparam.i_hcd_primary
+    )
 
-    monkeypatch.setattr(current_drive_variables, "iefrffix", cudrivparam.iefrffix)
+    monkeypatch.setattr(
+        current_drive_variables, "i_hcd_secondary", cudrivparam.i_hcd_secondary
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pheat", cudrivparam.pheat)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_primary_extra_heat_mw",
+        cudrivparam.p_hcd_primary_extra_heat_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pheatfix", cudrivparam.pheatfix)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_secondary_extra_heat_mw",
+        cudrivparam.p_hcd_secondary_extra_heat_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pinjfixmw", cudrivparam.pinjfixmw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_secondary_injected_mw",
+        cudrivparam.p_hcd_secondary_injected_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "irfcd", cudrivparam.irfcd)
+    monkeypatch.setattr(
+        current_drive_variables, "i_hcd_calculations", cudrivparam.i_hcd_calculations
+    )
 
     monkeypatch.setattr(current_drive_variables, "feffcd", cudrivparam.feffcd)
 
-    monkeypatch.setattr(current_drive_variables, "fpion", cudrivparam.fpion)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "f_p_beam_injected_ions",
+        cudrivparam.f_p_beam_injected_ions,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "nbshinef", cudrivparam.nbshinef)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "f_p_beam_shine_through",
+        cudrivparam.f_p_beam_shine_through,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "gamcd", cudrivparam.gamcd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_cd_norm_hcd_primary",
+        cudrivparam.eta_cd_norm_hcd_primary,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "gamma_ecrh", cudrivparam.gamma_ecrh)
+    monkeypatch.setattr(
+        current_drive_variables, "eta_cd_norm_ecrh", cudrivparam.eta_cd_norm_ecrh
+    )
 
-    monkeypatch.setattr(current_drive_variables, "etalh", cudrivparam.etalh)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_lowhyb_injector_wall_plug",
+        cudrivparam.eta_lowhyb_injector_wall_plug,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "etacd", cudrivparam.etacd)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_hcd_primary_injector_wall_plug",
+        cudrivparam.eta_hcd_primary_injector_wall_plug,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "etacdfix", cudrivparam.etacdfix)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_hcd_secondary_injector_wall_plug",
+        cudrivparam.eta_hcd_secondary_injector_wall_plug,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "etaech", cudrivparam.etaech)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_ecrh_injector_wall_plug",
+        cudrivparam.eta_ecrh_injector_wall_plug,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "forbitloss", cudrivparam.forbitloss)
+    monkeypatch.setattr(
+        current_drive_variables, "f_p_beam_orbit_loss", cudrivparam.f_p_beam_orbit_loss
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pinjmw", cudrivparam.pinjmw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_total_mw",
+        cudrivparam.p_hcd_injected_total_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "pwpnb", cudrivparam.pwpnb)
 
-    monkeypatch.setattr(current_drive_variables, "etanbi", cudrivparam.etanbi)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "eta_beam_injector_wall_plug",
+        cudrivparam.eta_beam_injector_wall_plug,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "beam_energy", cudrivparam.beam_energy)
+    monkeypatch.setattr(current_drive_variables, "e_beam_kev", cudrivparam.e_beam_kev)
 
-    monkeypatch.setattr(current_drive_variables, "effcd", cudrivparam.effcd)
+    monkeypatch.setattr(
+        current_drive_variables, "eta_cd_hcd_primary", cudrivparam.eta_cd_hcd_primary
+    )
 
     monkeypatch.setattr(current_drive_variables, "pwplh", cudrivparam.pwplh)
 
     monkeypatch.setattr(current_drive_variables, "echwpow", cudrivparam.echwpow)
 
-    monkeypatch.setattr(current_drive_variables, "pnbitot", cudrivparam.pnbitot)
+    monkeypatch.setattr(
+        current_drive_variables, "p_beam_injected_mw", cudrivparam.p_beam_injected_mw
+    )
 
-    monkeypatch.setattr(current_drive_variables, "nbshinemw", cudrivparam.nbshinemw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_beam_shine_through_mw",
+        cudrivparam.p_beam_shine_through_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pinjemw", cudrivparam.pinjemw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_electrons_mw",
+        cudrivparam.p_hcd_injected_electrons_mw,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pinjimw", cudrivparam.pinjimw)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_injected_ions_mw",
+        cudrivparam.p_hcd_injected_ions_mw,
+    )
 
     monkeypatch.setattr(current_drive_variables, "bigq", cudrivparam.bigq)
 
     monkeypatch.setattr(
         current_drive_variables,
-        "bootstrap_current_fraction",
-        cudrivparam.bootstrap_current_fraction,
+        "f_c_plasma_bootstrap",
+        cudrivparam.f_c_plasma_bootstrap,
     )
 
     monkeypatch.setattr(
         current_drive_variables,
-        "bootstrap_current_fraction_max",
-        cudrivparam.bootstrap_current_fraction_max,
+        "f_c_plasma_bootstrap_max",
+        cudrivparam.f_c_plasma_bootstrap_max,
     )
 
-    monkeypatch.setattr(current_drive_variables, "taubeam", cudrivparam.taubeam)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "n_beam_decay_lengths_core",
+        cudrivparam.n_beam_decay_lengths_core,
+    )
 
-    monkeypatch.setattr(current_drive_variables, "pinjalw", cudrivparam.pinjalw)
+    monkeypatch.setattr(
+        current_drive_variables, "p_hcd_injected_max", cudrivparam.p_hcd_injected_max
+    )
 
-    monkeypatch.setattr(current_drive_variables, "nbshield", cudrivparam.nbshield)
+    monkeypatch.setattr(
+        current_drive_variables, "dx_beam_shield", cudrivparam.dx_beam_shield
+    )
 
     monkeypatch.setattr(current_drive_variables, "frbeam", cudrivparam.frbeam)
 
@@ -498,21 +584,25 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     monkeypatch.setattr(
         current_drive_variables,
-        "diamagnetic_current_fraction",
-        cudrivparam.diamagnetic_current_fraction,
-    )
-
-    monkeypatch.setattr(
-        current_drive_variables, "ps_current_fraction", cudrivparam.ps_current_fraction
+        "f_c_plasma_diamagnetic",
+        cudrivparam.f_c_plasma_diamagnetic,
     )
 
     monkeypatch.setattr(
         current_drive_variables,
-        "plasma_current_internal_fraction",
-        cudrivparam.plasma_current_internal_fraction,
+        "f_c_plasma_pfirsch_schluter",
+        cudrivparam.f_c_plasma_pfirsch_schluter,
     )
 
-    monkeypatch.setattr(current_drive_variables, "harnum", cudrivparam.harnum)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "f_c_plasma_internal",
+        cudrivparam.f_c_plasma_internal,
+    )
+
+    monkeypatch.setattr(
+        current_drive_variables, "n_ecrh_harmonic", cudrivparam.n_ecrh_harmonic
+    )
 
     monkeypatch.setattr(current_drive_variables, "xi_ebw", cudrivparam.xi_ebw)
 
@@ -586,22 +676,32 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
 
     assert heat_transport_variables.pinjwp == pytest.approx(cudrivparam.expected_pinjwp)
 
-    assert current_drive_variables.echpwr == pytest.approx(cudrivparam.expected_echpwr)
+    assert current_drive_variables.p_ecrh_injected_mw == pytest.approx(
+        cudrivparam.expected_p_ecrh_injected_mw
+    )
 
-    assert current_drive_variables.gamcd == pytest.approx(cudrivparam.expected_gamcd)
+    assert current_drive_variables.eta_cd_norm_hcd_primary == pytest.approx(
+        cudrivparam.expected_gamcd
+    )
 
-    assert current_drive_variables.etacd == pytest.approx(cudrivparam.expected_etacd)
+    assert current_drive_variables.eta_hcd_primary_injector_wall_plug == pytest.approx(
+        cudrivparam.expected_etacd
+    )
 
-    assert current_drive_variables.pinjmw == pytest.approx(cudrivparam.expected_pinjmw)
+    assert current_drive_variables.p_hcd_injected_total_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_injected_total_mw
+    )
 
-    assert current_drive_variables.effcd == pytest.approx(cudrivparam.expected_effcd)
+    assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
+        cudrivparam.expected_effcd
+    )
 
     assert current_drive_variables.echwpow == pytest.approx(
         cudrivparam.expected_echwpow
     )
 
-    assert current_drive_variables.pinjemw == pytest.approx(
-        cudrivparam.expected_pinjemw
+    assert current_drive_variables.p_hcd_injected_electrons_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_injected_electrons_mw
     )
 
     assert current_drive_variables.bigq == pytest.approx(cudrivparam.expected_bigq)

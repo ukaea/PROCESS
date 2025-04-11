@@ -232,7 +232,7 @@ module constraint_variables
   real(dp) :: mvalim
   !! maximum MVA limit (`constraint equation 19`)
 
-  real(dp) :: nbshinefmax
+  real(dp) :: f_p_beam_shine_through_max
   !! maximum neutral beam shine-through fraction (`constraint equation 59`)
 
   real(dp) :: nflutfmax
@@ -380,7 +380,7 @@ module constraint_variables
     i_q95_fixed = 0
     pflux_fw_rad_max = 1.0D0
     mvalim = 40.0D0
-    nbshinefmax = 1.0D-3
+    f_p_beam_shine_through_max = 1.0D-3
     nflutfmax = 1.0D23
     pdivtlim = 150.0D0
     f_fw_rad_max = 3.33D0

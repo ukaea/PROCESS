@@ -1,7 +1,7 @@
 {
     "vars": [
         "minmax",
-        "pinjalw",
+        "p_hcd_injected_max",
         "pnetelin",
         "ripmax",
         "t_burn_min",

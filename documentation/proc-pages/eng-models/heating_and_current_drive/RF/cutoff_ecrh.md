@@ -1,6 +1,6 @@
 # ECRH with Cutoff
 
-- `iefrf/iefrffix` = 13
+- `i_hcd_primary/i_hcd_secondary` = 13
 
 | Input | Description |
 |-------|-------------|
@@ -9,7 +9,7 @@
 | `rmajor`, $R_0$ | Major radius $\left[\text{m}\right]$ |
 | `bt`, $B_{\text{T}}$ | Toroidal magnetic field $\left[\text{T}\right]$ |
 | `zeff`, $Z_{\text{eff}}$ | Effective charge |
-| `harnum` | Harmonic number |
+| `n_ecrh_harmonic` | Harmonic number |
 | `mode` | RF mode |
 
 ----
@@ -43,14 +43,14 @@ $$
 For the X-mode case:
 
 $$
-\mathtt{f_{cutoff}} = 0.5\left(\mathtt{fc}+\sqrt{\mathtt{harnum}\times\mathtt{fc}^2+4\mathtt{fp}^2}\right)
+\mathtt{f_{cutoff}} = 0.5\left(\mathtt{fc}+\sqrt{\mathtt{n_ecrh_harmonic}\times\mathtt{fc}^2+4\mathtt{fp}^2}\right)
 $$
                
 Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
 (a = 0.1).  This controls how sharply the transition is reached
                 
 $$
-\mathtt{cutoff_{factor}} = 0.5\left(1+\tanh\left({\left(\frac{2}{a}\right)((\mathtt{harnum}\times \mathtt{fc} -\mathtt{f_cutoff})/\mathtt{fp -a })}\right)\right)
+\mathtt{cutoff_{factor}} = 0.5\left(1+\tanh\left({\left(\frac{2}{a}\right)((\mathtt{n_ecrh_harmonic}\times \mathtt{fc} -\mathtt{f_cutoff})/\mathtt{fp -a })}\right)\right)
 $$
 
 $$
