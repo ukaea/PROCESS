@@ -41,7 +41,7 @@ class CudrivParam(NamedTuple):
 
     p_hcd_electric_total_mw: Any = None
 
-    p_ecrh_injected_mw: Any = None
+    p_hcd_ecrh_injected_total_mw: Any = None
 
     p_hcd_beam_injected_total_mw: Any = None
 
@@ -197,7 +197,7 @@ class CudrivParam(NamedTuple):
 
     expected_p_hcd_electric_total_mw: Any = None
 
-    expected_p_ecrh_injected_mw: Any = None
+    expected_p_hcd_ecrh_injected_total_mw: Any = None
 
     expected_gamcd: Any = None
 
@@ -220,7 +220,7 @@ class CudrivParam(NamedTuple):
         CudrivParam(
             p_hcd_secondary_electric_mw=0,
             p_hcd_electric_total_mw=0,
-            p_ecrh_injected_mw=0,
+            p_hcd_ecrh_injected_total_mw=0,
             p_hcd_beam_injected_total_mw=0,
             p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
@@ -298,7 +298,7 @@ class CudrivParam(NamedTuple):
             iprint=0,
             outfile=11,
             expected_p_hcd_electric_total_mw=240.99200038011492,
-            expected_p_ecrh_injected_mw=120.49600019005746,
+            expected_p_hcd_ecrh_injected_total_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
             expected_p_hcd_injected_total_mw=120.49600019005746,
@@ -310,7 +310,7 @@ class CudrivParam(NamedTuple):
         CudrivParam(
             p_hcd_secondary_electric_mw=0,
             p_hcd_electric_total_mw=240.99200038011492,
-            p_ecrh_injected_mw=120.49600019005746,
+            p_hcd_ecrh_injected_total_mw=120.49600019005746,
             p_hcd_beam_injected_total_mw=0,
             p_hcd_lowhyb_injected_total_mw=0,
             c_beam_total=0,
@@ -388,7 +388,7 @@ class CudrivParam(NamedTuple):
             iprint=0,
             outfile=11,
             expected_p_hcd_electric_total_mw=240.99200038011492,
-            expected_p_ecrh_injected_mw=120.49600019005746,
+            expected_p_hcd_ecrh_injected_total_mw=120.49600019005746,
             expected_gamcd=0.30000000000000004,
             expected_etacd=0.5,
             expected_p_hcd_injected_total_mw=120.49600019005746,
@@ -425,7 +425,9 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "p_ecrh_injected_mw", cudrivparam.p_ecrh_injected_mw
+        current_drive_variables,
+        "p_hcd_ecrh_injected_total_mw",
+        cudrivparam.p_hcd_ecrh_injected_total_mw,
     )
 
     monkeypatch.setattr(
@@ -720,8 +722,8 @@ def test_cudriv(cudrivparam, monkeypatch, current_drive):
         cudrivparam.expected_p_hcd_electric_total_mw
     )
 
-    assert current_drive_variables.p_ecrh_injected_mw == pytest.approx(
-        cudrivparam.expected_p_ecrh_injected_mw
+    assert current_drive_variables.p_hcd_ecrh_injected_total_mw == pytest.approx(
+        cudrivparam.expected_p_hcd_ecrh_injected_total_mw
     )
 
     assert current_drive_variables.eta_cd_norm_hcd_primary == pytest.approx(

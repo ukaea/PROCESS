@@ -78,7 +78,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
-  real(dp) :: p_ecrh_injected_mw
+  real(dp) :: p_hcd_ecrh_injected_total_mw
   !! ECH power (MW)
 
   real(dp) :: p_ebw_injected_mw
@@ -239,6 +239,9 @@ module current_drive_variables
   !! auxiliary injected power to ions (MW)
 
   real(dp) :: p_hcd_injected_total_mw
+  !! total auxiliary injected power (MW)
+
+  real(dp) :: p_hcd_injected_current_total_mw
   !! total auxiliary injected power (MW)
 
   real(dp)  :: p_hcd_secondary_injected_mw
