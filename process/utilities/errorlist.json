@@ -72,13 +72,13 @@
     },
     {
       "no": 13,
-      "level": 3,
-      "message": "CONSTRAINTS: No such constraint equation number..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 14,
-      "level": 3,
-      "message": "CONSTRAINTS: NaN/infty error for constraint equation..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 15,
