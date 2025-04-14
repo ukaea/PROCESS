@@ -72,7 +72,4 @@ module divertor_variables
   real(dp) :: xpertin
   !! perpendicular heat transport coefficient (m2/s)
 
-  real(dp) :: zeffdiv
-  !! Zeff in the divertor region (if `divdum/=0`)
-
 end module divertor_variables
