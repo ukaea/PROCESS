@@ -1395,7 +1395,7 @@ class CurrentDrive:
                     - current_drive_variables.f_c_plasma_hcd_secondary
                 )
                 * physics_variables.plasma_current
-                / current_drive_variables.eta_cd_norm_hcd_primary
+                / current_drive_variables.eta_cd_hcd_primary
             )
 
             # Calculate the driven current for the primary heating method
@@ -1403,6 +1403,11 @@ class CurrentDrive:
                 current_drive_variables.eta_cd_hcd_primary
                 * current_drive_variables.p_hcd_primary_injected_mw
                 * 1.0e6
+            )
+            # Calculate the fraction of the plasma current driven by the primary heating method
+            current_drive_variables.f_c_plasma_hcd_primary = (
+                current_drive_variables.c_hcd_primary_driven
+                / physics_variables.plasma_current
             )
 
             # ===========================================================
@@ -1415,6 +1420,7 @@ class CurrentDrive:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
                 # Wall plug power
@@ -1440,6 +1446,7 @@ class CurrentDrive:
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
                 # Wall plug power
@@ -1465,6 +1472,7 @@ class CurrentDrive:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
                 # Wall plug power
@@ -1490,6 +1498,7 @@ class CurrentDrive:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                 )
 
                 # Wall plug power
@@ -1523,6 +1532,7 @@ class CurrentDrive:
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                     * (1.0 - current_drive_variables.f_p_beam_shine_through)
                 )
 
@@ -1531,6 +1541,7 @@ class CurrentDrive:
                     current_drive_variables.f_p_beam_orbit_loss
                     * (
                         current_drive_variables.p_hcd_secondary_injected_mw
+                        + current_drive_variables.p_hcd_secondary_extra_heat_mw
                         - current_drive_variables.p_beam_shine_through_mw
                     )
                 )
@@ -1538,6 +1549,7 @@ class CurrentDrive:
                 # Power deposited
                 current_drive_variables.p_beam_plasma_coupled_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
                     - current_drive_variables.p_beam_shine_through_mw
                     - current_drive_variables.p_beam_orbit_loss_mw
                 )
@@ -1553,7 +1565,10 @@ class CurrentDrive:
                 )
 
                 current_drive_variables.pwpnb = (
-                    current_drive_variables.p_hcd_secondary_injected_mw
+                    (
+                        current_drive_variables.p_hcd_secondary_injected_mw
+                        + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                    )
                     / current_drive_variables.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
 
@@ -1567,7 +1582,13 @@ class CurrentDrive:
 
                 current_drive_variables.c_beam_total = (
                     1.0e-3
-                    * (current_drive_variables.p_hcd_secondary_injected_mw * 1.0e6)
+                    * (
+                        (
+                            current_drive_variables.p_hcd_secondary_injected_mw
+                            + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                        )
+                        * 1.0e6
+                    )
                     / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
@@ -1582,10 +1603,12 @@ class CurrentDrive:
             if current_drive_variables.i_hcd_primary in [1, 4, 6]:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 # Wall plug power
@@ -1594,19 +1617,15 @@ class CurrentDrive:
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 ) / current_drive_variables.eta_lowhyb_injector_wall_plug
 
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
                 # Wall plug power
                 current_drive_variables.p_hcd_lowhyb_electric_mw = (
                     current_drive_variables.p_hcd_lowhyb_injected_total_mw
                     / current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
-
-                heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.p_hcd_lowhyb_electric_mw
-                )
-
-                # Wall plug to injector efficiency
-                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                    current_drive_variables.eta_lowhyb_injector_wall_plug
                 )
 
             # ===========================================================
@@ -1615,16 +1634,14 @@ class CurrentDrive:
             if current_drive_variables.i_hcd_primary in [2]:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 # Wall plug power
-                current_drive_variables.p_hcd_icrh_electric_mw = (
-                    current_drive_variables.p_hcd_icrh_injected_total_mw
-                    / current_drive_variables.eta_icrh_injector_wall_plug
-                )
                 heat_transport_variables.p_hcd_primary_electric_mw = (
-                    current_drive_variables.p_hcd_icrh_electric_mw
-                )
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                ) / current_drive_variables.eta_icrh_injector_wall_plug
 
                 # Wall plug to injector efficiency
                 current_drive_variables.eta_hcd_primary_injector_wall_plug = (
@@ -1636,6 +1653,12 @@ class CurrentDrive:
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
+                # Wall plug power
+                current_drive_variables.p_hcd_icrh_electric_mw = (
+                    current_drive_variables.p_hcd_icrh_injected_total_mw
+                    / current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
             # ===========================================================
 
             # Electron cyclotron cases
@@ -1643,6 +1666,7 @@ class CurrentDrive:
             if current_drive_variables.i_hcd_primary in [3, 7, 10, 13]:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 # Wall plug to injector efficiency
@@ -1671,15 +1695,9 @@ class CurrentDrive:
             # Electron bernstein cases
 
             if current_drive_variables.i_hcd_primary in [12]:
-                current_drive_variables.p_ebw_injected_mw += (
-                    current_drive_variables.p_hcd_primary_injected_mw
-                )
-                p_hcd_primary_electrons_mw = current_drive_variables.p_ebw_injected_mw
-
-                # Wall plug power
-                current_drive_variables.p_hcd_ebw_electric_mw = (
+                p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_ebw_injected_mw
-                    / current_drive_variables.eta_ebw_injector_wall_plug
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
                 # Wall plug to injector efficiency
@@ -1697,6 +1715,12 @@ class CurrentDrive:
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
+                # Wall plug power
+                current_drive_variables.p_hcd_ebw_electric_mw = (
+                    current_drive_variables.p_ebw_injected_mw
+                    / current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
             # ===========================================================
 
             elif current_drive_variables.i_hcd_primary in [5, 8]:
@@ -1710,6 +1734,7 @@ class CurrentDrive:
                 # Shinethrough power (atoms that are not ionised) [MW]:
                 current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                     * (1.0 - current_drive_variables.f_p_beam_shine_through)
                 )
 
@@ -1718,6 +1743,7 @@ class CurrentDrive:
                     current_drive_variables.f_p_beam_orbit_loss
                     * (
                         current_drive_variables.p_hcd_primary_injected_mw
+                        + current_drive_variables.p_hcd_primary_extra_heat_mw
                         - current_drive_variables.p_beam_shine_through_mw
                     )
                 )
@@ -1725,6 +1751,7 @@ class CurrentDrive:
                 # Power deposited
                 current_drive_variables.p_beam_plasma_coupled_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                     - current_drive_variables.p_beam_shine_through_mw
                     - current_drive_variables.p_beam_orbit_loss_mw
                 )
@@ -1738,6 +1765,7 @@ class CurrentDrive:
 
                 current_drive_variables.pwpnb = (
                     current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
                     / current_drive_variables.eta_beam_injector_wall_plug
                 )
 
@@ -1751,7 +1779,13 @@ class CurrentDrive:
 
                 current_drive_variables.c_beam_total = (
                     1.0e-3
-                    * (current_drive_variables.p_hcd_primary_injected_mw * 1.0e6)
+                    * (
+                        (
+                            current_drive_variables.p_hcd_primary_injected_mw
+                            + current_drive_variables.p_hcd_primary_extra_heat_mw
+                        )
+                        * 1.0e6
+                    )
                     / current_drive_variables.e_beam_kev
                 )  # Neutral beam current (A)
 
@@ -1799,21 +1833,11 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
-            if (
-                abs(
-                    current_drive_variables.p_hcd_injected_total_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_plasma_ohmic_mw
-                )
-                < 1.0e-6
-            ):
-                current_drive_variables.bigq = 1.0e18
-            else:
-                current_drive_variables.bigq = physics_variables.fusion_power / (
-                    current_drive_variables.p_hcd_injected_total_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_plasma_ohmic_mw
-                )
+            current_drive_variables.bigq = physics_variables.fusion_power / (
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
+                + physics_variables.p_plasma_ohmic_mw
+            )
 
     def output_current_drive(self):
         """
