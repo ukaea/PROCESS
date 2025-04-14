@@ -3543,7 +3543,8 @@ class Physics:
                 po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
             else:
                 raise ProcessValueError(
-                    "Illegal value of idivrt", idivrt=physics_variables.idivrt
+                    "Illegal value of n_divertors",
+                    n_divertors=physics_variables.n_divertors,
                 )
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
@@ -8068,7 +8069,7 @@ def init_physics_variables():
     physics_variables.f_alpha_plasma = 0.95
     physics_variables.f_alpha_ion = 0.0
     physics_variables.f_deuterium = 0.5
-    physics_variables.ftar = 1.0
+    physics_variables.f_p_div_lower = 1.0
     physics_variables.ffwal = 0.92
     physics_variables.fgwped = 0.85
     physics_variables.fgwsep = 0.50
@@ -8092,7 +8093,7 @@ def init_physics_variables():
     physics_variables.i_plasma_current = 4
     physics_variables.i_diamagnetic_current = 0
     physics_variables.i_density_limit = 8
-    physics_variables.idivrt = 2
+    physics_variables.n_divertors = 2
     physics_variables.i_beta_fast_alpha = 1
     physics_variables.ignite = 0
     physics_variables.ipedestal = 1
@@ -8141,7 +8142,7 @@ def init_physics_variables():
     physics_variables.pden_plasma_core_rad_mw = 0.0
     physics_variables.dd_power = 0.0
     physics_variables.dhe3_power = 0.0
-    physics_variables.pdivt = 0.0
+    physics_variables.p_plasma_separatrix_mw = 0.0
     physics_variables.pdivl = 0.0
     physics_variables.pdivu = 0.0
     physics_variables.pdivmax = 0.0
