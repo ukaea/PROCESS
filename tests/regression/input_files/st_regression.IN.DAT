@@ -1045,7 +1045,7 @@ boundu(57) = 0.5
 
 * Use one or the other *
 
-casthi_fraction = 1.0E-12
+f_dr_tf_plasma_case = 1.0E-12
 * DESCRIPTION:   Inboard TF coil case plasma side thickness as a fraction of dr_tf_inboard (total coil thickness)
 * JUSTIFICATION: 
 
