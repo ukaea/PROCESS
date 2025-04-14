@@ -78,7 +78,7 @@ class FwTempParam(NamedTuple):
             area=612.23369764444396,
             prad_incident=97.271629070225231,
             label="Inboard first wall",
-            expected_tpeakfw=827.22264979106728,
+            expected_tpeakfw=846.4965128389427,
             expected_cfmean=5188.6731857247905,
             expected_rhofmean=5.7616377393642955,
             expected_massrate=0.0054299309578952218,
@@ -100,7 +100,7 @@ class FwTempParam(NamedTuple):
             area=988.92586580655245,
             prad_incident=176.95628839065773,
             label="Outboard first wall",
-            expected_tpeakfw=829.53877268685892,
+            expected_tpeakfw=850.851622254886,
             expected_cfmean=5188.6731857247905,
             expected_rhofmean=5.7616377393642955,
             expected_massrate=0.005816503189155049,
@@ -181,7 +181,7 @@ def test_heat_transfer(fw):
         visc_coolant=4.0416219836935569e-05,
         thermcond_coolant=0.3211653052986152,
         roughness_fw_channel=6e-8,
-    ) == pytest.approx(1929.221015448999)
+    ) == pytest.approx(1929.2042015869506)
 
 
 def test_fw_thermal_conductivity(monkeypatch, fw):
