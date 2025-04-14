@@ -384,7 +384,7 @@ def init_divertor_variables():
     dv.i_div_heat_load = 2
     dv.pflux_div_heat_load_max_mw = 5.0
     dv.prn1 = 0.285
-    dv.rconl = 0.0
+
     dv.rsrd = 0.0
     dv.tconl = 0.0
     dv.tdiv = 2.0

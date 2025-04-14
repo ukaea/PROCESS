@@ -67,9 +67,6 @@ module divertor_variables
   !! n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)
 
 
-  real(dp) :: rconl
-  !! connection length ratio, outboard side
-
   real(dp) :: rsrd
   !! effective separatrix/divertor radius ratio
 
