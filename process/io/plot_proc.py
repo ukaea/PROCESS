@@ -360,9 +360,49 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
 def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
     plot_plasma(axis, mfile_data, scan, colour_scheme)
 
-    axis.set_frame_on(False)
-    axis.set_xticks([])
-    axis.set_yticks([])
+    plot_centre_cross(axis, mfile_data, scan)
+
+    # Plot a horizontal line across the plasma
+    axis.axhline(y=0, color="black", linestyle="--", linewidth=0.5)
+
+    # Plot a vertical line connecting the top and bottom of the plasma
+    axis.axvline(
+        x=(rmajor - (triang * rminor)), color="black", linestyle="--", linewidth=0.5
+    )
+    # axis.set_frame_on(False)
+    # axis.set_xticks([])
+    # axis.set_yticks([])
+
+    # Add heating and current drive information
+    textstr_radiation = (
+        f"Heating and Current Drive:\n"
+        f"Radiation Power: {mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.4f} MW\n"
+    )
+
+    axis.text(
+        1.1,
+        1.1,
+        textstr_radiation,
+        fontsize=9,
+        verticalalignment="top",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "blue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Draw a red arrow coming from the right and pointing at the plasma
+    axis.annotate(
+        "",
+        xy=(rmajor + rminor / 2, 0),  # Pointing at the plasma
+        xytext=(rmajor + rminor + 2, 0),  # Starting point of the arrow
+        arrowprops=dict(facecolor="red", edgecolor="red", lw=5),
+    )
+
+    # ================================================
 
     # Add heating and current drive information
     textstr_hcd = (
@@ -375,11 +415,12 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
     )
 
     axis.text(
-        rmajor + rminor + 2.5,
-        -1.5,
+        0.75,
+        0.55,
         textstr_hcd,
         fontsize=9,
         verticalalignment="top",
+        transform=plt.gcf().transFigure,
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -388,20 +429,33 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
         },
     )
 
-    # Draw a blue arrow pointing from the center of the plasma to the top right corner
-    axis.annotate(
-        "",
-        xy=(rmajor + rminor, rminor),  # Top right corner of the plasma
-        xytext=(rmajor, 0),  # Center of the plasma
-        arrowprops=dict(facecolor="blue", edgecolor="blue", arrowstyle="->", lw=2),
+    # ================================================
+
+    # Add beta information
+    textstr_beta = (
+        f"Beta Information:\n \n"
+        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta'].get_scan(scan):.4f}\n"
+        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal'].get_scan(scan):.4f}\n"
+        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal'].get_scan(scan):.4f}\n"
+        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal'].get_scan(scan):.4f}\n"
+        f"Fast-alpha beta,$ \\ \\beta_{{\\alpha}}$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
+        f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile_data.data['beta_norm_total'].get_scan(scan):.4f}\n"
+        f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile_data.data['beta_norm_thermal'].get_scan(scan):.4f}\n"
     )
 
-    # Draw a red arrow coming from the right and pointing at the plasma
-    axis.annotate(
-        "",
-        xy=(rmajor + rminor / 2, 0),  # Pointing at the plasma
-        xytext=(rmajor + rminor + 2, 0),  # Starting point of the arrow
-        arrowprops=dict(facecolor="red", edgecolor="red", arrowstyle="->", lw=2),
+    axis.text(
+        -1.0,
+        1.1,
+        textstr_beta,
+        fontsize=9,
+        verticalalignment="top",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
     )
 
 
