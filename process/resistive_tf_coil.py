@@ -27,8 +27,52 @@ class ResistiveTFCoil(TFCoil):
     def run(self, output: bool):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
-        super().build_generic_tf_coil()
-        self.tf_current()
+        (
+            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.tan_theta_coil,
+            tfcoil_variables.a_tf_coil_inboard,
+            sctfcoil_module.r_tf_outboard_in,
+            sctfcoil_module.r_tf_outboard_out,
+            tfcoil_variables.dx_tf_inboard_out_toroidal,
+            tfcoil_variables.a_tf_leg_outboard,
+            tfcoil_variables.dr_tf_plasma_case,
+            tfcoil_variables.dx_tf_side_case,
+        ) = super().tf_global_geometry(
+            i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
+            casthi_is_fraction=tfcoil_variables.casthi_is_fraction,
+            casthi_fraction=tfcoil_variables.casthi_fraction,
+            tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
+            casths_fraction=tfcoil_variables.casths_fraction,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_nose_case=build_variables.dr_tf_nose_case,
+            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+        )
+
+        # Resistive coils : No approx necessary as the symmetry is cylindrical
+        # The turn insulation th (tfcoil_variables.thicndut) is also subtracted too here
+        tfcoil_variables.r_b_tf_inboard_peak = (
+            build_variables.r_tf_inboard_out
+            - tfcoil_variables.dr_tf_plasma_case
+            - tfcoil_variables.thicndut
+            - tfcoil_variables.tinstf
+        )
+
+        (
+            tfcoil_variables.b_tf_inboard_peak,
+            tfcoil_variables.c_tf_total,
+            sctfcoil_module.c_tf_coil,
+            tfcoil_variables.oacdcp,
+        ) = super().tf_current(
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            bt=physics_variables.bt,
+            rmajor=physics_variables.rmajor,
+            r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
+            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+        )
         self.tf_coil_shape_inner()
         self.res_tf_internal_geom()
         self.tf_res_heating()
