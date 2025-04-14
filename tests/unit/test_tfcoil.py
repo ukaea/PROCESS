@@ -241,7 +241,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
 
 
 @pytest.mark.parametrize(
-    "i_tf_case_geom, i_f_dr_tf_plasma_case, casthi_fraction, tfc_sidewall_is_fraction, casths_fraction, n_tf_coils, dr_tf_inboard, dr_tf_nose_case, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
+    "i_tf_case_geom, i_f_dr_tf_plasma_case, f_dr_tf_plasma_case, tfc_sidewall_is_fraction, casths_fraction, n_tf_coils, dr_tf_inboard, dr_tf_nose_case, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
     [
         (
             0,  # Circular plasma-facing front case
@@ -299,7 +299,7 @@ def test_tf_global_geometry(
     tfcoil,
     i_tf_case_geom,
     i_f_dr_tf_plasma_case,
-    casthi_fraction,
+    f_dr_tf_plasma_case,
     tfc_sidewall_is_fraction,
     casths_fraction,
     n_tf_coils,
@@ -315,7 +315,7 @@ def test_tf_global_geometry(
     result = tfcoil.tf_global_geometry(
         i_tf_case_geom,
         i_f_dr_tf_plasma_case,
-        casthi_fraction,
+        f_dr_tf_plasma_case,
         tfc_sidewall_is_fraction,
         casths_fraction,
         n_tf_coils,
