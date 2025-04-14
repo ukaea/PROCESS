@@ -69,7 +69,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.dx_tf_side_case,
         ) = super().tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
-            casthi_is_fraction=tfcoil_variables.casthi_is_fraction,
+            i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
             casthi_fraction=tfcoil_variables.casthi_fraction,
             tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
             casths_fraction=tfcoil_variables.casths_fraction,
