@@ -314,6 +314,7 @@ OBS_VARS = {
     "irfcd": "i_hcd_calculations",
     "wave_mode": "i_ecrh_wave_mode",
     "pheatfix": "p_hcd_secondary_extra_heat_mw",
+    "roughness": "roughness_fw_channel",
 }
 
 OBS_VARS_HELP = {
