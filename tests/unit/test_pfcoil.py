@@ -2081,3 +2081,157 @@ def test_brookscoil(pfcoil):
     # Self-inductance of 1m Brooks coil: PROCESS formula
 
     assert (l_self / l_self_p < 1.05e0) and (l_self / l_self_p > 0.95e0)
+
+
+@pytest.mark.parametrize(
+    "dz_cs_half, dr_bore, dr_cs, expected",
+    [
+        (
+            5.0,
+            2.0,
+            1.0,
+            (
+                2.5,  # r_cs_middle
+                10.0,  # a_cs_poloidal
+                5.0,  # z_cs_coil_upper
+                -5.0,  # z_cs_coil_lower
+                2.5,  # r_cs_middle (repeated)
+                0.0,  # z_cs_coil_middle
+                3.0,  # r_cs_coil_outer
+                2.0,  # r_cs_coil_inner
+            ),
+        ),
+        (
+            10.0,
+            3.0,
+            2.0,
+            (
+                4.0,  # r_cs_middle
+                40.0,  # a_cs_poloidal
+                10.0,  # z_cs_coil_upper
+                -10.0,  # z_cs_coil_lower
+                4.0,  # r_cs_middle (repeated)
+                0.0,  # z_cs_coil_middle
+                5.0,  # r_cs_coil_outer
+                3.0,  # r_cs_coil_inner
+            ),
+        ),
+    ],
+)
+def test_set_cs_coil_geometry(pfcoil, dz_cs_half, dr_bore, dr_cs, expected):
+    """Test set_cs_coil_geometry method.
+
+    :param pfcoil: PFCoil object
+    :type pfcoil: process.pfcoil.PFCoil
+    :param dz_cs_half: Half of the vertical height of the central solenoid coil (m)
+    :type dz_cs_half: float
+    :param dr_bore: Bore diameter of the central solenoid coil (m)
+    :type dr_bore: float
+    :param dr_cs: Radial thickness of the central solenoid coil (m)
+    :type dr_cs: float
+    :param expected: Expected output tuple
+    :type expected: tuple
+    """
+    result = pfcoil.set_cs_coil_geometry(dz_cs_half, dr_bore, dr_cs)
+    assert result == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "a_cs_poloidal, ld_ratio_cst, r_out_cst, f_a_cs_steel, f_a_cs_void, "
+    "j_cs_pulse_start, j_cs_flat_top_end, c_cs_coil_peak_ma, "
+    "c_cs_turn_peak_input, expected",
+    [
+        (
+            2.0,
+            70 / 22,
+            0.003,
+            0.5,
+            0.1,
+            1e7,
+            8e6,
+            0.0,
+            1e5,
+            (
+                pytest.approx(200.0, rel=1e-2),  # n_cs_coil_turns
+                pytest.approx(0.01, rel=1e-2),  # a_cs_turn
+                pytest.approx(0.05606119105813881, rel=1e-2),  # d_cond_cst
+                pytest.approx(0.17837651700316892, rel=1e-2),  # l_cond_cst
+                pytest.approx(0.016787994507973143, rel=1e-2),  # r_in_cst
+                pytest.approx(0.011242601021096262, rel=1e-2),  # t_structural_radial
+                pytest.approx(0.011242601021096262, rel=1e-2),  # t_structural_vertical
+                pytest.approx(0.1, rel=1e-2),  # f_a_cs_void
+            ),
+        ),
+        (
+            1.5,
+            60 / 20,
+            0.002,
+            0.4,
+            0.2,
+            9e6,
+            7e6,
+            0.0,
+            1.2e5,
+            (
+                pytest.approx(112.5, rel=1e-2),  # n_cs_coil_turns
+                pytest.approx(0.013333333333333334, rel=1e-2),  # a_cs_turn
+                pytest.approx(0.06666666666666667, rel=1e-2),  # d_cond_cst
+                pytest.approx(0.2, rel=1e-2),  # l_cond_cst
+                pytest.approx(0.023487822730438236, rel=1e-2),  # r_in_cst
+                pytest.approx(0.009845510602895097, rel=1e-2),  # t_structural_radial
+                pytest.approx(0.009845510602895097, rel=1e-2),  # t_structural_vertical
+                pytest.approx(0.2, rel=1e-2),  # f_a_cs_void
+            ),
+        ),
+    ],
+)
+def test_set_cs_turn_geometry(
+    pfcoil,
+    a_cs_poloidal,
+    ld_ratio_cst,
+    r_out_cst,
+    f_a_cs_steel,
+    f_a_cs_void,
+    j_cs_pulse_start,
+    j_cs_flat_top_end,
+    c_cs_coil_peak_ma,
+    c_cs_turn_peak_input,
+    expected,
+):
+    """Test the set_cs_turn_geometry method of PFCoil.
+
+    :param pfcoil: PFCoil object
+    :type pfcoil: process.pfcoil.PFCoil
+    :param a_cs_poloidal: Total cross-sectional area of the central solenoid coil (m^2)
+    :type a_cs_poloidal: float
+    :param ld_ratio_cst: Length-to-depth ratio of the central solenoid turn conduit
+    :type ld_ratio_cst: float
+    :param r_out_cst: Radius of the curved outer corner (m)
+    :type r_out_cst: float
+    :param f_a_cs_steel: Fraction of the cross-sectional area that is steel
+    :type f_a_cs_steel: float
+    :param f_a_cs_void: Fraction of the cross-sectional area that is void
+    :type f_a_cs_void: float
+    :param j_cs_pulse_start: Current density at the beginning of the pulse (A/m^2)
+    :type j_cs_pulse_start: float
+    :param j_cs_flat_top_end: Current density at the end of the flat-top (A/m^2)
+    :type j_cs_flat_top_end: float
+    :param c_cs_coil_peak_ma: Peak current in the central solenoid coil (MA)
+    :type c_cs_coil_peak_ma: float
+    :param c_cs_turn_peak_input: Peak current per turn in the central solenoid coil (A)
+    :type c_cs_turn_peak_input: float
+    :param expected: Expected results as a tuple
+    :type expected: tuple
+    """
+    result = pfcoil.set_cs_turn_geometry(
+        a_cs_poloidal,
+        ld_ratio_cst,
+        r_out_cst,
+        f_a_cs_steel,
+        f_a_cs_void,
+        j_cs_pulse_start,
+        j_cs_flat_top_end,
+        c_cs_coil_peak_ma,
+        c_cs_turn_peak_input,
+    )
+    assert result == expected
