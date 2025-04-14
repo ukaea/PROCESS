@@ -17,190 +17,6 @@ module constraints
 
 contains
 
-   subroutine constraint_eqn_002(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-    !! author: J. Morris
-    !! category: equality constraint
-    !!
-    !! Global plasma power balance equation
-    !!
-    !! \begin{equation} c_i =
-    !! \end{equation}
-    !!
-    !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
-    !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
-    !! <LI> = 1 total power lost is scaling power plus core radiation only
-    !! <LI> = 2 total power lost is scaling power only, with no additional
-    !! allowance for radiation. This is not recommended for power plant models.</UL>
-    !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
-    !! <LI> = 0 do not assume plasma ignition;
-    !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-    !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
-    !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
-    !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
-    !! pden_plasma_core_rad_mw : input real : total core radiation power per volume (MW/m3)
-    !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
-    !! alpha_power_density_total : input real : alpha power per volume (MW/m3)
-    !! charged_power_density : input real : non-alpha charged particle fusion power per volume (MW/m3)
-    !! pden_plasma_ohmic_mw : input real : ohmic heating power per volume (MW/m3)
-    !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
-    !! vol_plasma : input real : plasma volume (m3)
-
-    use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
-                                  pden_plasma_core_rad_mw, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
-                                  pden_plasma_ohmic_mw, vol_plasma
-    use current_drive_variables, only: p_hcd_injected_total_mw
-
-    implicit none
-
-          real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-    !! constraint derived type
-
-    ! pscaling : Local real : total transport power per volume (MW/m3)
-    real(dp) :: pscaling
-    real(dp) :: pnumerator, pdenom
-    pscaling = pden_electron_transport_loss_mw + pden_ion_transport_loss_mw
-    ! Total power lost is scaling power plus radiation:
-    if (i_rad_loss == 0) then
-        pnumerator = pscaling + pden_plasma_rad_mw
-    else if (i_rad_loss == 1) then
-        pnumerator = pscaling + pden_plasma_core_rad_mw
-    else
-        pnumerator = pscaling
-    end if
-
-    ! if plasma not ignited include injected power
-    if (i_plasma_ignited == 0) then
-      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
-    else
-      ! if plasma ignited
-      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw
-    end if
-
-    tmp_cc = 1.0D0 - pnumerator / pdenom
-    tmp_con = pdenom * (1.0D0 - tmp_cc)
-    tmp_err = pdenom * tmp_cc
-    tmp_symbol = '='
-    tmp_units = 'MW/m3'
-
-   end subroutine constraint_eqn_002
-
-   subroutine constraint_eqn_003(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Global power balance equation for ions
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Global power balance equation for ions
-      !! This is a consistency equation (NBI)
-      !! #=# physics
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
-      !! <LI> = 0 do not assume plasma ignition;
-      !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
-      !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
-      !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
-      !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
-      !! p_hcd_injected_ions_mw : input real : auxiliary injected power to ions (MW)
-      !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
-      use current_drive_variables, only: p_hcd_injected_ions_mw
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-	   ! No assume plasma ignition:
-      if (i_plasma_ignited == 0) then
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
-         tmp_symbol = '='
-         tmp_units  = 'MW/m3'
-	   ! Plasma ignited:
-      else
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw+piepv) / (f_alpha_plasma*alpha_power_ions_density)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density) * tmp_cc
-         tmp_symbol = '='
-         tmp_units  = 'MW/m3'
-      end if
-
-   end subroutine constraint_eqn_003
-
-   subroutine constraint_eqn_004(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Global power balance equation for electrons
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Global power balance equation for electrons
-      !! This is a consistency equation
-      !! N.B. This constraint is currently NOT RECOMMENDED for use.
-      !! #=# physics
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! i_rad_loss : input integer : switch for radiation loss term usage in power balance (see User Guide):<UL>
-      !! <LI> = 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
-      !! <LI> = 1 total power lost is scaling power plus core radiation only
-      !! <LI> = 2 total power lost is scaling power only, with no additional
-      !! allowance for radiation. This is not recommended for power plant models.</UL>
-      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
-      !! <LI> = 0 do not assume plasma ignition;
-      !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
-      !! pden_plasma_rad_mw : input real : total radiation power per volume (MW/m3)
-      !! pden_plasma_core_rad_mw : input real : total core radiation power per volume (MW/m3)
-      !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
-      !! alpha_power_electron_density : input real : alpha power per volume to electrons (MW/m3)
-      !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
-      !! p_hcd_injected_electrons_mw : input real : auxiliary injected power to electrons (MW)
-      !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_plasma_core_rad_mw, f_alpha_plasma, &
-                                 alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
-      use current_drive_variables, only: p_hcd_injected_electrons_mw
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      ! pscaling : Local real : total transport power per volume (MW/m3)
-      real(dp) :: pscaling
-      real(dp) :: pnumerator, pdenom
-      pscaling = pden_electron_transport_loss_mw
-	   ! Total power lost is scaling power plus radiation:
-      if (i_rad_loss == 0) then
-         pnumerator = pscaling + pden_plasma_rad_mw
-      else if (i_rad_loss == 1) then
-         pnumerator = pscaling + pden_plasma_core_rad_mw
-      else
-         pnumerator = pscaling
-      end if
-
-      ! if plasma not ignited include injected power
-      if (i_plasma_ignited == 0) then
-         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + p_hcd_injected_electrons_mw/vol_plasma
-      else
-      ! if plasma ignited
-         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv
-      end if
-
-      tmp_cc     = 1.0D0 - pnumerator / pdenom
-      tmp_con    = pdenom * (1.0D0 - tmp_cc)
-      tmp_err    = pdenom * tmp_cc
-      tmp_symbol = '='
-      tmp_units  = 'MW/m3'
-
-   end subroutine constraint_eqn_004
-
    subroutine constraint_eqn_006(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for epsilon beta-poloidal upper limit
       !! author: P B Lloyd, CCFE, Culham Science Centre
@@ -231,51 +47,6 @@ contains
       tmp_units = ''
 
    end subroutine constraint_eqn_006
-
-   subroutine constraint_eqn_007(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for hot beam ion density
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for hot beam ion density
-      !! This is a consistency equation (NBI)
-      !! #=# physics
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
-      !! <LI> = 0 do not assume plasma ignition;
-      !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
-      !! Obviously, i_plasma_ignited must be zero if current drive is required.
-      !! If i_plasma_ignited=1, any auxiliary power is assumed to be used only
-      !! during plasma start-up, and is excluded from all steady-state
-      !! power balance calculations.
-      !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
-      !! nd_beam_ions : input real : hot beam ion density, variable (/m3)
-      use physics_variables, only: i_plasma_ignited, beam_density_out, nd_beam_ions
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-	   ! Do not assume plasma ignition:
-      if (i_plasma_ignited == 0) then
-         tmp_cc     = 1.0D0 - beam_density_out/nd_beam_ions
-         tmp_con    = nd_beam_ions * (1.0D0 - tmp_cc)
-         tmp_err    = nd_beam_ions * tmp_cc
-         tmp_symbol = '='
-         tmp_units  = '/m3'
-      else
-         tmp_cc = 0
-        tmp_con = 0
-        tmp_err = 0
-        tmp_symbol = ''
-        tmp_units = ''
-         call report_error(1)
-      end if
-
-   end subroutine constraint_eqn_007
 
    subroutine constraint_eqn_008(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for neutron wall load upper limit
@@ -336,98 +107,6 @@ contains
       tmp_units = 'MW'
 
    end subroutine constraint_eqn_009
-
-   subroutine constraint_eqn_010(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! Equation for field at TF coil
-      !! This is a consistency equation
-      !! (do not use for stellarators)
-      !! #=# tfcoil
-      !! #=#=# consistency
-      !! rmajor |  plasma major radius (m)
-      !! bt     |  toroidal field on axis (T)
-      !! r_b_tf_inboard_peak  |  radius of maximum toroidal field (m)
-      !! b_tf_inboard_peak |  peak field at toroidal field coil (T)
-
-      !! This constraint is depreciated
-
-      implicit none
-
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-      !! Constraints output
-
-      ! This constraint is depreciated
-      call report_error(236)
-
-      tmp_con = 1.0D0
-      tmp_err = 0.0D0
-      tmp_symbol = '='
-      tmp_units = ''
-
-   end subroutine constraint_eqn_010
-
-   subroutine constraint_eqn_011(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for radial build
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for radial build
-      !! (This is a consistency equation.)
-      !! #=# build
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! rbld : input real : sum of thicknesses to the major radius (m)
-      !! rmajor : input real : plasma major radius (m)
-      use build_variables, only: rbld
-      use physics_variables, only: rmajor
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      tmp_cc =  1.0D0 - rbld/rmajor
-      tmp_con = rmajor * (1.0D0 - tmp_cc)
-      tmp_err = rmajor * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'm'
-
-   end subroutine constraint_eqn_011
-
-   subroutine constraint_eqn_014(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation to fix number of NBI decay lengths to plasma centre
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation to fix number of NBI decay lengths to plasma centre
-      !! This is a consistency equation
-      !! #=# current_drive
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! n_beam_decay_lengths_core : input real : neutral beam e-decay lengths to plasma centre
-      !! tbeamin : input real : permitted neutral beam e-decay lengths to plasma centre
-      use current_drive_variables, only: n_beam_decay_lengths_core, tbeamin
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      tmp_cc = 1.0D0 - n_beam_decay_lengths_core/tbeamin
-      tmp_con = tbeamin * (1.0D0 - tmp_cc)
-      tmp_err = tbeamin * tmp_cc
-      tmp_symbol = '='
-      tmp_units = ''
-
-   end subroutine constraint_eqn_014
 
    subroutine constraint_eqn_015(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for L-H power threshold limit
@@ -657,39 +336,6 @@ contains
       tmp_units = ''
 
    end subroutine constraint_eqn_021
-
-   subroutine constraint_eqn_022(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for divertor collision/connection length ratio upper limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for divertor collision/connection length ratio upper limit
-      !! #=# divertor
-      !! #=#=# fdivcol, rlenmax
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fdivcol : input real : f-value for divertor collisionality
-      !! rlenmax : input real : maximum value for length ratio (rlclolcn)
-      !! rlclolcn : input real : ratio of collision length / connection length
-
-      implicit none
-
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-      !! Constraints output
-
-      ! This constraint is depreciated
-      call report_error(289)
-
-      tmp_con = 1.0D0
-      tmp_err = 0.0D0
-      tmp_symbol = '='
-      tmp_units = ''
-
-   end subroutine constraint_eqn_022
 
    subroutine constraint_eqn_023(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for conducting shell radius / rminor upper limit
@@ -933,36 +579,6 @@ contains
       end if
 
    end subroutine constraint_eqn_028
-
-   subroutine constraint_eqn_029(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for inboard major radius: This is a consistency equation
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for inboard major radius: This is a consistency equation
-      !! #=# build
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! rmajor : input real : plasma major radius (m) (iteration variable 3)
-      !! rminor : input real : plasma minor radius (m)
-      !! rinboard : input real : plasma inboard radius (m)
-      use physics_variables, only: rmajor, rminor
-      use build_variables, only: rinboard
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      tmp_cc =  1.0D0 - (rmajor - rminor) / rinboard
-      tmp_con = rinboard * (1.0D0 - tmp_cc)
-      tmp_err = rinboard * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'm'
-
-   end subroutine constraint_eqn_029
 
    subroutine constraint_eqn_030(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for injection power upper limit
@@ -1352,57 +968,6 @@ contains
 
    end subroutine constraint_eqn_042
 
-   subroutine constraint_eqn_043(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for average centrepost temperature: This is a consistency equation (TART)
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for average centrepost temperature: This is a consistency equation (TART)
-      !! #=# tfcoil
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! temp_cp_average : input real : average temp of TF coil inboard leg conductor (C)e
-      !! tcpav2 : input real : centrepost average temperature (C) (for consistency)
-      !! itart : input integer : switch for spherical tokamak (ST) models:<UL>
-      !! <LI> = 0 use conventional aspect ratio models;
-      !! <LI> = 1 use spherical tokamak models</UL>
-      use tfcoil_variables, only: temp_cp_average, tcpav2
-      use physics_variables, only: itart
-      use tfcoil_variables, only:  i_tf_sup
-
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      ! if the machine isn't a ST then report error
-      if (itart == 0) call report_error(7)
-
-      ! For some reasons these lines are needed to make VMCON CONVERGE ....
-      if ( i_tf_sup == 0 ) then ! Copper case
-         temp_cp_average = temp_cp_average - 273.15D0
-         tcpav2 = tcpav2 - 273.15D0
-      end if
-
-      tmp_cc =   1.0D0 - temp_cp_average/tcpav2
-      tmp_con = tcpav2 * (1.0D0 - tmp_cc)
-      tmp_err = tcpav2 * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'deg C'
-
-      ! For some reasons these lines are needed to make VMCON CONVERGE ....
-      if ( i_tf_sup == 0 ) then ! Copper case
-         temp_cp_average = temp_cp_average + 273.15D0
-         tcpav2 = tcpav2 + 273.15D0
-      end if
-
-
-
-   end subroutine constraint_eqn_043
-
    subroutine constraint_eqn_044(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for centrepost temperature upper limit (TART)
       !! author: P B Lloyd, CCFE, Culham Science Centre
@@ -1631,36 +1196,6 @@ contains
       tmp_units = 'Hz'
 
    end subroutine constraint_eqn_050
-
-   subroutine constraint_eqn_051(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation to enforce startup flux = available startup flux
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation to enforce startup flux = available startup flux
-      !! #=# pfcoil
-      !! #=#=# consistency
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vs_plasma_res_ramp : input real : resistive losses in startup V-s (Wb)
-      !! vs_plasma_ind_ramp : input real :  internal and external plasma inductance V-s (Wb))
-      !! vs_cs_pf_total_ramp : input real :  total flux swing for startup (Wb)
-      use physics_variables, only: vs_plasma_res_ramp, vs_plasma_ind_ramp
-      use pfcoil_variables, only: vs_cs_pf_total_ramp, fvs_cs_pf_total_ramp
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      tmp_cc =  1.0D0 - fvs_cs_pf_total_ramp * abs((vs_plasma_res_ramp+vs_plasma_ind_ramp) / vs_cs_pf_total_ramp)
-      tmp_con = vs_cs_pf_total_ramp * (1.0D0 - tmp_cc)
-      tmp_err = vs_cs_pf_total_ramp * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'V.s'
-
-   end subroutine constraint_eqn_051
 
    subroutine constraint_eqn_052(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for tritium breeding ratio lower limit
@@ -2654,62 +2189,6 @@ contains
 
    end subroutine constraint_eqn_084
 
-   subroutine constraint_eqn_085(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equality constraint for the centerpost (CP) lifetime
-      !! Author : S Kahn
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Depending on the chosen option : i_cp_lifetime
-      !!  - 0 : The CP full power year lifelime is set by the user (cplife_input)
-      !!  - 1 : The CP lifelime is equal to the divertor one
-      !!  - 2 : The CP lifetime is equal to the breeding blankets one
-      !!  - 3 : The CP lifetime is equal to the plant one
-      !! #=# availability
-      !! #=#=# consistency
-      !! Logic change during pre-factoring: err, symbol, units will be assigned
-      !! only if present.
-      !! cplife : input real : calculated CP full power year lifetime (years)
-      !! life_blkt_fpy : input real : calculated first wall/blanket power year lifetime (years)
-      !! divlife : input real : calculated divertor  power year lifetime (years)
-      !! i_cp_lifetime : input integer : switch chosing which plant element the CP
-      !!                                 the CP lifetime must equate
-      use cost_variables, only : cplife, divlife, cplife_input, &
-         tlife, i_cp_lifetime
-      use fwbs_variables, only : life_blkt_fpy
-
-      implicit none
-
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-      !! Constraints output
-
-
-      ! The CP lifetime is equal to the the divertor one
-      if  ( i_cp_lifetime == 0 ) then
-         tmp_cc = 1.0D0 - cplife/cplife_input
-
-      else if ( i_cp_lifetime == 1 ) then
-         tmp_cc = 1.0D0 - cplife/divlife
-
-      ! The CP lifetime is equal to the tritium breeding blankets / FW one
-      else if ( i_cp_lifetime == 2 ) then
-         tmp_cc = 1.0D0 - cplife/life_blkt_fpy
-
-      ! The CP lifetime is equal to the
-      else if ( i_cp_lifetime == 3 ) then
-         tmp_cc = 1.0D0 - cplife/tlife
-      end if
-
-      tmp_con = divlife * (1.0D0 - tmp_cc)
-      tmp_err = divlife * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'years'
-
-   end subroutine constraint_eqn_085
-
    subroutine constraint_eqn_086(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Upper limit on the turn edge length in the TF winding pack
       !! Author : S Kahn
@@ -2886,33 +2365,5 @@ contains
       tmp_symbol = '<'
       tmp_units = 'MW'
    end subroutine constraint_eqn_091
-
-   subroutine constraint_eqn_092(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for checking is D/T ratio is consistent, and sums to 1.
-      !! author: G Turkington, UKAEA
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! f_deuterium : input : fraction of deuterium ions
-      !! f_tritium  : input : fraction of tritium ions
-      !! f_helium3  : input : fraction of helium-3 ions
-      use physics_variables, only: f_deuterium, f_tritium, f_helium3
-      implicit none
-      real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-
-      ! Iterate over f_tritium and calculate f_deuterium
-      f_deuterium = 1.0D0 - (f_tritium + f_helium3)
-      tmp_cc = 1.0D0 - (f_deuterium + f_tritium + f_helium3)
-      tmp_con = 1.0D0
-      tmp_err = tmp_con * tmp_cc
-      tmp_symbol = '='
-      tmp_units = 'fraction'
-
-   end subroutine constraint_eqn_092
-
 
 end module constraints
