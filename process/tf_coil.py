@@ -60,7 +60,7 @@ class TFCoil:
         ) = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
-            casthi_fraction=tfcoil_variables.casthi_fraction,
+            f_dr_tf_plasma_case=tfcoil_variables.f_dr_tf_plasma_case,
             tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
             casths_fraction=tfcoil_variables.casths_fraction,
             n_tf_coils=tfcoil_variables.n_tf_coils,
@@ -288,7 +288,7 @@ class TFCoil:
         self,
         i_tf_case_geom: int,
         i_f_dr_tf_plasma_case: bool,
-        casthi_fraction: float,
+        f_dr_tf_plasma_case: float,
         tfc_sidewall_is_fraction: bool,
         casths_fraction: float,
         n_tf_coils: int,
@@ -315,9 +315,9 @@ class TFCoil:
         :param i_f_dr_tf_plasma_case:
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
         :type i_f_dr_tf_plasma_case: bool
-        :param casthi_fraction:
+        :param f_dr_tf_plasma_case:
             Fraction of the inboard thickness used for the plasma-facing case thickness.
-        :type casthi_fraction: float
+        :type f_dr_tf_plasma_case: float
         :param tfc_sidewall_is_fraction:
             Whether the sidewall case thickness is specified as a fraction of the inboard radius.
         :type tfc_sidewall_is_fraction: bool
@@ -395,7 +395,7 @@ class TFCoil:
 
         # Plasma facing front case thickness [m]
         if i_f_dr_tf_plasma_case:
-            dr_tf_plasma_case = casthi_fraction * dr_tf_inboard
+            dr_tf_plasma_case = f_dr_tf_plasma_case * dr_tf_inboard
         else:
             dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
 
@@ -5228,7 +5228,7 @@ def init_tfcoil_variables():
     tfv.bmaxtfrp = 0.0
     tfv.casestr = 0.0
     tfv.dr_tf_plasma_case = 0.0
-    tfv.casthi_fraction = 0.05
+    tfv.f_dr_tf_plasma_case = 0.05
     tfv.i_f_dr_tf_plasma_case = False
     tfv.dx_tf_side_case = 0.0
     tfv.casths_fraction = 0.06
