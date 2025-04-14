@@ -47,7 +47,7 @@ module divertor_variables
   real(dp) :: fdiva
   !! divertor area fudge factor (for ITER, Sept 1990)
 
-  real(dp) :: flux_exp
+  real(dp) :: f_div_flux_expansion
   !! The plasma flux expansion in the divertor (default 2; Wade 2020)
 
   real(dp) :: pflux_div_heat_load_mw

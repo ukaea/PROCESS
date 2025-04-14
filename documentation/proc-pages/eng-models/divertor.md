@@ -222,7 +222,7 @@ where $f_{rad,div}$ is the SOL radiative fraction.
 
 For the purposes of this model, the following are inputs:
 
-- Flux expansion $F_{exp}$  (`flux_exp`, default = 2)  
+- Flux expansion $F_{exp}$  (`f_div_flux_expansion`, default = 2)  
 - Field line angle with respect to divertor target plate (degrees) $\beta_{div}$ (`deg_div_field_plate`), also 
   available as an iteration variable (170)  
 - SOL radiative fraction, $f_{rad,div}$ (`rad_fraction_sol`).

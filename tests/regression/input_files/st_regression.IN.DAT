@@ -826,7 +826,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*flux_exp = 
+*f_div_flux_expansion = 
 * DESCRIPTION:   The plasma flux expansion in the divertor (default 2; Wade 2020)
 * JUSTIFICATION: Not yet set
 

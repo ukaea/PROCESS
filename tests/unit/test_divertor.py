@@ -78,7 +78,7 @@ class TestDivertor:
         bt = 0.5
         bp = 0.09595
         p_plasma_separatrix_mw = 1.0e2
-        flux_exp = 2
+        f_div_flux_expansion = 2
         nesep = 1.0e19
         deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
@@ -93,7 +93,7 @@ class TestDivertor:
             bt,
             bp,
             p_plasma_separatrix_mw,
-            flux_exp,
+            f_div_flux_expansion,
             nesep,
             deg_div_field_plate,
             rad_fraction_sol,

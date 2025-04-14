@@ -61,7 +61,7 @@ class Divertor:
                 pv.bt,
                 pv.bp,
                 pv.p_plasma_separatrix_mw,
-                dv.flux_exp,
+                dv.f_div_flux_expansion,
                 pv.nesep,
                 dv.deg_div_field_plate,
                 pv.rad_fraction_sol,
@@ -217,7 +217,7 @@ class Divertor:
         bt: float,
         bp: float,
         p_plasma_separatrix_mw: float,
-        flux_exp: float,
+        f_div_flux_expansion: float,
         nesep: float,
         deg_div_field_plate: float,
         rad_fraction_sol: float,
@@ -251,8 +251,8 @@ class Divertor:
         :param p_plasma_separatrix_mw: power to divertor (MW)
         :type p_plasma_separatrix_mw: float
 
-        :param flux_exp: plasma flux expansion in divertor
-        :type flux_exp: float
+        :param f_div_flux_expansion: plasma flux expansion in divertor
+        :type f_div_flux_expansion: float
 
         :param nesep: electron density at separatrix (m-3)
         :type nesep: float
@@ -314,7 +314,7 @@ class Divertor:
         alpha_mid = math.degrees(math.atan(Bp_omp / Bt_omp))
 
         # Flux angle in the divertor
-        alpha_div = flux_exp * alpha_mid
+        alpha_div = f_div_flux_expansion * alpha_mid
 
         # Tilt of the separatrix relative to the target in the poloidal plane
         theta_div = math.asin(
@@ -323,7 +323,12 @@ class Divertor:
 
         # Wetted area
         area_wetted = (
-            2 * constants.pi * rmajor * lambda_int * flux_exp * math.sin(theta_div)
+            2
+            * constants.pi
+            * rmajor
+            * lambda_int
+            * f_div_flux_expansion
+            * math.sin(theta_div)
         )
 
         # Divertor heat load
@@ -341,7 +346,12 @@ class Divertor:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
-            po.ovarre(self.outfile, "Flux expansion", "(flux_exp)", flux_exp)
+            po.ovarre(
+                self.outfile,
+                "Flux expansion",
+                "(f_div_flux_expansion)",
+                f_div_flux_expansion,
+            )
             po.ovarre(
                 self.outfile,
                 "Field line angle wrt to target divertor plate (degrees)",
@@ -369,7 +379,7 @@ def init_divertor_variables():
     dv.dx_div_plate = 0.035
     dv.a_div_surface_total = 0.0
     dv.fdiva = 1.11
-    dv.flux_exp = 2.0
+    dv.f_div_flux_expansion = 2.0
     dv.pflux_div_heat_load_mw = 0.0
     dv.i_div_heat_load = 2
     dv.pflux_div_heat_load_max_mw = 5.0

@@ -624,7 +624,9 @@ INPUT_VARIABLES = {
     "flpitch": InputVariable(
         fortran.stellarator_variables, float, range=(0.0001, 0.01)
     ),
-    "flux_exp": InputVariable(fortran.divertor_variables, float, range=(0.0, 10.0)),
+    "f_div_flux_expansion": InputVariable(
+        fortran.divertor_variables, float, range=(0.0, 10.0)
+    ),
     "fmaxvvstress": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
