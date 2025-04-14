@@ -66,9 +66,6 @@ module divertor_variables
   real(dp) :: prn1
   !! n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)
 
-  real(dp) :: tconl
-  !! main plasma connection length (m)
-
   real(dp) :: tdiv
   !! temperature at divertor (eV) (input for stellarator only, calculated for tokamaks)
 
