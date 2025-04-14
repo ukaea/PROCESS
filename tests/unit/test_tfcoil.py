@@ -329,220 +329,45 @@ def test_tf_global_geometry(
     assert result == expected
 
 
-class TfCurrentParam(NamedTuple):
-    dr_tf_plasma_case: Any = None
-
-    c_tf_total: Any = None
-
-    r_b_tf_inboard_peak: Any = None
-
-    i_tf_sup: Any = None
-
-    casths_fraction: Any = None
-
-    tinstf: Any = None
-
-    dx_tf_inboard_out_toroidal: Any = None
-
-    b_tf_inboard_peak: Any = None
-
-    tfinsgap: Any = None
-
-    tfc_sidewall_is_fraction: Any = None
-
-    dx_tf_side_case: Any = None
-
-    casthi_is_fraction: Any = None
-
-    casthi_fraction: Any = None
-
-    n_tf_coils: Any = None
-
-    thicndut: Any = None
-
-    dr_tf_nose_case: Any = None
-
-    oacdcp: Any = None
-
-    a_tf_coil_inboard: Any = None
-
-    r_tf_inboard_out: Any = None
-
-    r_tf_inboard_in: Any = None
-
-    dr_tf_inboard: Any = None
-
-    bt: Any = None
-
-    rmajor: Any = None
-
-    c_tf_coil: Any = None
-
-    rad_tf_coil_toroidal: Any = None
-
-    expected_c_tf_total: Any = None
-
-    expected_r_b_tf_inboard_peak: Any = None
-
-    expected_b_tf_inboard_peak: Any = None
-
-    expected_oacdcp: Any = None
-
-    expected_c_tf_coil: Any = None
-
-
 @pytest.mark.parametrize(
-    "tfcurrentparam",
-    (
-        TfCurrentParam(
-            dr_tf_plasma_case=0.060000000000000012,
-            c_tf_total=0,
-            r_b_tf_inboard_peak=0,
-            i_tf_sup=1,
-            casths_fraction=0.059999999999999998,
-            tinstf=0.0080000000000000019,
-            dx_tf_inboard_out_toroidal=1.6395161177915356,
-            b_tf_inboard_peak=0,
-            tfinsgap=0.01,
-            tfc_sidewall_is_fraction=False,
-            dx_tf_side_case=0.05000000000000001,
-            casthi_is_fraction=False,
-            casthi_fraction=0.050000000000000003,
-            n_tf_coils=16,
-            thicndut=0.002,
-            dr_tf_nose_case=0.52465000000000006,
-            oacdcp=8673900,
-            a_tf_coil_inboard=27.308689677971632,
-            r_tf_inboard_out=4.20194118510911,
-            r_tf_inboard_in=2.9939411851091102,
-            dr_tf_inboard=1.208,
-            bt=5.3292000000000002,
-            rmajor=8.8901000000000003,
-            c_tf_coil=0,
-            rad_tf_coil_toroidal=0.19634954084936207,
-            expected_c_tf_total=236885604.60000002,
-            expected_r_b_tf_inboard_peak=4.0432020634751211,
-            expected_b_tf_inboard_peak=11.717722779177526,
-            expected_oacdcp=8674367.2945641987,
-            expected_c_tf_coil=14805350.287500001,
+    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected",
+    [
+        (
+            16,  # Number of TF coils
+            5.0,  # Toroidal magnetic field at plasma center [T]
+            6.2,  # Major radius of the plasma [m]
+            2.5,  # Radius at which the peak inboard B field occurs [m]
+            0.8,  # Cross-sectional area of the inboard leg of the TF coil [m²]
+            (
+                pytest.approx(12.4),  # b_tf_inboard_peak
+                pytest.approx(154999999.93042317),  # c_tf_total
+                pytest.approx(9687499.995651448),  # c_tf_coil
+                pytest.approx(193749999.91302896),  # oacdcp
+            ),
         ),
-    ),
+        (
+            12,  # Number of TF coils
+            3.0,  # Toroidal magnetic field at plasma center [T]
+            5.0,  # Major radius of the plasma [m]
+            1.8,  # Radius at which the peak inboard B field occurs [m]
+            0.5,  # Cross-sectional area of the inboard leg of the TF coil [m²]
+            (
+                pytest.approx(8.333333333),  # b_tf_inboard_peak
+                pytest.approx(74999999.9663338),  # c_tf_total
+                pytest.approx(6249999.997194484),  # c_tf_coil
+                pytest.approx(149999999.9326676),  # oacdcp
+            ),
+        ),
+    ],
 )
-def test_tf_current(tfcurrentparam, monkeypatch, tfcoil):
-    """
-    Automatically generated Regression Unit Test for tf_current.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param tfcurrentparam: the data used to mock and assert in this test.
-    :type tfcurrentparam: tfcurrentparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-
-    :param sctfcoil: initialised SuperconductingTFCoil object
-    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
-    """
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_plasma_case", tfcurrentparam.dr_tf_plasma_case
+def test_tf_current(
+    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected
+):
+    """Test the tf_current method."""
+    result = tfcoil.tf_current(
+        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard
     )
-
-    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfcurrentparam.c_tf_total)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "r_b_tf_inboard_peak", tfcurrentparam.r_b_tf_inboard_peak
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcurrentparam.i_tf_sup)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "casths_fraction", tfcurrentparam.casths_fraction
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tfcurrentparam.tinstf)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_inboard_out_toroidal",
-        tfcurrentparam.dx_tf_inboard_out_toroidal,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "b_tf_inboard_peak", tfcurrentparam.b_tf_inboard_peak
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfcurrentparam.tfinsgap)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "tfc_sidewall_is_fraction",
-        tfcurrentparam.tfc_sidewall_is_fraction,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_side_case", tfcurrentparam.dx_tf_side_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "casthi_is_fraction", tfcurrentparam.casthi_is_fraction
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "casthi_fraction", tfcurrentparam.casthi_fraction
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcurrentparam.n_tf_coils)
-
-    monkeypatch.setattr(tfcoil_variables, "thicndut", tfcurrentparam.thicndut)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", tfcurrentparam.dr_tf_nose_case
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "oacdcp", tfcurrentparam.oacdcp)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "a_tf_coil_inboard", tfcurrentparam.a_tf_coil_inboard
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcurrentparam.r_tf_inboard_out
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcurrentparam.r_tf_inboard_in
-    )
-
-    monkeypatch.setattr(build_variables, "dr_tf_inboard", tfcurrentparam.dr_tf_inboard)
-
-    monkeypatch.setattr(physics_variables, "bt", tfcurrentparam.bt)
-
-    monkeypatch.setattr(physics_variables, "rmajor", tfcurrentparam.rmajor)
-
-    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfcurrentparam.c_tf_coil)
-
-    monkeypatch.setattr(
-        sctfcoil_module, "rad_tf_coil_toroidal", tfcurrentparam.rad_tf_coil_toroidal
-    )
-
-    tfcoil.tf_current()
-
-    assert tfcoil_variables.c_tf_total == pytest.approx(
-        tfcurrentparam.expected_c_tf_total
-    )
-
-    assert tfcoil_variables.r_b_tf_inboard_peak == pytest.approx(
-        tfcurrentparam.expected_r_b_tf_inboard_peak
-    )
-
-    assert tfcoil_variables.b_tf_inboard_peak == pytest.approx(
-        tfcurrentparam.expected_b_tf_inboard_peak
-    )
-
-    assert tfcoil_variables.oacdcp == pytest.approx(tfcurrentparam.expected_oacdcp)
-
-    assert sctfcoil_module.c_tf_coil == pytest.approx(tfcurrentparam.expected_c_tf_coil)
+    assert result == expected
 
 
 @pytest.mark.parametrize(

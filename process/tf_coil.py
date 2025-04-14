@@ -43,7 +43,10 @@ class TFCoil:
         self.build = build
         self.a_tf_coil_inboard = tfcoil_variables.a_tf_coil_inboard
 
-    def build_generic_tf_coil(self):
+    def run(self, output):
+        """Run main tfcoil subroutine without outputting."""
+        self.iprint = 0
+
         (
             sctfcoil_module.rad_tf_coil_toroidal,
             sctfcoil_module.tan_theta_coil,
@@ -68,10 +71,6 @@ class TFCoil:
             r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
             dr_tf_outboard=build_variables.dr_tf_outboard,
         )
-
-    def run(self, output):
-        """Run main tfcoil subroutine without outputting."""
-        self.iprint = 0
 
         self.tf_current()
         self.tf_coil_shape_inner()
@@ -422,56 +421,51 @@ class TFCoil:
             dx_tf_side_case,
         )
 
-    def tf_current(self):
+    def tf_current(
+        self,
+        n_tf_coils: int,
+        bt: float,
+        rmajor: float,
+        r_b_tf_inboard_peak: float,
+        a_tf_coil_inboard: float,
+    ) -> tuple[float, float, float, float]:
         """
-        Calculation of the maximum B field and the corresponding TF current
-        """
+        Calculate the maximum B field and the corresponding TF current.
 
-        # Radial position of peak toroidal field [m]
-        if tfcoil_variables.i_tf_sup == 1:
-            # SC : conservative assumption as the radius is calculated with the
-            # WP radial distances defined at the TF middle (cos)
-            tfcoil_variables.r_b_tf_inboard_peak = (
-                build_variables.r_tf_inboard_out
-                * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
-                - tfcoil_variables.dr_tf_plasma_case
-                - tfcoil_variables.tinstf
-                - tfcoil_variables.tfinsgap
-            )
-        else:
-            # Resistive coils : No approx necessary as the symmetry is cylindrical
-            # The turn insulation th (tfcoil_variables.thicndut) is also subtracted too here
-            tfcoil_variables.r_b_tf_inboard_peak = (
-                build_variables.r_tf_inboard_out
-                - tfcoil_variables.dr_tf_plasma_case
-                - tfcoil_variables.thicndut
-                - tfcoil_variables.tinstf
-            )
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: int
+        :param bt: Toroidal magnetic field at the plasma center [T].
+        :type bt: float
+        :param rmajor: Major radius of the plasma [m].
+        :type rmajor: float
+        :param r_b_tf_inboard_peak: Radius at which the peak inboard B field occurs [m].
+        :type r_b_tf_inboard_peak: float
+        :param a_tf_coil_inboard: Cross-sectional area of the inboard leg of the TF coil [m²].
+        :type a_tf_coil_inboard: float
+
+        :returns: A tuple containing:
+            - **b_tf_inboard_peak** (*float*): Maximum B field on the magnet [T].
+            - **c_tf_total** (*float*): Total current in TF coils [A].
+            - **c_tf_coil** (*float*): Current per TF coil [A].
+            - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
+        :rtype: tuple[float, float, float, float]
+        """
 
         # Calculation of the maximum B field on the magnet [T]
-        tfcoil_variables.b_tf_inboard_peak = (
-            physics_variables.bt
-            * physics_variables.rmajor
-            / tfcoil_variables.r_b_tf_inboard_peak
-        )
+        b_tf_inboard_peak = bt * rmajor / r_b_tf_inboard_peak
 
         # Total current in TF coils [A]
-        # rem SK : ritcf is no longer an input
-        tfcoil_variables.c_tf_total = (
-            tfcoil_variables.b_tf_inboard_peak
-            * tfcoil_variables.r_b_tf_inboard_peak
-            * 5.0e6
+        c_tf_total = (
+            b_tf_inboard_peak * r_b_tf_inboard_peak * (2 * np.pi / constants.rmu0)
         )
 
         # Current per TF coil [A]
-        sctfcoil_module.c_tf_coil = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
-        )
+        c_tf_coil = c_tf_total / n_tf_coils
 
         # Global inboard leg average current in TF coils [A/m2]
-        tfcoil_variables.oacdcp = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
-        )
+        oacdcp = c_tf_total / a_tf_coil_inboard
+
+        return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
 
     def tf_coil_shape_inner(self):
         """Calculates the TF coil shape
