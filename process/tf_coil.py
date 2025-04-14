@@ -59,7 +59,7 @@ class TFCoil:
             tfcoil_variables.dx_tf_side_case,
         ) = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
-            casthi_is_fraction=tfcoil_variables.casthi_is_fraction,
+            i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
             casthi_fraction=tfcoil_variables.casthi_fraction,
             tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
             casths_fraction=tfcoil_variables.casths_fraction,
@@ -287,7 +287,7 @@ class TFCoil:
     def tf_global_geometry(
         self,
         i_tf_case_geom: int,
-        casthi_is_fraction: bool,
+        i_f_dr_tf_plasma_case: bool,
         casthi_fraction: float,
         tfc_sidewall_is_fraction: bool,
         casths_fraction: float,
@@ -312,9 +312,9 @@ class TFCoil:
         :param i_tf_case_geom:
             Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
         :type i_tf_case_geom: int
-        :param casthi_is_fraction:
+        :param i_f_dr_tf_plasma_case:
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
-        :type casthi_is_fraction: bool
+        :type i_f_dr_tf_plasma_case: bool
         :param casthi_fraction:
             Fraction of the inboard thickness used for the plasma-facing case thickness.
         :type casthi_fraction: float
@@ -394,7 +394,7 @@ class TFCoil:
         a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
 
         # Plasma facing front case thickness [m]
-        if casthi_is_fraction:
+        if i_f_dr_tf_plasma_case:
             dr_tf_plasma_case = casthi_fraction * dr_tf_inboard
         else:
             dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
@@ -5229,7 +5229,7 @@ def init_tfcoil_variables():
     tfv.casestr = 0.0
     tfv.dr_tf_plasma_case = 0.0
     tfv.casthi_fraction = 0.05
-    tfv.casthi_is_fraction = False
+    tfv.i_f_dr_tf_plasma_case = False
     tfv.dx_tf_side_case = 0.0
     tfv.casths_fraction = 0.06
     tfv.t_conductor = 0.0
