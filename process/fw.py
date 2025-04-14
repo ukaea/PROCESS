@@ -352,8 +352,8 @@ class Fw:
         """
         Calculates the thermal conductivity of the first wall material (Eurofer97).
 
-        :param t: Property temperature in Kelvin (K).
-        :type t: float
+        :param temp: Property temperature in Kelvin (K).
+        :type temp: float
         :return: Thermal conductivity of Eurofer97 in W/m/K.
         :rtype: float
 
