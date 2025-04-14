@@ -12,8 +12,8 @@
   "errors": [
     {
       "no": 1,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 7 if i_plasma_ignited=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 2,
@@ -1187,8 +1187,8 @@
     },
     {
       "no": 236,
-      "level": 3,
-      "message": "CHECK: The 1/R toroidal B field dependency constraint is being depreciated."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 237,
@@ -1452,8 +1452,8 @@
     },
     {
       "no": 289,
-      "level": 3,
-      "message": "CHECK: Constraint equation 22 has been deprecated."
+      "level": 0,
+      "message": "REMOVED"
     }
   ]
 }
