@@ -26,7 +26,7 @@ module divertor_variables
   real(dp) :: betao
   !! poloidal plane angle between divertor plate and leg, outboard (rad)
 
-  real(dp) :: divclfr
+  real(dp) :: f_vol_div_coolant
   !! divertor coolant fraction
 
   real(dp) :: den_div_structure

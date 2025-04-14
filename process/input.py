@@ -364,7 +364,9 @@ INPUT_VARIABLES = {
     "div_nu": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000000.0)),
     "div_prob_fail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "div_umain_time": InputVariable(fortran.cost_variables, float, range=(0.1, 2.0)),
-    "divclfr": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
+    "f_vol_div_coolant": InputVariable(
+        fortran.divertor_variables, float, range=(0.0, 1.0)
+    ),
     "den_div_structure": InputVariable(
         fortran.divertor_variables, float, range=(0.1, 100000.0)
     ),

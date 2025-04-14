@@ -1361,7 +1361,7 @@ def test_st_centrepost_nuclear_heating(
 
 class ComponentMassesParam(NamedTuple):
     a_div_surface_total: Any = None
-    divclfr: Any = None
+    f_vol_div_coolant: Any = None
     dx_div_plate: Any = None
     fdiva: Any = None
     m_div_plate: Any = None
@@ -1452,7 +1452,7 @@ class ComponentMassesParam(NamedTuple):
     (
         ComponentMassesParam(
             a_div_surface_total=0,
-            divclfr=0.29999999999999999,
+            f_vol_div_coolant=0.29999999999999999,
             dx_div_plate=0.035000000000000003,
             fdiva=1.1100000000000001,
             m_div_plate=0,
@@ -1556,7 +1556,9 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         "a_div_surface_total",
         componentmassesparam.a_div_surface_total,
     )
-    monkeypatch.setattr(divertor_variables, "divclfr", componentmassesparam.divclfr)
+    monkeypatch.setattr(
+        divertor_variables, "f_vol_div_coolant", componentmassesparam.f_vol_div_coolant
+    )
     monkeypatch.setattr(
         divertor_variables, "dx_div_plate", componentmassesparam.dx_div_plate
     )

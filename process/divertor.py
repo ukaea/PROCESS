@@ -362,7 +362,7 @@ def init_divertor_variables():
     dv.deg_div_field_plate = 1.0
     dv.betai = 1.0
     dv.betao = 1.0
-    dv.divclfr = 0.3
+    dv.f_vol_div_coolant = 0.3
     dv.den_div_structure = 1.0e4
     dv.dz_divertor = 0.2
     dv.m_div_plate = 0.0
