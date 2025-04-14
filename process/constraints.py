@@ -118,7 +118,7 @@ def constraint_equation_2():
     -  1 assume ignited (but include auxiliary power in costs)
 
      pden_electron_transport_loss_mw: electron transport power per volume (MW/m3)
-     pden_ion_transport_loss_mw:  ion transport power per volume (MW/m3)
+     pden_ion_transport_loss_mw: ion transport power per volume (MW/m3)
      pden_plasma_rad_mw: total radiation power per volume (MW/m3)
      pden_plasma_core_rad_mw: total core radiation power per volume (MW/m3)
      f_alpha_plasma: fraction of alpha power deposited in plasma
@@ -328,6 +328,28 @@ def constraint_equation_5():
     )
 
 
+@ConstraintManager.register_constraint(6, "", "<=")
+def constraint_equation_6():
+    """Equation for epsilon beta-poloidal upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fbeta_poloidal_eps: f-value for epsilon beta-poloidal
+    beta_poloidal_eps_max: maximum (eps*beta_poloidal)
+    eps: inverse aspect ratio
+    beta_poloidal: poloidal beta
+    """
+    cc = (
+        (fortran.physics_variables.eps * fortran.physics_variables.beta_poloidal)
+        / fortran.physics_variables.beta_poloidal_eps_max
+        - 1.0 * fortran.constraint_variables.fbeta_poloidal_eps
+    )
+    return ConstraintResult(
+        cc,
+        fortran.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
+        (fortran.physics_variables.eps * fortran.physics_variables.beta_poloidal) * cc,
+    )
+
+
 @ConstraintManager.register_constraint(7, "/m3", "=")
 def constraint_equation_7():
     """Equation for hot beam ion density
@@ -357,6 +379,45 @@ def constraint_equation_7():
         cc,
         fortran.physics_variables.nd_beam_ions * (1.0 - cc),
         fortran.physics_variables.nd_beam_ions * cc,
+    )
+
+
+@ConstraintManager.register_constraint(8, "MW/m2", "<=")
+def constraint_equation_8():
+    """Equation for neutron wall load upper limit
+
+    fwalld: f-value for maximum wall load
+    walalw: allowable wall-load (MW/m2)
+    pflux_fw_neutron_mw: average neutron wall load (MW/m2)
+    """
+    return ConstraintResult(
+        (
+            fortran.physics_variables.pflux_fw_neutron_mw
+            / fortran.constraint_variables.walalw
+            - 1.0 * fortran.constraint_variables.fwalld
+        ),
+        fortran.constraint_variables.fwalld * fortran.constraint_variables.walalw,
+        fortran.constraint_variables.fwalld * fortran.constraint_variables.walalw
+        - fortran.physics_variables.pflux_fw_neutron_mw,
+    )
+
+
+@ConstraintManager.register_constraint(9, "MW", "<=")
+def constraint_equation_9():
+    """Equation for fusion power upper limit
+
+    ffuspow: f-value for maximum fusion power
+    powfmax: maximum fusion power (MW)
+    fusion_power: fusion power (MW)
+    """
+    cc = (
+        fortran.physics_variables.fusion_power / fortran.constraint_variables.powfmax
+        - 1.0 * fortran.constraint_variables.ffuspow
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.powfmax * (1.0 - cc),
+        fortran.physics_variables.fusion_power * cc,
     )
 
 
@@ -409,7 +470,7 @@ def constraint_equation_13():
 
     ft_burn: f-value for minimum burn time
     t_burn: burn time (s) (calculated if i_pulsed_plant=1)
-    t_burn_min:  minimum burn time (s)
+    t_burn_min: minimum burn time (s)
     """
     return ConstraintResult(
         1.0
@@ -442,6 +503,290 @@ def constraint_equation_14():
     )
 
 
+@ConstraintManager.register_constraint(17, "MW/m3", "<=")
+def constraint_equation_17():
+    """Equation for radiation power upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    f_alpha_plasma: fraction of alpha power deposited in plasma
+    p_hcd_injected_total_mw: total auxiliary injected power (MW)
+    vol_plasma: plasma volume (m3)
+    alpha_power_density_total: alpha power per volume (MW/m3)
+    charged_power_density: non-alpha charged particle fusion power per volume (MW/m3)
+    pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m3)
+    fradpwr: f-value for core radiation power limit
+    pden_plasma_rad_mw: total radiation power per volume (MW/m3)
+    """
+    # Maximum possible power/vol_plasma that can be radiated (local)
+    pradmaxpv = (
+        fortran.current_drive_variables.p_hcd_injected_total_mw
+        / fortran.physics_variables.vol_plasma
+        + fortran.physics_variables.alpha_power_density_total
+        * fortran.physics_variables.f_alpha_plasma
+        + fortran.physics_variables.charged_power_density
+        + fortran.physics_variables.pden_plasma_ohmic_mw
+    )
+
+    cc = (
+        fortran.physics_variables.pden_plasma_rad_mw / pradmaxpv
+        - 1.0 * fortran.constraint_variables.fradpwr
+    )
+    return ConstraintResult(
+        cc, pradmaxpv * (1.0 - cc), fortran.physics_variables.pden_plasma_rad_mw * cc
+    )
+
+
+@ConstraintManager.register_constraint(18, "MW/m2", "<=")
+def constraint_equation_18():
+    """Equation for divertor heat load upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpflux_div_heat_load_mw: f-value for divertor heat load
+    pflux_div_heat_load_max_mw: heat load limit (MW/m2)
+    pflux_div_heat_load_mw: divertor heat load (MW/m2)
+    """
+    cc = (
+        fortran.divertor_variables.pflux_div_heat_load_mw
+        / fortran.divertor_variables.pflux_div_heat_load_max_mw
+        - 1.0 * fortran.constraint_variables.fpflux_div_heat_load_mw
+    )
+    return ConstraintResult(
+        cc,
+        fortran.divertor_variables.pflux_div_heat_load_max_mw * (1.0 - cc),
+        fortran.divertor_variables.pflux_div_heat_load_mw * cc,
+    )
+
+
+@ConstraintManager.register_constraint(19, "MVA", "<=")
+def constraint_equation_19():
+    """Equation for MVA (power) upper limit: resistive TF coil set
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    tfcpmw: peak resistive TF coil inboard leg power (total) (MW)
+    tflegmw: TF coil outboard leg resistive power (total) (MW)
+    fmva: f-value for maximum MVA
+    mvalim: MVA limit for resistive TF coil set (total) (MW)
+    """
+    totmva = fortran.tfcoil_variables.tfcpmw + fortran.tfcoil_variables.tflegmw
+
+    cc = (
+        totmva / fortran.constraint_variables.mvalim
+        - 1.0 * fortran.constraint_variables.fmva
+    )
+    return ConstraintManager(
+        cc, fortran.constraint_variables.mvalim * (1.0 - cc), totmva * cc
+    )
+
+
+@ConstraintManager.register_constraint(20, "m", "<=")
+def constraint_equation_20():
+    """Equation for neutral beam tangency radius upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fportsz: f-value for neutral beam tangency radius limit
+    rtanmax: maximum tangency radius for centreline of beam (m)
+    rtanbeam: neutral beam centreline tangency radius (m)
+    """
+    cc = (
+        fortran.current_drive_variables.rtanbeam
+        / fortran.current_drive_variables.rtanmax
+        - 1.0 * fortran.constraint_variables.fportsz
+    )
+    return ConstraintResult(
+        cc,
+        fortran.current_drive_variables.rtanmax * (1.0 - cc),
+        fortran.current_drive_variables.rtanbeam * cc,
+    )
+
+
+@ConstraintManager.register_constraint(23, "m", "<=")
+def constraint_equation_23():
+    """Equation for conducting shell radius / rminor upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    rminor: plasma minor radius (m)
+    dr_fw_plasma_gap_outboard: gap between plasma and first wall, outboard side (m)
+    dr_fw_outboard: outboard first wall thickness, initial estimate (m)
+    dr_blkt_outboard: outboard blanket thickness (m)
+    fr_conducting_wall: f-value for conducting wall radius / rminor limit
+    f_r_conducting_wall: maximum ratio of conducting wall distance to plasma minor radius for vertical stability
+    """
+    # conducting shell radius (m)
+    rcw = (
+        fortran.physics_variables.rminor
+        + fortran.build_variables.dr_fw_plasma_gap_outboard
+        + fortran.build_variables.dr_fw_outboard
+        + fortran.build_variables.dr_blkt_outboard
+    )
+
+    cc = (
+        rcw
+        / (
+            fortran.physics_variables.f_r_conducting_wall
+            * fortran.physics_variables.rminor
+        )
+        - 1.0 * fortran.constraint_variables.fr_conducting_wall
+    )
+    return ConstraintManager(
+        cc,
+        fortran.physics_variables.f_r_conducting_wall
+        * fortran.physics_variables.rminor
+        * (1.0 - cc),
+        rcw * cc,
+    )
+
+
+@ConstraintManager.register_constraint(24, "", "<=")
+def constraint_equation_24():
+    """Equation for beta upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    i_beta_component: switch for beta limit scaling (constraint equation  24):
+    - 0 apply limit to total beta;
+    - 1 apply limit to thermal beta;
+    - 2 apply limit to thermal + neutral beam beta
+    - 3 apply limit to toroidal beta
+    istell: switch for stellarator option (set via <CODE>device.dat</CODE>):
+    - 0 use tokamak model;
+    - 1 use stellarator model
+    fbeta_max: f-value for beta limit
+    beta_max: allowable beta
+    beta: total plasma beta (calculated if ipedestal =3)
+    beta_fast_alpha: fast alpha beta component
+    beta_beam: neutral beam beta component
+    bt: toroidal field
+    btot: total field
+    """
+    # Include all beta components: relevant for both tokamaks and stellarators
+    if (
+        fortran.physics_variables.i_beta_component == 0
+        or fortran.stellarator_variables.istell != 0
+    ):
+        cc = (
+            fortran.physics_variables.beta / fortran.physics_variables.beta_max
+            - 1.0 * fortran.constraint_variables.fbeta_max
+        )
+        con = fortran.physics_variables.beta_max
+        err = (
+            fortran.physics_variables.beta_max
+            - fortran.physics_variables.beta / fortran.constraint_variables.fbeta_max
+        )
+    # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
+    elif fortran.physics_variables.i_beta_component == 1:
+        cc = (
+            (
+                fortran.physics_variables.beta
+                - fortran.physics_variables.beta_fast_alpha
+                - fortran.physics_variables.beta_beam
+            )
+            / fortran.physics_variables.beta_max
+            - 1.0 * fortran.constraint_variables.fbeta_max
+        )
+        con = fortran.physics_variables.beta_max
+        err = (
+            fortran.physics_variables.beta_max
+            - (
+                fortran.physics_variables.beta
+                - fortran.physics_variables.beta_fast_alpha
+                - fortran.physics_variables.beta_beam
+            )
+            / fortran.constraint_variables.fbeta_max
+        )
+    # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
+    elif fortran.physics_variables.i_beta_component == 2:
+        cc = (
+            (fortran.physics_variables.beta - fortran.physics_variables.beta_fast_alpha)
+            / fortran.physics_variables.beta_max
+            - 1.0 * fortran.constraint_variables.fbeta_max
+        )
+        con = fortran.physics_variables.beta_max * (1.0 - cc)
+        err = (
+            fortran.physics_variables.beta - fortran.physics_variables.beta_fast_alpha
+        ) * cc
+    # Beta limit applies to toroidal beta
+    elif fortran.physics_variables.i_beta_component == 3:
+        cc = (
+            (
+                fortran.physics_variables.beta
+                * (fortran.physics_variables.btot / fortran.physics_variables.bt) ** 2
+            )
+            / fortran.physics_variables.beta_max
+            - 1.0 * fortran.constraint_variables.fbeta_max
+        )
+        con = fortran.physics_variables.beta_max
+        err = (
+            fortran.physics_variables.beta_max
+            - (
+                fortran.physics_variables.beta
+                * (fortran.physics_variables.btot / fortran.physics_variables.bt) ** 2
+            )
+            / fortran.constraint_variables.fbeta_max
+        )
+
+    return ConstraintResult(cc, con, err)
+
+
+@ConstraintManager.register_constraint(25, "T", "<=")
+def constraint_equation_25():
+    """Equation for peak toroidal field upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpeakb: f-value for maximum toroidal field
+    bmxlim: maximum peak toroidal field (T)
+    b_tf_inboard_peak: mean peak field at TF coil (T)
+    """
+    cc = (
+        fortran.tfcoil_variables.b_tf_inboard_peak / fortran.constraint_variables.bmxlim
+        - 1.0 * fortran.constraint_variables.fpeakb
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.bmxlim * (1.0 - cc),
+        fortran.tfcoil_variables.b_tf_inboard_peak * cc,
+    )
+
+
+@ConstraintManager.register_constraint(26, "A/m2", "<=")
+def constraint_equation_26():
+    """Equation for Central Solenoid current density upper limit at EOF
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fjohcreal: f-value for central solenoid current at end-of-flattop
+    j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m2)
+    j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
+    """
+    return ConstraintResult(
+        fortran.pfcoil_variables.j_cs_flat_top_end
+        / fortran.pfcoil_variables.j_cs_critical_flat_top_end
+        - 1.0 * fortran.constraint_variables.fjohc,
+        fortran.pfcoil_variables.j_cs_critical_flat_top_end,
+        fortran.pfcoil_variables.j_cs_critical_flat_top_end
+        - fortran.pfcoil_variables.j_cs_flat_top_end
+        / fortran.constraint_variables.fjohc,
+    )
+
+
+@ConstraintManager.register_constraint(27, "A/m2", "<=")
+def constraint_equation_27():
+    """Equation for Central Solenoid current density upper limit at BOP
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fjohc0: f-value for central solenoid current at beginning of pulse
+    j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m2)
+    j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
+    """
+    return ConstraintResult(
+        fortran.pfcoil_variables.j_cs_pulse_start
+        / fortran.pfcoil_variables.j_cs_critical_pulse_start
+        - 1.0 * fortran.constraint_variables.fjohc0,
+        fortran.pfcoil_variables.j_cs_critical_pulse_start,
+        fortran.pfcoil_variables.j_cs_critical_pulse_start
+        - fortran.pfcoil_variables.j_cs_pulse_start
+        / fortran.constraint_variables.fjohc0,
+    )
+
+
+@ConstraintManager.register_constraint(29, "m", "=")
 def constraint_equation_29():
     """Equation for inboard major radius: This is a consistency equation
     author: P B Lloyd, CCFE, Culham Science Centre
@@ -459,6 +804,166 @@ def constraint_equation_29():
         cc,
         fortran.build_variables.rinboard * (1.0 - cc),
         fortran.build_variables.rinboard * cc,
+    )
+
+
+@ConstraintManager.register_constraint(30, "MW", "<=")
+def constraint_equation_30():
+    """Equation for injection power upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    p_hcd_injected_total_mw: total auxiliary injected power (MW)
+    fpinj: f-value for injection power
+    p_hcd_injected_max: Maximum allowable value for injected power (MW)
+    """
+    return ConstraintResult(
+        fortran.current_drive_variables.p_hcd_injected_total_mw
+        / fortran.current_drive_variables.p_hcd_injected_max
+        - 1.0 * fortran.constraint_variables.fpinj,
+        fortran.current_drive_variables.p_hcd_injected_max,
+        fortran.current_drive_variables.p_hcd_injected_max
+        - fortran.current_drive_variables.p_hcd_injected_total_mw
+        / fortran.constraint_variables.fpinj,
+    )
+
+
+@ConstraintManager.register_constraint(31, "Pa", "<=")
+def constraint_equation_31():
+    """Equation for TF coil case stress upper limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fstrcase: f-value for TF coil case stress
+    sig_tf_case_max: Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
+    sig_tf_case: Constrained stress in TF coil case (Pa)
+    """
+    return ConstraintResult(
+        fortran.tfcoil_variables.sig_tf_case / fortran.tfcoil_variables.sig_tf_case_max
+        - 1.0 * fortran.constraint_variables.fstrcase,
+        fortran.tfcoil_variables.sig_tf_case_max,
+        fortran.tfcoil_variables.sig_tf_case_max
+        - fortran.tfcoil_variables.sig_tf_case / fortran.constraint_variables.fstrcase,
+    )
+
+
+@ConstraintManager.register_constraint(32, "Pa", "<=")
+def constraint_equation_32():
+    """Equation for TF coil conduit stress upper limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fstrcond: f-value for TF coil conduit stress
+    sig_tf_wp_max: Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
+    sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
+    """
+    return ConstraintResult(
+        fortran.tfcoil_variables.sig_tf_wp / fortran.tfcoil_variables.sig_tf_wp_max
+        - 1.0 * fortran.constraint_variables.fstrcond,
+        fortran.tfcoil_variables.sig_tf_wp_max,
+        fortran.tfcoil_variables.sig_tf_wp_max
+        - fortran.tfcoil_variables.sig_tf_wp / fortran.constraint_variables.fstrcond,
+    )
+
+
+@ConstraintManager.register_constraint(33, "A/m2", "<=")
+def constraint_equation_33():
+    """Equation for TF coil operating/critical J upper limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+    args : output structure : residual error; constraint value;
+
+    fiooic: f-value for TF coil operating current / critical
+    jwdgcrt: critical current density for winding pack (A/m2)
+    j_tf_wp: winding pack current density (A/m2)
+    """
+    if fortran.constraint_variables.fiooic > 0.7:
+        fortran.error_handling.report_error(285)
+
+    cc = (
+        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.jwdgcrt
+        - 1.0 * fortran.constraint_variables.fiooic
+    )
+    return ConstraintResult(
+        cc,
+        fortran.tfcoil_variables.jwdgcrt * (1.0 - cc),
+        fortran.tfcoil_variables.j_tf_wp * cc,
+    )
+
+
+@ConstraintManager.register_constraint(34, "V", "<=")
+def constraint_equation_34():
+    """Equation for TF coil dump voltage upper limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fvdump: f-value for dump voltage
+    vdalw: max voltage across TF coil during quench (kV)
+    vtfskv: voltage across a TF coil during quench (kV)
+    """
+    return ConstraintResult(
+        fortran.tfcoil_variables.vtfskv / fortran.tfcoil_variables.vdalw
+        - 1.0 * fortran.constraint_variables.fvdump,
+        fortran.tfcoil_variables.vdalw,
+        fortran.tfcoil_variables.vdalw - fortran.tfcoil_variables.vtfskv,
+    )
+
+
+@ConstraintManager.register_constraint(35, "A/m2", "<=")
+def constraint_equation_35():
+    """Equation for TF coil J_wp/J_prot upper limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fjprot: f-value for TF coil winding pack current density
+    jwdgpro: allowable TF coil winding pack current density, for dump temperature
+    rise protection (A/m2)
+    j_tf_wp: winding pack current density (A/m2)
+    """
+    return ConstraintResult(
+        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.jwdgpro
+        - 1.0 * fortran.constraint_variables.fjprot,
+        fortran.tfcoil_variables.jwdgpro,
+        fortran.tfcoil_variables.j_tf_wp - fortran.tfcoil_variables.jwdgpro,
+    )
+
+
+@ConstraintManager.register_constraint(37, "1E20 A/Wm2", "<=")
+def constraint_equation_37():
+    """Equation for current drive gamma upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fgamcd: f-value for current drive gamma
+    gammax: maximum current drive gamma
+    eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
+    """
+    cc = (
+        fortran.current_drive_variables.eta_cd_norm_hcd_primary
+        / fortran.constraint_variables.gammax
+        - 1.0 * fortran.constraint_variables.fgamcd
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.gammax * (1.0 - cc),
+        fortran.current_drive_variables.eta_cd_norm_hcd_primary * cc,
+    )
+
+
+@ConstraintManager.register_constraint(39, "K", "<=")
+def constraint_equation_39():
+    """Equation for first wall temperature upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ftpeak: f-value for first wall peak temperature
+    temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
+    temp_fw_peak: peak first wall temperature (K)
+    """
+    if fortran.fwbs_variables.temp_fw_peak < 1.0:
+        raise ProcessValueError(
+            "temp_fw_peak = 0 implies i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
+        )
+    cc = (
+        fortran.fwbs_variables.temp_fw_peak / fortran.fwbs_variables.temp_fw_max
+        - 1.0 * fortran.constraint_variables.ftpeak
+    )
+    return ConstraintResult(
+        cc,
+        fortran.fwbs_variables.temp_fw_max * (1.0 - cc),
+        fortran.fwbs_variables.temp_fw_peak * cc,
     )
 
 
@@ -488,14 +993,107 @@ def constraint_equation_43():
     return ConstraintResult(cc, tcpav2 * (1.0 - cc), tcpav2 * cc)
 
 
+@ConstraintManager.register_constraint(44, "deg C", "<=")
+def constraint_equation_44():
+    """Equation for centrepost temperature upper limit (TART)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fptemp: f-value for peak centrepost temperature
+    ptempalw: maximum peak centrepost temperature (K)
+    tcpmax: peak centrepost temperature (K)
+    itart: switch for spherical tokamak (ST) models:
+    - 0: use conventional aspect ratio models;
+    - 1: use spherical tokamak models
+    """
+    if fortran.physics_variables.itart == 0:
+        raise ProcessValueError("Do not use constraint 44 if itart=0")
+
+    if fortran.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
+        ptempalw = fortran.tfcoil_variables.ptempalw - 273.15
+        tcpmax = fortran.tfcoil_variables.tcpmax - 273.15
+    else:
+        ptempalw = fortran.tfcoil_variables.ptempalw
+        tcpmax = fortran.tfcoil_variables.tcpmax
+
+    cc = tcpmax / ptempalw - 1.0 * fortran.constraint_variables.fptemp
+    return ConstraintResult(cc, ptempalw * (1.0 - cc), tcpmax * cc)
+
+
+@ConstraintManager.register_constraint(46, "", "<=")
+def constraint_equation_46():
+    """Equation for Ip/Irod upper limit (TART)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    eps: inverse aspect ratio
+    fipir: f-value for Ip/Irod upper limit
+    c_tf_total: total (summed) current in TF coils (A)
+    plasma_current: plasma current (A)
+    itart: switch for spherical tokamak (ST) models:
+    - 0: use conventional aspect ratio models;
+    - 1: use spherical tokamak models
+    """
+    if fortran.physics_variables.itart == 0:
+        raise ProcessValueError("Do not use constraint 46 if itart=0")
+
+    # maximum ratio of plasma current to centrepost current
+    cratmx = 1.0 + 4.91 * (fortran.physics_variables.eps - 0.62)
+    cc = (
+        fortran.physics_variables.plasma_current / fortran.tfcoil_variables.c_tf_total
+    ) / cratmx - 1.0 * fortran.constraint_variables.fipir
+
+    return ConstraintResult(
+        cc,
+        cratmx * (1.0 - cc),
+        fortran.physics_variables.plasma_current
+        / fortran.tfcoil_variables.c_tf_total
+        * cc,
+    )
+
+
+@ConstraintManager.register_constraint(48, "", "<=")
+def constraint_equation_48():
+    """Equation for poloidal beta upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fbeta_poloidal: rf-value for poloidal beta
+    beta_poloidal_max: maximum poloidal beta
+    beta_poloidal: poloidal beta
+    """
+    cc = (
+        fortran.physics_variables.beta_poloidal
+        / fortran.constraint_variables.beta_poloidal_max
+        - 1.0 * fortran.constraint_variables.fbeta_poloidal
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.beta_poloidal_max * (1.0 - cc),
+        fortran.physics_variables.beta_poloidal * cc,
+    )
+
+
+@ConstraintManager.register_constraint(50, "Hz", "<=")
+def constraint_equation_50():
+    """IFE option: Equation for repetition rate upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+    author: S I Muldrew, CCFE, Culham Science Centre
+    """
+    cc = (
+        fortran.ife_variables.reprat / fortran.ife_variables.rrmax
+        - 1.0 * fortran.ife_variables.frrmax
+    )
+    return ConstraintResult(
+        cc, fortran.ife_variables.rrmax * (1.0 - cc), fortran.ife_variables.reprat * cc
+    )
+
+
 @ConstraintManager.register_constraint(51, "V.s", "=")
 def constraint_equation_51():
     """Equation to enforce startup flux = available startup flux
     author: P B Lloyd, CCFE, Culham Science Centre
 
     vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
-    vs_plasma_ind_ramp:  internal and external plasma inductance V-s (Wb))
-    vs_cs_pf_total_ramp:  total flux swing for startup (Wb)
+    vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
+    vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
     cc = 1.0 - fortran.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
         (
@@ -508,6 +1106,446 @@ def constraint_equation_51():
         cc,
         fortran.pfcoil_variables.vs_cs_pf_total_ramp * (1.0 - cc),
         fortran.pfcoil_variables.vs_cs_pf_total_ramp * cc,
+    )
+
+
+@ConstraintManager.register_constraint(53, "neutron/m2", "<=")
+def constraint_equation_53():
+    """Equation for fast neutron fluence on TF coil upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fflutf: f-value for maximum TF coil nuclear heating
+    nflutfmax: max fast neutron fluence on TF coil (n/m2)
+    nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
+    """
+    cc = (
+        fortran.fwbs_variables.nflutf / fortran.constraint_variables.nflutfmax
+        - 1.0 * fortran.constraint_variables.fflutf
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.nflutfmax * (1.0 - cc),
+        fortran.fwbs_variables.nflutf * cc,
+    )
+
+
+@ConstraintManager.register_constraint(54, "MW/m3", "<=")
+def constraint_equation_54():
+    """Equation for peak TF coil nuclear heating upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fptfnuc: f-value for maximum TF coil nuclear heating
+    ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
+    ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
+    """
+    cc = (
+        fortran.fwbs_variables.ptfnucpm3 / fortran.constraint_variables.ptfnucmax
+        - 1.0 * fortran.constraint_variables.fptfnuc
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.ptfnucmax * (1.0 - cc),
+        fortran.fwbs_variables.ptfnucpm3 * cc,
+    )
+
+
+@ConstraintManager.register_constraint(56, "MW/m", "<=")
+def constraint_equation_56():
+    """Equation for power through separatrix / major radius upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpsepr: f-value for maximum Psep/R limit
+    pseprmax: maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+    p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
+    rmajor: plasma major radius (m)
+    """
+    cc = (
+        (
+            fortran.physics_variables.p_plasma_separatrix_mw
+            / fortran.physics_variables.rmajor
+        )
+        / fortran.constraint_variables.pseprmax
+        - 1.0 * fortran.constraint_variables.fpsepr
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.pseprmax * (1.0 - cc),
+        (
+            fortran.physics_variables.p_plasma_separatrix_mw
+            / fortran.physics_variables.rmajor
+        )
+        * cc,
+    )
+
+
+@ConstraintManager.register_constraint(59, "", "<=")
+def constraint_equation_59():
+    """Equation for neutral beam shine-through fraction upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fnbshinef: f-value for maximum neutral beam shine-through fraction
+    f_p_beam_shine_through_max: maximum neutral beam shine-through fraction
+    f_p_beam_shine_through: neutral beam shine-through fraction
+    """
+    cc = (
+        fortran.current_drive_variables.f_p_beam_shine_through
+        / fortran.constraint_variables.f_p_beam_shine_through_max
+        - 1.0 * fortran.constraint_variables.fnbshinef
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.f_p_beam_shine_through_max * (1.0 - cc),
+        fortran.current_drive_variables.f_p_beam_shine_through * cc,
+    )
+
+
+@ConstraintManager.register_constraint(63, "", "<=")
+def constraint_equation_63():
+    """Upper limit on niterpump (vacuum_model = simple)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fniterpump: f-value for constraint that number of pumps < tfno
+    tfno: number of TF coils (default = 50 for stellarators)
+    niterpump: number of high vacuum pumps (real number), each with the throughput
+    """
+    cc = (
+        fortran.vacuum_variables.niterpump / fortran.tfcoil_variables.n_tf_coils
+        - 1.0 * fortran.constraint_variables.fniterpump
+    )
+    return ConstraintResult(
+        cc,
+        fortran.tfcoil_variables.n_tf_coils,
+        fortran.tfcoil_variables.n_tf_coils * cc,
+    )
+
+
+@ConstraintManager.register_constraint(64, "", "<=")
+def constraint_equation_64():
+    """Upper limit on Zeff
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fzeffmax: f-value for maximum zeff
+    zeffmax: maximum value for Zeff
+    zeff: plasma effective charge
+    """
+    cc = (
+        fortran.physics_variables.zeff / fortran.constraint_variables.fzeffmax
+        - 1.0 * fortran.constraint_variables.ffzeffmax
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.fzeffmax,
+        fortran.constraint_variables.fzeffmax * cc,
+    )
+
+
+@ConstraintManager.register_constraint(65, "Pa", "<=")
+def constraint_equation_65():
+    """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
+    author: Timothy Nunn, UKAEA
+
+    fmaxvvstress: f-value for constraint on maximum VV stress
+    max_vv_stress: Maximum permitted stress of the VV (Pa)
+    vv_stress_quench: Stress of the VV (Pa)
+    """
+    cc = (
+        fortran.sctfcoil_module.vv_stress_quench
+        / fortran.tfcoil_variables.max_vv_stress
+        - 1.0 * fortran.constraint_variables.fmaxvvstress
+    )
+    return ConstraintResult(
+        cc,
+        fortran.tfcoil_variables.max_vv_stress,
+        fortran.tfcoil_variables.max_vv_stress * cc,
+    )
+
+
+@ConstraintManager.register_constraint(66, "MW", "<=")
+def constrain_equation_66():
+    """Upper limit on rate of change of energy in poloidal field
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpoloidalpower: f-value for constraint on rate of change of energy in poloidal field
+    maxpoloidalpower: Maximum permitted absolute rate of change of stored energy in poloidal field (MW)
+    peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
+    """
+    cc = (
+        fortran.pf_power_variables.peakpoloidalpower
+        / fortran.pf_power_variables.maxpoloidalpower
+        - 1.0 * fortran.constraint_variables.fpoloidalpower
+    )
+    return ConstraintResult(
+        cc,
+        fortran.pf_power_variables.maxpoloidalpower,
+        fortran.pf_power_variables.maxpoloidalpower * cc,
+    )
+
+
+@ConstraintManager.register_constraint(67, "MW/m2", "<=")
+def constraint_equation_67():
+    """Simple upper limit on radiation wall load
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fradwall: f-value for upper limit on radiation wall load
+    pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
+    pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
+    """
+    cc = (
+        fortran.constraint_variables.pflux_fw_rad_max_mw
+        / fortran.constraint_variables.pflux_fw_rad_max
+        - 1.0 * fortran.constraint_variables.fradwall
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.pflux_fw_rad_max,
+        fortran.constraint_variables.pflux_fw_rad_max * cc,
+    )
+
+
+@ConstraintManager.register_constraint(68, "MWT/m", "<=")
+def constraint_equation_68():
+    """Upper limit on Psep scaling (PsepB/qAR)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpsepbqar: f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
+    psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
+    p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
+    bt: toroidal field on axis (T) (iteration variable 2)
+    q95: safety factor q at 95% flux surface
+    aspect: aspect ratio (iteration variable 1)
+    rmajor: plasma major radius (m) (iteration variable 3)
+    i_q95_fixed: Switch that allows for fixing q95 only in this constraint.
+    q95_fixed: fixed safety factor q at 95% flux surface
+    """
+    if fortran.constraint_variables.i_q95_fixed == 1:
+        cc = (
+            (
+                (
+                    fortran.physics_variables.p_plasma_separatrix_mw
+                    * fortran.physics_variables.bt
+                )
+                / (
+                    fortran.constraint_variables.q95_fixed
+                    * fortran.physics_variables.aspect
+                    * fortran.physics_variables.rmajor
+                )
+            )
+            / fortran.constraint_variables.psepbqarmax
+            - 1.0 * fortran.constraint_variables.fpsepbqar
+        )
+        err = (
+            fortran.physics_variables.p_plasma_separatrix_mw
+            * fortran.physics_variables.bt
+        ) / (
+            fortran.constraint_variables.q95_fixed
+            * fortran.physics_variables.aspect
+            * fortran.physics_variables.rmajor
+        ) - fortran.constraint_variables.psepbqarmax
+    else:
+        cc = (
+            (
+                (
+                    fortran.physics_variables.p_plasma_separatrix_mw
+                    * fortran.physics_variables.bt
+                )
+                / (
+                    fortran.physics_variables.q95
+                    * fortran.physics_variables.aspect
+                    * fortran.physics_variables.rmajor
+                )
+            )
+            / fortran.constraint_variables.psepbqarmax
+            - 1.0 * fortran.constraint_variables.fpsepbqar
+        )
+        err = (
+            fortran.physics_variables.p_plasma_separatrix_mw
+            * fortran.physics_variables.bt
+        ) / (
+            fortran.physics_variables.q95
+            * fortran.physics_variables.aspect
+            * fortran.physics_variables.rmajor
+        ) - fortran.constraint_variables.psepbqarmax
+
+    return ConstraintResult(cc, fortran.constraint_variables.psepbqarmax, err)
+
+
+@ConstraintManager.register_constraint(72, "Pa", "<=")
+def constraint_equation_72():
+    """Upper limit on central Solenoid Tresca yield stress
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
+    stress is the largest the largest stress of the
+     - CS stress at maximum current (conservative as the TF inward pressure is not taken
+       into account)
+     - CS stress at flux swing (no current in CS) from the TF inward pressure
+    This allow to cover the 2 worst stress scenario in the bucked and wedged design
+    Otherwise (free standing TF), the stress limits are only set by the CS stress at max current
+    Reverse the sign so it works as an inequality constraint (tmp_cc > 0)
+    This will have no effect if it is used as an equality constraint because it will be squared.
+
+    foh_stress: f-value for Tresca yield criterion in Central Solenoid
+    alstroh:  allowable hoop stress in Central Solenoid structural material (Pa)
+    s_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
+    sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
+                          can be significant for the bucked and weged design
+    i_tf_bucking: switch for TF structure design
+    """
+    # bucked and wedged desing
+    if (
+        fortran.tfcoil_variables.i_tf_bucking >= 2
+        and fortran.build_variables.i_tf_inside_cs == 0
+    ):
+        cc = (
+            max(
+                fortran.pfcoil_variables.s_shear_cs_peak,
+                fortran.tfcoil_variables.sig_tf_cs_bucked,
+            )
+            / fortran.pfcoil_variables.alstroh
+            - 1.0 * fortran.constraint_variables.foh_stress
+        )
+        err = fortran.pfcoil_variables.alstroh - max(
+            fortran.pfcoil_variables.s_shear_cs_peak,
+            fortran.tfcoil_variables.sig_tf_cs_bucked,
+        )
+    # Free standing CS
+    else:
+        cc = (
+            fortran.pfcoil_variables.s_shear_cs_peak / fortran.pfcoil_variables.alstroh
+            - 1.0 * fortran.constraint_variables.foh_stress
+        )
+        err = (
+            fortran.pfcoil_variables.alstroh - fortran.pfcoil_variables.s_shear_cs_peak
+        )
+
+    return ConstraintResult(cc, fortran.pfcoil_variables.alstroh, err)
+
+
+@ConstraintManager.register_constraint(74, "K", "<=")
+def constraint_equation_74():
+    """Upper limit to ensure TF coil quench temperature < tmax_croco
+    ONLY used for croco HTS coil
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fcqt: f-value: TF coil quench temparature remains below tmax_croco
+    croco_quench_temperature: CroCo strand: Actual temp reached during a quench (K)
+    tmax_croco: CroCo strand: maximum permitted temp during a quench (K)
+    """
+    cc = (
+        fortran.tfcoil_variables.croco_quench_temperature
+        / fortran.tfcoil_variables.tmax_croco
+        - 1.0 * fortran.constraint_variables.fcqt
+    )
+    return ConstraintResult(
+        cc,
+        fortran.tfcoil_variables.croco_quench_temperature,
+        fortran.tfcoil_variables.croco_quench_temperature * cc,
+    )
+
+
+@ConstraintManager.register_constraint(75, "A/m2", "<=")
+def constraint_equation_75():
+    """Upper limit to ensure that TF coil current / copper area < Maximum value
+    ONLY used for croco HTS coil
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    copperA_m2: TF coil current / copper area (A/m2)
+    copperA_m2_max: Maximum TF coil current / copper area (A/m2)
+    f_coppera_m2: f-value for TF coil current / copper area < copperA_m2_max
+    """
+    cc = (
+        fortran.rebco_variables.coppera_m2 / fortran.rebco_variables.coppera_m2_max
+        - 1.0 * fortran.rebco_variables.f_coppera_m2
+    )
+    return ConstraintResult(
+        cc, fortran.rebco_variables.coppera_m2, fortran.rebco_variables.coppera_m2 * cc
+    )
+
+
+@ConstraintManager.register_constraint(76, "m-3", "<=")
+def constraint_equation_76():
+    """Upper limit for Eich critical separatrix density model: Added for issue 558
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    Eich critical separatrix density model
+    Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
+
+    alpha_crit: critical ballooning parameter value
+    nesep_crit: critical electron density at separatrix [m-3]
+    kappa: plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
+    triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
+    aspect: aspect ratio (iteration variable 1)
+    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+    dlimit(7)array : density limit (/m3) as calculated using various models
+    fnesep: f-value for Eich critical separatrix density
+    """
+    # TODO: why on earth are these variables being set here!? Should they be local?
+    fortran.physics_variables.alpha_crit = (fortran.physics_variables.kappa**1.2) * (
+        1.0 + 1.5 * fortran.physics_variables.triang
+    )
+    fortran.physics_variables.nesep_crit = (
+        5.9
+        * fortran.physics_variables.alpha_crit
+        * (fortran.physics_variables.aspect ** (-2.0 / 7.0))
+        * (((1.0 + (fortran.physics_variables.kappa**2.0)) / 2.0) ** (-6.0 / 7.0))
+        * ((fortran.physics_variables.p_plasma_separatrix_mw * 1.0e6) ** (-11.0 / 70.0))
+        * fortran.physics_variables.dlimit[6]
+    )
+
+    cc = (
+        fortran.physics_variables.nesep / fortran.physics_variables.nesep_crit
+        - 1.0 * fortran.constraint_variables.fnesep
+    )
+    return ConstraintResult(
+        cc, fortran.physics_variables.nesep, fortran.physics_variables.nesep * cc
+    )
+
+
+@ConstraintManager.register_constraint(77, "A/turn", "<=")
+def constraint_equation_77():
+    """Equation for maximum TF current per turn upper limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fcpttf: f-value for TF coil current per turn
+    cpttf_max : allowable TF coil current per turn [A/turn]
+    cpttf : TF coil current per turn [A/turn]
+    """
+    cc = (
+        fortran.tfcoil_variables.cpttf / fortran.tfcoil_variables.cpttf_max
+        - 1.0 * fortran.constraint_variables.fcpttf
+    )
+    return ConstraintResult(
+        cc, fortran.tfcoil_variables.cpttf_max, fortran.tfcoil_variables.cpttf_max * cc
+    )
+
+
+@ConstraintManager.register_constraint(79, "A/turn", "<=")
+def constraint_equation_79():
+    """Equation for maximum CS field
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fb_cs_limit_max: F-value for CS mmax field (cons. 79, itvar 149)
+    b_cs_limit_max: Central solenoid max field limit [T]
+    b_cs_peak_pulse_start: maximum field in central solenoid at beginning of pulse (T)
+    b_cs_peak_flat_top_end: maximum field in central solenoid at end of flat-top (EoF) (T)
+    (Note: original code has "b_cs_peak_flat_top_end/b_cs_peak_pulse_start |  peak CS field [T]".)
+    """
+    cc = (
+        max(
+            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
+            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+        )
+        / fortran.pfcoil_variables.b_cs_limit_max
+        - 1.0 * fortran.pfcoil_variables.fb_cs_limit_max
+    )
+    return ConstraintResult(
+        cc,
+        fortran.pfcoil_variables.b_cs_limit_max,
+        max(
+            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
+            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+        )
+        * cc,
     )
 
 
@@ -546,6 +1584,85 @@ def constraint_equation_85():
         cc,
         fortran.cost_variables.divlife * (1.0 - cc),
         fortran.cost_variables.divlife * cc,
+    )
+
+
+@ConstraintManager.register_constraint(86, "m", "<=")
+def constraint_equation_86():
+    """Upper limit on the turn edge length in the TF winding pack
+    Author : S Kahn
+
+    t_turn_tf: TF coil turn edge length including turn insulation [m]
+    f_t_turn_tf: f-value for TF turn edge length constraint
+    t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
+    """
+    cc = (
+        fortran.tfcoil_variables.t_turn_tf / fortran.tfcoil_variables.t_turn_tf_max
+        - 1.0 * fortran.tfcoil_variables.f_t_turn_tf
+    )
+    return ConstraintResult(
+        cc,
+        fortran.tfcoil_variables.t_turn_tf_max * (1.0 - cc),
+        fortran.tfcoil_variables.t_turn_tf_max * cc,
+    )
+
+
+@ConstraintManager.register_constraint(87, "MW", "<=")
+def constraint_equation_87():
+    """Equation for TF coil cryogenic power upper limit
+    author: S. Kahn, CCFE, Culham Science Centre
+
+    crypmw: cryogenic plant power (MW)
+    f_crypmw: f-value for maximum cryogenic plant power
+    crypmw_max: Maximum cryogenic plant power (MW)
+    """
+    cc = (
+        fortran.heat_transport_variables.crypmw
+        / fortran.heat_transport_variables.crypmw_max
+        - 1.0 * fortran.heat_transport_variables.f_crypmw
+    )
+    return ConstraintResult(
+        cc,
+        fortran.heat_transport_variables.crypmw_max * (1.0 - cc),
+        fortran.heat_transport_variables.crypmw * cc,
+    )
+
+
+@ConstraintManager.register_constraint(88, "", "<=")
+def constraint_equation_88():
+    """Equation for TF coil vertical strain upper limit (absolute value)
+    author: CPS Swanson, PPPL, USA
+
+    fstr_wp: f-value for TF coil strain
+    str_wp_max: Allowable maximum TF coil vertical strain
+    str_wp: Constrained TF coil vertical strain
+    """
+    return ConstraintResult(
+        abs(fortran.tfcoil_variables.str_wp) / fortran.tfcoil_variables.str_wp_max
+        - 1.0 * fortran.constraint_variables.fstr_wp,
+        fortran.tfcoil_variables.str_wp_max,
+        fortran.tfcoil_variables.str_wp_max
+        - abs(fortran.tfcoil_variables.str_wp) / fortran.constraint_variables.fstr_wp,
+    )
+
+
+@ConstraintManager.register_constraint(89, "A/m2", "<=")
+def constraint_equation_89():
+    """Upper limit to ensure that the Central Solenoid [OH] coil current / copper area < Maximum value
+    author: G Turkington, CCFE, Culham Science Centre
+
+    copperaoh_m2: CS coil current at EOF / copper area [A/m2]
+    copperaoh_m2_max: maximum coil current / copper area [A/m2]
+    f_copperaoh_m2: f-value for CS coil current / copper area
+    """
+    cc = (
+        fortran.rebco_variables.copperaoh_m2 / fortran.rebco_variables.copperaoh_m2_max
+        - 1.0 * fortran.rebco_variables.f_copperaoh_m2
+    )
+    return ConstraintResult(
+        cc,
+        fortran.rebco_variables.copperaoh_m2,
+        fortran.rebco_variables.copperaoh_m2 * cc,
     )
 
 
