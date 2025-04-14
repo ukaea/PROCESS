@@ -1470,6 +1470,13 @@ class TFCoil:
         )
         po.ovarre(
             self.outfile,
+            "Radius of maximum field position on inboard TF coil (m)",
+            "(r_b_tf_inboard_peak)",
+            tfcoil_variables.r_b_tf_inboard_peak,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Total current in all TF coils (MA)",
             "(c_tf_total/1.D6)",
             1.0e-6 * tfcoil_variables.c_tf_total,
