@@ -17,49 +17,6 @@ module constraints
 
 contains
 
-   subroutine constraint_eqn_001(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-    !! author: J Morris
-    !! category: equality constraint
-    !!
-    !! Relationship between beta, temperature (keV) and density
-    !!
-    !! \begin{equation}
-    !! c_i = 1 - \frac{1}{\beta}\left( \beta_{ft} + \beta_{NBI} + 2 \times 10^3 \mu_0 e
-    !! \left( \frac{n_e T_e + n_i T_i}{B_{tot}^2} \right) \right)
-    !! \end{equation}
-    !!
-    !! - \( \beta \) -- total plasma beta
-    !! - \( \beta_{ft} \) -- fast alpha beta component
-    !! - \( \beta_{NBI} \) -- neutral beam beta component
-    !! - \( n_e \) -- electron density [m\(^3\)]
-    !! - \( n_i \) -- total ion density [m\(^3\)]
-    !! - \( T_e \) -- density weighted average electron temperature [keV]
-    !! - \( T_i \) -- density weighted average ion temperature [keV]
-    !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
-
-    use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
-    use constants, only: electron_charge,rmu0
-
-    implicit none
-
-   !  type(constraint_args_type), intent(out) :: args
-      real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-    !! constraint derived type
-
-      tmp_cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
-        2.0D3*rmu0*electron_charge * (dene*ten + nd_ions_total*tin)/btot**2 )/beta
-      tmp_con = beta * (1.0D0 - tmp_cc)
-      tmp_err = beta * tmp_cc
-      tmp_symbol = '='
-      tmp_units  = ''
-
-   end subroutine constraint_eqn_001
-
    subroutine constraint_eqn_002(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
     !! author: J. Morris
     !! category: equality constraint
@@ -243,54 +200,6 @@ contains
       tmp_units  = 'MW/m3'
 
    end subroutine constraint_eqn_004
-
-   subroutine constraint_eqn_005(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for density upper limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for density upper limit
-      !! #=# physics
-      !! #=#=# fdene, dnelimt
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! i_density_limit : input integer : switch for density limit to enforce (constraint equation 5):<UL>
-      !! <LI> = 1 old ASDEX;
-      !! <LI> = 2 Borrass model for ITER (I);
-      !! <LI> = 3 Borrass model for ITER (II);
-      !! <LI> = 4 JET edge radiation;
-      !! <LI> = 5 JET simplified;
-      !! <LI> = 6 Hugill-Murakami Mq limit;
-      !! <LI> = 7 Greenwald limit</UL>
-      !! fdene : input real : f-value for density limit
-      !! dene : input real : electron density (/m3)
-      !! dnelimt : input real : density limit (/m3)
-      !! dnla : input real : line averaged electron density (m-3)
-      use physics_variables, only: i_density_limit, dnelimt, dnla, dene
-      use constraint_variables, only: fdene
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-	   ! Apply Greenwald limit to line-averaged density
-      if (i_density_limit == 7) then
-         tmp_cc     = dnla/dnelimt - 1.0D0 * fdene
-         tmp_con    = fdene * dnelimt
-         tmp_err    = fdene * dnelimt - dnla
-         tmp_symbol = '<'
-         tmp_units  = '/m3'
-      else
-         tmp_cc =  dene/dnelimt - 1.0D0 * fdene
-         tmp_con    = dnelimt * (1.0D0 - tmp_cc)
-         tmp_err    = dene * tmp_cc
-         tmp_symbol = '<'
-         tmp_units  = '/m3'
-      end if
-
-   end subroutine constraint_eqn_005
 
    subroutine constraint_eqn_006(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation for epsilon beta-poloidal upper limit
@@ -490,69 +399,6 @@ contains
       tmp_units = 'm'
 
    end subroutine constraint_eqn_011
-
-   subroutine constraint_eqn_012(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for volt-second capability lower limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for volt-second capability lower limit
-      !! #=# pfcoil
-      !! #=#=# fvs, vs_plasma_total_required
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! vs_plasma_total_required : input real : total V-s needed (Wb)
-      !! vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
-      !! fvs : input real : f-value for flux-swing (V-s) requirement (STEADY STATE)
-      !! vs_cs_pf_total_pulse : input real :   total flux swing for pulse (Wb)
-      use physics_variables, only: vs_plasma_total_required
-      use constraint_variables, only: fvs
-      use pfcoil_variables, only: vs_cs_pf_total_pulse
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      !! vs_cs_pf_total_pulse is negative, requires sign change
-      tmp_cc =  1.0D0 - fvs * (-vs_cs_pf_total_pulse)/vs_plasma_total_required
-      tmp_con = vs_plasma_total_required * (1.0D0 - tmp_cc)
-      tmp_err = vs_plasma_total_required * tmp_cc
-      tmp_symbol = '>'
-      tmp_units = 'V.sec'
-
-   end subroutine constraint_eqn_012
-
-   subroutine constraint_eqn_013(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for burn time lower limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value;
-      !! residual error in physical units; output string; units string
-      !! Equation for burn time lower limit
-      !! #=# times
-      !! #=#=# ft_burn, t_burn_min
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! ft_burn : input real : f-value for minimum burn time
-      !! t_burn : input real : burn time (s) (calculated if i_pulsed_plant=1)
-      !! t_burn_min : input real :  minimum burn time (s)
-      use constraint_variables, only: ft_burn,t_burn_min
-      use times_variables, only: t_burn
-      implicit none
-            real(dp), intent(out) :: tmp_cc
-      real(dp), intent(out) :: tmp_con
-      real(dp), intent(out) :: tmp_err
-      character(len=1), intent(out) :: tmp_symbol
-      character(len=10), intent(out) :: tmp_units
-
-      tmp_cc =  1.0D0 - ft_burn * t_burn/t_burn_min
-      tmp_con = t_burn_min / ft_burn
-      tmp_err = t_burn_min / ft_burn  - t_burn
-      tmp_symbol = '>'
-      tmp_units = 'sec'
-
-   end subroutine constraint_eqn_013
 
    subroutine constraint_eqn_014(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Equation to fix number of NBI decay lengths to plasma centre
