@@ -707,7 +707,7 @@ def init_fwbs_variables():
     fwbs_variables.temp_fw_coolant_out = 823.0
     fwbs_variables.pres_fw_coolant = 15.5e6
     fwbs_variables.temp_fw_peak = 873.0
-    fwbs_variables.roughness = 1.0e-6
+    fwbs_variables.roughness_fw_channel = 1.0e-6
     fwbs_variables.len_fw_channel = 4.0
     fwbs_variables.f_fw_peak = 1.0
     fwbs_variables.pres_blkt_coolant = 15.50e6
