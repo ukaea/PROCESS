@@ -357,6 +357,54 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
+    plot_plasma(axis, mfile_data, scan, colour_scheme)
+
+    axis.set_frame_on(False)
+    axis.set_xticks([])
+    axis.set_yticks([])
+
+    # Add heating and current drive information
+    textstr_hcd = (
+        f"Heating and Current Drive:\n"
+        f"Auxiliary Power: {mfile_data.data['p_hcd_injected_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Bootstrap Fraction: {mfile_data.data['f_c_plasma_bootstrap'].get_scan(scan):.2f}\n"
+        f"Auxiliary Fraction: {mfile_data.data['f_c_plasma_auxiliary'].get_scan(scan):.2f}\n"
+        f"Inductive Fraction: {mfile_data.data['f_c_plasma_inductive'].get_scan(scan):.2f}\n"
+        f"Current Drive Efficiency: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.2f} A/W"
+    )
+
+    axis.text(
+        rmajor + rminor + 2.5,
+        -1.5,
+        textstr_hcd,
+        fontsize=9,
+        verticalalignment="top",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightblue",
+            "alpha": 0.5,
+            "linewidth": 2,
+        },
+    )
+
+    # Draw a blue arrow pointing from the center of the plasma to the top right corner
+    axis.annotate(
+        "",
+        xy=(rmajor + rminor, rminor),  # Top right corner of the plasma
+        xytext=(rmajor, 0),  # Center of the plasma
+        arrowprops=dict(facecolor="blue", edgecolor="blue", arrowstyle="->", lw=2),
+    )
+
+    # Draw a red arrow coming from the right and pointing at the plasma
+    axis.annotate(
+        "",
+        xy=(rmajor + rminor / 2, 0),  # Pointing at the plasma
+        xytext=(rmajor + rminor + 2, 0),  # Starting point of the arrow
+        arrowprops=dict(facecolor="red", edgecolor="red", arrowstyle="->", lw=2),
+    )
+
+
 def plot_current_profiles_over_time(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int
 ) -> None:
@@ -3587,6 +3635,7 @@ def main_plot(
     fig6,
     fig7,
     fig8,
+    fig9,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3715,6 +3764,9 @@ def main_plot(
 
     plot_14 = fig8.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_14, m_file_data, scan)
+
+    plot_15 = fig9.add_subplot(111, aspect="equal")
+    plot_main_plasma_information(plot_15, m_file_data, scan, colour_scheme)
 
 
 def main(args=None):
@@ -3986,6 +4038,7 @@ def main(args=None):
     page6 = plt.figure(figsize=(12, 9), dpi=80)
     page7 = plt.figure(figsize=(12, 9), dpi=80)
     page8 = plt.figure(figsize=(12, 9), dpi=80)
+    page9 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3997,6 +4050,7 @@ def main(args=None):
         page6,
         page7,
         page8,
+        page9,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -4013,6 +4067,7 @@ def main(args=None):
         pdf.savefig(page6)
         pdf.savefig(page7)
         pdf.savefig(page8)
+        pdf.savefig(page9)
 
     # show fig if option used
     if args.show:
@@ -4026,6 +4081,7 @@ def main(args=None):
     plt.close(page6)
     plt.close(page7)
     plt.close(page8)
+    plt.close(page9)
 
 
 if __name__ == "__main__":
