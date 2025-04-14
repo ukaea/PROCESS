@@ -63,7 +63,7 @@ class Divertor:
                 pv.p_plasma_separatrix_mw,
                 dv.flux_exp,
                 pv.nesep,
-                dv.beta_div,
+                dv.deg_div_field_plate,
                 pv.rad_fraction_sol,
                 pv.f_p_div_lower,
                 output=output,
@@ -219,7 +219,7 @@ class Divertor:
         p_plasma_separatrix_mw: float,
         flux_exp: float,
         nesep: float,
-        beta_div: float,
+        deg_div_field_plate: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
         output: bool,
@@ -257,8 +257,8 @@ class Divertor:
         :param nesep: electron density at separatrix (m-3)
         :type nesep: float
 
-        :param beta_div: field line angle wrt divertor target plate (degrees)
-        :type beta_div: float
+        :param deg_div_field_plate: field line angle wrt divertor target plate (degrees)
+        :type deg_div_field_plate: float
 
         :param rad_fraction_sol: SOL radiation fraction
         :type rad_fraction_sol: float
@@ -317,7 +317,9 @@ class Divertor:
         alpha_div = flux_exp * alpha_mid
 
         # Tilt of the separatrix relative to the target in the poloidal plane
-        theta_div = math.asin((1 + 1 / alpha_div**2) * math.sin(math.radians(beta_div)))
+        theta_div = math.asin(
+            (1 + 1 / alpha_div**2) * math.sin(math.radians(deg_div_field_plate))
+        )
 
         # Wetted area
         area_wetted = (
@@ -343,8 +345,8 @@ class Divertor:
             po.ovarre(
                 self.outfile,
                 "Field line angle wrt to target divertor plate (degrees)",
-                "(beta_div)",
-                beta_div,
+                "(deg_div_field_plate)",
+                deg_div_field_plate,
             )
             po.ovarre(
                 self.outfile,
@@ -357,7 +359,7 @@ class Divertor:
 
 def init_divertor_variables():
     dv.anginc = 0.262
-    dv.beta_div = 1.0
+    dv.deg_div_field_plate = 1.0
     dv.betai = 1.0
     dv.betao = 1.0
     dv.divclfr = 0.3

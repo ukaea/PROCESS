@@ -810,7 +810,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*beta_div = 
+*deg_div_field_plate = 
 * DESCRIPTION:   Field line angle wrt divertor target plate (degrees) (default = 1.0)
 * JUSTIFICATION: Not yet set
 

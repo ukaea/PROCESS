@@ -17,7 +17,7 @@ module divertor_variables
   real(dp) :: anginc
   !! angle of incidence of field line on plate (rad)
 
-  real(dp) :: beta_div
+  real(dp) :: deg_div_field_plate
   !! field line angle wrt divertor target plate (degrees)
 
   real(dp) :: betai

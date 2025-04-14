@@ -80,7 +80,7 @@ class TestDivertor:
         p_plasma_separatrix_mw = 1.0e2
         flux_exp = 2
         nesep = 1.0e19
-        beta_div = 5.0
+        deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
         f_p_div_lower = 1.0
 
@@ -95,7 +95,7 @@ class TestDivertor:
             p_plasma_separatrix_mw,
             flux_exp,
             nesep,
-            beta_div,
+            deg_div_field_plate,
             rad_fraction_sol,
             f_p_div_lower,
             False,

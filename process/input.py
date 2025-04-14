@@ -191,7 +191,9 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
     "beamwd": InputVariable(fortran.current_drive_variables, float, range=(0.001, 5.0)),
-    "beta_div": InputVariable(fortran.divertor_variables, float, range=(0.0, 360.0)),
+    "deg_div_field_plate": InputVariable(
+        fortran.divertor_variables, float, range=(0.0, 360.0)
+    ),
     "beta_poloidal_max": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 2.0)
     ),

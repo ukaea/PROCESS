@@ -375,7 +375,7 @@ module numerics
   !! <LI> (167) fncycle : f-value for minimum CS coil stress load cycles
   !! <LI> (168) fecrh_ignition: f-value for equation 91
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
-  !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
+  !! <LI> (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) dx_tf_side_case : TF side case thickness [m]
   !! <LI> (173) f_deuterium : Deuterium fraction in fuel
