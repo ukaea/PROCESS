@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
+import process.constraints as constraints
 from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
@@ -75,7 +76,10 @@ class Caller:
             self._call_models_once(xc)
             # Evaluate objective function and constraints
             objf = objective_function(ft.numerics.minmax)
-            conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
+            conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
+
+            # PyVMCON and other bits of PROCESS require a numpy array
+            conf = np.array(conf)
 
             if objf_prev is None and conf_prev is None:
                 # First run: run again to check idempotence
