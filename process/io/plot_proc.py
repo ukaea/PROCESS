@@ -357,21 +357,117 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
+def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     plot_plasma(axis, mfile_data, scan, colour_scheme)
 
-    plot_centre_cross(axis, mfile_data, scan)
-
-    # Plot a horizontal line across the plasma
-    axis.axhline(y=0, color="black", linestyle="--", linewidth=0.5)
-
-    # Plot a vertical line connecting the top and bottom of the plasma
-    axis.axvline(
-        x=(rmajor - (triang * rminor)), color="black", linestyle="--", linewidth=0.5
+    pg = plasma_geometry(
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan)
+        * mfile_data.data["radius_plasma_core_norm"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=1,
+        square=mfile_data.data["plasma_square"].get_scan(scan),
     )
-    # axis.set_frame_on(False)
-    # axis.set_xticks([])
-    # axis.set_yticks([])
+    axis.plot(pg.rs, pg.zs, color="black", linestyle="--")
+
+    triang = mfile_data.data["triang"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+
+    # Write the elongation beside the vertical line, position relative to figure axes
+    axis.text(
+        0.3,
+        0.75,
+        f"$\\kappa$: {mfile_data.data['kappa'].get_scan(scan):.2f}",
+        fontsize=9,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        transform=axis.transAxes,
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # Add plasma volume and areas information
+    textstr_plasma = (
+        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}\n"
+        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}\n"
+        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}"
+    )
+
+    axis.text(
+        0.95,
+        0.05,
+        textstr_plasma,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="right",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.44,
+        0.54,
+        f"$B_{{\\text{{T}}}}$: {mfile_data.data['bt'].get_scan(scan):.2f} T",
+        fontsize=9,
+        color="black",
+        verticalalignment="center",
+        transform=axis.transAxes,
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # Draw a double-ended arrow from the inner plasma edge to the center
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor, 0),  # Inner plasma edge
+        xytext=(rmajor, 0),  # Center
+        arrowprops=dict(arrowstyle="<->", color="black"),
+    )
+
+    # Draw a double-ended arrow from the inner plasma edge to the center
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor * triang, kappa * rminor),  # Inner plasma edge
+        xytext=(rmajor - rminor * triang, 0),  # Center
+        arrowprops=dict(arrowstyle="<->", color="black"),
+    )
+
+    # Add a label for the minor radius
+    axis.text(
+        rmajor - rminor / 2,
+        -0.5,
+        f"$a$: {rminor:.2f} m",
+        fontsize=9,
+        color="black",
+        ha="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # Draw a double-ended arrow from the inner plasma edge to the center
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor * triang, kappa * rminor * 0.25),  # Inner plasma edge
+        xytext=(rmajor, kappa * rminor * 0.25),  # Center
+        arrowprops=dict(arrowstyle="<->", color="black"),
+    )
+
+    # Write the triangularity to the left of the cross, position relative to figure axes
+    axis.text(
+        rmajor - (rminor * triang * 0.75),
+        kappa * rminor * 0.3,
+        f"$\\delta$: {mfile_data.data['triang'].get_scan(scan):.2f}",
+        fontsize=9,
+        color="black",
+        rotation=0,
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
 
     # Add heating and current drive information
     textstr_radiation = (
@@ -433,7 +529,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
 
     # Add beta information
     textstr_beta = (
-        f"Beta Information:\n \n"
+        f"**Beta Information:**\n \n"
         f"Total beta,$ \\ \\beta$: {mfile_data.data['beta'].get_scan(scan):.4f}\n"
         f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal'].get_scan(scan):.4f}\n"
         f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal'].get_scan(scan):.4f}\n"
@@ -444,18 +540,93 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme):
     )
 
     axis.text(
-        -1.0,
-        1.1,
+        0.05,
+        0.95,
         textstr_beta,
         fontsize=9,
         verticalalignment="top",
-        transform=axis.transAxes,
+        transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
         },
+    )
+
+    # ================================================
+
+    # Add beta information
+    textstr_volt_second = (
+        f"Volt-second requirements:\n \n"
+        f"Total volt-second consumption: {mfile_data.data['vs_plasma_total_required'].get_scan(scan):.4f}\n"
+        f"  - Internal volt-seconds: {mfile_data.data['vs_plasma_internal'].get_scan(scan):.4f}\n"
+        f"  - Volt-seconds needed for burn: {mfile_data.data['vs_plasma_burn_required'].get_scan(scan):.4f}\n"
+        f"Plasma loop voltage during burn: {mfile_data.data['v_plasma_loop_burn'].get_scan(scan):.4f}\n"
+        f"Plasma resistance: {mfile_data.data['res_plasma'].get_scan(scan):.4e}\n"
+        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):.4f}\n"
+        f"Plasma inductance: {mfile_data.data['ind_plasma'].get_scan(scan):.4e}\n"
+        f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}\n"
+    )
+
+    axis.text(
+        0.05,
+        0.75,
+        textstr_volt_second,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # =========================================
+
+    # Add beta information
+    textstr_div = (
+        f"$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.4f} MW "
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.4f} "
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T \\cdot q_a \\cdot R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.4f}"
+    )
+
+    axis.text(
+        0.35,
+        0.075,
+        textstr_div,
+        fontsize=11,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # ===============================================
+
+    # Draw an arrow from (rmajor, rminor * kappa * 0.5) to (1.2 * rmajor, rminor * kappa)
+    axis.annotate(
+        "",
+        xy=(1.2 * rmajor, rminor * kappa),
+        xytext=(rmajor, rminor * kappa * 0.5),
+        arrowprops=dict(facecolor="black", edgecolor="black", arrowstyle="->"),
+    )
+
+    # Add a neutron label at the end of the arrow
+    axis.text(
+        1.2 * rmajor,
+        rminor * kappa,
+        "Neutrons",
+        fontsize=10,
+        color="green",
+        verticalalignment="center",
+        horizontalalignment="left",
     )
 
 
@@ -3820,7 +3991,7 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(plot_14, m_file_data, scan)
 
     plot_15 = fig9.add_subplot(111, aspect="equal")
-    plot_main_plasma_information(plot_15, m_file_data, scan, colour_scheme)
+    plot_main_plasma_information(plot_15, m_file_data, scan, colour_scheme, fig9)
 
 
 def main(args=None):
