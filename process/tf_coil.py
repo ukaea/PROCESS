@@ -65,7 +65,7 @@ class TFCoil:
             casths_fraction=tfcoil_variables.casths_fraction,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dr_tf_inboard=build_variables.dr_tf_inboard,
-            dr_tf_nose_case=build_variables.dr_tf_nose_case,
+            dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
             r_tf_inboard_out=build_variables.r_tf_inboard_out,
             r_tf_inboard_in=build_variables.r_tf_inboard_in,
             r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
