@@ -262,7 +262,7 @@ contains
         case (78); call constraint_eqn_078(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
         ! Equation for maximum CS field
         case (79); call constraint_eqn_079(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-        ! Lower limit pdivt
+        ! Lower limit p_plasma_separatrix_mw
         case (80); call constraint_eqn_080(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
         ! Constraint equation making sure that ne(0) > ne(ped)
         case (81); call constraint_eqn_081(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
@@ -965,9 +965,9 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fl_h_threshold : input real : f-value for L-H power threshold
       !! p_l_h_threshold_mw : input real : L-H mode power threshold (MW)
-      !! pdivt : input real : power to conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real : power to conducted to the divertor region (MW)
       use constraint_variables, only: fl_h_threshold
-      use physics_variables, only: p_l_h_threshold_mw, pdivt
+      use physics_variables, only: p_l_h_threshold_mw, p_plasma_separatrix_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -975,9 +975,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fl_h_threshold * pdivt / p_l_h_threshold_mw
+      tmp_cc =  1.0D0 - fl_h_threshold * p_plasma_separatrix_mw / p_l_h_threshold_mw
       tmp_con = p_l_h_threshold_mw
-      tmp_err = p_l_h_threshold_mw - pdivt / fl_h_threshold
+      tmp_err = p_l_h_threshold_mw - p_plasma_separatrix_mw / fl_h_threshold
       if (fl_h_threshold > 1.0D0) then
          tmp_symbol = '>'
       else
@@ -1064,14 +1064,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for divertor heat load upper limit
       !! #=# divertor
-      !! #=#=# fhldiv, hldivlim
+      !! #=#=# fpflux_div_heat_load_mw, pflux_div_heat_load_max_mw
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fhldiv : input real : f-value for divertor heat load
-      !! hldivlim : input real : heat load limit (MW/m2)
-      !! hldiv : input real : divertor heat load (MW/m2)
-      use constraint_variables, only: fhldiv
-      use divertor_variables, only: hldivlim, hldiv
+      !! fpflux_div_heat_load_mw : input real : f-value for divertor heat load
+      !! pflux_div_heat_load_max_mw : input real : heat load limit (MW/m2)
+      !! pflux_div_heat_load_mw : input real : divertor heat load (MW/m2)
+      use constraint_variables, only: fpflux_div_heat_load_mw
+      use divertor_variables, only: pflux_div_heat_load_max_mw, pflux_div_heat_load_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1079,9 +1079,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  hldiv/hldivlim - 1.0D0 * fhldiv
-      tmp_con = hldivlim * (1.0D0 - tmp_cc)
-      tmp_err = hldiv * tmp_cc
+      tmp_cc =  pflux_div_heat_load_mw/pflux_div_heat_load_max_mw - 1.0D0 * fpflux_div_heat_load_mw
+      tmp_con = pflux_div_heat_load_max_mw * (1.0D0 - tmp_cc)
+      tmp_err = pflux_div_heat_load_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW/m2'
 
@@ -2303,10 +2303,10 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpsepr : input real : f-value for maximum Psep/R limit
       !! pseprmax : input real :  maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
-      !! pdivt : input real :  power to be conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real :  power to be conducted to the divertor region (MW)
       !! rmajor : input real :  plasma major radius (m)
       use constraint_variables, only: fpsepr, pseprmax
-      use physics_variables, only: pdivt, rmajor
+      use physics_variables, only: p_plasma_separatrix_mw, rmajor
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2314,9 +2314,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = (pdivt/rmajor)/pseprmax - 1.0D0 * fpsepr
+      tmp_cc = (p_plasma_separatrix_mw/rmajor)/pseprmax - 1.0D0 * fpsepr
       tmp_con = pseprmax * (1.0D0 - tmp_cc)
-      tmp_err = (pdivt/rmajor) * tmp_cc
+      tmp_err = (p_plasma_separatrix_mw/rmajor) * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW/m'
 
@@ -2645,7 +2645,7 @@ contains
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpsepbqar : input real : f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
       !! psepbqarmax : input real : maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
-      !! pdivt : input real : Power to conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real : Power to conducted to the divertor region (MW)
       !! bt : input real : toroidal field on axis (T) (iteration variable 2)
       !! q95 : input real : safety factor q at 95% flux surface
       !! aspect : input real : aspect ratio (iteration variable 1)
@@ -2653,7 +2653,7 @@ contains
       !! i_q95_fixed : input int : Switch that allows for fixing q95 only in this constraint.
       !! q95_fixed : input real : fixed safety factor q at 95% flux surface
       use constraint_variables, only: fpsepbqar, psepbqarmax, i_q95_fixed, q95_fixed
-      use physics_variables, only: pdivt, bt, q95, aspect, rmajor
+      use physics_variables, only: p_plasma_separatrix_mw, bt, q95, aspect, rmajor
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2662,11 +2662,11 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       if (i_q95_fixed == 1) then
-         tmp_cc = ((pdivt*bt)/(q95_fixed*aspect*rmajor)) / psepbqarmax - 1.0d0 * fpsepbqar
-         tmp_err = (pdivt*bt)/(q95_fixed*aspect*rmajor) - psepbqarmax
+         tmp_cc = ((p_plasma_separatrix_mw*bt)/(q95_fixed*aspect*rmajor)) / psepbqarmax - 1.0d0 * fpsepbqar
+         tmp_err = (p_plasma_separatrix_mw*bt)/(q95_fixed*aspect*rmajor) - psepbqarmax
       else
-         tmp_cc = ((pdivt*bt)/(q95*aspect*rmajor)) / psepbqarmax - 1.0d0 * fpsepbqar
-         tmp_err = (pdivt*bt)/(q95*aspect*rmajor) - psepbqarmax
+         tmp_cc = ((p_plasma_separatrix_mw*bt)/(q95*aspect*rmajor)) / psepbqarmax - 1.0d0 * fpsepbqar
+         tmp_err = (p_plasma_separatrix_mw*bt)/(q95*aspect*rmajor) - psepbqarmax
       end if
       tmp_con = psepbqarmax
       tmp_symbol = '<'
@@ -2687,9 +2687,9 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! psep_kallenbach : input real : Power conducted through the separatrix, as calculated by the divertor model [W]
-      !! pdivt : input real :  power to conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real :  power to conducted to the divertor region (MW)
       ! use div_kal_vars, only: psep_kallenbach
-      use physics_variables, only: pdivt
+      use physics_variables, only: p_plasma_separatrix_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2814,14 +2814,14 @@ contains
       !! residual error in physical units; output string; units string
       !! Ensure separatrix power is greater than the L-H power + auxiliary power
       !! #=# physics
-      !! #=#=# fplhsep, pdivt
+      !! #=#=# fplhsep, p_plasma_separatrix_mw
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fplhsep : input real : F-value for Psep >= Plh + Paux : for consistency of two values of separatrix power
       !! p_l_h_threshold_mw : input real : L-H mode power threshold (MW)
-      !! pdivt : input real : power to be conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real : power to be conducted to the divertor region (MW)
       !! p_hcd_injected_total_mw : inout real : total auxiliary injected power (MW)
-      use physics_variables, only: fplhsep, p_l_h_threshold_mw, pdivt
+      use physics_variables, only: fplhsep, p_l_h_threshold_mw, p_plasma_separatrix_mw
       use current_drive_variables, only: p_hcd_injected_total_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2830,9 +2830,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = 1.0d0 - fplhsep * pdivt / (p_l_h_threshold_mw+p_hcd_injected_total_mw)
-      tmp_con = pdivt
-      tmp_err = pdivt * tmp_cc
+      tmp_cc = 1.0d0 - fplhsep * p_plasma_separatrix_mw / (p_l_h_threshold_mw+p_hcd_injected_total_mw)
+      tmp_con = p_plasma_separatrix_mw
+      tmp_err = p_plasma_separatrix_mw * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'MW'
 
@@ -2913,11 +2913,11 @@ contains
       !! kappa : input real : plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
       !! triang : input real : plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
       !! aspect : input real : aspect ratio (iteration variable 1)
-      !! pdivt : input real : power to conducted to the divertor region (MW)
+      !! p_plasma_separatrix_mw : input real : power to conducted to the divertor region (MW)
       !! dlimit(7) : input real array : density limit (/m3) as calculated using various models
       !! fnesep : input real : f-value for Eich critical separatrix density
       use physics_variables, only: alpha_crit, nesep_crit, kappa, triang, &
-                                   aspect, pdivt, dlimit, nesep
+                                   aspect, p_plasma_separatrix_mw, dlimit, nesep
       use constraint_variables, only: fnesep
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -2929,7 +2929,7 @@ contains
       alpha_crit = (kappa ** 1.2D0) * (1.0D0 + 1.5D0 * triang)
       nesep_crit = 5.9D0 * alpha_crit * (aspect ** (-2.0D0/7.0D0)) * &
                 (((1.0D0 + (kappa ** 2.0D0)) / 2.0D0) ** (-6.0D0/7.0D0)) &
-                * ((pdivt* 1.0D6) ** (-11.0D0/70.0D0)) * dlimit(7)
+                * ((p_plasma_separatrix_mw* 1.0D6) ** (-11.0D0/70.0D0)) * dlimit(7)
       tmp_cc = nesep / nesep_crit - 1.0D0 * fnesep
       tmp_con = nesep
       tmp_err = nesep * tmp_cc
@@ -3034,19 +3034,19 @@ contains
    end subroutine constraint_eqn_079
 
    subroutine constraint_eqn_080(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
-      !! Equation for pdivt lower limit
+      !! Equation for p_plasma_separatrix_mw lower limit
       !! author: J Morris, Culham Science Centre
       !! args : output structure : residual error; constraint value; residual error in physical units;
       !! output string; units string
-      !! Lower limit pdivt
+      !! Lower limit p_plasma_separatrix_mw
       !! #=# physics
-      !! #=#=# fpdivlim, pdivt
+      !! #=#=# fp_plasma_separatrix_min_mw, p_plasma_separatrix_mw
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fpdivlim : input : F-value for lower limit on pdivt (cons. 80, itvar 153)
-      !! pdivtlim : input : Minimum power crossing separatrix pdivt [MW]
-      !! pdivt : input : Power crossing separatrix [MW]
-      use physics_variables, only: fpdivlim, pdivt
-      use constraint_variables, only : pdivtlim
+      !! fp_plasma_separatrix_min_mw : input : F-value for lower limit on p_plasma_separatrix_mw (cons. 80, itvar 153)
+      !! p_plasma_separatrix_min_mw : input : Minimum power crossing separatrix p_plasma_separatrix_mw [MW]
+      !! p_plasma_separatrix_mw : input : Power crossing separatrix [MW]
+      use physics_variables, only: fp_plasma_separatrix_min_mw, p_plasma_separatrix_mw
+      use constraint_variables, only : p_plasma_separatrix_min_mw
       implicit none
 
             real(dp), intent(out) :: tmp_cc
@@ -3054,9 +3054,9 @@ contains
       real(dp), intent(out) :: tmp_err
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
-      tmp_cc     = 1.0D0 - fpdivlim * pdivt / pdivtlim
-      tmp_con    = pdivtlim
-      tmp_err    = pdivt * tmp_cc
+      tmp_cc     = 1.0D0 - fp_plasma_separatrix_min_mw * p_plasma_separatrix_mw / p_plasma_separatrix_min_mw
+      tmp_con    = p_plasma_separatrix_min_mw
+      tmp_err    = p_plasma_separatrix_mw * tmp_cc
       tmp_symbol = '>'
       tmp_units  = 'MW'
 

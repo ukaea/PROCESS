@@ -64,7 +64,9 @@ ITERATION_VARIABLES = {
     23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),
     25: IterationVariable("fpnetel", fortran.constraint_variables, 0.001, 1.0),
     26: IterationVariable("ffuspow", fortran.constraint_variables, 0.001, 1.0),
-    27: IterationVariable("fhldiv", fortran.constraint_variables, 0.001, 1.0),
+    27: IterationVariable(
+        "fpflux_div_heat_load_mw", fortran.constraint_variables, 0.001, 1.0
+    ),
     28: IterationVariable("fradpwr", fortran.constraint_variables, 0.001, 0.99),
     29: IterationVariable("dr_bore", fortran.build_variables, 0.1, 10.00),
     30: IterationVariable("fmva", fortran.constraint_variables, 0.010, 1.0),
@@ -293,7 +295,9 @@ ITERATION_VARIABLES = {
     169: IterationVariable(
         "te0_ecrh_achievable", fortran.stellarator_variables, 1.0, 1.0e3
     ),
-    170: IterationVariable("beta_div", fortran.divertor_variables, 0.49, 5.01),
+    170: IterationVariable(
+        "deg_div_field_plate", fortran.divertor_variables, 0.49, 5.01
+    ),
     171: IterationVariable("casths_fraction", fortran.tfcoil_variables, 0.01, 0.99),
     172: IterationVariable("dx_tf_side_case", fortran.tfcoil_variables, 0.001, 1.0),
     173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),

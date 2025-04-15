@@ -3001,7 +3001,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
         ("pnucshld", "Nuclear heating in shield", "MW"),
         (crypmw, "TF cryogenic power", "MW"),
-        ("pdivt", "Power to divertor", "MW"),
+        ("p_plasma_separatrix_mw", "Power to divertor", "MW"),
         ("divlife", "Divertor life", "years"),
         ("pthermmw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
@@ -3095,15 +3095,15 @@ def plot_current_drive_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     pinjie = mfile_data.data["p_hcd_injected_total_mw"].get_scan(scan)
-    pdivt = mfile_data.data["pdivt"].get_scan(scan)
-    pdivr = pdivt / mfile_data.data["rmajor"].get_scan(scan)
+    p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
+    pdivr = p_plasma_separatrix_mw / mfile_data.data["rmajor"].get_scan(scan)
 
     if mfile_data.data["i_hcd_secondary"].get_scan(scan) != 0:
         pinjmwfix = mfile_data.data["pinjmwfix"].get_scan(scan)
 
     pdivnr = (
         1.0e20
-        * mfile_data.data["pdivt"].get_scan(scan)
+        * mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
         / (
             mfile_data.data["rmajor"].get_scan(scan)
             * mfile_data.data["dene"].get_scan(scan)
@@ -3116,7 +3116,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["p_l_h_threshold_mw"].get_scan(scan)
     else:
         pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
-    flh = pdivt / pthresh
+    flh = p_plasma_separatrix_mw / pthresh
 
     hstar = mfile_data.data["hstar"].get_scan(scan)
 

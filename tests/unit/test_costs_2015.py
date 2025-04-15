@@ -13735,7 +13735,7 @@ def test_calc_energy_conversion_system(
 class CalcRemainingSubsystemsParam(NamedTuple):
     p_hcd_injected_total_mw: Any = None
 
-    pdivt: Any = None
+    p_plasma_separatrix_mw: Any = None
 
     fusion_power: Any = None
 
@@ -13787,7 +13787,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
     (
         CalcRemainingSubsystemsParam(
             p_hcd_injected_total_mw=43.745615131519273,
-            pdivt=94.203763268233445,
+            p_plasma_separatrix_mw=94.203763268233445,
             fusion_power=1726.9363495105574,
             t_plasma_res_diffusion=2562.1529343276788,
             itr_sum=687546826.85995734,
@@ -14883,7 +14883,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
         ),
         CalcRemainingSubsystemsParam(
             p_hcd_injected_total_mw=43.745615131519266,
-            pdivt=94.062415557688894,
+            p_plasma_separatrix_mw=94.062415557688894,
             fusion_power=1726.1944723154274,
             t_plasma_res_diffusion=2562.1529343276788,
             itr_sum=1176301401.3409874,
@@ -16000,7 +16000,11 @@ def test_calc_remaining_subsystems(
         calcremainingsubsystemsparam.p_hcd_injected_total_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "pdivt", calcremainingsubsystemsparam.pdivt)
+    monkeypatch.setattr(
+        physics_variables,
+        "p_plasma_separatrix_mw",
+        calcremainingsubsystemsparam.p_plasma_separatrix_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "fusion_power", calcremainingsubsystemsparam.fusion_power

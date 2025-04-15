@@ -939,7 +939,7 @@ class Costs2015:
         #  Cost of ITER divertor
         self.s_cref[37] = 381.0e6
         #  Scale with max power to SOL (MW)
-        self.s_k[37] = physics_variables.pdivt
+        self.s_k[37] = physics_variables.p_plasma_separatrix_mw
         self.s_kref[37] = 140.0e0
         self.s_cost[37] = (
             self.s_cost_factor[37]

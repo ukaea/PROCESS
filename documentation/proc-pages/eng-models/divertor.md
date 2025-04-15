@@ -14,20 +14,20 @@ geometry at present.
 
 The Harrison-Kukushkin-Hotston divertor model[^1] developed for ITER is available, but is unlikely to be relevant for a reactor.
 
-The divertor heat flux `hldiv` can be calculated or it can be input by the user. Options are selected using the switch `i_hldiv`:
+The divertor heat flux `pflux_div_heat_load_mw` can be calculated or it can be input by the user. Options are selected using the switch `i_div_heat_load`:
 
-| `i_hldiv` | Description |
+| `i_div_heat_load` | Description |
 | :-: | - |
-| 0 | the user inputs the value for `hldiv` |
-| 1 | the Peng chamber model (`divtart`) is called to calculate `hldiv` |
-| 2 | the Wade heat flux model (`divwade`) is called to calculate `hldiv` |
+| 0 | the user inputs the value for `pflux_div_heat_load_mw` |
+| 1 | the Peng chamber model (`divtart`) is called to calculate `pflux_div_heat_load_mw` |
+| 2 | the Wade heat flux model (`divwade`) is called to calculate `pflux_div_heat_load_mw` |
 
 ---------------
 
 ## Peng Chamber model | `divtart()`
 
 !!! Note ""
-    `i_hldiv == 1`
+    `i_div_heat_load == 1`
 
 The tight aspect ratio tokamak divertor model (`divtart()`) [^5] calculates the divertor heat flux by 
 assuming that the power is evenly spread around the divertor chamber by the action of a gaseous 
@@ -88,7 +88,7 @@ $$
 The divertor heat load is then found as:
 
 $$
-\mathtt{hldiv} = \frac{\mathtt{pdivt}}{A_{\text{div}}}
+\mathtt{pflux_div_heat_load_mw} = \frac{\mathtt{p_plasma_separatrix_mw}}{A_{\text{div}}}
 $$
 
 !!! warning "Radiated power area"
@@ -167,7 +167,7 @@ The interactive graph below can be used to investigate how changing the key pram
 ## Wade Heat Flux Model
 
 !!! Note ""
-    `i_hldiv == 2`
+    `i_div_heat_load == 2`
 
 A divertor heat flux model is provided in Appendix A.II. of [^2].  This uses the Eich scaling 
 [^3] and S-factor [^4] to calculate the SOL width at the outboard divertor, mapped to the midplane:
@@ -222,8 +222,8 @@ where $f_{rad,div}$ is the SOL radiative fraction.
 
 For the purposes of this model, the following are inputs:
 
-- Flux expansion $F_{exp}$  (`flux_exp`, default = 2)  
-- Field line angle with respect to divertor target plate (degrees) $\beta_{div}$ (`beta_div`), also 
+- Flux expansion $F_{exp}$  (`f_div_flux_expansion`, default = 2)  
+- Field line angle with respect to divertor target plate (degrees) $\beta_{div}$ (`deg_div_field_plate`), also 
   available as an iteration variable (170)  
 - SOL radiative fraction, $f_{rad,div}$ (`rad_fraction_sol`).
 

@@ -178,7 +178,7 @@ p_hcd_injected_max  = 200.0 * maximum allowable value for injected power (MW) (`
 dz_divertor   = 0.62 * divertor structure vertical thickness (m)
 
 * Use Wade divertor heat load model
-i_hldiv = 2
+i_div_heat_load = 2
 
 *------------------Error Handling------------------*
 

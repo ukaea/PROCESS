@@ -314,6 +314,18 @@ OBS_VARS = {
     "irfcd": "i_hcd_calculations",
     "wave_mode": "i_ecrh_wave_mode",
     "pheatfix": "p_hcd_secondary_extra_heat_mw",
+    "ftar": "f_p_div_lower",
+    "beta_div": "deg_div_field_plate",
+    "divclfr": "f_vol_div_coolant",
+    "divdens": "den_div_structure",
+    "divplt": "dx_div_plate",
+    "fhldiv": "fpflux_div_heat_load_mw",
+    "flux_exp": "f_div_flux_expansion",
+    "fpdivlim": "fp_plasma_separatrix_min_mw",
+    "hldiv": "pflux_div_heat_load_mw",
+    "hldivlim": "pflux_div_heat_load_max_mw",
+    "pdivtlim": "p_plasma_separatrix_min_mw",
+    "i_hldiv": "i_div_heat_load",
 }
 
 OBS_VARS_HELP = {

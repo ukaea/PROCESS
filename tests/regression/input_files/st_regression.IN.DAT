@@ -417,7 +417,7 @@ boundu(10) = 1.2
 icc = 15
 * DESCRIPTION:   L-H Power Threshold Limit
 * JUSTIFICATION: Required to be in H-mode
-* VARIABLES:     p_l_h_threshold_mw,pdivt calculated in-situ
+* VARIABLES:     p_l_h_threshold_mw,p_plasma_separatrix_mw calculated in-situ
 
 ixc = 103 
 fl_h_threshold = 1.0
@@ -681,7 +681,7 @@ fimp(14) = 5e-05    *Tungsten
 *-------------------------------- *Divertor* ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-ftar = 0.5 
+f_p_div_lower = 0.5 
 * DESCRIPTION:   Fraction of power to the lower divertor
 * JUSTIFICATION: All power to lower divertor as Single-Null
 
@@ -689,11 +689,11 @@ i_single_null = 0
 * DESCRIPTION:   Switch for Divertor Configuration (0: Double-null, 1: Single-Null)
 * JUSTIFICATION: Design choice, STs generally always double-null
 
-*i_hldiv = 
-* DESCRIPTION:   switch for user input hldiv: (default = 0)
-* = 0: divtart model turned off and user inputs hldiv
-* = 1: divtart model calculates hldiv
-* = 2: divwade model calculates hldiv
+*i_div_heat_load = 
+* DESCRIPTION:   switch for user input pflux_div_heat_load_mw: (default = 0)
+* = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
+* = 1: divtart model calculates pflux_div_heat_load_mw
+* = 2: divwade model calculates pflux_div_heat_load_mw
 * JUSTIFICATION: Not yet set
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Protection Constraints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -702,30 +702,30 @@ i_single_null = 0
 *icc = 18 
 * DESCRIPTION:   Equation for divertor heat load upper limit
 * JUSTIFICATION: Turned off, Psep/R (icc=56) used instead
-* VARIABLES:     hldiv calculated in-situ
+* VARIABLES:     pflux_div_heat_load_mw calculated in-situ
 
-*hldiv = 
+*pflux_div_heat_load_mw = 
 * DESCRIPTION:   Divertor heat load (MW/m2)
 * JUSTIFICATION: Turned off, not used
 
 *ixc = 27
-*fhldiv = 
+*fpflux_div_heat_load_mw = 
 * DESCRIPTION:   f-value for divertor heat load
 * JUSTIFICATION: Used with icc=18 to enforce max divertor heat load, not used
 
-*hldivlim = 
+*pflux_div_heat_load_max_mw = 
 * DESCRIPTION:   Heat load limit (MW/m2)
 * JUSTIFICATION: Turned off, not used
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 80
-* DESCRIPTION:   Constraint equation for pdivt lower limit
-* JUSTIFICATION: Turned off, not needing a minimum pdivt
-* VARIABLES:     pdivtlim (Minimum power crossing separatrix pdivt [MW]). pdivt calculated in-situ
+* DESCRIPTION:   Constraint equation for p_plasma_separatrix_mw lower limit
+* JUSTIFICATION: Turned off, not needing a minimum p_plasma_separatrix_mw
+* VARIABLES:     p_plasma_separatrix_min_mw (Minimum power crossing separatrix p_plasma_separatrix_mw [MW]). p_plasma_separatrix_mw calculated in-situ
 
-*pdivtlim = 
-* DESCRIPTION:   Minimum pdivt [MW] (`constraint equation 80`)
+*p_plasma_separatrix_min_mw = 
+* DESCRIPTION:   Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)
 * JUSTIFICATION: Not set, not using icc = 80
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -744,7 +744,7 @@ i_single_null = 0
 icc = 56
 * DESCRIPTION:   Pseparatrix/Rmajor Upper Limit
 * JUSTIFICATION: Divertor protection
-* VARIABLES:     rmajor. pdivt calculated in situ
+* VARIABLES:     rmajor. p_plasma_separatrix_mw calculated in situ
 
 pseprmax = 40.0 
 * DESCRIPTION:   Maximum ratio of Psep/R (MW/m) (icc=56)
@@ -760,15 +760,15 @@ boundu(97) = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Divertor Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*divclfr = 
+*f_vol_div_coolant = 
 * DESCRIPTION:   Divertor coolant fraction (default = 0.3)
 * JUSTIFICATION: Not yet set
 
-*divdens = 
+*den_div_structure = 
 * DESCRIPTION:   Divertor structure density (kg/m3) (default = 1.0D4)
 * JUSTIFICATION: Not yet set
 
-*divplt = 
+*dx_div_plate = 
 * DESCRIPTION:   Divertor plate thickness (m) (default = 0.035)
 * JUSTIFICATION: Not yet set
 
@@ -810,7 +810,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*beta_div = 
+*deg_div_field_plate = 
 * DESCRIPTION:   Field line angle wrt divertor target plate (degrees) (default = 1.0)
 * JUSTIFICATION: Not yet set
 
@@ -826,7 +826,7 @@ boundu(97) = 1.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*flux_exp = 
+*f_div_flux_expansion = 
 * DESCRIPTION:   The plasma flux expansion in the divertor (default 2; Wade 2020)
 * JUSTIFICATION: Not yet set
 

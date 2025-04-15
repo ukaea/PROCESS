@@ -184,7 +184,7 @@ module numerics
   !!  <LI> (77) TF coil current per turn upper limit
   !!  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)
   !!  <LI> (79) Peak CS field upper limit (itv  149 fb_cs_limit_max)
-  !!  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)
+  !!  <LI> (80) Divertor power lower limit p_plasma_separatrix_mw (itv  153 fp_plasma_separatrix_min_mw)
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
   !!  <LI> (82) toroidalgap >  dx_tf_inboard_out_toroidal constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
@@ -232,7 +232,7 @@ module numerics
   !! <LI> (24) NOT USED
   !! <LI> (25) fpnetel (f-value for equation 16)
   !! <LI> (26) ffuspow (f-value for equation 9)
-  !! <LI> (27) fhldiv (f-value for equation 18)
+  !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
   !! <LI> (28) fradpwr (f-value for equation 17), total radiation fraction
   !! <LI> (29) dr_bore
   !! <LI> (30) fmva (f-value for equation 19)
@@ -358,7 +358,7 @@ module numerics
   !! <LI> (150) REMOVED
   !! <LI> (151) REMOVED
   !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
-  !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
+  !! <LI> (153) fp_plasma_separatrix_min_mw : F-value for minimum p_plasma_separatrix_mw (con. 80)
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
   !! <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
   !! <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
@@ -375,7 +375,7 @@ module numerics
   !! <LI> (167) fncycle : f-value for minimum CS coil stress load cycles
   !! <LI> (168) fecrh_ignition: f-value for equation 91
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
-  !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
+  !! <LI> (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
   !! <LI> (172) dx_tf_side_case : TF side case thickness [m]
   !! <LI> (173) f_deuterium : Deuterium fraction in fuel
@@ -538,7 +538,7 @@ contains
       'Rate of change of energy in field', &
       'Upper Lim. on Radiation Wall load', &
       'Upper Lim. on Psep * Bt / q A R  ', &
-      'pdivt < psep_kallenbach divertor ', &
+      'p_sep < psep_kallenbach divertor ', &
       'Separatrix temp consistency      ', &
       'Separatrix density consistency   ', &
       'CS Tresca yield criterion        ', &
@@ -549,7 +549,7 @@ contains
       'TFC current per turn upper limit ', &
       'Reinke criterion fZ lower limit  ', &
       'Peak CS field upper limit        ', &
-      'pdivt lower limit                ', &
+      'p_sep lower limit                ', &
       'ne0 > neped                      ', &
       'toroidalgap > dx_tf_inboard_out_t', &
       'available_space > required_space ', &

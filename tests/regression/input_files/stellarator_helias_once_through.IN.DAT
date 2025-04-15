@@ -109,7 +109,7 @@ fbeta_max = 1. * f-value for beta limit (`constraint equation 24`; `iteration va
 fecrh_ignition = 1.0 * f-value for ecrh ignition constraint
 fflutf   = 1 * f-value for neutron fluence on TF coil (`constraint equation 53`; `iteration variable 92`)
 ffuspow  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
-fhldiv   = 0.8 * f-value for divertor heat load (`constraint equation 18`; `iteration variable 27`)
+fpflux_div_heat_load_mw   = 0.8 * f-value for divertor heat load (`constraint equation 18`; `iteration variable 27`)
 fiooic   = 0.9 * f-value for TF coil operating current / critical current ratio
 fjprot   = 0.95 * f-value for TF coil winding pack current density
 fpnetel  = 1.0 * f-value for net electric power (`constraint equation 16`; `iteration variable 25`)
@@ -165,7 +165,7 @@ p_hcd_primary_extra_heat_mw    = 0. * heating power not used for current drive (
 *----------------Divertor Variables----------------*
 
 anginc   = 0.035 * angle of incidence of field line on plate (rad)
-hldivlim = 15 * heat load limit (MW/m2)
+pflux_div_heat_load_max_mw = 15 * heat load limit (MW/m2)
 tdiv     = 3. * temperature at divertor (eV) (input for stellarator only; calculated for tokamaks)
 xpertin  = 1.5 * perpendicular heat transport coefficient (m2/s)
 

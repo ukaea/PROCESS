@@ -849,7 +849,7 @@ class Stellarator:
         """
         Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
         r = physics_variables.rmajor
-        p_div = physics_variables.pdivt
+        p_div = physics_variables.p_plasma_separatrix_mw
         alpha = divertor_variables.anginc
         xi_p = divertor_variables.xpertin
         T_scrape = divertor_variables.tdiv
@@ -919,8 +919,8 @@ class Stellarator:
 
         #  Transfer to global variables
 
-        divertor_variables.hldiv = q_div
-        divertor_variables.divsur = darea
+        divertor_variables.pflux_div_heat_load_mw = q_div
+        divertor_variables.a_div_surface_total = darea
 
         fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
@@ -930,8 +930,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Power to divertor (MW)",
-                "(pdivt.)",
-                physics_variables.pdivt,
+                "(p_plasma_separatrix_mw.)",
+                physics_variables.p_plasma_separatrix_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -1022,8 +1022,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Peak heat load (MW/m2)",
-                "(hldiv)",
-                divertor_variables.hldiv,
+                "(pflux_div_heat_load_mw)",
+                divertor_variables.pflux_div_heat_load_mw,
             )
 
     def blanket_neutronics(self):
@@ -1242,7 +1242,7 @@ class Stellarator:
                 heat_transport_variables.htpmw_div = (
                     heat_transport_variables.fpumpdiv
                     * (
-                        physics_variables.pdivt
+                        physics_variables.p_plasma_separatrix_mw
                         + fwbs_variables.p_div_nuclear_heat_total_mw
                         + fwbs_variables.p_div_rad_total_mw
                     )
@@ -1578,7 +1578,7 @@ class Stellarator:
                     heat_transport_variables.htpmw_div = (
                         heat_transport_variables.fpumpdiv
                         * (
-                            physics_variables.pdivt
+                            physics_variables.p_plasma_separatrix_mw
                             + fwbs_variables.p_div_nuclear_heat_total_mw
                             + fwbs_variables.p_div_rad_total_mw
                         )
@@ -1598,27 +1598,27 @@ class Stellarator:
         #  fwbs_variables.blktmodel
 
         #  Divertor mass
-        #  N.B. divertor_variables.divsur is calculated in stdiv after this point, so will
+        #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
         #  be zero on first lap, hence the initial approximation
 
         if self.first_call_stfwbs:
-            divertor_variables.divsur = 50.0e0
+            divertor_variables.a_div_surface_total = 50.0e0
             self.first_call_stfwbs = False
 
-        divertor_variables.divmas = (
-            divertor_variables.divsur
-            * divertor_variables.divdens
-            * (1.0e0 - divertor_variables.divclfr)
-            * divertor_variables.divplt
+        divertor_variables.m_div_plate = (
+            divertor_variables.a_div_surface_total
+            * divertor_variables.den_div_structure
+            * (1.0e0 - divertor_variables.f_vol_div_coolant)
+            * divertor_variables.dx_div_plate
         )
 
         #  Start adding components of the coolant mass:
         #  Divertor coolant volume (m3)
 
         coolvol = (
-            divertor_variables.divsur
-            * divertor_variables.divclfr
-            * divertor_variables.divplt
+            divertor_variables.a_div_surface_total
+            * divertor_variables.f_vol_div_coolant
+            * divertor_variables.dx_div_plate
         )
 
         #  Blanket mass, excluding coolant
@@ -2307,14 +2307,14 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Divertor area (m2)",
-                "(divsur)",
-                divertor_variables.divsur,
+                "(a_div_surface_total)",
+                divertor_variables.a_div_surface_total,
             )
             po.ovarre(
                 self.outfile,
                 "Divertor mass (kg)",
-                "(divmas)",
-                divertor_variables.divmas,
+                "(m_div_plate)",
+                divertor_variables.m_div_plate,
             )
 
     def sctfcoil_nuclear_heating_iter90(self):
@@ -4414,7 +4414,7 @@ class Stellarator:
 
         # The SOL radiation needs to be smaller than the physics_variables.p_plasma_rad_mw
         physics_variables.psolradmw = stellarator_variables.f_rad * powht
-        physics_variables.pdivt = powht - physics_variables.psolradmw
+        physics_variables.p_plasma_separatrix_mw = powht - physics_variables.psolradmw
 
         # Add SOL Radiation to total
         physics_variables.p_plasma_rad_mw = (
@@ -4425,7 +4425,9 @@ class Stellarator:
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
         #  this may not be quite correct for stellarators)
-        physics_variables.pdivt = max(0.001e0, physics_variables.pdivt)
+        physics_variables.p_plasma_separatrix_mw = max(
+            0.001e0, physics_variables.p_plasma_separatrix_mw
+        )
 
         #  Power transported to the first wall by escaped alpha particles
 

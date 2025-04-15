@@ -88,7 +88,7 @@ def objective_function(minmax: int) -> float:
         case 8:
             objective_metric = physics_variables.aspect
         case 9:
-            objective_metric = divertor_variables.hldiv
+            objective_metric = divertor_variables.pflux_div_heat_load_mw
         case 10:
             objective_metric = physics_variables.bt
         case 11:

@@ -38,7 +38,7 @@ module scan_module
   integer :: nsweep
   !! Switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
-  !!         <LI> 2  hldivlim
+  !!         <LI> 2  pflux_div_heat_load_max_mw
   !!         <LI> 3  pnetelin
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp
@@ -87,7 +87,7 @@ module scan_module
   !!         <LI> 48 TF coil - n_pancake (integer turn winding pack)
   !!         <LI> 49 TF coil - n_layer (integer turn winding pack)
   !!         <LI> 50 Xenon fraction fimp(13)
-  !!         <LI> 51 Power fraction to lower DN Divertor ftar
+  !!         <LI> 51 Power fraction to lower DN Divertor f_p_div_lower
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness

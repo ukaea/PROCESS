@@ -143,7 +143,7 @@ class ProcessTracker:
         "nd_impurities",
         "t_energy_confinement",
         "te0",
-        "pdivt",
+        "p_plasma_separatrix_mw",
         "nesep",
         "vol_plasma",
         "a_plasma_surface",

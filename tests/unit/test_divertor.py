@@ -37,26 +37,26 @@ class TestDivertor:
         triang = 0.5
         dr_fw_plasma_gap_inboard = 0.09595
         dz_xpoint_divertor = 0.5
-        pdivt = 7.7197999809272062
+        p_plasma_separatrix_mw = 7.7197999809272062
         i_single_null = 0
         dz_divertor = 0.5
-        monkeypatch.setattr(dv, "i_hldiv", 1)
+        monkeypatch.setattr(dv, "i_div_heat_load", 1)
 
-        expected_hldiv = 0.087770426974167357
+        expected_pflux_div_heat_load_mw = 0.087770426974167357
 
-        hldiv = divertor.divtart(
+        pflux_div_heat_load_mw = divertor.divtart(
             rmajor,
             rminor,
             triang,
             dr_fw_plasma_gap_inboard,
             dz_xpoint_divertor,
-            pdivt,
+            p_plasma_separatrix_mw,
             False,
             i_single_null,
             dz_divertor,
         )
 
-        assert hldiv == pytest.approx(expected_hldiv)
+        assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)
 
     def test_divwade(self, monkeypatch, divertor):
         """Test the divwade subroutine.
@@ -77,28 +77,28 @@ class TestDivertor:
         aspect = 2.0
         bt = 0.5
         bp = 0.09595
-        pdivt = 1.0e2
-        flux_exp = 2
+        p_plasma_separatrix_mw = 1.0e2
+        f_div_flux_expansion = 2
         nesep = 1.0e19
-        beta_div = 5.0
+        deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
-        ftar = 1.0
+        f_p_div_lower = 1.0
 
-        expected_hldiv = 0.58898578
+        expected_pflux_div_heat_load_mw = 0.58898578
 
-        hldiv = divertor.divwade(
+        pflux_div_heat_load_mw = divertor.divwade(
             rmajor,
             rminor,
             aspect,
             bt,
             bp,
-            pdivt,
-            flux_exp,
+            p_plasma_separatrix_mw,
+            f_div_flux_expansion,
             nesep,
-            beta_div,
+            deg_div_field_plate,
             rad_fraction_sol,
-            ftar,
+            f_p_div_lower,
             False,
         )
 
-        assert hldiv == pytest.approx(expected_hldiv)
+        assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)

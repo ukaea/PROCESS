@@ -118,7 +118,7 @@ class BlanketLibrary:
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             htop = hbot
         else:
             # Blanket
@@ -327,7 +327,7 @@ class BlanketLibrary:
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
-        if physics_variables.idivrt == 2:
+        if physics_variables.n_divertors == 2:
             # double null configuration
             build_variables.blareaob = (
                 build_variables.blarea
@@ -1101,7 +1101,7 @@ class BlanketLibrary:
 
             # Calculate blanket poloidal length and segment, subtracting divertor length (m)
             # kit hcll version only had the single null option
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.bllengo = (
                     0.5
@@ -1143,7 +1143,7 @@ class BlanketLibrary:
             # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
 
             # kit hcll version only had the single null option
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.bllengi = (
                     0.5
@@ -1173,7 +1173,7 @@ class BlanketLibrary:
 
             # kit hcll version only had the single null option
             # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
-            if physics_variables.idivrt == 2:
+            if physics_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.bllengo = (
                     0.5

@@ -515,7 +515,7 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     if fortran.physics_variables.i_single_null == 0:
-        fortran.physics_variables.idivrt = 2
+        fortran.physics_variables.n_divertors = 2
         fortran.build_variables.dz_fw_plasma_gap = (
             fortran.build_variables.dz_xpoint_divertor
         )
@@ -523,7 +523,7 @@ def check_process(inputs):  # noqa: ARG001
         fortran.build_variables.dz_vv_upper = fortran.build_variables.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        fortran.physics_variables.idivrt = 1
+        fortran.physics_variables.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if fortran.physics_variables.itart == 1:
@@ -621,8 +621,8 @@ def check_process(inputs):  # noqa: ARG001
 
         # Check if a single null divertor is used in double null machine
         if fortran.physics_variables.i_single_null == 0 and (
-            fortran.physics_variables.ftar == 1.0
-            or fortran.physics_variables.ftar == 0.0
+            fortran.physics_variables.f_p_div_lower == 1.0
+            or fortran.physics_variables.f_p_div_lower == 0.0
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
 

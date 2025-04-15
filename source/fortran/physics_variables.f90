@@ -226,7 +226,7 @@ module physics_variables
   real(dp) :: f_deuterium
   !! deuterium fuel fraction
 
-  real(dp) :: ftar
+  real(dp) :: f_p_div_lower
   !! fraction of power to the lower divertor in double null configuration
   !! (`i_single_null = 0` only) (default assumes SN)
 
@@ -256,8 +256,8 @@ module physics_variables
   real(dp) :: fplhsep
   !! F-value for Psep >= Plh + Paux (`constraint equation 73`)
 
-  real(dp) :: fpdivlim
-  !! F-value for minimum pdivt (`constraint equation 80`)
+  real(dp) :: fp_plasma_separatrix_min_mw
+  !! F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)
 
   real(dp) :: fne0
   !! f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
@@ -345,7 +345,7 @@ module physics_variables
   !! - =7 Greenwald limit
   !! - =8 ASDEX New
 
-  integer :: idivrt
+  integer :: n_divertors
   !! number of divertors (calculated from `i_single_null`)
 
   integer :: i_beta_fast_alpha
@@ -615,7 +615,7 @@ module physics_variables
   real(dp) :: dhe3_power
   !! deuterium-helium3 fusion power (MW)
 
-  real(dp) :: pdivt
+  real(dp) :: p_plasma_separatrix_mw
   !! power to conducted to the divertor region (MW)
 
   real(dp) :: pdivl

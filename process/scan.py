@@ -45,7 +45,7 @@ class ScanVariable:
 
 SCAN_VARIABLES = {
     1: ScanVariable("aspect", "Aspect_ratio"),
-    2: ScanVariable("hldivlim", "Div_heat_limit_(MW/m2)"),
+    2: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)"),
     3: ScanVariable("pnetelin", "Net_electric_power_(MW)"),
     4: ScanVariable("hfact", "Confinement_H_factor"),
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
@@ -87,7 +87,7 @@ SCAN_VARIABLES = {
     48: ScanVariable("n_pancake", "TF Coil - n_pancake"),
     49: ScanVariable("n_layer", "TF Coil - n_layer"),
     50: ScanVariable("fimp(13)", "Xenon fraction"),
-    51: ScanVariable("ftar", "lower_divertor_power_fraction"),
+    51: ScanVariable("f_p_div_lower", "lower_divertor_power_fraction"),
     52: ScanVariable("rad_fraction_sol", "SoL radiation fraction"),
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
     54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
@@ -882,7 +882,7 @@ class Scan:
             case 1:
                 physics_variables.aspect = swp[iscn - 1]
             case 2:
-                divertor_variables.hldivlim = swp[iscn - 1]
+                divertor_variables.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
                 constraint_variables.pnetelin = swp[iscn - 1]
             case 4:
@@ -970,7 +970,7 @@ class Scan:
                     impurity_radiation_module.fimp[12]
                 )
             case 51:
-                physics_variables.ftar = swp[iscn - 1]
+                physics_variables.f_p_div_lower = swp[iscn - 1]
             case 52:
                 physics_variables.rad_fraction_sol = swp[iscn - 1]
             case 53:

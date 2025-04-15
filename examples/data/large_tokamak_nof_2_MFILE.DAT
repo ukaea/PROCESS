@@ -327,7 +327,7 @@
  Fast_alpha_particle_power_incident_on_the_first_wall_(MW)________________ (palpfwmw)_____________________ 1.61828978259608931e+01 OP
  Nominal_mean_neutron_load_on_inside_surface_of_reactor_(MW/m2)___________ (wallmw)_______________________ 1.00688183106747675e+00 OP
  Power_incident_on_the_divertor_targets_(MW)______________________________ (ptarmw)_______________________ 8.47292144123684743e+00 OP
- Fraction_of_power_to_the_lower_divertor__________________________________ (ftar)_________________________ 1.00000000000000000e+00 IP
+ Fraction_of_power_to_the_lower_divertor__________________________________ (f_p_div_lower)_________________________ 1.00000000000000000e+00 IP
  Outboard_side_heat_flux_decay_length_(m)_________________________________ (lambdaio)_____________________ 1.57000000000000000e-03 OP
  Fraction_of_power_on_the_inner_targets___________________________________ (fio)__________________________ 4.09999999999999976e-01 OP
  Fraction_of_power_incident_on_the_lower_inner_target_____________________ (fLI)__________________________ 4.09999999999999976e-01 OP
@@ -343,8 +343,8 @@
  Injection_power_to_ions_(MW)_____________________________________________ (pinjimw)______________________ 0.00000000000000000e+00 OP
  Injection_power_to_electrons_(MW)________________________________________ (pinjemw)______________________ 7.75278055722339587e+01 OP
  Ignited_plasma_switch_(0=not_ignited,_1=ignited)________________________ (ignite)______________________              0    
- Power_into_divertor_zone_via_charged_particles_(MW)______________________ (pdivt)________________________ 4.23646072061842460e+01 OP
- Psep_/_R_ratio_(MW/m)____________________________________________________ (pdivt/rmajor)_________________ 5.29557590077303075e+00 OP
+ Power_into_divertor_zone_via_charged_particles_(MW)______________________ (p_plasma_separatrix_mw)________________________ 4.23646072061842460e+01 OP
+ Psep_/_R_ratio_(MW/m)____________________________________________________ (p_plasma_separatrix_mw/rmajor)_________________ 5.29557590077303075e+00 OP
  Psep_Bt_/_qAR_ratio_(MWT/m)______________________________________________ (pdivtbt_over_qar)_____________ 2.51421835634025426e+00 OP
  ITER_1996_scaling:_nominal_(MW)__________________________________________ (l_h_threshold_powers(1))______ 1.37158694933641470e+02 OP
  ITER_1996_scaling:_upper_bound_(MW)______________________________________ (l_h_threshold_powers(2))______ 3.29097731153592292e+02 OP

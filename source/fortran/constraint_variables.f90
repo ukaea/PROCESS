@@ -71,7 +71,7 @@ module constraint_variables
   real(dp) :: fgamcd
   !! f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)
 
-  real(dp) :: fhldiv
+  real(dp) :: fpflux_div_heat_load_mw
   !! f-value for divertor heat load (`constraint equation 18`, `iteration variable 27`)
 
   real(dp) :: fiooic
@@ -240,8 +240,8 @@ module constraint_variables
   !! Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
   !! To set the CP lifetime (`constraint equation 85`)
 
-  real(dp) :: pdivtlim
-  !! Minimum pdivt [MW] (`constraint equation 80`)
+  real(dp) :: p_plasma_separatrix_min_mw
+  !! Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)
 
   real(dp) :: f_fw_rad_max
   !! peaking factor for radiation wall load (`constraint equation 67`)
@@ -333,7 +333,7 @@ module constraint_variables
     fflutf = 1.0D0
     ffuspow = 1.0D0
     fgamcd = 1.0D0
-    fhldiv = 1.0D0
+    fpflux_div_heat_load_mw = 1.0D0
     fiooic = 0.5D0
     fipir = 1.0D0
     q95_fixed = 3.0D0
@@ -382,7 +382,7 @@ module constraint_variables
     mvalim = 40.0D0
     f_p_beam_shine_through_max = 1.0D-3
     nflutfmax = 1.0D23
-    pdivtlim = 150.0D0
+    p_plasma_separatrix_min_mw = 150.0D0
     f_fw_rad_max = 3.33D0
     pflux_fw_rad_max_mw = 0.0D0
     pnetelin = 1.0D3
