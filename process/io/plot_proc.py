@@ -371,7 +371,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         square=mfile_data.data["plasma_square"].get_scan(scan),
     )
     axis.plot(pg.rs, pg.zs, color="black", linestyle="--")
-
+    axis.plot(rmajor, 0, 'r+', markersize=20, markeredgewidth=2,)
     triang = mfile_data.data["triang"].get_scan(scan)
     kappa = mfile_data.data["kappa"].get_scan(scan)
 
@@ -412,7 +412,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     )
 
     axis.text(
-        0.44,
+        0.42,
         0.54,
         f"$B_{{\\text{{T}}}}$: {mfile_data.data['bt'].get_scan(scan):.2f} T",
         fontsize=9,
@@ -540,7 +540,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     )
 
     axis.text(
-        0.05,
+        0.025,
         0.95,
         textstr_beta,
         fontsize=9,
@@ -570,7 +570,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     )
 
     axis.text(
-        0.05,
+        0.025,
         0.75,
         textstr_volt_second,
         fontsize=9,
@@ -588,16 +588,16 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
 
     # Add beta information
     textstr_div = (
-        f"$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.4f} MW "
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.4f} "
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T \\cdot q_a \\cdot R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.4f}"
+        f"$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.2f} MW "
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.2f} "
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f}"
     )
 
     axis.text(
         0.35,
         0.075,
         textstr_div,
-        fontsize=11,
+        fontsize=12,
         verticalalignment="top",
         transform=fig.transFigure,
         bbox={
@@ -622,12 +622,44 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     axis.text(
         1.2 * rmajor,
         rminor * kappa,
-        "Neutrons",
+        f"$P_{{\\text{{rad,core}}}}$: {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.2f} MW",
         fontsize=10,
-        color="green",
+        color="black",
         verticalalignment="center",
         horizontalalignment="left",
     )
+
+    # ================================================
+
+    # Add confinement
+    textstr_confinement = (
+        f"Confinement\n \n"
+        f"Confinement scaling law: {mfile_data.data['tauelaw'].get_scan(scan)}\n"
+        f"Confinement $H$ factor: {mfile_data.data['hfact'].get_scan(scan):.4f}\n"
+        f"Confinement time, from scaling: {mfile_data.data['t_energy_confinement'].get_scan(scan):.4f}\n"
+        f"Fusion double product (s/m³): {mfile_data.data['ntau'].get_scan(scan):.4e}\n"
+        f"Lawson Triple product (keV·s/m³): {mfile_data.data['nTtau'].get_scan(scan):.4e}\n"
+        f"Transport loss power assumed in scaling law (MW): {mfile_data.data['p_plasma_loss_mw'].get_scan(scan):.4f}\n"
+        f"Alpha particle confinement time (s): {mfile_data.data['t_alpha_confinement'].get_scan(scan):.4f}\n"
+    )
+    
+  
+    axis.text(
+        0.025,
+        0.55,
+        textstr_confinement,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # =========================================
 
 
 def plot_current_profiles_over_time(
