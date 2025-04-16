@@ -36,6 +36,7 @@ setup_kwargs = {
     "install_requires": [
         "numpy>=1.23,<2",
         "scipy>=1.10",
+        "numba-scipy @ git+https://github.com/numba/numba-scipy@23c3b33440ea1fe0f84d05d269fb4a3df4b92787",
         "cvxpy!=1.3.0,!=1.3.1",
         "osqp<1.0",
         "pandas>=2.0",
@@ -52,7 +53,10 @@ setup_kwargs = {
         "test": ["pytest>=5.4.1", "requests>=2.30", "testbook>=0.4"],
         "examples": ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"],
     },
-    "entry_points": {"console_scripts": ["process=process.main:main"]},
+    "entry_points": {
+        "console_scripts": ["process=process.main:main"],
+        "numba_extensions": ["init = numba_scipy:_init_extension"],
+    },
     "extra_link_args": EXTRA_ARGS,
 }
 
