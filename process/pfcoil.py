@@ -1171,10 +1171,16 @@ class PFCoil:
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
-            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
-            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+            0.5
+            * (
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+                - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
+            ),
+            0.5
+            * (
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+                - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1]
+            ),
             current,
         )
         br_outer, bz_outer, psi_outer = semianalytic(
@@ -1182,17 +1188,22 @@ class PFCoil:
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
-            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
-            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+            0.5
+            * (
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+                - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
+            ),
+            0.5
+            * (
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+                - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1]
+            ),
             current,
         )
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
         bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils - 1, 99 - 1, timepoint)
-
         pfv.b_cs_peak_flat_top_end = abs(bzi + bz_inner)
 
         # Peak field on outboard side of central Solenoid
@@ -1209,10 +1220,16 @@ class PFCoil:
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
-            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
-            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+            0.5
+            * (
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+                - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
+            ),
+            0.5
+            * (
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+                - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1]
+            ),
             current,
         )
         br_outer, bz_outer, psi_outer = semianalytic(
@@ -1220,15 +1237,20 @@ class PFCoil:
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
             pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
             pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
-            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
-            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
+            0.5
+            * (
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+                - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
+            ),
+            0.5
+            * (
+                pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+                - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1]
+            ),
             current,
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils - 1, 99 - 1, timepoint)
-
         pfv.b_cs_peak_pulse_start = abs(bz_inner + bzi)
 
         # Maximum field values
@@ -1332,7 +1354,6 @@ class PFCoil:
         if pfv.i_pf_conductor == 0:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
-
             (
                 jcritwp,
                 pfv.jcableoh_eof,
@@ -1363,7 +1384,6 @@ class PFCoil:
             pfv.j_cs_critical_flat_top_end = jcritwp * pfv.awpoh / pfv.a_cs_poloidal
 
             # Allowable coil overall current density at BOP
-
             (
                 jcritwp,
                 pfv.jcableoh_bop,
@@ -1483,8 +1503,8 @@ class PFCoil:
                 if jj == i:
                     rp = np.array([pfv.r_pf_coil_inner[i], pfv.r_pf_coil_outer[i]])
                     zp = np.array([pfv.z_pf_coil_middle[jj], pfv.z_pf_coil_middle[jj]])
-                    dr = pfv.r_pf_coil_outer[i] - pfv.r_pf_coil_inner[i]
-                    dz = pfv.z_pf_coil_upper[jj] - pfv.z_pf_coil_lower[jj]
+                    dr = 0.5 * (pfv.r_pf_coil_outer[i] - pfv.r_pf_coil_inner[i])
+                    dz = 0.5 * (pfv.z_pf_coil_upper[jj] - pfv.z_pf_coil_lower[jj])
                     self_current = current
                     self_rc = pfv.r_pf_coil_middle[jj]
                     self_zc = pfv.z_pf_coil_middle[jj]
@@ -3087,7 +3107,6 @@ class PFCoil:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
-
             another_estimate = 2 * thelium
             t_zero_margin, root_result = optimize.newton(
                 superconductors.current_density_margin,
