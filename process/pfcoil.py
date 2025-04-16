@@ -1518,7 +1518,6 @@ class PFCoil:
         pf.xind[:kk] = mutual_inductance(
             pf.rfxf[:kk],
             pf.zfxf[:kk],
-            pf.cfxf[:kk],
             pfv.r_pf_coil_inner[i],
             pfv.z_pf_coil_middle[i],
         )
