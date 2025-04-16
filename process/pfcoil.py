@@ -3,7 +3,9 @@ import math
 
 import numba
 import numpy as np
-from scipy import optimize
+from numba.types import CPointer, float64, intc
+from scipy import LowLevelCallable, optimize
+from scipy.integrate import IntegrationWarning, nquad, quad
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
@@ -24,17 +26,6 @@ from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process import fortran as ft
-import process.superconductors as superconductors
-import math
-import numpy as np
-import numba
-from numba.types import CPointer, float64, intc
-from scipy import LowLevelCallable
-from scipy.integrate import IntegrationWarning, quad, nquad
-import logging
-from scipy import optimize
-from scipy.special import ellipe, ellipk
 
 logger = logging.getLogger(__name__)
 
@@ -681,7 +672,9 @@ class PFCoil:
                 # Peak field
                 if ij == 0:
                     # Index args +1ed
-                    bri, bro, bzi, bzo = self.peakb(i, iii, it)  # returns b_pf_coil_peak, bpf2
+                    bri, bro, bzi, bzo = self.peakb(
+                        i, iii, it
+                    )  # returns b_pf_coil_peak, bpf2
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
@@ -1171,24 +1164,28 @@ class PFCoil:
         # Peak field at the End-Of-Flattop (EOF)
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
-        current = pfv.coheof * pfv.areaoh
+        current = pfv.j_cs_flat_top_end * pfv.a_cs_poloidal
         # Self field from CS
         br_inner, bz_inner, psi_inner = semianalytic(
-            pfv.rpf[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.ra[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
-            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
             current,
         )
         br_outer, bz_outer, psi_outer = semianalytic(
-            pfv.rpf[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
-            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
             current,
         )
 
@@ -1203,26 +1200,30 @@ class PFCoil:
         bohco = abs(bzo + bz_outer)
 
         # Peak field at the Beginning-Of-Pulse (BOP)
-        # Occurs at inner edge of coil; bmaxoh0 and bzi are of same sign at BOP
+        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
 
-        current = pfv.cohbop * pfv.areaoh
+        current = pfv.j_cs_pulse_start * pfv.a_cs_poloidal
         # Self field
         br_inner, bz_inner, psi_inner = semianalytic(
-            pfv.rpf[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.ra[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
-            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
             current,
         )
         br_outer, bz_outer, psi_outer = semianalytic(
-            pfv.rpf[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1],
-            pfv.zpf[pfv.nohc - 1],
-            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
-            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_middle[pfv.n_cs_pf_coils - 1],
+            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+            - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
+            pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+            - pfv.z_pf_coil_lower[pfv.n_cs_pf_coils - 1],
             current,
         )
         timepoint = 2
@@ -1425,31 +1426,22 @@ class PFCoil:
             # so exclude its own contribution; its self field is
             # dealt with inside ohcalc
             kk = 0
-            rp = np.array([pfv.ra[i], pfv.rb[i]])
-            zp = np.array([pfv.zpf[i], pfv.zpf[i]])
+            rp = np.array([pfv.r_pf_coil_inner[i], pfv.r_pf_coil_outer[i]])
+            zp = np.array([pfv.z_pf_coil_middle[i], pfv.z_pf_coil_middle[i]])
         else:
             # Check different times for maximum current
             if (
-                abs(
-                    pfv.c_pf_cs_coil_pulse_start_ma[i]
-                    - pfv.c_pf_cs_coils_peak_ma[i]
-                )
+                abs(pfv.c_pf_cs_coil_pulse_start_ma[i] - pfv.c_pf_cs_coils_peak_ma[i])
                 < 1.0e-12
             ):
                 it = 2
             elif (
-                abs(
-                    pfv.c_pf_cs_coil_flat_top_ma[i]
-                    - pfv.c_pf_cs_coils_peak_ma[i]
-                )
+                abs(pfv.c_pf_cs_coil_flat_top_ma[i] - pfv.c_pf_cs_coils_peak_ma[i])
                 < 1.0e-12
             ):
                 it = 4
             elif (
-                abs(
-                    pfv.c_pf_cs_coil_pulse_end_ma[i]
-                    - pfv.c_pf_cs_coils_peak_ma[i]
-                )
+                abs(pfv.c_pf_cs_coil_pulse_end_ma[i] - pfv.c_pf_cs_coils_peak_ma[i])
                 < 1.0e-12
             ):
                 it = 5
@@ -1509,7 +1501,7 @@ class PFCoil:
             zc_array = np.append(zc_array, 0.0e0)
         bri, bzi, _ = bfield(rc_array, zc_array, current_array, rp[0], zp[0])
         bro, bzo, _ = bfield(rc_array, zc_array, current_array, rp[1], zp[1])
-        if not ((bv.iohcl != 0) and (i == pfv.nohc - 1)):
+        if not ((bv.iohcl != 0) and (i == pfv.n_cs_pf_coils - 1)):
             bri_self, bzi_self, _ = semianalytic(
                 self_rc, self_zc, rp[0], zp[0], dr, dz, self_current
             )
@@ -1527,15 +1519,8 @@ class PFCoil:
             pf.rfxf[:kk],
             pf.zfxf[:kk],
             pf.cfxf[:kk],
-            pfv.r_pf_coil_inner[i - 1],
-            pfv.z_pf_coil_middle[i - 1],
-        )
-        pf.xind[:kk], bro, bzo, psi = bfield(
-            pf.rfxf[:kk],
-            pf.zfxf[:kk],
-            pf.cfxf[:kk],
-            pfv.rb[i - 1],
-            pfv.zpf[i - 1],
+            pfv.r_pf_coil_inner[i],
+            pfv.z_pf_coil_middle[i],
         )
 
         # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
@@ -3759,8 +3744,8 @@ def integrate(func, args, bound1, bound2):
         ]
         try:
             result = quad(func, bound1, bound2, args=args, points=points, limit=200)[0]
-        except IntegrationWarning:
-            raise IntegrationWarning
+        except IntegrationWarning as err:
+            raise IntegrationWarning from err
 
     # warnings.filterwarnings("default", category=IntegrationWarning)
     return result
@@ -3911,7 +3896,7 @@ def _partial_z_integrand_nojit(phi, rr, zz):
     # F2
     result = result - 0.5 * rr if rr - 1 < EPS else result - 0.5 / rr
     # F3
-    if 0.5 * np.pi * sin_phi > 1e-9:  # noqa: PLR2004
+    if 0.5 * np.pi * sin_phi > 1e-9:
         result -= sin_phi * np.arctan(zz * (rr - cos_phi) / (r0 * sin_phi))
     return result
 
@@ -3939,7 +3924,7 @@ def _full_psi_integrand(rp, phi, rc, zc, zp, d_rc, d_zc):
     """
     Integrand for psi = xBz
     """
-    z = zp - zc  # numba issue # noqa: PLR6104
+    z = zp - zc  # numba issue
     r1, r2 = (rc - d_rc) / rp, (rc + d_rc) / rp
     z1, z2 = (-d_zc - z) / rp, (d_zc - z) / rp
     return rp**2 * (
@@ -4071,18 +4056,18 @@ def semianalytic(rc, zc, rp, zp, d_rc, d_zc, current):
     if rp < 0.0001:
         rp = 0.0001
     r1, r2, z1, z2, j_tor = _get_working_coords(rc, zc, rp, zp, d_rc, d_zc)
-    Br = integrate(
+    br = integrate(
         _full_x_integrand, tuple(np.asarray((r1, r2, z1, z2)).ravel()), 0, np.pi
     )
 
-    Bz = _integrate_z_by_parts(r1, r2, z1, z2)
+    bz = _integrate_z_by_parts(r1, r2, z1, z2)
 
     psi = n_integrate(
         _full_psi_integrand,
         (floatify(rc), floatify(zc), floatify(zp), floatify(d_rc), floatify(d_zc)),
         [[0, floatify(rp)], [0, np.pi]],
     )
-    fac_B = 2e-7 * j_tor * rp  # MU_0/(2*np.pi)
+    fac_b = 2e-7 * j_tor * rp  # MU_0/(2*np.pi)
     fac_psi = 2e-7 * j_tor
 
-    return current * fac_B * Br, current * fac_B * Bz, current * fac_psi * psi
+    return current * fac_b * br, current * fac_b * bz, current * fac_psi * psi
