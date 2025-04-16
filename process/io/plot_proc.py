@@ -386,18 +386,6 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
     # Plot the centre of the plasma
     axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
 
-    # Plot the on axis toroidla field above the centre of the plasma
-    axis.text(
-        0.42,
-        0.54,
-        f"$B_{{\\text{{T}}}}$: {mfile_data.data['bt'].get_scan(scan):.2f} T",
-        fontsize=9,
-        color="black",
-        verticalalignment="center",
-        transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
-    )
-
     # =========================================
 
     # Draw a double-ended arrow from the inner plasma edge to the center
@@ -524,8 +512,9 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
 
     # Add heating and current drive information
     textstr_hcd = (
-        f"$\\mathbf{{Heating \\ & current \\ drive:}}$\n \n"
-        f"Total injected heat: {mfile_data.data['p_hcd_injected_total_mw'].get_scan(scan):.3f} MW\n\n"
+        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
+        f"Total injected heat: {mfile_data.data['p_hcd_injected_total_mw'].get_scan(scan):.3f} MW\n"
+        f"Ohmic heating power: {mfile_data.data['p_plasma_ohmic_mw'].get_scan(scan):.3f} MW\n\n"
         f"$\\mathbf{{Primary \\ system:}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
@@ -553,6 +542,16 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
             "alpha": 0.5,
             "linewidth": 2,
         },
+    )
+
+    # Add beta label
+    axis.text(
+        0.9,
+        0.6,
+        "$P_{\\text{inj}}$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
     )
 
     # ================================================
@@ -638,46 +637,38 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
 
     # Add beta information
     textstr_div = (
-        f"$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.2f} MW "
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.2f} "
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f}"
+        f"\n$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.2f} MW           \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.2f} MW/m               \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f} MW T/m               "
     )
 
     axis.text(
         0.35,
-        0.075,
+        0.12,
         textstr_div,
-        fontsize=12,
+        fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightgreen",
+            "facecolor": "orange",
             "alpha": 1.0,
             "linewidth": 2,
         },
     )
 
+    # Add beta label
+    axis.text(
+        0.45,
+        0.1,
+        "$P_{\\text{div}}$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
     # ===============================================
 
-    # Draw an arrow from (rmajor, rminor * kappa * 0.5) to (1.2 * rmajor, rminor * kappa)
-    axis.annotate(
-        "",
-        xy=(1.05 * rmajor, rminor * kappa),
-        xytext=(rmajor * 0.95, rminor * kappa * 0.5),
-        arrowprops=dict(facecolor="black", edgecolor="black", arrowstyle="->"),
-    )
-
-    # Add a neutron label at the end of the arrow
-    axis.text(
-        1.05 * rmajor,
-        rminor * kappa,
-        f"$P_{{\\text{{rad,core}}}}$: {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.2f} MW",
-        fontsize=10,
-        color="black",
-        verticalalignment="center",
-        horizontalalignment="left",
-    )
 
     # ================================================
 
@@ -713,16 +704,16 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
     )
 
-    # Add a neutron label at the end of the arrow
-    axis.text(
-        1.15 * rmajor,
-        rminor * kappa * 0.9,
-        f"$P_{{\\text{{rad,edge}}}}$: {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.2f} MW",
-        fontsize=10,
-        color="black",
-        verticalalignment="center",
-        horizontalalignment="left",
-    )
+    # # Add a neutron label at the end of the arrow
+    # axis.text(
+    #     1.15 * rmajor,
+    #     rminor * kappa * 0.9,
+    #     f"$P_{{\\text{{rad,edge}}}}$: {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.2f} MW",
+    #     fontsize=10,
+    #     color="black",
+    #     verticalalignment="center",
+    #     horizontalalignment="left",
+    # )
 
     # ================================================
 
@@ -738,7 +729,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         f"Plasma thermal energy: {mfile_data.data['e_plasma_beta'].get_scan(scan)/1e9:.4f} GJ\n"
         f"Alpha particle confinement time: {mfile_data.data['t_alpha_confinement'].get_scan(scan):.4f} s"
     )
-
+    
     axis.text(
         0.025,
         0.575,
@@ -748,7 +739,7 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightgreen",
+            "facecolor": "#7FFFD4",  # Changed to a not normal color (Aquamarine)
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -826,25 +817,25 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         "",
         xy=(rmajor + rminor, rminor * kappa * 0.55),  # Pointing at the plasma
         xytext=(
-            rmajor + 0.2 * rminor,
-            rminor * kappa * 0.25,
+            rmajor,
+            rminor * kappa * 0.5,
         ),
         arrowprops=dict(facecolor="grey", edgecolor="grey", lw=1),
     )
 
-    textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['neutron_power_total'].get_scan(scan):.2f} MW \n"
+    textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['neutron_power_total'].get_scan(scan):.2f} MW"
 
     axis.text(
-        1.1,
-        0.8,
+        0.6,
+        0.9,
         textstr_neutron,
         fontsize=9,
         verticalalignment="top",
         transform=axis.transAxes,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
+            "facecolor": "grey",
+            "alpha": 0.8,
             "linewidth": 2,
         },
     )
@@ -872,8 +863,8 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
+            "facecolor": "red",
+            "alpha": 0.6,
             "linewidth": 2,
         },
     )
@@ -914,20 +905,20 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         f"$\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"$\\mathbf{{relative \\ number}}$\n"
         f"$\\mathbf{{densities:}}$\n \n"
-        f"H: {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
-        f"He: {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
-        f"Be: {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
-        f"C: {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
-        f"N: {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
-        f"O: {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
-        f"Ne: {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
-        f"Si: {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
-        f"Ar : {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
-        f"Fe : {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
-        f"Ni : {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
-        f"Kr : {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
-        f"Xe : {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
-        f"W : {mfile_data.data['fimp(14)'].get_scan(scan):.4e}\n"
+        f"H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
+        f"He:   {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
+        f"Be:   {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
+        f"C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
+        f"N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
+        f"O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
+        f"Ne:   {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
+        f"Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
+        f"Ar:   {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
+        f"Fe:   {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
+        f"Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
+        f"Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
+        f"Xe:   {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
+        f"W:    {mfile_data.data['fimp(14)'].get_scan(scan):.4e}\n"
     )
 
     axis.text(
@@ -977,6 +968,80 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         0.785,
         0.9,
         "$I_{\\text{p}} $",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    # Add fuelling
+    textstr_fields = (
+        f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
+        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['bt'].get_scan(scan):.4f} T                  \n"
+        f"Average poloidal field, $B_{{p}}$: {mfile_data.data['bp'].get_scan(scan):.4f} T              \n"
+        f"Total field, $B_{{tot}}$: {mfile_data.data['btot'].get_scan(scan):.4f} T                \n"
+        f"Vertical field, $B_{{vert}}$: {mfile_data.data['bvert'].get_scan(scan):.4f} T"
+    )
+
+    axis.text(
+        0.64,
+        0.13,
+        textstr_fields,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#C8A2C8",  # Hex code for lilac color
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
+    # Add plasma current label
+    axis.text(
+        0.84,
+        0.1,
+        "$B$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+    # ========
+
+    # Add radiation
+    textstr_radiation = (
+        f"           $\\mathbf{{Radiation:}}$\n\n"
+        f"           Total radiation power {mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Core radiation power {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Edge radiation power {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Synchrotron radiation power {mfile_data.data['p_plasma_sync_mw'].get_scan(scan):.4f} MW\n"
+        f"           Synchrotron wall reflectivity {mfile_data.data['f_sync_reflect'].get_scan(scan):.4f}\n"
+        
+    )
+
+    axis.text(
+        0.735,
+        0.8,
+        textstr_radiation,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "navy",  # Changed color to navy
+            "alpha": 0.6,
+            "linewidth": 2,
+        },
+    )
+
+    # Add radiation label
+    axis.text(
+        0.74,
+        0.75,
+        "$\\gamma$",
         fontsize=23,
         verticalalignment="top",
         transform=fig.transFigure,
