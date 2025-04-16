@@ -679,12 +679,9 @@ class PFCoil:
             iii = ii
             for ij in range(pfv.n_pf_coils_in_group[ii]):
                 # Peak field
-
                 if ij == 0:
                     # Index args +1ed
-                    bri, bro, bzi, bzo = self.peakb(
-                        i + 1, iii + 1, it
-                    )  # returns b_pf_coil_peak, bpf2
+                    bri, bro, bzi, bzo = self.peakb(i, iii, it)  # returns b_pf_coil_peak, bpf2
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
@@ -1174,42 +1171,70 @@ class PFCoil:
         # Peak field at the End-Of-Flattop (EOF)
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
-        # Peak field due to central Solenoid itself
-        bmaxoh2 = self.bfmax(
-            pfv.j_cs_flat_top_end,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+        current = pfv.coheof * pfv.areaoh
+        # Self field from CS
+        br_inner, bz_inner, psi_inner = semianalytic(
+            pfv.rpf[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.ra[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
+            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            current,
+        )
+        br_outer, bz_outer, psi_outer = semianalytic(
+            pfv.rpf[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
+            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            current,
         )
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils - 1, 99 - 1, timepoint)
 
-        pfv.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
+        pfv.b_cs_peak_flat_top_end = abs(bzi + bz_inner)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
-        bohco = abs(bzo)
+        bohco = abs(bzo + bz_outer)
 
         # Peak field at the Beginning-Of-Pulse (BOP)
-        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfv.b_cs_peak_pulse_start = self.bfmax(
-            pfv.j_cs_pulse_start,
-            pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1],
-            pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1],
-            hohc,
+        # Occurs at inner edge of coil; bmaxoh0 and bzi are of same sign at BOP
+
+        current = pfv.cohbop * pfv.areaoh
+        # Self field
+        br_inner, bz_inner, psi_inner = semianalytic(
+            pfv.rpf[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.ra[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
+            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            current,
+        )
+        br_outer, bz_outer, psi_outer = semianalytic(
+            pfv.rpf[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1],
+            pfv.zpf[pfv.nohc - 1],
+            pfv.rb[pfv.nohc - 1] - pfv.ra[pfv.nohc - 1],
+            pfv.zh[pfv.nohc - 1] - pfv.zl[pfv.nohc - 1],
+            current,
         )
         timepoint = 2
-        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils, 99, timepoint)
+        bri, bro, bzi, bzo = self.peakb(pfv.n_cs_pf_coils - 1, 99 - 1, timepoint)
 
-        pfv.b_cs_peak_pulse_start = abs(pfv.b_cs_peak_pulse_start + bzi)
+        pfv.b_cs_peak_pulse_start = abs(bz_inner + bzi)
 
         # Maximum field values
         pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1] = max(
             pfv.b_cs_peak_flat_top_end, abs(pfv.b_cs_peak_pulse_start)
         )
-        pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
+        pf.bpf2[pfv.n_cs_pf_coils - 1] = max(bohco, abs(bzo + bz_outer))
 
         # Stress ==> cross-sectional area of supporting steel to use
         if pfv.i_pf_conductor == 0:
@@ -1395,33 +1420,35 @@ class PFCoil:
         The calculation includes the effects from all the coils
         and the plasma.
         """
-        if bv.iohcl != 0 and i == pfv.n_cs_pf_coils:
+        if (bv.iohcl != 0) and (i == pfv.n_cs_pf_coils - 1):
             # Peak field is to be calculated at the Central Solenoid itself,
             # so exclude its own contribution; its self field is
-            # dealt with externally using routine BFMAX
+            # dealt with inside ohcalc
             kk = 0
+            rp = np.array([pfv.ra[i], pfv.rb[i]])
+            zp = np.array([pfv.zpf[i], pfv.zpf[i]])
         else:
             # Check different times for maximum current
             if (
                 abs(
-                    pfv.c_pf_cs_coil_pulse_start_ma[i - 1]
-                    - pfv.c_pf_cs_coils_peak_ma[i - 1]
+                    pfv.c_pf_cs_coil_pulse_start_ma[i]
+                    - pfv.c_pf_cs_coils_peak_ma[i]
                 )
                 < 1.0e-12
             ):
                 it = 2
             elif (
                 abs(
-                    pfv.c_pf_cs_coil_flat_top_ma[i - 1]
-                    - pfv.c_pf_cs_coils_peak_ma[i - 1]
+                    pfv.c_pf_cs_coil_flat_top_ma[i]
+                    - pfv.c_pf_cs_coils_peak_ma[i]
                 )
                 < 1.0e-12
             ):
                 it = 4
             elif (
                 abs(
-                    pfv.c_pf_cs_coil_pulse_end_ma[i - 1]
-                    - pfv.c_pf_cs_coils_peak_ma[i - 1]
+                    pfv.c_pf_cs_coil_pulse_end_ma[i]
+                    - pfv.c_pf_cs_coils_peak_ma[i]
                 )
                 < 1.0e-12
             ):
@@ -1452,70 +1479,51 @@ class PFCoil:
 
                 kk = pf.nfxf
 
-        # Non-Central Solenoid coils' contributions
+        # initialise variables for loop
+        current_array = np.array([])
+        rc_array = np.array([])
+        zc_array = np.array([])
         jj = 0
+        # loops to set up arrays for magnetostatic calculations
         for iii in range(pfv.n_pf_coil_groups):
             for _jjj in range(pfv.n_pf_coils_in_group[iii]):
-                jj = jj + 1
-                # Radius, z-coordinate and current for each coil
-                if iii == ii - 1:
-                    # Self field from coil (Lyle's Method)
-                    kk = kk + 1
-
-                    dzpf = pfv.z_pf_coil_upper[jj - 1] - pfv.z_pf_coil_lower[jj - 1]
-                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
-                    pf.cfxf[kk - 1] = (
-                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfv.waves[jj - 1, it - 1]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
-                    pf.cfxf[kk - 1] = (
-                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfv.waves[jj - 1, it - 1]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
-                    pf.cfxf[kk - 1] = (
-                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfv.waves[jj - 1, it - 1]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
-                    pf.cfxf[kk - 1] = (
-                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfv.waves[jj - 1, it - 1]
-                        * 0.25e6
-                    )
-
+                current = pfv.c_pf_cs_coils_peak_ma[jj] * pfv.waves[jj, it - 1] * 1.0e6
+                if jj == i:
+                    rp = np.array([pfv.r_pf_coil_inner[i], pfv.r_pf_coil_outer[i]])
+                    zp = np.array([pfv.z_pf_coil_middle[jj], pfv.z_pf_coil_middle[jj]])
+                    dr = pfv.r_pf_coil_outer[i] - pfv.r_pf_coil_inner[i]
+                    dz = pfv.z_pf_coil_upper[jj] - pfv.z_pf_coil_lower[jj]
+                    self_current = current
+                    self_rc = pfv.r_pf_coil_middle[jj]
+                    self_zc = pfv.z_pf_coil_middle[jj]
                 else:
-                    # Field from different coil
-                    kk = kk + 1
-                    pf.rfxf[kk - 1] = pfv.r_pf_coil_middle[jj - 1]
-                    pf.zfxf[kk - 1] = pfv.z_pf_coil_middle[jj - 1]
-                    pf.cfxf[kk - 1] = (
-                        pfv.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfv.waves[jj - 1, it - 1]
-                        * 1.0e6
-                    )
+                    current_array = np.append(current_array, current)
+                    rc_array = np.append(rc_array, pfv.r_pf_coil_middle[jj])
+                    zc_array = np.append(zc_array, pfv.z_pf_coil_middle[jj])
+                jj += 1
 
-        # Plasma contribution
+        # plasma contribution
         if it > 2:
-            kk = kk + 1
-            pf.rfxf[kk - 1] = pv.rmajor
-            pf.zfxf[kk - 1] = 0.0e0
-            pf.cfxf[kk - 1] = pv.plasma_current
+            current_array = np.append(current_array, pv.plasma_current)
+            rc_array = np.append(rc_array, pv.rmajor)
+            zc_array = np.append(zc_array, 0.0e0)
+        bri, bzi, _ = bfield(rc_array, zc_array, current_array, rp[0], zp[0])
+        bro, bzo, _ = bfield(rc_array, zc_array, current_array, rp[1], zp[1])
+        if not ((bv.iohcl != 0) and (i == pfv.nohc - 1)):
+            bri_self, bzi_self, _ = semianalytic(
+                self_rc, self_zc, rp[0], zp[0], dr, dz, self_current
+            )
+            bro_self, bzo_self, _ = semianalytic(
+                self_rc, self_zc, rp[1], zp[1], dr, dz, self_current
+            )
 
-        # Calculate the field at the inner and outer edges
-        # of the coil of interest
-        pf.xind[:kk], bri, bzi, psi = bfield(
+            bri += bri_self
+            bzi += bzi_self
+            bro += bro_self
+            bzo += bzo_self
+
+        # remove xind as not used?
+        pf.xind[:kk] = mutual_inductance(
             pf.rfxf[:kk],
             pf.zfxf[:kk],
             pf.cfxf[:kk],
@@ -1526,84 +1534,21 @@ class PFCoil:
             pf.rfxf[:kk],
             pf.zfxf[:kk],
             pf.cfxf[:kk],
-            pfv.r_pf_coil_outer[i - 1],
-            pfv.z_pf_coil_middle[i - 1],
+            pfv.rb[i - 1],
+            pfv.zpf[i - 1],
         )
 
         # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
-        if (bv.iohcl != 0) and (i == pfv.n_cs_pf_coils):
+        if (bv.iohcl != 0) and (i == pfv.n_cs_pf_coils - 1):
             return bri, bro, bzi, bzo
 
         bpfin = math.sqrt(bri**2 + bzi**2)
         bpfout = math.sqrt(bro**2 + bzo**2)
-        for n in range(pfv.n_pf_coils_in_group[ii - 1]):
-            pfv.b_pf_coil_peak[i - 1 + n] = bpfin
-            pf.bpf2[i - 1 + n] = bpfout
+        for n in range(pfv.n_pf_coils_in_group[ii]):
+            pfv.b_pf_coil_peak[i + n] = bpfin
+            pf.bpf2[i + n] = bpfout
 
         return bri, bro, bzi, bzo
-
-    def bfmax(self, rj, a, b, h):
-        """Calculates the maximum field of a solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        This routine calculates the peak field (T) at a solenoid's
-        inner radius, using fits taken from the figure
-        on p.22 of M. Wilson's book Superconducting Magnets,
-        Clarendon Press, Oxford, N.Y., 1983
-
-        :param rj: overall current density (A/m2)
-        :type rj: float
-        :param a: solenoid inner radius (m)
-        :type a: float
-        :param b: solenoid outer radius (m)
-        :type b: float
-        :param h: solenoid half height (m)
-        :type h: float
-        :return bfmax: maximum field of solenoid
-        :rtype: float
-        """
-        beta = h / a
-        alpha = b / a
-
-        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
-        b0 = (
-            rj
-            * constants.rmu0
-            * h
-            * math.log(
-                (alpha + math.sqrt(alpha**2 + beta**2))
-                / (1.0 + math.sqrt(1.0 + beta**2))
-            )
-        )
-
-        if beta > 3.0:
-            b1 = constants.rmu0 * rj * (b - a)
-            f = (3.0 / beta) ** 2
-            bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
-
-        elif beta > 2.0:
-            rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
-                0.01 - (beta - 2.0) * 0.0045
-            )
-            bfmax = rat * b0
-
-        elif beta > 1.0:
-            rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            bfmax = rat * b0
-
-        elif beta > 0.75:
-            rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
-                0.2 * (beta - 0.75) - 0.05
-            )
-            bfmax = rat * b0
-
-        else:
-            rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
-                0.6 * (beta - 0.5) - 0.20
-            )
-            bfmax = rat * b0
-
-        return bfmax
 
     def vsec(self):
         """Calculation of volt-second capability of PF system.
@@ -1823,13 +1768,9 @@ class PFCoil:
         nohmax = 200
         nplas = 1
 
-        br = 0.0
-        bz = 0.0
-        psi = 0.0
         rc = np.zeros(pfv.ngc2 + nohmax)
         zc = np.zeros(pfv.ngc2 + nohmax)
         xc = np.zeros(pfv.ngc2 + nohmax)
-        cc = np.zeros(pfv.ngc2 + nohmax)
         xcin = np.zeros(pfv.ngc2 + nohmax)
         xcout = np.zeros(pfv.ngc2 + nohmax)
         rplasma = np.zeros(nplas)
@@ -1916,8 +1857,8 @@ class PFCoil:
 
                 reqv = rp * (1.0e0 + delzoh**2 / (24.0e0 * rp**2))
 
-                xcin, br, bz, psi = bfield(rc, zc, cc, reqv - deltar, zp)
-                xcout, br, bz, psi = bfield(rc, zc, cc, reqv + deltar, zp)
+                xcin = mutual_inductance(rc, zc, reqv - deltar, zp)
+                xcout = mutual_inductance(rc, zc, reqv + deltar, zp)
 
                 for ii in range(nplas):
                     xc[ii] = 0.5e0 * (xcin[ii] + xcout[ii])
@@ -1945,7 +1886,7 @@ class PFCoil:
             ncoils = ncoils + pfv.n_pf_coils_in_group[i]
             rp = pfv.r_pf_coil_middle[ncoils - 1]
             zp = pfv.z_pf_coil_middle[ncoils - 1]
-            xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+            xc = mutual_inductance(rc, zc, rp, zp)
             for ii in range(nplas):
                 xpfpl = xpfpl + xc[ii]
 
@@ -1983,7 +1924,7 @@ class PFCoil:
                 ncoils = ncoils + pfv.n_pf_coils_in_group[i]
                 rp = pfv.r_pf_coil_middle[ncoils - 1]
                 zp = pfv.z_pf_coil_middle[ncoils - 1]
-                xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+                xc = mutual_inductance(rc, zc, rp, zp)
                 for ii in range(noh):
                     xohpf = xohpf + xc[ii]
 
@@ -2014,7 +1955,7 @@ class PFCoil:
 
             rp = pfv.r_pf_coil_middle[i]
             zp = pfv.z_pf_coil_middle[i]
-            xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+            xc = mutual_inductance(rc, zc, rp, zp)
             for k in range(pf.nef):
                 if k < i:
                     pfv.ind_pf_cs_plasma_mutual[i, k] = (
@@ -3182,28 +3123,17 @@ class PFCoil:
         return jcritwp, j_crit_cable, j_crit_sc, tmarg
 
 
-@numba.njit(cache=True)
-def bfield(rc, zc, cc, rp, zp):
-    """Calculate the field at a point due to currents in a number
-    of circular poloidal conductor loops.
-    author: P J Knight, CCFE, Culham Science Centre
-    author: D Strickler, ORNL
-    author: J Galambos, ORNL
-    nc : input integer : number of loops
+def mutual_inductance(rc, zc, rp, zp):
+    """
+    Calcualtes the mutual inductances between the loops and a poloidal
+    filament at the (R,Z) point of interest.
+
+    nc : number of loops
     rc(nc) : input real array : R coordinates of loops (m)
     zc(nc) : input real array : Z coordinates of loops (m)
-    cc(nc) : input real array : Currents in loops (A)
     xc(nc) : output real array : Mutual inductances (H)
     rp, zp : input real : coordinates of point of interest (m)
-    br : output real : radial field component at (rp,zp) (T)
-    bz : output real : vertical field component at (rp,zp) (T)
-    psi : output real : poloidal flux at (rp,zp) (Wb)
-    This routine calculates the magnetic field components and
-    the poloidal flux at an (R,Z) point, given the locations
-    and currents of a set of conductor loops.
-    <P>The mutual inductances between the loops and a poloidal
-    filament at the (R,Z) point of interest is also found."""
-
+    """
     #  Elliptic integral coefficients
 
     a0 = 1.38629436112
@@ -3228,9 +3158,6 @@ def bfield(rc, zc, cc, rp, zp):
     nc = len(rc)
 
     xc = np.empty((nc,))
-    br = 0
-    bz = 0
-    psi = 0
 
     for i in range(nc):
         d = (rp + rc[i]) ** 2 + (zp - zc[i]) ** 2
@@ -3269,21 +3196,33 @@ def bfield(rc, zc, cc, rp, zp):
 
         xc[i] = 0.5 * RMU0 * sd * ((2.0 - s) * xk - 2.0 * xe)
 
-        #  Radial, vertical fields
+    return xc
 
-        # brx = (
-        #     RMU0
-        #     * cc[i]
-        #     * dz
-        #     / (2 * np.pi * rp * sd)
-        #     * (-xk + (rc[i] ** 2 + rp**2 + zs) / (dr**2 + zs) * xe)
-        # )
-        # bzx = (
-        #     RMU0
-        #     * cc[i]
-        #     / (2 * np.pi * sd)
-        #     * (xk + (rc[i] ** 2 - rp**2 - zs) / (dr**2 + zs) * xe)
-        # )
+
+@numba.njit(cache=True)
+def bfield(rc, zc, cc, rp, zp):
+    """Calculate the field at a point due to currents in a number
+    of circular poloidal conductor loops.
+    author: P J Knight, CCFE, Culham Science Centre
+    author: D Strickler, ORNL
+    author: J Galambos, ORNL
+    nc : input integer : number of loops
+    rc(nc) : input real array : R coordinates of loops (m)
+    zc(nc) : input real array : Z coordinates of loops (m)
+    cc(nc) : input real array : Currents in loops (A)
+    rp, zp : input real : coordinates of point of interest (m)
+    br : output real : radial field component at (rp,zp) (T)
+    bz : output real : vertical field component at (rp,zp) (T)
+    psi : output real : poloidal flux at (rp,zp) (Wb)
+    This routine calculates the magnetic field components and
+    the poloidal flux at an (R,Z) point, given the locations
+    and currents of a set of conductor loops."""
+
+    br = 0
+    bz = 0
+    psi = 0
+
+    for i in range(len(rc)):
         # get the field due to unit current using Green's function
         g_br, g_bz, g_psi = greens(rc[i], zc[i], rp, zp)
         # convert to actual field from unit current
@@ -3294,7 +3233,7 @@ def bfield(rc, zc, cc, rp, zp):
         bz += g_bz * cc[i]
         psi += g_psi * cc[i]
 
-    return xc, br, bz, psi
+    return br, bz, psi
 
 
 @numba.njit(cache=True)
@@ -3404,7 +3343,7 @@ def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     for i in range(npts):
         # bfield() only operates correctly on nfix slices of array
         # arguments, not entire arrays
-        _, brw, bzw, _ = bfield(rfix[:nfix], zfix[:nfix], cfix[:nfix], rpts[i], zpts[i])
+        brw, bzw, _ = bfield(rfix[:nfix], zfix[:nfix], cfix[:nfix], rpts[i], zpts[i])
         bfix[i] = brw
         bfix[npts + i] = bzw
 
@@ -3484,7 +3423,7 @@ def mtrx(
         for j in range(n_pf_coil_groups):
             nc = n_pf_coils_in_group[j]
 
-            _, gmat[i, j], gmat[i + npts, j], _ = bfield(
+            gmat[i, j], gmat[i + npts, j], _ = bfield(
                 rcls[j, :nc], zcls[j, :nc], cc[:nc], rpts[i], zpts[i]
             )
 
@@ -3737,9 +3676,9 @@ def greens(rc, zc, rp, zp):
     zc: input real array : coil z coordinates (m)
     rp: input real array : calculation r coordinates (m)
     zp: input real array : calculation z coordinates (m)
-    g_psi : output real : poloidal flux at (rp,zp) (Wb)
     g_br: output real : radial field component at (rp,zp) (T)
     g_bz : output real : vertical field component at (rp,zp) (T)
+    g_psi : output real : poloidal flux at (rp,zp) (Wb)
     """
 
     a, k2 = calc_a_k2(rc, zc, rp, zp)
@@ -3757,7 +3696,7 @@ def greens(rc, zc, rp, zp):
     )
     g_psi = 0.25 * RMU0 / np.pi * a * ((2 - k2) * k - 2 * e)
 
-    return g_psi, g_br, g_bz
+    return g_br, g_bz, g_psi
 
 
 def floatify(x):
@@ -4051,24 +3990,32 @@ def _array_dispatcher(func):
     Decorator for float and array handling.
     """
 
-    def wrapper(rc, zc, rp, zp, d_rc, d_zc):
+    def wrapper(rc, zc, rp, zp, d_rc, d_zc, current):
         # Handle floats
         if is_num(rp):
-            return func(rc, zc, rp, zp, d_rc, d_zc)
+            return func(rc, zc, rp, zp, d_rc, d_zc, current)
 
         # Handle arrays
         if len(rp.shape) == 1:
             if not isinstance(rc, np.ndarray) or len(rc.shape) == 1:
                 result = np.zeros(len(rp))
                 for i in range(len(rp)):
-                    result[i] = floatify(func(rc, zc, rp[i], zp[i], d_rc, d_zc))
+                    result[i] = floatify(
+                        func(rc, zc, rp[i], zp[i], d_rc, d_zc, current)
+                    )
             else:
                 result = np.zeros((len(rp), len(rc)))
                 for j in range(rc.shape[1]):
                     for i in range(len(rp)):
                         result[i, j] = floatify(
                             func(
-                                rc[:, j], zc[:, j], rp[i], zp[i], d_rc[:, j], d_zc[:, j]
+                                rc[:, j],
+                                zc[:, j],
+                                rp[i],
+                                zp[i],
+                                d_rc[:, j],
+                                d_zc[:, j],
+                                current[:, j],
                             )
                         )
         # 2-D arrays
@@ -4077,7 +4024,7 @@ def _array_dispatcher(func):
             for i in range(rp.shape[0]):
                 for j in range(zp.shape[1]):
                     result[i, j] = floatify(
-                        func(rc, zc, rp[i, j], zp[i, j], d_rc, d_zc)
+                        func(rc, zc, rp[i, j], zp[i, j], d_rc, d_zc, current)
                     )
         else:
             result = np.zeros([*list(rp.shape), rc.shape[1]])
@@ -4091,6 +4038,7 @@ def _array_dispatcher(func):
                             zp[i, j],
                             d_rc[:, k],
                             d_zc[:, k],
+                            current[:, k],
                         )
         return result
 
@@ -4098,7 +4046,7 @@ def _array_dispatcher(func):
 
 
 @_array_dispatcher
-def semianalytic(rc, zc, rp, zp, d_rc, d_zc):
+def semianalytic(rc, zc, rp, zp, d_rc, d_zc, current):
     """
     Function that uses a semi-analytic reduction of the Biot-Savart law to
     calculate the magnetic fields (Bx, Bz) and magnetic flux (psi) from a
@@ -4119,6 +4067,9 @@ def semianalytic(rc, zc, rp, zp, d_rc, d_zc):
     bz : output real : vertical field component at (rp,zp) (T)
     psi : output real : psi component at (rp, zp) (Wb)
     """
+    # stops rp going to 0 as this results in a divide by 0 error in "_get_working_coords"
+    if rp < 0.0001:
+        rp = 0.0001
     r1, r2, z1, z2, j_tor = _get_working_coords(rc, zc, rp, zp, d_rc, d_zc)
     Br = integrate(
         _full_x_integrand, tuple(np.asarray((r1, r2, z1, z2)).ravel()), 0, np.pi
@@ -4134,38 +4085,4 @@ def semianalytic(rc, zc, rp, zp, d_rc, d_zc):
     fac_B = 2e-7 * j_tor * rp  # MU_0/(2*np.pi)
     fac_psi = 2e-7 * j_tor
 
-    return fac_B * Br, fac_B * Bz, fac_psi * psi
-
-
-@numba.jit(nopython=True)
-def elliptic_inductance(radius, rc):
-    """
-    Calculate the inductance of a circular coil by elliptic integrals.
-
-    Parameters
-    ----------
-    radius: input real : The radius of the circular coil
-    rc: input real : The radius of the coil cross-section
-    xc: output real : The self-inductance of the circular coil [H]
-
-    Notes
-    -----
-    The inductance is given by
-
-    .. math::
-        L = \\mu_{0} (2 r - r_c) \\Biggl((1 - k^2 / 2)~
-        \\int_0^{\\frac{\\pi}{2}} \\frac{d\\theta}{\\sqrt{1 - k~
-        \\sin (\\theta)^2}} - \\int_0^{\\frac{\\pi}{2}}~
-        \\sqrt{1 - k \\sin (\\theta)^2} \\, d\\theta\\Biggr)
-
-    where :math:`r` is the radius, :math:`\\mu_{0}` is the vacuum
-    permeability, and
-
-    .. math::
-        k = \\max\\left(10^{-8}, \\min~
-        \\left(\\frac{4r(r - r_c)}{(2r - r_c)^2}~
-        , 1.0 - 10^{-8}\\right)\\right)
-    """
-    k = 4 * radius * (radius - rc) / (2 * radius - rc) ** 2
-    k = clip_nb(k, GREENS_ZERO, 1.0 - GREENS_ZERO)
-    return RMU0 * (2 * radius - rc) * ((1 - k**2 / 2) * ellipk_nb(k) - ellipe_nb(k))
+    return current * fac_B * Br, current * fac_B * Bz, current * fac_psi * psi
