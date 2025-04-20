@@ -518,14 +518,14 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         f"$\\mathbf{{Primary \\ system:}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
-        f"Absolute efficiency of primary: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.4f} A/W\n"
-        f"Normalsied efficiency of primary: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.2f} 10^20 A / Wm^2\n"
+        f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.4f} A/W\n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile_data.data['c_hcd_primary_driven'].get_scan(scan) / 1e6:.3f} MA\n\n"
         f"$\\mathbf{{Secondary \\ system:}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_secondary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_secondary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
-        f"Absolute efficiency of secondary: {mfile_data.data['eta_cd_hcd_secondary'].get_scan(scan):.4f} A/W\n"
-        f"Normalsied efficiency of secondary: {mfile_data.data['eta_cd_norm_hcd_secondary'].get_scan(scan):.2f} 10^20 A / Wm^2\n"
+        f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_hcd_secondary'].get_scan(scan):.4f} A/W\n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_norm_hcd_secondary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by secondary: {mfile_data.data['c_hcd_secondary_driven'].get_scan(scan) / 1e6:.3f} MA\n"
     )
 
@@ -722,11 +722,11 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         f"$\\mathbf{{Confinement:}}$\n \n"
         f"Confinement scaling law: {mfile_data.data['tauelaw'].get_scan(scan)}\n"
         f"Confinement $H$ factor: {mfile_data.data['hfact'].get_scan(scan):.4f}\n"
-        f"Confinement time, from scaling: {mfile_data.data['t_energy_confinement'].get_scan(scan):.4f}\n"
-        f"Fusion double product (s/m³): {mfile_data.data['ntau'].get_scan(scan):.4e}\n"
-        f"Lawson Triple product (keV·s/m³): {mfile_data.data['nTtau'].get_scan(scan):.4e}\n"
-        f"Transport loss power assumed in scaling law (MW): {mfile_data.data['p_plasma_loss_mw'].get_scan(scan):.4f}\n"
-        f"Plasma thermal energy: {mfile_data.data['e_plasma_beta'].get_scan(scan)/1e9:.4f} GJ\n"
+        f"Energy confinement time from scaling: {mfile_data.data['t_energy_confinement'].get_scan(scan):.4f}\n"
+        f"Fusion double product: {mfile_data.data['ntau'].get_scan(scan):.4e} s/m³\n"
+        f"Lawson Triple product: {mfile_data.data['nttau'].get_scan(scan):.4e} keV·s/m³\n"
+        f"Transport loss power assumed in scaling law: {mfile_data.data['p_plasma_loss_mw'].get_scan(scan):.4f} MW\n"
+        f"Plasma thermal energy, $W$: {mfile_data.data['e_plasma_beta'].get_scan(scan)/1e9:.4f} GJ\n"
         f"Alpha particle confinement time: {mfile_data.data['t_alpha_confinement'].get_scan(scan):.4f} s"
     )
     
@@ -739,8 +739,8 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "#7FFFD4",  # Changed to a not normal color (Aquamarine)
-            "alpha": 1.0,
+            "facecolor": "grey",  # Changed to a not normal color (Aquamarine)
+            "alpha": 0.5,
             "linewidth": 2,
         },
     )
@@ -892,8 +892,8 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
+            "facecolor": "peru",
+            "alpha": 0.5,
             "linewidth": 2,
         },
     )
@@ -902,27 +902,28 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
 
     # Add fuelling
     textstr_ions = (
-        f"$\\mathbf{{Ion \\ to \\ electron}}$\n"
-        f"$\\mathbf{{relative \\ number}}$\n"
-        f"$\\mathbf{{densities:}}$\n \n"
-        f"H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
-        f"He:   {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
-        f"Be:   {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
-        f"C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
-        f"N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
-        f"O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
-        f"Ne:   {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
-        f"Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
-        f"Ar:   {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
-        f"Fe:   {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
-        f"Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
-        f"Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
-        f"Xe:   {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
-        f"W:    {mfile_data.data['fimp(14)'].get_scan(scan):.4e}\n"
+        f"               $\\mathbf{{Ion \\ to \\ electron}}$\n"
+        f"               $\\mathbf{{relative \\ number}}$\n"
+        f"               $\\mathbf{{densities:}}$\n \n"
+        f"               Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
+        f"               H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
+        f"               He:   {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
+        f"               Be:   {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
+        f"               C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
+        f"               N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
+        f"               O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
+        f"               Ne:   {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
+        f"               Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
+        f"               Ar:   {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
+        f"               Fe:   {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
+        f"               Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
+        f"               Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
+        f"               Xe:   {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
+        f"                W:    {mfile_data.data['fimp(14)'].get_scan(scan):.4e}"
     )
 
     axis.text(
-        0.885,
+        0.805,
         0.325,
         textstr_ions,
         fontsize=9,
@@ -935,13 +936,23 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
             "linewidth": 2,
         },
     )
+    
+    # Add plasma current label
+    axis.text(
+        0.825,
+        0.25,
+        "$Z$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
 
     # ================================================
 
     # Add fuelling
     textstr_currents = (
         f"          $\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"          Plasma current {mfile_data.data['plasma_current'].get_scan(scan) / 1e6:.4f} MA\n"
+        f"          Plasma current {mfile_data.data['plasma_current_ma'].get_scan(scan):.4f} MA\n"
         f"            - Bootstrap fraction {mfile_data.data['f_c_plasma_bootstrap'].get_scan(scan):.4f}\n"
         f"            - Diamagnetic fraction {mfile_data.data['f_c_plasma_diamagnetic'].get_scan(scan):.4f}\n"
         f"            - Pfirsch-Schlüter fraction {mfile_data.data['f_c_plasma_pfirsch_schluter'].get_scan(scan):.4f}\n"
@@ -1032,7 +1043,42 @@ def plot_main_plasma_information(axis, mfile_data, scan, colour_scheme, fig):
         bbox={
             "boxstyle": "round",
             "facecolor": "navy",  # Changed color to navy
-            "alpha": 0.6,
+            "alpha": 0.4,
+            "linewidth": 2,
+        },
+    )
+
+    # Add radiation label
+    axis.text(
+        0.74,
+        0.75,
+        "$\\gamma$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+    
+    # ========
+
+    # Add radiation
+    textstr_lh = (
+        f"$\\mathbf{{L-H \\ threshold:}}$\n\n"
+        f"$P_{{\\text{{L-H}}}}$ {mfile_data.data['p_l_h_threshold_mw'].get_scan(scan):.4f} MW\n"
+
+        
+    )
+
+    axis.text(
+        0.22,
+        0.4,
+        textstr_lh,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "peachpuff",  # Changed color to navy
+            "alpha": 1.0,
             "linewidth": 2,
         },
     )
