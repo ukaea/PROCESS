@@ -1494,7 +1494,7 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def plot_n_profiles(prof, demo_ranges):
+def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
@@ -1566,8 +1566,12 @@ def plot_n_profiles(prof, demo_ranges):
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
             f"{nd_fuel_ions / dene:.3f}",
-            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}",
+            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
+            r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
+            f"{ne0 / dene:.3f}",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
+            r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
+            f"{mfile_data.data['dnla'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -1582,6 +1586,7 @@ def plot_n_profiles(prof, demo_ranges):
             verticalalignment="top",
             bbox=props_density,
         )
+        prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     # ---
 
@@ -1627,9 +1632,10 @@ def plot_jprofile(prof):
         ha="left",
         transform=plt.gcf().transFigure,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
 
-def plot_t_profiles(prof, demo_ranges):
+def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     """Function to plot temperature profile
     Arguments:
       prof --> axis object to add plot to
@@ -1684,6 +1690,7 @@ def plot_t_profiles(prof, demo_ranges):
         )
         prof.minorticks_on()
 
+    te = mfile_data.data["te"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
@@ -1691,7 +1698,9 @@ def plot_t_profiles(prof, demo_ranges):
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}"
+        r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
+        f"{te0 / te:.3f}",
         rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
     ))
 
@@ -1705,10 +1714,11 @@ def plot_t_profiles(prof, demo_ranges):
         verticalalignment="top",
         bbox=props_temperature,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
 
-def plot_qprofile(prof, demo_ranges):
+def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
     Arguments:
@@ -1746,11 +1756,13 @@ def plot_qprofile(prof, demo_ranges):
         ha="left",
         transform=plt.gcf().transFigure,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
     textstr_q = "\n".join((
         r"$q_0$: " + f"{q0:.3f}\n",
-        r"$q_{95}$: " + f"{q95:.3f}",
+        r"$q_{95}$: " + f"{q95:.3f}\n",
+        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -4401,12 +4413,12 @@ def main_plot(
     # Plot density profiles
     plot_8 = fig3.add_subplot(231)  # , aspect= 0.05)
     plot_8.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(plot_8, demo_ranges)
+    plot_n_profiles(plot_8, demo_ranges, m_file_data, scan)
 
     # Plot temperature profiles
     plot_9 = fig3.add_subplot(232)
     plot_9.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_t_profiles(plot_9, demo_ranges)
+    plot_t_profiles(plot_9, demo_ranges, m_file_data, scan)
 
     # Plot impurity profiles
     plot_10 = fig3.add_subplot(233)
@@ -4421,7 +4433,7 @@ def main_plot(
     # Plot q profile
     plot_12 = fig3.add_subplot(4, 3, 12)
     plot_12.set_position([0.7, 0.125, 0.25, 0.15])
-    plot_qprofile(plot_12, demo_ranges)
+    plot_qprofile(plot_12, demo_ranges, m_file_data, scan)
 
     # Plot poloidal cross-section
     plot_13 = fig4.add_subplot(121, aspect="equal")
