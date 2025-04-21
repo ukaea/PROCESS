@@ -44,13 +44,6 @@ EPS = np.finfo(1.0).eps
 class SuperconductingTFCoil(TFCoil):
     def __init__(self):
         self.outfile = constants.nout
-        self.r_b_tf_inboard_peak = (
-            build_variables.r_tf_inboard_out
-            * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
-            - tfcoil_variables.dr_tf_plasma_case
-            - tfcoil_variables.tinstf
-            - tfcoil_variables.tfinsgap
-        )
 
     def run(self, output: bool):
         """
@@ -86,6 +79,14 @@ class SuperconductingTFCoil(TFCoil):
         # SC : conservative assumption as the radius is calculated with the
         # WP radial distances defined at the TF middle (cos)
 
+        tfcoil_variables.r_b_tf_inboard_peak = (
+            build_variables.r_tf_inboard_out
+            * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
+            - tfcoil_variables.dr_tf_plasma_case
+            - tfcoil_variables.tinstf
+            - tfcoil_variables.tfinsgap
+        )
+
         (
             tfcoil_variables.b_tf_inboard_peak,
             tfcoil_variables.c_tf_total,
@@ -95,7 +96,7 @@ class SuperconductingTFCoil(TFCoil):
             n_tf_coils=tfcoil_variables.n_tf_coils,
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
-            r_b_tf_inboard_peak=self.r_b_tf_inboard_peak,
+            r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
             a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
         )
         self.tf_coil_shape_inner()
