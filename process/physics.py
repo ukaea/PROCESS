@@ -2021,6 +2021,14 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap = (
                     current_drive_variables.bscf_gi_II
                 )
+            elif physics_variables.i_bootstrap_current == 12:
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_sugiyama_l
+                )
+            elif physics_variables.i_bootstrap_current == 13:
+                current_drive_variables.f_c_plasma_bootstrap = (
+                    current_drive_variables.f_c_plasma_bootstrap_sugiyama_h
+                )
             else:
                 raise ProcessValueError(
                     "Illegal value of i_bootstrap_current",
