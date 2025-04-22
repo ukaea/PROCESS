@@ -718,7 +718,7 @@ The paramters for the ACCOME database are as follows, with the scan range in the
 
 ---------------
 
-#### L-mode Scaling | `bootstrap_fraction_sugiyama_h_mode()`
+#### L-mode Scaling | `bootstrap_fraction_sugiyama_l_mode()`
 
 Is selected by setting `i_bootstrap_current = 12`
 

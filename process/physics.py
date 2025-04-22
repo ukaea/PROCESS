@@ -1975,60 +1975,25 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap
             )
         else:
-            if physics_variables.i_bootstrap_current == 1:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_iter89
-                )
-            elif physics_variables.i_bootstrap_current == 2:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_nevins
-                )
-            elif physics_variables.i_bootstrap_current == 3:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_wilson
-                )
-            elif physics_variables.i_bootstrap_current == 4:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_sauter
-                )
-            elif physics_variables.i_bootstrap_current == 5:
-                # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
-                # So the diamagnetic current calculation should be turned off when using, (i_diamagnetic_current = 0).
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_sakai
-                )
-            elif physics_variables.i_bootstrap_current == 6:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_aries
-                )
-            elif physics_variables.i_bootstrap_current == 7:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_andrade
-                )
-            elif physics_variables.i_bootstrap_current == 8:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_hoang
-                )
-            elif physics_variables.i_bootstrap_current == 9:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_wong
-                )
-            elif physics_variables.i_bootstrap_current == 10:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.bscf_gi_I
-                )
-            elif physics_variables.i_bootstrap_current == 11:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.bscf_gi_II
-                )
-            elif physics_variables.i_bootstrap_current == 12:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_sugiyama_l
-                )
-            elif physics_variables.i_bootstrap_current == 13:
-                current_drive_variables.f_c_plasma_bootstrap = (
-                    current_drive_variables.f_c_plasma_bootstrap_sugiyama_h
-                )
+            bootstrap_map = {
+                1: current_drive_variables.f_c_plasma_bootstrap_iter89,
+                2: current_drive_variables.f_c_plasma_bootstrap_nevins,
+                3: current_drive_variables.f_c_plasma_bootstrap_wilson,
+                4: current_drive_variables.f_c_plasma_bootstrap_sauter,
+                5: current_drive_variables.f_c_plasma_bootstrap_sakai,
+                6: current_drive_variables.f_c_plasma_bootstrap_aries,
+                7: current_drive_variables.f_c_plasma_bootstrap_andrade,
+                8: current_drive_variables.f_c_plasma_bootstrap_hoang,
+                9: current_drive_variables.f_c_plasma_bootstrap_wong,
+                10: current_drive_variables.bscf_gi_I,
+                11: current_drive_variables.bscf_gi_II,
+                12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+                13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+            }
+            if int(physics_variables.i_bootstrap_current) in bootstrap_map:
+                current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
+                    int(physics_variables.i_bootstrap_current)
+                ]
             else:
                 raise ProcessValueError(
                     "Illegal value of i_bootstrap_current",
