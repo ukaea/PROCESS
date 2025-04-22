@@ -1937,6 +1937,35 @@ class Physics:
                 effective_charge=physics_variables.zeff,
             )
         )
+        current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sugiyama_l_mode(
+                eps=physics_variables.eps,
+                beta_poloidal=physics_variables.beta_poloidal,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                zeff=physics_variables.zeff,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+            )
+        )
+        current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sugiyama_h_mode(
+                eps=physics_variables.eps,
+                beta_poloidal=physics_variables.beta_poloidal,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                tbeta=physics_variables.tbeta,
+                zeff=physics_variables.zeff,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                rhopedn=physics_variables.rhopedn,
+                neped=physics_variables.neped,
+                n_greenwald=physics_variables.dlimit[6],
+                teped=physics_variables.teped,
+            )
+        )
 
         if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
             current_drive_variables.f_c_plasma_bootstrap = abs(
@@ -5748,6 +5777,20 @@ class Physics:
                 "Bootstrap fraction (Gi II)",
                 "(bscf_gi_II)",
                 current_drive_variables.bscf_gi_II,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sugiyama L-mode)",
+                "(f_c_plasma_bootstrap_sugiyama_l)",
+                current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sugiyama H-mode)",
+                "(f_c_plasma_bootstrap_sugiyama_h)",
+                current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
                 "OP ",
             )
 

@@ -63,6 +63,12 @@ module current_drive_variables
   real(dp) :: bscf_gi_II
   !! Bootstrap current fraction, second Gi et al model
 
+  real(dp) :: f_c_plasma_bootstrap_sugiyama_l
+  !! Bootstrap current fraction, L-mode Sugiyama et al model
+
+  real(dp) :: f_c_plasma_bootstrap_sugiyama_h
+  !! Bootstrap current fraction, H-mode Sugiyama et al model
+
   real(dp) :: cboot
   !! bootstrap current fraction multiplier
 

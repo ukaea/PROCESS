@@ -2228,6 +2228,8 @@ def init_current_drive_variables():
     current_drive_variables.f_c_plasma_bootstrap_wong = 0.0
     current_drive_variables.bscf_gi_i = 0.0
     current_drive_variables.bscf_gi_ii = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = 0.0
+    current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = 0.0
     current_drive_variables.cboot = 1.0
     current_drive_variables.c_beam_total = 0.0
     current_drive_variables.f_c_plasma_diamagnetic_hender = 0.0
