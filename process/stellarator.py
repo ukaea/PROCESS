@@ -26,6 +26,7 @@ from process.fortran import (
     impurity_radiation_module,
     neoclassics_module,
     numerics,
+    pfcoil_variables,
     physics_module,
     physics_variables,
     rebco_variables,
@@ -34,6 +35,7 @@ from process.fortran import (
     stellarator_variables,
     structure_variables,
     tfcoil_variables,
+    times_variables,
 )
 from process.fortran import (
     stellarator_module as st,
@@ -5710,3 +5712,66 @@ def init_stellarator_module():
     st.f_a = 0.0
     st.f_b = 0.0
     st.f_i = 0.0
+
+
+def stinit():
+    """Routine to initialise the variables relevant to stellarators
+    author: P J Knight, CCFE, Culham Science Centre
+    author: F Warmer, IPP Greifswald
+
+    This routine initialises the variables relevant to stellarators.
+    Many of these may override the values set in routine
+    """
+    if stellarator_variables.istell == 0:
+        return
+
+    numerics.boundu[0] = 40.0  # allow higher aspect ratio
+
+    # These lines switch off tokamak specifics (solenoid, pf coils, pulses etc.).
+    # Are they still up to date? (26/07/22 JL)
+
+    # Build quantities
+
+    build_variables.dr_cs = 0.0
+    build_variables.iohcl = 0
+    pfcoil_variables.f_z_cs_tf_internal = 0.0
+    build_variables.dr_cs_tf_gap = 0.0
+    build_variables.tfootfi = 1.0
+
+    #  Physics quantities
+
+    physics_variables.beta_norm_max = 0.0
+    physics_variables.kappa95 = 1.0
+    physics_variables.triang = 0.0
+    physics_variables.q95 = 1.03
+
+    #  Turn off current drive
+
+    current_drive_variables.i_hcd_calculations = 0
+
+    #  Times for different phases
+
+    times_variables.t_precharge = 0.0
+    times_variables.t_current_ramp_up = 0.0
+    times_variables.t_burn = 3.15576e7  # one year
+    times_variables.t_ramp_down = 0.0
+    times_variables.t_pulse_repetition = (
+        times_variables.t_current_ramp_up
+        + times_variables.t_fusion_ramp
+        + times_variables.t_burn
+        + times_variables.t_ramp_down
+    )
+    times_variables.tdown = (
+        times_variables.t_precharge
+        + times_variables.t_current_ramp_up
+        + times_variables.t_ramp_down
+        + times_variables.t_between_pulse
+    )
+    times_variables.t_cycle = (
+        times_variables.t_precharge
+        + times_variables.t_current_ramp_up
+        + times_variables.t_fusion_ramp
+        + times_variables.t_burn
+        + times_variables.t_ramp_down
+        + times_variables.t_between_pulse
+    )

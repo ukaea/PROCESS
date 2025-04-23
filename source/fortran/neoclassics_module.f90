@@ -29,8 +29,6 @@ module neoclassics_module
     ! of import into the stellarator module such that Python conversion could take place.
     ! S Gubbins 12/09/2022
 
-    character, dimension(4) :: species = (/"e","D","T","a"/)
-    !  Species that are considered
     real(dp), dimension(4) :: densities
     !  Densities of the species that are considered [/m3]
     real(dp), dimension(4) :: temperatures
@@ -85,7 +83,6 @@ contains
     subroutine init_neoclassics_module
         !! Initialise module variables
         implicit none
-        species = (/"e","D","T","a"/)
         densities = 0
         temperatures = 0
         dr_densities = 0
