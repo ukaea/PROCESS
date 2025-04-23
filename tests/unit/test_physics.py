@@ -976,6 +976,38 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             teped=4.5,
             expected_bfs=0.40154857221044604,
         ),
+        # JA-DEMO steady state case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.2847058823529412,
+            beta_poloidal=1.52,
+            alphan=1.7,
+            alphat=4.5,
+            tbeta=2.65,
+            zeff=1.84,
+            q95=4.09,
+            q0=1.0,
+            rhopedn=0.91,
+            neped=0.98e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.5634482876932788,
+        ),
+        # ITER 15MA case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.3225806451612903,
+            beta_poloidal=0.691,
+            alphan=0.3,
+            alphat=4.0,
+            tbeta=2.0,
+            zeff=1.8,
+            q95=6.26,
+            q0=1.0,
+            rhopedn=0.93,
+            neped=0.75e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.2770187998673241,
+        ),
     ),
 )
 def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, physics):
