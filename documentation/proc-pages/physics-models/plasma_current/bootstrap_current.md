@@ -707,7 +707,7 @@ The paramters for the ACCOME database are as follows, with the scan range in the
 - $R$ = 6 m
 - $\kappa \sim 1.8$ 
 - $\delta \sim 0.4$
-- $Z_{\text{eff}}$ has a unfiorm profile, and only fully stripped carbon is considered as an impurity.
+- $Z_{\text{eff}}$ has a uniform profile, and only fully stripped carbon is considered as an impurity.
 - $T_{\text{e}} = T_{\text{i}}$
 
 | Parameter                              | Range                                                                 |
@@ -734,7 +734,7 @@ Is selected by setting `i_bootstrap_current = 12`
 | $a_{\text{j}}$  | 0.2, 0.5, 1.0, 1.1, 2.0, 2.0, 4.0, 10.0, 50.0                 |
 | $b_{\text{j}}$  | 2.0, 2.0, 1.0, 2.0, 1.0, 2.0, 4.0, 4.0, 4.0                  |
 
-The scan range for the L-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables their are 48,600 cases of which 47,652 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 5.92 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0236$.
+The scan range for the L-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables there are 48,600 cases of which 47,652 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 5.92 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0236$.
 
 $$
 f_{\text{BS}}^{\text{L}} = 0.740 \epsilon^{0.418} \beta_{\text{p}}^{0.904} \alpha_{\text{n}}^{0.06} \alpha_{\text{T}}^{-0.138} Z_{\text{eff}}^{0.230} \left(\frac{q_{95}}{q_0}\right)^{-0.142}
@@ -761,7 +761,7 @@ Is selected by setting `i_bootstrap_current = 13`
 | $a_{\text{j}}$  | 0.6, 1.2, 1.5, 1.1, 10.0, 50.0                 |
 | $b_{\text{j}}$  | 2.0, 1.5, 1.0, 4.0, 4.0                |
 
-The scan range for the H-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables their are 460,800 cases of which 330,149 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 1.17 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0324$.
+The scan range for the H-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables there are 460,800 cases of which 330,149 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 1.17 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0324$.
 
 It is also assumed that:
 
