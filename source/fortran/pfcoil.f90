@@ -12,7 +12,6 @@ module pfcoil_module
 #ifndef dp
   use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
-   use resistive_materials, only: volume_fractions, supercon_strand
    use pfcoil_variables, only: nfixmx, n_pf_groups_max, n_pf_coils_in_group_max, ngc2
    implicit none
 
@@ -42,6 +41,4 @@ module pfcoil_module
    ! outpf subroutine var requiring re-initialisation before each new run
    logical :: CSlimit
 
-   type(volume_fractions), private :: conductorpf
-   type(supercon_strand), private ::croco_strand
  end module pfcoil_module

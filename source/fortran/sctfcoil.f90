@@ -15,8 +15,7 @@ module sctfcoil_module
 #ifndef dp
    use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
-   use resistive_materials, only: resistive_material, volume_fractions, &
-      supercon_strand
+
    implicit none
 
 ! Module variables
@@ -138,13 +137,6 @@ module sctfcoil_module
    real(dp) :: vv_stress_quench
    !! The Tresca stress experienced by the Vacuum Vessel when the SCTF coil quenches [Pa]
 
-
-   type(resistive_material), private :: copper
-   type(resistive_material), private :: hastelloy
-   type(resistive_material), private :: solder
-   type(resistive_material), private :: jacket
-   type(resistive_material), private :: helium
-
 ! croco_strand
    real(dp) :: croco_strand_area
    real(dp) :: croco_strand_critical_current
@@ -170,21 +162,4 @@ module sctfcoil_module
 ! Var in tf_res_heating requiring re-initialisation on each new run
 ! Not sure what is really doing --> to be checked
    integer :: is_leg_cp_temp_same
-
-contains
-! --------------------------------------------------------------------------
-   subroutine initialise_cables()
-      use rebco_variables, only: copper_rrr
-
-      implicit none
-
-      copper%rrr = copper_rrr
-      copper%density = 8960.0d0
-      hastelloy%density = 8890.0d0
-      ! Solder: 60EN ie 60%Sn + 40%Pb solder (approx the same as eutectic 63/37)
-      solder%density = 8400.0d0
-      jacket%density = 8000.0d0       ! 304 stainless
-   end subroutine initialise_cables
-! --------------------------------------------------------------------------
-
 end module sctfcoil_module
