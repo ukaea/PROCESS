@@ -383,7 +383,7 @@ module numerics
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
 
-  character*14, dimension(ipnvars) :: name_xc
+  character*32, dimension(ipnvars) :: name_xc
 
   real(dp) :: sqsumsq
   !!  sqsumsq : sqrt of the sum of the square of the constraint residuals
