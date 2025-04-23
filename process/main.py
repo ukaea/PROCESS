@@ -682,18 +682,13 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.electron_cyclotron = ElectronCyclotron(plasma_profile=self.plasma_profile)
-        self.ion_cyclotron = IonCyclotron(plasma_profile=self.plasma_profile)
-        self.lower_hybrid = LowerHybrid(plasma_profile=self.plasma_profile)
-        self.neutral_beam = NeutralBeam(plasma_profile=self.plasma_profile)
-        self.electron_bernstein = ElectronBernstein(plasma_profile=self.plasma_profile)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
-            electron_cyclotron=self.electron_cyclotron,
-            ion_cyclotron=self.ion_cyclotron,
-            lower_hybrid=self.lower_hybrid,
-            neutral_beam=self.neutral_beam,
-            electron_bernstein=self.electron_bernstein,
+            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
+            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
+            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive

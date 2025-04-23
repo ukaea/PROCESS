@@ -1,4 +1,4 @@
-# Ion Cyclotron Heating | ``IonCyclotron`
+# Ion Cyclotron Heating | `IonCyclotron`
 
 
 Ion cyclotron heating (ICH) is a technique used in fusion tokamaks to heat ions in a plasma by applying radio frequency (RF) waves. The RF waves used in ICH are typically in the range of tens to hundreds of megahertz.
