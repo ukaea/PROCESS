@@ -484,6 +484,47 @@ def constraint_equation_13():
     )
 
 
+@ConstraintManager.register_constraint(15, "MW", ">=")
+def constraint_equation_15():
+    """Equation for L-H power threshold limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fl_h_threshold: f-value for L-H power threshold
+    p_l_h_threshold_mw: L-H mode power threshold (MW)
+    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+    """
+    return ConstraintResult(
+        1.0
+        - fortran.constraint_variables.fl_h_threshold
+        * fortran.physics_variables.p_plasma_separatrix_mw
+        / fortran.physics_variables.p_l_h_threshold_mw,
+        fortran.physics_variables.p_l_h_threshold_mw,
+        fortran.physics_variables.p_l_h_threshold_mw
+        - fortran.physics_variables.p_plasma_separatrix_mw
+        / fortran.constraint_variables.fl_h_threshold,
+    )
+
+
+@ConstraintManager.register_constraint(16, "MW", ">=")
+def constraint_equation_16():
+    """Equation for net electric power lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fpnetel: f-value for net electric power
+    p_plant_electric_net_mw: net electric power (MW)
+    pnetelin: required net electric power (MW)
+    """
+    return ConstraintResult(
+        1.0
+        - fortran.constraint_variables.fpnetel
+        * fortran.heat_transport_variables.p_plant_electric_net_mw
+        / fortran.constraint_variables.pnetelin,
+        fortran.constraint_variables.pnetelin,
+        fortran.heat_transport_variables.p_plant_electric_net_mw
+        - fortran.constraint_variables.pnetelin / fortran.constraint_variables.fpnetel,
+    )
+
+
 @ConstraintManager.register_constraint(14, "", "=")
 def constraint_equation_14():
     """Equation to fix number of NBI decay lengths to plasma centre
@@ -600,6 +641,28 @@ def constraint_equation_20():
         cc,
         fortran.current_drive_variables.rtanmax * (1.0 - cc),
         fortran.current_drive_variables.rtanbeam * cc,
+    )
+
+
+@ConstraintManager.register_constraint(21, "", ">=")
+def constraint_equation_21():
+    """Equation for minor radius lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    frminor: f-value for minor radius limit
+    rminor: plasma minor radius (m)
+    aplasmin: minimum minor radius (m)
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.frminor
+        * fortran.physics_variables.rminor
+        / fortran.build_variables.aplasmin
+    )
+    return ConstraintResult(
+        cc,
+        fortran.build_variables.aplasmin * (1.0 - cc),
+        fortran.build_variables.aplasmin * cc,
     )
 
 
@@ -790,6 +853,38 @@ def constraint_equation_27():
     )
 
 
+@ConstraintManager.register_constraint(28, "", ">=")
+def constraint_equation_28():
+    """Equation for fusion gain (big Q) lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fqval: pf-value for Q
+    bigq: Fusion gain; P_fusion / (P_injection + P_ohmic)
+    bigqmin: minimum fusion gain Q
+    i_plasma_ignited : input integer : switch for ignition assumption:
+    - 0 do not assume plasma ignition;
+    - 1 assume ignited (but include auxiliary power in costs)
+    Obviously, ignite must be zero if current drive is required.
+    If i_plasma_ignited=1, any auxiliary power is assumed to be used only
+    during plasma start-up, and is excluded from all steady-state
+    power balance calculations.
+    """
+    if fortran.physics_variables.i_plasma_ignited != 0:
+        raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
+
+    cc = (
+        1.0
+        - fortran.constraint_variables.fqval
+        * fortran.current_drive_variables.bigq
+        / fortran.constraint_variables.bigqmin
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.bigqmin * (1.0 - cc),
+        fortran.constraint_variables.bigqmin * cc,
+    )
+
+
 @ConstraintManager.register_constraint(29, "m", "=")
 def constraint_equation_29():
     """Equation for inboard major radius: This is a consistency equation
@@ -926,6 +1021,25 @@ def constraint_equation_35():
     )
 
 
+@ConstraintManager.register_constraint(36, "K", ">=")
+def constraint_equation_36():
+    """Equation for TF coil s/c temperature margin lower limit (SCTF)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ftmargtf: f-value for TF coil temperature margin
+    tmargtf: TF coil temperature margin (K)
+    tmargmin_tf: minimum allowable temperature margin : TF coils (K)
+    """
+    return ConstraintResult(
+        1.0
+        - fortran.constraint_variables.ftmargtf
+        * fortran.tfcoil_variables.tmargtf
+        / fortran.tfcoil_variables.tmargmin_tf,
+        fortran.tfcoil_variables.tmargmin_tf,
+        fortran.tfcoil_variables.tmargmin_tf - fortran.tfcoil_variables.tmargtf,
+    )
+
+
 @ConstraintManager.register_constraint(37, "1E20 A/Wm2", "<=")
 def constraint_equation_37():
     """Equation for current drive gamma upper limit
@@ -968,6 +1082,77 @@ def constraint_equation_39():
         cc,
         fortran.fwbs_variables.temp_fw_max * (1.0 - cc),
         fortran.fwbs_variables.temp_fw_peak * cc,
+    )
+
+
+@ConstraintManager.register_constraint(40, "MW", ">=")
+def constraint_equation_40():
+    """Equation for auxiliary power lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fauxmn: f-value for minimum auxiliary power
+    p_hcd_injected_total_mw: total auxiliary injected power (MW)
+    auxmin: minimum auxiliary power (MW)
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.fauxmn
+        * fortran.current_drive_variables.p_hcd_injected_total_mw
+        / fortran.constraint_variables.auxmin
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.auxmin * (1.0 - cc),
+        fortran.constraint_variables.auxmin * cc,
+    )
+
+
+@ConstraintManager.register_constraint(41, "sec", ">=")
+def constraint_equation_41():
+    """Equation for plasma current ramp-up time lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ft_current_ramp_up: f-value for plasma current ramp-up time
+    t_current_ramp_up: plasma current ramp-up time for current initiation (s)
+    t_current_ramp_up_min: minimum plasma current ramp-up time (s)
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.ft_current_ramp_up
+        * fortran.times_variables.t_current_ramp_up
+        / fortran.constraint_variables.t_current_ramp_up_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.t_current_ramp_up_min * (1.0 - cc),
+        fortran.constraint_variables.t_current_ramp_up_min * cc,
+    )
+
+
+@ConstraintManager.register_constraint(42, "sec", ">=")
+def constraint_equation_42():
+    """Equation for cycle time lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ftcycl: f-value for cycle time
+    t_cycle: full cycle time (s)
+    tcycmn: minimum cycle time (s)
+    """
+    if fortran.constraint_variables.tcycmn < 1.0:
+        raise ProcessValueError(
+            "tcycmn = 0 implies that i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
+        )
+
+    cc = (
+        1.0
+        - fortran.constraint_variables.ftcycl
+        * fortran.times_variables.t_cycle
+        / fortran.constraint_variables.tcycmn
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.tcycmn * (1.0 - cc),
+        fortran.constraint_variables.tcycmn * cc,
     )
 
 
@@ -1021,6 +1206,34 @@ def constraint_equation_44():
 
     cc = tcpmax / ptempalw - 1.0 * fortran.constraint_variables.fptemp
     return ConstraintResult(cc, ptempalw * (1.0 - cc), tcpmax * cc)
+
+
+@ConstraintManager.register_constraint(45, "", ">=")
+def constraint_manager_45():
+    """Equation for edge safety factor lower limit (TART)
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fq: f-value for edge safety factor
+    q95 : safety factor 'near' plasma edge
+    (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
+    q95_min: lower limit for edge safety factor
+    itart : input integer : switch for spherical tokamak (ST) models:
+    - 0 use conventional aspect ratio models;
+    - 1 use spherical tokamak models"""
+    if fortran.physics_variables.itart == 0:
+        raise ProcessValueError("Do not use constraint 45 if itart=0")
+
+    cc = (
+        1.0
+        - fortran.constraint_variables.fq
+        * fortran.physics_variables.q95
+        / fortran.physics_variables.q95_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.physics_variables.q95_min * (1.0 - cc),
+        fortran.physics_variables.q95_min * cc,
+    )
 
 
 @ConstraintManager.register_constraint(46, "", "<=")
@@ -1113,6 +1326,28 @@ def constraint_equation_51():
     )
 
 
+@ConstraintManager.register_constraint(52, "", ">=")
+def constraint_equation_52():
+    """Equation for tritium breeding ratio lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ftbr: f-value for minimum tritium breeding ratio
+    tbr: tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
+    tbrmin: minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.ftbr
+        * fortran.fwbs_variables.tbr
+        / fortran.constraint_variables.tbrmin
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.tbrmin * (1.0 - cc),
+        fortran.constraint_variables.tbrmin * cc,
+    )
+
+
 @ConstraintManager.register_constraint(53, "neutron/m2", "<=")
 def constraint_equation_53():
     """Equation for fast neutron fluence on TF coil upper limit
@@ -1200,6 +1435,77 @@ def constraint_equation_59():
         cc,
         fortran.constraint_variables.f_p_beam_shine_through_max * (1.0 - cc),
         fortran.current_drive_variables.f_p_beam_shine_through * cc,
+    )
+
+
+@ConstraintManager.register_constraint(60, "K", ">=")
+def constraint_equation_60():
+    """Equation for Central Solenoid s/c temperature margin lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    ftmargoh: f-value for central solenoid temperature margin
+    temp_cs_margin: Central solenoid temperature margin (K)
+    tmargmin_cs: Minimum allowable temperature margin : CS (K)
+    """
+    return ConstraintResult(
+        1.0
+        - fortran.constraint_variables.ftmargoh
+        * fortran.pfcoil_variables.temp_cs_margin
+        / fortran.tfcoil_variables.tmargmin_cs,
+        fortran.tfcoil_variables.tmargmin_cs,
+        fortran.tfcoil_variables.tmargmin_cs - fortran.pfcoil_variables.temp_cs_margin,
+    )
+
+
+@ConstraintManager.register_constraint(61, "", ">=")
+def constraint_equation_61():
+    """Equation for availability lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    favail: F-value for minimum availability
+    cfactr: Total plant availability fraction
+    avail_min: Minimum availability
+    """
+    cc = (
+        1.0
+        - fortran.cost_variables.favail
+        * fortran.cost_variables.cfactr
+        / fortran.cost_variables.avail_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.cost_variables.avail_min * (1.0 - cc),
+        fortran.cost_variables.cfactr * cc,
+    )
+
+
+@ConstraintManager.register_constraint(62, "", ">=")
+def constraint_equation_62():
+    """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    falpha_energy_confinement: f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
+    t_alpha_confinement: alpha particle confinement time (s)
+    t_energy_confinement: global thermal energy confinement time (sec)
+    f_alpha_energy_confinement_min: Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.falpha_energy_confinement
+        * (
+            fortran.physics_variables.t_alpha_confinement
+            / fortran.physics_variables.t_energy_confinement
+        )
+        / fortran.constraint_variables.f_alpha_energy_confinement_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.f_alpha_energy_confinement_min,
+        (
+            fortran.physics_variables.t_alpha_confinement
+            / fortran.physics_variables.t_energy_confinement
+        )
+        * cc,
     )
 
 
@@ -1389,7 +1695,7 @@ def constraint_equation_72():
     This will have no effect if it is used as an equality constraint because it will be squared.
 
     foh_stress: f-value for Tresca yield criterion in Central Solenoid
-    alstroh:  allowable hoop stress in Central Solenoid structural material (Pa)
+    alstroh: allowable hoop stress in Central Solenoid structural material (Pa)
     s_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
     sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
                           can be significant for the bucked and weged design
@@ -1423,6 +1729,33 @@ def constraint_equation_72():
         )
 
     return ConstraintResult(cc, fortran.pfcoil_variables.alstroh, err)
+
+
+@ConstraintManager.register_constraint(73, "MW", ">=")
+def constraint_equation_73():
+    """Lower limit to ensure separatrix power is greater than the L-H power + auxiliary power
+    Related to constraint 15
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fplhsep: F-value for Psep >= Plh + Paux : for consistency of two values of separatrix power
+    p_l_h_threshold_mw: L-H mode power threshold (MW)
+    p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
+    p_hcd_injected_total_mw : inout real : total auxiliary injected power (MW)
+    """
+    cc = (
+        1.0
+        - fortran.physics_variables.fplhsep
+        * fortran.physics_variables.p_plasma_separatrix_mw
+        / (
+            fortran.physics_variables.p_l_h_threshold_mw
+            + fortran.current_drive_variables.p_hcd_injected_total_mw
+        )
+    )
+    return ConstraintResult(
+        cc,
+        fortran.physics_variables.p_plasma_separatrix_mw,
+        fortran.physics_variables.p_plasma_separatrix_mw * cc,
+    )
 
 
 @ConstraintManager.register_constraint(74, "K", "<=")
@@ -1523,6 +1856,28 @@ def constraint_equation_77():
     )
 
 
+@ConstraintManager.register_constraint(78, "", ">=")
+def constraint_equation_78():
+    """Equation for Reinke criterion, divertor impurity fraction lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    freinke : input : f-value for Reinke criterion (itv 147)
+    fzmin : input : minimum impurity fraction from Reinke model
+    fzactual : input : actual impurity fraction
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.freinke
+        * fortran.reinke_variables.fzactual
+        / fortran.reinke_variables.fzmin
+    )
+    return ConstraintResult(
+        cc,
+        fortran.reinke_variables.fzmin * (1.0 - cc),
+        fortran.reinke_variables.fzmin * cc,
+    )
+
+
 @ConstraintManager.register_constraint(79, "A/turn", "<=")
 def constraint_equation_79():
     """Equation for maximum CS field
@@ -1550,6 +1905,124 @@ def constraint_equation_79():
             fortran.pfcoil_variables.b_cs_peak_pulse_start,
         )
         * cc,
+    )
+
+
+@ConstraintManager.register_constraint(80, "MW", ">=")
+def constraint_equation_80():
+    """Equation for p_plasma_separatrix_mw lower limit
+    author: J Morris, Culham Science Centre
+    args : output structure : residual error; constraint value; residual error in physical units;
+    output string; units string
+    Lower limit p_plasma_separatrix_mw
+    #=# physics
+    #=#=# fp_plasma_separatrix_min_mw, p_plasma_separatrix_mw
+    Logic change during pre-factoring: err, symbol, units will be assigned only if present.
+    fp_plasma_separatrix_min_mw : input : F-value for lower limit on p_plasma_separatrix_mw (cons. 80, itvar 153)
+    p_plasma_separatrix_min_mw : input : Minimum power crossing separatrix p_plasma_separatrix_mw [MW]
+    p_plasma_separatrix_mw : input : Power crossing separatrix [MW]
+    """
+    cc = (
+        1.0
+        - fortran.physics_variables.fp_plasma_separatrix_min_mw
+        * fortran.physics_variables.p_plasma_separatrix_mw
+        / fortran.constraint_variables.p_plasma_separatrix_min_mw
+    )
+    return ConstraintResult(
+        cc,
+        fortran.constraint_variables.p_plasma_separatrix_min_mw,
+        fortran.constraint_variables.p_plasma_separatrix_min_mw * cc,
+    )
+
+
+@ConstraintManager.register_constraint(81, "m-3", ">=")
+def constraint_equation_81():
+    """Lower limit to ensure central density is larger that the pedestal one
+    author: S Kahn, Culham Science Centre
+    args : output structure : residual error; constraint value;
+    residual error in physical units; output string; units string
+    Lower limit ne0 > neped
+    !#=# physics
+    !#=#=# ne0, neped
+    Logic change during pre-factoring: err, symbol, units will be
+    assigned only if present.
+    fne0  : input : F-value for constraint on ne0 > neped
+    ne0   : input : Central electron density [m-3]
+    neped : input : Electron density at pedestal [m-3]
+    """
+    cc = (
+        1.0
+        - fortran.physics_variables.fne0
+        * fortran.physics_variables.ne0
+        / fortran.physics_variables.neped
+    )
+    return ConstraintResult(
+        cc, fortran.physics_variables.fne0, fortran.physics_variables.fne0 * cc
+    )
+
+
+@ConstraintManager.register_constraint(82, "m", ">=")
+def constraint_equation_82():
+    """Equation for toroidal consistency of stellarator build
+    author: J Lion, IPP Greifswald
+
+    ftoroidalgap: f-value for constraint toroidalgap > dx_tf_inboard_out_toroidal
+    toroidalgap: minimal gap between two stellarator coils
+    dx_tf_inboard_out_toroidal: total toroidal width of a tf coil
+    """
+    return ConstraintResult(
+        1.0
+        - fortran.tfcoil_variables.ftoroidalgap
+        * fortran.tfcoil_variables.toroidalgap
+        / fortran.tfcoil_variables.dx_tf_inboard_out_toroidal,
+        fortran.tfcoil_variables.toroidalgap,
+        fortran.tfcoil_variables.toroidalgap
+        - fortran.tfcoil_variables.dx_tf_inboard_out_toroidal
+        / fortran.tfcoil_variables.ftoroidalgap,
+    )
+
+
+@ConstraintManager.register_constraint(83, "m", ">=")
+def constraint_equation_83():
+    """Equation for radial consistency of stellarator build
+    author: J Lion, IPP Greifswald
+
+    f_avspace: f-value for constraint available_radial_space > required_radial_space
+    available_radial_space: avaible space in radial direction as given by each s.-configuration
+    required_radial_space: required space in radial direction
+    """
+    cc = (
+        1.0
+        - fortran.build_variables.f_avspace
+        * fortran.build_variables.available_radial_space
+        / fortran.build_variables.required_radial_space
+    )
+    return ConstraintResult(
+        cc,
+        fortran.build_variables.available_radial_space * (1.0 - cc),
+        fortran.build_variables.required_radial_space * cc,
+    )
+
+
+@ConstraintManager.register_constraint(84, "", ">=")
+def constraint_equation_84():
+    """Equation for the lower limit of beta
+    author: J Lion, IPP Greifswald
+
+    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_min
+    beta_min: Lower limit for beta
+    beta: plasma beta
+    """
+    cc = (
+        1.0
+        - fortran.constraint_variables.fbeta_min
+        * fortran.physics_variables.beta
+        / fortran.physics_variables.beta_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.physics_variables.beta_min * (1.0 - cc),
+        fortran.physics_variables.beta * cc,
     )
 
 
@@ -1667,6 +2140,71 @@ def constraint_equation_89():
         cc,
         fortran.rebco_variables.copperaoh_m2,
         fortran.rebco_variables.copperaoh_m2 * cc,
+    )
+
+
+@ConstraintManager.register_constraint(90, "", ">=")
+def constraint_equation_90():
+    """Lower limit for CS coil stress load cycles
+    author: A. Pearce, G Turkington CCFE, Culham Science Centre
+
+    fncycle: f-value for constraint n_cycle > n_cycle_min
+    n_cycle: Allowable number of cycles for CS
+    n_cycle_min: Minimum required cycles for CS
+    """
+    if (
+        fortran.cost_variables.ibkt_life == 1
+        and fortran.cs_fatigue_variables.bkt_life_csf == 1
+    ):
+        fortran.cs_fatigue_variables.n_cycle_min = fortran.cost_variables.bktcycles
+
+    cc = (
+        1.0
+        - fortran.constraint_variables.fncycle
+        * fortran.cs_fatigue_variables.n_cycle
+        / fortran.cs_fatigue_variables.n_cycle_min
+    )
+    return ConstraintResult(
+        cc,
+        fortran.cs_fatigue_variables.n_cycle_min * (1.0 - cc),
+        fortran.cs_fatigue_variables.n_cycle * cc,
+    )
+
+
+@ConstraintManager.register_constraint(91, "MW", ">=")
+def constraint_equation_91():
+    """Lower limit to ensure ECRH te is greater than required te for ignition
+    at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
+    stellarators only (but in principle usable also for tokamaks).
+    author: J Lion, IPP Greifswald
+
+    fecrh_ignition: f-value for constraint powerht_local > powerscaling
+    max_gyrotron_frequency: Max. av. gyrotron frequency
+    te0_ecrh_achievable: Max. achievable electron temperature at ignition point
+    """
+    # Achievable ECRH te needs to be larger than needed te for igntion
+    if fortran.physics_variables.i_plasma_ignited == 0:
+        cc = (
+            1.0
+            - fortran.constraint_variables.fecrh_ignition
+            * (
+                fortran.stellarator_variables.powerht_constraint
+                + fortran.current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+            / fortran.stellarator_variables.powerscaling_constraint
+        )
+    else:
+        cc = (
+            1.0
+            - fortran.constraint_variables.fecrh_ignition
+            * fortran.stellarator_variables.powerht_constraint
+            / fortran.stellarator_variables.powerscaling_constraint
+        )
+
+    return ConstraintResult(
+        cc,
+        fortran.stellarator_variables.powerscaling_constraint * (1.0 - cc),
+        fortran.stellarator_variables.powerht_constraint * cc,
     )
 
 
