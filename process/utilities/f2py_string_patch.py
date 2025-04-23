@@ -41,16 +41,15 @@ def string_to_f2py_compatible(
         )
 
     if string:
+        warning_msg = (
+            f"String '{string}' of length {len(string)} is being set on a Fortran variable "
+            f"with length {target_size}"
+        )
         if len(string) > target_size and except_length:
-            raise RuntimeError(
-                f"String {string} of length {len(string)} is trying to initiate as {target} with length {target_size}"
-            )
+            raise RuntimeError(warning_msg)
         if len(string) > target_size:
             warnings.warn(
-                (
-                    f"String {string} of length {len(string)} is trying to initiate as {target} with length"
-                    f"{target_size}. String string will be truncated!"
-                ),
+                f"{warning_msg}. The string will be truncated!",
                 stacklevel=2,
             )
 
