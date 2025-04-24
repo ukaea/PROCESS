@@ -1044,10 +1044,6 @@ def check_process(inputs):  # noqa: ARG001
                 fsum=fsum,
             )
 
-    # Initialise superconductor cable parameters
-    if fortran.tfcoil_variables.i_tf_sup == 1:
-        fortran.sctfcoil_module.initialise_cables()
-
     # Check that the temperature margins are not overdetermined
     if fortran.tfcoil_variables.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
