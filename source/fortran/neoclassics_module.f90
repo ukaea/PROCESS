@@ -1,8 +1,3 @@
-module neoclassics_constants
-    integer, parameter :: no_roots = 30 ! Number of Gauss laguerre roots
-end module neoclassics_constants
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module neoclassics_module
 
     !! Module containing neoclassical computations
@@ -16,21 +11,15 @@ module neoclassics_module
     use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
 
-    use neoclassics_constants, only: no_roots
-
     implicit none
-
-    public
-
-
 
     ! These module variables were taken from the previous Neoclassics derived type. This derived type contained
     ! nested derived types 'Gauss_leguerre' and 'Profile_values'. They were made module variables for ease
     ! of import into the stellarator module such that Python conversion could take place.
     ! S Gubbins 12/09/2022
 
-    character, dimension(4) :: species = (/"e","D","T","a"/)
-    !  Species that are considered
+    integer, parameter :: no_roots = 30 ! Number of Gauss laguerre roots
+
     real(dp), dimension(4) :: densities
     !  Densities of the species that are considered [/m3]
     real(dp), dimension(4) :: temperatures
@@ -77,37 +66,4 @@ module neoclassics_module
     real(dp) :: eps_eff = 1d-5
     !  Epsilon effective (used in neoclassics_calc_D11_mono)
     real(dp) :: r_eff = 0
-
-
-
-
-contains
-    subroutine init_neoclassics_module
-        !! Initialise module variables
-        implicit none
-        species = (/"e","D","T","a"/)
-        densities = 0
-        temperatures = 0
-        dr_densities = 0
-        dr_temperatures =0
-        roots = 0
-        weights = 0
-        nu = 0
-        nu_star = 0
-        nu_star_averaged = 0
-        vd = 0
-        KT = 0
-        Er = 0.0
-        iota = 1.0d0
-        D11_mono = 0
-        D11_plateau = 0
-        D111 = 0
-        D112 = 0
-        D113 = 0
-        q_flux = 0
-        Gamma_flux = 0
-        D31_mono = 0
-        eps_eff = 1d-5
-    end subroutine init_neoclassics_module
-
 end module neoclassics_module
