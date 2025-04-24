@@ -8,13 +8,10 @@ from process.fortran import (
     blanket_library,
     build_variables,
     constants,
-    error_handling,
     fwbs_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.warning_handler import WarningManager
 
 
 class Fw:
@@ -151,10 +148,12 @@ class Fw:
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
-            eh.report_error(223)
+            WarningManager.create_warning("NaN first wall temperature")
         elif (temp_k <= 100) or (temp_k > 1500):
-            eh.fdiags[0] = temp_k
-            eh.report_error(224)
+            WarningManager.create_warning(
+                "First wall temperature (temp_k) out of range : [100-1500] K",
+                temp_k=temp_k,
+            )
 
         # Thermal conductivity of first wall material (W/m.K)
         tkfw = self.fw_thermal_conductivity(temp_k)
@@ -445,17 +444,19 @@ class Fw:
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            error_handling.fdiags[0] = reynolds
-            error_handling.report_error(225)
+            WarningManager.create_warning(
+                "Reynolds number out of range : [3e3-5000e3]", reynolds=reynolds
+            )
 
         # Check that Prandtl number is in valid range for the Gnielinski correlation
         if (pr < 0.5) or (pr > 2000.0):
-            error_handling.fdiags[0] = pr
-            error_handling.report_error(226)
+            WarningManager.create_warning(
+                "Prandtl number out of range : [0.5-2000]", pr=pr
+            )
 
         # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
         if f <= 0.0:
-            error_handling.report_error(227)
+            WarningManager.create_warning("Negative Darcy friction factor (f)")
 
         return heat_transfer_coefficient
 

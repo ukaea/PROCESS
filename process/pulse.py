@@ -2,7 +2,6 @@ from process import process_output as po
 from process.fortran import (
     constants,
     constraint_variables,
-    error_handling,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -10,6 +9,7 @@ from process.fortran import (
     pulse_variables,
     times_variables,
 )
+from process.warning_handler import WarningManager
 
 
 class Pulse:
@@ -154,8 +154,7 @@ class Pulse:
         v_plasma_loop_burn: float,
         t_fusion_ramp: float,
     ) -> float:
-        """
-        Calculate the burn time for a pulsed reactor.
+        """Calculate the burn time for a pulsed reactor.
 
         This routine computes the burn time for a pulsed reactor scenario,
         based on the total Vs available in the CS and PF coils and the
@@ -172,17 +171,17 @@ class Pulse:
         :rtype: float
 
         :raises: Reports error 93 if calculated burn time is negative.
-
         """
-
         t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
 
         if t_burn < 0.0e0:
-            error_handling.fdiags[0] = t_burn
-            error_handling.fdiags[1] = vs_cs_pf_total_burn
-            error_handling.fdiags[2] = v_plasma_loop_burn
-            error_handling.fdiags[3] = t_fusion_ramp
-            error_handling.report_error(93)
+            WarningManager.create_warning(
+                "Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capability",
+                t_burn=t_burn,
+                vs_cs_pf_total_burn=vs_cs_pf_total_burn,
+                v_plasma_loop_burn=v_plasma_loop_burn,
+                t_fusion_ramp=t_fusion_ramp,
+            )
 
         return t_burn
 

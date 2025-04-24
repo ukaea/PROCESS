@@ -50,6 +50,7 @@ from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_
 from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.vacuum import init_vacuum_variables
+from process.warning_handler import WarningManager
 
 
 def init_process():
@@ -60,9 +61,6 @@ def init_process():
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.
     """
-    # Initialise error handling
-    fortran.error_handling.initialise_error_list()
-
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables()
 
@@ -249,11 +247,11 @@ def init_all_module_vars():
     run. This matters ever since Process is used as a shared library, rather
     than a 'run-once' executable.
     """
+    WarningManager.reinitialise()
     fortran.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
-    fortran.error_handling.init_error_handling()
     init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()

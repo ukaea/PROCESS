@@ -87,8 +87,8 @@
     },
     {
       "no": 16,
-      "level": 2,
-      "message": "LHRAD: LH penetration radius not found after lapno iterations, using 0.8*rminor"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 17,
@@ -152,7 +152,7 @@
     },
     {
       "no": 29,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -182,7 +182,7 @@
     },
     {
       "no": 35,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -192,7 +192,7 @@
     },
     {
       "no": 37,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -317,13 +317,13 @@
     },
     {
       "no": 62,
-      "level": 1,
-      "message": "RADIALB: Ripple result may be inaccurate, as the fit has been extrapolated"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 63,
-      "level": 2,
-      "message": "PORTSZ: Max beam tangency radius set =0 temporarily; change dx_beam_duct"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 64,
@@ -362,8 +362,8 @@
     },
     {
       "no": 71,
-      "level": 2,
-      "message": "PFCOIL: OH coil not present; check volt-second calculations..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 72,
@@ -372,8 +372,8 @@
     },
     {
       "no": 73,
-      "level": 2,
-      "message": "INDUCT: Max no. of segments noh for OH coil > nohmax; increase dr_cs lower bound"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 74,
@@ -397,7 +397,7 @@
     },
     {
       "no": 78,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -407,8 +407,8 @@
     },
     {
       "no": 80,
-      "level": 2,
-      "message": "calculate_density_limit: qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 81,
@@ -422,8 +422,8 @@
     },
     {
       "no": 83,
-      "level": 2,
-      "message": "POHM: Negative plasma resistance res_plasma"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 84,
@@ -447,7 +447,7 @@
     },
     {
       "no": 88,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -457,7 +457,7 @@
     },
     {
       "no": 90,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -467,13 +467,13 @@
     },
     {
       "no": 92,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 93,
-      "level": 2,
-      "message": "BURN: Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capability"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 94,
@@ -492,37 +492,37 @@
     },
     {
       "no": 97,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 98,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 99,
-      "level": 2,
-      "message": "SCTFCOIL: Winding pack cross-section problem..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 100,
-      "level": 2,
-      "message": "SCTFCOIL: Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 101,
-      "level": 2,
-      "message": "SCTFCOIL: Negative cable space dimension"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 102,
-      "level": 2,
-      "message": "SCTFCOIL: Cable space area problem; artificially set rounded corner radius to 0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 103,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -537,7 +537,7 @@
     },
     {
       "no": 106,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -562,23 +562,23 @@
     },
     {
       "no": 111,
-      "level": 2,
-      "message": "INTERSECT: X ranges not overlapping"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 112,
-      "level": 2,
-      "message": "INTERSECT: X has dropped below Xmin; X has been set equal to Xmin"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 113,
-      "level": 2,
-      "message": "INTERSECT: X has risen above Xmax; X has been set equal to Xmax"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 114,
-      "level": 2,
-      "message": "INTERSECT: Convergence too slow; X may be wrong..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 115,
@@ -617,7 +617,7 @@
     },
     {
       "no": 122,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -627,8 +627,8 @@
     },
     {
       "no": 124,
-      "level": 2,
-      "message": "VACUUM: Newton's method not converging; check fusion power, te"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 125,
@@ -662,7 +662,7 @@
     },
     {
       "no": 131,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -672,7 +672,7 @@
     },
     {
       "no": 133,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -682,12 +682,12 @@
     },
     {
       "no": 135,
-      "level": 1,
-      "message": "OUTPF: CS not using max current density: further optimisation may be possible"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 136,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -697,7 +697,7 @@
     },
     {
       "no": 138,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -712,28 +712,28 @@
     },
     {
       "no": 141,
-      "level": 1,
-      "message": "RADIALB: (TF coil ripple calculation) Dimensionless coil width X out of fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 142,
-      "level": 1,
-      "message": "RADIALB: (TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 143,
-      "level": 1,
-      "message": "RADIALB: (TF coil ripple calculation) (R+a)/rtot out of fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 144,
-      "level": 1,
-      "message": "OUTTF: (TF coil peak field calculation) Winding pack width out of fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 145,
-      "level": 1,
-      "message": "OUTTF: (TF coil peak field calculation) Winding pack radial thickness out of fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 146,
@@ -742,22 +742,22 @@
     },
     {
       "no": 147,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 148,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 149,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 150,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -767,22 +767,22 @@
     },
     {
       "no": 152,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 153,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 154,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 155,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -792,27 +792,27 @@
     },
     {
       "no": 157,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 158,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 159,
-      "level": 2,
-      "message": "ITERSC: Reduced temperature t artificially lowered"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 160,
-      "level": 2,
-      "message": "ITERSC: Reduced field bzero artificially lowered"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 161,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -837,37 +837,37 @@
     },
     {
       "no": 166,
-      "level": 2,
-      "message": "PLANT_THERMAL_EFFICIENCY: Turbine temperature temp_turbine_coolant_in out of range of validity"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 167,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 168,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 169,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 170,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 171,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 172,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1012,38 +1012,38 @@
     },
     {
       "no": 201,
-      "level": 1,
-      "message": "LH THRESHOLD: bt outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 202,
-      "level": 1,
-      "message": "LH THRESHOLD: rminor outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 203,
-      "level": 1,
-      "message": "LH THRESHOLD: rmajor outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 204,
-      "level": 1,
-      "message": "LH THRESHOLD: nd_electron_line outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 205,
-      "level": 1,
-      "message": "LH THRESHOLD: kappa outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 206,
-      "level": 1,
-      "message": "LH THRESHOLD: triang outside Snipes 2000 fitted range"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 207,
-      "level": 1,
-      "message": "LH THRESHOLD: Closed divertor only. Limited data used in Snipes fit"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 208,
@@ -1072,8 +1072,8 @@
     },
     {
       "no": 213,
-      "level": 2,
-      "message": "NCORE: Central density is less than pedestal density"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 214,
@@ -1092,12 +1092,12 @@
     },
     {
       "no": 217,
-      "level": 2,
-      "message": "REINKE IMPURITY MODEL: fzmin is greater than or equal to 1.0, this is at least notable"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 218,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1107,12 +1107,12 @@
     },
     {
       "no": 220,
-      "level": 1,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 221,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1122,28 +1122,28 @@
     },
     {
       "no": 223,
-      "level": 2,
-      "message": "[fw.f90][fw_temp] NaN first wall temperature "
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 224,
-      "level": 2,
-      "message": "[fw.f90][fw_temp] First wall temperature (temp_k) out of range : [100-1500] K"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 225,
-      "level": 2,
-      "message": "[fw.f90][heat_transfer] Reynolds number out of range : [3e3-5000e3]"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 226,
-      "level": 2,
-      "message": "[fw.f90][heat_transfer] Prandtl number out of range : [0.5-2000]"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 227,
-      "level": 2,
-      "message": "[fw.f90][heat_transfer] Negative Darcy friction factor (f)"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 228,
@@ -1152,7 +1152,7 @@
     },
     {
       "no": 229,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1172,7 +1172,7 @@
     },
     {
       "no": 233,
-      "level": 1,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1192,7 +1192,7 @@
     },
     {
       "no": 237,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1217,23 +1217,23 @@
     },
     {
       "no": 242,
-      "level": 2,
-      "message": "PHYSICS: Bootstrap fraction upper limit enforced"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 243,
-      "level": 2,
-      "message": "PHYSICS: Predicted plasma driven current is more than upper limit on non-inductive fraction."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 244,
-      "level": 2,
-      "message": "PHYSICS: Diamagnetic fraction is more than 1%, but not calculated. Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 245,
-      "level": 2,
-      "message": "[sctfcoil] Invalid stress model (r_tf_inboard = 0), stress constraint switched off"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 246,
@@ -1252,13 +1252,13 @@
     },
     {
       "no": 249,
-      "level": 2,
-      "message": "[tfcoil][cntrpst] Negative conductor average temperature difference, set to 0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 250,
-      "level": 2,
-      "message": "[tfcoil][cntrpst] Negative conductor peak temperature difference, set to 0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 251,
@@ -1287,13 +1287,13 @@
     },
     {
       "no": 256,
-      "level": 2,
-      "message": "CHECK: Top CP radius larger that its value determined with plasma shape"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 257,
-      "level": 2,
-      "message": "[tfcoil] : Helium temperature out of helium property fiting range [4-50] K"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 258,
@@ -1312,18 +1312,18 @@
     },
     {
       "no": 261,
-      "level": 2,
-      "message": "[tfcoil]: TF strain was outside the region of applicability. Used lower strain"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 262,
-      "level": 2,
-      "message": "REBCO : Non physical strain used in CS. Use superconductor strain < +/- 0.7% "
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 263,
-      "level": 2,
-      "message": "REBCO : Non physical strain used in PF. Use superconductor strain < +/- 0.7% "
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 264,
@@ -1337,8 +1337,8 @@
     },
     {
       "no": 266,
-      "level": 2,
-      "message": "REBCO : Field on superconductor > 14 T (outside of interpolation range)"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 267,
@@ -1347,8 +1347,8 @@
     },
     {
       "no": 268,
-      "level": 2,
-      "message": "[radialb]: TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 269,
@@ -1367,7 +1367,7 @@
     },
     {
       "no": 272,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -1377,8 +1377,8 @@
     },
     {
       "no": 274,
-      "level": 2,
-      "message": "[HCPB]: Blanket heating is <1 MW or NaN. Is something wrong?"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 275,
@@ -1387,13 +1387,13 @@
     },
     {
       "no": 276,
-      "level": 2,
-      "message": "CHECK: One of the areas or fractions is negative in the internal SC TF coil geometry"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 277,
-      "level": 2,
-      "message": "CHECK: One or more collision between TF and PF coils. Check PF placement."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 278,
@@ -1407,8 +1407,8 @@
     },
     {
       "no": 280,
-      "level": 2,
-      "message": "CHECK: Outside temperature limit for one or more liquid metal breeder properties."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 281,
@@ -1417,8 +1417,8 @@
     },
     {
       "no": 282,
-      "level": 2,
-      "message": "CHECK: ncore is going negative when solving. Please raise the value of dene and or its lower limit."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 283,
@@ -1432,18 +1432,18 @@
     },
     {
       "no": 285,
-      "level": 2,
-      "message": "[tfcoil]: fiooic shouldn't be above 0.7 for engineering reliability."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 286,
-      "level": 2,
-      "message": "[pfcoil][cntrpost]: fjohc shouldn't be above 0.7 for engineering reliability."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 287,
-      "level": 2,
-      "message": "[pfcoil][cntrpost]: fjohc0 shouldn't be above 0.7 for engineering reliability."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 288,

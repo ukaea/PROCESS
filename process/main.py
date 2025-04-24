@@ -101,6 +101,7 @@ from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
+from process.warning_handler import WarningManager
 from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
@@ -487,7 +488,7 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
+        WarningManager.show_errors(fortran.constants.nout)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
