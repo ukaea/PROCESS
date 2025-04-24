@@ -15,7 +15,6 @@ from process.fortran import (
     cs_fatigue_variables,
     current_drive_variables,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
@@ -32,6 +31,7 @@ from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
+from process.warning_handler import WarningManager
 
 
 @dataclass
@@ -164,13 +164,10 @@ class Scan:
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
         """
-        # Turn off error reporting (until next output)
-        error_handling.errors_on = False
-
         if scan_module.isweep == 0:
             ifail = self.doopt()
             write_output_files(models=self.models, ifail=ifail)
-            error_handling.show_errors()
+            WarningManager.show_errors(constants.nout)
             return
 
         if scan_module.isweep > scan_module.ipnscns:
@@ -203,8 +200,6 @@ class Scan:
         """
         numerics.sqsumsq = (numerics.rcm[: numerics.neqns] ** 2).sum() ** 0.5
 
-        error_handling.errors_on = True
-
         process_output.oheadr(constants.nout, "Numerics")
         process_output.ocmmnt(
             constants.nout, "PROCESS has performed a VMCON (optimisation) run."
@@ -216,8 +211,9 @@ class Scan:
             )
             process_output.oblnkl(constants.iotty)
 
-            error_handling.idiags[0] = ifail
-            error_handling.report_error(132)
+            WarningManager.create_warning(
+                "Optimisation solver VMCON returns with ifail != 1", ifail=ifail
+            )
 
             self.verror(ifail)
             process_output.oblnkl(constants.nout)
@@ -259,8 +255,9 @@ class Scan:
                 )
                 process_output.oblnkl(constants.iotty)
 
-                error_handling.fdiags[0] = numerics.sqsumsq
-                error_handling.report_error(134)
+                WarningManager.create_warning(
+                    "High final VMCON constraint residues", sqsumsq=numerics.sqsumsq
+                )
 
         process_output.ovarin(
             constants.nout, "Number of iteration variables", "(nvar)", numerics.nvar
@@ -656,8 +653,8 @@ class Scan:
             scan_1d_ifail_dict[iscan] = ifail
             write_output_files(models=self.models, ifail=ifail)
 
-            error_handling.show_errors()
-            error_handling.init_error_handling()
+            WarningManager.show_errors(constants.nout)
+            WarningManager.reinitialise()
 
         # outvar now contains results
         self.scan_1d_write_plot()
@@ -709,8 +706,8 @@ class Scan:
 
                 write_output_files(models=self.models, ifail=ifail)
 
-                error_handling.show_errors()
-                error_handling.init_error_handling()
+                WarningManager.show_errors(constants.nout)
+                WarningManager.reinitialise()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan = iscan + 1
 

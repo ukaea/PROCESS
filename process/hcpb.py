@@ -18,9 +18,7 @@ from process.fortran import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
+from process.warning_handler import WarningManager
 
 
 class CCFE_HCPB:
@@ -578,11 +576,13 @@ class CCFE_HCPB:
         )
 
         if fwbs_variables.p_blkt_nuclear_heat_total_mw < 1:
-            eh.fdiags[0] = fwbs_variables.p_blkt_nuclear_heat_total_mw
-            eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
-            eh.fdiags[2] = physics_variables.fusion_power
-            eh.fdiags[3] = mass
-            eh.report_error(274)
+            WarningManager.create_warning(
+                "Blanket heating is <1 MW or NaN. Is something wrong?",
+                p_blkt_nuclear_heat_total_mw=fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                exp_blanket=ccfe_hcpb_module.exp_blanket,
+                fusion_power=physics_variables.fusion_power,
+                mass=mass,
+            )
 
     def nuclear_heating_shield(self):
         """Nuclear heating in the shield for CCFE HCPB model

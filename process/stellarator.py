@@ -19,7 +19,6 @@ from process.fortran import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
@@ -43,6 +42,7 @@ from process.fortran import (
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -3378,11 +3378,13 @@ class Stellarator:
         xmax = min(np.max(x1), np.amax(x2))
 
         if xmin >= xmax:
-            error_handling.fdiags[0] = np.amin(x1)
-            error_handling.fdiags[1] = np.amin(x2)
-            error_handling.fdiags[2] = np.amax(x1)
-            error_handling.fdiags[3] = np.amax(x2)
-            error_handling.report_error(111)
+            WarningManager.create_warning(
+                "X ranges not overlapping",
+                x1_min=np.amin(x1),
+                x1_max=np.amax(x1),
+                x2_min=np.amin(x2),
+                x2_max=np.amax(x2),
+            )
 
         #  Ensure input guess for x is within this range
 
@@ -3430,20 +3432,24 @@ class Stellarator:
             x = x - 2.0e0 * dx * y / (yright - yleft)
 
             if x < xmin:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmin
-                error_handling.report_error(112)
+                WarningManager.create_warning(
+                    "X has dropped below Xmin; X has been set equal to Xmin",
+                    x=x,
+                    xmin=xmin,
+                )
                 x = xmin
                 break
 
             if x > xmax:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmax
-                error_handling.report_error(113)
+                WarningManager.create_warning(
+                    "X has risen above Xmax; X has been set equal to Xmax",
+                    x=x,
+                    xmax=xmax,
+                )
                 x = xmax
                 break
         else:
-            error_handling.report_error(114)
+            WarningManager.create_warning("Convergence too slow; X may be wrong")
 
         return x
 

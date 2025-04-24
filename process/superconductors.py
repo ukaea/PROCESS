@@ -4,8 +4,8 @@ import numpy as np
 from scipy import optimize
 
 from process.exceptions import ProcessValueError
-from process.fortran import error_handling as eh
 from process.fortran import rebco_variables
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -545,18 +545,20 @@ def bottura_scaling(
     tc0eps = tc0max * strfun ** (1 / 3)
 
     if temperature / tc0eps >= 1.0:
-        eh.fdiags[0] = temperature
-        eh.fdiags[1] = tc0eps
-        eh.report_error(159)
+        WarningManager.create_warning(
+            "Reduced temperature t artificially lowered",
+            temperature=temperature,
+            tc0eps=tc0eps,
+        )
 
     # Reduced temperature at zero field, corrected for strain
     # t > 1 is permitted, indicating the temperature is above the critical value at zero field.
     t = temperature / tc0eps
 
     if bmax / bc20eps >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bc20eps
-        eh.report_error(160)
+        WarningManager.create_warning(
+            "Reduced field bzero artificially lowered", bmax=bmax, bc20eps=bc20eps
+        )
 
     # Reduced field at zero temperature, taking account of strain
     bzero = bmax / bc20eps

@@ -15,16 +15,13 @@ from process.fortran import (
     build_variables,
     constants,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
     primary_pumping_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.warning_handler import WarningManager
 
 # Acronyms for this module:
 # BB          Breeding Blanket
@@ -647,7 +644,9 @@ class BlanketLibrary:
                 if (blanket_library.bllengi < (fwbs_variables.b_bz_liq * 3)) or (
                     blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3)
                 ):
-                    eh.report_error(278)
+                    WarningManager.create_warning(
+                        "Your blanket modules are too small for the Liquid Metal pipes"
+                    )
 
             # Unless there is no IB blanket...
             else:
@@ -661,7 +660,9 @@ class BlanketLibrary:
                 ) / fwbs_variables.nopipes
                 # Poloidal
                 if blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3):
-                    eh.report_error(278)
+                    WarningManager.create_warning(
+                        "Your blanket modules are too small for the Liquid Metal pipes"
+                    )
 
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
@@ -1345,7 +1346,9 @@ class BlanketLibrary:
             (t_ranges[:, 0] > mid_temp_liq).any()
             or (t_ranges[:, 1] < mid_temp_liq).any()
         ):
-            error_handling.report_error(280)
+            WarningManager.create_warning(
+                "Outside temperature limit for one or more liquid metal breeder properties"
+            )
 
             if output:
                 po.ocmmnt(

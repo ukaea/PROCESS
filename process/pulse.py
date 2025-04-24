@@ -2,7 +2,6 @@ from process import process_output as po
 from process.fortran import (
     constants,
     constraint_variables,
-    error_handling,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -10,6 +9,7 @@ from process.fortran import (
     pulse_variables,
     times_variables,
 )
+from process.warning_handler import WarningManager
 
 
 class Pulse:
@@ -185,12 +185,13 @@ class Pulse:
 
         tb = vsmax / v_plasma_loop_burn - times_variables.t_fusion_ramp
         if tb < 0.0e0:
-            error_handling.fdiags[0] = tb
-            error_handling.fdiags[1] = vsmax
-            error_handling.fdiags[2] = v_plasma_loop_burn
-            error_handling.fdiags[3] = times_variables.t_fusion_ramp
-            error_handling.report_error(93)
-
+            WarningManager.create_warning(
+                "Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capability",
+                tb=tb,
+                vsmax=vsmax,
+                v_plasma_loop_burn=v_plasma_loop_burn,
+                t_fusion_ramp=times_variables.t_fusion_ramp.item(),
+            )
         times_variables.t_burn = max(0.0e0, tb)
 
         #  Output section
