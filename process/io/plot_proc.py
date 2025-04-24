@@ -3296,6 +3296,8 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
     boot_wong = mfile_data.data["f_c_plasma_bootstrap_wong"].get_scan(scan)
     boot_gi_I = mfile_data.data["bscf_gi_i"].get_scan(scan)  # noqa: N806
     boot_gi_II = mfile_data.data["bscf_gi_ii"].get_scan(scan)  # noqa: N806
+    boot_sugiyama_l = mfile_data.data["f_c_plasma_bootstrap_sugiyama_l"].get_scan(scan)
+    boot_sugiyama_h = mfile_data.data["f_c_plasma_bootstrap_sugiyama_h"].get_scan(scan)
 
     # Data for the box plot
     data = {
@@ -3310,6 +3312,8 @@ def plot_bootstrap_comparison(axis, mfile_data, scan):
         "Wong": boot_wong,
         "Gi-I": boot_gi_I,
         "Gi-II": boot_gi_II,
+        "Sugiyama (L-mode)": boot_sugiyama_l,
+        "Sugiyama (H-mode)": boot_sugiyama_h,
     }
     # Create the violin plot
     axis.violinplot(data.values(), showextrema=False)
