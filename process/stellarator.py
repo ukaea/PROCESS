@@ -5714,6 +5714,31 @@ def init_stellarator_module():
     st.f_i = 0.0
 
 
+def init_neoclassics_module():
+    neoclassics_module.densities[:] = 0.0
+    neoclassics_module.temperatures[:] = 0.0
+    neoclassics_module.dr_densities[:] = 0.0
+    neoclassics_module.dr_temperatures[:] = 0.0
+    neoclassics_module.roots[:] = 0
+    neoclassics_module.weights[:] = 0
+    neoclassics_module.nu[:, :] = 0
+    neoclassics_module.nu_star[:, :] = 0
+    neoclassics_module.nu_star_averaged[:] = 0
+    neoclassics_module.vd[:] = 0
+    neoclassics_module.kt[:] = 0
+    neoclassics_module.er = 0.0
+    neoclassics_module.iota = 1.0
+    neoclassics_module.d11_mono[:, :] = 0
+    neoclassics_module.d11_plateau[:, :] = 0
+    neoclassics_module.d111[:] = 0
+    neoclassics_module.d112[:] = 0
+    neoclassics_module.d113[:] = 0
+    neoclassics_module.q_flux[:] = 0
+    neoclassics_module.gamma_flux[:] = 0
+    neoclassics_module.d31_mono[:] = 0
+    neoclassics_module.eps_eff = 1e-5
+
+
 def stinit():
     """Routine to initialise the variables relevant to stellarators
     author: P J Knight, CCFE, Culham Science Centre
