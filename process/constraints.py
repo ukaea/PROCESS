@@ -16,28 +16,40 @@ class ConstraintResult:
     (aka given an evaluation at the point x).
     """
 
-    cc: float
+    normalised_residual: float
     """The normalised residual of the constraint."""
-    con: float
+    constraint_value: float
     """The value of the constraint (in the physical units)."""
-    err: float
+    constraint_error: float
     """The residual error of the constraint (in the physical units)."""
 
 
 @dataclass
 class ConstraintRegistration:
-    """Contains information about a constraint.
-
-    E.g. how to call the constraint, its units, and its symbol (=, >=, <=)
-    """
+    """Contains the constraint equation and metadata about the constraint."""
 
     name: Hashable
-    result: Callable[[], ConstraintResult]
+    """The name (often a number) of the constraint. It can be any hashable e.g. a string."""
+    constraint_equation: Callable[[], ConstraintResult]
+    """The constraint equation that, when called, returns the normalised resiudal,
+    constraint value, and constraint error.
+    """
     units: str
+    """The units of the constraint value and error."""
     symbol: ConstraintSymbolType
+    """The type of constraint (<=, >=, ==). Only used for writing output diagnostics,
+    this does not impact the calculations.
+    """
 
 
 class ConstraintManager:
+    """A singleton class that manages the registration of constraint equations
+    and metadata.
+
+    This class maintains an internal registry of constraints indexed by their names.
+    Classmethods provide access to this registry or to directly evaluate constraints.
+    """
+
     _constraint_registry: ClassVar[dict[Hashable, ConstraintRegistration]] = {}
     """An internal registry of the PROCESS constraint equations"""
 
@@ -45,23 +57,64 @@ class ConstraintManager:
         raise NotImplementedError(f"{self.__class__.__name__} cannot be instantiated.")
 
     @classmethod
+    def num_constraints(cls):
+        """Return the number of constraints currently in the registry"""
+        return len(cls._constraint_registry)
+
+    @classmethod
     def register_constraint(
         cls, name: Hashable, units: str, symbol: ConstraintSymbolType
     ) -> Callable[[], Callable[[], ConstraintResult]]:
-        def wrapper(wrapped_func: Callable[[], ConstraintResult]):
+        """A decorator to add a constraint equation with metadata to the registry.
+
+        The decorator should wrap a function with no argument which returns a
+        ConstraintResult.
+
+        :param name: the name of the constraint and how it can be indexed from the registry
+        :type name: Hashable
+        :param units: the units of the constraint written to the output files
+        :type units: str
+        :param symbol: the symbol of the constraint written to the output files
+        :type symbol: str
+        """
+
+        def wrapper(func: Callable[[], ConstraintResult]):
             if name in cls._constraint_registry:
                 raise ValueError(f"Constraint {name} already exists.")
             cls._constraint_registry[name] = ConstraintRegistration(
-                name, wrapped_func, units, symbol
+                name, func, units, symbol
             )
 
-            return wrapped_func
+            return func
 
         return wrapper
 
     @classmethod
     def get_constraint(cls, name: Hashable):
+        """Retrieves a constraint registration from the registry given its name.
+        Returns None if no constraint with the name exists.
+
+        :param name: the name of the constraint
+        :type name: Hashable
+        :returns: the constraint registration object
+        :rtype: ConstraintRegistration | None
+        """
         return cls._constraint_registry.get(name)
+
+    @classmethod
+    def evaluate_constraint(cls, name: Hashable):
+        """Evalutes a constraint with a given name.
+        :param name: the name of the constraint
+        :type name: Hashable
+        :returns: the result of evaluating the constraint
+        :rtype: ConstraintResult | None
+        """
+        registration = cls.get_constraint(name)
+
+        if registration is not None:
+            return registration.constraint_equation()
+
+        return None
 
 
 @ConstraintManager.register_constraint(1, "", "=")
@@ -97,9 +150,9 @@ def constraint_equation_1():
         / fortran.physics_variables.beta
     )
     return ConstraintResult(
-        cc=cc,
-        con=(fortran.physics_variables.beta * (1.0 - cc)),
-        err=(fortran.physics_variables.beta * cc),
+        normalised_residual=cc,
+        constraint_value=(fortran.physics_variables.beta * (1.0 - cc)),
+        constraint_error=(fortran.physics_variables.beta * cc),
     )
 
 
@@ -2256,8 +2309,12 @@ def constraint_eqns(m: int, ieqn: int):
                     fortran.constraints, f"constraint_eqn_{constraint_id:03d}"
                 )()
             else:
-                result = constraint.result()
-                tmp_cc, tmp_con, tmp_err = result.cc, result.con, result.err
+                result = constraint.constraint_equation()
+                tmp_cc, tmp_con, tmp_err = (
+                    result.normalised_residual,
+                    result.constraint_value,
+                    result.constraint_error,
+                )
                 tmp_symbol, tmp_units = constraint.symbol, constraint.units
 
         except AttributeError as e:
@@ -2279,10 +2336,11 @@ def constraint_eqns(m: int, ieqn: int):
         symbol.append(tmp_symbol)
         units.append(tmp_units)
 
-    return cc, con, err, symbol, units
+    return np.array(cc), np.array(con), np.array(err), symbol, units
 
 
 def init_constraint_variables():
+    """Initialise the constraint variables"""
     fortran.constraint_variables.auxmin = 0.1
     fortran.constraint_variables.beta_poloidal_max = 0.19
     fortran.constraint_variables.bigqmin = 10.0

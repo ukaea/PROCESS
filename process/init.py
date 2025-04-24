@@ -12,7 +12,7 @@ import process.process_output as process_output
 from process.blanket_library import init_blanket_library, init_primary_pumping_variables
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
-from process.constraints import init_constraint_variables
+from process.constraints import ConstraintManager, init_constraint_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
 from process.current_drive import init_current_drive_variables
@@ -1135,7 +1135,7 @@ def check_process(inputs):  # noqa: ARG001
 def set_active_constraints():
     """Set constraints provided in the input file as 'active'"""
     num_constraints = 0
-    for i in range(fortran.numerics.ipeqns):
+    for i in range(ConstraintManager.num_constraints()):
         if fortran.numerics.icc[i] != 0:
             fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
             num_constraints += 1
