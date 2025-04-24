@@ -2032,31 +2032,38 @@ class Physics:
             )
         )
 
-        bootstrap_map = {
-            0: current_drive_variables.f_c_plasma_bootstrap,
-            1: current_drive_variables.f_c_plasma_bootstrap_iter89,
-            2: current_drive_variables.f_c_plasma_bootstrap_nevins,
-            3: current_drive_variables.f_c_plasma_bootstrap_wilson,
-            4: current_drive_variables.f_c_plasma_bootstrap_sauter,
-            5: current_drive_variables.f_c_plasma_bootstrap_sakai,
-            6: current_drive_variables.f_c_plasma_bootstrap_aries,
-            7: current_drive_variables.f_c_plasma_bootstrap_andrade,
-            8: current_drive_variables.f_c_plasma_bootstrap_hoang,
-            9: current_drive_variables.f_c_plasma_bootstrap_wong,
-            10: current_drive_variables.bscf_gi_I,
-            11: current_drive_variables.bscf_gi_II,
-            12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
-            13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
-        }
-        if int(physics_variables.i_bootstrap_current) in bootstrap_map:
-            current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
-                int(physics_variables.i_bootstrap_current)
-            ]
-        else:
-            raise ProcessValueError(
-                "Illegal value of i_bootstrap_current",
-                i_bootstrap_current=physics_variables.i_bootstrap_current,
+        if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
+            current_drive_variables.f_c_plasma_bootstrap = abs(
+                current_drive_variables.f_c_plasma_bootstrap_max
             )
+            current_drive_variables.f_c_plasma_internal = (
+                current_drive_variables.f_c_plasma_bootstrap
+            )
+        else:
+            bootstrap_map = {
+                1: current_drive_variables.f_c_plasma_bootstrap_iter89,
+                2: current_drive_variables.f_c_plasma_bootstrap_nevins,
+                3: current_drive_variables.f_c_plasma_bootstrap_wilson,
+                4: current_drive_variables.f_c_plasma_bootstrap_sauter,
+                5: current_drive_variables.f_c_plasma_bootstrap_sakai,
+                6: current_drive_variables.f_c_plasma_bootstrap_aries,
+                7: current_drive_variables.f_c_plasma_bootstrap_andrade,
+                8: current_drive_variables.f_c_plasma_bootstrap_hoang,
+                9: current_drive_variables.f_c_plasma_bootstrap_wong,
+                10: current_drive_variables.bscf_gi_I,
+                11: current_drive_variables.bscf_gi_II,
+                12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+                13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+            }
+            if int(physics_variables.i_bootstrap_current) in bootstrap_map:
+                current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
+                    int(physics_variables.i_bootstrap_current)
+                ]
+            else:
+                raise ProcessValueError(
+                    "Illegal value of i_bootstrap_current",
+                    i_bootstrap_current=physics_variables.i_bootstrap_current,
+                )
 
         physics_module.err242 = 0
         if (
@@ -6078,6 +6085,20 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sugiyama L-mode)",
+                "(f_c_plasma_bootstrap_sugiyama_l)",
+                current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Bootstrap fraction (Sugiyama H-mode)",
+                "(f_c_plasma_bootstrap_sugiyama_h)",
+                current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+                "OP ",
+            )
 
             po.ovarrf(
                 self.outfile,
@@ -7092,6 +7113,133 @@ class Physics:
         )
 
         return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
+
+    @staticmethod
+    def bootstrap_fraction_sugiyama_l_mode(
+        eps: float,
+        beta_poloidal: float,
+        alphan: float,
+        alphat: float,
+        zeff: float,
+        q95: float,
+        q0: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
+
+        :param eps: Inverse aspect ratio.
+        :type eps: float
+        :param beta_poloidal: Plasma poloidal beta.
+        :type beta_poloidal: float
+        :param alphan: Density profile index.
+        :type alphan: float
+        :param alphat: Temperature profile index.
+        :type alphat: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param q95: Safety factor at 95% of the plasma radius.
+        :type q95: float
+        :param q0: Safety factor at the magnetic axis.
+        :type q0: float
+
+        :returns: The calculated bootstrap fraction.
+        :rtype: float
+
+        :notes:
+            - This scaling is derived for L-mode plasmas.
+            - Ion and electron temperature are the same
+            - Z_eff has a uniform profile, with only fully stripped carbon impurity
+
+        :references:
+            - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
+              current balance models for tokamak systems code considering H-mode plasma profiles,”
+              Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
+              https://doi.org/10.1016/j.fusengdes.2025.115022.
+        """
+
+        return (
+            0.740
+            * eps**0.418
+            * beta_poloidal**0.904
+            * alphan**0.06
+            * alphat**-0.138
+            * zeff**0.230
+            * (q95 / q0) ** -0.142
+        )
+
+    @staticmethod
+    def bootstrap_fraction_sugiyama_h_mode(
+        eps: float,
+        beta_poloidal: float,
+        alphan: float,
+        alphat: float,
+        tbeta: float,
+        zeff: float,
+        q95: float,
+        q0: float,
+        rhopedn: float,
+        neped: float,
+        n_greenwald: float,
+        teped: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
+
+        :param eps: Inverse aspect ratio.
+        :type eps: float
+        :param beta_poloidal: Plasma poloidal beta.
+        :type beta_poloidal: float
+        :param alphan: Density profile index.
+        :type alphan: float
+        :param alphat: Temperature profile index.
+        :type alphat: float
+        :param tbeta: Second temperature profile index.
+        :type tbeta: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param q95: Safety factor at 95% of the plasma radius.
+        :type q95: float
+        :param q0: Safety factor at the magnetic axis.
+        :type q0: float
+        :param rhopedn: Normalised plasma radius of density pedestal.
+        :type rhopedn: float
+        :param neped: Electron number density at the pedestal [m^-3].
+        :type neped: float
+        :param n_greenwald: Greenwald density limit [m^-3].
+        :type n_greenwald: float
+        :param teped: Electron temperature at the pedestal [keV].
+        :type teped: float
+
+        :returns: The calculated bootstrap fraction.
+        :rtype: float
+
+        :notes:
+            - This scaling is derived for H-mode plasmas.
+            - The temperature and density pedestal positions are the same
+            - Separatrix temperature and density are zero
+            - Ion and electron temperature are the same
+            - Z_eff has a uniform profile, with only fully stripped carbon impurity
+
+        :references:
+            - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
+              current balance models for tokamak systems code considering H-mode plasma profiles,”
+              Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
+              https://doi.org/10.1016/j.fusengdes.2025.115022.
+        """
+
+        return (
+            0.789
+            * eps**0.606
+            * beta_poloidal**0.960
+            * alphan**0.0319
+            * alphat**0.00822
+            * tbeta**-0.0783
+            * zeff**0.241
+            * (q95 / q0) ** -0.103
+            * rhopedn**0.367
+            * (neped / n_greenwald) ** -0.174
+            * teped**0.0552
+        )
 
     @staticmethod
     def bootstrap_fraction_sugiyama_l_mode(
