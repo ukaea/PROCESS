@@ -78,14 +78,35 @@ module current_drive_variables
   real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
-  real(dp) :: p_ecrh_injected_mw
+  real(dp) :: p_hcd_ecrh_injected_total_mw
   !! ECH power (MW)
 
-  real(dp) :: echwpow
+  real(dp) :: p_ebw_injected_mw
+  !! Electron bernstein power (MW)
+
+  real(dp) :: p_hcd_ecrh_electric_mw
   !! ECH wall plug power (MW)
 
+  real(dp) :: p_hcd_ebw_electric_mw
+  !! Electron bernstein wall plug power (MW)
+
   real(dp) :: eta_cd_hcd_primary
-  !! current drive efficiency (A/W)
+  !! Current drive efficiency of primary HCD system (A/W)
+
+  real(dp) :: eta_cd_hcd_secondary
+  !! Current drive efficiency of secondary HCD system (A/W)
+
+  real(dp) :: c_hcd_primary_driven
+  !! Current in plasma driven by primary HCD system (A)
+
+  real(dp) :: c_hcd_secondary_driven
+  !! Current in plasma driven by secondary HCD system (A)
+
+  real(dp) :: f_c_plasma_hcd_primary
+  !! Fraction of plasma current driven by primary HCD system
+
+  real(dp) :: f_c_plasma_hcd_secondary
+  !! Fraction of plasma current driven by secondary HCD system
 
   real(dp) :: n_ecrh_harmonic
   !! cyclotron harmonic frequency number, used in cut-off function
@@ -110,6 +131,12 @@ module current_drive_variables
 
   real(dp) :: eta_lowhyb_injector_wall_plug
   !! lower hybrid wall plug to injector efficiency
+
+  real(dp) :: eta_icrh_injector_wall_plug
+  !! Ion cyclotron wall plug to injector efficiency
+
+  real(dp) :: eta_ebw_injector_wall_plug
+  !! Electron bernstein wave wall plug to injector efficiency
 
   real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
@@ -214,16 +241,31 @@ module current_drive_variables
   real(dp) :: p_hcd_injected_total_mw
   !! total auxiliary injected power (MW)
 
+  real(dp) :: p_hcd_injected_current_total_mw
+  !! total auxiliary injected power (MW)
+
   real(dp)  :: p_hcd_secondary_injected_mw
   !! secondary total fixed auxiliary injected power (MW)
+
+  real(dp)  :: p_hcd_primary_injected_mw
+  !! primary auxiliary injected power (MW)
 
   real(dp) :: f_c_plasma_internal
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
-  real(dp) :: plhybd
-  !! lower hybrid injection power (MW)
+  real(dp) :: p_hcd_lowhyb_injected_total_mw
+  !! Total lower hybrid injection power (MW)
 
-  real(dp) :: pnbeam
+  real(dp) :: p_hcd_icrh_injected_total_mw
+  !! Total ion cyclotron injection power (MW)
+
+  real(dp) :: p_hcd_ebw_injected_total_mw
+  !! Total electron bernstein wave injection power (MW)
+
+  real(dp) :: p_beam_plasma_coupled_mw
+  !! Total neutral beam power that is coupled to plasma after losses (MW)
+
+  real(dp) :: p_hcd_beam_injected_total_mw
   !! neutral beam injection power (MW)
 
   real(dp) :: p_beam_orbit_loss_mw
@@ -232,7 +274,7 @@ module current_drive_variables
   real(dp) :: f_c_plasma_pfirsch_schluter
   !! Pfirsch-Schlüter current fraction
 
-  real(dp) :: pwplh
+  real(dp) :: p_hcd_lowhyb_electric_mw
   !! lower hybrid wall plug power (MW)
 
   real(dp) :: pwpnb

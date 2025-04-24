@@ -43,7 +43,7 @@ def write(models, _outfile):
     models.physics.outplas()
 
     # TODO what is this? Not in caller.f90?
-    models.current_drive.cudriv(output=True)
+    models.current_drive.output_current_drive()
 
     # Pulsed reactor model
     models.pulse.run(output=True)

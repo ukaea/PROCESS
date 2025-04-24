@@ -56,7 +56,7 @@ ixc = 41 * f_j_cs_start_pulse_end_flat_top
 ixc = 42 * dr_cs_tf_gap
 boundl(42) = 0.05
 boundu(42) = 0.1
-ixc = 44 * fvsbrnni
+ixc = 44 * f_c_plasma_non_inductive
 ixc = 48 * fstrcase
 ixc = 49 * fstrcond
 ixc = 50 * fiooic
@@ -256,7 +256,7 @@ aspect   = 3.1 * Aspect ratio (iteration variable 1)
 dene     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
 beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
-fvsbrnni = 0.4434 * Fraction of the plasma current produced by
+f_c_plasma_non_inductive = 0.4434 * Fraction of the plasma current produced by
 ejima_coeff    = 0.3 * Ejima coefficient for resistive startup v-s formula
 hfact    = 1.1 * H factor on energy confinement times (iteration variable 10)
 i_bootstrap_current     = 4 * Switch for bootstrap current scaling;
@@ -351,7 +351,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fjohc0         =  5.3923E-01
                      f_j_cs_start_pulse_end_flat_top        =  9.3176E-01
                      dr_cs_tf_gap          =  5.0000E-02
-                     fvsbrnni       =  3.9566E-01
+                     f_c_plasma_non_inductive       =  3.9566E-01
                      fstrcase       =  1.0000E+00
                      fstrcond       =  9.2007E-01
                      fiooic         =  6.3437E-01

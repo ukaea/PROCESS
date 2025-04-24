@@ -249,7 +249,7 @@ module numerics
   !! <LI> (41) f_j_cs_start_pulse_end_flat_top
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
-  !! <LI> (44) fvsbrnni
+  !! <LI> (44) f_c_plasma_non_inductive
   !! <LI> (45) fqval (f-value for equation 28)
   !! <LI> (46) fpinj (f-value for equation 30)
   !! <LI> (47) feffcd

@@ -59,7 +59,14 @@ from process.costs import Costs
 from process.costs_2015 import Costs2015
 from process.cryostat import Cryostat
 from process.cs_fatigue import CsFatigue
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.dcll import DCLL
 from process.divertor import Divertor
 from process.fw import Fw
@@ -675,7 +682,14 @@ class Models:
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.current_drive = CurrentDrive(plasma_profile=self.plasma_profile)
+        self.current_drive = CurrentDrive(
+            plasma_profile=self.plasma_profile,
+            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
+            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
+            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
+        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
