@@ -885,6 +885,176 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):  # noqa:
     assert bfs == pytest.approx(bootstrapfractiongiiiparam.expected_bfs)
 
 
+class BootstrapFractionSugiyamaLModeParam(NamedTuple):
+    eps: Any = None
+    beta_poloidal: Any = None
+    alphan: Any = None
+    alphat: Any = None
+    zeff: Any = None
+    q95: Any = None
+    q0: Any = None
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionsugiyamalparam",
+    (
+        BootstrapFractionSugiyamaLModeParam(
+            eps=0.33333333,
+            beta_poloidal=1.2708883332338736,
+            alphan=1.0,
+            alphat=1.45,
+            zeff=2.5,
+            q95=3.5,
+            q0=1.0,
+            expected_bfs=0.5700433347072669,
+        ),
+        BootstrapFractionSugiyamaLModeParam(
+            eps=0.25,
+            beta_poloidal=1.1,
+            alphan=0.9,
+            alphat=1.3,
+            zeff=2.0,
+            q95=4.0,
+            q0=1.2,
+            expected_bfs=0.42806341892858024,
+        ),
+    ),
+)
+def test_bootstrap_fraction_sugiyama_l_mode(bootstrapfractionsugiyamalparam, physics):
+    """
+    Test bootstrap_fraction_sugiyama_l_mode function.
+
+    This test validates the Sugiyama L-mode bootstrap fraction calculation
+    using predefined parameters and expected results.
+
+    :param bootstrapfractionsugiyamalparam: Parameters for the test case.
+    :type bootstrapfractionsugiyamalparam: BootstrapFractionSugiyamaLModeParam
+    """
+    bfs = physics.bootstrap_fraction_sugiyama_l_mode(
+        eps=bootstrapfractionsugiyamalparam.eps,
+        beta_poloidal=bootstrapfractionsugiyamalparam.beta_poloidal,
+        alphan=bootstrapfractionsugiyamalparam.alphan,
+        alphat=bootstrapfractionsugiyamalparam.alphat,
+        zeff=bootstrapfractionsugiyamalparam.zeff,
+        q95=bootstrapfractionsugiyamalparam.q95,
+        q0=bootstrapfractionsugiyamalparam.q0,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionsugiyamalparam.expected_bfs)
+
+
+class BootstrapFractionSugiyamaHModeParam(NamedTuple):
+    eps: Any = None
+    beta_poloidal: Any = None
+    alphan: Any = None
+    alphat: Any = None
+    tbeta: Any = None
+    zeff: Any = None
+    q95: Any = None
+    q0: Any = None
+    rhopedn: Any = None
+    neped: Any = None
+    n_greenwald: Any = None
+    teped: Any = None
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionsugiyamahparam",
+    (
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.33333333,
+            beta_poloidal=1.2708883332338736,
+            alphan=1.0,
+            alphat=1.45,
+            tbeta=2.0,
+            zeff=2.5,
+            q95=3.5,
+            q0=1.0,
+            rhopedn=0.9,
+            neped=6.0e19,
+            n_greenwald=8.0e19,
+            teped=5.0,
+            expected_bfs=0.5875359328840783,
+        ),
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.25,
+            beta_poloidal=1.1,
+            alphan=0.9,
+            alphat=1.3,
+            tbeta=1.8,
+            zeff=2.0,
+            q95=4.0,
+            q0=1.2,
+            rhopedn=0.85,
+            neped=5.5e19,
+            n_greenwald=7.5e19,
+            teped=4.5,
+            expected_bfs=0.40154857221044604,
+        ),
+        # JA-DEMO steady state case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.2847058823529412,
+            beta_poloidal=1.52,
+            alphan=1.7,
+            alphat=4.5,
+            tbeta=2.65,
+            zeff=1.84,
+            q95=4.09,
+            q0=1.0,
+            rhopedn=0.91,
+            neped=0.98e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.5634482876932788,
+        ),
+        # ITER 15MA case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.3225806451612903,
+            beta_poloidal=0.691,
+            alphan=0.3,
+            alphat=4.0,
+            tbeta=2.0,
+            zeff=1.8,
+            q95=6.26,
+            q0=1.0,
+            rhopedn=0.93,
+            neped=0.75e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.2770187998673241,
+        ),
+    ),
+)
+def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, physics):
+    """
+    Test bootstrap_fraction_sugiyama_h_mode function.
+
+    This test validates the Sugiyama H-mode bootstrap fraction calculation
+    using predefined parameters and expected results.
+
+    :param bootstrapfractionsugiyamahparam: Parameters for the test case.
+    :type bootstrapfractionsugiyamahparam: BootstrapFractionSugiyamaHModeParam
+    """
+    bfs = physics.bootstrap_fraction_sugiyama_h_mode(
+        eps=bootstrapfractionsugiyamahparam.eps,
+        beta_poloidal=bootstrapfractionsugiyamahparam.beta_poloidal,
+        alphan=bootstrapfractionsugiyamahparam.alphan,
+        alphat=bootstrapfractionsugiyamahparam.alphat,
+        tbeta=bootstrapfractionsugiyamahparam.tbeta,
+        zeff=bootstrapfractionsugiyamahparam.zeff,
+        q95=bootstrapfractionsugiyamahparam.q95,
+        q0=bootstrapfractionsugiyamahparam.q0,
+        rhopedn=bootstrapfractionsugiyamahparam.rhopedn,
+        neped=bootstrapfractionsugiyamahparam.neped,
+        n_greenwald=bootstrapfractionsugiyamahparam.n_greenwald,
+        teped=bootstrapfractionsugiyamahparam.teped,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionsugiyamahparam.expected_bfs)
+
+
 class PlasmaCurrentParam(NamedTuple):
     beta_norm_total: Any = None
 

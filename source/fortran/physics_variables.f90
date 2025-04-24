@@ -304,6 +304,8 @@ module physics_variables
   !! - =9 for Wong et al scaling
   !! - =10 for Gi-I et al scaling
   !! - =11 for Gi-II et al scaling
+  !! - =12 for Sugiyama (L-mode) et al scaling
+  !! - =13 for Sugiyama (H-mode) et al scaling
 
   integer :: i_beta_component
   !! switch for beta limit scaling (`constraint equation 24`)
