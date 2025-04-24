@@ -1809,6 +1809,8 @@ class Costs:
                 * cost_variables.ucech
                 * (1.0e6 * current_drive_variables.p_hcd_ecrh_injected_total_mw)
                 ** exprf
+                * (1.0e6 * current_drive_variables.p_hcd_ecrh_injected_total_mw)
+                ** exprf
             )
 
             if cost_variables.ifueltyp == 1:
@@ -1823,11 +1825,15 @@ class Costs:
                     * cost_variables.uclh
                     * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
                     ** exprf
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                 )
             else:
                 self.c2232 = (
                     1.0e-6
                     * cost_variables.ucich
+                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    ** exprf
                     * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
                     ** exprf
                 )
@@ -1838,6 +1844,7 @@ class Costs:
 
                 #  Account 223.3 : Neutral Beam
 
+                # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
                 # self.c2233 = 1.0e-6 * cost_variables.ucnbi * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
                 # #327
 
@@ -2473,7 +2480,7 @@ class Costs:
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if cost_variables.ireactor == 0:
             pwrrej = (
-                physics_variables.p_fusion_total_mw
+                physics_variables.fusion_power
                 + heat_transport_variables.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )

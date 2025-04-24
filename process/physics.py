@@ -81,6 +81,8 @@ def calculate_volt_second_requirements(
             :type eps: float
             :param f_c_plasma_inductive: Fraction of plasma current produced inductively
             :type f_c_plasma_inductive: float
+            :param f_c_plasma_inductive: Fraction of plasma current produced inductively
+            :type f_c_plasma_inductive: float
             :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
             :type ejima_coeff: float
             :param kappa: Plasma elongation
@@ -163,6 +165,7 @@ def calculate_volt_second_requirements(
     # Include enhancement factor in flattop V-s requirement
     # to account for MHD sawtooth effects.
 
+    v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
     v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
 
     v_burn_resistive = v_plasma_loop_burn * csawth
@@ -2082,8 +2085,13 @@ class Physics:
             current_drive_variables.f_c_plasma_internal
             > physics_variables.f_c_plasma_non_inductive
         ):
+        if (
+            current_drive_variables.f_c_plasma_internal
+            > physics_variables.f_c_plasma_non_inductive
+        ):
             current_drive_variables.f_c_plasma_internal = min(
                 current_drive_variables.f_c_plasma_internal,
+                physics_variables.f_c_plasma_non_inductive,
                 physics_variables.f_c_plasma_non_inductive,
             )
             physics_module.err243 = 1
@@ -2091,8 +2099,13 @@ class Physics:
         # Fraction of plasma current produced by inductive means
         physics_variables.f_c_plasma_inductive = max(
             1.0e-10, (1.0e0 - physics_variables.f_c_plasma_non_inductive)
+        physics_variables.f_c_plasma_inductive = max(
+            1.0e-10, (1.0e0 - physics_variables.f_c_plasma_non_inductive)
         )
         #  Fraction of plasma current produced by auxiliary current drive
+        physics_variables.f_c_plasma_auxiliary = (
+            physics_variables.f_c_plasma_non_inductive
+            - current_drive_variables.f_c_plasma_internal
         physics_variables.f_c_plasma_auxiliary = (
             physics_variables.f_c_plasma_non_inductive
             - current_drive_variables.f_c_plasma_internal
@@ -2101,6 +2114,7 @@ class Physics:
         # Auxiliary current drive power calculations
 
         if current_drive_variables.i_hcd_calculations != 0:
+            self.current_drive.cudriv()
             self.current_drive.cudriv()
 
         # ***************************** #
@@ -2134,7 +2148,7 @@ class Physics:
             (
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
-                physics_variables.p_beam_alpha_mw,
+                physics_variables.alpha_power_beams,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
@@ -2313,6 +2327,7 @@ class Physics:
             physics_variables.res_plasma,
         ) = self.plasma_ohmic_heating(
             physics_variables.f_c_plasma_inductive,
+            physics_variables.f_c_plasma_inductive,
             physics_variables.kappa95,
             physics_variables.plasma_current,
             physics_variables.rmajor,
@@ -2469,6 +2484,7 @@ class Physics:
         ) = calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
+            physics_variables.f_c_plasma_inductive,
             physics_variables.f_c_plasma_inductive,
             physics_variables.ejima_coeff,
             physics_variables.kappa,
@@ -3425,6 +3441,7 @@ class Physics:
     @staticmethod
     def plasma_ohmic_heating(
         f_c_plasma_inductive: float,
+        f_c_plasma_inductive: float,
         kappa95: float,
         plasma_current: float,
         rmajor: float,
@@ -3437,6 +3454,7 @@ class Physics:
         Calculate the ohmic heating power and related parameters.
 
         Args:
+            f_c_plasma_inductive (float): Fraction of plasma current driven inductively.
             f_c_plasma_inductive (float): Fraction of plasma current driven inductively.
             kappa95 (float): Plasma elongation at 95% surface.
             plasma_current (float): Plasma current (A).
@@ -3490,8 +3508,10 @@ class Physics:
 
         # Ohmic heating power per unit volume
         # Corrected from: pden_plasma_ohmic_mw = (f_c_plasma_inductive*plasma_current)**2 * ...
+        # Corrected from: pden_plasma_ohmic_mw = (f_c_plasma_inductive*plasma_current)**2 * ...
 
         pden_plasma_ohmic_mw = (
+            f_c_plasma_inductive * plasma_current**2 * res_plasma * 1.0e-6 / vol_plasma
             f_c_plasma_inductive * plasma_current**2 * res_plasma * 1.0e-6 / vol_plasma
         )
 
@@ -8505,6 +8525,8 @@ def init_physics_variables():
     physics_variables.eps = 0.34399724802
     physics_variables.f_c_plasma_auxiliary = 0.0
     physics_variables.f_c_plasma_inductive = 0.0
+    physics_variables.f_c_plasma_auxiliary = 0.0
+    physics_variables.f_c_plasma_inductive = 0.0
     physics_variables.f_alpha_electron = 0.0
     physics_variables.f_alpha_plasma = 0.95
     physics_variables.f_alpha_ion = 0.0
@@ -8520,9 +8542,8 @@ def init_physics_variables():
     physics_variables.fpdivlim = 1.0
     physics_variables.fne0 = 1.0
     physics_variables.f_tritium = 0.5
-    physics_variables.fusden_total = 0.0
-    physics_variables.fusrat_total = 0.0
-    physics_variables.fusden_plasma = 0.0
+    physics_variables.fusion_rate_density_total = 0.0
+    physics_variables.fusion_rate_density_plasma = 0.0
     physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4
     physics_variables.f_beta_alpha_beam_thermal = 0.0

@@ -601,7 +601,7 @@ def acc26_param(**kwargs):
     # Default parameters
     defaults = {
         "ireactor": 0,
-        "p_fusion_total_mw": 2000.0,
+        "fusion_power": 2000.0,
         "p_hcd_electric_total_mw": 250.0,
         "tfcmw": 50.0,
         "pthermmw": htv.pthermmw,
@@ -626,7 +626,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            p_fusion_total_mw=fortran.physics_variables.p_fusion_total_mw,
+            fusion_power=fortran.physics_variables.fusion_power,
             p_hcd_electric_total_mw=htv.p_hcd_electric_total_mw,
             tfcmw=fortran.tfcoil_variables.tfcmw,
             pthermmw=3000.0,
@@ -654,6 +654,9 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
     monkeypatch.setattr(
         fortran.physics_variables, "p_fusion_total_mw", param["p_fusion_total_mw"]
+    )
+    monkeypatch.setattr(
+        htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
     )
     monkeypatch.setattr(
         htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
@@ -2886,9 +2889,11 @@ class Acc223Param(NamedTuple):
     fcdfuel: Any = None
 
     p_hcd_lowhyb_injected_total_mw: Any = None
+    p_hcd_lowhyb_injected_total_mw: Any = None
 
     i_hcd_primary: Any = None
 
+    p_hcd_ecrh_injected_total_mw: Any = None
     p_hcd_ecrh_injected_total_mw: Any = None
 
     p_beam_injected_mw: Any = None
@@ -2949,7 +2954,9 @@ class Acc223Param(NamedTuple):
             cdcost=0,
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
+            p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
+            p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_beam_injected_mw=0,
             dcdrv2=59.899999999999999,
@@ -2984,7 +2991,9 @@ class Acc223Param(NamedTuple):
             cdcost=140.341808845157,
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
+            p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
+            p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_hcd_ecrh_injected_total_mw=51.978447720428512,
             p_beam_injected_mw=0,
             dcdrv2=59.899999999999999,
@@ -3045,12 +3054,20 @@ def test_acc223(acc223param, monkeypatch, costs):
         "p_hcd_lowhyb_injected_total_mw",
         acc223param.p_hcd_lowhyb_injected_total_mw,
     )
+    monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_lowhyb_injected_total_mw",
+        acc223param.p_hcd_lowhyb_injected_total_mw,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "i_hcd_primary", acc223param.i_hcd_primary
     )
 
     monkeypatch.setattr(
+        current_drive_variables,
+        "p_hcd_ecrh_injected_total_mw",
+        acc223param.p_hcd_ecrh_injected_total_mw,
         current_drive_variables,
         "p_hcd_ecrh_injected_total_mw",
         acc223param.p_hcd_ecrh_injected_total_mw,
@@ -5152,6 +5169,7 @@ class Acc26Param(NamedTuple):
     pthermmw: Any = None
 
     p_hcd_electric_total_mw: Any = None
+    p_hcd_electric_total_mw: Any = None
 
     pgrossmw: Any = None
 
@@ -5173,6 +5191,7 @@ class Acc26Param(NamedTuple):
             lsa=2,
             pthermmw=2620.2218111502593,
             p_hcd_electric_total_mw=129.94611930107126,
+            p_hcd_electric_total_mw=129.94611930107126,
             pgrossmw=982.58317918134742,
             p_fusion_total_mw=1985.785106643267,
             tfcmw=0,
@@ -5184,6 +5203,7 @@ class Acc26Param(NamedTuple):
             uchrs=87900000,
             lsa=2,
             pthermmw=2619.4223856129224,
+            p_hcd_electric_total_mw=129.94611930107126,
             p_hcd_electric_total_mw=129.94611930107126,
             pgrossmw=982.28339460484608,
             p_fusion_total_mw=1985.1653095257811,
@@ -5214,6 +5234,11 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc26param.pthermmw)
 
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electric_total_mw",
+        acc26param.p_hcd_electric_total_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "p_hcd_electric_total_mw",
