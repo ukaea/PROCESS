@@ -702,7 +702,7 @@ $$
 j_{\text{add}}(\rho) \propto \left(1-\rho^{b_{\text{j}}}\right)^{a_{\text{j}}}
 $$
 
-The paramters for the ACCOME database are as follows, with the scan range in the table below:
+The parameters for the ACCOME database are as follows, with the scan range in the table below:
 
 - $R$ = 6 m
 - $\kappa \sim 1.8$ 
