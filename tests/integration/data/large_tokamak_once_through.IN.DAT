@@ -58,7 +58,7 @@ ixc = 29 * dr_bore
 boundl(29) = 0.1
 ixc = 37 * j_cs_flat_top_end
 ixc = 41 * f_j_cs_start_pulse_end_flat_top
-ixc = 44 * fvsbrnni
+ixc = 44 * f_c_plasma_non_inductive
 ixc = 56 * tdmptf
 ixc = 57 * dr_tf_nose_case
 ixc = 58 * thwcndut
@@ -321,7 +321,7 @@ dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`i_plasma_geometry=2; 3`)
-fvsbrnni = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
+f_c_plasma_non_inductive = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 ejima_coeff    = 0.3 * Ejima coefficient for resistive startup V-s formula
 hfact    = 1.185971818905028 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
 i_bootstrap_current = 4 * switch for bootstrap current scaling

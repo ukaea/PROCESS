@@ -544,14 +544,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1061E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      6.0930E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      3.9070E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      6.0930E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      3.9070E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9996E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8403E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9617E+02    
@@ -1154,7 +1154,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1424E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0069E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.8762E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -1707,14 +1707,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1146E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9548E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0452E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9548E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0452E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0647E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8362E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0338E+02    
@@ -2317,7 +2317,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1614E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0684E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.8935E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -2870,14 +2870,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1238E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      1.5526E-03    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.8606E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.1394E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5559E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      1.5526E-03    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.8606E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.1394E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5559E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5112E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5112E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1163E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8300E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0929E+02    
@@ -3480,7 +3480,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1722E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0930E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5112E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5112E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9047E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -4033,14 +4033,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1715E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.8847E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.1153E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.8847E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.1153E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1107E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8204E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0982E+02    
@@ -4643,7 +4643,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1752E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1139E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9072E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -5196,14 +5196,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1531E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9218E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0782E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9218E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0782E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0691E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8323E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
@@ -5806,7 +5806,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1784E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1204E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9089E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -6359,14 +6359,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1452E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9136E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0864E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9136E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0864E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9993E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8374E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9690E+02    
@@ -6969,7 +6969,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1716E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0955E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9016E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -7522,14 +7522,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1915E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9320E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0680E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9320E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0680E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9926E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8284E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9732E+02    
@@ -8132,7 +8132,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1758E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1093E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9051E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -8685,14 +8685,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2074E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9395E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0605E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9395E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0605E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0503E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8182E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0426E+02    
@@ -9295,7 +9295,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1789E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1211E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9091E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -9848,14 +9848,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2337E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9780E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0220E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9780E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0220E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1023E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8018E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1131E+02    
@@ -10458,7 +10458,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1711E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1001E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9028E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -11011,14 +11011,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2713E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9910E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0090E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9910E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0090E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1014E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.7989E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1157E+02    
@@ -11621,7 +11621,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1847E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1424E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9149E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -12174,14 +12174,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2391E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9399E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0601E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9399E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0601E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0509E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8184E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0431E+02    
@@ -12784,7 +12784,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1971E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1769E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9262E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -13337,14 +13337,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2221E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9353E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0647E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9353E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0647E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9941E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8291E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9741E+02    
@@ -13947,7 +13947,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1962E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.1711E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9243E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -14500,14 +14500,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2611E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9505E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0495E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9505E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0495E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.9920E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8251E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9768E+02    
@@ -15110,7 +15110,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2076E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2066E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9345E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -15663,14 +15663,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2685E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9754E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0246E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9754E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0246E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.0529E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8208E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
@@ -16273,7 +16273,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2189E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2438E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9458E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -16826,14 +16826,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.2763E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      0.0000E+00    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.9990E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.0010E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5000E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      0.0000E+00    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.9990E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.0010E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5000E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5000E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5000E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      6.1139E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8166E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1092E+02    
@@ -17436,7 +17436,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.2309E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.2830E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5000E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.9577E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -17712,9 +17712,9 @@ ixc = 29
 boundl(29) = 0.1
 dr_bore = 2.0
 
-* fvsbrnni
+* f_c_plasma_non_inductive
 ixc = 44
-fvsbrnni = 0.4
+f_c_plasma_non_inductive = 0.4
 
 * tdmptf [s]
 ixc = 56

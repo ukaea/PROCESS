@@ -6,7 +6,6 @@ from process import (
 from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import (
     constants,
-    cost_variables,
     current_drive_variables,
     heat_transport_variables,
     physics_variables,
@@ -17,1323 +16,10 @@ from process.fortran import (
 from process.plasma_profiles import PlasmaProfile
 
 
-class CurrentDrive:
+class NeutralBeam:
     def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.nout
         self.plasma_profile = plasma_profile
-
-    def cudriv(self, output: bool):
-        """Routine to calculate the current drive power requirements
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
-        This routine calculates the power requirements of the current
-        drive system, using a choice of models for the current drive
-        efficiency.
-        """
-
-        current_drive_variables.p_ecrh_injected_mw = 0.0e0
-        current_drive_variables.pnbeam = 0.0e0
-        current_drive_variables.plhybd = 0.0e0
-        current_drive_variables.c_beam_total = 0.0e0
-        beam_current_fix = 0.0e0
-        current_drive_variables.p_beam_orbit_loss_mw = 0.0e0
-        porbitlossmwfix = 0.0e0
-
-        pinjmw1 = 0.0
-        pinjmwfix = 0.0
-        pinjimw1 = 0.0
-        pinjemw1 = 0.0
-        pinjemwfix = 0.0
-        pinjimwfix = 0.0
-        auxiliary_cdfix = 0.0
-        aux_current_fraction_fix = 0.0
-        gamcdfix = 0.0e0
-
-        # To stop issues with input file we force
-        # zero secondary heating if no injection method
-        if current_drive_variables.i_hcd_secondary == 0:
-            current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
-
-        # check for unphysically large heating in
-        # secondary injected power source
-        if (
-            current_drive_variables.p_hcd_secondary_extra_heat_mw
-            > current_drive_variables.p_hcd_secondary_injected_mw
-        ):
-            current_drive_variables.p_hcd_secondary_extra_heat_mw = (
-                current_drive_variables.p_hcd_secondary_injected_mw
-            )
-
-        # current_drive_variables.i_hcd_calculations |  switch for current drive calculation
-        # = 0   |  turned off
-        # = 1   |  turned on
-        if current_drive_variables.i_hcd_calculations != 0:
-            # put electron density in desired units (10^-20 m-3)
-            dene20 = physics_variables.dene * 1.0e-20
-
-            # If present we must calculate second current drive
-            # efficiencies in units of Amps/Watt using the fixed
-            # values from user input
-            # current_drive_variables.i_hcd_secondary |  switch for fixed current drive efficiency model
-
-            # Fenstermacher Lower Hybrid model
-            if current_drive_variables.i_hcd_secondary == 1:
-                effrfssfix = (
-                    (0.36e0 * (1.0e0 + (physics_variables.te / 25.0e0) ** 1.16e0))
-                    / (physics_variables.rmajor * dene20)
-                    * current_drive_variables.feffcd
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            # Ion-Cyclotron current drive
-            elif current_drive_variables.i_hcd_secondary == 2:
-                effrfssfix = (
-                    0.63e0
-                    * 0.1e0
-                    * physics_variables.ten
-                    / (2.0e0 + physics_variables.zeff)
-                    / (physics_variables.rmajor * dene20)
-                    * current_drive_variables.feffcd
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            # Fenstermacher Electron Cyclotron Resonance model
-            elif current_drive_variables.i_hcd_secondary == 3:
-                effrfssfix = (
-                    0.21e0
-                    * physics_variables.ten
-                    / (physics_variables.rmajor * dene20 * physics_variables.dlamee)
-                    * current_drive_variables.feffcd
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            # Ehst Lower Hybrid / Fast Wave current drive
-            elif current_drive_variables.i_hcd_secondary == 4:
-                effrfssfix = (
-                    physics_variables.te**0.77e0
-                    * (0.034e0 + 0.196e0 * physics_variables.beta)
-                    / (physics_variables.rmajor * dene20)
-                    * (
-                        32.0e0 / (5.0e0 + physics_variables.zeff)
-                        + 2.0e0
-                        + (12.0e0 * (6.0e0 + physics_variables.zeff))
-                        / (5.0e0 + physics_variables.zeff)
-                        / (3.0e0 + physics_variables.zeff)
-                        + 3.76e0 / physics_variables.zeff
-                    )
-                    / 12.507e0
-                    * current_drive_variables.feffcd
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            elif current_drive_variables.i_hcd_secondary == 5:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.iternb()
-                effnbssfix = effnbss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effnbssfix
-            # Culham Lower Hybrid current drive model
-            elif current_drive_variables.i_hcd_secondary == 6:
-                effrfss = self.cullhy()
-                effrfssfix = effrfss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effrfssfix
-            # Culham ECCD model
-            elif current_drive_variables.i_hcd_secondary == 7:
-                effrfss = self.culecd()
-                effrfssfix = effrfss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effrfssfix
-            # Culham Neutral Beam model
-            elif current_drive_variables.i_hcd_secondary == 8:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.culnbi()
-                effnbssfix = effnbss * current_drive_variables.feffcd
-                eta_cd_hcd_secondary = effnbssfix
-            # ECRH user input gamma
-            elif current_drive_variables.i_hcd_secondary == 10:
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_secondary = (
-                    current_drive_variables.eta_cd_norm_ecrh
-                )
-
-                # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
-                    dene20 * physics_variables.rmajor
-                )
-                eta_cd_hcd_secondary = effrfssfix
-            # EBW scaling
-            elif current_drive_variables.i_hcd_secondary == 12:
-                # Scaling author Simon Freethy
-                # Ref : PROCESS issue 1262
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_secondary = (
-                    current_drive_variables.xi_ebw / 32.7e0
-                ) * physics_variables.te
-
-                # Absolute current drive efficiency
-                effrfssfix = current_drive_variables.eta_cd_norm_hcd_secondary / (
-                    dene20 * physics_variables.rmajor
-                )
-                eta_cd_hcd_secondary = effrfssfix
-
-                # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
-                # constant 'a' controls sharpness of transition
-                a = 0.1e0
-
-                fc = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * current_drive_variables.n_ecrh_harmonic
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * np.sqrt(
-                        physics_variables.dene
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                density_factor = 0.5e0 * (
-                    1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
-                )
-
-                eta_cd_hcd_secondary = eta_cd_hcd_secondary * density_factor
-                effrfssfix = effrfssfix * density_factor
-            elif current_drive_variables.i_hcd_secondary == 13:
-                # ECCD model for O-mode cut-off with added Te and Zeff dependance
-                # Scaling author: Simon Freethy
-                # Ref : PROCESS issue #2994
-
-                fc = (
-                    1
-                    / (2 * np.pi)
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1
-                    / (2 * np.pi)
-                    * np.sqrt(
-                        (physics_variables.dene / 1.0e19)
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
-                xi_CD = xi_CD * (
-                    4.8e0 / (2 + physics_variables.zeff)
-                )  # Zeff correction
-                effrfssfix = (
-                    xi_CD
-                    * physics_variables.te
-                    / (
-                        3.27e0
-                        * physics_variables.rmajor
-                        * (physics_variables.dene / 1.0e19)
-                    )
-                )
-
-                # O-mode case
-                if current_drive_variables.i_ecrh_wave_mode == 0:
-                    f_cutoff = fp
-
-                # X-mode case
-                elif current_drive_variables.i_ecrh_wave_mode == 1:
-                    f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
-                        )
-                    )
-
-                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
-                a = 0.1  # This controls how sharply the transition is reached
-                cutoff_factor = 0.5 * (
-                    1
-                    + np.tanh(
-                        (2 / (a))
-                        * (
-                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
-                            / fp
-                            - a
-                        )
-                    )
-                )
-                eta_cd_hcd_secondary = effrfssfix * cutoff_factor
-            elif current_drive_variables.i_hcd_secondary != 0:
-                raise ProcessValueError(
-                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
-                )
-
-            if current_drive_variables.i_hcd_secondary in [1, 2, 4, 6]:
-                # Injected power
-                pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
-
-                # Wall plug power
-                heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.p_hcd_secondary_injected_mw
-                    / current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
-
-                # Wall plug to injector efficiency
-                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
-                    current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
-
-                # Normalised current drive efficiency gamma
-                gamcdfix = effrfssfix * (dene20 * physics_variables.rmajor)
-
-                # the fixed auxiliary current
-                auxiliary_cdfix = (
-                    effrfssfix
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
-                )
-                aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
-                )
-            elif current_drive_variables.i_hcd_secondary in [3, 7, 10, 12, 13]:
-                # Injected power
-                pinjemwfix = current_drive_variables.p_hcd_secondary_injected_mw
-
-                # Wall plug power
-                heat_transport_variables.pinjwpfix = (
-                    current_drive_variables.p_hcd_secondary_injected_mw
-                    / current_drive_variables.eta_ecrh_injector_wall_plug
-                )
-
-                # Wall plug to injector efficiency
-                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
-                    current_drive_variables.eta_ecrh_injector_wall_plug
-                )
-
-                # the fixed auxiliary current
-                auxiliary_cdfix = (
-                    effrfssfix
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
-                )
-                aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
-                )
-            elif current_drive_variables.i_hcd_secondary in [5, 8]:
-                # Account for first orbit losses
-                # (power due to particles that are ionised but not thermalised) [MW]:
-                # This includes a second order term in shinethrough*(first orbit loss)
-                current_drive_variables.f_p_beam_orbit_loss = min(
-                    0.999, current_drive_variables.f_p_beam_orbit_loss
-                )  # Should never be needed
-
-                pnbitotfix = current_drive_variables.p_hcd_secondary_injected_mw / (
-                    1.0e0
-                    - current_drive_variables.f_p_beam_orbit_loss
-                    + current_drive_variables.f_p_beam_orbit_loss
-                    * current_drive_variables.f_p_beam_shine_through
-                )
-
-                # Shinethrough power (atoms that are not ionised) [MW]:
-                nbshinemwfix = (
-                    pnbitotfix * current_drive_variables.f_p_beam_shine_through
-                )
-
-                # First orbit loss
-                porbitlossmwfix = current_drive_variables.f_p_beam_orbit_loss * (
-                    pnbitotfix - nbshinemwfix
-                )
-
-                # Power deposited
-                pinjmwfix = pnbitotfix - nbshinemwfix - porbitlossmwfix
-                pinjimwfix = pinjmwfix * current_drive_variables.f_p_beam_injected_ions
-                pinjemwfix = pinjmwfix * (
-                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
-                )
-
-                current_drive_variables.pwpnb = (
-                    pnbitotfix / current_drive_variables.eta_beam_injector_wall_plug
-                )  # neutral beam wall plug power
-                heat_transport_variables.pinjwpfix = current_drive_variables.pwpnb
-                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
-                    current_drive_variables.eta_beam_injector_wall_plug
-                )
-                gamnb = effnbssfix * (dene20 * physics_variables.rmajor)
-                gamcdfix = gamnb
-                beam_current_fix = (
-                    1.0e-3 * (pnbitotfix * 1.0e6) / current_drive_variables.e_beam_kev
-                )  # Neutral beam current (A)
-                auxiliary_cdfix = (
-                    effnbssfix
-                    * (
-                        current_drive_variables.p_hcd_secondary_injected_mw
-                        - current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    )
-                    * 1.0e6
-                )
-                aux_current_fraction_fix = (
-                    auxiliary_cdfix / physics_variables.plasma_current
-                )
-
-            # Fenstermacher Lower Hybrid model
-            if current_drive_variables.i_hcd_primary == 1:
-                effrfss = (
-                    (0.36e0 * (1.0e0 + (physics_variables.te / 25.0e0) ** 1.16e0))
-                    / (physics_variables.rmajor * dene20)
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Ion-Cyclotron current drive
-            elif current_drive_variables.i_hcd_primary == 2:
-                effrfss = (
-                    0.63e0
-                    * 0.1e0
-                    * physics_variables.ten
-                    / (2.0e0 + physics_variables.zeff)
-                    / (physics_variables.rmajor * dene20)
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Fenstermacher Electron Cyclotron Resonance model
-            elif current_drive_variables.i_hcd_primary == 3:
-                effrfss = (
-                    0.21e0
-                    * physics_variables.ten
-                    / (physics_variables.rmajor * dene20 * physics_variables.dlamee)
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Ehst Lower Hybrid / Fast Wave current drive
-            elif current_drive_variables.i_hcd_primary == 4:
-                effrfss = (
-                    physics_variables.te**0.77e0
-                    * (0.034e0 + 0.196e0 * physics_variables.beta)
-                    / (physics_variables.rmajor * dene20)
-                    * (
-                        32.0e0 / (5.0e0 + physics_variables.zeff)
-                        + 2.0e0
-                        + (12.0e0 * (6.0e0 + physics_variables.zeff))
-                        / (5.0e0 + physics_variables.zeff)
-                        / (3.0e0 + physics_variables.zeff)
-                        + 3.76e0 / physics_variables.zeff
-                    )
-                    / 12.507e0
-                    * current_drive_variables.feffcd
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # ITER Neutral Beam current drive
-            elif current_drive_variables.i_hcd_primary == 5:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.iternb()
-                effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effnbss
-            # Culham Lower Hybrid current drive model
-            elif current_drive_variables.i_hcd_primary == 6:
-                effrfss = self.cullhy()
-                effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Culham ECCD model
-            elif current_drive_variables.i_hcd_primary == 7:
-                effrfss = self.culecd()
-                effrfss = effrfss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # Culham Neutral Beam model
-            elif current_drive_variables.i_hcd_primary == 8:
-                (
-                    effnbss,
-                    current_drive_variables.f_p_beam_injected_ions,
-                    current_drive_variables.f_p_beam_shine_through,
-                ) = self.culnbi()
-                effnbss = effnbss * current_drive_variables.feffcd
-                current_drive_variables.eta_cd_hcd_primary = effnbss
-            # ECRH user input gamma
-            elif current_drive_variables.i_hcd_primary == 10:
-                current_drive_variables.eta_cd_norm_hcd_primary = (
-                    current_drive_variables.eta_cd_norm_ecrh
-                )
-
-                # Absolute current drive efficiency
-                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
-                    dene20 * physics_variables.rmajor
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-            # EBW scaling
-            elif current_drive_variables.i_hcd_primary == 12:
-                # Scaling author Simon Freethy
-                # Ref : PROCESS issue 1262
-
-                # Normalised current drive efficiency gamma
-                current_drive_variables.eta_cd_norm_hcd_primary = (
-                    current_drive_variables.xi_ebw / 32.7e0
-                ) * physics_variables.te
-
-                # Absolute current drive efficiency
-                effrfss = current_drive_variables.eta_cd_norm_hcd_primary / (
-                    dene20 * physics_variables.rmajor
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss
-                # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
-                # this behaviour is captured in the following function (ref issue #1262):
-                # current_drive_variables.n_ecrh_harmonic = cyclotron harmonic number (fundamental used as default)
-                # contant 'a' controls sharpness of transition
-                a = 0.1e0
-
-                fc = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * current_drive_variables.n_ecrh_harmonic
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1.0e0
-                    / (2.0e0 * np.pi)
-                    * np.sqrt(
-                        physics_variables.dene
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                density_factor = 0.5e0 * (
-                    1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a))
-                )
-
-                current_drive_variables.eta_cd_hcd_primary = (
-                    current_drive_variables.eta_cd_hcd_primary * density_factor
-                )
-                effrfss = effrfss * density_factor
-
-            elif current_drive_variables.i_hcd_primary == 13:
-                # ECCD model for O-mode cut-off with added Te and Zeff dependance
-                # Scaling author: Simon Freethy
-                # Ref : PROCESS issue #2994
-
-                fc = (
-                    1
-                    / (2 * np.pi)
-                    * constants.electron_charge
-                    * physics_variables.bt
-                    / constants.electron_mass
-                )
-                fp = (
-                    1
-                    / (2 * np.pi)
-                    * np.sqrt(
-                        (physics_variables.dene / 1.0e19)
-                        * constants.electron_charge**2
-                        / (constants.electron_mass * constants.epsilon0)
-                    )
-                )
-
-                xi_CD = 0.18e0  # This is tuned to the results of a GRAY study
-                xi_CD = xi_CD * (
-                    4.8e0 / (2 + physics_variables.zeff)
-                )  # Zeff correction
-                effrfss = (
-                    xi_CD
-                    * physics_variables.te
-                    / (
-                        3.27e0
-                        * physics_variables.rmajor
-                        * (physics_variables.dene / 1.0e19)
-                    )
-                )
-
-                # O-mode case
-                if current_drive_variables.i_ecrh_wave_mode == 0:
-                    f_cutoff = fp
-
-                # X-mode case
-                elif current_drive_variables.i_ecrh_wave_mode == 1:
-                    f_cutoff = 0.5 * (
-                        fc
-                        + np.sqrt(
-                            current_drive_variables.n_ecrh_harmonic * fc**2 + 4 * fp**2
-                        )
-                    )
-
-                # Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic
-                a = 0.1  # This controls how sharply the transition is reached
-                cutoff_factor = 0.5 * (
-                    1
-                    + np.tanh(
-                        (2 / (a))
-                        * (
-                            (current_drive_variables.n_ecrh_harmonic * fc - f_cutoff)
-                            / fp
-                            - a
-                        )
-                    )
-                )
-                current_drive_variables.eta_cd_hcd_primary = effrfss * cutoff_factor
-            else:
-                raise ProcessValueError(
-                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
-                )
-
-            # Compute current drive wall plug and injected powers (MW) and efficiencies
-            auxiliary_cd = (
-                physics_variables.aux_current_fraction
-                * physics_variables.plasma_current
-            )
-
-            # LHCD or ICCD
-            if current_drive_variables.i_hcd_primary in [1, 2, 4, 6]:
-                # Injected power
-                current_drive_variables.plhybd = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
-                    )
-                    * physics_variables.plasma_current
-                    / effrfss
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-                pinjimw1 = 0.0e0
-                pinjemw1 = current_drive_variables.plhybd
-
-                # Wall plug power
-                current_drive_variables.pwplh = (
-                    current_drive_variables.plhybd
-                    / current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
-                pinjwp1 = current_drive_variables.pwplh
-
-                # Wall plug to injector efficiency
-                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                    current_drive_variables.eta_lowhyb_injector_wall_plug
-                )
-
-                # Normalised current drive efficiency gamma
-                gamrf = effrfss * (dene20 * physics_variables.rmajor)
-                current_drive_variables.eta_cd_norm_hcd_primary = gamrf
-            # ECCD
-            elif current_drive_variables.i_hcd_primary in [3, 7, 10, 12, 13]:
-                # Injected power (set to close to close the Steady-state current equilibrium)
-                current_drive_variables.p_ecrh_injected_mw = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
-                    )
-                    * physics_variables.plasma_current
-                    / effrfss
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-                pinjemw1 = current_drive_variables.p_ecrh_injected_mw
-
-                # Wall plug power
-                current_drive_variables.echwpow = (
-                    current_drive_variables.p_ecrh_injected_mw
-                    / current_drive_variables.eta_ecrh_injector_wall_plug
-                )
-
-                # Wall plug to injector efficiency
-                pinjwp1 = current_drive_variables.echwpow
-                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                    current_drive_variables.eta_ecrh_injector_wall_plug
-                )
-            elif current_drive_variables.i_hcd_primary in [5, 8]:
-                # MDK. See Gitlab issue #248, and scanned note.
-                power1 = (
-                    1.0e-6
-                    * (
-                        physics_variables.aux_current_fraction
-                        - aux_current_fraction_fix
-                    )
-                    * physics_variables.plasma_current
-                    / effnbss
-                    + current_drive_variables.p_hcd_primary_extra_heat_mw
-                )
-
-                # Account for first orbit losses
-                # (power due to particles that are ionised but not thermalised) [MW]:
-                # This includes a second order term in shinethrough*(first orbit loss)
-                current_drive_variables.f_p_beam_orbit_loss = min(
-                    0.999, current_drive_variables.f_p_beam_orbit_loss
-                )  # Should never be needed
-
-                current_drive_variables.p_beam_injected_mw = power1 / (
-                    1.0e0
-                    - current_drive_variables.f_p_beam_orbit_loss
-                    + current_drive_variables.f_p_beam_orbit_loss
-                    * current_drive_variables.f_p_beam_shine_through
-                )
-
-                # Shinethrough power (atoms that are not ionised) [MW]:
-                current_drive_variables.p_beam_shine_through_mw = (
-                    current_drive_variables.p_beam_injected_mw
-                    * current_drive_variables.f_p_beam_shine_through
-                )
-
-                # First orbit loss
-                current_drive_variables.p_beam_orbit_loss_mw = (
-                    current_drive_variables.f_p_beam_orbit_loss
-                    * (
-                        current_drive_variables.p_beam_injected_mw
-                        - current_drive_variables.p_beam_shine_through_mw
-                    )
-                )
-
-                # Power deposited
-                pinjmw1 = (
-                    current_drive_variables.p_beam_injected_mw
-                    - current_drive_variables.p_beam_shine_through_mw
-                    - current_drive_variables.p_beam_orbit_loss_mw
-                )
-                pinjimw1 = pinjmw1 * current_drive_variables.f_p_beam_injected_ions
-                pinjemw1 = pinjmw1 * (
-                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
-                )
-
-                current_drive_variables.pwpnb = (
-                    current_drive_variables.p_beam_injected_mw
-                    / current_drive_variables.eta_beam_injector_wall_plug
-                )  # neutral beam wall plug power
-                pinjwp1 = current_drive_variables.pwpnb
-                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                    current_drive_variables.eta_beam_injector_wall_plug
-                )
-                gamnb = effnbss * (dene20 * physics_variables.rmajor)
-                current_drive_variables.eta_cd_norm_hcd_primary = gamnb
-                current_drive_variables.c_beam_total = (
-                    1.0e-3
-                    * (current_drive_variables.p_beam_injected_mw * 1.0e6)
-                    / current_drive_variables.e_beam_kev
-                )  # Neutral beam current (A)
-
-            # Total injected power
-            # sum contributions from primary and secondary systems
-            current_drive_variables.p_hcd_injected_total_mw = (
-                pinjemw1 + pinjimw1 + pinjemwfix + pinjimwfix
-            )
-            pinjmw1 = pinjemw1 + pinjimw1
-            pinjmwfix = pinjemwfix + pinjimwfix
-            current_drive_variables.p_hcd_injected_electrons_mw = pinjemw1 + pinjemwfix
-            current_drive_variables.p_hcd_injected_ions_mw = pinjimw1 + pinjimwfix
-            heat_transport_variables.pinjwp = (
-                pinjwp1 + heat_transport_variables.pinjwpfix
-            )
-
-            # Reset injected power to zero for ignited plasma (fudge)
-            if physics_variables.ignite == 1:
-                heat_transport_variables.pinjwp = 0.0e0
-
-            # Ratio of fusion to input (injection+ohmic) power
-            if (
-                abs(
-                    current_drive_variables.p_hcd_injected_total_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_plasma_ohmic_mw
-                )
-                < 1.0e-6
-            ):
-                current_drive_variables.bigq = 1.0e18
-            else:
-                current_drive_variables.bigq = physics_variables.fusion_power / (
-                    current_drive_variables.p_hcd_injected_total_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_plasma_ohmic_mw
-                )
-
-        if not output:
-            return
-
-        po.oheadr(self.outfile, "Current Drive System")
-
-        if current_drive_variables.i_hcd_calculations == 0:
-            po.ocmmnt(self.outfile, "No current drive used")
-            po.oblnkl(self.outfile)
-            return
-
-        if current_drive_variables.i_hcd_primary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_primary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_primary == 10:
-            po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
-            )
-        elif current_drive_variables.i_hcd_primary == 12:
-            po.ocmmnt(self.outfile, "EBW current drive")
-        elif current_drive_variables.i_hcd_primary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
-            )
-
-        po.ovarin(
-            self.outfile,
-            "Current drive efficiency model",
-            "(i_hcd_primary)",
-            current_drive_variables.i_hcd_primary,
-        )
-
-        if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 10:
-            po.ocmmnt(
-                self.outfile, "Electron Cyclotron Current Drive (user input gamma_CD)"
-            )
-        elif current_drive_variables.i_hcd_secondary == 12:
-            po.ocmmnt(self.outfile, "EBW current drive")
-        elif current_drive_variables.i_hcd_secondary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (O-mode cutoff with Zeff & Te)",
-            )
-
-        po.ovarin(
-            self.outfile,
-            "Secondary current drive efficiency model",
-            "(i_hcd_secondary)",
-            current_drive_variables.i_hcd_secondary,
-        )
-
-        if physics_variables.ignite == 1:
-            po.ocmmnt(
-                self.outfile,
-                "Ignited plasma; injected power only used for start-up phase",
-            )
-
-        po.oblnkl(self.outfile)
-
-        if abs(physics_variables.inductive_current_fraction) > 1.0e-8:
-            po.ocmmnt(self.outfile, "Current is driven by both inductive")
-            po.ocmmnt(self.outfile, "and non-inductive means.")
-
-        po.ovarre(
-            self.outfile,
-            "Ratio of power for flat-top to start-up (MW)",
-            "(startupratio)",
-            cost_variables.startupratio,
-        )
-        po.ovarre(
-            self.outfile,
-            "Auxiliary power used for plasma heating only (MW)",
-            "(p_hcd_primary_extra_heat_mw)",
-            current_drive_variables.p_hcd_primary_extra_heat_mw
-            + current_drive_variables.p_hcd_secondary_extra_heat_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Power injected for current drive (MW)",
-            "(pcurrentdrivemw)",
-            current_drive_variables.p_hcd_injected_total_mw
-            - current_drive_variables.p_hcd_primary_extra_heat_mw
-            - current_drive_variables.p_hcd_secondary_extra_heat_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Maximum Allowed Bootstrap current fraction",
-            "(f_c_plasma_bootstrap_max)",
-            current_drive_variables.f_c_plasma_bootstrap_max,
-        )
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Power injected for main current drive (MW)",
-                "(pcurrentdrivemw1)",
-                pinjmw1 - current_drive_variables.p_hcd_primary_extra_heat_mw,
-            )
-            po.ovarre(
-                self.outfile,
-                "Power injected for secondary current drive (MW)",
-                "(pcurrentdrivemw2)",
-                pinjmwfix - current_drive_variables.p_hcd_secondary_extra_heat_mw,
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Fusion gain factor Q",
-            "(bigq)",
-            current_drive_variables.bigq,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Auxiliary current drive (A)",
-            "(auxiliary_cd)",
-            auxiliary_cd,
-            "OP ",
-        )
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Secondary auxiliary current drive (A)",
-                "(auxiliary_cdfix)",
-                auxiliary_cdfix,
-                "OP ",
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Current drive efficiency (A/W)",
-            "(eta_cd_hcd_primary)",
-            current_drive_variables.eta_cd_hcd_primary,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Normalised current drive efficiency of primary HCD system (10^20 A / W m^2)",
-            "(eta_cd_norm_hcd_primary)",
-            current_drive_variables.eta_cd_norm_hcd_primary,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Wall plug to injector efficiency",
-            "(eta_hcd_primary_injector_wall_plug)",
-            current_drive_variables.eta_hcd_primary_injector_wall_plug,
-        )
-
-        if current_drive_variables.i_hcd_primary == 10:
-            po.ovarre(
-                self.outfile,
-                "ECRH plasma heating efficiency",
-                "(eta_cd_norm_ecrh)",
-                current_drive_variables.eta_cd_norm_ecrh,
-            )
-        if current_drive_variables.i_hcd_primary == 12:
-            po.ovarre(
-                self.outfile,
-                "EBW plasma heating efficiency",
-                "(xi_ebw)",
-                current_drive_variables.xi_ebw,
-            )
-        if current_drive_variables.i_hcd_primary in [12, 13]:
-            po.ovarre(
-                self.outfile,
-                "EC harmonic number",
-                "(n_ecrh_harmonic)",
-                current_drive_variables.n_ecrh_harmonic,
-            )
-        if current_drive_variables.i_hcd_primary == 13:
-            po.ovarin(
-                self.outfile,
-                "EC cutoff wave mode switch",
-                "(i_ecrh_wave_mode)",
-                current_drive_variables.i_ecrh_wave_mode,
-            )
-
-        if current_drive_variables.i_hcd_secondary != 0:
-            po.ovarre(
-                self.outfile,
-                "Secondary current drive efficiency (A/W)",
-                "(eta_cd_hcd_secondary)",
-                eta_cd_hcd_secondary,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Seconday wall plug to injector efficiency",
-                "(eta_hcd_secondary_injector_wall_plug)",
-                current_drive_variables.eta_hcd_secondary_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Normalised secondary current drive efficiency, gamma (10^20 A/W-m2)",
-                "(gamcdfix)",
-                gamcdfix,
-                "OP ",
-            )
-
-        po.osubhd(self.outfile, "Fractions of current drive :")
-        po.ovarrf(
-            self.outfile,
-            "Bootstrap fraction",
-            "(f_c_plasma_bootstrap)",
-            current_drive_variables.f_c_plasma_bootstrap,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Diamagnetic fraction",
-            "(f_c_plasma_diamagnetic)",
-            current_drive_variables.f_c_plasma_diamagnetic,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Pfirsch-Schlueter fraction",
-            "(f_c_plasma_pfirsch_schluter)",
-            current_drive_variables.f_c_plasma_pfirsch_schluter,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Auxiliary current drive fraction",
-            "(aux_current_fraction)",
-            physics_variables.aux_current_fraction,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Inductive fraction",
-            "(inductive_current_fraction)",
-            physics_variables.inductive_current_fraction,
-            "OP ",
-        )
-        # Add total error check.
-        po.ovarrf(
-            self.outfile,
-            "Total",
-            "(f_c_plasma_internal+aux_current_fraction+inductive_current_fraction)",
-            current_drive_variables.f_c_plasma_internal
-            + physics_variables.aux_current_fraction
-            + physics_variables.inductive_current_fraction,
-        )
-        if (
-            abs(
-                current_drive_variables.f_c_plasma_internal
-                + physics_variables.aux_current_fraction
-                + physics_variables.inductive_current_fraction
-                - 1.0e0
-            )
-            > 1.0e-8
-        ):
-            po.ocmmnt(self.outfile, "ERROR: current drive fractions do not add to 1")
-
-        # MDK Add physics_variables.fvsbrnni as it can be an iteration variable
-        po.ovarrf(
-            self.outfile,
-            "Fraction of the plasma current produced by non-inductive means",
-            "(fvsbrnni)",
-            physics_variables.fvsbrnni,
-        )
-
-        if (
-            abs(
-                current_drive_variables.f_c_plasma_bootstrap
-                - current_drive_variables.f_c_plasma_bootstrap_max
-            )
-            < 1.0e-8
-        ):
-            po.ocmmnt(self.outfile, "Warning : bootstrap current fraction is at")
-            po.ocmmnt(self.outfile, "          its prescribed maximum.")
-
-        po.oblnkl(self.outfile)
-
-        if abs(current_drive_variables.plhybd) > 1.0e-8:
-            po.ovarre(self.outfile, "RF efficiency (A/W)", "(effrfss)", effrfss, "OP ")
-            po.ovarre(self.outfile, "RF gamma (10^20 A/W-m2)", "(gamrf)", gamrf, "OP ")
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid injected power (MW)",
-                "(plhybd)",
-                current_drive_variables.plhybd,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid wall plug efficiency",
-                "(eta_lowhyb_injector_wall_plug)",
-                current_drive_variables.eta_lowhyb_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Lower hybrid wall plug power (MW)",
-                "(pwplh)",
-                current_drive_variables.pwplh,
-                "OP ",
-            )
-
-        # MDK rearranged and added current_drive_variables.p_beam_shine_through_mw
-        # if (abs(current_drive_variables.pnbeam) > 1.0e-8) :
-        if (
-            (current_drive_variables.i_hcd_primary == 5)
-            or (current_drive_variables.i_hcd_primary == 8)
-            or (current_drive_variables.i_hcd_secondary == 5)
-            or (current_drive_variables.i_hcd_secondary == 8)
-        ):
-            po.ovarre(
-                self.outfile,
-                "Neutral beam energy (keV)",
-                "(e_beam_kev)",
-                current_drive_variables.e_beam_kev,
-            )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam current (A)",
-                    "(c_beam_total)",
-                    current_drive_variables.c_beam_total,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed neutral beam current (A)",
-                    "(beam_current_fix)",
-                    beam_current_fix,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarre(
-                    self.outfile, "Beam efficiency (A/W)", "(effnbss)", effnbss, "OP "
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.ovarre(
-                    self.outfile,
-                    "Secondary fixed beam efficiency (A/W)",
-                    "(effnbssfix)",
-                    effnbssfix,
-                    "OP ",
-                )
-
-            po.ovarre(
-                self.outfile, "Beam gamma (10^20 A/W-m2)", "(gamnb)", gamnb, "OP "
-            )
-            po.ovarre(
-                self.outfile,
-                "Neutral beam wall plug efficiency",
-                "(eta_beam_injector_wall_plug)",
-                current_drive_variables.eta_beam_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam decay lengths to centre",
-                "(n_beam_decay_lengths_core)",
-                current_drive_variables.n_beam_decay_lengths_core,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam shine-through fraction",
-                "(f_p_beam_shine_through)",
-                current_drive_variables.f_p_beam_shine_through,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Neutral beam wall plug power (MW)",
-                "(pwpnb)",
-                current_drive_variables.pwpnb,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "Neutral beam power balance :")
-            po.ocmmnt(self.outfile, "----------------------------")
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
-            ):
-                po.ovarrf(
-                    self.outfile,
-                    "Beam first orbit loss power (MW)",
-                    "(p_beam_orbit_loss_mw)",
-                    current_drive_variables.p_beam_orbit_loss_mw,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Beam shine-through power [MW]",
-                    "(p_beam_shine_through_mw)",
-                    current_drive_variables.p_beam_shine_through_mw,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Beam power deposited in plasma (MW)",
-                    "(p_hcd_injected_total_mw)",
-                    pinjmw1,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Maximum allowable beam power (MW)",
-                    "(p_hcd_injected_max)",
-                    current_drive_variables.p_hcd_injected_max,
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Total (MW)",
-                    "(current_drive_variables.p_beam_orbit_loss_mw+current_drive_variables.p_beam_shine_through_mw+current_drive_variables.p_hcd_injected_total_mw)",
-                    current_drive_variables.p_beam_orbit_loss_mw
-                    + current_drive_variables.p_beam_shine_through_mw
-                    + pinjmw1,
-                )
-                po.oblnkl(self.outfile)
-                po.ovarrf(
-                    self.outfile,
-                    "Beam power entering vacuum vessel (MW)",
-                    "(p_beam_injected_mw)",
-                    current_drive_variables.p_beam_injected_mw,
-                    "OP ",
-                )
-
-            if (current_drive_variables.i_hcd_secondary == 5) or (
-                current_drive_variables.i_hcd_secondary == 8
-            ):
-                po.oblnkl(self.outfile)
-                po.ocmmnt(self.outfile, "Secondary fixed neutral beam power balance :")
-                po.ocmmnt(self.outfile, "----------------------------")
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed beam first orbit loss power (MW)",
-                    "(porbitlossmwfix)",
-                    porbitlossmwfix,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed beam shine-through power [MW]",
-                    "(nbshinemwfix)",
-                    nbshinemwfix,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed beam power deposited in plasma (MW)",
-                    "(pinjmwfix)",
-                    pinjmwfix,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Maximum allowable beam power (MW)",
-                    "(p_hcd_injected_max)",
-                    current_drive_variables.p_hcd_injected_max,
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary fixed total (MW)",
-                    "(porbitlossmwfixed+nbshinemwfix+pinjmwfix)",
-                    porbitlossmwfix + nbshinemwfix + pinjmwfix,
-                )
-                po.oblnkl(self.outfile)
-                po.ovarrf(
-                    self.outfile,
-                    "Secondary beam power entering vacuum vessel (MW)",
-                    "(pnbitotfix)",
-                    pnbitotfix,
-                    "OP ",
-                )
-
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Fraction of beam energy to ions",
-                "(f_p_beam_injected_ions)",
-                current_drive_variables.f_p_beam_injected_ions,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam duct shielding thickness (m)",
-                "(dx_beam_shield)",
-                current_drive_variables.dx_beam_shield,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam tangency radius / Plasma major radius",
-                "(frbeam)",
-                current_drive_variables.frbeam,
-            )
-            po.ovarre(
-                self.outfile,
-                "Beam centreline tangency radius (m)",
-                "(rtanbeam)",
-                current_drive_variables.rtanbeam,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Maximum possible tangency radius (m)",
-                "(rtanmax)",
-                current_drive_variables.rtanmax,
-                "OP ",
-            )
-
-        if abs(current_drive_variables.p_ecrh_injected_mw) > 1.0e-8:
-            po.ovarre(
-                self.outfile,
-                "Electron cyclotron injected power (MW)",
-                "(p_ecrh_injected_mw)",
-                current_drive_variables.p_ecrh_injected_mw,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Maximum allowable ECRH power (MW)",
-                "(p_hcd_injected_max)",
-                current_drive_variables.p_hcd_injected_max,
-            )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug efficiency",
-                "(eta_ecrh_injector_wall_plug)",
-                current_drive_variables.eta_ecrh_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug power (MW)",
-                "(echwpow)",
-                current_drive_variables.echwpow,
-                "OP ",
-            )
-
-        if abs(current_drive_variables.p_hcd_secondary_injected_mw) > 1.0e-8:
-            po.ovarrf(
-                self.outfile,
-                "Fixed ECRH power (MW)",
-                "(pinjmwfix)",
-                current_drive_variables.pinjmwfix,
-            )
-            po.ovarre(
-                self.outfile,
-                "ECH wall plug efficiency",
-                "(eta_ecrh_injector_wall_plug)",
-                current_drive_variables.eta_ecrh_injector_wall_plug,
-            )
-            po.ovarre(
-                self.outfile,
-                "Secondary fixed ECH wall plug power (MW)",
-                "(pinjwpfix)",
-                current_drive_variables.pinjwpfix,
-                "OP ",
-            )
 
     def iternb(self):
         """Routine to calculate ITER Neutral Beam current drive parameters
@@ -1412,72 +98,429 @@ class CurrentDrive:
 
         return effnbss, f_p_beam_injected_ions, fshine
 
-    def cullhy(self):
-        """Routine to calculate Lower Hybrid current drive efficiency
+    def culnbi(self):
+        """Routine to calculate Neutral Beam current drive parameters
         author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : lower hybrid current drive efficiency (A/W)
-        This routine calculates the current drive parameters for a
-        lower hybrid system, based on the AEA FUS 172 model.
+        effnbss : output real : neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
+        fshine  : output real : shine-through fraction of beam
+        This routine calculates Neutral Beam current drive parameters
+        using the corrections outlined in AEA FUS 172 to the ITER method.
+        <P>The result cannot be guaranteed for devices with aspect ratios far
+        from that of ITER (approx. 2.8).
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        rratio = self.lhrad()
-        rpenet = rratio * physics_variables.rminor
-
-        # Local density, temperature, toroidal field at this minor radius
-
-        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedn,
-            physics_variables.ne0,
-            physics_variables.neped,
-            physics_variables.nesep,
-            physics_variables.alphan,
-        )
-        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
-            rratio,
-            physics_variables.rhopedt,
-            physics_variables.te0,
-            physics_variables.teped,
-            physics_variables.tesep,
-            physics_variables.alphat,
-            physics_variables.tbeta,
-        )
-        blocal = (
-            physics_variables.bt
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rpenet)
-        )  # Calculated on inboard side
-
-        # Parallel refractive index needed for plasma access
-
-        frac = np.sqrt(dlocal) / blocal
-        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
-
-        # Local inverse aspect ratio
-
-        epslh = rpenet / physics_variables.rmajor
-
-        # LH normalised efficiency (A/W m**-2)
-
-        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
-
-        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
-        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
-        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
-        term04 = 3.5e0 * epslh**0.77e0 + x
-
-        if term03 > term04:
+        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
             raise ProcessValueError(
-                "Normalised LH efficiency < 0; use a different value of iefrf",
-                term03=term03,
-                term04=term04,
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=physics_variables.eps,
+                frbeam=current_drive_variables.frbeam,
             )
 
-        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
+        #  Calculate beam path length to centre
 
-        # Current drive efficiency (A/W)
+        dpath = physics_variables.rmajor * np.sqrt(
+            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
+        )
 
-        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
+        #  Calculate beam stopping cross-section
+
+        sigstop = self.sigbeam(
+            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
+            physics_variables.te,
+            physics_variables.dene,
+            physics_variables.f_nd_alpha_electron,
+            physics_variables.rncne,
+            physics_variables.rnone,
+            physics_variables.rnfene,
+        )
+
+        #  Calculate number of decay lengths to centre
+
+        current_drive_variables.n_beam_decay_lengths_core = (
+            dpath * physics_variables.dnla * sigstop
+        )
+
+        #  Shine-through fraction of beam
+
+        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
+        fshine = max(fshine, 1.0e-20)
+
+        #  Deuterium and tritium beam densities
+
+        dend = physics_variables.nd_fuel_ions * (
+            1.0e0 - current_drive_variables.f_beam_tritium
+        )
+        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
+
+        #  Power split to ions / electrons
+
+        f_p_beam_injected_ions = self.cfnbi(
+            physics_variables.m_beam_amu,
+            current_drive_variables.e_beam_kev,
+            physics_variables.ten,
+            physics_variables.dene,
+            dend,
+            dent,
+            physics_variables.zeffai,
+            physics_variables.dlamie,
+        )
+
+        #  Current drive efficiency
+
+        effnbss = self.etanb2(
+            physics_variables.m_beam_amu,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.aspect,
+            physics_variables.dene,
+            physics_variables.dnla,
+            current_drive_variables.e_beam_kev,
+            current_drive_variables.frbeam,
+            fshine,
+            physics_variables.rmajor,
+            physics_variables.rminor,
+            physics_variables.ten,
+            physics_variables.zeff,
+        )
+
+        return effnbss, f_p_beam_injected_ions, fshine
+
+    def etanb2(
+        self,
+        m_beam_amu,
+        alphan,
+        alphat,
+        aspect,
+        dene,
+        dnla,
+        e_beam_kev,
+        frbeam,
+        fshine,
+        rmajor,
+        rminor,
+        ten,
+        zeff,
+    ):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation, plus correction terms
+        outlined in Culham Report AEA FUS 172
+        author: P J Knight, CCFE, Culham Science Centre
+        m_beam_amu   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        dnla    : input real : line averaged electron density (m**-3)
+        e_beam_kev  : input real : neutral beam energy (keV)
+        frbeam  : input real : R_tangent / R_major for neutral beam injection
+        fshine  : input real : shine-through fraction of beam
+        rmajor  : input real : plasma major radius (m)
+        rminor  : input real : plasma minor radius (m)
+        ten     : input real : density weighted average electron temperature (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency in A/W of
+        a neutral beam system, based on the 1990 ITER model,
+        plus correction terms outlined in Culham Report AEA FUS 172.
+        <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
+        AEA FUS 172: Physics Assessment for the European Reactor Study
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+        #  Charge of beam ions
+        zbeam = 1.0
+
+        #  Fitting factor (IPDG89)
+        bbd = 1.0
+
+        #  Volume averaged electron density (10**20 m**-3)
+        dene20 = dene / 1e20
+
+        #  Line averaged electron density (10**20 m**-3)
+        dnla20 = dnla / 1e20
+
+        #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
+        #  N.B. ten is in keV
+        ecrit = 0.01 * m_beam_amu * ten
+
+        #  Beam energy in MeV
+        ebmev = e_beam_kev / 1e3
+
+        #  x and y coefficients of function J0(x,y) (IPDG89)
+        xjs = ebmev / (bbd * ecrit)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / m_beam_amu
+
+        #  Fitting function J0(x,y)
+        j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        #  Effective inverse aspect ratio, with a limit on its maximum value
+        epseff = min(0.2, (0.5 / aspect))
+
+        #  Reduction in the reverse electron current
+        #  due to neoclassical effects
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+
+        # Reduction in the net beam driven current
+        #  due to the reverse electron current
+        ffac = 1.0 - (zbeam / zeff) * (1.0 - gfac)
+
+        #  Normalisation to allow results to be valid for
+        #  non-ITER plasma size and density:
+
+        #  Line averaged electron density (10**20 m**-3) normalised to ITER
+        nnorm = 1.0
+
+        #  Distance along beam to plasma centre
+        r = max(rmajor, rmajor * frbeam)
+        eps1 = rminor / r
+
+        if (1.0 + eps1) < frbeam:
+            raise ProcessValueError(
+                "Imminent negative square root argument; NBI will miss plasma completely",
+                eps=eps1,
+                frbeam=frbeam,
+            )
+
+        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
+
+        # Distance along beam to plasma centre for ITER
+        # assuming a tangency radius equal to the major radius
+        epsitr = 2.15 / 6.0
+        dnorm = 6.0 * np.sqrt(2.0 * epsitr + epsitr**2)
+
+        #  Normalisation to beam energy (assumes a simplified formula for
+        #  the beam stopping cross-section)
+        ebnorm = ebmev * ((nnorm * dnorm) / (dnla20 * d)) ** (1.0 / 0.78)
+
+        #  A_bd fitting coefficient, after normalisation with ebnorm
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2 * ebnorm + 0.09 * ebnorm**2)
+        )
+
+        #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
+        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
+
+        #  Current drive efficiency (A/W)
+        return gamnb / (dene20 * rmajor)
+
+    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
+        """Routine to find neutral beam current drive efficiency
+        using the ITER 1990 formulation
+        author: P J Knight, CCFE, Culham Science Centre
+        m_beam_amu   : input real : beam ion mass (amu)
+        alphan  : input real : density profile factor
+        alphat  : input real : temperature profile factor
+        aspect  : input real : aspect ratio
+        dene    : input real : volume averaged electron density (m**-3)
+        ebeam  : input real : neutral beam energy (keV)
+        rmajor  : input real : plasma major radius (m)
+        ten     : input real : density weighted average electron temp. (keV)
+        zeff    : input real : plasma effective charge
+        This routine calculates the current drive efficiency of
+        a neutral beam system, based on the 1990 ITER model.
+        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+
+        zbeam = 1.0
+        bbd = 1.0
+
+        dene20 = 1e-20 * dene
+
+        # Ratio of E_beam/E_crit
+        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
+        xj = np.sqrt(xjs)
+
+        yj = 0.8 * zeff / m_beam_amu
+
+        rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
+
+        epseff = 0.5 / aspect
+        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
+        ffac = 1.0 / zbeam - (1.0 - gfac) / zeff
+
+        abd = (
+            0.107
+            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
+            * (1.0 - 0.21 * alphat)
+            * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
+        )
+
+        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
+
+    def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
+        """Calculates the stopping cross-section for a hydrogen
+        beam in a fusion plasma
+        author: P J Knight, CCFE, Culham Science Centre
+        eb     : input real : beam energy (kev/amu)
+        te     : input real : electron temperature (keV)
+        ne     : input real : electron density (10^20m-3)
+        rnhe   : input real : alpha density / ne
+        rnc    : input real : carbon density /ne
+        rno    : input real : oxygen density /ne
+        rnfe   : input real : iron density /ne
+        This function calculates the stopping cross-section (m^-2)
+        for a hydrogen beam in a fusion plasma.
+        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
+        """
+        a = np.array([
+            [
+                [4.4, -2.49e-2],
+                [7.46e-2, 2.27e-3],
+                [3.16e-3, -2.78e-5],
+            ],
+            [
+                [2.3e-1, -1.15e-2],
+                [-2.55e-3, -6.2e-4],
+                [1.32e-3, 3.38e-5],
+            ],
+        ])
+
+        b = np.array([
+            [
+                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
+                [
+                    [-0.25, -0.119, -0.108, -0.0558],
+                    [-0.0381, -0.015, -0.0138, -3.72e-3],
+                ],
+            ],
+            [
+                [
+                    [0.849, 0.518, 0.477, 0.322],
+                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
+                ],
+                [
+                    [0.0677, 0.0292, 0.0259, 0.0124],
+                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
+                ],
+            ],
+            [
+                [
+                    [-0.0588, -0.0336, -0.0305, -0.0187],
+                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
+                ],
+                [
+                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
+                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
+                ],
+            ],
+        ])
+
+        z = np.array([2.0, 6.0, 8.0, 26.0])
+        nn = np.array([rnhe, rnc, rno, rnfe])
+
+        nen = ne * 1e-19
+
+        s1 = 0.0
+        for k in range(2):
+            for j in range(3):
+                for i in range(2):
+                    s1 += (
+                        a[i, j, k]
+                        * (np.log(eb)) ** i
+                        * (np.log(nen)) ** j
+                        * (np.log(te)) ** k
+                    )
+
+        sz = 0.0
+        for l in range(4):  # noqa: E741
+            for k in range(2):
+                for j in range(2):
+                    for i in range(3):
+                        sz += (
+                            b[i, j, k, l]
+                            * (np.log(eb)) ** i
+                            * (np.log(nen)) ** j
+                            * (np.log(te)) ** k
+                            * nn[l]
+                            * z[l]
+                            * (z[l] - 1.0)
+                        )
+
+        return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
+
+    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
+        """Routine to calculate the fraction of the fast particle energy
+        coupled to the ions
+        author: P J Knight, CCFE, Culham Science Centre
+        afast   : input real : mass of fast particle (units of proton mass)
+        efast   : input real : energy of fast particle (keV)
+        te      : input real : density weighted average electron temp. (keV)
+        ne      : input real : volume averaged electron density (m**-3)
+        nd      : input real : deuterium beam density (m**-3)
+        nt      : input real : tritium beam density (m**-3)
+        zeffai  : input real : mass weighted plasma effective charge
+        xlmbda  : input real : ion-electron coulomb logarithm
+        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
+        This routine calculates the fast particle energy coupled to
+        the ions in the neutral beam system.
+        """
+        # atmd = 2.0
+        atmdt = 2.5
+        # atmt = 3.0
+        c = 3.0e8
+        me = constants.electron_mass
+        # zd = 1.0
+        # zt = 1.0
+
+        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
+        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
+
+        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
+        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
+
+        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
+        sumln = zeffai * xlmbdai / xlmbda
+        xlnrat = (
+            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
+        ) ** (2.0e0 / 3.0e0)
+        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
+
+        ecritfi = (
+            afast
+            * constants.proton_mass
+            * ve
+            * ve
+            * xlnrat
+            / (2.0e0 * constants.electron_charge * 1.0e3)
+        )
+
+        x = np.sqrt(efast / ecritfi)
+        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
+        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
+        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.arctan(thx) + np.pi / 6.0e0)
+
+        return (t1 + t2) / (3.0e0 * x * x)
+
+    def xlmbdabi(self, mb, mth, eb, t, nelec):
+        """Calculates the Coulomb logarithm for ion-ion collisions
+        author: P J Knight, CCFE, Culham Science Centre
+        mb     : input real : mass of fast particle (units of proton mass)
+        mth    : input real : mass of background ions (units of proton mass)
+        eb     : input real : energy of fast particle (keV)
+        t      : input real : density weighted average electron temp. (keV)
+        nelec  : input real : volume averaged electron density (m**-3)
+        This function calculates the Coulomb logarithm for ion-ion
+        collisions where the relative velocity may be large compared
+        with the background ('mt') thermal velocity.
+        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+        """
+
+        x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
+        x2 = mth / (mth + mb)
+
+        return 23.7 + np.log(x2 * np.sqrt(x1))
+
+
+class ElectronCyclotron:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
 
     def culecd(self):
         """Routine to calculate Electron Cyclotron current drive efficiency
@@ -1611,93 +654,373 @@ class CurrentDrive:
             raise ProcessValueError("Negative normalised current drive efficiency")
         return ecgam
 
-    def culnbi(self):
-        """Routine to calculate Neutral Beam current drive parameters
+    def electron_cyclotron_fenstermacher(
+        self,
+        ten: float,
+        rmajor: float,
+        dene20: float,
+        dlamee: float,
+    ) -> float:
+        """
+        Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
+
+        :param ten: Density weighted average electron temperature keV.
+        :type ten: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in 1x10^20 m^-3.
+        :type dene20: float
+        :param dlamee: Electron collision frequency in 1/s.
+        :type dlamee: float
+
+        :return: The calculated electron cyclotron heating efficiency in A/W.
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+
+        """
+
+        return (0.21e0 * ten) / (rmajor * dene20 * dlamee)
+
+    def electron_cyclotron_freethy(
+        self,
+        te: float,
+        zeff: float,
+        rmajor: float,
+        dene: float,
+        bt: float,
+        n_ecrh_harmonic: int,
+        i_ecrh_wave_mode: int,
+    ) -> float:
+        """
+        Calculate the Electron Cyclotron current drive efficiency using the Freethy model.
+
+        This function computes the ECCD efficiency based on the electron temperature,
+        effective charge, major radius, electron density, magnetic field, harmonic number,
+        and wave mode.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene: Volume averaged electron density in m^-3.
+        :type dene: float
+        :param bt: Toroidal magnetic field in Tesla.
+        :type bt: float
+        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
+        :type n_ecrh_harmonic: int
+        :param i_ecrh_wave_mode: Wave mode switch (0 for O-mode, 1 for X-mode).
+        :type i_ecrh_wave_mode: int
+
+        :return: The calculated absolute ECCD efficiency in A/W.
+        :rtype: float
+
+        :notes:
+            - Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic.
+            - The density factor accounts for this behavior.
+
+        :references:
+            - Freethy, S., PROCESS issue #2994.
+        """
+
+        # Cyclotron frequency
+        fc = 1 / (2 * np.pi) * constants.electron_charge * bt / constants.electron_mass
+
+        # Plasma frequency
+        fp = (
+            1
+            / (2 * np.pi)
+            * np.sqrt(
+                (dene / 1.0e19)
+                * constants.electron_charge**2
+                / (constants.electron_mass * constants.epsilon0)
+            )
+        )
+
+        # Scaling factor for ECCD efficiency
+        xi_CD = 0.18e0  # Tuned to the results of a GRAY study
+        xi_CD *= 4.8e0 / (2 + zeff)  # Zeff correction
+
+        # ECCD efficiency
+        eta_cd = xi_CD * te / (3.27e0 * rmajor * (dene / 1.0e19))
+
+        # Determine the cut-off frequency based on wave mode
+        if i_ecrh_wave_mode == 0:  # O-mode case
+            f_cutoff = fp
+        elif i_ecrh_wave_mode == 1:  # X-mode case
+            f_cutoff = 0.5 * (fc + np.sqrt(n_ecrh_harmonic * fc**2 + 4 * fp**2))
+        else:
+            raise ValueError("Invalid wave mode. Use 0 for O-mode or 1 for X-mode.")
+
+        # Plasma coupling factor
+        a = 0.1  # Controls sharpness of the transition
+        cutoff_factor = 0.5 * (
+            1 + np.tanh((2 / a) * ((n_ecrh_harmonic * fc - f_cutoff) / fp - a))
+        )
+
+        # Final ECCD efficiency
+        return eta_cd * cutoff_factor
+
+    def legend(self, zlocal, arg):
+        """Routine to calculate Legendre function and its derivative
+        author: M R O'Brien, CCFE, Culham Science Centre
         author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
-        This routine calculates Neutral Beam current drive parameters
-        using the corrections outlined in AEA FUS 172 to the ITER method.
-        <P>The result cannot be guaranteed for devices with aspect ratios far
-        from that of ITER (approx. 2.8).
+        zlocal  : input real : local plasma effective charge
+        arg     : input real : argument of Legendre function
+        palpha  : output real : value of Legendre function
+        palphap : output real : derivative of Legendre function
+        This routine calculates the Legendre function <CODE>palpha</CODE>
+        of argument <CODE>arg</CODE> and order
+        <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
+        and its derivative <CODE>palphap</CODE>.
+        <P>This Legendre function is a conical function and we use the series
+        in <CODE>xisq</CODE> given in Abramowitz and Stegun. The
+        derivative is calculated from the derivative of this series.
+        <P>The derivatives were checked by calculating <CODE>palpha</CODE> for
+        neighbouring arguments. The calculation of <CODE>palpha</CODE> for zero
+        argument was checked by comparison with the expression
+        <CODE>palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2</CODE>
+        (Abramowitz and Stegun, eqn 8.6.1). Here <CODE>gam1</CODE> and
+        <CODE>gam2</CODE> are the Gamma functions of arguments
+        <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
+        Abramowitz and Stegun, equation 8.12.1
+        """
+        if abs(arg) > (1.0e0 + 1.0e-10):
+            eh.fdiags[0] = arg
+            raise ProcessValueError("Invalid argument", arg=arg)
+
+        arg2 = min(arg, (1.0e0 - 1.0e-10))
+        sinsq = 0.5e0 * (1.0e0 - arg2)
+        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
+        palpha = 1.0e0
+        pold = 1.0e0
+        pterm = 1.0e0
+        palphap = 0.0e0
+        poldp = 0.0e0
+
+        for n in range(10000):
+            #  Check for convergence every 20 iterations
+
+            if (n > 1) and ((n % 20) == 1):
+                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
+                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
+
+                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
+                    return palpha, palphap
+
+                pold = palpha
+                poldp = palphap
+
+            pterm = (
+                pterm
+                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
+                / (2.0e0 * n) ** 2
+                * sinsq
+            )
+            palpha = palpha + pterm
+            palphap = palphap - n * pterm / (1.0e0 - arg2)
+        else:
+            raise ProcessError("legend: Solution has not converged")
+
+
+class IonCyclotron:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+    def ion_cyclotron_ipdg89(
+        self, ten: float, zeff: float, rmajor: float, dene20: float
+    ) -> float:
+        """
+        Routine to calculate IPDG89 Ion Cyclotron heating efficiency.
+
+        This function computes the ion cyclotron heating efficiency based on
+        the electron temperature, effective charge, major radius, and electron density.
+
+        :param ten: Density weighted average electron temperature keV.
+        :type ten: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene: Volume averaged electron density in 1x10^20 m^-3.
+        :type dene: float
+
+        :return: The calculated ion cyclotron heating efficiency in A/W.
+        :rtype: float
+
+        :notes:
+        - The 0.1 term is to convert the temperature into 10 keV units
+        - The original formula is for the normalised current drive efficnecy
+          hence the addition of the density and majro radius terms to get back to an absolute value
+
+        :references:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+        - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+        """
+
+        return ((0.63e0 * 0.1e0 * ten) / (2.0e0 + zeff)) / (rmajor * dene20)
+
+
+class ElectronBernstein:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+    def electron_bernstein_freethy(
+        self,
+        te: float,
+        rmajor: float,
+        dene20: float,
+        bt: float,
+        n_ecrh_harmonic: int,
+        xi_ebw: float,
+    ) -> float:
+        """
+        Calculate the Electron Bernstein Wave (EBW) current drive efficiency using the Freethy model.
+
+        This function computes the EBW current drive efficiency based on the electron temperature,
+        major radius, electron density, magnetic field, harmonic number, and scaling factor.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+        :param bt: Toroidal magnetic field in Tesla.
+        :type bt: float
+        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
+        :type n_ecrh_harmonic: int
+        :param xi_ebw: Scaling factor for EBW efficiency.
+        :type xi_ebw: float
+
+        :return: The calculated absolute EBW current drive efficiency in A/W.
+        :rtype: float
+
+        :notes:
+            - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
+            - The density factor accounts for this behavior.
+
+        :references:
+            - Freethy, S., PROCESS issue #1262.
+        """
+
+        # Normalised current drive efficiency gamma
+        eta_cd_norm = (xi_ebw / 32.7e0) * te
+
+        # Absolute current drive efficiency
+        eta_cd = eta_cd_norm / (dene20 * rmajor)
+
+        # EBWs can only couple to plasma if cyclotron harmonic is above plasma density cut-off;
+        # this behavior is captured in the following function:
+        # constant 'a' controls sharpness of transition
+        a = 0.1e0
+
+        fc = (
+            1.0e0
+            / (2.0e0 * np.pi)
+            * n_ecrh_harmonic
+            * constants.electron_charge
+            * bt
+            / constants.electron_mass
+        )
+
+        fp = (
+            1.0e0
+            / (2.0e0 * np.pi)
+            * np.sqrt(
+                dene20
+                * constants.electron_charge**2
+                / (constants.electron_mass * constants.epsilon0)
+            )
+        )
+
+        density_factor = 0.5e0 * (1.0e0 + np.tanh((2.0e0 / a) * ((fp - fc) / fp - a)))
+
+        return eta_cd * density_factor
+
+
+class LowerHybrid:
+    def __init__(self, plasma_profile: PlasmaProfile):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+
+    def cullhy(self):
+        """Routine to calculate Lower Hybrid current drive efficiency
+        author: P J Knight, CCFE, Culham Science Centre
+        effrfss : output real : lower hybrid current drive efficiency (A/W)
+        This routine calculates the current drive parameters for a
+        lower hybrid system, based on the AEA FUS 172 model.
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
+        rratio = self.lhrad()
+        rpenet = rratio * physics_variables.rminor
+
+        # Local density, temperature, toroidal field at this minor radius
+
+        dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedn,
+            physics_variables.ne0,
+            physics_variables.neped,
+            physics_variables.nesep,
+            physics_variables.alphan,
+        )
+        tlocal = self.plasma_profile.teprofile.calculate_profile_y(
+            rratio,
+            physics_variables.rhopedt,
+            physics_variables.te0,
+            physics_variables.teped,
+            physics_variables.tesep,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+        )
+        blocal = (
+            physics_variables.bt
+            * physics_variables.rmajor
+            / (physics_variables.rmajor - rpenet)
+        )  # Calculated on inboard side
+
+        # Parallel refractive index needed for plasma access
+
+        frac = np.sqrt(dlocal) / blocal
+        nplacc = frac + np.sqrt(1.0e0 + frac * frac)
+
+        # Local inverse aspect ratio
+
+        epslh = rpenet / physics_variables.rmajor
+
+        # LH normalised efficiency (A/W m**-2)
+
+        x = 24.0e0 / (nplacc * np.sqrt(tlocal))
+
+        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
+        term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
+        term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
+        term04 = 3.5e0 * epslh**0.77e0 + x
+
+        if term03 > term04:
             raise ProcessValueError(
-                "Imminent negative square root argument; NBI will miss plasma completely",
-                eps=physics_variables.eps,
-                frbeam=current_drive_variables.frbeam,
+                "Normalised LH efficiency < 0; use a different value of i_hcd_primary",
+                term03=term03,
+                term04=term04,
             )
 
-        #  Calculate beam path length to centre
+        gamlh = term01 * term02 * (1.0e0 - term03 / term04)
 
-        dpath = physics_variables.rmajor * np.sqrt(
-            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
-        )
+        # Current drive efficiency (A/W)
 
-        #  Calculate beam stopping cross-section
-
-        sigstop = self.sigbeam(
-            current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.te,
-            physics_variables.dene,
-            physics_variables.f_nd_alpha_electron,
-            physics_variables.rncne,
-            physics_variables.rnone,
-            physics_variables.rnfene,
-        )
-
-        #  Calculate number of decay lengths to centre
-
-        current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.dnla * sigstop
-        )
-
-        #  Shine-through fraction of beam
-
-        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
-        fshine = max(fshine, 1.0e-20)
-
-        #  Deuterium and tritium beam densities
-
-        dend = physics_variables.nd_fuel_ions * (
-            1.0e0 - current_drive_variables.f_beam_tritium
-        )
-        dent = physics_variables.nd_fuel_ions * current_drive_variables.f_beam_tritium
-
-        #  Power split to ions / electrons
-
-        f_p_beam_injected_ions = self.cfnbi(
-            physics_variables.m_beam_amu,
-            current_drive_variables.e_beam_kev,
-            physics_variables.ten,
-            physics_variables.dene,
-            dend,
-            dent,
-            physics_variables.zeffai,
-            physics_variables.dlamie,
-        )
-
-        #  Current drive efficiency
-
-        effnbss = self.etanb2(
-            physics_variables.m_beam_amu,
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.aspect,
-            physics_variables.dene,
-            physics_variables.dnla,
-            current_drive_variables.e_beam_kev,
-            current_drive_variables.frbeam,
-            fshine,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.ten,
-            physics_variables.zeff,
-        )
-
-        return effnbss, f_p_beam_injected_ions, fshine
+        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
 
     def lhrad(self):
         """Routine to calculate Lower Hybrid wave absorption radius
@@ -1754,128 +1077,6 @@ class CurrentDrive:
             rat0 = 0.8e0
 
         return rat0
-
-    def etanb2(
-        self,
-        m_beam_amu,
-        alphan,
-        alphat,
-        aspect,
-        dene,
-        dnla,
-        e_beam_kev,
-        frbeam,
-        fshine,
-        rmajor,
-        rminor,
-        ten,
-        zeff,
-    ):
-        """Routine to find neutral beam current drive efficiency
-        using the ITER 1990 formulation, plus correction terms
-        outlined in Culham Report AEA FUS 172
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
-        dnla    : input real : line averaged electron density (m**-3)
-        e_beam_kev  : input real : neutral beam energy (keV)
-        frbeam  : input real : R_tangent / R_major for neutral beam injection
-        fshine  : input real : shine-through fraction of beam
-        rmajor  : input real : plasma major radius (m)
-        rminor  : input real : plasma minor radius (m)
-        ten     : input real : density weighted average electron temperature (keV)
-        zeff    : input real : plasma effective charge
-        This routine calculates the current drive efficiency in A/W of
-        a neutral beam system, based on the 1990 ITER model,
-        plus correction terms outlined in Culham Report AEA FUS 172.
-        <P>The formulae are from AEA FUS 172, unless denoted by IPDG89.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-        """
-        #  Charge of beam ions
-        zbeam = 1.0
-
-        #  Fitting factor (IPDG89)
-        bbd = 1.0
-
-        #  Volume averaged electron density (10**20 m**-3)
-        dene20 = dene / 1e20
-
-        #  Line averaged electron density (10**20 m**-3)
-        dnla20 = dnla / 1e20
-
-        #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
-        #  N.B. ten is in keV
-        ecrit = 0.01 * m_beam_amu * ten
-
-        #  Beam energy in MeV
-        ebmev = e_beam_kev / 1e3
-
-        #  x and y coefficients of function J0(x,y) (IPDG89)
-        xjs = ebmev / (bbd * ecrit)
-        xj = np.sqrt(xjs)
-
-        yj = 0.8 * zeff / m_beam_amu
-
-        #  Fitting function J0(x,y)
-        j0 = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
-
-        #  Effective inverse aspect ratio, with a limit on its maximum value
-        epseff = min(0.2, (0.5 / aspect))
-
-        #  Reduction in the reverse electron current
-        #  due to neoclassical effects
-        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
-
-        # Reduction in the net beam driven current
-        #  due to the reverse electron current
-        ffac = 1.0 - (zbeam / zeff) * (1.0 - gfac)
-
-        #  Normalisation to allow results to be valid for
-        #  non-ITER plasma size and density:
-
-        #  Line averaged electron density (10**20 m**-3) normalised to ITER
-        nnorm = 1.0
-
-        #  Distance along beam to plasma centre
-        r = max(rmajor, rmajor * frbeam)
-        eps1 = rminor / r
-
-        if (1.0 + eps1) < frbeam:
-            raise ProcessValueError(
-                "Imminent negative square root argument; NBI will miss plasma completely",
-                eps=eps1,
-                frbeam=frbeam,
-            )
-
-        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
-
-        # Distance along beam to plasma centre for ITER
-        # assuming a tangency radius equal to the major radius
-        epsitr = 2.15 / 6.0
-        dnorm = 6.0 * np.sqrt(2.0 * epsitr + epsitr**2)
-
-        #  Normalisation to beam energy (assumes a simplified formula for
-        #  the beam stopping cross-section)
-        ebnorm = ebmev * ((nnorm * dnorm) / (dnla20 * d)) ** (1.0 / 0.78)
-
-        #  A_bd fitting coefficient, after normalisation with ebnorm
-        abd = (
-            0.107
-            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
-            * (1.0 - 0.21 * alphat)
-            * (1.0 - 0.2 * ebnorm + 0.09 * ebnorm**2)
-        )
-
-        #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
-        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
-
-        #  Current drive efficiency (A/W)
-        return gamnb / (dene20 * rmajor)
 
     def lheval(self, drfind, rratio):
         """Routine to evaluate the difference between electron energy
@@ -1941,274 +1142,1298 @@ class CurrentDrive:
 
         return e1 - e2
 
-    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
-        """Routine to find neutral beam current drive efficiency
-        using the ITER 1990 formulation
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
-        ebeam  : input real : neutral beam energy (keV)
-        rmajor  : input real : plasma major radius (m)
-        ten     : input real : density weighted average electron temp. (keV)
-        zeff    : input real : plasma effective charge
-        This routine calculates the current drive efficiency of
-        a neutral beam system, based on the 1990 ITER model.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+    def lower_hybrid_fenstermacher(
+        self, te: float, rmajor: float, dene20: float
+    ) -> float:
+        """
+        Calculate the lower hybrid frequency using the Fenstermacher formula.
+        This function computes the lower hybrid frequency based on the electron
+        temperature, major radius, and electron density.
+
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+
+        :return: The calculated absolute current drive efficiency in A/W.
+        :rtype: float
+
+        :notes:
+            - This forumla was originally in the Oak RidgeSystems Code, attributed to Fenstermacher
+              and is used in the AEA FUS 172 report.
+
+        :references:
+            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
+
+            - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
         """
 
-        zbeam = 1.0
-        bbd = 1.0
+        return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
 
-        dene20 = 1e-20 * dene
-
-        # Ratio of E_beam/E_crit
-        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
-        xj = np.sqrt(xjs)
-
-        yj = 0.8 * zeff / m_beam_amu
-
-        rjfunc = xjs / (4.0 + 3.0 * yj + xjs * (xj + 1.39 + 0.61 * yj**0.7))
-
-        epseff = 0.5 / aspect
-        gfac = (1.55 + 0.85 / zeff) * np.sqrt(epseff) - (0.2 + 1.55 / zeff) * epseff
-        ffac = 1.0 / zbeam - (1.0 - gfac) / zeff
-
-        abd = (
-            0.107
-            * (1.0 - 0.35 * alphan + 0.14 * alphan**2)
-            * (1.0 - 0.21 * alphat)
-            * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
-        )
-
-        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
-
-    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
-        """Routine to calculate the fraction of the fast particle energy
-        coupled to the ions
-        author: P J Knight, CCFE, Culham Science Centre
-        afast   : input real : mass of fast particle (units of proton mass)
-        efast   : input real : energy of fast particle (keV)
-        te      : input real : density weighted average electron temp. (keV)
-        ne      : input real : volume averaged electron density (m**-3)
-        nd      : input real : deuterium beam density (m**-3)
-        nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
-        xlmbda  : input real : ion-electron coulomb logarithm
-        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
-        This routine calculates the fast particle energy coupled to
-        the ions in the neutral beam system.
+    def lower_hybrid_ehst(
+        self, te: float, beta: float, rmajor: float, dene20: float, zeff: float
+    ) -> float:
         """
-        # atmd = 2.0
-        atmdt = 2.5
-        # atmt = 3.0
-        c = 3.0e8
-        me = constants.electron_mass
-        # zd = 1.0
-        # zt = 1.0
+        Calculate the Lower Hybrid current drive efficiency using the Ehst model.
 
-        # xlbd = self.xlmbdabi(afast, atmd, efast, te, ne)
-        # xlbt = self.xlmbdabi(afast, atmt, efast, te, ne)
+        This function computes the current drive efficiency based on the electron
+        temperature, beta, major radius, electron density, and effective charge.
 
-        # sum = nd * zd * zd * xlbd / atmd + nt * zt * zt * xlbt / atmt
-        # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
+        :param te: Volume averaged electron temperature in keV.
+        :type te: float
+        :param beta: Plasma beta value (ratio of plasma pressure to magnetic pressure).
+        :type beta: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
+        :type dene20: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
 
-        xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
-        xlnrat = (
-            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
-        ) ** (2.0e0 / 3.0e0)
-        ve = c * np.sqrt(2.0e0 * te / 511.0e0)
+        :return: The calculated absolute current drive efficiency in A/W.
+        :rtype: float
 
-        ecritfi = (
-            afast
-            * constants.proton_mass
-            * ve
-            * ve
-            * xlnrat
-            / (2.0e0 * constants.electron_charge * 1.0e3)
-        )
+        :notes:
 
-        x = np.sqrt(efast / ecritfi)
-        t1 = np.log((x * x - x + 1.0e0) / ((x + 1.0e0) ** 2))
-        thx = (2.0e0 * x - 1.0e0) / np.sqrt(3.0e0)
-        t2 = 2.0e0 * np.sqrt(3.0e0) * (np.arctan(thx) + np.pi / 6.0e0)
-
-        return (t1 + t2) / (3.0e0 * x * x)
-
-    def xlmbdabi(self, mb, mth, eb, t, nelec):
-        """Calculates the Coulomb logarithm for ion-ion collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        mb     : input real : mass of fast particle (units of proton mass)
-        mth    : input real : mass of background ions (units of proton mass)
-        eb     : input real : energy of fast particle (keV)
-        t      : input real : density weighted average electron temp. (keV)
-        nelec  : input real : volume averaged electron density (m**-3)
-        This function calculates the Coulomb logarithm for ion-ion
-        collisions where the relative velocity may be large compared
-        with the background ('mt') thermal velocity.
-        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+        :references:
+            - Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
+              Nuclear Fusion, 31(10), 1933-1949, 1991.
         """
-
-        x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
-        x2 = mth / (mth + mb)
-
-        return 23.7 + np.log(x2 * np.sqrt(x1))
-
-    def legend(self, zlocal, arg):
-        """Routine to calculate Legendre function and its derivative
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        zlocal  : input real : local plasma effective charge
-        arg     : input real : argument of Legendre function
-        palpha  : output real : value of Legendre function
-        palphap : output real : derivative of Legendre function
-        This routine calculates the Legendre function <CODE>palpha</CODE>
-        of argument <CODE>arg</CODE> and order
-        <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
-        and its derivative <CODE>palphap</CODE>.
-        <P>This Legendre function is a conical function and we use the series
-        in <CODE>xisq</CODE> given in Abramowitz and Stegun. The
-        derivative is calculated from the derivative of this series.
-        <P>The derivatives were checked by calculating <CODE>palpha</CODE> for
-        neighbouring arguments. The calculation of <CODE>palpha</CODE> for zero
-        argument was checked by comparison with the expression
-        <CODE>palpha(0) = 1/sqrt(pi) * cos(pi*alpha/2) * gam1 / gam2</CODE>
-        (Abramowitz and Stegun, eqn 8.6.1). Here <CODE>gam1</CODE> and
-        <CODE>gam2</CODE> are the Gamma functions of arguments
-        <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
-        Abramowitz and Stegun, equation 8.12.1
-        """
-        if abs(arg) > (1.0e0 + 1.0e-10):
-            eh.fdiags[0] = arg
-            raise ProcessValueError("Invalid argument", arg=arg)
-
-        arg2 = min(arg, (1.0e0 - 1.0e-10))
-        sinsq = 0.5e0 * (1.0e0 - arg2)
-        xisq = 0.25e0 * (32.0e0 * zlocal / (zlocal + 1.0e0) - 1.0e0)
-        palpha = 1.0e0
-        pold = 1.0e0
-        pterm = 1.0e0
-        palphap = 0.0e0
-        poldp = 0.0e0
-
-        for n in range(10000):
-            #  Check for convergence every 20 iterations
-
-            if (n > 1) and ((n % 20) == 1):
-                term1 = 1.0e-10 * max(abs(pold), abs(palpha))
-                term2 = 1.0e-10 * max(abs(poldp), abs(palphap))
-
-                if (abs(pold - palpha) < term1) and (abs(poldp - palphap) < term2):
-                    return palpha, palphap
-
-                pold = palpha
-                poldp = palphap
-
-            pterm = (
-                pterm
-                * (4.0e0 * xisq + (2.0e0 * n - 1.0e0) ** 2)
-                / (2.0e0 * n) ** 2
-                * sinsq
+        return (
+            ((te**0.77 * (0.034 + 0.196 * beta)) / (rmajor * dene20))
+            * (
+                32.0 / (5.0 + zeff)
+                + 2.0
+                + (12.0 * (6.0 + zeff)) / (5.0 + zeff) / (3.0 + zeff)
+                + 3.76 / zeff
             )
-            palpha = palpha + pterm
-            palphap = palphap - n * pterm / (1.0e0 - arg2)
-        else:
-            raise ProcessError("legend: Solution has not converged")
+            / 12.507
+        )
 
-    def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
-        """Calculates the stopping cross-section for a hydrogen
-        beam in a fusion plasma
-        author: P J Knight, CCFE, Culham Science Centre
-        eb     : input real : beam energy (kev/amu)
-        te     : input real : electron temperature (keV)
-        ne     : input real : electron density (10^20m-3)
-        rnhe   : input real : alpha density / ne
-        rnc    : input real : carbon density /ne
-        rno    : input real : oxygen density /ne
-        rnfe   : input real : iron density /ne
-        This function calculates the stopping cross-section (m^-2)
-        for a hydrogen beam in a fusion plasma.
-        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
+
+class CurrentDrive:
+    def __init__(
+        self,
+        plasma_profile: PlasmaProfile,
+        electron_cyclotron: ElectronCyclotron,
+        ion_cyclotron: IonCyclotron,
+        lower_hybrid: LowerHybrid,
+        neutral_beam: NeutralBeam,
+        electron_bernstein: ElectronBernstein,
+    ):
+        self.outfile = constants.nout
+        self.plasma_profile = plasma_profile
+        self.electron_cyclotron = electron_cyclotron
+        self.ion_cyclotron = ion_cyclotron
+        self.lower_hybrid = lower_hybrid
+        self.neutral_beam = neutral_beam
+        self.electron_bernstein = electron_bernstein
+
+    def cudriv(self) -> None:
         """
-        a = np.array([
-            [
-                [4.4, -2.49e-2],
-                [7.46e-2, 2.27e-3],
-                [3.16e-3, -2.78e-5],
-            ],
-            [
-                [2.3e-1, -1.15e-2],
-                [-2.55e-3, -6.2e-4],
-                [1.32e-3, 3.38e-5],
-            ],
-        ])
+        Calculate the current drive power requirements.
 
-        b = np.array([
-            [
-                [[-2.36, -1.49, -1.41, -1.03], [0.185, -0.0154, -4.08e-4, 0.106]],
-                [
-                    [-0.25, -0.119, -0.108, -0.0558],
-                    [-0.0381, -0.015, -0.0138, -3.72e-3],
-                ],
-            ],
-            [
-                [
-                    [0.849, 0.518, 0.477, 0.322],
-                    [-0.0478, 7.18e-3, 1.57e-3, -0.0375],
-                ],
-                [
-                    [0.0677, 0.0292, 0.0259, 0.0124],
-                    [0.0105, 3.66e-3, 3.33e-3, 8.61e-4],
-                ],
-            ],
-            [
-                [
-                    [-0.0588, -0.0336, -0.0305, -0.0187],
-                    [4.34e-3, 3.41e-4, 7.35e-4, 3.53e-3],
-                ],
-                [
-                    [-4.48e-3, -1.79e-3, -1.57e-3, -7.43e-4],
-                    [-6.76e-4, -2.04e-4, -1.86e-4, -5.12e-5],
-                ],
-            ],
-        ])
+        This method computes the power requirements of the current drive system
+        using a choice of models for the current drive efficiency.
 
-        z = np.array([2.0, 6.0, 8.0, 26.0])
-        nn = np.array([rnhe, rnc, rno, rnfe])
+        :param output: Flag indicating whether to write results to the output file.
+        :type output: bool
 
-        nen = ne * 1e-19
+        :raises ProcessValueError: If an invalid current drive switch is encountered.
+        """
 
-        s1 = 0.0
-        for k in range(2):
-            for j in range(3):
-                for i in range(2):
-                    s1 += (
-                        a[i, j, k]
-                        * (np.log(eb)) ** i
-                        * (np.log(nen)) ** j
-                        * (np.log(te)) ** k
+        current_drive_variables.p_hcd_ecrh_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_beam_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_lowhyb_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_icrh_injected_total_mw = 0.0e0
+        current_drive_variables.p_hcd_ebw_injected_total_mw = 0.0e0
+        current_drive_variables.c_beam_total = 0.0e0
+        current_drive_variables.p_beam_orbit_loss_mw = 0.0e0
+
+        pinjmw1 = 0.0
+        p_hcd_primary_ions_mw = 0.0
+        p_hcd_primary_electrons_mw = 0.0
+        p_hcd_secondary_electrons_mw = 0.0
+        p_hcd_secondary_ions_mw = 0.0
+
+        # To stop issues with input file we force
+        # zero secondary heating if no injection method
+        if current_drive_variables.i_hcd_secondary == 0:
+            current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
+
+        # i_hcd_calculations |  switch for current drive calculation
+        # = 0   |  turned off
+        # = 1   |  turned on
+
+        if current_drive_variables.i_hcd_calculations != 0:
+            # Put electron density in desired units (10^-20 m-3)
+            dene20 = physics_variables.dene * 1.0e-20
+
+            # Calculate current drive efficiencies
+            # ==============================================================
+
+            # Define a dictionary of lambda functions for current drive efficiency models
+            hcd_models = {
+                1: lambda: self.lower_hybrid.lower_hybrid_fenstermacher(
+                    physics_variables.te, physics_variables.rmajor, dene20
+                )
+                * current_drive_variables.feffcd,
+                2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
+                    ten=physics_variables.ten,
+                    zeff=physics_variables.zeff,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                )
+                * current_drive_variables.feffcd,
+                3: lambda: self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                    ten=physics_variables.ten,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    dlamee=physics_variables.dlamee,
+                )
+                * current_drive_variables.feffcd,
+                4: lambda: self.lower_hybrid.lower_hybrid_ehst(
+                    te=physics_variables.te,
+                    beta=physics_variables.beta,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    zeff=physics_variables.zeff,
+                )
+                * current_drive_variables.feffcd,
+                5: lambda: (
+                    self.neutral_beam.iternb()[0] * current_drive_variables.feffcd
+                ),
+                6: lambda: self.lower_hybrid.cullhy() * current_drive_variables.feffcd,
+                7: lambda: self.electron_cyclotron.culecd()
+                * current_drive_variables.feffcd,
+                8: lambda: (
+                    self.neutral_beam.culnbi()[0] * current_drive_variables.feffcd
+                ),
+                10: lambda: current_drive_variables.eta_cd_norm_ecrh
+                / (dene20 * physics_variables.rmajor),
+                12: lambda: self.electron_bernstein.electron_bernstein_freethy(
+                    te=physics_variables.te,
+                    rmajor=physics_variables.rmajor,
+                    dene20=dene20,
+                    bt=physics_variables.bt,
+                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                    xi_ebw=current_drive_variables.xi_ebw,
+                )
+                * current_drive_variables.feffcd,
+                13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
+                    te=physics_variables.te,
+                    zeff=physics_variables.zeff,
+                    rmajor=physics_variables.rmajor,
+                    dene=physics_variables.dene,
+                    bt=physics_variables.bt,
+                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                    i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
+                )
+                * current_drive_variables.feffcd,
+            }
+
+            # Assign outputs for models that return multiple values
+            if current_drive_variables.i_hcd_secondary in [5, 8]:
+                _, f_p_beam_injected_ions, f_p_beam_shine_through = (
+                    self.neutral_beam.iternb()
+                    if current_drive_variables.i_hcd_secondary == 5
+                    else self.neutral_beam.culnbi()
+                )
+                current_drive_variables.f_p_beam_injected_ions = f_p_beam_injected_ions
+                current_drive_variables.f_p_beam_shine_through = f_p_beam_shine_through
+
+            # Calculate eta_cd_hcd_secondary based on the selected model
+            if current_drive_variables.i_hcd_secondary.item() in hcd_models:
+                current_drive_variables.eta_cd_hcd_secondary = hcd_models[
+                    current_drive_variables.i_hcd_secondary.item()
+                ]()
+            elif current_drive_variables.i_hcd_secondary != 0:
+                raise ProcessValueError(
+                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_secondary = }"
+                )
+
+            # Calculate eta_cd_hcd_primary based on the selected model
+            if current_drive_variables.i_hcd_primary.item() in hcd_models:
+                current_drive_variables.eta_cd_hcd_primary = hcd_models[
+                    current_drive_variables.i_hcd_primary.item()
+                ]()
+            else:
+                raise ProcessValueError(
+                    f"Current drive switch is invalid: {current_drive_variables.i_hcd_primary = }"
+                )
+
+            # Calculate the normalised current drive efficieny for the primary heating method
+            current_drive_variables.eta_cd_norm_hcd_primary = (
+                current_drive_variables.eta_cd_hcd_primary
+                * (dene20 * physics_variables.rmajor)
+            )
+            # Calculate the normalised current drive efficieny for the secondary heating method
+            current_drive_variables.eta_cd_norm_hcd_secondary = (
+                current_drive_variables.eta_cd_hcd_secondary
+                * (dene20 * physics_variables.rmajor)
+            )
+
+            # Calculate the driven current for the secondary heating method
+            current_drive_variables.c_hcd_secondary_driven = (
+                current_drive_variables.eta_cd_hcd_secondary
+                * current_drive_variables.p_hcd_secondary_injected_mw
+                * 1.0e6
+            )
+            # Calculate the fraction of the plasma current driven by the secondary heating method
+            current_drive_variables.f_c_plasma_hcd_secondary = (
+                current_drive_variables.c_hcd_secondary_driven
+                / physics_variables.plasma_current
+            )
+
+            # Calculate the injected power for the primary heating method
+            current_drive_variables.p_hcd_primary_injected_mw = (
+                1.0e-6
+                * (
+                    physics_variables.f_c_plasma_auxiliary
+                    - current_drive_variables.f_c_plasma_hcd_secondary
+                )
+                * physics_variables.plasma_current
+                / current_drive_variables.eta_cd_hcd_primary
+            )
+
+            # Calculate the driven current for the primary heating method
+            current_drive_variables.c_hcd_primary_driven = (
+                current_drive_variables.eta_cd_hcd_primary
+                * current_drive_variables.p_hcd_primary_injected_mw
+                * 1.0e6
+            )
+            # Calculate the fraction of the plasma current driven by the primary heating method
+            current_drive_variables.f_c_plasma_hcd_primary = (
+                current_drive_variables.c_hcd_primary_driven
+                / physics_variables.plasma_current
+            )
+
+            # ===========================================================
+
+            # Calculate the wall plug power for the secondary heating method
+            # ==============================================================
+
+            # Lower hybrid cases
+            if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
+                # Injected power
+                p_hcd_secondary_electrons_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                ) / current_drive_variables.eta_lowhyb_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+            # ==========================================================
+
+            # Ion cyclotron cases
+            if current_drive_variables.i_hcd_secondary in [2]:
+                # Injected power
+                p_hcd_secondary_ions_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                ) / current_drive_variables.eta_icrh_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_icrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+            # ==========================================================
+
+            # Electron cyclotron cases
+            if current_drive_variables.i_hcd_secondary in [3, 7, 10, 13]:
+                # Injected power
+                p_hcd_secondary_electrons_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                ) / current_drive_variables.eta_ecrh_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+            # ==========================================================
+
+            # Electron berstein cases
+            if current_drive_variables.i_hcd_secondary in [12]:
+                # Injected power
+                p_hcd_secondary_electrons_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                ) / current_drive_variables.eta_ebw_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ebw_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+            # ==========================================================
+
+            # Neutral beam cases
+            elif current_drive_variables.i_hcd_secondary in [5, 8]:
+                # Account for first orbit losses
+                # (power due to particles that are ionised but not thermalised) [MW]:
+                # This includes a second order term in shinethrough*(first orbit loss)
+
+                current_drive_variables.f_p_beam_orbit_loss = min(
+                    0.999, current_drive_variables.f_p_beam_orbit_loss
+                )  # Should never be needed
+
+                # Shinethrough power (atoms that are not ionised) [MW]:
+                current_drive_variables.p_beam_shine_through_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                    * (1.0 - current_drive_variables.f_p_beam_shine_through)
+                )
+
+                # First orbit loss
+                current_drive_variables.p_beam_orbit_loss_mw = (
+                    current_drive_variables.f_p_beam_orbit_loss
+                    * (
+                        current_drive_variables.p_hcd_secondary_injected_mw
+                        + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                        - current_drive_variables.p_beam_shine_through_mw
                     )
+                )
 
-        sz = 0.0
-        for l in range(4):  # noqa: E741
-            for k in range(2):
-                for j in range(2):
-                    for i in range(3):
-                        sz += (
-                            b[i, j, k, l]
-                            * (np.log(eb)) ** i
-                            * (np.log(nen)) ** j
-                            * (np.log(te)) ** k
-                            * nn[l]
-                            * z[l]
-                            * (z[l] - 1.0)
+                # Power deposited
+                current_drive_variables.p_beam_plasma_coupled_mw = (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                    - current_drive_variables.p_beam_shine_through_mw
+                    - current_drive_variables.p_beam_orbit_loss_mw
+                )
+
+                p_hcd_secondary_ions_mw = (
+                    current_drive_variables.p_beam_plasma_coupled_mw
+                    * current_drive_variables.f_p_beam_injected_ions
+                )
+
+                p_hcd_secondary_electrons_mw = (
+                    current_drive_variables.p_beam_plasma_coupled_mw
+                    * (1.0e0 - current_drive_variables.f_p_beam_injected_ions)
+                )
+
+                current_drive_variables.pwpnb = (
+                    (
+                        current_drive_variables.p_hcd_secondary_injected_mw
+                        + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                    )
+                    / current_drive_variables.eta_beam_injector_wall_plug
+                )  # neutral beam wall plug power
+
+                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                    current_drive_variables.pwpnb
+                )
+
+                current_drive_variables.eta_hcd_secondary_injector_wall_plug = (
+                    current_drive_variables.eta_beam_injector_wall_plug
+                )
+
+                current_drive_variables.c_beam_total = (
+                    1.0e-3
+                    * (
+                        (
+                            current_drive_variables.p_hcd_secondary_injected_mw
+                            + current_drive_variables.p_hcd_secondary_extra_heat_mw
                         )
+                        * 1.0e6
+                    )
+                    / current_drive_variables.e_beam_kev
+                )  # Neutral beam current (A)
 
-        return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
+                current_drive_variables.p_hcd_beam_injected_total_mw += (
+                    current_drive_variables.p_hcd_secondary_injected_mw
+                    + current_drive_variables.p_hcd_secondary_extra_heat_mw
+                )
+
+            # ==========================================================
+
+            # Lower hybrid cases
+            if current_drive_variables.i_hcd_primary in [1, 4, 6]:
+                p_hcd_primary_electrons_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                ) / current_drive_variables.eta_lowhyb_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_lowhyb_electric_mw = (
+                    current_drive_variables.p_hcd_lowhyb_injected_total_mw
+                    / current_drive_variables.eta_lowhyb_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            # Ion cyclotron cases
+            if current_drive_variables.i_hcd_primary in [2]:
+                p_hcd_primary_ions_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                ) / current_drive_variables.eta_icrh_injector_wall_plug
+
+                # Wall plug to injector efficiency
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_icrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_icrh_electric_mw = (
+                    current_drive_variables.p_hcd_icrh_injected_total_mw
+                    / current_drive_variables.eta_icrh_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            # Electron cyclotron cases
+
+            if current_drive_variables.i_hcd_primary in [3, 7, 10, 13]:
+                p_hcd_primary_electrons_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug to injector efficiency
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                ) / current_drive_variables.eta_ecrh_injector_wall_plug
+
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ecrh_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_ecrh_electric_mw = (
+                    current_drive_variables.p_hcd_ecrh_injected_total_mw
+                    / current_drive_variables.eta_ecrh_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            # Electron bernstein cases
+
+            if current_drive_variables.i_hcd_primary in [12]:
+                p_hcd_primary_electrons_mw = (
+                    current_drive_variables.p_ebw_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug to injector efficiency
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                ) / current_drive_variables.eta_ebw_injector_wall_plug
+
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+                current_drive_variables.p_hcd_ebw_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+                # Wall plug power
+                current_drive_variables.p_hcd_ebw_electric_mw = (
+                    current_drive_variables.p_ebw_injected_mw
+                    / current_drive_variables.eta_ebw_injector_wall_plug
+                )
+
+            # ===========================================================
+
+            elif current_drive_variables.i_hcd_primary in [5, 8]:
+                # Account for first orbit losses
+                # (power due to particles that are ionised but not thermalised) [MW]:
+                # This includes a second order term in shinethrough*(first orbit loss)
+                current_drive_variables.f_p_beam_orbit_loss = min(
+                    0.999, current_drive_variables.f_p_beam_orbit_loss
+                )  # Should never be needed
+
+                # Shinethrough power (atoms that are not ionised) [MW]:
+                current_drive_variables.p_beam_shine_through_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                    * (1.0 - current_drive_variables.f_p_beam_shine_through)
+                )
+
+                # First orbit loss
+                current_drive_variables.p_beam_orbit_loss_mw = (
+                    current_drive_variables.f_p_beam_orbit_loss
+                    * (
+                        current_drive_variables.p_hcd_primary_injected_mw
+                        + current_drive_variables.p_hcd_primary_extra_heat_mw
+                        - current_drive_variables.p_beam_shine_through_mw
+                    )
+                )
+
+                # Power deposited
+                current_drive_variables.p_beam_plasma_coupled_mw = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                    - current_drive_variables.p_beam_shine_through_mw
+                    - current_drive_variables.p_beam_orbit_loss_mw
+                )
+
+                p_hcd_primary_ions_mw = (
+                    pinjmw1 * current_drive_variables.f_p_beam_injected_ions
+                )
+                p_hcd_primary_electrons_mw = pinjmw1 * (
+                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
+                )
+
+                current_drive_variables.pwpnb = (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                    / current_drive_variables.eta_beam_injector_wall_plug
+                )
+
+                # Neutral beam wall plug power
+                heat_transport_variables.p_hcd_primary_electric_mw = (
+                    current_drive_variables.pwpnb
+                )
+                current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                    current_drive_variables.eta_beam_injector_wall_plug
+                )
+
+                current_drive_variables.c_beam_total = (
+                    1.0e-3
+                    * (
+                        (
+                            current_drive_variables.p_hcd_primary_injected_mw
+                            + current_drive_variables.p_hcd_primary_extra_heat_mw
+                        )
+                        * 1.0e6
+                    )
+                    / current_drive_variables.e_beam_kev
+                )  # Neutral beam current (A)
+
+                current_drive_variables.p_hcd_beam_injected_total_mw += (
+                    current_drive_variables.p_hcd_primary_injected_mw
+                    + current_drive_variables.p_hcd_primary_extra_heat_mw
+                )
+
+            # ===========================================================
+
+            # Total injected power that contributed to heating
+            current_drive_variables.p_hcd_injected_total_mw = (
+                current_drive_variables.p_hcd_primary_injected_mw
+                + current_drive_variables.p_hcd_primary_extra_heat_mw
+                + current_drive_variables.p_hcd_secondary_injected_mw
+                + current_drive_variables.p_hcd_secondary_extra_heat_mw
+            )
+
+            # Total injected power that contributed to current drive
+            current_drive_variables.p_hcd_injected_current_total_mw = (
+                current_drive_variables.p_hcd_primary_injected_mw
+                + current_drive_variables.p_hcd_secondary_injected_mw
+            )
+
+            pinjmw1 = p_hcd_primary_electrons_mw + p_hcd_primary_ions_mw
+
+            # Total injected power given to electrons
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                p_hcd_primary_electrons_mw + p_hcd_secondary_electrons_mw
+            )
+
+            # Total injected power given to ions
+            current_drive_variables.p_hcd_injected_ions_mw = (
+                p_hcd_primary_ions_mw + p_hcd_secondary_ions_mw
+            )
+
+            # Total wall plug power for all heating systems
+            heat_transport_variables.p_hcd_electric_total_mw = (
+                heat_transport_variables.p_hcd_primary_electric_mw
+                + heat_transport_variables.p_hcd_secondary_electric_mw
+            )
+
+            # Reset injected power to zero for ignited plasma (fudge)
+            if physics_variables.ignite == 1:
+                heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
+
+            # Ratio of fusion to input (injection+ohmic) power
+            current_drive_variables.bigq = physics_variables.fusion_power / (
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
+                + physics_variables.p_plasma_ohmic_mw
+            )
+
+    def output_current_drive(self):
+        """
+        Output the current drive information to the output file.
+        This method writes the current drive information to the output file.
+        """
+
+        po.oheadr(self.outfile, "Heating & Current Drive System")
+
+        if physics_variables.ignite == 1:
+            po.ocmmnt(
+                self.outfile,
+                "Ignited plasma; injected power only used for start-up phase",
+            )
+
+        if abs(physics_variables.f_c_plasma_inductive) > 1.0e-8:
+            po.ocmmnt(
+                self.outfile,
+                "Current is driven by both inductive and non-inductive means.",
+            )
+            po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Fusion gain factor Q",
+            "(bigq)",
+            current_drive_variables.bigq,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        if current_drive_variables.i_hcd_calculations == 0:
+            po.ocmmnt(self.outfile, "No current drive used")
+            po.oblnkl(self.outfile)
+            return
+
+        po.ovarin(
+            self.outfile,
+            "Primary current drive efficiency model",
+            "(i_hcd_primary)",
+            current_drive_variables.i_hcd_primary,
+        )
+
+        if current_drive_variables.i_hcd_primary in [1, 4, 6]:
+            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
+        elif current_drive_variables.i_hcd_primary == 2:
+            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
+        elif current_drive_variables.i_hcd_primary in [3, 7]:
+            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
+        elif current_drive_variables.i_hcd_primary in [5, 8]:
+            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
+        elif current_drive_variables.i_hcd_primary == 10:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (input normalised efficiency)",
+            )
+        elif current_drive_variables.i_hcd_primary == 12:
+            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
+        elif current_drive_variables.i_hcd_primary == 13:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
+            )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Absolute current drive efficiency of primary system [A/W]",
+            "(eta_cd_hcd_primary)",
+            current_drive_variables.eta_cd_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Normalised current drive efficiency of primary system [10^20 A / Wm^2]",
+            "(eta_cd_norm_hcd_primary)",
+            current_drive_variables.eta_cd_norm_hcd_primary,
+            "OP ",
+        )
+        if current_drive_variables.i_hcd_primary == 10:
+            po.ovarre(
+                self.outfile,
+                "ECRH plasma heating efficiency",
+                "(eta_cd_norm_ecrh)",
+                current_drive_variables.eta_cd_norm_ecrh,
+            )
+        po.ovarre(
+            self.outfile,
+            "Power injected into plasma by primary system for current drive (MW)",
+            "(p_hcd_primary_injected_mw)",
+            current_drive_variables.p_hcd_primary_injected_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Extra power injected into plasma by primary system  (MW)",
+            "(p_hcd_primary_extra_heat_mw)",
+            current_drive_variables.p_hcd_primary_extra_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Current driven in plasma by primary system (A)",
+            "(c_hcd_primary_driven)",
+            current_drive_variables.c_hcd_primary_driven,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma current driven by primary system",
+            "(f_c_plasma_hcd_primary)",
+            current_drive_variables.f_c_plasma_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug to injector efficiency of primary system",
+            "(eta_hcd_primary_injector_wall_plug)",
+            current_drive_variables.eta_hcd_primary_injector_wall_plug,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug electric power of primary system",
+            "(p_hcd_primary_electric_mw)",
+            heat_transport_variables.p_hcd_primary_electric_mw,
+            "OP ",
+        )
+
+        if current_drive_variables.i_hcd_primary in [12, 13]:
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "ECRH / EBW harmonic number",
+                "(n_ecrh_harmonic)",
+                current_drive_variables.n_ecrh_harmonic,
+            )
+        if current_drive_variables.i_hcd_primary == 13:
+            po.ovarin(
+                self.outfile,
+                "Electron cyclotron cutoff wave mode switch",
+                "(i_ecrh_wave_mode)",
+                current_drive_variables.i_ecrh_wave_mode,
+            )
+
+        po.oblnkl(self.outfile)
+
+        if current_drive_variables.i_hcd_primary in [5, 8]:
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Neutral beam power balance :")
+            po.ocmmnt(self.outfile, "----------------------------")
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam energy (keV)",
+                "(e_beam_kev)",
+                current_drive_variables.e_beam_kev,
+            )
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Neutral beam current (A)",
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam wall plug efficiency",
+                "(eta_beam_injector_wall_plug)",
+                current_drive_variables.eta_beam_injector_wall_plug,
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam decay lengths to centre",
+                "(n_beam_decay_lengths_core)",
+                current_drive_variables.n_beam_decay_lengths_core,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam shine-through fraction",
+                "(f_p_beam_shine_through)",
+                current_drive_variables.f_p_beam_shine_through,
+                "OP ",
+            )
+
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarrf(
+                    self.outfile,
+                    "Beam first orbit loss power (MW)",
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam shine-through power [MW]",
+                    "(p_beam_shine_through_mw)",
+                    current_drive_variables.p_beam_shine_through_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Maximum allowable beam power (MW)",
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
+                )
+                po.oblnkl(self.outfile)
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power entering vacuum vessel (MW)",
+                    "(p_beam_injected_mw)",
+                    current_drive_variables.p_beam_injected_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    current_drive_variables.f_p_beam_injected_ions,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam duct shielding thickness (m)",
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam tangency radius / Plasma major radius",
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam centreline tangency radius (m)",
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Maximum possible tangency radius (m)",
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
+                    "OP ",
+                )
+
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ovarin(
+            self.outfile,
+            "Secondary current drive efficiency model",
+            "(i_hcd_secondary)",
+            current_drive_variables.i_hcd_secondary,
+        )
+
+        if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
+            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
+        elif current_drive_variables.i_hcd_secondary == 2:
+            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
+        elif current_drive_variables.i_hcd_secondary in [3, 7]:
+            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
+        elif current_drive_variables.i_hcd_secondary in [5, 8]:
+            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
+        elif current_drive_variables.i_hcd_secondary == 10:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (input normalised efficiency)",
+            )
+        elif current_drive_variables.i_hcd_secondary == 12:
+            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
+        elif current_drive_variables.i_hcd_secondary == 13:
+            po.ocmmnt(
+                self.outfile,
+                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
+            )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Absolute current drive efficiency of secondary system [A/W]",
+            "(eta_cd_hcd_secondary)",
+            current_drive_variables.eta_cd_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
+            "(eta_cd_norm_hcd_secondary)",
+            current_drive_variables.eta_cd_norm_hcd_secondary,
+            "OP ",
+        )
+        if current_drive_variables.i_hcd_secondary == 10:
+            po.ovarre(
+                self.outfile,
+                "ECRH plasma heating efficiency",
+                "(eta_cd_norm_ecrh)",
+                current_drive_variables.eta_cd_norm_ecrh,
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Power injected into plasma by secondary system (MW)",
+            "(p_hcd_secondary_injected_mw)",
+            current_drive_variables.p_hcd_secondary_injected_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Extra power injected into plasma by secondary system  (MW)",
+            "(p_hcd_secondary_extra_heat_mw)",
+            current_drive_variables.p_hcd_secondary_extra_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Current driven in plasma by secondary system (A)",
+            "(c_hcd_secondary_driven)",
+            current_drive_variables.c_hcd_secondary_driven,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma current driven by secondary system",
+            "(f_c_plasma_hcd_secondary)",
+            current_drive_variables.f_c_plasma_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug to injector efficiency of secondary system",
+            "(eta_hcd_secondary_injector_wall_plug)",
+            current_drive_variables.eta_hcd_secondary_injector_wall_plug,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug electric power of secondary system",
+            "(p_hcd_secondary_electric_mw)",
+            heat_transport_variables.p_hcd_secondary_electric_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+
+        if current_drive_variables.i_hcd_secondary in [5, 8]:
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Neutral beam power balance :")
+            po.ocmmnt(self.outfile, "----------------------------")
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam energy (keV)",
+                "(e_beam_kev)",
+                current_drive_variables.e_beam_kev,
+            )
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Neutral beam current (A)",
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Neutral beam wall plug efficiency",
+                "(eta_beam_injector_wall_plug)",
+                current_drive_variables.eta_beam_injector_wall_plug,
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam decay lengths to centre",
+                "(n_beam_decay_lengths_core)",
+                current_drive_variables.n_beam_decay_lengths_core,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Beam shine-through fraction",
+                "(f_p_beam_shine_through)",
+                current_drive_variables.f_p_beam_shine_through,
+                "OP ",
+            )
+
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
+            ):
+                po.ovarrf(
+                    self.outfile,
+                    "Beam first orbit loss power (MW)",
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Beam shine-through power [MW]",
+                    "(p_beam_shine_through_mw)",
+                    current_drive_variables.p_beam_shine_through_mw,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Maximum allowable beam power (MW)",
+                    "(p_hcd_injected_max)",
+                    current_drive_variables.p_hcd_injected_max,
+                )
+                po.oblnkl(self.outfile)
+                po.ovarrf(
+                    self.outfile,
+                    "Beam power entering vacuum vessel (MW)",
+                    "(p_beam_injected_mw)",
+                    current_drive_variables.p_beam_injected_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    current_drive_variables.f_p_beam_injected_ions,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam duct shielding thickness (m)",
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam tangency radius / Plasma major radius",
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Beam centreline tangency radius (m)",
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Maximum possible tangency radius (m)",
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
+                    "OP ",
+                )
+
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Totals :")
+
+        po.ovarre(
+            self.outfile,
+            "Total injected heating power that drove plasma current (MW)",
+            "(p_hcd_injected_current_total_mw)",
+            current_drive_variables.p_hcd_injected_current_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total injected heating power across all systems (MW)",
+            "(p_hcd_injected_total_mw)",
+            current_drive_variables.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total injected heating power given to the electrons (MW)",
+            "(p_hcd_injected_electrons_mw)",
+            current_drive_variables.p_hcd_injected_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total injected heating power given to the ions (MW)",
+            "(p_hcd_injected_ions_mw)",
+            current_drive_variables.p_hcd_injected_ions_mw,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Upper limit on total plasma injected power (MW)",
+            "(p_hcd_injected_max)",
+            current_drive_variables.p_hcd_injected_max,
+            "OP ",
+        )
+
+        po.osubhd(self.outfile, "Contributions:")
+
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from lower hybrid systems (MW)",
+            "(p_hcd_lowhyb_injected_total_mw)",
+            current_drive_variables.p_hcd_lowhyb_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from ion cyclotron systems (MW)",
+            "(p_hcd_icrh_injected_total_mw)",
+            current_drive_variables.p_hcd_icrh_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from electron cyclotron systems (MW)",
+            "(p_hcd_ecrh_injected_total_mw)",
+            current_drive_variables.p_hcd_ecrh_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from neutral beam systems (MW)",
+            "(p_hcd_beam_injected_total_mw)",
+            current_drive_variables.p_hcd_beam_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power into plasma from lower hybrid systems (MW)",
+            "(p_hcd_ebw_injected_total_mw)",
+            current_drive_variables.p_hcd_ebw_injected_total_mw,
+            "OP ",
+        )
+
+        po.osubhd(self.outfile, "Fractions of current drive :")
+        po.ovarrf(
+            self.outfile,
+            "Bootstrap fraction",
+            "(f_c_plasma_bootstrap)",
+            current_drive_variables.f_c_plasma_bootstrap,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Diamagnetic fraction",
+            "(f_c_plasma_diamagnetic)",
+            current_drive_variables.f_c_plasma_diamagnetic,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Pfirsch-Schlueter fraction",
+            "(f_c_plasma_pfirsch_schluter)",
+            current_drive_variables.f_c_plasma_pfirsch_schluter,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Auxiliary current drive fraction",
+            "(f_c_plasma_auxiliary)",
+            physics_variables.f_c_plasma_auxiliary,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Inductive fraction",
+            "(f_c_plasma_inductive)",
+            physics_variables.f_c_plasma_inductive,
+            "OP ",
+        )
+
+        # MDK Add physics_variables.f_c_plasma_non_inductive as it can be an iteration variable
+        po.ovarrf(
+            self.outfile,
+            "Fraction of the plasma current produced by non-inductive means",
+            "(f_c_plasma_non_inductive)",
+            physics_variables.f_c_plasma_non_inductive,
+        )
+
+        if (
+            abs(
+                current_drive_variables.f_c_plasma_bootstrap
+                - current_drive_variables.f_c_plasma_bootstrap_max
+            )
+            < 1.0e-8
+        ):
+            po.ocmmnt(self.outfile, "Warning : bootstrap current fraction is at")
+            po.ocmmnt(self.outfile, "          its prescribed maximum.")
+
+        po.oblnkl(self.outfile)
 
 
 def init_current_drive_variables():
@@ -2233,7 +2458,7 @@ def init_current_drive_variables():
     current_drive_variables.f_c_plasma_diamagnetic_hender = 0.0
     current_drive_variables.f_c_plasma_diamagnetic_scene = 0.0
     current_drive_variables.f_c_plasma_diamagnetic = 0.0
-    current_drive_variables.p_ecrh_injected_mw = 0.0
+    current_drive_variables.p_hcd_ecrh_injected_total_mw = 0.0
     current_drive_variables.echwpow = 0.0
     current_drive_variables.eta_cd_hcd_primary = 0.0
     current_drive_variables.n_ecrh_harmonic = 2.0
@@ -2266,10 +2491,11 @@ def init_current_drive_variables():
     current_drive_variables.p_hcd_injected_electrons_mw = 0.0
     current_drive_variables.p_hcd_injected_ions_mw = 0.0
     current_drive_variables.p_hcd_injected_total_mw = 0.0
+    current_drive_variables.p_hcd_injected_current_total_mw = 0.0
     current_drive_variables.p_hcd_secondary_injected_mw = 0.0
     current_drive_variables.f_c_plasma_internal = 0.0
-    current_drive_variables.plhybd = 0.0
-    current_drive_variables.pnbeam = 0.0
+    current_drive_variables.p_hcs_lowhyb_injected_total_mw = 0.0
+    current_drive_variables.p_hcd_beam_injected_mw = 0.0
     current_drive_variables.p_beam_orbit_loss_mw = 0.0
     current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
     current_drive_variables.pwplh = 0.0

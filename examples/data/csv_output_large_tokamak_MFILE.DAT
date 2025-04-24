@@ -127,9 +127,9 @@
  bore____________________________________________________________________ (itvar035)____________________      2.0588E+00    
  bore_(final_value/initial_value)________________________________________ (xcm035)______________________      1.0294E+00    
  bore_(range_normalised)_________________________________________________ (nitvar035)___________________      1.9786E-01    
- fvsbrnni________________________________________________________________ (itvar036)____________________      4.1495E-01    
- fvsbrnni_(final_value/initial_value)____________________________________ (xcm036)______________________      1.0374E+00    
- fvsbrnni_(range_normalised)_____________________________________________ (nitvar036)___________________      4.1437E-01    
+ f_c_plasma_non_inductive________________________________________________________________ (itvar036)____________________      4.1495E-01    
+ f_c_plasma_non_inductive_(final_value/initial_value)____________________________________ (xcm036)______________________      1.0374E+00    
+ f_c_plasma_non_inductive_(range_normalised)_____________________________________________ (nitvar036)___________________      4.1437E-01    
  tdmptf__________________________________________________________________ (itvar037)____________________      1.9607E+01    
  tdmptf_(final_value/initial_value)______________________________________ (xcm037)______________________      7.8427E-01    
  tdmptf_(range_normalised)_______________________________________________ (nitvar037)___________________      1.9526E-01    
@@ -545,14 +545,14 @@
  Bootstrap_fraction______________________________________________________ (bootipf)_____________________      4.1436E-01    
  Diamagnetic_fraction____________________________________________________ (diaipf)______________________      0.0000E+00    
  Pfirsch-Schlueter_fraction______________________________________________ (f_c_plasma_pfirsch_schluter)_______________________      0.0000E+00    
- Auxiliary_current_drive_fraction________________________________________ (aux_current_fraction)_______________________      5.9038E-04    
- Inductive_fraction______________________________________________________ (inductive_current_fraction)_______________________      5.8505E-01    
- Total___________________________________________________________________ (plasipf+aux_current_fraction+inductive_current_fraction)_________      1.0000E+00    
- Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (fvsbrnni)____________________      4.1495E-01 ITV
- Electron_cyclotron_injected_power_(MW)__________________________________ (p_ecrh_injected_mw)______________________      7.5213E+01 OP 
+ Auxiliary_current_drive_fraction________________________________________ (f_c_plasma_auxiliary)_______________________      5.9038E-04    
+ Inductive_fraction______________________________________________________ (f_c_plasma_inductive)_______________________      5.8505E-01    
+ Total___________________________________________________________________ (plasipf+f_c_plasma_auxiliary+f_c_plasma_inductive)_________      1.0000E+00    
+ Fraction_of_the_plasma_current_produced_by_non-inductive_means__________ (f_c_plasma_non_inductive)____________________      4.1495E-01 ITV
+ Electron_cyclotron_injected_power_(MW)__________________________________ (p_hcd_ecrh_injected_total_mw)______________________      7.5213E+01 OP 
  Maximum_allowable_ECRH_power_(MW)_______________________________________ (p_hcd_injected_max)_____________________      2.0000E+02    
  ECH_wall_plug_efficiency________________________________________________ (eta_ecrh_injector_wall_plug)______________________      5.0000E-01    
- ECH_wall_plug_power_(MW)________________________________________________ (echwpow)_____________________      1.5043E+02 OP 
+ ECH_wall_plug_power_(MW)________________________________________________ (p_hcd_ecrh_electric_mw)_____________________      1.5043E+02 OP 
  Total_V-s_capability_of_Central_Solenoid/PF_coils_(Wb)__________________ (abs(vs_cs_pf_total_pulse))__________________      5.8939E+02    
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8401E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.8571E+02    
@@ -1158,7 +1158,7 @@
  Total_(MW)______________________________________________________________ ______________________________      2.1348E+03    
  Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      4.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
- Electric_power_for_heating_and_current_drive_(MW)_______________________ (pinjwp)______________________      1.5043E+02    
+ Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5043E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (htpmw)_______________________      1.8742E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
@@ -1432,9 +1432,9 @@ ixc = 29
 boundl(29) = 0.1
 dr_bore = 2.0
 
-* fvsbrnni
+* f_c_plasma_non_inductive
 ixc = 44
-fvsbrnni = 0.4
+f_c_plasma_non_inductive = 0.4
 
 * tdmptf [s]
 ixc = 56

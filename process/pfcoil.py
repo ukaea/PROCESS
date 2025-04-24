@@ -1216,7 +1216,7 @@ class PFCoil:
 
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
-            if pv.inductive_current_fraction > 0.0e-4:
+            if pv.f_c_plasma_inductive > 0.0e-4:
                 csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
                     pf.sig_hoop,
                     csfv.residual_sig_hoop,
@@ -2330,7 +2330,7 @@ class PFCoil:
                     tfv.tmargmin_cs,
                 )
                 # only output CS fatigue model for pulsed reactor design
-                if pv.inductive_current_fraction > 0.0e-4:
+                if pv.f_c_plasma_inductive > 0.0e-4:
                     op.ovarre(
                         self.outfile,
                         "Residual hoop stress in CS Steel (Pa)",
