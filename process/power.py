@@ -443,7 +443,7 @@ class Power:
         #  Power to plasma heating supplies, MW
         pheatingmw = (
             heat_transport_variables.p_hcd_electric_total_mw
-        )  # Should be zero if ignite==1
+        )  # Should be zero if i_plasma_ignited==1
 
         #  Power to cryogenic comp. motors, MW
         crymw = heat_transport_variables.crypmw
@@ -796,7 +796,7 @@ class Power:
         # heat_transport_variables.p_hcd_electric_total_mw calculated in current_drive.f90
 
         #  Waste injection power
-        if physics_variables.ignite == 0:
+        if physics_variables.i_plasma_ignited == 0:
             # MDK
             # pinjht = heat_transport_variables.p_hcd_electric_total_mw - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
             heat_transport_variables.pinjht = (
@@ -1347,7 +1347,7 @@ class Power:
 
         pinj = (
             current_drive_variables.p_hcd_injected_total_mw
-            if physics_variables.ignite == 0
+            if physics_variables.i_plasma_ignited == 0
             else 0.0
         )
 
@@ -1723,7 +1723,7 @@ class Power:
             physics_variables.p_plasma_ohmic_mw,
             "OP ",
         )
-        # if (physics_variables.ignite == 1) :
+        # if (physics_variables.i_plasma_ignited == 1) :
         #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+p_plasma_ohmic_mw, 'OP ')
         #    po.oblnkl(self.outfile)
         #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.alpha_power_total+physics_variables.non_alpha_charged_power+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :

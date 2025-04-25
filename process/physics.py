@@ -2074,7 +2074,7 @@ class Physics:
         # If ignited, then ignore beam fusion effects
 
         if (current_drive_variables.c_beam_total != 0.0e0) and (
-            physics_variables.ignite == 0
+            physics_variables.i_plasma_ignited == 0
         ):
             (
                 physics_variables.beta_beam,
@@ -2282,7 +2282,7 @@ class Physics:
         # which is assumed to be absorbed by the first wall
         pinj = (
             current_drive_variables.p_hcd_injected_total_mw
-            if physics_variables.ignite == 0
+            if physics_variables.i_plasma_ignited == 0
             else 0.0
         )
 
@@ -2368,7 +2368,7 @@ class Physics:
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
-            physics_variables.ignite,
+            physics_variables.i_plasma_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.non_alpha_charged_power,
@@ -2853,7 +2853,7 @@ class Physics:
 
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
-        if physics_variables.ignite == 0:
+        if physics_variables.i_plasma_ignited == 0:
             physics_variables.nd_beam_ions = (
                 physics_variables.dene * physics_variables.f_nd_beam_electron
             )
@@ -5032,14 +5032,14 @@ class Physics:
             current_drive_variables.p_hcd_injected_electrons_mw,
             "OP ",
         )
-        if physics_variables.ignite == 1:
+        if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         po.ovarin(
             self.outfile,
             "Ignited plasma switch (0=not ignited, 1=ignited)",
-            "(ignite)",
-            physics_variables.ignite,
+            "(i_plasma_ignited)",
+            physics_variables.i_plasma_ignited,
         )
 
         po.oblnkl(self.outfile)
@@ -5352,7 +5352,7 @@ class Physics:
 
         po.osubhd(self.outfile, "Confinement :")
 
-        if physics_variables.ignite == 1:
+        if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Device is assumed to be ignited for the calculation of confinement time",
@@ -6023,7 +6023,7 @@ class Physics:
                 physics_variables.eps,
                 1.0,
                 i_confinement_time,
-                physics_variables.ignite,
+                physics_variables.i_plasma_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
@@ -6947,7 +6947,7 @@ class Physics:
                 physics_variables.eps,
                 hfact,
                 i_confinement_time,
-                physics_variables.ignite,
+                physics_variables.i_plasma_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
                 physics_variables.non_alpha_charged_power,
@@ -6975,7 +6975,7 @@ class Physics:
             )
 
             # Take into account whether injected power is included in tau_e calculation (i.e. whether device is ignited)
-            if physics_variables.ignite == 0:
+            if physics_variables.i_plasma_ignited == 0:
                 fhz_value -= (
                     current_drive_variables.p_hcd_injected_total_mw
                     / physics_variables.vol_plasma
@@ -7003,7 +7003,7 @@ class Physics:
         eps: float,
         hfact: float,
         i_confinement_time: int,
-        ignite: int,
+        i_plasma_ignited: int,
         kappa: float,
         kappa95: float,
         non_alpha_charged_power: float,
@@ -7032,7 +7032,7 @@ class Physics:
         :param eps: Inverse aspect ratio
         :param hfact: H factor on energy confinement scalings
         :param i_confinement_time: Switch for energy confinement scaling to use
-        :param ignite: Switch for ignited calculation
+        :param i_plasma_ignited: Switch for ignited calculation
         :param kappa: Plasma elongation
         :param kappa95: Plasma elongation at 95% surface
         :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
@@ -7068,7 +7068,7 @@ class Physics:
         )
 
         # If the device is not ignited, add the injected auxiliary power
-        if ignite == 0:
+        if i_plasma_ignited == 0:
             p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
 
         # Include the radiation as a loss term if requested
@@ -8238,7 +8238,7 @@ def init_physics_variables():
     physics_variables.i_density_limit = 8
     physics_variables.n_divertors = 2
     physics_variables.i_beta_fast_alpha = 1
-    physics_variables.ignite = 0
+    physics_variables.i_plasma_ignited = 0
     physics_variables.ipedestal = 1
     physics_variables.i_pfirsch_schluter_current = 0
     physics_variables.neped = 4.0e19

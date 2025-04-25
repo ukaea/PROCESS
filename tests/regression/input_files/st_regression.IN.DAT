@@ -79,7 +79,7 @@ icc = 2
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
-* VARIABLES:     i_rad_loss,ignite,p_hcd_injected_electrons_mw, Rest calculated in-situ
+* VARIABLES:     i_rad_loss,i_plasma_ignited,p_hcd_injected_electrons_mw, Rest calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Performance ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -142,7 +142,7 @@ fpnetel = 1.0
 *icc = 28
 * DESCRIPTION:   Constraint equation for fusion gain (big Q) lower limit 
 * JUSTIFICATION: Turned off, dont care about Q lower limit  
-* VARIABLES:     ignite,  bigq calculated in-situ
+* VARIABLES:     i_plasma_ignited,  bigq calculated in-situ
 
 *bigqmin = 
 * DESCRIPTION:   Minimum fusion gain Q 
@@ -397,7 +397,7 @@ q0 = 2.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ H-mode & Confinement ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*ignite = 
+*i_plasma_ignited = 
 * DESCRIPTION:   Switch for ignited plasma assumption
 * JUSTIFICATION: Non ignited plasma, default = Not ignited
 
@@ -2779,12 +2779,12 @@ feffcd = 1.0
 *icc = 3
 * DESCRIPTION:   Global power balance for ions (NBI)
 * JUSTIFICATION: Not used as no NBI used
-* VARIABLES:     p_hcd_injected_ions_mw,ignite, Rest calculated in-situ
+* VARIABLES:     p_hcd_injected_ions_mw,i_plasma_ignited, Rest calculated in-situ
 
 *icc = 7
 * DESCRIPTION:   Equation for hot ion beam density (NBI)
 * JUSTIFICATION: Turned off, not using NBI
-* VARIABLES:     ignite,nd_beam_ions Rest calculated in-situ
+* VARIABLES:     i_plasma_ignited,nd_beam_ions Rest calculated in-situ
 
 *ixc = 7
 *f_nd_beam_electron = 
