@@ -85,10 +85,10 @@ $$
 
 ### Ignition
 
-Switch `ignite` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
-without the need for any injected auxiliary power during the burn. If `ignite = 1`, the heating and current drive power $P_{\text{HCD}}$, does not contribute to the loss power term. 
+Switch `i_plasma_ignited` can be used to denote whether the plasma is ignited, i.e. fully self-sustaining 
+without the need for any injected auxiliary power during the burn. If `i_plasma_ignited = 1`, the heating and current drive power $P_{\text{HCD}}$, does not contribute to the loss power term. 
 
-If `ignite = 0`, the plasma is not ignited, and the heating and current drive power $P_{\text{HCD}}$, does contribute to the loss power term.
+If `i_plasma_ignited = 0`, the plasma is not ignited, and the heating and current drive power $P_{\text{HCD}}$, does contribute to the loss power term.
 phase. An ignited plasma will be difficult to control and is unlikely to be practical. This
 option is not recommended.
 
@@ -695,7 +695,7 @@ $$
 
 The $\frac{3}{2}n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}$ value is simply the volume averaged ion thermal energy density where $\langle T_{\text{i}} \rangle_{\text{n}}$ is the density weighted temperature. The same goes for the $\frac{3}{2}n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{e}}$ electron thermal energy density term. $\tau_{\text{E}}$ is the confinement time calculated from the chosen confinement scaling via `i_confinement_time`. 
 
-The constraint uses the loss power and thermal densities hence the inclusion of the $V_{\text{p}}$ plasma volume term. The constraint is adapted depending on the condition of `i_rad_loss` which governs the radiation contribution to the loss power definition, see the [radiation and energy confinement section](#effect-of-radiation-on-energy-confinement) for more info. The injected heating and current drive contribution $P_{\text{HCD}}$ is also included or excluded depending if the plasma is deemed to be ignited with the `ignite` switch.
+The constraint uses the loss power and thermal densities hence the inclusion of the $V_{\text{p}}$ plasma volume term. The constraint is adapted depending on the condition of `i_rad_loss` which governs the radiation contribution to the loss power definition, see the [radiation and energy confinement section](#effect-of-radiation-on-energy-confinement) for more info. The injected heating and current drive contribution $P_{\text{HCD}}$ is also included or excluded depending if the plasma is deemed to be ignited with the `i_plasma_ignited` switch.
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
 
