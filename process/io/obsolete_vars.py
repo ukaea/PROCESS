@@ -326,6 +326,7 @@ OBS_VARS = {
     "hldivlim": "pflux_div_heat_load_max_mw",
     "pdivtlim": "p_plasma_separatrix_min_mw",
     "i_hldiv": "i_div_heat_load",
+    "ignite": "i_plasma_ignited",
 }
 
 OBS_VARS_HELP = {
