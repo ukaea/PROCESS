@@ -4218,7 +4218,7 @@ class Stellarator:
         #  If ignited, then ignore beam fusion effects
 
         if (current_drive_variables.p_hcd_beam_injected_total_mw != 0.0e0) and (
-            physics_variables.ignite == 0
+            physics_variables.i_plasma_ignited == 0
         ):
             (
                 physics_variables.beta_beam,

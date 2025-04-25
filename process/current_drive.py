@@ -3522,7 +3522,7 @@ class CurrentDrive:
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
-            if physics_variables.ignite == 1:
+            if physics_variables.i_plasma_ignited == 1:
                 heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
@@ -3540,7 +3540,7 @@ class CurrentDrive:
 
         po.oheadr(self.outfile, "Heating & Current Drive System")
 
-        if physics_variables.ignite == 1:
+        if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Ignited plasma; injected power only used for start-up phase",

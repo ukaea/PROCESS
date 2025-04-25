@@ -445,6 +445,7 @@ contains
     !! <LI> = 2 total power lost is scaling power only, with no additional
     !! allowance for radiation. This is not recommended for power plant models.</UL>
     !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
+    !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
     !! <LI> = 0 do not assume plasma ignition;
     !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
     !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
@@ -459,7 +460,7 @@ contains
     !! vol_plasma : input real : plasma volume (m3)
 
     use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
-                                  pden_plasma_core_rad_mw, f_alpha_plasma, pden_alpha_total_mw, pden_non_alpha_charged_mw, &
+                                  pden_plasma_core_rad_mw, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: p_hcd_injected_total_mw
 
@@ -487,7 +488,7 @@ contains
 
     ! if plasma not ignited include injected power
     if (i_plasma_ignited == 0) then
-      pdenom = f_alpha_plasma*pden_alpha_total_mw + pden_non_alpha_charged_mw + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
+      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
     else
       ! if plasma ignited
       pdenom = f_alpha_plasma*pden_alpha_total_mw + pden_non_alpha_charged_mw + pden_plasma_ohmic_mw
@@ -512,6 +513,7 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
+      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
@@ -520,7 +522,7 @@ contains
       !! f_pden_alpha_ions_mw : input real : alpha power per volume to ions (MW/m3)
       !! p_hcd_injected_ions_mw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, f_pden_alpha_ions_mw, vol_plasma
+      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
       use current_drive_variables, only: p_hcd_injected_ions_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -531,9 +533,9 @@ contains
 
 	   ! No assume plasma ignition:
       if (i_plasma_ignited == 0) then
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma)
-         tmp_con    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma)
+         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
@@ -565,6 +567,7 @@ contains
       !! <LI> = 2 total power lost is scaling power only, with no additional
       !! allowance for radiation. This is not recommended for power plant models.</UL>
       !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
+      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
       !! pden_electron_transport_loss_mw : input real : electron transport power per volume (MW/m3)
@@ -576,7 +579,7 @@ contains
       !! p_hcd_injected_electrons_mw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_plasma_core_rad_mw, f_alpha_plasma, &
-                                 f_pden_alpha_electron_mw, piepv, vol_plasma, pden_plasma_rad_mw
+                                 alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: p_hcd_injected_electrons_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -600,7 +603,7 @@ contains
 
       ! if plasma not ignited include injected power
       if (i_plasma_ignited == 0) then
-         pdenom = f_alpha_plasma*f_pden_alpha_electron_mw + piepv + p_hcd_injected_electrons_mw/vol_plasma
+         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + p_hcd_injected_electrons_mw/vol_plasma
       else
       ! if plasma ignited
          pdenom = f_alpha_plasma*f_pden_alpha_electron_mw + piepv
@@ -704,14 +707,18 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
+      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
+      !! Obviously, i_plasma_ignited must be zero if current drive is required.
+      !! If i_plasma_ignited=1, any auxiliary power is assumed to be used only
       !! Obviously, i_plasma_ignited must be zero if current drive is required.
       !! If i_plasma_ignited=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       !! beam_density_out : input real :  hot beam ion density from calculation (/m3)
       !! nd_beam_ions : input real : hot beam ion density, variable (/m3)
+      use physics_variables, only: i_plasma_ignited, beam_density_out, nd_beam_ions
       use physics_variables, only: i_plasma_ignited, beam_density_out, nd_beam_ions
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -721,6 +728,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
 	   ! Do not assume plasma ignition:
+      if (i_plasma_ignited == 0) then
       if (i_plasma_ignited == 0) then
          tmp_cc     = 1.0D0 - beam_density_out/nd_beam_ions
          tmp_con    = nd_beam_ions * (1.0D0 - tmp_cc)
@@ -1423,14 +1431,18 @@ contains
       !! bigq : input real : Fusion gain; P_fusion / (P_injection + P_ohmic)
       !! bigqmin : input real : minimum fusion gain Q
       !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
+      !! i_plasma_ignited : input integer : switch for ignition assumption:<UL>
       !! <LI> = 0 do not assume plasma ignition;
       !! <LI> = 1 assume ignited (but include auxiliary power in costs)</UL>
+      !! Obviously, i_plasma_ignited must be zero if current drive is required.
+      !! If i_plasma_ignited=1, any auxiliary power is assumed to be used only
       !! Obviously, i_plasma_ignited must be zero if current drive is required.
       !! If i_plasma_ignited=1, any auxiliary power is assumed to be used only
       !! during plasma start-up, and is excluded from all steady-state
       !! power balance calculations.
       use constraint_variables, only: fqval, bigqmin
       use current_drive_variables, only: bigq
+      use physics_variables, only: i_plasma_ignited
       use physics_variables, only: i_plasma_ignited
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1440,6 +1452,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! if plasma is not ignited ...
+      if (i_plasma_ignited == 0) then
       if (i_plasma_ignited == 0) then
          tmp_cc =  1.0D0 - fqval * bigq/bigqmin
          tmp_con = bigqmin * (1.0D0 - tmp_cc)
@@ -3377,6 +3390,7 @@ contains
    subroutine constraint_eqn_091(tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units)
       !! Lower limit to ensure ECRH te is greater than required te for ignition
       !! at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
+      !! at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
       !! stellarators only (but in principle usable also for tokamaks).
       !! author: J Lion, IPP Greifswald
       !! args : output structure : residual error; constraint value;
@@ -3390,6 +3404,7 @@ contains
       use constraint_variables, only: fecrh_ignition
       use stellarator_variables, only: max_gyrotron_frequency, te0_ecrh_achievable, powerscaling_constraint, powerht_constraint
       use physics_variables, only: i_plasma_ignited
+      use physics_variables, only: i_plasma_ignited
       use current_drive_variables, only: p_hcd_primary_extra_heat_mw
       implicit none
       real(dp), intent(out) :: tmp_cc
@@ -3399,6 +3414,7 @@ contains
       character(len=10), intent(out) :: tmp_units
 
       ! Achievable ECRH te needs to be larger than needed te for igntion
+      if(i_plasma_ignited==0) then
       if(i_plasma_ignited==0) then
          tmp_cc = 1.0D0 - fecrh_ignition* (powerht_constraint+p_hcd_primary_extra_heat_mw)/powerscaling_constraint
       else
