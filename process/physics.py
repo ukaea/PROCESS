@@ -1606,6 +1606,23 @@ class Physics:
             physics_variables.triang95,
         )
 
+        if physics_variables.iprofile == 1:
+            # Ensure current profile consistency, if required
+            # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
+
+            # Tokamaks 4th Edition, Wesson, page 116
+            physics_variables.alphaj = (
+                physics_variables.qstar / physics_variables.q0 - 1.0
+            )
+            physics_variables.ind_plasma_internal_norm = np.log(
+                1.65 + 0.89 * physics_variables.alphaj
+            )
+
+        if physics_variables.iprofile in [4, 5, 6]:
+            # Spherical Tokamak relation for internal inductance
+            # Menard et al. (2016), Nuclear Fusion, 56, 106023
+            physics_variables.ind_plasma_internal_norm = 3.4 - physics_variables.kappa
+
         # Calculate density and temperature profile quantities
         # If physics_variables.ipedestal = 1 then set pedestal density to
         #   physics_variables.fgwped * Greenwald density limit
@@ -3252,14 +3269,11 @@ class Physics:
         bt: float,
         eps: float,
         i_plasma_current: int,
-        iprofile: int,
         kappa: float,
         kappa95: float,
         p0: float,
         len_plasma_poloidal: float,
-        q0: float,
         q95: float,
-        ind_plasma_internal_norm: float,
         rmajor: float,
         rminor: float,
         triang: float,
@@ -3282,18 +3296,10 @@ class Physics:
                 7 = Connor-Hastie model
                 8 = Sauter scaling (allowing negative triangularity)
                 9 = FIESTA ST scaling
-            iprofile (int): Switch for current profile consistency.
-                0: Use input values for alphaj, ind_plasma_internal_norm, beta_norm_max.
-                1: Make these consistent with input q95, q_0 values.
-                2: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling).
-                3: Use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling).
-                4: Use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling).
-                5: Use input value for alphaj. Set ind_plasma_internal_norm and beta_norm_max from Menard scaling.
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
             p0 (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
-            q0 (float): Plasma safety factor on axis.
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             ind_plasma_internal_norm (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
@@ -3302,7 +3308,7 @@ class Physics:
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float, float, float]: Tuple containing bp, qstar, plasma_current, alphaj, ind_plasma_internal_norm.
+            Tuple[float, float, float,]: Tuple containing bp, qstar, plasma_current,
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3362,7 +3368,6 @@ class Physics:
 
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
-            # N.B. If iprofile=1, alphaj will be wrong during the first call (only)
             fq = calculate_current_coefficient_hastie(
                 alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0
             )
@@ -3419,20 +3424,7 @@ class Physics:
             constants.rmu0,
         )
 
-        if iprofile == 1:
-            # Ensure current profile consistency, if required
-            # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
-
-            # Tokamaks 4th Edition, Wesson, page 116
-            alphaj = qstar / q0 - 1.0
-            ind_plasma_internal_norm = np.log(1.65 + 0.89 * alphaj)
-
-        if iprofile in [4, 5, 6]:
-            # Spherical Tokamak relation for internal inductance
-            # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            ind_plasma_internal_norm = 3.4 - kappa
-
-        return alphaj, ind_plasma_internal_norm, bp, qstar, plasma_current
+        return bp, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
