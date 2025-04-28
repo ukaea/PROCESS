@@ -1541,6 +1541,7 @@ INPUT_VARIABLES = {
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "iprimshld": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "iprofile": InputVariable(fortran.physics_variables, int, range=(0, 6)),
+    "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 4)),
     "i_fw_blkt_shared_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
