@@ -138,7 +138,7 @@ module physics_variables
   !! vertical field at plasma (T)
 
   real(dp) :: c_beta
-  !! Destabalisation parameter for iprofile=6 beta limit
+  !! Destabalisation parameter for i_beta_norm_max=4 beta limit
 
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
@@ -427,17 +427,6 @@ module physics_variables
   real(dp) :: tesep
   !! electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
   !! criterion is used (`icc=78`)
-
-  integer :: iprofile
-  !! switch for current profile consistency:
-  !!
-  !! - =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max
-  !! - =1 make these consistent with input q95, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set ind_plasma_internal_norm and beta_norm_max from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set ind_plasma_internal_norm from Menard and beta_norm_max from Tholerus
 
   integer :: i_beta_norm_max
   !! Switch for maximum normalised beta scaling:

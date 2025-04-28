@@ -3804,7 +3804,7 @@ class Physics:
                     "OP ",
                 )
 
-                if physics_variables.iprofile == 1:
+                if physics_variables.i_alphaj == 1:
                     po.ovarrf(
                         self.outfile,
                         "Current density profile factor",
@@ -4067,7 +4067,7 @@ class Physics:
         )
         po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:
-            if physics_variables.iprofile == 1:
+            if physics_variables.i_beta_norm_max != 0:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
@@ -8331,7 +8331,6 @@ def init_physics_variables():
     physics_variables.tbeta = 2.0
     physics_variables.teped = 1.0
     physics_variables.tesep = 0.1
-    physics_variables.iprofile = 1
     physics_variables.i_beta_norm_max = 1
     physics_variables.i_rad_loss = 1
     physics_variables.i_confinement_time = 34
