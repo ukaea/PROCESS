@@ -8334,6 +8334,7 @@ def init_physics_variables():
     physics_variables.f_nd_alpha_electron = 0.1
     physics_variables.f_nd_protium_electrons = 0.0
     physics_variables.ind_plasma_internal_norm = 0.9
+    physics_variables.i_ind_plasma_internal_norm = 0
     physics_variables.ind_plasma = 0.0
     physics_variables.rmajor = 8.14
     physics_variables.rminor = 0.0

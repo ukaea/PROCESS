@@ -427,6 +427,9 @@ module physics_variables
   integer :: i_beta_norm_max
   !! Switch for beta_norm_max scaling:
 
+  integer :: i_ind_plasma_internal_norm
+  !! Switch for ind_plasma_internal_norm scaling:
+
   integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
   !!
