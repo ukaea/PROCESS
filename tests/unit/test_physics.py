@@ -1062,11 +1062,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     i_plasma_current: Any = None
 
-    iprofile: Any = None
-
     alphaj: Any = None
-
-    ind_plasma_internal_norm: Any = None
 
     alphap: Any = None
 
@@ -1082,8 +1078,6 @@ class PlasmaCurrentParam(NamedTuple):
 
     len_plasma_poloidal: Any = None
 
-    q0: Any = None
-
     q95: Any = None
 
     rmajor: Any = None
@@ -1095,10 +1089,6 @@ class PlasmaCurrentParam(NamedTuple):
     triang95: Any = None
 
     expected_normalised_total_beta: Any = None
-
-    expected_alphaj: Any = None
-
-    expected_ind_plasma_internal_norm: Any = None
 
     expected_bp: Any = None
 
@@ -1114,9 +1104,7 @@ class PlasmaCurrentParam(NamedTuple):
             beta_norm_total=0,
             beta=0.030000000000000006,
             i_plasma_current=4,
-            iprofile=1,
             alphaj=1,
-            ind_plasma_internal_norm=0.90000000000000002,
             alphap=0,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -1124,15 +1112,12 @@ class PlasmaCurrentParam(NamedTuple):
             kappa95=1.6517857142857142,
             p0=0,
             len_plasma_poloidal=24.081367139525412,
-            q0=1,
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_alphaj=1.9008029008029004,
-            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
             expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
@@ -1141,9 +1126,7 @@ class PlasmaCurrentParam(NamedTuple):
             beta_norm_total=2.4784688886891844,
             beta=0.030000000000000006,
             i_plasma_current=4,
-            iprofile=1,
             alphaj=1.9008029008029004,
-            ind_plasma_internal_norm=1.2064840230894305,
             alphap=2.4500000000000002,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -1151,15 +1134,12 @@ class PlasmaCurrentParam(NamedTuple):
             kappa95=1.6517857142857142,
             p0=626431.90482713911,
             len_plasma_poloidal=24.081367139525412,
-            q0=1,
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_alphaj=1.9008029008029004,
-            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
             expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
@@ -1187,11 +1167,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
-    _, _, bp, qstar, plasma_current = physics.calculate_plasma_current(
+    bp, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
-        iprofile=plasmacurrentparam.iprofile,
         alphaj=plasmacurrentparam.alphaj,
-        ind_plasma_internal_norm=plasmacurrentparam.ind_plasma_internal_norm,
         alphap=plasmacurrentparam.alphap,
         bt=plasmacurrentparam.bt,
         eps=plasmacurrentparam.eps,
@@ -1199,7 +1177,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         kappa95=plasmacurrentparam.kappa95,
         p0=plasmacurrentparam.p0,
         len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
-        q0=plasmacurrentparam.q0,
         q95=plasmacurrentparam.q95,
         rmajor=plasmacurrentparam.rmajor,
         rminor=plasmacurrentparam.rminor,

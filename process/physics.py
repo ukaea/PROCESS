@@ -1606,7 +1606,7 @@ class Physics:
             physics_variables.triang95,
         )
 
-        if physics_variables.iprofile == 1:
+        if physics_variables.i_alphaj == 1:
             # Ensure current profile consistency, if required
             # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
 
@@ -1614,11 +1614,12 @@ class Physics:
             physics_variables.alphaj = (
                 physics_variables.qstar / physics_variables.q0 - 1.0
             )
+
+        if physics_variables.i_ind_plasma_internal == 1:
             physics_variables.ind_plasma_internal_norm = np.log(
                 1.65 + 0.89 * physics_variables.alphaj
             )
-
-        if physics_variables.iprofile in [4, 5, 6]:
+        elif physics_variables.i_ind_plasma_internal == 2:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             physics_variables.ind_plasma_internal_norm = 3.4 - physics_variables.kappa
