@@ -174,6 +174,18 @@ module physics_variables
   real(dp) :: beta_norm_max
   !! Troyon-like coefficient for beta scaling
 
+  real(dp) :: beta_norm_max_wesson
+  !! Wesson-like coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_menard
+  !! Menard-like coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_original_scaling
+  !! Original scaling coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_tholerus
+  !! Tholerus-like coefficient for beta scaling
+
   real(dp) :: dnelimt
   !! density limit (/m3)
 

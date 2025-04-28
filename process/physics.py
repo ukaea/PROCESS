@@ -8181,6 +8181,10 @@ def init_physics_variables():
     physics_variables.nd_beam_ions = 0.0
     physics_variables.beam_density_out = 0.0
     physics_variables.beta_norm_max = 3.5
+    physics_variables.beta_norm_max_wesson = 0.0
+    physics_variables.beta_norm_max_menard = 0.0
+    physics_variables.beta_norm_max_original_scaling = 0.0
+    physics_variables.beta_norm_max_tholerus = 0.0
     physics_variables.dnelimt = 0.0
     physics_variables.nd_ions_total = 0.0
     physics_variables.dnla = 0.0
