@@ -1581,8 +1581,6 @@ class Physics:
 
         # Calculate plasma current
         (
-            physics_variables.alphaj,
-            physics_variables.ind_plasma_internal_norm,
             physics_variables.bp,
             physics_variables.qstar,
             physics_variables.plasma_current,
@@ -1592,14 +1590,11 @@ class Physics:
             physics_variables.bt,
             physics_variables.eps,
             physics_variables.i_plasma_current,
-            physics_variables.iprofile,
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.p0,
             physics_variables.len_plasma_poloidal,
-            physics_variables.q0,
             physics_variables.q95,
-            physics_variables.ind_plasma_internal_norm,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.triang,
@@ -1615,11 +1610,11 @@ class Physics:
                 physics_variables.qstar / physics_variables.q0 - 1.0
             )
 
-        if physics_variables.i_ind_plasma_internal == 1:
+        if physics_variables.i_ind_plasma_internal_norm == 1:
             physics_variables.ind_plasma_internal_norm = np.log(
                 1.65 + 0.89 * physics_variables.alphaj
             )
-        elif physics_variables.i_ind_plasma_internal == 2:
+        elif physics_variables.i_ind_plasma_internal_norm == 2:
             # Spherical Tokamak relation for internal inductance
             # Menard et al. (2016), Nuclear Fusion, 56, 106023
             physics_variables.ind_plasma_internal_norm = 3.4 - physics_variables.kappa
@@ -2469,30 +2464,51 @@ class Physics:
 
         # Calculate physics_variables.beta limit
 
-        # Define a dictionary of lambda functions for beta_norm_max calculations
+        # Define beta_norm_max calculations
+
+        # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+        # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        physics_variables.beta_norm_max_wesson = (
+            4.0 * physics_variables.ind_plasma_internal_norm
+        )
+
+        # Original scaling law
+        physics_variables.beta_norm_max_original_scaling = 2.7 * (
+            1.0 + 5.0 * physics_variables.eps**3.5
+        )
+
+        # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+        # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+        # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        physics_variables.beta_norm_max_menard = 3.12 + 3.5 * physics_variables.eps**1.7
+
+        # Method used for STEP plasma scoping
+        # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+        # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+
+        # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
+        physics_variables.beta_norm_max_thloreus = 3.7 + (
+            (
+                physics_variables.c_beta
+                / (physics_variables.p0 / physics_variables.vol_avg_pressure)
+            )
+            * (12.5 - 3.5 * (physics_variables.p0 / physics_variables.vol_avg_pressure))
+        )
+
+        # Map calculation methods to a dictionary
         beta_norm_max_calculations = {
-            1: lambda: 4.0e0 * physics_variables.ind_plasma_internal_norm,
-            2: lambda: 2.7e0 * (1.0e0 + 5.0e0 * physics_variables.eps**3.5e0),
-            3: lambda: 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0,
-            4: lambda: 3.7e0
-            + (
-                (
-                    physics_variables.c_beta
-                    / (physics_variables.p0 / physics_variables.vol_avg_pressure)
-                )
-                * (
-                    12.5e0
-                    - 3.5e0
-                    * (physics_variables.p0 / physics_variables.vol_avg_pressure)
-                )
-            ),
+            0: physics_variables.beta_norm_max,
+            1: physics_variables.beta_norm_max_wesson,
+            2: physics_variables.beta_norm_max_original_scaling,
+            3: physics_variables.beta_norm_max_menard,
+            4: physics_variables.beta_norm_max_thloreus,
         }
 
-        # Calculate beta_norm_max based on iprofile
+        # Calculate beta_norm_max based on i_beta_norm_max
         if int(physics_variables.i_beta_norm_max) in beta_norm_max_calculations:
             physics_variables.beta_norm_max = beta_norm_max_calculations[
                 int(physics_variables.i_beta_norm_max)
-            ]()
+            ]
 
         # calculate_beta_limit() returns the beta_max for beta
         physics_variables.beta_max = calculate_beta_limit(
@@ -3742,17 +3758,6 @@ class Physics:
             po.osubhd(self.outfile, "Current and Field :")
 
             if stellarator_variables.istell == 0:
-                if physics_variables.iprofile == 1:
-                    po.ocmmnt(
-                        self.outfile,
-                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is enforced",
-                    )
-                else:
-                    po.ocmmnt(
-                        self.outfile,
-                        "Consistency between q0,q95,alphaj,ind_plasma_internal_norm,beta_norm_max is not enforced",
-                    )
-
                 po.oblnkl(self.outfile)
                 po.ovarin(
                     self.outfile,
@@ -4051,6 +4056,37 @@ class Physics:
                 physics_variables.beta_norm_poloidal,
                 "OP ",
             )
+
+            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson normalised beta upper limit",
+                "(beta_norm_max_wesson) ",
+                physics_variables.beta_norm_max_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Original normalsied beta upper limit",
+                "(beta_norm_max_original_scaling) ",
+                physics_variables.beta_norm_max_original_scaling,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard normalised beta upper limit",
+                "(beta_norm_max_menard) ",
+                physics_variables.beta_norm_max_menard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "E. Thloreus normalised beta upper limit",
+                "(beta_norm_max_thloreus) ",
+                physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+
         po.osubhd(self.outfile, "Plasma energies derived from beta :")
         po.ovarre(
             self.outfile,
