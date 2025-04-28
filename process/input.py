@@ -1545,6 +1545,7 @@ INPUT_VARIABLES = {
     "i_ind_plasma_internal_norm": InputVariable(
         fortran.physics_variables, int, range=(0, 2)
     ),
+    "i_alphaj": InputVariable(fortran.physics_variables, int, range=(0, 1)),
     "i_fw_blkt_shared_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),

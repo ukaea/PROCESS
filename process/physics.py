@@ -8154,6 +8154,7 @@ def init_physics_variables():
     physics_variables.m_plasma_electron = 0.0
     physics_variables.m_plasma = 0.0
     physics_variables.alphaj = 1.0
+    physics_variables.i_alphaj = 0
     physics_variables.alphan = 0.25
     physics_variables.alphap = 0.0
     physics_variables.alpha_rate_density_total = 0.0

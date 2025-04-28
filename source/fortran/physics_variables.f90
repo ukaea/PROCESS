@@ -425,10 +425,13 @@ module physics_variables
   !! - =6 use input values for alphaj, c_beta.  Set ind_plasma_internal_norm from Menard and beta_norm_max from Tholerus
 
   integer :: i_beta_norm_max
-  !! Switch for beta_norm_max scaling:
+  !! Switch for maximum normalised beta scaling:
 
   integer :: i_ind_plasma_internal_norm
-  !! Switch for ind_plasma_internal_norm scaling:
+  !! Switch for plasma normalised internal inductance scaling:
+
+  integer :: i_alphaj
+  !! Switch for current profile index scaling:
 
   integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
