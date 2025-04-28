@@ -1610,14 +1610,33 @@ class Physics:
                 physics_variables.qstar / physics_variables.q0 - 1.0
             )
 
-        if physics_variables.i_ind_plasma_internal_norm == 1:
-            physics_variables.ind_plasma_internal_norm = np.log(
-                1.65 + 0.89 * physics_variables.alphaj
+        physics_variables.ind_plasma_internal_norm_wesson = np.log(
+            1.65 + 0.89 * physics_variables.alphaj
+        )
+
+        # Spherical Tokamak relation for internal inductance
+        # Menard et al. (2016), Nuclear Fusion, 56, 106023
+        physics_variables.ind_plasma_internal_norm_menard = (
+            3.4 - physics_variables.kappa
+        )
+
+        # Map calculation methods to a dictionary
+        ind_plasma_internal_norm_calculations = {
+            0: physics_variables.ind_plasma_internal_norm,
+            1: physics_variables.ind_plasma_internal_norm_wesson,
+            2: physics_variables.ind_plasma_internal_norm_menard,
+        }
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        if (
+            int(physics_variables.i_ind_plasma_internal_norm)
+            in ind_plasma_internal_norm_calculations
+        ):
+            physics_variables.ind_plasma_internal_norm = (
+                ind_plasma_internal_norm_calculations[
+                    int(physics_variables.i_ind_plasma_internal_norm)
+                ]
             )
-        elif physics_variables.i_ind_plasma_internal_norm == 2:
-            # Spherical Tokamak relation for internal inductance
-            # Menard et al. (2016), Nuclear Fusion, 56, 106023
-            physics_variables.ind_plasma_internal_norm = 3.4 - physics_variables.kappa
 
         # Calculate density and temperature profile quantities
         # If physics_variables.ipedestal = 1 then set pedestal density to
@@ -3798,13 +3817,6 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma normalised internal inductance",
-                    "(ind_plasma_internal_norm)",
-                    physics_variables.ind_plasma_internal_norm,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
                     "Vertical field at plasma (T)",
                     "(bvert)",
                     physics_variables.bvert,
@@ -3869,7 +3881,30 @@ class Physics:
                     physics_variables.q95_min,
                     "OP ",
                 )
-
+            po.ovarrf(
+                self.outfile,
+                "Plasma normalised internal inductance",
+                "(ind_plasma_internal_norm)",
+                physics_variables.ind_plasma_internal_norm,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
+            po.oblnkl(self.outfile)
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_wesson)",
+                physics_variables.ind_plasma_internal_norm_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_menard)",
+                physics_variables.ind_plasma_internal_norm_menard,
+                "OP ",
+            )
         else:
             po.ovarrf(
                 self.outfile,
@@ -8358,6 +8393,8 @@ def init_physics_variables():
     physics_variables.f_nd_alpha_electron = 0.1
     physics_variables.f_nd_protium_electrons = 0.0
     physics_variables.ind_plasma_internal_norm = 0.9
+    physics_variables.ind_plasma_internal_norm_wesson = 0.0
+    physics_variables.ind_plasma_internal_norm_menard = 0.0
     physics_variables.i_ind_plasma_internal_norm = 0
     physics_variables.ind_plasma = 0.0
     physics_variables.rmajor = 8.14

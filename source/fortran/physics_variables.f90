@@ -801,7 +801,13 @@ module physics_variables
   !! Seeded f_nd_protium_electrons density / electron density.
 
   real(dp) :: ind_plasma_internal_norm
-  !! Plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+  !! Plasma normalised internal inductance
+
+  real(dp) :: ind_plasma_internal_norm_wesson
+  !! Wesson-like plasma normalised internal inductance
+
+  real(dp) :: ind_plasma_internal_menard
+  !! Menard-like plasma normalised internal inductance
 
   real(dp) :: ind_plasma
   !! plasma inductance (H)
