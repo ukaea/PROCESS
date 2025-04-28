@@ -1601,14 +1601,25 @@ class Physics:
             physics_variables.triang95,
         )
 
-        if physics_variables.i_alphaj == 1:
-            # Ensure current profile consistency, if required
-            # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
+        # Ensure current profile consistency, if required
+        # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
 
-            # Tokamaks 4th Edition, Wesson, page 116
-            physics_variables.alphaj = (
-                physics_variables.qstar / physics_variables.q0 - 1.0
-            )
+        # Tokamaks 4th Edition, Wesson, page 116
+        physics_variables.alphaj_wesson = (
+            physics_variables.qstar / physics_variables.q0 - 1.0
+        )
+
+        # Map calculation methods to a dictionary
+        alphaj_calculations = {
+            0: physics_variables.alphaj,
+            1: physics_variables.alphaj_wesson,
+        }
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        if int(physics_variables.i_alphaj) in alphaj_calculations:
+            physics_variables.alphaj = alphaj_calculations[
+                int(physics_variables.i_alphaj)
+            ]
 
         physics_variables.ind_plasma_internal_norm_wesson = np.log(
             1.65 + 0.89 * physics_variables.alphaj
@@ -3808,6 +3819,16 @@ class Physics:
                         "(alphaj)",
                         physics_variables.alphaj,
                     )
+                po.ocmmnt(self.outfile, "Current profile index scalings:")
+                po.oblnkl(self.outfile)
+                po.ovarrf(
+                    self.outfile,
+                    "J. Wesson plasma current profile index",
+                    "(alphaj_wesson)",
+                    physics_variables.alphaj_wesson,
+                    "OP ",
+                )
+                po.oblnkl(self.outfile)
                 po.ovarrf(
                     self.outfile,
                     "On-axis plasma current density (A/m2)",

@@ -42,7 +42,10 @@ module physics_variables
   !! Total mass of the plasma (kg)
 
   real(dp) :: alphaj
-  !! current profile index (calculated from q_0 and q if `iprofile=1`)
+  !! current profile index
+
+  real(dp) :: alphaj_wesson
+  !! Wesson-like current profile index
 
   real(dp) :: alphan
   !! density profile index
