@@ -2451,40 +2451,30 @@ class Physics:
 
         # Calculate physics_variables.beta limit
 
-        if physics_variables.iprofile == 1:
-            # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-            # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        # Define a dictionary of lambda functions for beta_norm_max calculations
+        beta_norm_max_calculations = {
+            1: lambda: 4.0e0 * physics_variables.ind_plasma_internal_norm,
+            2: lambda: 2.7e0 * (1.0e0 + 5.0e0 * physics_variables.eps**3.5e0),
+            3: lambda: 3.12e0 + 3.5e0 * physics_variables.eps**1.7e0,
+            4: lambda: 3.7e0
+            + (
+                (
+                    physics_variables.c_beta
+                    / (physics_variables.p0 / physics_variables.vol_avg_pressure)
+                )
+                * (
+                    12.5e0
+                    - 3.5e0
+                    * (physics_variables.p0 / physics_variables.vol_avg_pressure)
+                )
+            ),
+        }
 
-            physics_variables.beta_norm_max = (
-                4.0e0 * physics_variables.ind_plasma_internal_norm
-            )
-
-        if physics_variables.iprofile == 2:
-            # Original scaling law
-            physics_variables.beta_norm_max = 2.7e0 * (
-                1.0e0 + 5.0e0 * physics_variables.eps**3.5e0
-            )
-
-        if physics_variables.iprofile == 3 or physics_variables.iprofile == 5:
-            # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-
-            physics_variables.beta_norm_max = (
-                3.12e0 + 3.5e0 * physics_variables.eps**1.7e0
-            )
-
-        if physics_variables.iprofile == 6:
-            # Method used for STEP plasma scoping
-            # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-            # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
-
-            # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
-            fp = physics_variables.p0 / physics_variables.vol_avg_pressure
-
-            physics_variables.beta_norm_max = 3.7e0 + (
-                (physics_variables.c_beta / fp) * (12.5e0 - 3.5e0 * fp)
-            )
+        # Calculate beta_norm_max based on iprofile
+        if int(physics_variables.i_beta_norm_max) in beta_norm_max_calculations:
+            physics_variables.beta_norm_max = beta_norm_max_calculations[
+                int(physics_variables.i_beta_norm_max)
+            ]()
 
         # calculate_beta_limit() returns the beta_max for beta
         physics_variables.beta_max = calculate_beta_limit(
@@ -8253,7 +8243,7 @@ def init_physics_variables():
     physics_variables.teped = 1.0
     physics_variables.tesep = 0.1
     physics_variables.iprofile = 1
-    physics_variables.i_beta_norm_max = 0
+    physics_variables.i_beta_norm_max = 1
     physics_variables.i_rad_loss = 1
     physics_variables.i_confinement_time = 34
     physics_variables.i_plasma_wall_gap = 1
