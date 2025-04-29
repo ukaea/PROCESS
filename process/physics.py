@@ -1620,6 +1620,11 @@ class Physics:
             physics_variables.alphaj = alphaj_calculations[
                 int(physics_variables.i_alphaj)
             ]
+        else:
+            raise ProcessValueError(
+                "Illegal value of i_alphaj",
+                i_alphaj=physics_variables.i_alphaj,
+            )
 
         physics_variables.ind_plasma_internal_norm_wesson = np.log(
             1.65 + 0.89 * physics_variables.alphaj
@@ -1647,6 +1652,11 @@ class Physics:
                 ind_plasma_internal_norm_calculations[
                     int(physics_variables.i_ind_plasma_internal_norm)
                 ]
+            )
+        else:
+            raise ProcessValueError(
+                "Illegal value of i_ind_plasma_internal_norm",
+                i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
             )
 
         # Calculate density and temperature profile quantities
@@ -2539,6 +2549,11 @@ class Physics:
             physics_variables.beta_norm_max = beta_norm_max_calculations[
                 int(physics_variables.i_beta_norm_max)
             ]
+        else:
+            raise ProcessValueError(
+                "Illegal value of i_beta_norm_max",
+                i_beta_norm_max=physics_variables.i_beta_norm_max,
+            )
 
         # calculate_beta_limit() returns the beta_max for beta
         physics_variables.beta_max = calculate_beta_limit(
