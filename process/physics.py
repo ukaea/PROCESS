@@ -2543,19 +2543,27 @@ class Physics:
             )
         )
 
+        # R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
+        # Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
+        # doi: https://doi.org/10.13182/fst59-279.
+
+        # Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
+        # Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
+        # doi: https://doi.org/10.1088/0029-5515/44/4/009.
+
         physics_variables.beta_norm_max_stambaugh = (
             current_drive_variables.f_c_plasma_bootstrap
             * 10
             * (
                 -0.7748
-                + 1.2869 * physics_variables.kappa
-                - 0.2921 * physics_variables.kappa**2
-                + 0.0197 * physics_variables.kappa**3
+                + (1.2869 * physics_variables.kappa)
+                - (0.2921 * physics_variables.kappa**2)
+                + (0.0197 * physics_variables.kappa**3)
             )
             / (
-                physics_variables.aspect
+                physics_variables.aspect**0.5523
                 * np.tanh(
-                    (1.8524 + 0.2319 * physics_variables.kappa)
+                    (1.8524 + (0.2319 * physics_variables.kappa))
                     / physics_variables.aspect**0.6163
                 )
             )

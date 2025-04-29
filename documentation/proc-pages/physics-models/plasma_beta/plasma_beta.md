@@ -324,6 +324,21 @@ where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ a
 
 **This is only recommended for spherical tokamaks**
 
+-------------
+
+#### Stambaugh Relation
+
+This can be activated by stating `i_beta_norm_max = 5` in the input file.
+
+`beta_norm_max` is set to `beta_norm_max_stambaugh` using[^8] [^9]:
+
+
+$$
+g=\frac{f_\beta \times 10 \times\left(-0.7748+1.2869 \kappa-0.2921 \kappa^2+0.0197 \kappa^3\right)}{A^{0.5523} \times \tanh \left[(1.8524+0.2319 \kappa) / A^{0.6163}\right]}
+$$
+
+This fit was done for $A = 1.2 -7.0, \kappa = 1.5-6.0$ with $\delta = 0.5$ for nearly 100% bootstrap current
+
 ---------
 
 ## Key Constraints
@@ -405,4 +420,10 @@ The value of `beta_min` can be set to the desired minimum total beta. The scalin
 [^6]: M. E. Mauel et al., “Operation at the tokamak equilibrium poloidal beta-limit in TFTR,” Nuclear Fusion, vol. 32, no. 8, pp. 1468–1473, Aug. 1992. doi:https://dx.doi.org/10.1088/0029-5515/32/8/I14
 
 [^7]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
+[^8]: R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,” Fusion Science and Technology, vol. 59, no. 2, pp. 279–307, Feb. 2011, doi: https://doi.org/10.13182/fst59-279.
+
+[^9]: Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,” Nuclear Fusion, vol. 44, no. 4, pp. 548–554, Mar. 2004, doi: https://doi.org/10.1088/0029-5515/44/4/009.
+‌
+‌
 ‌
