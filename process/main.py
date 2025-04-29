@@ -54,7 +54,6 @@ from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
 from process.buildings import Buildings
-from process.caller import write_output_files
 from process.costs import Costs
 from process.costs_2015 import Costs2015
 from process.cryostat import Cryostat
@@ -87,7 +86,6 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
-from process.iteration_variables import load_iteration_variables
 from process.pfcoil import PFCoil
 from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
@@ -389,8 +387,7 @@ class SingleRun:
         This is separate from init to allow model instances to be modified before a run.
         """
         self.validate_user_model()
-        self.call_solver()
-        self.run_scan(self.solver)
+        self.run_scan()
         self.finish()
         self.append_input()
 
@@ -465,38 +462,22 @@ class SingleRun:
         # [:n] as array always at max size: contains 0s
         fortran.numerics.ixc[:n].sort()
 
-    def call_solver(self):
-        """Call the equation solver (HYBRD)."""
-        # If no HYBRD (non-optimisation) runs are required, return
-        if (fortran.numerics.ioptimz > 0) or (fortran.numerics.ioptimz == -2):
-            return
-        # eqslv() has been temporarily commented out. Please see the comment
-        # in fortran.function_evaluator.fcnhyb() for an explanation.
-        # Original call:
-        # self.ifail = fortran.main_module.eqslv()
-        raise NotImplementedError("HYBRD non-optimisation solver is not implemented")
-
-    def run_scan(self, solver):
-        """Create scan object if required.
-
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str
-        """
+    def run_scan(self):
+        """Create scan object if required."""
+        # TODO Move this solver logic up to init?
+        # ioptimz == 1: optimisation
         if fortran.numerics.ioptimz == 1:
-            # VMCON optimisation
-            self.scan = Scan(self.models, solver)
+            pass
+        # ioptimz == -2: evaluation
         elif fortran.numerics.ioptimz == -2:
-            # No optimisation: compute the output variables now
-            # Get optimisation parameters x, evaluate models
-            load_iteration_variables()
-            self.ifail = 6
-            write_output_files(models=self.models, ifail=self.ifail)
-            self.show_errors()
+            # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
+            self.solver = "fsolve"
         else:
             raise ValueError(
                 f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
+        self.scan = Scan(self.models, self.solver)
 
     def show_errors(self):
         """Report all informational/error messages encountered."""

@@ -153,11 +153,12 @@ class Scan:
         :type solver: str
         """
         self.models = models
+        self.solver = solver
         self.optimiser = Optimiser(models, solver)
         self.run_scan()
 
     def run_scan(self):
-        """Call VMCON over a range of values of one of the variables.
+        """Call a solver over a range of values of one of the variables.
 
         This method calls the optimisation routine VMCON a number of times, by
         performing a sweep over a range of values of a particular variable. A
@@ -168,6 +169,8 @@ class Scan:
         error_handling.errors_on = False
 
         if scan_module.isweep == 0:
+            # Solve single problem, rather than an array of problems (scan)
+            # doopt() can also run just an evaluation
             ifail = self.doopt()
             write_output_files(models=self.models, ifail=ifail)
             error_handling.show_errors()
@@ -186,11 +189,7 @@ class Scan:
             self.scan_1d()
 
     def doopt(self):
-        """Run the optimiser."""
-        # If no optimisation is required, leave the method
-        if numerics.ioptimz < 0:
-            return None
-
+        """Run the optimiser or solver."""
         ifail = self.optimiser.run()
         self.post_optimise(ifail)
 
@@ -206,11 +205,16 @@ class Scan:
         error_handling.errors_on = True
 
         process_output.oheadr(constants.nout, "Numerics")
-        process_output.ocmmnt(
-            constants.nout, "PROCESS has performed a VMCON (optimisation) run."
-        )
+        if self.solver == "fsolve":
+            process_output.ocmmnt(
+                constants.nout, "PROCESS has performed an fsolve (evaluation) run."
+            )
+        else:
+            process_output.ocmmnt(
+                constants.nout, "PROCESS has performed a VMCON (optimisation) run."
+            )
         if ifail != 1:
-            process_output.ovarin(constants.nout, "VMCON error flag", "(ifail)", ifail)
+            process_output.ovarin(constants.nout, "Error flag", "(ifail)", ifail)
             process_output.oheadr(
                 constants.iotty, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
             )
@@ -219,16 +223,29 @@ class Scan:
             error_handling.idiags[0] = ifail
             error_handling.report_error(132)
 
-            self.verror(ifail)
+            # Error code handler for VMCON
+            if self.solver == "vmcon":
+                self.verror(ifail)
             process_output.oblnkl(constants.nout)
             process_output.oblnkl(constants.iotty)
         else:
-            process_output.ocmmnt(
-                constants.nout, "and found a feasible set of parameters."
-            )
+            # Solution found
+            if self.solver != "fsolve":
+                process_output.ocmmnt(
+                    constants.nout, "and found a feasible set of parameters."
+                )
+                process_output.oheadr(
+                    constants.iotty, "PROCESS found a feasible solution"
+                )
+            else:
+                process_output.ocmmnt(
+                    constants.nout, "and found a consistent set of parameters."
+                )
+                process_output.oheadr(
+                    constants.iotty, "PROCESS found a consistent solution"
+                )
             process_output.oblnkl(constants.nout)
-            process_output.ovarin(constants.nout, "VMCON error flag", "(ifail)", ifail)
-            process_output.oheadr(constants.iotty, "PROCESS found a feasible solution")
+            process_output.ovarin(constants.nout, "Error flag", "(ifail)", ifail)
 
             if numerics.sqsumsq >= 1.0e-2:
                 process_output.oblnkl(constants.nout)
@@ -274,27 +291,33 @@ class Scan:
         process_output.ovarin(
             constants.nout, "Optimisation switch", "(ioptimz)", numerics.ioptimz
         )
-        process_output.ovarin(
-            constants.nout, "Figure of merit switch", "(minmax)", numerics.minmax
-        )
+        # Objective function output: none for fsolve
+        if self.solver != "fsolve":
+            process_output.ovarin(
+                constants.nout, "Figure of merit switch", "(minmax)", numerics.minmax
+            )
 
-        objf_name = string_to_f2py_compatible(
-            numerics.objf_name,
-            f'"{f2py_compatible_to_string(numerics.lablmm[abs(numerics.minmax) - 1])}"',
-        )
+            objf_name = string_to_f2py_compatible(
+                numerics.objf_name,
+                f'"{f2py_compatible_to_string(numerics.lablmm[abs(numerics.minmax) - 1])}"',
+            )
 
-        numerics.objf_name = objf_name
+            numerics.objf_name = objf_name
 
-        process_output.ovarst(
-            constants.nout, "Objective function name", "(objf_name)", numerics.objf_name
-        )
-        process_output.ovarre(
-            constants.nout,
-            "Normalised objective function",
-            "(norm_objf)",
-            numerics.norm_objf,
-            "OP ",
-        )
+            process_output.ovarst(
+                constants.nout,
+                "Objective function name",
+                "(objf_name)",
+                numerics.objf_name,
+            )
+            process_output.ovarre(
+                constants.nout,
+                "Normalised objective function",
+                "(norm_objf)",
+                numerics.norm_objf,
+                "OP ",
+            )
+
         process_output.ovarre(
             constants.nout,
             "Square root of the sum of squares of the constraint residuals",
@@ -302,36 +325,48 @@ class Scan:
             numerics.sqsumsq,
             "OP ",
         )
-        process_output.ovarre(
-            constants.nout,
-            "VMCON convergence parameter",
-            "(convergence_parameter)",
-            global_variables.convergence_parameter,
-            "OP ",
-        )
-        process_output.ovarin(
-            constants.nout,
-            "Number of VMCON iterations",
-            "(nviter)",
-            numerics.nviter,
-            "OP ",
-        )
+        if self.solver != "fsolve":
+            process_output.ovarre(
+                constants.nout,
+                "VMCON convergence parameter",
+                "(convergence_parameter)",
+                global_variables.convergence_parameter,
+                "OP ",
+            )
+            process_output.ovarin(
+                constants.nout,
+                "Number of optimising solver iterations",
+                "(nviter)",
+                numerics.nviter,
+                "OP ",
+            )
         process_output.oblnkl(constants.nout)
 
-        if ifail == 1:
-            string1 = "PROCESS has successfully optimised"
+        if self.solver == "fsolve":
+            if ifail == 1:
+                msg = "PROCESS has solved using fsolve."
+            else:
+                msg = "PROCESS failed to solve using fsolve."
+            process_output.write(
+                constants.nout,
+                f"{msg}\n",
+            )
         else:
-            string1 = "PROCESS has tried to optimise"
+            if ifail == 1:
+                string1 = "PROCESS has successfully optimised"
+            else:
+                string1 = "PROCESS has failed to optimise"
 
-        string2 = "minimise" if numerics.minmax > 0 else "maximise"
+            string2 = "minimise" if numerics.minmax > 0 else "maximise"
 
-        process_output.write(
-            constants.nout,
-            f"{string1} the iteration variables to {string2} the figure of merit: {objf_name}\n",
-        )
+            process_output.write(
+                constants.nout,
+                f"{string1} the optimisation parameters to {string2} the objective function: {objf_name}\n",
+            )
 
         written_warning = False
 
+        # Output optimisation parameters
         solution_vector_table = []
         for i in range(numerics.nvar):
             numerics.xcs[i] = numerics.xcm[i] * numerics.scafc[i]
@@ -342,6 +377,7 @@ class Scan:
             xminn = 1.01 * numerics.itv_scaled_lower_bounds[i]
             xmaxx = 0.99 * numerics.itv_scaled_upper_bounds[i]
 
+            # Write to output file if close to optimisation parameter bounds
             if numerics.xcm[i] < xminn or numerics.xcm[i] > xmaxx:
                 if not written_warning:
                     written_warning = True
@@ -349,7 +385,7 @@ class Scan:
                         constants.nout,
                         (
                             "Certain operating limits have been reached,"
-                            "\n as shown by the following iteration variables that are"
+                            "\n as shown by the following optimisation parameters that are"
                             "\n at or near to the edge of their prescribed range :\n"
                         ),
                     )
@@ -366,6 +402,7 @@ class Scan:
                     f" {numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i]}",
                 )
 
+            # Write optimisation parameters to mfile
             process_output.ovarre(
                 constants.mfile,
                 f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1]),
@@ -401,6 +438,7 @@ class Scan:
                 xnorm,
             )
 
+        # Write optimisation parameter headings to output file
         process_output.osubhd(
             constants.nout, "The solution vector is comprised as follows :"
         )
@@ -415,13 +453,14 @@ class Scan:
 
         process_output.osubhd(
             constants.nout,
-            "The following equality constraint residues should be close to zero :",
+            "The following equality constraint residues should be close to zero:",
         )
 
         con1, con2, err, sym, lab = constraints.constraint_eqns(
             numerics.neqns + numerics.nineqns, -1
         )
 
+        # Write equality constraints to mfile
         equality_constraint_table = []
         for i in range(numerics.neqns):
             name = f2py_compatible_to_string(numerics.lablcc[numerics.icc[i] - 1])
@@ -440,6 +479,7 @@ class Scan:
                 con1[i],
             )
 
+        # Write equality constraints to output file
         process_output.write(
             constants.nout,
             tabulate(
@@ -455,13 +495,16 @@ class Scan:
             ),
         )
 
+        # Write inequality constraints
         if numerics.nineqns > 0:
             inequality_constraint_table = []
-            process_output.osubhd(
-                constants.nout,
-                "The following inequality constraint residues should be "
-                "greater than or approximately equal to zero :",
-            )
+            # Inequalities not necessarily satisfied when evaluating
+            if self.solver != "fsolve":
+                process_output.osubhd(
+                    constants.nout,
+                    "The following inequality constraint residues should be "
+                    "greater than or approximately equal to zero:",
+                )
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = f2py_compatible_to_string(numerics.lablcc[numerics.icc[i] - 1])
