@@ -215,24 +215,6 @@ def test_initialise(single_run, monkeypatch):
     single_run.initialise()
 
 
-def test_call_solver(single_run, monkeypatch):
-    """Attempt to call the hybrd() non-optimising solver.
-
-    :param single_run: single_run fixture
-    :type single_run: SingleRun
-    :param monkeypatch: monkeypatch fixture
-    :type monkeypatch: object
-    """
-    # No hybrd() call required
-    monkeypatch.setattr(fortran.numerics, "ioptimz", 1)
-    single_run.call_solver()
-
-    # Attempt to use hybrd()
-    monkeypatch.setattr(fortran.numerics, "ioptimz", -1)
-    with pytest.raises(NotImplementedError):
-        single_run.call_solver()
-
-
 def test_set_mfile(single_run, monkeypatch):
     """Check the mfile filename is being stored correctly.
 

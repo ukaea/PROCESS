@@ -24,7 +24,7 @@ class Optimiser:
         self.solver_name = solver_name
 
     def run(self):
-        """Run vmcon solver and retry if it fails in certain ways."""
+        """Run solver and retry if it fails in certain ways."""
         # Initialise iteration variables and bounds in Fortran
         load_iteration_variables()
         load_scaled_bounds()
@@ -53,37 +53,38 @@ class Optimiser:
         self.solver.set_constraints(m, meq)
         ifail = self.solver.solve()
 
-        # If fail then alter value of epsfcn - this can be improved
-        if ifail != 1:
-            print("Trying again with new epsfcn")
-            # epsfcn is only used in evaluators.Evaluators()
-            # TODO epsfcn could be set in Evaluators instance now, don't need to
-            # set/unset in numerics module
-            numerics.epsfcn = numerics.epsfcn * 10  # try new larger value
-            print("new epsfcn = ", numerics.epsfcn)
+        # If VMCON optimisation has failed then try altering value of epsfcn
+        if self.solver_name == "vmcon":
+            if ifail != 1:
+                print("Trying again with new epsfcn")
+                # epsfcn is only used in evaluators.Evaluators()
+                # TODO epsfcn could be set in Evaluators instance now, don't need to
+                # set/unset in numerics module
+                numerics.epsfcn = numerics.epsfcn * 10  # try new larger value
+                print("new epsfcn = ", numerics.epsfcn)
 
-            ifail = self.solver.solve()
-            # First solution attempt failed (ifail != 1): supply ifail value
-            # to next attempt
-            numerics.epsfcn = numerics.epsfcn / 10  # reset value
+                ifail = self.solver.solve()
+                # First solution attempt failed (ifail != 1): supply ifail value
+                # to next attempt
+                numerics.epsfcn = numerics.epsfcn / 10  # reset value
 
-        if ifail != 1:
-            print("Trying again with new epsfcn")
-            numerics.epsfcn = numerics.epsfcn / 10  # try new smaller value
-            print("new epsfcn = ", numerics.epsfcn)
-            ifail = self.solver.solve()
-            numerics.epsfcn = numerics.epsfcn * 10  # reset value
+            if ifail != 1:
+                print("Trying again with new epsfcn")
+                numerics.epsfcn = numerics.epsfcn / 10  # try new smaller value
+                print("new epsfcn = ", numerics.epsfcn)
+                ifail = self.solver.solve()
+                numerics.epsfcn = numerics.epsfcn * 10  # reset value
 
-        # If VMCON has exited with error code 5 try another run using a multiple
-        # of the identity matrix as input for the Hessian b(n,n)
-        # Only do this if VMCON has not iterated (nviter=1)
-        if ifail == 5 and numerics.nviter < 2:
-            print(
-                "VMCON error code = 5.  Rerunning VMCON with a new initial "
-                "estimate of the second derivative matrix."
-            )
-            self.solver.set_b(2.0)
-            ifail = self.solver.solve()
+            # If VMCON has exited with error code 5 try another run using a multiple
+            # of the identity matrix as input for the Hessian b(n,n)
+            # Only do this if VMCON has not iterated (nviter=1)
+            if ifail == 5 and numerics.nviter < 2:
+                print(
+                    "VMCON error code = 5.  Rerunning VMCON with a new initial "
+                    "estimate of the second derivative matrix."
+                )
+                self.solver.set_b(2.0)
+                ifail = self.solver.solve()
 
         self.output()
 
