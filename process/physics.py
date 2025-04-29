@@ -2543,6 +2543,24 @@ class Physics:
             )
         )
 
+        physics_variables.beta_norm_max_stambaugh = (
+            current_drive_variables.f_c_plasma_bootstrap
+            * 10
+            * (
+                -0.7748
+                + 1.2869 * physics_variables.kappa
+                - 0.2921 * physics_variables.kappa**2
+                + 0.0197 * physics_variables.kappa**3
+            )
+            / (
+                physics_variables.aspect
+                * np.tanh(
+                    (1.8524 + 0.2319 * physics_variables.kappa)
+                    / physics_variables.aspect**0.6163
+                )
+            )
+        )
+
         # Map calculation methods to a dictionary
         beta_norm_max_calculations = {
             0: physics_variables.beta_norm_max,
@@ -2550,6 +2568,7 @@ class Physics:
             2: physics_variables.beta_norm_max_original_scaling,
             3: physics_variables.beta_norm_max_menard,
             4: physics_variables.beta_norm_max_thloreus,
+            5: physics_variables.beta_norm_max_stambaugh,
         }
 
         # Calculate beta_norm_max based on i_beta_norm_max
@@ -4332,6 +4351,13 @@ class Physics:
                 "E. Thloreus normalised beta upper limit",
                 "(beta_norm_max_thloreus) ",
                 physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "R. Stambaugh normalised beta upper limit",
+                "(beta_norm_max_stambaugh) ",
+                physics_variables.beta_norm_max_stambaugh,
                 "OP ",
             )
 
@@ -8494,6 +8520,7 @@ def init_physics_variables():
     physics_variables.beta_norm_max_menard = 0.0
     physics_variables.beta_norm_max_original_scaling = 0.0
     physics_variables.beta_norm_max_tholerus = 0.0
+    physics_variables.beta_norm_max_stambaugh = 0.0
     physics_variables.dnelimt = 0.0
     physics_variables.nd_ions_total = 0.0
     physics_variables.dnla = 0.0
