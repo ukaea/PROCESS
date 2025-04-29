@@ -37,7 +37,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 ???+ note "Plasma current profile"
 
-    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated in the plasma current calculation relating to `iprofile` found [here](../plasma_current.md).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated after the plasma current calculation relating to `i_alphaj` found [here](../plasma_current/plasma_current.md#setting-the-current-profile-index).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
 
