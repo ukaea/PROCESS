@@ -1,17 +1,18 @@
-* Once through only: no optimisation
+* Solve for equality constraints only: evaluate models consistently
 ioptimz  = -2
-* Define number of equality constraints, and
-* use inequality constraints: corresponding f-values removed
-neqns = 3
 
 *--------------------------------------------------*
 
 
 *---------------Constraint Equations---------------*
+* Define number of equality constraints
+neqns = 2
 
+* Equalities
 icc = 1 * Beta
 icc = 2 * Global power balance
-icc = 11 * Radial build
+
+* Inequalities
 icc = 5 * Density upper limit
 icc = 8 * Neutron wall load upper limit
 icc = 9 * Fusion power upper limit
@@ -38,43 +39,9 @@ icc = 32 * TF coil conduit stress upper limit
 
 *---------------Iteration Variables----------------*
 
-ixc = 2 * bt
-ixc = 3 * rmajor
-boundl(3) = 8.0
-boundu(3) = 9.0
 ixc = 4 * te
 boundu(4) = 100.0
-ixc = 5 * beta
 ixc = 6 * dene
-ixc = 10 * hfact
-boundu(10) = 1.2
-ixc = 13 * dr_tf_inboard
-boundl(13) = 0.7
-ixc = 16 * dr_cs
-boundl(16) = 0.3
-ixc = 18 * q
-boundl(18) = 3.0
-ixc = 29 * dr_bore
-boundl(29) = 0.1
-ixc = 37 * j_cs_flat_top_end
-ixc = 41 * f_j_cs_start_pulse_end_flat_top
-ixc = 44 * f_c_plasma_non_inductive
-ixc = 56 * tdmptf
-ixc = 57 * dr_tf_nose_case
-ixc = 58 * thwcndut
-boundl(58) = 0.008
-ixc = 59 * fcutfsu
-boundl(59) = 0.50
-boundu(59) = 0.94
-ixc = 60 * cpttf
-boundl(60) = 65000.0
-boundu(60) = 90000.0
-ixc = 109 * f_nd_alpha_electron
-boundu(109) = 0.1
-ixc = 122 * f_a_cs_steel
-ixc = 135 * fimp(13)
-ixc = 140 * dr_tf_wp
-boundl(140) = 0.4
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -269,9 +236,6 @@ fimp(14) = 5e-06
 
 *---------------------Numerics---------------------*
 
-minmax   = 1 * 
-neqns    = 3 * neqns /0/ ; number of equality constraints to be satisfied
-epsvmc   = 1e-7 * epsvmc /1;0e-6/ ; error tolerance for VMCON
 
 *----------------Pf Power Variables----------------*
 

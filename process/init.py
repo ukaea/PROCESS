@@ -184,28 +184,30 @@ def run_summary():
         process_output.ocmmnt(
             outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
         )
-        process_output.ocmmnt(
-            outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
-        )
+        # If optimising, write objective function and convergence parameter
+        if fortran.numerics.ioptimz == 1:
+            process_output.ocmmnt(
+                outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
+            )
 
-        if fortran.numerics.minmax > 0:
-            minmax_string = "  -- minimise "
-            minmax_sign = "+"
-        else:
-            minmax_string = "  -- maximise "
-            minmax_sign = "-"
+            if fortran.numerics.minmax > 0:
+                minmax_string = "  -- minimise "
+                minmax_sign = "+"
+            else:
+                minmax_string = "  -- maximise "
+                minmax_sign = "-"
 
-        fom_string = f2py_compatible_to_string(
-            fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
-        )
-        process_output.ocmmnt(
-            outfile,
-            f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
-        )
-        process_output.ocmmnt(
-            outfile,
-            f"Convergence parameter : {fortran.numerics.epsvmc}",
-        )
+            fom_string = f2py_compatible_to_string(
+                fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
+            )
+            process_output.ocmmnt(
+                outfile,
+                f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
+            )
+            process_output.ocmmnt(
+                outfile,
+                f"Convergence parameter : {fortran.numerics.epsvmc}",
+            )
 
         process_output.oblnkl(outfile)
         process_output.ostars(outfile, 110)
@@ -227,7 +229,8 @@ def run_summary():
     process_output.ovarin(
         mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
     )
-    if fortran.numerics.ioptimz == -2:
+    # If optimising, write figure of merit switch
+    if fortran.numerics.ioptimz == 1:
         process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
         )
