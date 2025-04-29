@@ -1967,55 +1967,48 @@ class Physics:
             )
         )
 
-        if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
-            current_drive_variables.f_c_plasma_bootstrap = abs(
-                current_drive_variables.f_c_plasma_bootstrap_max
-            )
-            current_drive_variables.f_c_plasma_internal = (
-                current_drive_variables.f_c_plasma_bootstrap
-            )
+        bootstrap_map = {
+            0: current_drive_variables.f_c_plasma_bootstrap,
+            1: current_drive_variables.f_c_plasma_bootstrap_iter89,
+            2: current_drive_variables.f_c_plasma_bootstrap_nevins,
+            3: current_drive_variables.f_c_plasma_bootstrap_wilson,
+            4: current_drive_variables.f_c_plasma_bootstrap_sauter,
+            5: current_drive_variables.f_c_plasma_bootstrap_sakai,
+            6: current_drive_variables.f_c_plasma_bootstrap_aries,
+            7: current_drive_variables.f_c_plasma_bootstrap_andrade,
+            8: current_drive_variables.f_c_plasma_bootstrap_hoang,
+            9: current_drive_variables.f_c_plasma_bootstrap_wong,
+            10: current_drive_variables.bscf_gi_I,
+            11: current_drive_variables.bscf_gi_II,
+            12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+            13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+        }
+        if int(physics_variables.i_bootstrap_current) in bootstrap_map:
+            current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
+                int(physics_variables.i_bootstrap_current)
+            ]
         else:
-            bootstrap_map = {
-                1: current_drive_variables.f_c_plasma_bootstrap_iter89,
-                2: current_drive_variables.f_c_plasma_bootstrap_nevins,
-                3: current_drive_variables.f_c_plasma_bootstrap_wilson,
-                4: current_drive_variables.f_c_plasma_bootstrap_sauter,
-                5: current_drive_variables.f_c_plasma_bootstrap_sakai,
-                6: current_drive_variables.f_c_plasma_bootstrap_aries,
-                7: current_drive_variables.f_c_plasma_bootstrap_andrade,
-                8: current_drive_variables.f_c_plasma_bootstrap_hoang,
-                9: current_drive_variables.f_c_plasma_bootstrap_wong,
-                10: current_drive_variables.bscf_gi_I,
-                11: current_drive_variables.bscf_gi_II,
-                12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
-                13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
-            }
-            if int(physics_variables.i_bootstrap_current) in bootstrap_map:
-                current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
-                    int(physics_variables.i_bootstrap_current)
-                ]
-            else:
-                raise ProcessValueError(
-                    "Illegal value of i_bootstrap_current",
-                    i_bootstrap_current=physics_variables.i_bootstrap_current,
-                )
-
-            physics_module.err242 = 0
-            if (
-                current_drive_variables.f_c_plasma_bootstrap
-                > current_drive_variables.f_c_plasma_bootstrap_max
-            ):
-                current_drive_variables.f_c_plasma_bootstrap = min(
-                    current_drive_variables.f_c_plasma_bootstrap,
-                    current_drive_variables.f_c_plasma_bootstrap_max,
-                )
-                physics_module.err242 = 1
-
-            current_drive_variables.f_c_plasma_internal = (
-                current_drive_variables.f_c_plasma_bootstrap
-                + current_drive_variables.f_c_plasma_diamagnetic
-                + current_drive_variables.f_c_plasma_pfirsch_schluter
+            raise ProcessValueError(
+                "Illegal value of i_bootstrap_current",
+                i_bootstrap_current=physics_variables.i_bootstrap_current,
             )
+
+        physics_module.err242 = 0
+        if (
+            current_drive_variables.f_c_plasma_bootstrap
+            > current_drive_variables.f_c_plasma_bootstrap_max
+        ) and physics_variables.i_bootstrap_current != 0:
+            current_drive_variables.f_c_plasma_bootstrap = min(
+                current_drive_variables.f_c_plasma_bootstrap,
+                current_drive_variables.f_c_plasma_bootstrap_max,
+            )
+            physics_module.err242 = 1
+
+        current_drive_variables.f_c_plasma_internal = (
+            current_drive_variables.f_c_plasma_bootstrap
+            + current_drive_variables.f_c_plasma_diamagnetic
+            + current_drive_variables.f_c_plasma_pfirsch_schluter
+        )
 
         # Plasma driven current fraction (Bootstrap + Diamagnetic
         # + Pfirsch-Schlüter) constrained to be less than
@@ -5796,7 +5789,7 @@ class Physics:
             if physics_module.err243 == 1:
                 error_handling.report_error(243)
 
-            if current_drive_variables.f_c_plasma_bootstrap_max < 0.0e0:
+            if physics_variables.i_bootstrap_current == 0:
                 po.ocmmnt(
                     self.outfile, "  (User-specified bootstrap current fraction used)"
                 )
