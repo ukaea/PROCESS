@@ -79,7 +79,6 @@ from process.io import obsolete_vars as ov
 # For VaryRun
 from process.io.process_config import RunProcessConfig
 from process.io.process_funcs import (
-    check_input_error,
     get_neqns_itervars,
     get_variable_range,
     no_unfeasible_mfile,
@@ -317,12 +316,6 @@ class VaryRun:
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
 
-        # If config file contains WDIR, use that. Otherwise, use the directory
-        # containing the config file (used when running regression tests in
-        # temp dirs)
-        # TODO Not sure this is required any more
-        wdir = config.wdir if config.wdir else Path(self.config_file).parent
-
         # Check IN.DAT exists
         if not input_path.exists():
             raise FileNotFoundError
@@ -340,8 +333,6 @@ class VaryRun:
             # handle error codes
             # Run process on an IN.DAT file
             config.run_process(input_path, self.solver)
-
-            check_input_error(wdir=wdir)
 
             if not process_stopped():
                 no_unfeasible = no_unfeasible_mfile()
