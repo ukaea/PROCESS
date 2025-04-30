@@ -689,8 +689,8 @@ def plot_main_plasma_information(
 
     # Add divertor information
     textstr_div = (
-        f"\n$P_{{\\text{{sep}}}}$: {mfile_data.data['pdivt'].get_scan(scan):.2f} MW           \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdivt/rmajor'].get_scan(scan):.2f} MW/m               \n"
+        f"\n$P_{{\\text{{sep}}}}$: {mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW           \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['p_plasma_separatrix_mw/rmajor'].get_scan(scan):.2f} MW/m               \n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f} MW T/m               "
     )
 
