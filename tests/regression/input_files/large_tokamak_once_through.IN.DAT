@@ -1,8 +1,5 @@
-* Solve for equality constraints only: evaluate models consistently
+* Evaluation problem: evaluate models consistently by solving equality constraints only
 ioptimz  = -2
-
-*--------------------------------------------------*
-
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
