@@ -291,8 +291,6 @@ def init_all_module_vars():
     init_cost_variables_new()
     init_python_build_variables()
 
-    fortran.init_module.init_fortran_modules()
-
 
 def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
