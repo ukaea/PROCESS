@@ -276,8 +276,6 @@ def init_all_module_vars():
     init_blanket_library()
     init_dcll_module()
 
-    fortran.init_module.init_fortran_modules()
-
 
 def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are

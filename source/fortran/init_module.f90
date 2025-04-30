@@ -10,18 +10,6 @@ use, intrinsic :: iso_fortran_env, only: dp=>real64
 
 contains
 
-   subroutine init_fortran_modules
-      !! Temporary routine to call initialisation routines for Fortran modules
-      !! that are not wrapped by f2py and thus cannot be called from Python.
-
-      use fson_library, only: init_fson_library
-
-      implicit none
-
-      call init_fson_library
-
-   end subroutine init_fortran_modules
-
    subroutine open_files
       use global_variables, only: verbose, fileprefix, output_prefix
       use constants, only: nout, mfile
