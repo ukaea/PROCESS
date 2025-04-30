@@ -1,22 +1,25 @@
-* Once-through run for a design point for a 5 field HELIAS machine
-* creating using Stellarator models developed by 
+* 5 field HELIAS machine creating using Stellarator models developed by 
 * Lion, J., et al. "A general stellarator version of the systems code PROCESS." Nuclear Fusion 61.12 (2021): 126021.
 
-*--------------------------------------------------*
-
+* Evaluation problem: evaluate models consistently by solving equality constraints only
+ioptimz = -2
 
 *---------------Constraint Equations---------------*
+* Define number of equality constraints
+neqns = 2
 
+* Equalities
 icc = 2 * Global power balance
+icc = 83 * Radial build consistency for stellarators
+
+* Inequalities
 icc = 16 * Net electric power lower limit
-icc = 11 * Radial build
 icc = 34 * Dump voltage upper limit
 icc = 65 * Dump time set by VV loads
 icc = 35 * J_winding pack
 icc = 82 * toroidalgap
 icc = 84 * Lower limit for beta
 icc = 24 * Beta upper limit
-icc = 83 * Radial build consistency for stellarators
 icc = 32 * TF coil conduit stress upper limit
 icc = 18 * Divertor heat load upper limit
 icc = 17 * Radiation fraction upper limit
@@ -27,39 +30,12 @@ icc = 67 * Simple Radiation Wall load limit
 
 *---------------Iteration Variables----------------*
 
-ixc = 2 * bt
-boundl(2) = 1.8
-boundu(2) = 18.9
 ixc = 3 * rmajor
 boundl(3) = 2.
 boundu(3) = 25.
 ixc = 4 * te
 boundl(4) = 2.
 boundu(4) = 19.5
-ixc = 6 * dene
-boundl(6) = 1.35d19
-boundu(6) = 8.35d21
-ixc = 10 * hfact
-boundl(10) = 0.1
-boundu(10) = 1.3
-ixc = 25 * fpnetel
-boundl(25) = 0.2
-boundu(25) = 1.0
-ixc = 50 * fiooic
-boundl(50) = 0.01
-boundu(50) = 0.9
-ixc = 56 * tdmptf
-boundl(56) = 0.001
-boundu(56) = 200.
-ixc = 59 * fcutfsu
-boundl(59) = 0.086
-boundu(59) = 0.98
-ixc = 109 * f_nd_alpha_electron
-boundl(109) = 0.0001
-boundu(109) = 0.4
-ixc = 169 * te0_ecrh_achievable
-boundl(169) = 4.
-boundu(169) = 35.
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -255,10 +231,6 @@ fimp(14) = 0.0
 
 *---------------------Numerics---------------------*
 
-ioptimz  = -2 * once through, no optimisation
-minmax   = 7 * 
-neqns    = 3 * neqns /0/ ; number of equality constraints to be satisfied
-epsfcn   = 0.0001 * epsfcn /1;0e-3/ ; finite difference step length for HYBRD/VMCON derivatives
 
 *----------------Pf Power Variables----------------*
 
