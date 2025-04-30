@@ -1,11 +1,16 @@
-
-*--------------------------------------------------*
-
+* Evaluation problem: evaluate models consistently by solving equality constraints only
+ioptimz = -2
 
 *---------------Constraint Equations---------------*
+* Define number of equality constraints
+neqns = 3
 
+* Equalities
 icc = 1 * Beta
 icc = 2 * Global power balance
+icc = 11 * Radial build
+
+* Inequalities
 icc = 9 * Fusion power upper limit
 icc = 5 * Density upper limit
 icc = 24 * Beta upper limit
@@ -17,7 +22,6 @@ icc = 56 * Pseparatrix
 icc = 33 * I_op
 icc = 31 * TF coil case stress upper limit
 icc = 32 * TF coil conduit stress upper limit
-icc = 11 * Radial build
 icc = 67 * Simple Radiation Wall load limit
 icc = 30 * Injection power upper limit
 icc = 46 * Equation for Ip
@@ -28,76 +32,12 @@ icc = 16 * Net electric lower limit
 ixc = 4 * te
 boundl(4) = 5.0
 boundu(4) = 25.0
-ixc = 5 * beta
-boundl(5) = 0.01
-boundu(5) = 1.0
 ixc = 6 * dene
 boundl(6) = 0.5d+20
 boundu(6) = 5.0d+20
-ixc = 9 * fdene
-boundl(9) = 0.1
-boundu(9) = 1.0
-ixc = 10 * hfact
-boundl(10) = 0.8
-boundu(10) = 1.2
-ixc = 16 * ohcth
-boundl(16) = 0.03
-boundu(16) = 0.5
-ixc = 18 * q
-boundl(18) = 3.0
-boundu(18) = 20.0
-ixc = 28 * fradpwr
-boundu(28) = 1.0
 ixc = 29 * bore
 boundl(29) = 0.1
 boundu(29) = 0.8
-ixc = 36 * fbeta_max
-boundl(36) = 0.01
-boundu(36) = 1.0
-ixc = 46 * fpinj
-boundl(46) = 0.6
-boundu(46) = 1.5
-ixc = 48 * fstrcase
-boundl(48) = 0.01
-boundu(48) = 1.0
-ixc = 49 * fstrcond
-boundu(49) = 1.0
-ixc = 50 * fiooic
-boundl(50) = 0.01
-boundu(50) = 1.0
-ixc = 57 * dr_tf_nose_case
-boundl(57) = 0.01
-boundu(57) = 0.5
-ixc = 72 * fipir
-ixc = 93 * shldith
-boundl(93) = 0.01
-boundu(93) = 1.0
-ixc = 97 * fpsepr
-boundl(97) = 0.01
-boundu(97) = 1.0
-ixc = 103 * flhthresh
-ixc = 109 * f_nd_alpha_electron
-boundl(109) = 0.001
-boundu(109) = 1.0
-ixc = 110 * ftaulimit
-boundl(110) = 0.01
-boundu(110) = 1.0
-ixc = 116 * fradwall
-boundl(116) = 0.01
-boundu(116) = 1.0
-ixc = 135 * fimp(13)
-ixc = 140 * dr_tf_wp
-boundl(140) = 0.4
-boundu(140) = 0.8
-ixc = 145 * fgwped
-boundl(145) = 0.1
-boundu(145) = 1.0
-ixc = 152 * fgwsep
-boundl(152) = 0.001
-boundu(152) = 0.1
-ixc = 154 * fne0
-boundu(154) = 0.99
-ixc = 26
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -290,9 +230,6 @@ fimp(14) = 5e-05
 
 *---------------------Numerics---------------------*
 
-ioptimz  = -2 * Once through only: no optimisation
-minmax   = -5 * 
-epsvmc   = 1.0e-11 * epsvmc /1;0e-6/ ; error tolerance for VMCON
 
 *----------------Pf Power Variables----------------*
 
