@@ -4,16 +4,12 @@ from process.iteration_variables import load_iteration_variables, load_scaled_bo
 from process.solver import get_solver
 
 
-class Optimiser:
+class SolverHandler:
     def __init__(self, models, solver_name):
-        """Creates and runs a Vmcon instance.
+        """Creates and runs a solver instance.
 
-        This routine calls the minimisation/maximisation routine VMCON,
-        developed by Argonne National Laboratory.
-        On exit, the (normalised) value of the variable being maximised
-        or minimised (i.e. the figure of merit) is returned in argument f.
-
-        This represents the old optimiz subroutine in the numerics module.
+        This may be an optimiser (e.g. VMCON) or an equation solver (e.g.
+        fsolve).
 
         :param models: physics and engineering model objects
         :type models: process.main.Models
