@@ -65,6 +65,7 @@ nav:
                   - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
                   - Inductive Current:
                       - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                      - Plasma Inductance: physics-models/plasma_current/plasma_inductance.md
                       - Plasma Resistive Heating: physics-models/plasma_current/plasma_resistive_heating.md
               - Confinement time: physics-models/plasma_confinement.md
               - L-H transition: physics-models/plasma_h_mode.md

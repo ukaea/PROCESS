@@ -338,14 +338,11 @@ beta_norm_max = 5.0
 * DESCRIPTION:   (Troyon-like) coefficient for beta scaling
 * JUSTIFICATION: 
 * REFERENCE:     Ono & Kaita (2015), Physics of Plasmas, 22, 040501
-*                
+* 
 
-*gtscale = 
-* DESCRIPTION:   Flag to scale beta coefficient with aspect, iprofile=0 only
-* = 0 do not scale beta_norm_max with eps
-* = 1 scale beta_norm_max with aspect, original scaling
-* = 2 scale beta_norm_max with aspect, Menard scaling
-* JUSTIFICATION: Working at fixed normalized beta, default = 0
+i_beta_norm_max = 0
+* DESCRIPTION:   Max normalised beta selection switch (0 = user input)
+
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -572,6 +569,9 @@ tesep = 0.125
 alphaj = 0.1
 * DESCRIPTION:   Current Profile Index
 * JUSTIFICATION: ST current profile is flattish, value assumed
+
+i_alphaj = 0
+* DESCRIPTION: Current profile selection switch (0 = user input)
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radiation,Fuelling & Impurities ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2910,16 +2910,13 @@ i_pfirsch_schluter_current = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-iprofile = 0
-* DESCRIPTION:   Switch for Current Profile Consistency (0: Use Input Values for alphaj ind_plasma_internal_norm beta_norm_max)
-* =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max (but see gtscale option)
-* =1 make these consistent with input q, q_0 values (recommend `i_plasma_current=4` with this option)
-* JUSTIFICATION: These consistency equations don't hold for STs
-* REFERENCE:     
 
 ind_plasma_internal_norm = 0.3
 * DESCRIPTION:   Plasma Normalised Internal Inductance
 * JUSTIFICATION: Matched to JETTO li(3).
+
+i_ind_plasma_internal_norm = 0
+* DESCRIPTION:   Normalised plasma intenral induction selection switch (0 = user input)
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *csawth

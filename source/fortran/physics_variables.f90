@@ -42,7 +42,10 @@ module physics_variables
   !! Total mass of the plasma (kg)
 
   real(dp) :: alphaj
-  !! current profile index (calculated from q_0 and q if `iprofile=1`)
+  !! current profile index
+
+  real(dp) :: alphaj_wesson
+  !! Wesson-like current profile index
 
   real(dp) :: alphan
   !! density profile index
@@ -135,7 +138,7 @@ module physics_variables
   !! vertical field at plasma (T)
 
   real(dp) :: c_beta
-  !! Destabalisation parameter for iprofile=6 beta limit
+  !! Destabalisation parameter for i_beta_norm_max=4 beta limit
 
   real(dp) :: csawth
   !! coeff. for sawteeth effects on burn V-s requirement
@@ -173,6 +176,18 @@ module physics_variables
 
   real(dp) :: beta_norm_max
   !! Troyon-like coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_wesson
+  !! Wesson-like coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_menard
+  !! Menard-like coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_original_scaling
+  !! Original scaling coefficient for beta scaling
+
+  real(dp) :: beta_norm_max_tholerus
+  !! Tholerus-like coefficient for beta scaling
 
   real(dp) :: dnelimt
   !! density limit (/m3)
@@ -413,16 +428,14 @@ module physics_variables
   !! electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
   !! criterion is used (`icc=78`)
 
-  integer :: iprofile
-  !! switch for current profile consistency:
-  !!
-  !! - =0 use input values for alphaj, ind_plasma_internal_norm, beta_norm_max
-  !! - =1 make these consistent with input q95, q_0 values (recommend `i_plasma_current=4` with this option)
-  !! - =2 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (original scaling)
-  !! - =3 use input values for alphaj, ind_plasma_internal_norm. Scale beta_norm_max with aspect ratio (Menard scaling)
-  !! - =4 use input values for alphaj, beta_norm_max. Set ind_plasma_internal_norm from elongation (Menard scaling)
-  !! - =5 use input value for alphaj.  Set ind_plasma_internal_norm and beta_norm_max from Menard scaling
-  !! - =6 use input values for alphaj, c_beta.  Set ind_plasma_internal_norm from Menard and beta_norm_max from Tholerus
+  integer :: i_beta_norm_max
+  !! Switch for maximum normalised beta scaling:
+
+  integer :: i_ind_plasma_internal_norm
+  !! Switch for plasma normalised internal inductance scaling:
+
+  integer :: i_alphaj
+  !! Switch for current profile index scaling:
 
   integer :: i_rad_loss
   !! switch for radiation loss term usage in power balance (see User Guide):
@@ -780,7 +793,13 @@ module physics_variables
   !! Seeded f_nd_protium_electrons density / electron density.
 
   real(dp) :: ind_plasma_internal_norm
-  !! Plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+  !! Plasma normalised internal inductance
+
+  real(dp) :: ind_plasma_internal_norm_wesson
+  !! Wesson-like plasma normalised internal inductance
+
+  real(dp) :: ind_plasma_internal_menard
+  !! Menard-like plasma normalised internal inductance
 
   real(dp) :: ind_plasma
   !! plasma inductance (H)
