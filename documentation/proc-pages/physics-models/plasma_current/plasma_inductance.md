@@ -53,9 +53,6 @@ $$
 \texttt{ind_plasma_internal_norm_menard} = 3.4 - \kappa
 $$
 
-This relation is based off of data from NSTX for $l_i$ in the range of 0.4-0.85. This model should be used for $\kappa \ge 2.5$
-
-
 **This is only recommended for spherical tokamaks**
 
 **It is recommended to use this switch with [`i_beta_norm_max = 3`](../plasma_beta/plasma_beta.md#menard-beta-relation) as they are self-consistent with each other.**

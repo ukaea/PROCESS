@@ -78,7 +78,7 @@ $$
 \nabla \left(p+\frac{B^2}{2\mu_0}\right) = \frac{1}{\mu_0}\left(\mathbf{B} \cdot \nabla \right)\mathbf{B}
 $$
 
-The right hand side vanishes when the field lines are straight and parallel, in which case above reduces to a simple statement that the total (kinetic plus magnetic) pressure is constant everywhere within a confined plasma, 
+The right hand side vanishes when the field lines are straight and parallel, in which case above reduces to a simple statement that the total (kinetic plus magnetic) pressure is constant everywhere within a confined plasma,
 
 $$
 p + \frac{B^2}{2\mu_0} \equiv \frac{B^2}{2\mu_0}\left(1+\beta \right) = \text{const}
@@ -115,12 +115,15 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field. Th
 ------------
 
 ### Setting the Beta g Coefficient
+### Setting the Beta g Coefficient
 
+Switch `i_beta_norm_max` determines how the beta $g$ coefficient `beta_norm_max` should
 Switch `i_beta_norm_max` determines how the beta $g$ coefficient `beta_norm_max` should
 be calculated. The following switch options are available below:
 
 #### User Input
 
+The user can specify the maximum allowed value of $\beta_{\text{N}}$ directly by stating `i_beta_norm_max = 0` in the input file.
 The user can specify the maximum allowed value of $\beta_{\text{N}}$ directly by stating `i_beta_norm_max = 0` in the input file.
 
 ```python
@@ -129,6 +132,12 @@ IN.DAT
 i_beta_norm_max = 0
 beta_norm_max = 3.0
 
+```
+```python
+IN.DAT
+
+i_beta_norm_max = 0
+beta_norm_max = 3.0
 
 ```
 
@@ -137,10 +146,13 @@ beta_norm_max = 3.0
 #### Wesson Relation
 
 This can be activated by stating `i_beta_norm_max = 1` in the input file.
+This can be activated by stating `i_beta_norm_max = 1` in the input file.
 
+`beta_norm_max` is set to `beta_norm_max_wesson` using:  
 `beta_norm_max` is set to `beta_norm_max_wesson` using:  
 
 $$
+\texttt{beta_norm_max_wesson} = g = 4l_i
 \texttt{beta_norm_max_wesson} = g = 4l_i
 $$
 
@@ -150,17 +162,22 @@ This is only recommended for high aspect ratio tokamaks[^3].
 
 **It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#wesson-relation) and [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) as they are self-consistent with each other.**
 
+**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#wesson-relation) and [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) as they are self-consistent with each other.**
+
 ---------
 
 #### Original Scaling Law
 
 This can be activated by stating `i_beta_norm_max = 2` in the input file.
+This can be activated by stating `i_beta_norm_max = 2` in the input file.
 
+`beta_norm_max` is set to `beta_norm_max_original_scaling` using:  
 `beta_norm_max` is set to `beta_norm_max_original_scaling` using:  
 
 $$
 \texttt{beta_norm_max_original_scaling} = g =2.7(1+5\epsilon^{3.5})
-$$ 
+\texttt{beta_norm_max_original_scaling} = g =2.7(1+5\epsilon^{3.5})
+$$
 
 <!DOCTYPE html>
 <html lang="en">
@@ -233,12 +250,10 @@ This can be activated by stating `i_beta_norm_max = 3` in the input file.
 
 `beta_norm_max` is set to `beta_norm_max_menard` using[^4]:
 
-
 $$
 \texttt{beta_norm_max_menard} = g =3.12+3.5\epsilon^{1.7}
+\texttt{beta_norm_max_menard} = g =3.12+3.5\epsilon^{1.7}
 $$
-
-Found as a reasonable fit to the computed no wall limit at $f_{\text{BS}} \approx 50%$. Uses maximum $\kappa$ data from NSTX at $A = 1.45, A = 1.75.$ Along with record $\beta_{\text{T}}$ data from DIII-D at $A = 2.9$ and high $\kappa$.
 
 **This is only recommended for spherical tokamaks**
 
@@ -314,7 +329,9 @@ Found as a reasonable fit to the computed no wall limit at $f_{\text{BS}} \appro
 This can be activated by stating `i_beta_norm_max = 4` in the input file.
 
 `beta_norm_max` is set to `beta_norm_max_tholerus` using[^5]:
+This can be activated by stating `i_beta_norm_max = 4` in the input file.
 
+`beta_norm_max` is set to `beta_norm_max_tholerus` using[^5]:
 
 $$
 C_{\beta}\approx\frac{(g-3.7)F_p}{12.5-3.5 F_p}
@@ -322,6 +339,7 @@ $$
 
 where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ and $C_{\beta}$ is the destabilization parameter (default 0.5)[^5].  
 
+**This is only recommended for spherical tokamaks**
 **This is only recommended for spherical tokamaks**
 
 ---------
@@ -368,6 +386,7 @@ This constraint can be activated by stating `icc = 24` in the input file.
 It is the general setting of the $\beta$ limit depending on the $\beta_{\text{N}}$ value calculated in the [beta limit](#beta-limit) calculations.
 
 The upper limit value of beta is calculated by `calculate_beta_limit()`. The beta
+coefficient $g$ can be set using `beta_norm_max`, depending on the setting of [`i_beta_norm_max`](#setting-the-beta--coefficient). It can be set directly or follow some relation.
 coefficient $g$ can be set using `beta_norm_max`, depending on the setting of [`i_beta_norm_max`](#setting-the-beta--coefficient). It can be set directly or follow some relation.
 
 The scaling value `fbeta_max` can be varied also.

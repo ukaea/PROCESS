@@ -1604,14 +1604,12 @@ class Physics:
             physics_variables.triang95,
         )
 
-        # -----------------------------------------------------
-        # Plasma Current Profile
-        # -----------------------------------------------------
+        # Ensure current profile consistency, if required
+        # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
 
+        # Tokamaks 4th Edition, Wesson, page 116
         physics_variables.alphaj_wesson = (
-            self.calculate_current_profile_index_wesson(
-                qstar=physics_variables.qstar, q0=physics_variables.q0
-            ),
+            physics_variables.qstar / physics_variables.q0 - 1.0
         )
 
         # Map calculation methods to a dictionary
@@ -1620,7 +1618,7 @@ class Physics:
             1: physics_variables.alphaj_wesson,
         }
 
-        # Calculate alphaj based on i_alphaj
+        # Calculate beta_norm_max based on i_beta_norm_max
         if int(physics_variables.i_alphaj) in alphaj_calculations:
             physics_variables.alphaj = alphaj_calculations[
                 int(physics_variables.i_alphaj)
@@ -1631,20 +1629,14 @@ class Physics:
                 i_alphaj=physics_variables.i_alphaj,
             )
 
-        # ==================================================
-
-        # -----------------------------------------------------
-        # Plasma Normalised Internal Inductance
-        # -----------------------------------------------------
-
-        physics_variables.ind_plasma_internal_norm_wesson = (
-            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
+        physics_variables.ind_plasma_internal_norm_wesson = np.log(
+            1.65 + 0.89 * physics_variables.alphaj
         )
 
         # Spherical Tokamak relation for internal inductance
         # Menard et al. (2016), Nuclear Fusion, 56, 106023
         physics_variables.ind_plasma_internal_norm_menard = (
-            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
+            3.4 - physics_variables.kappa
         )
 
         # Map calculation methods to a dictionary
@@ -1654,7 +1646,7 @@ class Physics:
             2: physics_variables.ind_plasma_internal_norm_menard,
         }
 
-        # Calculate ind_plasma_internal_normx based on i_ind_plasma_internal_norm
+        # Calculate beta_norm_max based on i_beta_norm_max
         if (
             int(physics_variables.i_ind_plasma_internal_norm)
             in ind_plasma_internal_norm_calculations
@@ -1669,8 +1661,6 @@ class Physics:
                 "Illegal value of i_ind_plasma_internal_norm",
                 i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
             )
-
-        # ===================================================
 
         # Calculate density and temperature profile quantities
         # If physics_variables.ipedestal = 1 then set pedestal density to
@@ -2535,35 +2525,37 @@ class Physics:
             + physics_variables.p_ion_transport_loss_mw
         )
 
-        # ============================================================
-
-        # -----------------------------------------------------
-        # Normalised Beta Limit
-        # -----------------------------------------------------
+        # Calculate physics_variables.beta limit
 
         # Define beta_norm_max calculations
 
-        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
-            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+        # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+        # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        physics_variables.beta_norm_max_wesson = (
+            4.0 * physics_variables.ind_plasma_internal_norm
         )
 
         # Original scaling law
-        physics_variables.beta_norm_max_original_scaling = (
-            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
+        physics_variables.beta_norm_max_original_scaling = 2.7 * (
+            1.0 + 5.0 * physics_variables.eps**3.5
         )
 
-        # J. Menard scaling law
-        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
-            eps=physics_variables.eps
-        )
+        # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+        # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+        # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        physics_variables.beta_norm_max_menard = 3.12 + 3.5 * physics_variables.eps**1.7
 
-        # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = (
-            self.calculate_beta_norm_max_thloreus(
-                c_beta=physics_variables.c_beta,
-                p0=physics_variables.p0,
-                vol_avg_pressure=physics_variables.vol_avg_pressure,
+        # Method used for STEP plasma scoping
+        # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+        # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+
+        # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
+        physics_variables.beta_norm_max_thloreus = 3.7 + (
+            (
+                physics_variables.c_beta
+                / (physics_variables.p0 / physics_variables.vol_avg_pressure)
             )
+            * (12.5 - 3.5 * (physics_variables.p0 / physics_variables.vol_avg_pressure))
         )
 
         # Map calculation methods to a dictionary
@@ -3574,6 +3566,7 @@ class Physics:
 
         Returns:
             Tuple[float, float, float,]: Tuple containing bp, qstar, plasma_current,
+            Tuple[float, float, float,]: Tuple containing bp, qstar, plasma_current,
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3689,6 +3682,7 @@ class Physics:
             constants.rmu0,
         )
 
+        return bp, qstar, plasma_current
         return bp, qstar, plasma_current
 
     def outtim(self):
@@ -4023,6 +4017,7 @@ class Physics:
                 )
 
                 if physics_variables.i_alphaj == 1:
+                if physics_variables.i_alphaj == 1:
                     po.ovarrf(
                         self.outfile,
                         "Current density profile factor",
@@ -4039,17 +4034,23 @@ class Physics:
                     )
                 po.ocmmnt(self.outfile, "Current profile index scalings:")
                 po.oblnkl(self.outfile)
-
                 po.ovarrf(
                     self.outfile,
+                    "J. Wesson plasma current profile index",
+                    "(alphaj_wesson)",
+                    physics_variables.alphaj_wesson,
                     "J. Wesson plasma current profile index",
                     "(alphaj_wesson)",
                     physics_variables.alphaj_wesson,
                     "OP ",
                 )
                 po.oblnkl(self.outfile)
+                po.oblnkl(self.outfile)
                 po.ovarrf(
                     self.outfile,
+                    "On-axis plasma current density (A/m2)",
+                    "(j_plasma_0)",
+                    physics_variables.j_plasma_0,
                     "On-axis plasma current density (A/m2)",
                     "(j_plasma_0)",
                     physics_variables.j_plasma_0,
@@ -4121,6 +4122,30 @@ class Physics:
                     physics_variables.q95_min,
                     "OP ",
                 )
+            po.ovarrf(
+                self.outfile,
+                "Plasma normalised internal inductance",
+                "(ind_plasma_internal_norm)",
+                physics_variables.ind_plasma_internal_norm,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
+            po.oblnkl(self.outfile)
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_wesson)",
+                physics_variables.ind_plasma_internal_norm_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_menard)",
+                physics_variables.ind_plasma_internal_norm_menard,
+                "OP ",
+            )
             po.ovarrf(
                 self.outfile,
                 "Plasma normalised internal inductance",
@@ -4287,6 +4312,7 @@ class Physics:
         po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:
             if physics_variables.i_beta_norm_max != 0:
+            if physics_variables.i_beta_norm_max != 0:
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
@@ -4331,6 +4357,37 @@ class Physics:
                 physics_variables.beta_norm_poloidal,
                 "OP ",
             )
+
+            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson normalised beta upper limit",
+                "(beta_norm_max_wesson) ",
+                physics_variables.beta_norm_max_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Original normalsied beta upper limit",
+                "(beta_norm_max_original_scaling) ",
+                physics_variables.beta_norm_max_original_scaling,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard normalised beta upper limit",
+                "(beta_norm_max_menard) ",
+                physics_variables.beta_norm_max_menard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "E. Thloreus normalised beta upper limit",
+                "(beta_norm_max_thloreus) ",
+                physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+
 
             po.osubhd(self.outfile, "Maximum normalised beta scalings :")
             po.ovarrf(
@@ -8615,6 +8672,7 @@ def init_physics_variables():
     physics_variables.m_plasma = 0.0
     physics_variables.alphaj = 1.0
     physics_variables.i_alphaj = 0
+    physics_variables.i_alphaj = 0
     physics_variables.alphan = 0.25
     physics_variables.alphap = 0.0
     physics_variables.fusden_alpha_total = 0.0
@@ -8658,6 +8716,10 @@ def init_physics_variables():
     physics_variables.nd_beam_ions = 0.0
     physics_variables.beam_density_out = 0.0
     physics_variables.beta_norm_max = 3.5
+    physics_variables.beta_norm_max_wesson = 0.0
+    physics_variables.beta_norm_max_menard = 0.0
+    physics_variables.beta_norm_max_original_scaling = 0.0
+    physics_variables.beta_norm_max_tholerus = 0.0
     physics_variables.beta_norm_max_wesson = 0.0
     physics_variables.beta_norm_max_menard = 0.0
     physics_variables.beta_norm_max_original_scaling = 0.0
@@ -8718,6 +8780,7 @@ def init_physics_variables():
     physics_variables.tbeta = 2.0
     physics_variables.teped = 1.0
     physics_variables.tesep = 0.1
+    physics_variables.i_beta_norm_max = 1
     physics_variables.i_beta_norm_max = 1
     physics_variables.i_rad_loss = 1
     physics_variables.i_confinement_time = 34
@@ -8802,6 +8865,9 @@ def init_physics_variables():
     physics_variables.f_nd_alpha_electron = 0.1
     physics_variables.f_nd_protium_electrons = 0.0
     physics_variables.ind_plasma_internal_norm = 0.9
+    physics_variables.ind_plasma_internal_norm_wesson = 0.0
+    physics_variables.ind_plasma_internal_norm_menard = 0.0
+    physics_variables.i_ind_plasma_internal_norm = 0
     physics_variables.ind_plasma_internal_norm_wesson = 0.0
     physics_variables.ind_plasma_internal_norm_menard = 0.0
     physics_variables.i_ind_plasma_internal_norm = 0
