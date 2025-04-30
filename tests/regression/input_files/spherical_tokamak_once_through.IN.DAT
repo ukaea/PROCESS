@@ -325,7 +325,8 @@ zref(10) = 1.0
 
 *----------------Physics Variables-----------------*
 
-alphaj   = 0.1 * current profile index (calculated from q_0 and q if `iprofile=1`)
+alphaj   = 0.1 * current profile index
+i_alphaj = 0 * Current profile index selection (0 = user input)
 alphan   = 0.9 * density profile index
 alphat   = 1.4 * temperature profile index
 aspect   = 1.8 * aspect ratio (`iteration variable 1`)
@@ -333,6 +334,7 @@ beta     = 0.13134204235647895 * total plasma beta (`iteration variable 5`) (cal
 bt       = 3.0 * toroidal field on axis (T) (`iteration variable 2`)
 dene     = 9.69888313737236e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max = 5.0 * Troyon-like coefficient for beta scaling
+i_beta_norm_max = 0 * Normalised beta max selection (0 = user input)
 f_p_div_lower     = 0.5 * fraction of power to the lower divertor in double null configuration
 fgwped   = 0.1 * fraction of Greenwald density to set as pedestal-top density; If `<0`; pedestal-top
 fgwsep   = 0.1 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
@@ -350,7 +352,6 @@ rhopedt  = 0.925 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
 teped    = 4.5 * electron temperature of pedestal (keV) (`ipedestal==1`)
 tesep    = 0.125 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
-iprofile = 0 * switch for current profile consistency;
 i_plasma_geometry = 0 * switch for plasma elongation and triangularity calculations;
 itart    = 1 * switch for spherical tokamak (ST) models;
 itartpf  = 1 * switch for Spherical Tokamak PF models;
@@ -358,7 +359,8 @@ kappa    = 2.8 * plasma separatrix elongation (calculated if `i_plasma_geometry 
 q95        = 5.835830999686161 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 2.0 * safety factor on axis
 f_nd_alpha_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
-ind_plasma_internal_norm      = 0.3 * plasma normalised internal inductance (calculated from alphaj if `iprofile=1`)
+ind_plasma_internal_norm      = 0.3 * plasma normalised internal inductance
+i_ind_plasma_internal_norm = 0 * Normalised plasma intenral induction selection switch (0 = user input) 
 rmajor   = 4.5 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 0 * switch for single null / double null plasma;
 f_sync_reflect = 0.6 * synchrotron wall reflectivity factor

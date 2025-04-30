@@ -365,6 +365,9 @@ alphan = 1.00
 * Temperature profile index
 alphat = 1.45 
 
+* Current profile index model switch
+i_alphaj = 1
+
 * (troyon-like) coefficient for beta scaling
 beta_norm_max = 3.0
 
@@ -416,9 +419,6 @@ teped = 5.5
 * Electron temperature at separatrix (kev) (ipedestal=1)
 tesep = 0.1
 
-* Switch for current profile consistency
-iprofile = 1
-
 * Switch for energy confinement time scaling law
 i_confinement_time = 34
 
@@ -433,6 +433,9 @@ f_sync_reflect = 0.6
 
 * plasma resistivity pre-factor
 plasma_res_factor = 0.7
+
+* Switch for plasma normalised internal inductance model
+i_ind_plasma_internal_norm = 1
 
 * Timings *
 ***********

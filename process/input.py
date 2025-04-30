@@ -1540,7 +1540,11 @@ INPUT_VARIABLES = {
     "ipnet": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "iprimshld": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
-    "iprofile": InputVariable(fortran.physics_variables, int, range=(0, 6)),
+    "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 4)),
+    "i_ind_plasma_internal_norm": InputVariable(
+        fortran.physics_variables, int, range=(0, 2)
+    ),
+    "i_alphaj": InputVariable(fortran.physics_variables, int, range=(0, 1)),
     "i_fw_blkt_shared_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),

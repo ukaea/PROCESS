@@ -1605,9 +1605,6 @@ teped = 5.5
 * Electron temperature at separatrix (kev) (ipedestal=1)
 tesep = 0.1
 
-* Switch for current profile consistency
-iprofile = 1
-
 * Switch for energy confinement time scaling law
 i_confinement_time = 34
 
