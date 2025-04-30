@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 import process.process_output as process_output
+from process.fortran import constants
 
 
 class ProcessUserWarning(UserWarning):
@@ -51,6 +52,13 @@ class WarningManager:
         )
         print(warning_string)
         process_output.write(file_unit, warning_string)
+        process_output.ovarre(
+            constants.mfile,
+            "Error status",
+            "error_status",
+            2 if len(WarningManager.warnings()) > 0 else 0,
+            "OP",
+        )
 
     @classmethod
     def warning_string(cls):
