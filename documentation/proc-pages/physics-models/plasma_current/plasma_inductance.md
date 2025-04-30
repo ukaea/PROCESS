@@ -36,7 +36,7 @@ This relation is based off of data taken from DIII-D shots[^1].
 
 This is only recommended for high aspect ratio tokamaks[^2].
 
-**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#setting-the-current-profile-index) and [`i_beta_norm_max = 1`](../plasma_beta/plasma_beta.md#wesson-relation) as they are self consistent with each other.**
+**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#setting-the-current-profile-index) and [`i_beta_norm_max = 1`](../plasma_beta/plasma_beta.md#wesson-relation) as they are self-consistent with each other.**
 
 
 ---------
@@ -55,7 +55,7 @@ $$
 
 **This is only recommended for spherical tokamaks**
 
-**It is recommended to use this switch with [`i_beta_norm_max = 3`](../plasma_beta/plasma_beta.md#menard-beta-relation) as they are self consistent with each other.**
+**It is recommended to use this switch with [`i_beta_norm_max = 3`](../plasma_beta/plasma_beta.md#menard-beta-relation) as they are self-consistent with each other.**
 
 [^1]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 

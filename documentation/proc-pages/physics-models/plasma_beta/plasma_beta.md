@@ -114,7 +114,7 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field. Th
 
 ------------
 
-### Setting the Beta $g$ Coefficient
+### Setting the Beta g Coefficient
 
 Switch `i_beta_norm_max` determines how the beta $g$ coefficient `beta_norm_max` should
 be calculated. The following switch options are available below:
@@ -148,7 +148,7 @@ This relation is based off of data taken from DIII-D shots[^7].
 
 This is only recommended for high aspect ratio tokamaks[^3].
 
-**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#wesson-relation) and [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) as they are self consistent with each other.**
+**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#wesson-relation) and [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) as they are self-consistent with each other.**
 
 ---------
 
@@ -240,7 +240,7 @@ $$
 
 **This is only recommended for spherical tokamaks**
 
-**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 2`](../plasma_current/plasma_inductance.md#menard-inductance-relation) as they are self consistent with each other.**
+**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 2`](../plasma_current/plasma_inductance.md#menard-inductance-relation) as they are self-consistent with each other.**
 
 <!DOCTYPE html>
 <html lang="en">

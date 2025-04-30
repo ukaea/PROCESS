@@ -588,7 +588,7 @@ This relation is based off of data taken from DIII-D shots[^15].
 
 This is only recommended for high aspect ratio tokamaks[^13].
 
-**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) and [`i_beta_norm_max = 1`](../plasma_beta/plasma_beta.md#wesson-relation) as they are self consistent with each other.**
+**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) and [`i_beta_norm_max = 1`](../plasma_beta/plasma_beta.md#wesson-relation) as they are self-consistent with each other.**
 
 -----------
 
