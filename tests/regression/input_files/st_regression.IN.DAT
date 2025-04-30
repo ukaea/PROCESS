@@ -2290,7 +2290,7 @@ i_fw_coolant_type = helium
 * 'water'
 * JUSTIFICATION: Not yet set.
 
-*roughness = 
+*roughness_fw_channel = 
 * DESCRIPTION:   First wall channel roughness epsilon [m] (default = 1.0D-6)
 * JUSTIFICATION: Not yet set.
 
