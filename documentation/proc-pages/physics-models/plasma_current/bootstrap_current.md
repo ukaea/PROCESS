@@ -783,7 +783,7 @@ An error is also raised to the user in the terminal output at the end of the run
 
 ## Fixing the bootstrap current fraction
 
-If the user wants to set the value of the bootstrap current fraction directly then the value can be set by assigning the negative of the desired value to `f_c_plasma_bootstrap_max`.
+If the user wants to set the value of the bootstrap current fraction directly then the value can be set by setting `i_bootstrap_current = 0` and then writing the value directly with 
 
 
 ```txt
@@ -791,7 +791,8 @@ If the user wants to set the value of the bootstrap current fraction directly th
 
 # Setting a fixed bootstrap current fraction of 80%
 
-f_c_plasma_bootstrap_max = -0.8
+i_bootstrap_current = 0
+f_c_plasma_bootstrap = 0.8
 ```
 
 
