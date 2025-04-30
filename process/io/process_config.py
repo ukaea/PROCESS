@@ -125,10 +125,7 @@ class ProcessConfig:
         if os.path.isfile("MFILE.DAT"):
             m_file = MFile(filename=directory + "/MFILE.DAT")
 
-            error_status = (
-                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
-                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
-            )
+            error_status = f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
 
             if self.comment != "":
                 with open(directory + "/README.txt", "a") as readme:
@@ -1151,7 +1148,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
                 header += f" n_{label.replace('_(range_normalised)', ''):8s}"
 
             # error status, id and ifail
-            header += " error_status error_id ifail\n"
+            header += " error_status ifail\n"
             with open(self.wdir + "/UQ_error_summary.txt", "w") as err_summary:
                 err_summary.write(header)
 
@@ -1165,10 +1162,7 @@ class UncertaintiesConfig(ProcessConfig, Config):
             output += f" {m_file.data[f'nitvar{i:03}'].get_scan(-1):10f}"
 
         # error status and id
-        output += (
-            f" {int(m_file.data['error_status'].get_scan(-1)):13d} "
-            f"{int(m_file.data['error_id'].get_scan(-1)):8d}"
-        )
+        output += f" {int(m_file.data['error_status'].get_scan(-1)):13d} "
         # ifail
         if m_file.data["error_status"].get_scan(-1) < 3:
             output += f" {int(m_file.data['ifail'].get_scan(-1)):5d}\n"

@@ -12,7 +12,6 @@ Compatible with PROCESS version 368
 
 import logging
 from os.path import join as pjoin
-from pathlib import Path
 from sys import stderr
 from time import sleep
 
@@ -222,7 +221,6 @@ def check_logfile(logfile="process.log"):
     Checks the log file of the PROCESS output.
     Stops, if an error occured that needs to be
     fixed before rerunning.
-    XXX should be deprecated!! and replaced by check_input_error!
     """
 
     with open(logfile) as outlogfile:
@@ -234,34 +232,6 @@ def check_logfile(logfile="process.log"):
                     file=stderr,
                 )
                 exit()
-
-
-def check_input_error(wdir="."):
-    """
-    Checks, if an input error has occurred.
-    Stops as a consequence.
-    Will also fail if the MFILE.DAT isn't found.
-    """
-    try:
-        mfile_path = Path(wdir) / "MFILE.DAT"
-
-        if mfile_path.exists():
-            mfile_path_str = str(mfile_path)
-            mfile = MFile(filename=mfile_path_str)
-        else:
-            raise FileNotFoundError("MFile doesn't exist")
-
-        error_id = mfile.data["error_id"].get_scan(-1)
-
-        if error_id == 130:
-            print(
-                "Error in input file. Please check OUT.DAT for more information.",
-                file=stderr,
-            )
-            exit()
-    except Exception:
-        logger.exception("Check input error exception")
-        raise
 
 
 ########################################
