@@ -27,7 +27,7 @@ from process.fortran import (
     scan_module,
     tfcoil_variables,
 )
-from process.optimiser import Optimiser
+from process.solver_handler import SolverHandler
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
@@ -154,7 +154,7 @@ class Scan:
         """
         self.models = models
         self.solver = solver
-        self.optimiser = Optimiser(models, solver)
+        self.solver_handler = SolverHandler(models, solver)
         self.run_scan()
 
     def run_scan(self):
@@ -190,7 +190,7 @@ class Scan:
 
     def doopt(self):
         """Run the optimiser or solver."""
-        ifail = self.optimiser.run()
+        ifail = self.solver_handler.run()
         self.post_optimise(ifail)
 
         return ifail
