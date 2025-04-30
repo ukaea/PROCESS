@@ -149,10 +149,10 @@ This function is used to calculate the first wall heating, it assumes the same c
 
 11. Set the effective heat transfer area equal to the pipe diameter
 
-12. Caclualte the temperature drop in the first wall material
+12. Calculate the temperature drop in the first wall material
 
     $$
-    \Delta T_{\text{FW}} = \frac{\text{Oneload} \times \mathtt{dr_fw}}{k 2r_{\text{channel}}}
+    \Delta T_{\text{FW}} = \frac{\text{Oneload} \times \texttt{dr_fw}}{k 2r_{\text{channel}}}
     $$
 
 13. Maximum distance traveled by surface heat load = $\texttt{diagonal}$
@@ -203,7 +203,7 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
     \mathrm{Re} = \frac{\rho v \left(2r_{\text{channel}}\right)}{\mu}
     $$
 
-    were $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
+    where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
 
 2. **Calculate the Prandtl number:**
 
@@ -216,7 +216,7 @@ where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and
 3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](#fw-coolant-friction--darcy_friction_haaland) method:**
 
     $$
-    f = \mathtt{darcy\_friction\_haaland()}
+    f = \texttt{darcy_friction_haaland()}
     $$
 
 4. **Calculate the Nusselt number using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation):**
