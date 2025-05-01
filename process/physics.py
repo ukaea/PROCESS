@@ -1891,18 +1891,13 @@ class Physics:
         )
 
         # Wilson scaling uses thermal poloidal beta, not total
-        betpth = (
-            physics_variables.beta
-            - physics_variables.beta_fast_alpha
-            - physics_variables.beta_beam
-        ) * (physics_variables.btot / physics_variables.bp) ** 2
         current_drive_variables.f_c_plasma_bootstrap_wilson = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wilson(
                 physics_variables.alphaj,
                 physics_variables.alphap,
                 physics_variables.alphat,
-                betpth,
+                physics_variables.beta_thermal_poloidal,
                 physics_variables.q0,
                 physics_variables.q95,
                 physics_variables.rmajor,
