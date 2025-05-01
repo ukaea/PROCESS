@@ -32,7 +32,7 @@ class ConstraintRegistration:
     """
 
     name: Hashable
-    result: Callable[[], ConstraintResult]
+    constraint_equation: Callable[[], ConstraintResult]
     units: str
     symbol: ConstraintSymbolType
 
@@ -48,20 +48,24 @@ class ConstraintManager:
     def register_constraint(
         cls, name: Hashable, units: str, symbol: ConstraintSymbolType
     ) -> Callable[[], Callable[[], ConstraintResult]]:
-        def wrapper(wrapped_func: Callable[[], ConstraintResult]):
+        def wrapper(func: Callable[[], ConstraintResult]):
             if name in cls._constraint_registry:
                 raise ValueError(f"Constraint {name} already exists.")
             cls._constraint_registry[name] = ConstraintRegistration(
-                name, wrapped_func, units, symbol
+                name, func, units, symbol
             )
 
-            return wrapped_func
+            return func
 
         return wrapper
 
     @classmethod
     def get_constraint(cls, name: Hashable):
         return cls._constraint_registry.get(name)
+
+    @classmethod
+    def evaluate_constraint(cls, name: Hashable):
+        return cls.get_constraint(name).constraint_equation()
 
 
 @ConstraintManager.register_constraint(1, "", "=")
@@ -2253,7 +2257,7 @@ def constraint_eqns(m: int, ieqn: int):
                     fortran.constraints, f"constraint_eqn_{constraint_id:03d}"
                 )()
             else:
-                result = constraint.result()
+                result = constraint.constraint_equation()
                 tmp_cc, tmp_con, tmp_err = result.cc, result.con, result.err
                 tmp_symbol, tmp_units = constraint.symbol, constraint.units
 
