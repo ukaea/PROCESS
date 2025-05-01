@@ -40,9 +40,6 @@ class CCFE_HCPB:
         self.blanket_library = blanket_library
 
     def run(self, output: bool):
-        ccfe_hcpb_module.ip = int(output)
-        ccfe_hcpb_module.ofile = self.outfile
-
         # Coolant type
         fwbs_variables.i_blkt_coolant_type = 1
         # Note that the first wall coolant is now input separately.
