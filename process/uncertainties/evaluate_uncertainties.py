@@ -35,7 +35,6 @@ import process.io.mfile as mf
 from process.io.in_dat import InDat
 from process.io.process_config import UncertaintiesConfig
 from process.io.process_funcs import (
-    check_input_error,
     get_neqns_itervars,
     get_variable_range,
     no_unfeasible_mfile,
@@ -109,9 +108,6 @@ def run_monte_carlo(args):
             # Define path for the input file to run
             input_path = Path(config.wdir) / "IN.DAT"
             config.run_process(input_path)
-
-            # Check for produced MFILE.DAT in working dir
-            check_input_error(wdir=config.wdir)
 
             if not process_stopped():
                 no_unfeasible = no_unfeasible_mfile()

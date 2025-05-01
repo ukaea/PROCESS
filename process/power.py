@@ -12,7 +12,6 @@ from process.fortran import (
     constraint_variables,
     cost_variables,
     current_drive_variables,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     numerics,
@@ -25,6 +24,7 @@ from process.fortran import (
     times_variables,
 )
 from process.variables import AnnotatedVariable
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -2474,9 +2474,10 @@ class Power:
                 if (heat_transport_variables.tturb < 657.0e0) or (
                     heat_transport_variables.tturb > 915.0e0
                 ):
-                    error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
-                    error_handling.report_error(166)
+                    WarningManager.create_warning(
+                        "Turbine temperature tturb out of range of validity",
+                        tturb=heat_transport_variables.tturb,
+                    )
 
                 etath = (
                     0.1802e0 * np.log(heat_transport_variables.tturb)
@@ -2493,9 +2494,10 @@ class Power:
                 if (heat_transport_variables.tturb < 657.0e0) or (
                     heat_transport_variables.tturb > 915.0e0
                 ):
-                    error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
-                    error_handling.report_error(166)
+                    WarningManager.create_warning(
+                        "Turbine temperature tturb out of range of validity",
+                        tturb=heat_transport_variables.tturb,
+                    )
 
                 etath = (
                     0.1802e0 * np.log(heat_transport_variables.tturb)
@@ -2522,9 +2524,10 @@ class Power:
             if (heat_transport_variables.tturb < 408.0e0) or (
                 heat_transport_variables.tturb > 1023.0e0
             ):
-                error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
-                error_handling.report_error(166)
+                WarningManager.create_warning(
+                    "Turbine temperature tturb out of range of validity",
+                    tturb=heat_transport_variables.tturb,
+                )
 
             etath = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
 
@@ -2551,9 +2554,10 @@ class Power:
             if (heat_transport_variables.tturb < 408.0e0) or (
                 heat_transport_variables.tturb > 1023.0e0
             ):
-                error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
-                error_handling.report_error(166)
+                WarningManager.create_warning(
+                    "Turbine temperature tturb out of range of validity",
+                    tturb=heat_transport_variables.tturb,
+                )
 
             return 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
 

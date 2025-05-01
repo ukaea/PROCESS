@@ -79,7 +79,6 @@ from process.io import obsolete_vars as ov
 # For VaryRun
 from process.io.process_config import RunProcessConfig
 from process.io.process_funcs import (
-    check_input_error,
     get_neqns_itervars,
     get_variable_range,
     no_unfeasible_mfile,
@@ -102,6 +101,7 @@ from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
+from process.warning_handler import WarningManager
 from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
@@ -312,12 +312,6 @@ class VaryRun:
         neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
 
-        # If config file contains WDIR, use that. Otherwise, use the directory
-        # containing the config file (used when running regression tests in
-        # temp dirs)
-        # TODO Not sure this is required any more
-        wdir = config.wdir if config.wdir else Path(self.config_file).parent
-
         # Check IN.DAT exists
         if not input_path.exists():
             raise FileNotFoundError
@@ -335,8 +329,6 @@ class VaryRun:
             # handle error codes
             # Run process on an IN.DAT file
             config.run_process(input_path, self.solver)
-
-            check_input_error(wdir=wdir)
 
             if not process_stopped():
                 no_unfeasible = no_unfeasible_mfile()
@@ -500,7 +492,7 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
+        WarningManager.show_errors(fortran.constants.nout)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.

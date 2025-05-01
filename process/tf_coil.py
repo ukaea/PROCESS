@@ -11,7 +11,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
-    error_handling,
     fwbs_variables,
     global_variables,
     pfcoil_variables,
@@ -20,13 +19,13 @@ from process.fortran import (
     tfcoil_variables,
 )
 from process.fortran import build_variables as bv
-from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
+from process.warning_handler import WarningManager
 
 RMU0 = constants.rmu0
 
@@ -247,7 +246,9 @@ class TFCoil:
                 )
         except ValueError as e:
             if e.args[1] == 245 and e.args[2] == 0:
-                error_handling.report_error(245)
+                WarningManager.create_warning(
+                    "Invalid stress model (r_tf_inboard = 0), stress constraint switched off"
+                )
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
 
@@ -719,12 +720,18 @@ class TFCoil:
 
         # If the average conductor temperature difference is negative, set it to 0
         if dtcncpav < 0.0e0:
-            eh.report_error(249)
+            WarningManager.create_warning(
+                "Negative conductor average temperature difference, set to 0",
+                dtcncpav=dtcncpav,
+            )
             dtcncpav = 0.0e0
 
         # If the average conductor temperature difference is negative, set it to 0
         if dtconcpmx < 0.0e0:
-            eh.report_error(250)
+            WarningManager.create_warning(
+                "Negative conductor peak temperature difference, set to 0",
+                dtconcpmx=dtconcpmx,
+            )
             dtconcpmx = 0.0e0
 
         # Average conductor temperature
@@ -1008,8 +1015,10 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            WarningManager.create_warning(
+                "Helium temperature out of helium property fiting range [4-50] K",
+                temp=temp,
+            )
 
         # Oder 3 polynomial fit
         if temp < 29.5e0:
@@ -1047,8 +1056,10 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            WarningManager.create_warning(
+                "Helium temperature out of helium property fiting range [4-50] K",
+                temp=temp,
+            )
 
         # Order 3 polynomial fit in [4-30] K on the dimenion [K/(g.K)]
         if temp < 29.5e0:
@@ -1088,8 +1099,10 @@ class TFCoil:
         """
 
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            WarningManager.create_warning(
+                "Helium temperature out of helium property fiting range [4-50] K",
+                temp=temp,
+            )
 
         # Order 4 polynomial exponential fit in [4-25] K
         if temp < 22.5e0:
@@ -1127,8 +1140,10 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            WarningManager.create_warning(
+                "Helium temperature out of helium property fiting range [4-50] K",
+                temp=temp,
+            )
 
         # Order 4 polynomial fit
         if temp < 24.0e0:
@@ -1177,8 +1192,10 @@ class TFCoil:
 
         # Fiting range verification
         if temp < 15.0e0 or temp > 150.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(258)
+            WarningManager.create_warning(
+                "Aluminium temperature out of the th conductivity fit range [15-60] K",
+                temp=temp,
+            )
 
         # fit 15 < T < 60 K (order 3 poly)
         if temp < 60.0e0:
