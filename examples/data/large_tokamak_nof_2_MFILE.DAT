@@ -653,7 +653,7 @@
  Total_Insulation_cross-section_(total)_(m2)______________________________ (a_tf_ins*n_tf_coils)__________ 8.66201502436131143e-01
  Total_Insulation_fraction________________________________________________ (f_tf_ins)_____________________ 4.70467882399137685e-02
  Casing_cross_section_area_(per_leg)_(m2)_________________________________ (acasetf)______________________ 5.64787852862676631e-01
- Inboard_leg_case_plasma_side_wall_thickness_(m)__________________________ (casthi)_______________________ 5.99999999999999978e-02
+ Inboard_leg_case_plasma_side_wall_thickness_(m)__________________________ (dr_tf_plasma_case)_______________________ 5.99999999999999978e-02
  Inboard_leg_case_inboard_"nose"_thickness_(m)____________________________ (thkcas)_______________________ 2.81687322115530880e-01
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)___________ (casths)_______________________ 5.00000000000000028e-02
  External_case_mass_per_coil_(kg)_________________________________________ (whtcas)_______________________ 5.57026409541280358e+05 OP
@@ -1550,7 +1550,7 @@ i_pulsed_plant   = 1 * Switch for reactor model;
 
 sig_tf_case_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in TF coil case (Pa)
 sig_tf_wp_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
-casthi   = 0.06 * inboard TF coil case plasma side thickness (m) (calculated for stellarators)
+dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 casths   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 cpttf    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
 dhecoil  = 0.01 * diameter of central helium channel in TF winding (m)
