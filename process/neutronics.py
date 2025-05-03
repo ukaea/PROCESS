@@ -6,16 +6,17 @@ ISBN:9780471223634.
 import functools
 
 import numpy as np
-from numpy import testing as npt
-from scipy.constants import Avogadro
-from neutronics_data import (ZeroContinuousFunc,
+from neutronics_data import (
+    ZeroContinuousFunc,
+    breeding_xs_data_bank,
     extract_atomic_mass,
     get_avg_atomic_mass,
-    material_density_data_bank,
     material_composition_data_bank,
+    material_density_data_bank,
     xs_data_bank,
-    breeding_xs_data_bank
 )
+from numpy import testing as npt
+from scipy.constants import Avogadro
 
 BARNS_CM2 = 1e-24
 N_A = Avogadro
@@ -314,7 +315,9 @@ def get_material_nuclear_data(
     )
     discrete_macro_mult_xs_matrix = (
         expand_macro_neutron_multiplication_xs_into_matrix(
-            discrete_n2n_xs, group_structure, N2N_Q_VALUE
+            discrete_n2n_xs,
+            group_structure,
+            N2N_Q_VALUE,
             # TODO: need to restructure this as we may have more than one types of (n,2n)
             # reactions, requiring different values of N2N_Q_VALUE.
         )
