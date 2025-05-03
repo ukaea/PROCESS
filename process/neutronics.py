@@ -67,7 +67,7 @@ class RegisterLater:
 
 def get_diffusion_coefficient_and_length(
     total_xs: float, scattering_xs: float, avg_atomic_mass: float
-) -> tuple[float, np.complex128]:
+) -> tuple[float, float]:
     r"""
     Calculate the diffusion coefficient for a given scattering and total macro-scopic
     cross-section in a given medium.
@@ -96,18 +96,16 @@ def get_diffusion_coefficient_and_length(
     diffusion_coef:
         The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
         unit: [cm]
-    diffusion_len:
-        The characteristic diffusion length as given by Reactor Analysis, Duderstadt and
-        Hamilton.
+    diffusion_len_2:
+        The square of the characteristic diffusion length as given by Reactor Analysis,
+        Duderstadt and Hamilton.
         unit: [cm]
     """
 
     transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
     diffusion_coef = 1 / 3 / transport_xs
-    diffusion_len = np.sqrt(
-        complex(diffusion_coef / (total_xs - scattering_xs), 0.0)
-    )
-    return diffusion_coef, diffusion_len
+    diffusion_len_2 = diffusion_coef / (total_xs - scattering_xs)
+    return diffusion_coef, diffusion_len_2
 
 
 def extrapolation_length(diffusion_coefficient: float) -> float:
@@ -380,7 +378,7 @@ class NeutronFluxProfile:
         # Dictionaries indexed by integers, so that we don't have to worry about ordering
         self.integration_constants = {}
         self.extended_boundary = {}
-        self.l_fw, self.l_bz = {}, {}
+        self.l_fw_2, self.l_bz_2 = {}, {}
 
     def solve_one_group(self) -> None:
         i = 0
@@ -390,12 +388,12 @@ class NeutronFluxProfile:
         c2 = self.flux * ...
         c3 = self.flux * ...
         c4 = self.flux * ...
-        self.l_fw[i], d_fw = get_diffusion_coefficient_and_length(
+        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
             self.fw_sigma_t[i],
             self.fw_sigma_s[i, i],
             self.fw_A,
         )
-        self.l_bz[i], d_bz = get_diffusion_coefficient_and_length(
+        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
             self.bz_sigma_t[i],
             self.bz_sigma_s[i, i],
             self.bz_A,
@@ -420,12 +418,12 @@ class NeutronFluxProfile:
         c2 = self.flux * ...
         c3 = self.flux * ...
         c4 = self.flux * ...
-        self.l_fw[i], d_fw = get_diffusion_coefficient_and_length(
+        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
             self.fw_sigma_t[i],
             self.fw_sigma_s[i, i],
             self.fw_A,
         )
-        self.l_bz[i], d_bz = get_diffusion_coefficient_and_length(
+        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
             self.bz_sigma_t[i],
             self.bz_sigma_s[i, i],
             self.bz_A,
@@ -438,18 +436,20 @@ class NeutronFluxProfile:
         """Neutron flux at the first wall."""
         i = n - 1
         c1, c2 = self.integration_constants[i][:2]
-        return np.real(
-            c1 * np.sinh(x / self.l_fw[i]) + c2 * np.cosh(x / self.l_fw[i])
-        )
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        if self.l_fw_2 < 0:
+            return c1 * -np.sin(x / l_fw) + c2 * np.cos(x / l_fw)
+        return c1 * np.sinh(x / l_fw) + c2 * np.cosh(x / l_fw)
 
     @groupwise
     def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
         """Neutron flux at the blanket."""
         i = n - 1
         c3, c4 = self.integration_constants[i][2:]
-        return np.real(
-            c3 * np.sinh(x / self.l_bz[i]) + c4 * np.cosh(x / self.l_bz[i])
-        )
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        if self.l_bz_2 < 0:
+            return c3 * -np.sin(x / l_bz) + c4 * np.cos(x / l_bz)
+        return c3 * np.sinh(x / l_bz) + c4 * np.cosh(x / l_bz)
 
     @groupwise
     def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
