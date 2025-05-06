@@ -1641,7 +1641,7 @@ class Physics:
         # Spherical Tokamak relation for internal inductance
         # Menard et al. (2016), Nuclear Fusion, 56, 106023
         physics_variables.ind_plasma_internal_norm_menard = (
-            3.4 - physics_variables.kappa
+            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
         )
 
         # Map calculation methods to a dictionary
@@ -1651,7 +1651,7 @@ class Physics:
             2: physics_variables.ind_plasma_internal_norm_menard,
         }
 
-        # Calculate beta_norm_max based on i_beta_norm_max
+        # Calculate ind_plasma_internal_normx based on i_ind_plasma_internal_norm
         if (
             int(physics_variables.i_ind_plasma_internal_norm)
             in ind_plasma_internal_norm_calculations
@@ -2777,6 +2777,28 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return np.log(1.65 + 0.89 * alphaj)
+
+    @staticmethod
+    def calculate_internal_inductance_menard(kappa: float) -> float:
+        """
+        Calculate the Menard plasma normalized internal inductance.
+
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+
+        :return: The Menard plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
+            - This model is only recommneded to be used for ST's with kappa > 2.5
+
+        :References:
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        """
+        return 3.4 - kappa
 
     @staticmethod
     def calculate_density_limit(

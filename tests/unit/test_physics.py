@@ -3269,3 +3269,10 @@ def test_calculate_internal_inductance_wesson():
     alphaj = 0.8
     result = Physics.calculate_internal_inductance_wesson(alphaj)
     assert result == pytest.approx(0.8595087177751706, abs=0.0001)
+
+
+def test_calculate_internal_inductance_menard():
+    """Test calculate_internal_inductance_menard()."""
+    kappa = 2.8
+    result = Physics.calculate_internal_inductance_menard(kappa)
+    assert result == pytest.approx(0.6, abs=0.001)
