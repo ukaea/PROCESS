@@ -2526,17 +2526,13 @@ class Physics:
             eps=physics_variables.eps
         )
 
-        # Method used for STEP plasma scoping
-        # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-        # Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
-
-        # Pressure peaking factor (Fp) is defined as the ratio of the peak pressure to the average pressure
-        physics_variables.beta_norm_max_thloreus = 3.7 + (
-            (
-                physics_variables.c_beta
-                / (physics_variables.p0 / physics_variables.vol_avg_pressure)
+        # E. Tholerus scaling law
+        physics_variables.beta_norm_max_thloreus = (
+            self.calculate_beta_norm_max_thloreus(
+                c_beta=physics_variables.c_beta,
+                p0=physics_variables.p0,
+                vol_avg_pressure=physics_variables.vol_avg_pressure,
             )
-            * (12.5 - 3.5 * (physics_variables.p0 / physics_variables.vol_avg_pressure))
         )
 
         # Map calculation methods to a dictionary
@@ -2852,6 +2848,36 @@ class Physics:
 
         """
         return 3.12 + 3.5 * eps**1.7
+
+    @staticmethod
+    def calculate_beta_norm_max_thloreus(
+        c_beta: float, p0: float, vol_avg_pressure: float
+    ) -> float:
+        """
+        Calculate the E. Tholerus normalized beta upper limit.
+
+        :param c_beta: Pressure peaking factor coefficient.
+        :type c_beta: float
+        :param p0: Central plasma pressure (Pa).
+        :type p0: float
+        :param vol_avg_pressure: Volume-averaged plasma pressure (Pa).
+        :type vol_avg_pressure: float
+
+        :return: The E. Tholerus normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
+              which is defined as the ratio of the peak pressure to the average pressure.
+            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
+
+        :References:
+            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+        """
+        return 3.7 + (
+            (c_beta / (p0 / vol_avg_pressure)) * (12.5 - 3.5 * (p0 / vol_avg_pressure))
+        )
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:
