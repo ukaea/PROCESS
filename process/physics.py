@@ -2517,8 +2517,8 @@ class Physics:
         )
 
         # Original scaling law
-        physics_variables.beta_norm_max_original_scaling = 2.7 * (
-            1.0 + 5.0 * physics_variables.eps**3.5
+        physics_variables.beta_norm_max_original_scaling = (
+            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
         )
 
         # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
@@ -2810,6 +2810,24 @@ class Physics:
             Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
         """
         return 4 * ind_plasma_internal_norm
+
+    @staticmethod
+    def calculate_beta_norm_max_original(eps: float) -> float:
+        """
+        Calculate the original scaling law normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The original scaling law normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+
+        :References:
+
+        """
+        return 2.7 * (1.0 + 5.0 * eps**3.5)
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:

@@ -3283,3 +3283,10 @@ def test_calculate_beta_norm_max_wesson():
     ind_plasma_internal_norm = 1.5
     result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
     assert result == pytest.approx(6.0, abs=0.001)
+
+
+def test_calculate_beta_norm_max_original():
+    """Test calculate_beta_norm_max_original()"""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_original(eps)
+    assert result == pytest.approx(3.8932426932522994, abs=0.00001)
