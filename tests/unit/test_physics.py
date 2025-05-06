@@ -3276,3 +3276,10 @@ def test_calculate_internal_inductance_menard():
     kappa = 2.8
     result = Physics.calculate_internal_inductance_menard(kappa)
     assert result == pytest.approx(0.6, abs=0.001)
+
+
+def test_calculate_beta_norm_max_wesson():
+    """Test calculate_beta_norm_max_wesson()."""
+    ind_plasma_internal_norm = 1.5
+    result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
+    assert result == pytest.approx(6.0, abs=0.001)

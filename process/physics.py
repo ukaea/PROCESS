@@ -1696,9 +1696,11 @@ class Physics:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
-        # *************************** #
-        #       BETA COMPONENTS       #
-        # *************************** #
+        # ============================================
+
+        # -----------------------------------------------------
+        # Beta Components
+        # -----------------------------------------------------
 
         physics_variables.beta_toroidal = (
             physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
@@ -1766,6 +1768,8 @@ class Physics:
             / (2.0e0 * constants.rmu0)
             * physics_variables.vol_plasma
         )
+
+        # =======================================================
 
         # Set PF coil ramp times
         if pulse_variables.i_pulsed_plant != 1:
@@ -2500,14 +2504,16 @@ class Physics:
             + physics_variables.p_ion_transport_loss_mw
         )
 
-        # Calculate physics_variables.beta limit
+        # ============================================================
+
+        # -----------------------------------------------------
+        # Normalised Beta Limit
+        # -----------------------------------------------------
 
         # Define beta_norm_max calculations
 
-        # T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-        # Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
-        physics_variables.beta_norm_max_wesson = (
-            4.0 * physics_variables.ind_plasma_internal_norm
+        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
+            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
         )
 
         # Original scaling law
@@ -2560,6 +2566,8 @@ class Physics:
             physics_variables.plasma_current,
             physics_variables.rminor,
         )
+
+        # ============================================================
 
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
@@ -2777,6 +2785,31 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return np.log(1.65 + 0.89 * alphaj)
+
+    @staticmethod
+    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
+        """
+        Calculate the Wesson normalsied beta upper limit.
+
+        :param ind_plasma_internal_norm: Plasma normalised internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: The Wesson normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalsied internal
+            inductance and current profile index.
+            - This fit is derived from the DIII-D database for β_N >= 2.5
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+
+            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        """
+        return 4 * ind_plasma_internal_norm
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:

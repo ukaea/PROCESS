@@ -144,7 +144,7 @@ $$
 \texttt{beta_norm_max_wesson} = g = 4l_i
 $$
 
-This relation is based off of data taken from DIII-D shots[^7].
+This relation is based off of data taken from DIII-D shots for $\beta_{\text{N}} \ge 2.5$[^7].
 
 This is only recommended for high aspect ratio tokamaks[^3].
 
