@@ -3290,3 +3290,10 @@ def test_calculate_beta_norm_max_original():
     eps = 0.5
     result = Physics.calculate_beta_norm_max_original(eps)
     assert result == pytest.approx(3.8932426932522994, abs=0.00001)
+
+
+def test_calculate_beta_norm_max_menard():
+    """Test calculate_beta_norm_max_menard()."""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_menard(eps)
+    assert result == pytest.approx(4.197251361676802, abs=0.000001)

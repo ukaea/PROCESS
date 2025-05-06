@@ -2521,10 +2521,10 @@ class Physics:
             self.calculate_beta_norm_max_original(eps=physics_variables.eps)
         )
 
-        # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-        # Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-        # doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-        physics_variables.beta_norm_max_menard = 3.12 + 3.5 * physics_variables.eps**1.7
+        # J. Menard scaling law
+        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
+            eps=physics_variables.eps
+        )
 
         # Method used for STEP plasma scoping
         # E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
@@ -2828,6 +2828,30 @@ class Physics:
 
         """
         return 2.7 * (1.0 + 5.0 * eps**3.5)
+
+    @staticmethod
+    def calculate_beta_norm_max_menard(eps: float) -> float:
+        """
+        Calculate the Menard normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The Menard normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
+            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
+              β_T data from DIII-D at A = 2.9 and high κ.
+
+        :References:
+            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+        """
+        return 3.12 + 3.5 * eps**1.7
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:
