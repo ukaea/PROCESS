@@ -94,19 +94,17 @@ def test_single_run_with_mfilejson(temp_data):
     :type temp_data: Path
     """
     # Set input file path in temp_data dir.
-    input_path = temp_data / "large_tokamak_once_through.IN.DAT"
-    mfile_path = temp_data / "large_tokamak_once_through.MFILE.DAT"
+    input_path = temp_data / "large_tokamak_eval.IN.DAT"
+    mfile_path = temp_data / "large_tokamak_eval.MFILE.DAT"
     input_file = str(input_path.resolve())
     mfile = str(mfile_path.resolve())
 
     # Run a SingleRun with the --mfilejson flag.
     main.main(args=["-i", input_file, "--mfilejson", "-m", mfile])
 
-    # Assert that 'large_tokamak_once_through.MFILE.DAT.json' has been produced in the temp_data directory.
-    expected_json = temp_data / "large_tokamak_once_through.MFILE.DAT.json"
-    assert expected_json.exists(), (
-        "large_tokamak_once_through.MFILE.DAT.json was not found"
-    )
+    # Assert that 'large_tokamak_eval.MFILE.DAT.json' has been produced in the temp_data directory.
+    expected_json = temp_data / "large_tokamak_eval.MFILE.DAT.json"
+    assert expected_json.exists(), "large_tokamak_eval.MFILE.DAT.json was not found"
 
     # Check if the file contains valid JSON.
     try:
