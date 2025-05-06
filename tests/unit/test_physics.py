@@ -3262,3 +3262,10 @@ def test_calculate_current_profile_index_wesson():
     q0 = 1.5
     result = Physics.calculate_current_profile_index_wesson(qstar, q0)
     assert result == pytest.approx(1.33333, abs=0.0001)
+
+
+def test_calculate_internal_inductance_wesson():
+    """Test calculate_internal_inductance_wesson()."""
+    alphaj = 0.8
+    result = Physics.calculate_internal_inductance_wesson(alphaj)
+    assert result == pytest.approx(0.8595087177751706, abs=0.0001)

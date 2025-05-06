@@ -1634,8 +1634,8 @@ class Physics:
         # Plasma Normalised Internal Inductance
         # -----------------------------------------------------
 
-        physics_variables.ind_plasma_internal_norm_wesson = np.log(
-            1.65 + 0.89 * physics_variables.alphaj
+        physics_variables.ind_plasma_internal_norm_wesson = (
+            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
         )
 
         # Spherical Tokamak relation for internal inductance
@@ -2755,6 +2755,28 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return qstar / q0 - 1.0
+
+    @staticmethod
+    def calculate_internal_inductance_wesson(alphaj: float) -> float:
+        """
+        Calculate the Wesson plasma normalized internal inductance.
+
+        :param alphaj: Current profile index.
+        :type alphaj: float
+
+        :return: The Wesson plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalised beta and
+              current profile index.
+            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+        """
+        return np.log(1.65 + 0.89 * alphaj)
 
     @staticmethod
     def calculate_density_limit(
