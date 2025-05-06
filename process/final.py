@@ -34,7 +34,7 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
 
     # Output relevant to no optimisation
     if numerics.ioptimz == -2:
-        output_once_through()
+        output_evaluation()
 
     # Print non-idempotence warning to OUT.DAT only
     if non_idempotent_msg:
@@ -45,10 +45,10 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
     op.write(models, constants.nout)
 
 
-def output_once_through():
-    """Write output for a once-through run of PROCESS"""
+def output_evaluation():
+    """Write output for an evaluation run of PROCESS"""
     po.oheadr(constants.nout, "Numerics")
-    po.ocmmnt(constants.nout, "PROCESS has performed a run witout optimisation.")
+    po.ocmmnt(constants.nout, "PROCESS has performed an evaluation run.")
     po.oblnkl(constants.nout)
 
     # Evaluate objective function

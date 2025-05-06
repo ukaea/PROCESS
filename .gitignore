@@ -53,6 +53,7 @@ env/
 *.DAT
 !scenario_examples/*/*.DAT
 !tests/regression/input_files/*.IN.DAT
+!tests/integration/data/*.IN.DAT
 !scenario_examples/*/*.pdf
 */.ipynb_checkpoints/
 REBCO_JC.DAT

@@ -1044,7 +1044,7 @@ def test_elliptical_component(
     """
     Automatically generated Regression Unit Test for elliptical_component.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param ellipticalcomponentparam: the data used to mock and assert in this test.
     :type ellipticalcomponentparam: ellipticalcomponentparam
@@ -1237,7 +1237,7 @@ def test_apply_coverage_factors(
     """
     Automatically generated Regression Unit Test for apply_coverage_factors.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param applycoveragefactorsparam: the data used to mock and assert in this test.
     :type applycoveragefactorsparam: applycoveragefactorsparam
