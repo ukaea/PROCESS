@@ -274,7 +274,7 @@ def test_input_file(
     should be compared in the test.
     :type opt_params_only: bool
     """
-    if input_file.name == "spherical_tokamak_once_through.IN.DAT":
+    if input_file.name == "spherical_tokamak_eval.IN.DAT":
         pytest.skip(
             "The spherical tokamak evaluation currently encounters a divide by zero."
         )
