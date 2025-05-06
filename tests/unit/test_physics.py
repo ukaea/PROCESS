@@ -3254,3 +3254,11 @@ def test_calculate_plasma_masses():
     assert m_plasma_alpha == pytest.approx(6.644657345e-06, abs=1e-30)
     assert m_plasma_electron == pytest.approx(9.1093837139e-09, abs=1e-34)
     assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
+
+
+def test_calculate_current_profile_index_wesson():
+    """Test calculate_current_profile_index_wesson()."""
+    qstar = 3.5
+    q0 = 1.5
+    result = Physics.calculate_current_profile_index_wesson(qstar, q0)
+    assert result == pytest.approx(1.33333, abs=0.0001)

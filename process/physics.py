@@ -1537,7 +1537,7 @@ class Physics:
         None
         This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
 
-        References:
+        :References:
         - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
           https://www.sciencedirect.com/science/article/pii/S0920379614005961
         - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
@@ -1601,12 +1601,14 @@ class Physics:
             physics_variables.triang95,
         )
 
-        # Ensure current profile consistency, if required
-        # This is as described in Hartmann and Zohm only if i_plasma_current = 4 as well...
+        # -----------------------------------------------------
+        # Plasma Current Profile
+        # -----------------------------------------------------
 
-        # Tokamaks 4th Edition, Wesson, page 116
         physics_variables.alphaj_wesson = (
-            physics_variables.qstar / physics_variables.q0 - 1.0
+            self.calculate_current_profile_index_wesson(
+                qstar=physics_variables.qstar, q0=physics_variables.q0
+            ),
         )
 
         # Map calculation methods to a dictionary
@@ -1615,7 +1617,7 @@ class Physics:
             1: physics_variables.alphaj_wesson,
         }
 
-        # Calculate beta_norm_max based on i_beta_norm_max
+        # Calculate alphaj based on i_alphaj
         if int(physics_variables.i_alphaj) in alphaj_calculations:
             physics_variables.alphaj = alphaj_calculations[
                 int(physics_variables.i_alphaj)
@@ -1625,6 +1627,12 @@ class Physics:
                 "Illegal value of i_alphaj",
                 i_alphaj=physics_variables.i_alphaj,
             )
+
+        # ==================================================
+
+        # -----------------------------------------------------
+        # Plasma Normalised Internal Inductance
+        # -----------------------------------------------------
 
         physics_variables.ind_plasma_internal_norm_wesson = np.log(
             1.65 + 0.89 * physics_variables.alphaj
@@ -1658,6 +1666,8 @@ class Physics:
                 "Illegal value of i_ind_plasma_internal_norm",
                 i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
             )
+
+        # ===================================================
 
         # Calculate density and temperature profile quantities
         # If physics_variables.ipedestal = 1 then set pedestal density to
@@ -2720,6 +2730,31 @@ class Physics:
                     f" {reinke_variables.impvardiv}"
                 ),
             )
+
+    @staticmethod
+    def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
+        """
+        Calculate the Wesson current profile index.
+
+        :param qstar: Cylindrical safety factor.
+        :type qstar: float
+        :param q0: Safety factor on axis.
+        :type q0: float
+
+
+        :return: The Wesson current profile index.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalised beta and
+              normalised internal inductance.
+            - This relation is only true for the cyclindrical plasma approximation.
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+        """
+        return qstar / q0 - 1.0
 
     @staticmethod
     def calculate_density_limit(
@@ -3824,6 +3859,7 @@ class Physics:
                     )
                 po.ocmmnt(self.outfile, "Current profile index scalings:")
                 po.oblnkl(self.outfile)
+
                 po.ovarrf(
                     self.outfile,
                     "J. Wesson plasma current profile index",
