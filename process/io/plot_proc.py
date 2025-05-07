@@ -590,9 +590,10 @@ def plot_main_plasma_information(
         transform=plt.gcf().transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 0.5,
+            "facecolor": "paleturquoise",
+            "alpha": 1.0,
             "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
         },
     )
 
@@ -743,9 +744,10 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "grey",  # Changed to a not normal color (Aquamarine)
-            "alpha": 0.5,
+            "facecolor": "gainsboro",  # Changed to a not normal color (Aquamarine)
+            "alpha": 1.0,
             "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
         },
     )
 
@@ -784,8 +786,8 @@ def plot_main_plasma_information(
     )
 
     textstr_alpha = (
-        f"$P_{{\\text{{\\alpha,loss}}}}$ {mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW \n"
-        f"$f_{{\\text{{\\alpha,coupled}}}}$ {mfile_data.data['f_alpha_plasma'].get_scan(scan):.2f}"
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW \n"
+        f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile_data.data['f_alpha_plasma'].get_scan(scan):.2f}"
     )
 
     axis.text(
@@ -891,9 +893,10 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "peru",
-            "alpha": 0.5,
+            "facecolor": "khaki",
+            "alpha": 1.0,
             "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
         },
     )
 
@@ -1040,9 +1043,10 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "navy",
-            "alpha": 0.4,
+            "facecolor": "lavender",
+            "alpha": 1.0,
             "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
         },
     )
 
