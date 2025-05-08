@@ -4276,7 +4276,7 @@ class Stellarator:
             physics_variables.pden_neutron_total_mw,
             physics_variables.p_plasma_alpha_mw,
             physics_variables.p_alpha_total_mw,
-            physics_variables.neutron_power_plasma,
+            physics_variables.p_plasma_neutron_mw,
             physics_variables.p_neutron_total_mw,
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,

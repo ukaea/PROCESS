@@ -666,7 +666,7 @@ module physics_variables
   real(dp) :: plasma_current
   !! plasma current (A)
 
-  real(dp) :: neutron_power_plasma
+  real(dp) :: p_plasma_neutron_mw
   !! Neutron fusion power from just the plasma [MW]
 
   real(dp) :: p_neutron_total_mw
