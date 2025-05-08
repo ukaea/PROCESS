@@ -80,7 +80,7 @@ class CCFE_HCPB:
 
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
             fwbs_variables.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
-                physics_variables.neutron_power_total,
+                physics_variables.p_neutron_total_mw,
                 build_variables.dr_shld_inboard,
                 physics_variables.rmajor,
             )
@@ -91,7 +91,7 @@ class CCFE_HCPB:
                 fwbs_variables.pnuc_cp_sh,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.neutron_power_total, build_variables.dr_shld_inboard
+                physics_variables.p_neutron_total_mw, build_variables.dr_shld_inboard
             )
 
         else:  # No CP
@@ -151,7 +151,7 @@ class CCFE_HCPB:
             )
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.neutron_power_total
+            * physics_variables.p_neutron_total_mw
         )
 
         # Power to the blanket (MW)
@@ -162,7 +162,7 @@ class CCFE_HCPB:
             )
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.neutron_power_total
+            * physics_variables.p_neutron_total_mw
         )
 
         # Power to the shield(MW)
@@ -171,7 +171,7 @@ class CCFE_HCPB:
             (fwbs_variables.pnucshld / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.neutron_power_total
+            * physics_variables.p_neutron_total_mw
         )
 
         # Power to the TF coils (MW)
@@ -180,13 +180,13 @@ class CCFE_HCPB:
             (fwbs_variables.ptfnuc / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
-            * physics_variables.neutron_power_total
+            * physics_variables.p_neutron_total_mw
             + fwbs_variables.pnuc_cp_tf
         )
 
         # Power deposited in the CP
         fwbs_variables.pnuc_cp_sh = (
-            f_geom_cp * physics_variables.neutron_power_total
+            f_geom_cp * physics_variables.p_neutron_total_mw
             - fwbs_variables.pnuc_cp_tf
         )
 
@@ -194,14 +194,14 @@ class CCFE_HCPB:
         # ---
         # p_div_nuclear_heat_total_mw is not changed.
         # The energy due to multiplication, by subtraction:
-        # emultmw = p_fw_nuclear_heat_total_mw + p_blkt_nuclear_heat_total_mw + pnucshld + ptfnuc + p_div_nuclear_heat_total_mw - neutron_power_total
+        # emultmw = p_fw_nuclear_heat_total_mw + p_blkt_nuclear_heat_total_mw + pnucshld + ptfnuc + p_div_nuclear_heat_total_mw - p_neutron_total_mw
         # ---
 
         # New code, a bit simpler
         fwbs_variables.emultmw = (
             (fwbs_variables.emult - 1)
             * f_geom_blanket
-            * physics_variables.neutron_power_total
+            * physics_variables.p_neutron_total_mw
         )
 
         # powerflow calculation for pumping power
@@ -939,7 +939,7 @@ class CCFE_HCPB:
         # Solid angle fraction covered by the CP (OUTPUT) [-]
         return 0.25 * cp_sol_angle / np.pi
 
-    def st_tf_centrepost_fast_neut_flux(self, neutron_power_total, sh_width, rmajor):
+    def st_tf_centrepost_fast_neut_flux(self, p_neutron_total_mw, sh_width, rmajor):
         """Author S Kahn
         Routine calculating the fast neutron (E > 0.1 MeV) flux reaching the TF
         at the centerpost. These calcualtion are made from a CP only MCNP fit
@@ -950,7 +950,7 @@ class CCFE_HCPB:
         of 16.6 cm, close to the "15 - 16 cm" of Menard et al. 2016.
         (This is an e-folding lenth of 7.22 cm.)
 
-        :param neutron_power_total: neutron fusion power [MW]
+        :param p_neutron_total_mw: neutron fusion power [MW]
         :param sh_width: Neutron shield width [m]
         :param rmajor: Plasma major radius [m]
         """
@@ -983,7 +983,7 @@ class CCFE_HCPB:
                 f_wc_density
                 * f_neut_flux_out_wall
                 * neut_flux_cp
-                * (neutron_power_total / 800)
+                * (p_neutron_total_mw / 800)
             )
 
         return neut_flux_cp

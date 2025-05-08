@@ -2174,7 +2174,7 @@ class Physics:
             physics_variables.p_plasma_alpha_mw,
             physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
-            physics_variables.neutron_power_total,
+            physics_variables.p_neutron_total_mw,
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
@@ -2209,7 +2209,7 @@ class Physics:
         if physics_variables.iwalld == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
-                * physics_variables.neutron_power_total
+                * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
         else:
@@ -2221,7 +2221,7 @@ class Physics:
                         - fwbs_variables.f_a_fw_hcd
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
             else:
@@ -2232,7 +2232,7 @@ class Physics:
                         - fwbs_variables.f_a_fw_hcd
                         - fwbs_variables.f_ster_div_single
                     )
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
 
@@ -4774,8 +4774,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Neutron power: total (MW)",
-            "(neutron_power_total)",
-            physics_variables.neutron_power_total,
+            "(p_neutron_total_mw)",
+            physics_variables.p_neutron_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -8382,7 +8382,7 @@ def init_physics_variables():
     physics_variables.piepv = 0.0
     physics_variables.plasma_current = 0.0
     physics_variables.neutron_power_plasma = 0.0
-    physics_variables.neutron_power_total = 0.0
+    physics_variables.p_neutron_total_mw = 0.0
     physics_variables.neutron_power_density_total = 0.0
     physics_variables.neutron_power_density_plasma = 0.0
     physics_variables.p_plasma_ohmic_mw = 0.0

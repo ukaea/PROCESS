@@ -1231,7 +1231,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
 class StTfCentrepostFastNeutFluxParam(NamedTuple):
     i_tf_sup: Any = None
 
-    neutron_power_total: Any = None
+    p_neutron_total_mw: Any = None
 
     sh_width: Any = None
 
@@ -1245,14 +1245,14 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
     (
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            neutron_power_total=400.65875490746737,
+            p_neutron_total_mw=400.65875490746737,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=144701998710998.5,
         ),
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
-            neutron_power_total=409.82485143909827,
+            p_neutron_total_mw=409.82485143909827,
             sh_width=0.60000000000000009,
             rmajor=3,
             expected_neut_flux_cp=148012428028364.28,
@@ -1279,7 +1279,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     )
 
     neut_flux_cp = ccfe_hcpb.st_tf_centrepost_fast_neut_flux(
-        neutron_power_total=sttfcentrepostfastneutfluxparam.neutron_power_total,
+        p_neutron_total_mw=sttfcentrepostfastneutfluxparam.p_neutron_total_mw,
         sh_width=sttfcentrepostfastneutfluxparam.sh_width,
         rmajor=sttfcentrepostfastneutfluxparam.rmajor,
     )

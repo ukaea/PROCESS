@@ -35,7 +35,7 @@ def plot_full_sankey(
     totalplasma = (
         p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
     )  # Total Power in plasma (MW)
-    neutron_power_total = m_file.data["neutron_power_total"].get_scan(
+    p_neutron_total_mw = m_file.data["p_neutron_total_mw"].get_scan(
         -1
     )  # Neutron fusion power (MW)
     non_alpha_charged_power = m_file.data["non_alpha_charged_power"].get_scan(
@@ -141,7 +141,7 @@ def plot_full_sankey(
             p_plasma_ohmic_mw,
             -pcharohmmw,
             -palpinjmw,
-            -neutron_power_total,
+            -p_neutron_total_mw,
         ]
         sankey.add(
             flows=plasma,
@@ -169,7 +169,7 @@ def plot_full_sankey(
 
         # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
         neutrons = [
-            neutron_power_total,
+            p_neutron_total_mw,
             -p_div_nuclear_heat_total_mw,
             -p_fw_nuclear_heat_total_mw,
             -pnucshld,

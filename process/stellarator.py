@@ -1186,7 +1186,7 @@ class Stellarator:
         #  shield)
 
         fwbs_variables.pnucloss = (
-            physics_variables.neutron_power_total * fwbs_variables.fhole
+            physics_variables.p_neutron_total_mw * fwbs_variables.fhole
         )
 
         # The peaking factor, obtained as precalculated parameter
@@ -1200,14 +1200,14 @@ class Stellarator:
 
             if heat_transport_variables.ipowerflow == 1:
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.p_fw_hcd_nuclear_heat_mw
@@ -1268,13 +1268,13 @@ class Stellarator:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = pneut2 - (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 )
@@ -1315,20 +1315,20 @@ class Stellarator:
                 #  Neutron power incident on divertor (MW)
 
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     * fwbs_variables.f_ster_div_single
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
                 pnucfwbs = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
@@ -4277,7 +4277,7 @@ class Stellarator:
             physics_variables.p_plasma_alpha_mw,
             physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
-            physics_variables.neutron_power_total,
+            physics_variables.p_neutron_total_mw,
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
@@ -4312,14 +4312,14 @@ class Stellarator:
         if physics_variables.iwalld == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
-                * physics_variables.neutron_power_total
+                * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
                 physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
             else:
@@ -4330,7 +4330,7 @@ class Stellarator:
                         - fwbs_variables.f_a_fw_hcd
                         - fwbs_variables.f_ster_div_single
                     )
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
 
