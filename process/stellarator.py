@@ -4278,7 +4278,7 @@ class Stellarator:
             physics_variables.p_alpha_total_mw,
             physics_variables.p_plasma_neutron_mw,
             physics_variables.p_neutron_total_mw,
-            physics_variables.non_alpha_charged_power,
+            physics_variables.p_non_alpha_charged_mw,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
             physics_variables.f_pden_alpha_ions_mw,
@@ -4393,7 +4393,7 @@ class Stellarator:
 
         powht = (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
@@ -4469,7 +4469,7 @@ class Stellarator:
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
@@ -4499,7 +4499,7 @@ class Stellarator:
             physics_variables.i_plasma_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.non_alpha_charged_power,
+            physics_variables.p_non_alpha_charged_mw,
             current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,

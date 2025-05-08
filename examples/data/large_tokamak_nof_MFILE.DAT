@@ -382,7 +382,7 @@
  Neutron_power:_plasma_only_(MW)__________________________________________ (p_plasma_neutron_mw)_________ 1.39144256113123765e+03 OP
  Neutron_power_density:_plasma_(MW/m^3)___________________________________ (pden_plasma_neutron_mw)_ 7.36926076953736353e-01 OP
  Neutron_power:_beam-plasma_(MW)__________________________________________ (p_beam_neutron_mw)__________ 0.00000000000000000e+00 OP
- Charged_particle_power_(excluding_alphas)_(MW)___________________________ (non_alpha_charged_power)______ 1.34669877478527300e+00 OP
+ Charged_particle_power_(excluding_alphas)_(MW)___________________________ (p_non_alpha_charged_mw)______ 1.34669877478527300e+00 OP
  Total_charged_particle_power_(including_alphas)_(MW)_____________________ (charged_particle_power)_______ 3.51889598375332753e+02 OP
  Total_power_deposited_in_plasma_(MW)_____________________________________ (tot_power_plasma)_____________ 4.40026498969293129e+02 OP
  Synchrotron_radiation_power_(MW)_________________________________________ (pden_plasma_sync_mw*vol_plasma)_ 1.45588444219885051e+01 OP
@@ -1165,7 +1165,7 @@
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.18176171262989300e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 4.40026498969293016e+02 OP
  Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*p_alpha_total_mw)_ 3.33015754620520056e+02 OP
- Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (non_alpha_charged_power.)_____ 1.34669877478527300e+00 OP
+ Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (p_non_alpha_charged_mw.)_____ 1.34669877478527300e+00 OP
  Ohmic_heating_(MW)_______________________________________________________ (p_plasma_ohmic_mw.)___________ 6.76139747896948751e-01 OP
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 1.04987905826090795e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 4.40026498969293129e+02 OP

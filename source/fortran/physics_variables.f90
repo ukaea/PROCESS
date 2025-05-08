@@ -606,7 +606,7 @@ module physics_variables
   real(dp) :: p_beam_alpha_mw
   !! alpha power from hot neutral beam ions (MW)
 
-  real(dp) :: non_alpha_charged_power
+  real(dp) :: p_non_alpha_charged_mw
   !! non-alpha charged particle fusion power (MW)
 
   real(dp) :: charged_particle_power

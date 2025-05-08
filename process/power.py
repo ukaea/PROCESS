@@ -1712,8 +1712,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power from charged products of DD and/or D-He3 fusion (MW)",
-            "(non_alpha_charged_power.)",
-            physics_variables.non_alpha_charged_power,
+            "(p_non_alpha_charged_mw.)",
+            physics_variables.p_non_alpha_charged_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1724,9 +1724,9 @@ class Power:
             "OP ",
         )
         # if (physics_variables.i_plasma_ignited == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.non_alpha_charged_power+p_plasma_ohmic_mw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+p_plasma_ohmic_mw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.non_alpha_charged_power+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1743,7 +1743,7 @@ class Power:
             "Total (MW)",
             "",
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + pinj,
             "OP ",
@@ -1755,7 +1755,7 @@ class Power:
                 - (
                     physics_variables.f_alpha_plasma
                     * physics_variables.p_alpha_total_mw
-                    + physics_variables.non_alpha_charged_power
+                    + physics_variables.p_non_alpha_charged_mw
                     + physics_variables.p_plasma_ohmic_mw
                     + pinj
                 )

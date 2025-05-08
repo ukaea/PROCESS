@@ -2175,7 +2175,7 @@ class Physics:
             physics_variables.p_alpha_total_mw,
             physics_variables.p_plasma_neutron_mw,
             physics_variables.p_neutron_total_mw,
-            physics_variables.non_alpha_charged_power,
+            physics_variables.p_non_alpha_charged_mw,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
             physics_variables.f_pden_alpha_ions_mw,
@@ -2329,7 +2329,7 @@ class Physics:
 
         physics_variables.p_plasma_separatrix_mw = (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + pinj
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.p_plasma_rad_mw
@@ -2412,7 +2412,7 @@ class Physics:
             physics_variables.i_plasma_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.non_alpha_charged_power,
+            physics_variables.p_non_alpha_charged_mw,
             current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
@@ -2671,7 +2671,7 @@ class Physics:
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
@@ -4810,8 +4810,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Charged particle power (excluding alphas) (MW)",
-            "(non_alpha_charged_power)",
-            physics_variables.non_alpha_charged_power,
+            "(p_non_alpha_charged_mw)",
+            physics_variables.p_non_alpha_charged_mw,
             "OP ",
         )
         po.ovarre(
@@ -4823,7 +4823,7 @@ class Physics:
         )
         tot_power_plasma = (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.non_alpha_charged_power
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
@@ -6104,7 +6104,7 @@ class Physics:
                 physics_variables.i_plasma_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
+                physics_variables.p_non_alpha_charged_mw,
                 current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
@@ -7028,7 +7028,7 @@ class Physics:
                 physics_variables.i_plasma_ignited,
                 physics_variables.kappa,
                 physics_variables.kappa95,
-                physics_variables.non_alpha_charged_power,
+                physics_variables.p_non_alpha_charged_mw,
                 current_drive_variables.p_hcd_injected_total_mw,
                 physics_variables.plasma_current,
                 physics_variables.pden_plasma_core_rad_mw,
@@ -7084,7 +7084,7 @@ class Physics:
         i_plasma_ignited: int,
         kappa: float,
         kappa95: float,
-        non_alpha_charged_power: float,
+        p_non_alpha_charged_mw: float,
         p_hcd_injected_total_mw: float,
         plasma_current: float,
         pden_plasma_core_rad_mw: float,
@@ -7113,7 +7113,7 @@ class Physics:
         :param i_plasma_ignited: Switch for ignited calculation
         :param kappa: Plasma elongation
         :param kappa95: Plasma elongation at 95% surface
-        :param non_alpha_charged_power: Non-alpha charged particle fusion power (MW)
+        :param p_non_alpha_charged_mw: Non-alpha charged particle fusion power (MW)
         :param p_hcd_injected_total_mw: Auxiliary power to ions and electrons (MW)
         :param plasma_current: Plasma current (A)
         :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
@@ -7141,7 +7141,7 @@ class Physics:
         # Calculate heating power (MW)
         p_plasma_loss_mw = (
             physics_variables.f_alpha_plasma * p_alpha_total_mw
-            + non_alpha_charged_power
+            + p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
         )
 
@@ -8361,7 +8361,7 @@ def init_physics_variables():
     physics_variables.p_alpha_total_mw = 0.0
     physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.p_beam_alpha_mw = 0.0
-    physics_variables.non_alpha_charged_power = 0.0
+    physics_variables.p_non_alpha_charged_mw = 0.0
     physics_variables.charged_power_density = 0.0
     physics_variables.pcoef = 0.0
     physics_variables.p_plasma_inner_rad_mw = 0.0
