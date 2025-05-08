@@ -603,7 +603,7 @@ module physics_variables
   real(dp) :: p_alpha_total_mw
   !! Total alpha power from plasma and beams (MW)
 
-  real(dp) :: alpha_power_beams
+  real(dp) :: p_beam_alpha_mw
   !! alpha power from hot neutral beam ions (MW)
 
   real(dp) :: non_alpha_charged_power

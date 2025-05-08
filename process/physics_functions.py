@@ -287,7 +287,7 @@ def fast_alpha_beta(
         fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
         beta_fast_alpha = beta_thermal * fact * fact2
 
-    else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0
+    else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0
         beta_fast_alpha = 0.0
 
     return beta_fast_alpha

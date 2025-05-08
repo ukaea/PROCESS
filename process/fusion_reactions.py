@@ -682,7 +682,7 @@ def bosch_hale_reactivity(
 def set_fusion_powers(
     f_alpha_electron: float,
     f_alpha_ion: float,
-    alpha_power_beams: float,
+    p_beam_alpha_mw: float,
     charged_power_density: float,
     neutron_power_density_plasma: float,
     vol_plasma: float,
@@ -695,7 +695,7 @@ def set_fusion_powers(
     Parameters:
         f_alpha_electron (float): Fraction of alpha energy to electrons.
         f_alpha_ion (float): Fraction of alpha energy to ions.
-        alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
+        p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
         neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
         vol_plasma (float): Plasma volume (m^3).
@@ -727,7 +727,7 @@ def set_fusion_powers(
 
     # Add neutral beam alpha power / volume
     pden_alpha_total_mw = pden_plasma_alpha_mw + (
-        alpha_power_beams / vol_plasma
+        p_beam_alpha_mw / vol_plasma
     )
 
     # Total alpha power
@@ -745,7 +745,7 @@ def set_fusion_powers(
                 constants.dt_neutron_energy_fraction
                 / (1.0 - constants.dt_neutron_energy_fraction)
             )
-            * alpha_power_beams
+            * p_beam_alpha_mw
         )
         / vol_plasma
     )
@@ -839,7 +839,7 @@ def beam_fusion(
                 tuple: A tuple containing the following elements:
                     - beta_beam (float): Neutral beam beta component.
                     - beam_density_out (float): Hot beam ion density (m^-3).
-                    - alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
+                    - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
 
             Notes:
                 - The function uses the Bosch-Hale parametrization to compute the reactivity.
@@ -911,7 +911,7 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    alpha_power_beams = beamfus0 * (
+    p_beam_alpha_mw = beamfus0 * (
         deuterium_beam_alpha_power + tritium_beam_alpha_power
     )
 
@@ -925,7 +925,7 @@ def beam_fusion(
         / (bt**2 + bp**2)
     )
 
-    return beta_beam, hot_beam_density, alpha_power_beams
+    return beta_beam, hot_beam_density, p_beam_alpha_mw
 
 
 def beamcalc(

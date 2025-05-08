@@ -31,7 +31,7 @@ class SetFusionPowersParam(NamedTuple):
 
     f_alpha_ion: Any = None
 
-    alpha_power_beams: Any = None
+    p_beam_alpha_mw: Any = None
 
     charged_power_density: Any = None
 
@@ -74,7 +74,7 @@ class SetFusionPowersParam(NamedTuple):
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
-            alpha_power_beams=0,
+            p_beam_alpha_mw=0,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
@@ -94,7 +94,7 @@ class SetFusionPowersParam(NamedTuple):
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
-            alpha_power_beams=100.5,
+            p_beam_alpha_mw=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
@@ -114,7 +114,7 @@ class SetFusionPowersParam(NamedTuple):
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
-            alpha_power_beams=100.5,
+            p_beam_alpha_mw=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
@@ -134,7 +134,7 @@ class SetFusionPowersParam(NamedTuple):
             f_deuterium=2.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
-            alpha_power_beams=100.5,
+            p_beam_alpha_mw=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
@@ -181,7 +181,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     ) = reactions.set_fusion_powers(
         f_alpha_electron=setfusionpowersparam.f_alpha_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
-        alpha_power_beams=setfusionpowersparam.alpha_power_beams,
+        p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
         charged_power_density=setfusionpowersparam.charged_power_density,
         neutron_power_density_plasma=setfusionpowersparam.neutron_power_density_plasma,
         vol_plasma=setfusionpowersparam.vol_plasma,
@@ -246,7 +246,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
 
 
 def test_beam_fusion():
-    beta_beam, beam_density_out, alpha_power_beams = reactions.beam_fusion(
+    beta_beam, beam_density_out, p_beam_alpha_mw = reactions.beam_fusion(
         1.0,
         1.5,
         0.85,
@@ -268,7 +268,7 @@ def test_beam_fusion():
 
     assert beta_beam == pytest.approx(0.0026264022466211366)
     assert beam_density_out == pytest.approx(4.2133504058678246e17)
-    assert alpha_power_beams == pytest.approx(11.593221085189192)
+    assert p_beam_alpha_mw == pytest.approx(11.593221085189192)
 
 
 def test_beamcalc():

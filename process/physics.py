@@ -2120,7 +2120,7 @@ class Physics:
             (
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
-                physics_variables.alpha_power_beams,
+                physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
@@ -2143,20 +2143,20 @@ class Physics:
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
             physics_variables.fusden_alpha_total = (
                 physics_variables.fusden_plasma_alpha
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
             physics_variables.p_dt_total_mw = (
                 physics_variables.p_plasma_dt_mw
-                + 5.0e0 * physics_variables.alpha_power_beams
+                + 5.0e0 * physics_variables.p_beam_alpha_mw
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
@@ -2184,7 +2184,7 @@ class Physics:
         ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
-            physics_variables.alpha_power_beams,
+            physics_variables.p_beam_alpha_mw,
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density_plasma,
             physics_variables.vol_plasma,
@@ -4752,8 +4752,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power: beam-plasma (MW)",
-            "(alpha_power_beams)",
-            physics_variables.alpha_power_beams,
+            "(p_beam_alpha_mw)",
+            physics_variables.p_beam_alpha_mw,
             "OP ",
         )
         po.ovarre(
@@ -4803,7 +4803,7 @@ class Physics:
             self.outfile,
             "Neutron power: beam-plasma (MW)",
             "(neutron_power_beams)",
-            physics_variables.alpha_power_beams * 4.0e0,
+            physics_variables.p_beam_alpha_mw * 4.0e0,
             "OP ",
         )
         po.osubhd(self.outfile, "Charged Particle Powers :")
@@ -8360,7 +8360,7 @@ def init_physics_variables():
     physics_variables.alpha_power_ions_density = 0.0
     physics_variables.p_alpha_total_mw = 0.0
     physics_variables.p_plasma_alpha_mw = 0.0
-    physics_variables.alpha_power_beams = 0.0
+    physics_variables.p_beam_alpha_mw = 0.0
     physics_variables.non_alpha_charged_power = 0.0
     physics_variables.charged_power_density = 0.0
     physics_variables.pcoef = 0.0
