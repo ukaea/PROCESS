@@ -65,7 +65,7 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 8-Page PDF Summary
+## PROCESS 9-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
