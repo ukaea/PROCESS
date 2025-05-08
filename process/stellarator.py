@@ -4244,7 +4244,7 @@ class Stellarator:
                 physics_variables.zeffai,
             )
             physics_variables.fusden_total = (
-                physics_variables.fusion_rate_density_plasma
+                physics_variables.fusden_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
@@ -4264,7 +4264,7 @@ class Stellarator:
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
             physics_variables.fusden_total = (
-                physics_variables.fusion_rate_density_plasma
+                physics_variables.fusden_plasma
             )
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma

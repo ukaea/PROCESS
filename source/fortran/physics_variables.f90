@@ -284,7 +284,7 @@ module physics_variables
   real(dp) :: fusden_total
   !! fusion reaction rate, from beams and plasma (reactions/m3/sec)
 
-  real(dp) :: fusion_rate_density_plasma
+  real(dp) :: fusden_plasma
   !! fusion reaction rate, just from plasma (reactions/m3/sec)
 
   real(dp) :: f_c_plasma_non_inductive

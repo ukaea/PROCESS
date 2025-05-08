@@ -183,7 +183,7 @@ This method sets the required physics variables in the `physics_variables` and `
 - `physics_variables.alpha_power_density_plasma`: Updated with `self.alpha_power_density`
 - `physics_variables.charged_power_density`: Updated with `self.charged_power_density`
 - `physics_variables.neutron_power_density_plasma`: Updated with `self.neutron_power_density`
-- `physics_variables.fusion_rate_density_plasma`: Updated with `self.fusion_rate_density`
+- `physics_variables.fusden_plasma`: Updated with `self.fusion_rate_density`
 - `physics_variables.alpha_rate_density_plasma`: Updated with `self.alpha_rate_density`
 - `physics_variables.proton_rate_density`: Updated with `self.proton_rate_density`
 - `physics_module.sigmav_dt_average`: Updated with `self.sigmav_dt_average`

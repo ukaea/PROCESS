@@ -2141,7 +2141,7 @@ class Physics:
                 physics_variables.zeffai,
             )
             physics_variables.fusden_total = (
-                physics_variables.fusion_rate_density_plasma
+                physics_variables.fusden_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
@@ -2161,7 +2161,7 @@ class Physics:
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
             physics_variables.fusden_total = (
-                physics_variables.fusion_rate_density_plasma
+                physics_variables.fusden_plasma
             )
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
@@ -4667,7 +4667,7 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Fusion rate density: plasma (particles/m3/sec)",
-            "(fusion_rate_density_plasma)",
+            "(fusden_plasma)",
             physics_variables.fusden_total,
             "OP ",
         )
@@ -8307,7 +8307,7 @@ def init_physics_variables():
     physics_variables.fne0 = 1.0
     physics_variables.f_tritium = 0.5
     physics_variables.fusden_total = 0.0
-    physics_variables.fusion_rate_density_plasma = 0.0
+    physics_variables.fusden_plasma = 0.0
     physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4
     physics_variables.f_beta_alpha_beam_thermal = 0.0

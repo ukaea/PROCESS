@@ -362,7 +362,7 @@
  3-Helium_fuel_fraction___________________________________________________ (f_helium3)____________________ 0.00000000000000000e+00
  Total_fusion_power_(MW)__________________________________________________ (p_fusion_total_mw)_________________ 1.74333215950657041e+03 OP
  Fusion_rate_density:_total_(particles/m3/sec)____________________________ (fusden_total)____ 3.29182443497713664e+17 OP
- Fusion_rate_density:_plasma_(particles/m3/sec)___________________________ (fusion_rate_density_plasma)___ 3.29182443497713664e+17 OP
+ Fusion_rate_density:_plasma_(particles/m3/sec)___________________________ (fusden_plasma)___ 3.29182443497713664e+17 OP
  D-T_fusion_power:_total_(MW)_____________________________________________ (p_dt_total_mw)_______________ 1.74119261535816122e+03 OP
  D-T_fusion_power:_plasma_(MW)____________________________________________ (p_plasma_dt_mw)______________ 1.74119261535816122e+03 OP
  D-D_fusion_power_(MW)____________________________________________________ (p_dd_total_mw)_____________________ 2.13954414840924656e+00 OP
