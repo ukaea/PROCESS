@@ -381,7 +381,7 @@
  Neutron_power_density:_total_(MW/m^3)____________________________________ (pden_neutron_total_mw)__ 7.36926076953736353e-01 OP
  Neutron_power:_plasma_only_(MW)__________________________________________ (p_plasma_neutron_mw)_________ 1.39144256113123765e+03 OP
  Neutron_power_density:_plasma_(MW/m^3)___________________________________ (pden_plasma_neutron_mw)_ 7.36926076953736353e-01 OP
- Neutron_power:_beam-plasma_(MW)__________________________________________ (neutron_power_beams)__________ 0.00000000000000000e+00 OP
+ Neutron_power:_beam-plasma_(MW)__________________________________________ (p_beam_neutron_mw)__________ 0.00000000000000000e+00 OP
  Charged_particle_power_(excluding_alphas)_(MW)___________________________ (non_alpha_charged_power)______ 1.34669877478527300e+00 OP
  Total_charged_particle_power_(including_alphas)_(MW)_____________________ (charged_particle_power)_______ 3.51889598375332753e+02 OP
  Total_power_deposited_in_plasma_(MW)_____________________________________ (tot_power_plasma)_____________ 4.40026498969293129e+02 OP
