@@ -2140,7 +2140,7 @@ class Physics:
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
-            physics_variables.fusion_rate_density_total = (
+            physics_variables.fusden_total = (
                 physics_variables.fusion_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
@@ -2160,7 +2160,7 @@ class Physics:
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusion_rate_density_total = (
+            physics_variables.fusden_total = (
                 physics_variables.fusion_rate_density_plasma
             )
             physics_variables.alpha_rate_density_total = (
@@ -2475,7 +2475,7 @@ class Physics:
             physics_variables.dene,
             physics_variables.te,
             physics_variables.nd_fuel_ions,
-            physics_variables.fusion_rate_density_total,
+            physics_variables.fusden_total,
             physics_variables.alpha_rate_density_total,
             physics_variables.plasma_current,
             sbar,
@@ -3143,7 +3143,7 @@ class Physics:
         dene: float,
         te: float,
         nd_fuel_ions: float,
-        fusion_rate_density_total: float,
+        fusden_total: float,
         alpha_rate_density_total: float,
         plasma_current: float,
         sbar: float,
@@ -3158,7 +3158,7 @@ class Physics:
             dene (float): Electron density (/m3).
             te (float): Volume avergaed electron temperature (keV).
             nd_fuel_ions (float): Fuel ion density (/m3).
-            fusion_rate_density_total (float): Fusion reaction rate from plasma and beams (/m3/s).
+            fusden_total (float): Fusion reaction rate from plasma and beams (/m3/s).
             alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
             plasma_current (float): Plasma current (A).
             sbar (float): Exponent for aspect ratio (normally 1).
@@ -3186,7 +3186,7 @@ class Physics:
         nTtau = ntau * te
 
         # Fusion reactions per second
-        fusrat = fusion_rate_density_total * vol_plasma
+        fusrat = fusden_total * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -4660,15 +4660,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Fusion rate density: total (particles/m3/sec)",
-            "(fusion_rate_density_total)",
-            physics_variables.fusion_rate_density_total,
+            "(fusden_total)",
+            physics_variables.fusden_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fusion rate density: plasma (particles/m3/sec)",
             "(fusion_rate_density_plasma)",
-            physics_variables.fusion_rate_density_total,
+            physics_variables.fusden_total,
             "OP ",
         )
         po.ovarre(
@@ -8306,7 +8306,7 @@ def init_physics_variables():
     physics_variables.fpdivlim = 1.0
     physics_variables.fne0 = 1.0
     physics_variables.f_tritium = 0.5
-    physics_variables.fusion_rate_density_total = 0.0
+    physics_variables.fusden_total = 0.0
     physics_variables.fusion_rate_density_plasma = 0.0
     physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4

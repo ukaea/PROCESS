@@ -2130,7 +2130,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     monkeypatch.setattr(ife_variables, "ifetyp", ifepw1param.ifetyp)
     monkeypatch.setattr(ife_variables, "etadrv", ifepw1param.etadrv)
     monkeypatch.setattr(ife_variables, "pifecr", ifepw1param.pifecr)
-    monkeypatch.setattr(physics_variables, "p_fusion_total_mw", ifepw1param.p_fusion_total_mw)
+    monkeypatch.setattr(
+        physics_variables, "p_fusion_total_mw", ifepw1param.p_fusion_total_mw
+    )
 
     ife.ifepw1()
 

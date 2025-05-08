@@ -281,7 +281,7 @@ module physics_variables
   real(dp) :: f_tritium
   !! tritium fuel fraction
 
-  real(dp) :: fusion_rate_density_total
+  real(dp) :: fusden_total
   !! fusion reaction rate, from beams and plasma (reactions/m3/sec)
 
   real(dp) :: fusion_rate_density_plasma

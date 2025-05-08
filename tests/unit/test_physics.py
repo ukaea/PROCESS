@@ -2039,7 +2039,7 @@ class PhyauxParam(NamedTuple):
 
     nd_alphas: Any = None
 
-    fusion_rate_density_total: Any = None
+    fusden_total: Any = None
 
     alpha_rate_density_total: Any = None
 
@@ -2079,7 +2079,7 @@ class PhyauxParam(NamedTuple):
             te=12.569,
             nd_fuel_ions=5.8589175702454272e19,
             nd_alphas=7.5e18,
-            fusion_rate_density_total=1.9852091609123786e17,
+            fusden_total=1.9852091609123786e17,
             alpha_rate_density_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -2102,7 +2102,7 @@ class PhyauxParam(NamedTuple):
             te=12.569,
             nd_fuel_ions=5.8576156204039725e19,
             nd_alphas=7.5e18,
-            fusion_rate_density_total=1.9843269653375773e17,
+            fusden_total=1.9843269653375773e17,
             alpha_rate_density_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -2143,7 +2143,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
             te=phyauxparam.te,
             nd_fuel_ions=phyauxparam.nd_fuel_ions,
             nd_alphas=phyauxparam.nd_alphas,
-            fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
+            fusden_total=phyauxparam.fusden_total,
             alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
             plasma_current=phyauxparam.plasma_current,
             sbar=phyauxparam.sbar,
