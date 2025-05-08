@@ -167,7 +167,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     monkeypatch.setattr(pv, "f_deuterium", setfusionpowersparam.f_deuterium)
 
     (
-        neutron_power_density_total,
+        pden_neutron_total_mw,
         p_plasma_alpha_mw,
         p_alpha_total_mw,
         neutron_power_plasma,
@@ -191,7 +191,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     assert pden_alpha_total_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_density
     )
-    assert neutron_power_density_total == pytest.approx(
+    assert pden_neutron_total_mw == pytest.approx(
         setfusionpowersparam.expected_neutron_power_density
     )
     assert p_alpha_total_mw == pytest.approx(

@@ -4273,7 +4273,7 @@ class Stellarator:
 
         # Create some derived values and add beam contribution to fusion power
         (
-            physics_variables.neutron_power_density_total,
+            physics_variables.pden_neutron_total_mw,
             physics_variables.p_plasma_alpha_mw,
             physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
