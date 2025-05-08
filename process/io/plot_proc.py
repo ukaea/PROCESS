@@ -20,6 +20,7 @@ from importlib import resources
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
+import matplotlib.image as mpimg
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
@@ -355,6 +356,755 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     else:
         axis.set_xlim([0, axis.get_xlim()[1]])
     # ---
+
+
+def plot_main_plasma_information(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int, fig: plt.Figure
+) -> None:
+    """
+    Plots the main plasma information including plasma shape, geometry, currents, heating,
+    confinement, and other relevant plasma parameters.
+
+    Args:
+        axis (plt.Axes): The matplotlib axis object to plot on.
+        mfile_data (mf.MFile): The MFILE data object containing plasma parameters.
+        scan (int): The scan number to use for extracting data.
+        colour_scheme (int): The colour scheme to use for plots.
+        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    """
+    # Import key variables
+    triang = mfile_data.data["triang"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+
+    # Remove the axes
+    axis.axis("off")
+
+    # Plot the main plasma shape
+    plot_plasma(axis, mfile_data, scan, colour_scheme)
+
+    # Get the plasma permieter points for the core plasma region
+    pg = plasma_geometry(
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan)
+        * mfile_data.data["radius_plasma_core_norm"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=1,
+        square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
+    # Plot the core plasma boundary line
+    axis.plot(pg.rs, pg.zs, color="black", linestyle="--")
+
+    # Plot the centre of the plasma
+    axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
+
+    # =========================================
+
+    # Draw a double-ended arrow from the inner plasma edge to the center
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor, 0),  # Inner plasma edge
+        xytext=(rmajor, 0),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Add a label for the minor radius
+    axis.text(
+        rmajor - rminor / 2,
+        -rminor * kappa * 0.08,
+        f"$a$: {rminor:.2f} m",
+        fontsize=9,
+        color="black",
+        ha="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # ============================================
+
+    # Draw a single-ended arrow from the machien centre to the plasma center
+    axis.annotate(
+        "",
+        xy=(axis.get_xlim()[0], -rminor * 0.3 * kappa),  # Inner plasma edge
+        xytext=(rmajor, -rminor * 0.3 * kappa),  # Center
+        arrowprops={"arrowstyle": "<-", "color": "black"},
+    )
+
+    # Add a label for the major radius
+    axis.text(
+        rmajor - rminor / 2,
+        -rminor * kappa * 0.25,
+        f"$R_0$: {rmajor:.2f} m",
+        fontsize=9,
+        color="black",
+        ha="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # ============================================
+
+    # Draw a double-ended arrow from the xpoint to the center to show elongation
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor * triang, kappa * rminor),  # Inner plasma edge
+        xytext=(rmajor - rminor * triang, 0),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Write the elongation beside the vertical line, position relative to figure axes
+    axis.text(
+        0.3,
+        0.75,
+        f"$\\kappa$: {mfile_data.data['kappa'].get_scan(scan):.2f}",
+        fontsize=9,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        transform=axis.transAxes,
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # =============================================
+
+    # Draw a double-ended arrow from the inner plasma edge to the center
+    axis.annotate(
+        "",
+        xy=(rmajor - rminor * triang, kappa * rminor * 0.25),  # Inner plasma edge
+        xytext=(rmajor, kappa * rminor * 0.25),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Write the triangularity to the left of the cross, position relative to figure axes
+    axis.text(
+        rmajor - (rminor * triang * 0.75),
+        kappa * rminor * 0.3,
+        f"$\\delta$: {mfile_data.data['triang'].get_scan(scan):.2f}",
+        fontsize=9,
+        color="black",
+        rotation=0,
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # =============================================
+
+    radius_plasma_core_norm = mfile_data.data["radius_plasma_core_norm"].get_scan(scan)
+
+    # Draw a double-ended arrow for the plasma core region
+    axis.annotate(
+        "",
+        xy=(rmajor, -rminor * 0.1 * kappa),  # Inner plasma edge
+        xytext=(rmajor + (rminor * radius_plasma_core_norm), -rminor * 0.1 * kappa),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    # Add a label for core region
+    axis.text(
+        rmajor + (rminor * radius_plasma_core_norm / 4),
+        -rminor * kappa * 0.15,
+        f"$\\rho_{{\\text{{core}}}}$: {radius_plasma_core_norm:.2f}",
+        fontsize=9,
+        color="black",
+        rotation=0,
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+
+    # ================================================
+
+    # Add plasma volume, areas and shaping information
+    textstr_plasma = (
+        f"$\\mathbf{{Shaping:}}$\n \n"
+        f"$\\kappa_{{95}}$: {mfile_data.data['kappa95'].get_scan(scan):.2f} | $\\delta_{{95}}$: {mfile_data.data['triang95'].get_scan(scan):.2f} | $\\zeta$: {mfile_data.data['plasma_square'].get_scan(scan):.2f}\n"
+        f"A: {mfile_data.data['aspect'].get_scan(scan):.2f}\n"
+        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ m^3$\n"
+        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}$ \\ m^2$\n"
+        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}$ \\ m^2$\n"
+        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):.2f}$ \\ m$"
+    )
+
+    axis.text(
+        0.6,
+        0.825,
+        textstr_plasma,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # ============================================
+
+    # Draw a red arrow coming from the right and pointing at the plasma
+    axis.annotate(
+        "",
+        xy=(rmajor + (rminor * 0.8), kappa * rminor * 0.2),  # Pointing at the plasma
+        xytext=(
+            rmajor + (rminor * 1.4),
+            kappa * rminor * 0.2,
+        ),  # Starting point of the arrow
+        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+    )
+
+    # Draw a red arrow coming from the right and pointing at the plasma
+    axis.annotate(
+        "",
+        xy=(rmajor + (rminor * 0.8), -kappa * rminor * 0.2),  # Pointing at the plasma
+        xytext=(
+            rmajor + (rminor * 1.4),
+            -kappa * rminor * 0.2,
+        ),  # Starting point of the arrow
+        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+    )
+
+    # Add heating and current drive information
+    textstr_hcd = (
+        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
+        f"Total injected heat: {mfile_data.data['p_hcd_injected_total_mw'].get_scan(scan):.3f} MW                       \n"
+        f"Ohmic heating power: {mfile_data.data['p_plasma_ohmic_mw'].get_scan(scan):.3f} MW         \n\n"
+        f"$\\mathbf{{Primary \\ system:}}$ \n"
+        f"Current driving power {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan):.4f} MW\n"
+        f"Extra heat power: {mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
+        f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.4f} A/W\n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"Current driven by primary: {mfile_data.data['c_hcd_primary_driven'].get_scan(scan) / 1e6:.3f} MA\n\n"
+        f"$\\mathbf{{Secondary \\ system:}}$ \n"
+        f"Current driving power {mfile_data.data['p_hcd_secondary_injected_mw'].get_scan(scan):.4f} MW\n"
+        f"Extra heat power: {mfile_data.data['p_hcd_secondary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
+        f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_hcd_secondary'].get_scan(scan):.4f} A/W\n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_norm_hcd_secondary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"Current driven by secondary: {mfile_data.data['c_hcd_secondary_driven'].get_scan(scan) / 1e6:.3f} MA\n"
+    )
+
+    axis.text(
+        0.66,
+        0.6,
+        textstr_hcd,
+        fontsize=9,
+        verticalalignment="top",
+        transform=plt.gcf().transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "paleturquoise",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
+        },
+    )
+
+    # Add injected power label
+    axis.text(
+        0.92,
+        0.625,
+        "$P_{\\text{inj}}$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ================================================
+
+    # Add beta information
+    textstr_beta = (
+        f"$\\mathbf{{Beta \\ Information:}}$\n \n"
+        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta'].get_scan(scan):.4f}\n"
+        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal'].get_scan(scan):.4f}\n"
+        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal'].get_scan(scan):.4f}\n"
+        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal'].get_scan(scan):.4f}\n"
+        f"Fast-alpha beta,$ \\ \\beta_{{\\alpha}}$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
+        f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile_data.data['beta_norm_total'].get_scan(scan):.4f}\n"
+        f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile_data.data['beta_norm_thermal'].get_scan(scan):.4f}\n"
+    )
+
+    axis.text(
+        0.025,
+        0.95,
+        textstr_beta,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add beta label
+    axis.text(
+        0.215,
+        0.925,
+        "$\\beta$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ================================================
+
+    # Add volt-second information
+    textstr_volt_second = (
+        f"$\\mathbf{{Volt-second \\ requirements:}}$\n \n"
+        f"Total volt-second consumption: {mfile_data.data['vs_plasma_total_required'].get_scan(scan):.4f} Vs                \n"
+        f"  - Internal volt-seconds: {mfile_data.data['vs_plasma_internal'].get_scan(scan):.4f} Vs\n"
+        f"  - Volt-seconds needed for burn: {mfile_data.data['vs_plasma_burn_required'].get_scan(scan):.4f} Vs\n"
+        f"$V_{{\\text{{loop}}}}$: {mfile_data.data['v_plasma_loop_burn'].get_scan(scan):.4f} V\n"
+        f"$\\Omega_{{\\text{{p}}}}$: {mfile_data.data['res_plasma'].get_scan(scan):.4e} $\\Omega$\n"
+        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):.4f} s\n"
+        f"Plasma inductance: {mfile_data.data['ind_plasma'].get_scan(scan):.4e} H\n"
+        f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}\n"
+    )
+
+    axis.text(
+        0.025,
+        0.77,
+        textstr_volt_second,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add volt second label
+    axis.text(
+        0.27,
+        0.75,
+        "Vs",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =========================================
+
+    # Add divertor information
+    textstr_div = (
+        f"\n$P_{{\\text{{sep}}}}$: {mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW           \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['p_plasma_separatrix_mw/rmajor'].get_scan(scan):.2f} MW/m               \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f} MW T/m               "
+    )
+
+    axis.text(
+        0.35,
+        0.12,
+        textstr_div,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add divertor label
+    axis.text(
+        0.45,
+        0.1,
+        "$P_{\\text{div}}$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ================================================
+
+    # Add confinement information
+    textstr_confinement = (
+        f"$\\mathbf{{Confinement:}}$\n \n"
+        f"Confinement scaling law: {mfile_data.data['tauelaw'].get_scan(scan)}\n"
+        f"Confinement $H$ factor: {mfile_data.data['hfact'].get_scan(scan):.4f}\n"
+        f"Energy confinement time from scaling: {mfile_data.data['t_energy_confinement'].get_scan(scan):.4f} s\n"
+        f"Fusion double product: {mfile_data.data['ntau'].get_scan(scan):.4e} s/m³\n"
+        f"Lawson Triple product: {mfile_data.data['nttau'].get_scan(scan):.4e} keV·s/m³\n"
+        f"Transport loss power assumed in scaling law: {mfile_data.data['p_plasma_loss_mw'].get_scan(scan):.4f} MW\n"
+        f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile_data.data['e_plasma_beta'].get_scan(scan) / 1e9:.4f} GJ\n"
+        f"Alpha particle confinement time: {mfile_data.data['t_alpha_confinement'].get_scan(scan):.4f} s"
+    )
+
+    axis.text(
+        0.025,
+        0.575,
+        textstr_confinement,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "gainsboro",  # Changed to a not normal color (Aquamarine)
+            "alpha": 1.0,
+            "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
+        },
+    )
+
+    # Add tau label
+    axis.text(
+        0.3,
+        0.55,
+        "$\\tau_{\\text{e}} $",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =========================================
+
+    # Load the neutron image
+    alpha_particle = mpimg.imread(
+        resources.path("process.io", "alpha_particle.PNG")
+    )  # Use importlib.resources to locate the image
+
+    # Display the neutron image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.975, 0.275, 0.075, 0.075], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(alpha_particle)
+    new_ax.axis("off")
+
+    axis.annotate(
+        "",
+        xy=(rmajor + rminor, -rminor * kappa * 0.55),  # Pointing at the plasma
+        xytext=(
+            rmajor + 0.2 * rminor,
+            -rminor * kappa * 0.25,
+        ),
+        arrowprops={"facecolor": "red", "edgecolor": "grey", "lw": 1},
+    )
+
+    textstr_alpha = (
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW \n"
+        f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile_data.data['f_alpha_plasma'].get_scan(scan):.2f}"
+    )
+
+    axis.text(
+        1.0,
+        0.275,
+        textstr_alpha,
+        fontsize=9,
+        verticalalignment="top",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # =========================================
+    neutron = mpimg.imread(resources.path("process.io", "neutron.png"))
+    new_ax = axis.inset_axes(
+        [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(neutron)
+    new_ax.axis("off")
+
+    # Draw a red arrow coming from the right and pointing at the plasma
+    axis.annotate(
+        "",
+        xy=(rmajor + rminor, rminor * kappa * 0.65),  # Pointing at the plasma
+        xytext=(
+            rmajor,
+            rminor * kappa * 0.5,
+        ),
+        arrowprops={"facecolor": "grey", "edgecolor": "grey", "lw": 1},
+    )
+
+    textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['neutron_power_total'].get_scan(scan):.2f} MW"
+
+    axis.text(
+        0.75,
+        0.85,
+        textstr_neutron,
+        fontsize=9,
+        verticalalignment="top",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+
+    # ===============================================
+
+    # Add fusion reaction information
+    textstr_reactions = (
+        f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
+        f"Fuel mixture: \n"
+        f"|  D: {mfile_data.data['f_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
+        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['fusion_power'].get_scan(scan):.2f} MW\n"
+        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['dt_power_total'].get_scan(scan):.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['dd_power'].get_scan(scan):.2f} MW\n"
+        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['dhe3_power'].get_scan(scan):.2f} MW\n"
+        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['alpha_power_total'].get_scan(scan):.2f} MW"
+    )
+
+    axis.text(
+        0.025,
+        0.4,
+        textstr_reactions,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 0.6,
+            "linewidth": 2,
+        },
+    )
+
+    # ================================================
+
+    # Add fuelling information
+    textstr_fuelling = (
+        f"$\\mathbf{{Fuelling:}}$\n \n"
+        f"Plasma mass: {mfile_data.data['m_plasma'].get_scan(scan) * 1000:.4f} g\n"
+        f"   - Average mass of all plasma ions: {mfile_data.data['m_ions_total_amu'].get_scan(scan):.3f} amu\n"
+        f"Fuel mass: {mfile_data.data['m_plasma_fuel_ions'].get_scan(scan) * 1000:.4f} g\n"
+        f"   - Average mass of all fuel ions: {mfile_data.data['m_fuel_amu'].get_scan(scan):.3f} amu\n\n"
+        f"Fueling rate: {mfile_data.data['qfuel'].get_scan(scan):.3e} nucleus-pairs/s\n"
+        f"Fuel burn-up rate: {mfile_data.data['rndfuel'].get_scan(scan):.3e} reactions/s \n"
+        f"Burn-up fraction: {mfile_data.data['burnup'].get_scan(scan):.4f} \n"
+    )
+
+    axis.text(
+        0.025,
+        0.22,
+        textstr_fuelling,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "khaki",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
+        },
+    )
+
+    # ================================================
+
+    # Add ion density information
+    textstr_ions = (
+        f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
+        f"             $\\mathbf{{relative \\ number}}$\n"
+        f"             $\\mathbf{{densities:}}$\n \n"
+        f"             Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
+        f"             H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
+        f"             He:   {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
+        f"             Be:   {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
+        f"             C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
+        f"             N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
+        f"             O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
+        f"             Ne:   {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
+        f"             Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
+        f"             Ar:   {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
+        f"             Fe:   {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
+        f"             Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
+        f"             Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
+        f"             Xe:   {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
+        f"              W:    {mfile_data.data['fimp(14)'].get_scan(scan):.4e}"
+    )
+
+    axis.text(
+        0.805,
+        0.335,
+        textstr_ions,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "olivedrab",
+            "alpha": 0.7,
+            "linewidth": 2,
+        },
+    )
+
+    # Add ion charge label
+    axis.text(
+        0.815,
+        0.29,
+        "$Z$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ================================================
+
+    # Add plasma current information
+    textstr_currents = (
+        f"          $\\mathbf{{Plasma\\ currents:}}$\n\n"
+        f"          Plasma current {mfile_data.data['plasma_current_ma'].get_scan(scan):.4f} MA\n"
+        f"            - Bootstrap fraction {mfile_data.data['f_c_plasma_bootstrap'].get_scan(scan):.4f}\n"
+        f"            - Diamagnetic fraction {mfile_data.data['f_c_plasma_diamagnetic'].get_scan(scan):.4f}\n"
+        f"            - Pfirsch-Schlüter fraction {mfile_data.data['f_c_plasma_pfirsch_schluter'].get_scan(scan):.4f}\n"
+        f"            - Auxiliary fraction {mfile_data.data['f_c_plasma_auxiliary'].get_scan(scan):.4f}\n"
+    )
+
+    axis.text(
+        0.765,
+        0.95,
+        textstr_currents,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#C8A2C8",  # Hex code for lilac color
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add plasma current label
+    axis.text(
+        0.78,
+        0.9,
+        "$I_{\\text{p}} $",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    # Add magnetic field information
+    textstr_fields = (
+        f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
+        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['bt'].get_scan(scan):.4f} T                  \n"
+        f"Average poloidal field, $B_{{p}}$: {mfile_data.data['bp'].get_scan(scan):.4f} T              \n"
+        f"Total field, $B_{{tot}}$: {mfile_data.data['btot'].get_scan(scan):.4f} T                \n"
+        f"Vertical field, $B_{{vert}}$: {mfile_data.data['bvert'].get_scan(scan):.4f} T"
+    )
+
+    axis.text(
+        0.55,
+        0.13,
+        textstr_fields,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",  # Hex code for lilac color
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add magnetic field label
+    axis.text(
+        0.75,
+        0.1,
+        "$B$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ===========================================
+
+    # Add radiation information
+    textstr_radiation = (
+        f"           $\\mathbf{{Radiation:}}$\n\n"
+        f"           Total radiation power {mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Core radiation power {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Edge radiation power {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Synchrotron radiation power {mfile_data.data['p_plasma_sync_mw'].get_scan(scan):.4f} MW\n"
+        f"           Synchrotron wall reflectivity {mfile_data.data['f_sync_reflect'].get_scan(scan):.4f}\n"
+    )
+
+    axis.text(
+        0.72,
+        0.81,
+        textstr_radiation,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lavender",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "edgecolor": "black",  # Set box outline to black
+        },
+    )
+
+    # Add radiation label
+    axis.text(
+        0.725,
+        0.76,
+        "$\\gamma$",
+        fontsize=23,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # ============================================
+
+    # Add L-H threshold information
+    textstr_lh = (
+        f"$\\mathbf{{L-H \\ threshold:}}$\n\n"
+        f"$P_{{\\text{{L-H}}}}:$ {mfile_data.data['p_l_h_threshold_mw'].get_scan(scan):.4f} MW\n"
+    )
+
+    axis.text(
+        0.22,
+        0.4,
+        textstr_lh,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "peachpuff",  # Changed color to navy
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # ======================================
+
+    # Add density limit information
+    textstr_density_limit = (
+        f"$\\mathbf{{Density \\ limit:}}$\n\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile_data.data['dnelimt'].get_scan(scan):.3e} \\ m^{{-3}}$\n"
+    )
+
+    axis.text(
+        0.22,
+        0.32,
+        textstr_density_limit,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "pink",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def plot_current_profiles_over_time(
@@ -748,7 +1498,7 @@ def arc_fill(axis, r1, r2, color="pink"):
     axis.add_patch(patch)
 
 
-def plot_n_profiles(prof, demo_ranges):
+def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
@@ -820,8 +1570,12 @@ def plot_n_profiles(prof, demo_ranges):
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
             r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
             f"{nd_fuel_ions / dene:.3f}",
-            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}",
+            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
+            r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
+            f"{ne0 / dene:.3f}",
+            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
+            r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
+            f"{mfile_data.data['dnla'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -836,6 +1590,7 @@ def plot_n_profiles(prof, demo_ranges):
             verticalalignment="top",
             bbox=props_density,
         )
+        prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     # ---
 
@@ -881,9 +1636,10 @@ def plot_jprofile(prof):
         ha="left",
         transform=plt.gcf().transFigure,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
 
-def plot_t_profiles(prof, demo_ranges):
+def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     """Function to plot temperature profile
     Arguments:
       prof --> axis object to add plot to
@@ -938,6 +1694,7 @@ def plot_t_profiles(prof, demo_ranges):
         )
         prof.minorticks_on()
 
+    te = mfile_data.data["te"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
@@ -945,7 +1702,9 @@ def plot_t_profiles(prof, demo_ranges):
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}",
+        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}"
+        r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
+        f"{te0 / te:.3f}",
         rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
     ))
 
@@ -959,10 +1718,11 @@ def plot_t_profiles(prof, demo_ranges):
         verticalalignment="top",
         bbox=props_temperature,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
 
-def plot_qprofile(prof, demo_ranges):
+def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
     Arguments:
@@ -1000,11 +1760,13 @@ def plot_qprofile(prof, demo_ranges):
         ha="left",
         transform=plt.gcf().transFigure,
     )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
     textstr_q = "\n".join((
         r"$q_0$: " + f"{q0:.3f}\n",
-        r"$q_{95}$: " + f"{q95:.3f}",
+        r"$q_{95}$: " + f"{q95:.3f}\n",
+        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -3587,6 +4349,7 @@ def main_plot(
     fig6,
     fig7,
     fig8,
+    fig9,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -3619,45 +4382,6 @@ def main_plot(
         )
         print("          -> No impurity plot done\033[0m")
 
-    # Plot poloidal cross-section
-    plot_1 = fig3.add_subplot(121, aspect="equal")
-    poloidal_cross_section(plot_1, m_file_data, scan, demo_ranges, colour_scheme)
-
-    # Plot toroidal cross-section
-    plot_2 = fig3.add_subplot(122, aspect="equal")
-    toroidal_cross_section(plot_2, m_file_data, scan, demo_ranges, colour_scheme)
-    # fig3.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
-
-    # Plot color key
-    plot_3 = fig3.add_subplot(222)
-    plot_3.set_position([0.5, 0.5, 0.5, 0.5])
-    color_key(plot_3, m_file_data, scan, colour_scheme)
-
-    # Plot density profiles
-    plot_4 = fig2.add_subplot(231)  # , aspect= 0.05)
-    plot_4.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(plot_4, demo_ranges)
-
-    # Plot temperature profiles
-    plot_5 = fig2.add_subplot(232)
-    plot_5.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_t_profiles(plot_5, demo_ranges)
-
-    # Plot impurity profiles
-    plot_8 = fig2.add_subplot(233)
-    plot_8.set_position([0.7, 0.45, 0.25, 0.5])
-    plot_radprofile(plot_8, m_file_data, scan, imp, demo_ranges)
-
-    # Plot current density profile
-    plot_7 = fig2.add_subplot(4, 3, 10)
-    plot_7.set_position([0.075, 0.125, 0.25, 0.15])
-    plot_jprofile(plot_7)
-
-    # Plot q profile
-    plot_6 = fig2.add_subplot(4, 3, 12)
-    plot_6.set_position([0.7, 0.125, 0.25, 0.15])
-    plot_qprofile(plot_6, demo_ranges)
-
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
@@ -3686,35 +4410,78 @@ def main_plot(
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
+    # Plot main plasma information
+    plot_7 = fig2.add_subplot(111, aspect="equal")
+    plot_main_plasma_information(plot_7, m_file_data, scan, colour_scheme, fig2)
+
+    # Plot density profiles
+    plot_8 = fig3.add_subplot(231)  # , aspect= 0.05)
+    plot_8.set_position([0.075, 0.55, 0.25, 0.4])
+    plot_n_profiles(plot_8, demo_ranges, m_file_data, scan)
+
+    # Plot temperature profiles
+    plot_9 = fig3.add_subplot(232)
+    plot_9.set_position([0.375, 0.55, 0.25, 0.4])
+    plot_t_profiles(plot_9, demo_ranges, m_file_data, scan)
+
+    # Plot impurity profiles
+    plot_10 = fig3.add_subplot(233)
+    plot_10.set_position([0.7, 0.45, 0.25, 0.5])
+    plot_radprofile(plot_10, m_file_data, scan, imp, demo_ranges)
+
+    # Plot current density profile
+    plot_11 = fig3.add_subplot(4, 3, 10)
+    plot_11.set_position([0.075, 0.125, 0.25, 0.15])
+    plot_jprofile(plot_11)
+
+    # Plot q profile
+    plot_12 = fig3.add_subplot(4, 3, 12)
+    plot_12.set_position([0.7, 0.125, 0.25, 0.15])
+    plot_qprofile(plot_12, demo_ranges, m_file_data, scan)
+
+    # Plot poloidal cross-section
+    plot_13 = fig4.add_subplot(121, aspect="equal")
+    poloidal_cross_section(plot_13, m_file_data, scan, demo_ranges, colour_scheme)
+
+    # Plot toroidal cross-section
+    plot_14 = fig4.add_subplot(122, aspect="equal")
+    toroidal_cross_section(plot_14, m_file_data, scan, demo_ranges, colour_scheme)
+    # fig4.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
+
+    # Plot color key
+    plot_15 = fig4.add_subplot(222)
+    plot_15.set_position([0.5, 0.5, 0.5, 0.5])
+    color_key(plot_15, m_file_data, scan, colour_scheme)
+
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_7 = fig4.add_subplot(211, aspect="equal")
-        plot_7.set_position([0.05, 0.5, 0.8, 0.4])
-        plot_tf_wp(plot_7, m_file_data, scan)
+        plot_16 = fig5.add_subplot(211, aspect="equal")
+        plot_16.set_position([0.05, 0.5, 0.8, 0.4])
+        plot_tf_wp(plot_16, m_file_data, scan)
 
         # TF coil turn structure
-        plot_8 = fig4.add_subplot(325, aspect="equal")
-        plot_8.set_position([0.1, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_8, m_file_data, scan)
+        plot_17 = fig5.add_subplot(325, aspect="equal")
+        plot_17.set_position([0.1, 0.1, 0.3, 0.3])
+        plot_tf_turn(plot_17, m_file_data, scan)
 
-    plot_9 = fig5.add_subplot(221)
-    plot_bootstrap_comparison(plot_9, m_file_data, scan)
+    plot_18 = fig6.add_subplot(221)
+    plot_bootstrap_comparison(plot_18, m_file_data, scan)
 
-    plot_10 = fig5.add_subplot(224)
-    plot_h_threshold_comparison(plot_10, m_file_data, scan)
+    plot_19 = fig6.add_subplot(224)
+    plot_h_threshold_comparison(plot_19, m_file_data, scan)
 
-    plot_11 = fig6.add_subplot(221)
-    plot_density_limit_comparison(plot_11, m_file_data, scan)
+    plot_20 = fig7.add_subplot(221)
+    plot_density_limit_comparison(plot_20, m_file_data, scan)
 
-    plot_12 = fig7.add_subplot(111)
-    plot_current_profiles_over_time(plot_12, m_file_data, scan)
+    plot_21 = fig8.add_subplot(111)
+    plot_current_profiles_over_time(plot_21, m_file_data, scan)
 
-    plot_13 = fig8.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_13, m_file_data, scan)
+    plot_22 = fig9.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_22, m_file_data, scan)
 
-    plot_14 = fig8.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_14, m_file_data, scan)
+    plot_23 = fig9.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
 
 
 def main(args=None):
@@ -3986,6 +4753,7 @@ def main(args=None):
     page6 = plt.figure(figsize=(12, 9), dpi=80)
     page7 = plt.figure(figsize=(12, 9), dpi=80)
     page8 = plt.figure(figsize=(12, 9), dpi=80)
+    page9 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -3997,6 +4765,7 @@ def main(args=None):
         page6,
         page7,
         page8,
+        page9,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -4013,6 +4782,7 @@ def main(args=None):
         pdf.savefig(page6)
         pdf.savefig(page7)
         pdf.savefig(page8)
+        pdf.savefig(page9)
 
     # show fig if option used
     if args.show:
@@ -4026,6 +4796,7 @@ def main(args=None):
     plt.close(page6)
     plt.close(page7)
     plt.close(page8)
+    plt.close(page9)
 
 
 if __name__ == "__main__":
