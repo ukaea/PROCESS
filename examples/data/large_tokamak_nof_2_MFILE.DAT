@@ -294,7 +294,7 @@
  D-T_fusion_power:_plasma_(MW)____________________________________________ (p_plasma_dt_mw)______________ 1.60765157256174621e+03 OP
  D-D_fusion_power_(MW)____________________________________________________ (p_dd_total_mw)_____________________ 1.90958943687632710e+00 OP
  D-D_branching_ratio_for_tritium_producing_reactions______________________ (f_dd_branching_trit)__________ 4.75373665171270443e-01 OP
- D-He3_fusion_power_(MW)__________________________________________________ (dhe3_power)___________________ 0.00000000000000000e+00 OP
+ D-He3_fusion_power_(MW)__________________________________________________ (p_dhe3_total_mw)___________________ 0.00000000000000000e+00 OP
  Alpha_rate_density:_total_(particles/m3/sec)_____________________________ (alpha_rate_density_total)_____ 3.02129344101219072e+17 OP
  Alpha_rate_density:_plasma_(particles/m3/sec)____________________________ (alpha_rate_density_plasma)____ 3.02129344101219072e+17 OP
  Alpha_power:_total_(MW)__________________________________________________ (alpha_power_total)____________ 3.23657956519217578e+02 OP

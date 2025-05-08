@@ -627,7 +627,7 @@ module physics_variables
   real(dp) :: p_dd_total_mw
   !! deuterium-deuterium fusion power (MW)
 
-  real(dp) :: dhe3_power
+  real(dp) :: p_dhe3_total_mw
   !! deuterium-helium3 fusion power (MW)
 
   real(dp) :: p_plasma_separatrix_mw

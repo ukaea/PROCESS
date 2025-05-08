@@ -2104,7 +2104,7 @@ class Physics:
         physics_variables.p_plasma_dt_mw = (
             physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
-        physics_variables.dhe3_power = (
+        physics_variables.p_dhe3_total_mw = (
             physics_module.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.p_dd_total_mw = (
@@ -4702,8 +4702,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "D-He3 fusion power (MW)",
-            "(dhe3_power)",
-            physics_variables.dhe3_power,
+            "(p_dhe3_total_mw)",
+            physics_variables.p_dhe3_total_mw,
             "OP ",
         )
         po.osubhd(self.outfile, "Alpha Powers :")
@@ -8367,7 +8367,7 @@ def init_physics_variables():
     physics_variables.p_plasma_inner_rad_mw = 0.0
     physics_variables.pden_plasma_core_rad_mw = 0.0
     physics_variables.p_dd_total_mw = 0.0
-    physics_variables.dhe3_power = 0.0
+    physics_variables.p_dhe3_total_mw = 0.0
     physics_variables.p_plasma_separatrix_mw = 0.0
     physics_variables.pdivl = 0.0
     physics_variables.pdivu = 0.0
