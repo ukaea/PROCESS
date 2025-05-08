@@ -2180,7 +2180,7 @@ class Physics:
             physics_variables.alpha_power_electron_density,
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
-            physics_variables.fusion_power,
+            physics_variables.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
@@ -4653,8 +4653,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(p_fusion_total_mw)",
+            physics_variables.p_fusion_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -8388,7 +8388,7 @@ def init_physics_variables():
     physics_variables.p_plasma_ohmic_mw = 0.0
     physics_variables.pden_plasma_ohmic_mw = 0.0
     physics_variables.p_plasma_loss_mw = 0.0
-    physics_variables.fusion_power = 0.0
+    physics_variables.p_fusion_total_mw = 0.0
     physics_variables.len_plasma_poloidal = 0.0
     physics_variables.p_plasma_rad_mw = 0.0
     physics_variables.pden_plasma_rad_mw = 0.0

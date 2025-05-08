@@ -4283,7 +4283,7 @@ class Stellarator:
             physics_variables.alpha_power_electron_density,
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
-            physics_variables.fusion_power,
+            physics_variables.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
@@ -5038,7 +5038,7 @@ class Stellarator:
         ):
             current_drive_variables.bigq = 1e18
         else:
-            current_drive_variables.bigq = physics_variables.fusion_power / (
+            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
                 current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw

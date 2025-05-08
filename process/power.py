@@ -1777,8 +1777,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(p_fusion_total_mw)",
+            physics_variables.p_fusion_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1810,7 +1810,7 @@ class Power:
             "OP ",
         )
         total = (
-            physics_variables.fusion_power
+            physics_variables.p_fusion_total_mw
             + fwbs_variables.emultmw
             + pinj
             + self.htpmw_mech
@@ -2012,8 +2012,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(p_fusion_total_mw)",
+            physics_variables.p_fusion_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2023,7 +2023,7 @@ class Power:
             fwbs_variables.emultmw,
             "OP ",
         )
-        total_power = physics_variables.fusion_power + fwbs_variables.emultmw
+        total_power = physics_variables.p_fusion_total_mw + fwbs_variables.emultmw
         po.ovarrf(self.outfile, "Total (MW)", "", total_power, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -2080,19 +2080,19 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(fusion_power+emultmw)",
+            "(pnetelmw/(p_fusion_total_mw+emultmw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / (physics_variables.fusion_power + fwbs_variables.emultmw),
+            / (physics_variables.p_fusion_total_mw + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/fusion_power)",
+            "(pnetelmw/p_fusion_total_mw)",
             100.0e0
             * heat_transport_variables.pnetelmw
-            / physics_variables.fusion_power,
+            / physics_variables.p_fusion_total_mw,
             "OP ",
         )
         po.ovarrf(

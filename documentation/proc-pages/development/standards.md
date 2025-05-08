@@ -449,7 +449,7 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 
 ```fortran
 ! Fusion power [W]
-fusion_power = 1000.0d6
+p_fusion_total = 1000.0d6
 ```
 
 If a variable is not in SI units then its units should be put at the end of of the variable name.
@@ -457,7 +457,7 @@ Example:
 
 ```fortran
 ! Fusion power [MW]
-fusion_power_MW = 1000.0d0
+p_fusion_total_mw = 1000.0d0
 ```
 
 !!! note

@@ -1470,7 +1470,7 @@ class IFE:
             # Repetition rate (Hz)
             ife_variables.reprat = ife_variables.pdrive / ife_variables.edrive
             # Fusion power (MW)
-            physics_variables.fusion_power = (
+            physics_variables.p_fusion_total_mw = (
                 1.0e-6 * ife_variables.pdrive * ife_variables.gain
             )
         else:
@@ -1478,8 +1478,8 @@ class IFE:
             ife_variables.reprat = ife_variables.rrin
             ife_variables.pdrive = ife_variables.reprat * ife_variables.edrive
             # Gain
-            physics_variables.fusion_power = ife_variables.pfusife
-            ife_variables.gain = physics_variables.fusion_power / (
+            physics_variables.p_fusion_total_mw = ife_variables.pfusife
+            ife_variables.gain = physics_variables.p_fusion_total_mw / (
                 1.0e-6 * ife_variables.pdrive
             )
 
@@ -1491,7 +1491,10 @@ class IFE:
             phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
             sang = 1.0 - np.cos(phi)
             physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
+                physics_variables.p_fusion_total_mw
+                * 0.5
+                * sang
+                / build_variables.a_fw_total
             )
 
         elif ife_variables.ifetyp == 4:
@@ -1503,12 +1506,15 @@ class IFE:
             phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
             sang = sang - (1.0 - np.cos(phi))
             physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.fusion_power * 0.5 * sang / build_variables.a_fw_total
+                physics_variables.p_fusion_total_mw
+                * 0.5
+                * sang
+                / build_variables.a_fw_total
             )
 
         else:
             physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.fusion_power / build_variables.a_fw_total
+                physics_variables.p_fusion_total_mw / build_variables.a_fw_total
             )
 
         if not output:
@@ -1548,8 +1554,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Fusion power (MW)",
-            "(fusion_power)",
-            physics_variables.fusion_power,
+            "(p_fusion_total_mw)",
+            physics_variables.p_fusion_total_mw,
         )
         process_output.ovarre(
             self.outfile,
@@ -1910,7 +1916,7 @@ class IFE:
         # Total thermal power removed from fusion core
 
         heat_transport_variables.priheat = (
-            fwbs_variables.emult * physics_variables.fusion_power
+            fwbs_variables.emult * physics_variables.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)

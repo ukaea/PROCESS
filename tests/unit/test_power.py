@@ -2169,7 +2169,7 @@ class Power2Param(NamedTuple):
 
     i_rad_loss: Any = None
 
-    fusion_power: Any = None
+    p_fusion_total_mw: Any = None
 
     non_alpha_charged_power: Any = None
 
@@ -2308,7 +2308,7 @@ class Power2Param(NamedTuple):
             n_divertors=1,
             p_plasma_ohmic_mw=0.61391840981850698,
             i_rad_loss=1,
-            fusion_power=1985.785106643267,
+            p_fusion_total_mw=1985.785106643267,
             non_alpha_charged_power=1.6064693283140403,
             pscalingmw=325.08626176539281,
             f_alpha_plasma=0.94999999999999996,
@@ -2410,7 +2410,7 @@ class Power2Param(NamedTuple):
             n_divertors=1,
             p_plasma_ohmic_mw=0.61391840981850698,
             i_rad_loss=1,
-            fusion_power=1985.1653095257811,
+            p_fusion_total_mw=1985.1653095257811,
             non_alpha_charged_power=1.6059679220663614,
             pscalingmw=325.00280675287695,
             f_alpha_plasma=0.94999999999999996,
@@ -2642,7 +2642,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "i_rad_loss", power2param.i_rad_loss)
 
-    monkeypatch.setattr(physics_variables, "fusion_power", power2param.fusion_power)
+    monkeypatch.setattr(
+        physics_variables, "p_fusion_total_mw", power2param.p_fusion_total_mw
+    )
 
     monkeypatch.setattr(
         physics_variables,

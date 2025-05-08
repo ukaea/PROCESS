@@ -687,7 +687,7 @@ module physics_variables
   real(dp) :: p_plasma_loss_mw
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
-  real(dp) :: fusion_power
+  real(dp) :: p_fusion_total_mw
   !! fusion power (MW)
 
   real(dp) :: len_plasma_poloidal

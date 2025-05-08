@@ -247,15 +247,15 @@ Constraint equations are added to *PROCESS* in the following way:
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ffuspow : input real : f-value for maximum fusion power
       !! powfmax : input real : maximum fusion power (MW)
-      !! fusion_power : input real : fusion power (MW)
+      !! p_fusion_total_mw : input real : fusion power (MW)
       use constraint_variables, only: ffuspow, powfmax
-      use physics_variables, only: fusion_power
+      use physics_variables, only: p_fusion_total_mw
       implicit none
       type (constraint_args_type), intent(out) :: args
 
-      args%cc =  1.0D0 - ffuspow * powfmax/fusion_power
+      args%cc =  1.0D0 - ffuspow * powfmax/p_fusion_total_mw
       args%con = powfmax * (1.0D0 - args%cc)
-      args%err = fusion_power * args%cc
+      args%err = p_fusion_total_mw * args%cc
       args%symbol = '<'
       args%units = 'MW'
 

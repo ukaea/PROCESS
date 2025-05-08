@@ -494,7 +494,7 @@ class CCFE_HCPB:
         # Total heating (MW)
         fwbs_variables.ptfnuc = (
             ccfe_hcpb_module.tfc_nuc_heating
-            * (physics_variables.fusion_power / 1000.0)
+            * (physics_variables.p_fusion_total_mw / 1000.0)
             / 1.0e6
         )
 
@@ -526,9 +526,9 @@ class CCFE_HCPB:
             )
             po.ovarre(
                 self.outfile,
-                "fusion_power",
-                "(fusion_power.)",
-                physics_variables.fusion_power,
+                "p_fusion_total_mw",
+                "(p_fusion_total_mw.)",
+                physics_variables.p_fusion_total_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -550,13 +550,13 @@ class CCFE_HCPB:
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
             fwbs_variables.m_fw_total
             * ccfe_hcpb_module.fw_armour_u_nuc_heating
-            * physics_variables.fusion_power
+            * physics_variables.p_fusion_total_mw
         )
 
         if fwbs_variables.p_fw_nuclear_heat_total_mw < 0:
             raise ProcessValueError(
                 f"""Error in nuclear_heating_fw. {fwbs_variables.p_fw_nuclear_heat_total_mw = },
-                {physics_variables.fusion_power = }, {fwbs_variables.m_fw_total = }"""
+                {physics_variables.p_fusion_total_mw = }, {fwbs_variables.m_fw_total = }"""
             )
 
     def nuclear_heating_blanket(self):
@@ -574,13 +574,13 @@ class CCFE_HCPB:
         # Total blanket nuclear heating (MW)
         ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
         fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-            physics_variables.fusion_power * a * ccfe_hcpb_module.exp_blanket
+            physics_variables.p_fusion_total_mw * a * ccfe_hcpb_module.exp_blanket
         )
 
         if fwbs_variables.p_blkt_nuclear_heat_total_mw < 1:
             eh.fdiags[0] = fwbs_variables.p_blkt_nuclear_heat_total_mw
             eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
-            eh.fdiags[2] = physics_variables.fusion_power
+            eh.fdiags[2] = physics_variables.p_fusion_total_mw
             eh.fdiags[3] = mass
             eh.report_error(274)
 
@@ -621,7 +621,7 @@ class CCFE_HCPB:
         # Total nuclear heating in shield (MW)
         fwbs_variables.pnucshld = (
             ccfe_hcpb_module.shld_u_nuc_heating
-            * (physics_variables.fusion_power / 1000)
+            * (physics_variables.p_fusion_total_mw / 1000)
             / 1.0e6
         )
 
@@ -643,14 +643,16 @@ class CCFE_HCPB:
             # Double null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
                 0.8
-                * physics_variables.fusion_power
+                * physics_variables.p_fusion_total_mw
                 * 2
                 * fwbs_variables.f_ster_div_single
             )
         else:
             # single null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8 * physics_variables.fusion_power * fwbs_variables.f_ster_div_single
+                0.8
+                * physics_variables.p_fusion_total_mw
+                * fwbs_variables.f_ster_div_single
             )
 
         # No heating of the H & CD

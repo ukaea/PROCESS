@@ -713,7 +713,7 @@ def set_fusion_powers(
             - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power (float): Charged particle fusion power [MW].
-            - fusion_power (float): Total fusion power [MW].
+            - p_fusion_total_mw (float): Total fusion power [MW].
 
     References:
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
@@ -762,7 +762,9 @@ def set_fusion_powers(
     charged_particle_power = alpha_power_total + non_alpha_charged_power
 
     # Total fusion power
-    fusion_power = alpha_power_total + neutron_power_total + non_alpha_charged_power
+    p_fusion_total_mw = (
+        alpha_power_total + neutron_power_total + non_alpha_charged_power
+    )
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
@@ -785,7 +787,7 @@ def set_fusion_powers(
         alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,
-        fusion_power,
+        p_fusion_total_mw,
     )
 
 

@@ -23,7 +23,9 @@ def plot_full_sankey(
     m_file = MFile(mfilename)
 
     # Used in [PLASMA]
-    fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion power (MW)
+    p_fusion_total_mw = m_file.data["p_fusion_total_mw"].get_scan(
+        -1
+    )  # Fusion power (MW)
     p_hcd_injected_total_mw = m_file.data["p_hcd_injected_total_mw"].get_scan(
         -1
     )  # Total auxiliary injected power (MW)
@@ -31,7 +33,7 @@ def plot_full_sankey(
         -1
     )  # Ohmic heating power (MW)
     totalplasma = (
-        fusion_power + p_hcd_injected_total_mw + p_plasma_ohmic_mw
+        p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
     )  # Total Power in plasma (MW)
     neutron_power_total = m_file.data["neutron_power_total"].get_scan(
         -1
@@ -134,7 +136,7 @@ def plot_full_sankey(
 
         # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
         plasma = [
-            fusion_power,
+            p_fusion_total_mw,
             p_hcd_injected_total_mw,
             p_plasma_ohmic_mw,
             -pcharohmmw,
@@ -510,7 +512,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     m_file = MFile(mfilename)
 
     # Used in [PLASMA]
-    fusion_power = m_file.data["fusion_power"].get_scan(-1)  # Fusion Power (MW)
+    p_fusion_total_mw = m_file.data["p_fusion_total_mw"].get_scan(
+        -1
+    )  # Fusion Power (MW)
     p_hcd_injected_total_mw = m_file.data["p_hcd_injected_total_mw"].get_scan(
         -1
     )  # Total auxiliary injected Power (MW)
@@ -518,7 +522,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # Ohmic heating Power (MW)
     totalplasma = (
-        fusion_power + p_hcd_injected_total_mw + p_plasma_ohmic_mw
+        p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
     )  # Total Power in plasma (MW)
 
     # Used in [DEPOSITION]
@@ -660,7 +664,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
         # Fusion power, Injected power + ohmic power, - total plasma power
         plasma = [
-            fusion_power,
+            p_fusion_total_mw,
             p_hcd_injected_total_mw + p_plasma_ohmic_mw,
             -totalplasma,
         ]
@@ -818,7 +822,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 t.set_horizontalalignment("left")
                 t.set_position((
                     pos[0] - 0.35,
-                    pos[1] + 0.5 * (fusion_power / totalplasma) + 0.2,
+                    pos[1] + 0.5 * (p_fusion_total_mw / totalplasma) + 0.2,
                 ))
             if t == diagrams[0].texts[2]:  # Plasma
                 t.set_horizontalalignment("right")

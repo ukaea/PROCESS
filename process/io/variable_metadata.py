@@ -28,7 +28,7 @@ var_dicts = {
         description="TF coil thickness",
         units="m",
     ),
-    "fusion_power": VariableMetadata(
+    "p_fusion_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
     ),
     "p_hcd_injected_electrons_mw": VariableMetadata(

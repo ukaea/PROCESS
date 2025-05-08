@@ -177,7 +177,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,
-        fusion_power,
+        p_fusion_total_mw,
     ) = reactions.set_fusion_powers(
         f_alpha_electron=setfusionpowersparam.f_alpha_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
@@ -212,7 +212,9 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     assert charged_particle_power == pytest.approx(
         setfusionpowersparam.expected_charged_particle_power
     )
-    assert fusion_power == pytest.approx(setfusionpowersparam.expected_fusion_power)
+    assert p_fusion_total_mw == pytest.approx(
+        setfusionpowersparam.expected_fusion_power
+    )
 
 
 @pytest.mark.parametrize(
