@@ -384,7 +384,7 @@
  Neutron_power:_beam-plasma_(MW)__________________________________________ (p_beam_neutron_mw)__________ 0.00000000000000000e+00 OP
  Charged_particle_power_(excluding_alphas)_(MW)___________________________ (p_non_alpha_charged_mw)______ 1.34669877478527300e+00 OP
  Total_charged_particle_power_(including_alphas)_(MW)_____________________ (p_charged_particle_mw)_______ 3.51889598375332753e+02 OP
- Total_power_deposited_in_plasma_(MW)_____________________________________ (tot_power_plasma)_____________ 4.40026498969293129e+02 OP
+ Total_power_deposited_in_plasma_(MW)_____________________________________ (p_plasma_heating_total_mw)_____________ 4.40026498969293129e+02 OP
  Synchrotron_radiation_power_(MW)_________________________________________ (pden_plasma_sync_mw*vol_plasma)_ 1.45588444219885051e+01 OP
  Synchrotron_wall_reflectivity_factor_____________________________________ (f_sync_reflect)_______________ 6.00000000000000089e-01
  Normalised_minor_radius_defining_'core'__________________________________ (coreradius)___________________ 7.50000000000000111e-01

@@ -4263,12 +4263,8 @@ class Stellarator:
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusden_total = (
-                physics_variables.fusden_plasma
-            )
-            physics_variables.fusden_alpha_total = (
-                physics_variables.fusden_plasma_alpha
-            )
+            physics_variables.fusden_total = physics_variables.fusden_plasma
+            physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
@@ -4760,8 +4756,7 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.pden_alpha_total_mw
+                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4770,8 +4765,7 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.pden_alpha_total_mw
+                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4907,8 +4901,7 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.f_alpha_plasma
-            * physics_variables.pden_alpha_total_mw
+            physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
             - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 

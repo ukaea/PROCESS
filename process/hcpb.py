@@ -186,8 +186,7 @@ class CCFE_HCPB:
 
         # Power deposited in the CP
         fwbs_variables.pnuc_cp_sh = (
-            f_geom_cp * physics_variables.p_neutron_total_mw
-            - fwbs_variables.pnuc_cp_tf
+            f_geom_cp * physics_variables.p_neutron_total_mw - fwbs_variables.pnuc_cp_tf
         )
 
         # Old code kept for backward compatibility

@@ -2160,12 +2160,8 @@ class Physics:
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusden_total = (
-                physics_variables.fusden_plasma
-            )
-            physics_variables.fusden_alpha_total = (
-                physics_variables.fusden_plasma_alpha
-            )
+            physics_variables.fusden_total = physics_variables.fusden_plasma
+            physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
@@ -4821,7 +4817,7 @@ class Physics:
             physics_variables.p_charged_particle_mw,
             "OP ",
         )
-        tot_power_plasma = (
+        p_plasma_heating_total_mw = (
             physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
@@ -4830,8 +4826,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total power deposited in plasma (MW)",
-            "(tot_power_plasma)",
-            tot_power_plasma,
+            "(p_plasma_heating_total_mw)",
+            p_plasma_heating_total_mw,
             "OP ",
         )
 

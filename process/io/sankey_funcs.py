@@ -44,9 +44,7 @@ def plot_full_sankey(
     pcharohmmw = (
         p_non_alpha_charged_mw + p_plasma_ohmic_mw
     )  # The ohmic and charged particle power (MW)
-    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(
-        -1
-    )  # Alpha power (MW)
+    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(-1)  # Alpha power (MW)
     palpinjmw = (
         p_alpha_total_mw + p_hcd_injected_total_mw
     )  # Alpha particle and HC&D power (MW)
@@ -570,9 +568,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
-    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(
-        -1
-    )  # Alpha power (MW)
+    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(-1)  # Alpha power (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma

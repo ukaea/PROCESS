@@ -424,7 +424,7 @@
  Alpha_power:_beam-plasma_(MW)___________________________________________ (palpnb)______________________      0.0000E+00 OP 
  Neutron_power_(MW)______________________________________________________ (pneutmw)_____________________      1.2953E+03 OP 
  Charged_particle_power_(excluding_alphas)_(MW)__________________________ (pchargemw)___________________      1.2659E+00 OP 
- Total_power_deposited_in_plasma_(MW)____________________________________ (tot_power_plasma)____________      3.8950E+02 OP 
+ Total_power_deposited_in_plasma_(MW)____________________________________ (p_plasma_heating_total_mw)____________      3.8950E+02 OP 
  Bremsstrahlung_radiation_power_(MW)_____________________________________ (pbrempv*vol)_________________      6.5195E+01 OP 
  Line_radiation_power_(MW)_______________________________________________ (plinepv*vol)_________________      1.4609E+02 OP 
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      1.5187E+01 OP 

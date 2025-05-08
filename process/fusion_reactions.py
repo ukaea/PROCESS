@@ -726,9 +726,7 @@ def set_fusion_powers(
     p_plasma_alpha_mw = pden_plasma_alpha_mw * vol_plasma
 
     # Add neutral beam alpha power / volume
-    pden_alpha_total_mw = pden_plasma_alpha_mw + (
-        p_beam_alpha_mw / vol_plasma
-    )
+    pden_alpha_total_mw = pden_plasma_alpha_mw + (p_beam_alpha_mw / vol_plasma)
 
     # Total alpha power
     p_alpha_total_mw = pden_alpha_total_mw * vol_plasma
@@ -762,9 +760,7 @@ def set_fusion_powers(
     p_charged_particle_mw = p_alpha_total_mw + p_non_alpha_charged_mw
 
     # Total fusion power
-    p_fusion_total_mw = (
-        p_alpha_total_mw + p_neutron_total_mw + p_non_alpha_charged_mw
-    )
+    p_fusion_total_mw = p_alpha_total_mw + p_neutron_total_mw + p_non_alpha_charged_mw
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
@@ -911,9 +907,7 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    p_beam_alpha_mw = beamfus0 * (
-        deuterium_beam_alpha_power + tritium_beam_alpha_power
-    )
+    p_beam_alpha_mw = beamfus0 * (deuterium_beam_alpha_power + tritium_beam_alpha_power)
 
     # Neutral beam beta
     beta_beam = (
