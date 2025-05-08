@@ -597,7 +597,7 @@ module physics_variables
   real(dp) :: alpha_power_ions_density
   !! alpha power per volume to ions (MW/m3)
 
-  real(dp) :: alpha_power_plasma
+  real(dp) :: p_plasma_alpha_mw
   !! Alpha power from only the plasma (MW)
 
   real(dp) :: p_alpha_total_mw

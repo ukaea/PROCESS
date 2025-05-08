@@ -2171,7 +2171,7 @@ class Physics:
         # Create some derived values and add beam contribution to fusion power
         (
             physics_variables.neutron_power_density_total,
-            physics_variables.alpha_power_plasma,
+            physics_variables.p_plasma_alpha_mw,
             physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
@@ -4738,8 +4738,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power: plasma only (MW)",
-            "(alpha_power_plasma)",
-            physics_variables.alpha_power_plasma,
+            "(p_plasma_alpha_mw)",
+            physics_variables.p_plasma_alpha_mw,
             "OP ",
         )
         po.ovarre(
@@ -8359,7 +8359,7 @@ def init_physics_variables():
     physics_variables.p_fw_alpha_mw = 0.0
     physics_variables.alpha_power_ions_density = 0.0
     physics_variables.p_alpha_total_mw = 0.0
-    physics_variables.alpha_power_plasma = 0.0
+    physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.alpha_power_beams = 0.0
     physics_variables.non_alpha_charged_power = 0.0
     physics_variables.charged_power_density = 0.0

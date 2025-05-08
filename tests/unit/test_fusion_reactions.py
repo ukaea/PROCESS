@@ -168,7 +168,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
 
     (
         neutron_power_density_total,
-        alpha_power_plasma,
+        p_plasma_alpha_mw,
         p_alpha_total_mw,
         neutron_power_plasma,
         neutron_power_total,

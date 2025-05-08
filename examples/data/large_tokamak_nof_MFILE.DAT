@@ -372,7 +372,7 @@
  Alpha_rate_density:_plasma_(particles/m3/sec)____________________________ (fusden_plasma_alpha)____ 3.27225993374781760e+17 OP
  Alpha_power:_total_(MW)__________________________________________________ (p_alpha_total_mw)____________ 3.50542899600547457e+02 OP
  Alpha_power_density:_total_(MW/m^3)______________________________________ (pden_alpha_total_mw)____ 1.85652078657564057e-01 OP
- Alpha_power:_plasma_only_(MW)____________________________________________ (alpha_power_plasma)___________ 3.50542899600547457e+02 OP
+ Alpha_power:_plasma_only_(MW)____________________________________________ (p_plasma_alpha_mw)___________ 3.50542899600547457e+02 OP
  Alpha_power_density:_plasma_(MW/m^3)_____________________________________ (alpha_power_density_plasma)___ 1.85652078657564057e-01 OP
  Alpha_power:_beam-plasma_(MW)____________________________________________ (alpha_power_beams)____________ 0.00000000000000000e+00 OP
  Alpha_power_per_unit_volume_transferred_to_electrons_(MW/m3)_____________ (alpha_power_electron_density)_ 1.25503605903536375e-01 OP
