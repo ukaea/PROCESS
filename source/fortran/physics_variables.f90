@@ -624,7 +624,7 @@ module physics_variables
   real(dp) :: pden_plasma_core_rad_mw
   !! total core radiation power per volume (MW/m3)
 
-  real(dp) :: dd_power
+  real(dp) :: p_dd_total_mw
   !! deuterium-deuterium fusion power (MW)
 
   real(dp) :: dhe3_power
