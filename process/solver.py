@@ -13,6 +13,7 @@ from pyvmcon import (
     VMCONConvergenceException,
     solve,
 )
+from scipy.optimize import fsolve
 
 from process.evaluators import Evaluators
 from process.exceptions import ProcessValueError
@@ -272,6 +273,50 @@ class VmconBounded(Vmcon):
         self.x_0 = x_0
 
 
+class FSolve(_Solver):
+    """Solve equality constraints to ensure model consistency.
+
+    :param _Solver: Solver base class
+    :type _Solver: _Solver
+    """
+
+    def evaluate_eq_cons(self, x: np.ndarray) -> np.ndarray:
+        """Evaluate equality constraints.
+
+        :param x: parameter vector
+        :type x: np.ndarray
+        :return: equality constraint vector
+        :rtype: np.ndarray
+        """
+        # Evaluate equality constraints only
+        _, conf = self.evaluators.fcnvmc1(x.shape[0], self.meq, x, 0)
+
+        return conf
+
+    def solve(self) -> int:
+        """Solve equality constraints.
+
+        :return: solver error code
+        :rtype: int
+        """
+        print("Solving equality constraints using fsolve")
+        self.x, info, err, msg = fsolve(
+            self.evaluate_eq_cons, self.x_0, full_output=True
+        )
+
+        # Evaluate equality and inequality constraints at equality-satisfying solution
+        # (or at last iteration of x if solution not found)
+        _, self.conf = self.evaluators.fcnvmc1(self.x.shape[0], self.m, self.x, 0)
+
+        # err == 1 for successful solve
+        if err != 1:
+            print(f"fsolve error code {err}: {msg}")
+        self.info = err
+        # No objective function
+        self.objf = None
+        return self.info
+
+
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
@@ -286,6 +331,8 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
         solver = Vmcon()
     elif solver_name == "vmcon_bounded":
         solver = VmconBounded()
+    elif solver_name == "fsolve":
+        solver = FSolve()
     else:
         try:
             solver = load_external_solver(solver_name)
