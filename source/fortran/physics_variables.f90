@@ -53,7 +53,7 @@ module physics_variables
   real(dp) :: alphap
   !! pressure profile index
 
-  real(dp) :: alpha_rate_density_total
+  real(dp) :: fusden_alpha_total
   !! Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]
 
   real(dp) :: alpha_rate_density_plasma

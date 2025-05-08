@@ -4250,7 +4250,7 @@ class Stellarator:
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.alpha_rate_density_total = (
+            physics_variables.fusden_alpha_total = (
                 physics_variables.alpha_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
@@ -4266,7 +4266,7 @@ class Stellarator:
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
             )
-            physics_variables.alpha_rate_density_total = (
+            physics_variables.fusden_alpha_total = (
                 physics_variables.alpha_rate_density_plasma
             )
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
@@ -4546,7 +4546,7 @@ class Stellarator:
             physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
-            physics_variables.alpha_rate_density_total,
+            physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,

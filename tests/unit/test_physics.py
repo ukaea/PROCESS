@@ -1339,7 +1339,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     pcoef: Any = None
 
-    alpha_rate_density_total: Any = None
+    fusden_alpha_total: Any = None
 
     rnfene: Any = None
 
@@ -1475,7 +1475,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=0,
             nd_impurities=0,
             pcoef=0,
-            alpha_rate_density_total=0,
+            fusden_alpha_total=0,
             rnfene=0,
             m_beam_amu=0,
             te=12,
@@ -1593,7 +1593,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=2.0909945616489103,
             nd_impurities=28875000000000004,
             pcoef=1.0521775929921553,
-            alpha_rate_density_total=1.973996644759543e17,
+            fusden_alpha_total=1.973996644759543e17,
             rnfene=0,
             m_beam_amu=2.01355414,
             te=12,
@@ -1757,8 +1757,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         physics_variables,
-        "alpha_rate_density_total",
-        plasmacompositionparam.alpha_rate_density_total,
+        "fusden_alpha_total",
+        plasmacompositionparam.fusden_alpha_total,
     )
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
@@ -2041,7 +2041,7 @@ class PhyauxParam(NamedTuple):
 
     fusden_total: Any = None
 
-    alpha_rate_density_total: Any = None
+    fusden_alpha_total: Any = None
 
     plasma_current: Any = None
 
@@ -2080,7 +2080,7 @@ class PhyauxParam(NamedTuple):
             nd_fuel_ions=5.8589175702454272e19,
             nd_alphas=7.5e18,
             fusden_total=1.9852091609123786e17,
-            alpha_rate_density_total=1.973996644759543e17,
+            fusden_alpha_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.401323521525641,
@@ -2103,7 +2103,7 @@ class PhyauxParam(NamedTuple):
             nd_fuel_ions=5.8576156204039725e19,
             nd_alphas=7.5e18,
             fusden_total=1.9843269653375773e17,
-            alpha_rate_density_total=1.9731194318497056e17,
+            fusden_alpha_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.402116961408892,
@@ -2144,7 +2144,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
             nd_fuel_ions=phyauxparam.nd_fuel_ions,
             nd_alphas=phyauxparam.nd_alphas,
             fusden_total=phyauxparam.fusden_total,
-            alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
+            fusden_alpha_total=phyauxparam.fusden_alpha_total,
             plasma_current=phyauxparam.plasma_current,
             sbar=phyauxparam.sbar,
             t_energy_confinement=phyauxparam.t_energy_confinement,

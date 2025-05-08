@@ -2147,7 +2147,7 @@ class Physics:
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.alpha_rate_density_total = (
+            physics_variables.fusden_alpha_total = (
                 physics_variables.alpha_rate_density_plasma
                 + 1.0e6
                 * physics_variables.alpha_power_beams
@@ -2163,7 +2163,7 @@ class Physics:
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
             )
-            physics_variables.alpha_rate_density_total = (
+            physics_variables.fusden_alpha_total = (
                 physics_variables.alpha_rate_density_plasma
             )
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
@@ -2476,7 +2476,7 @@ class Physics:
             physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
-            physics_variables.alpha_rate_density_total,
+            physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,
@@ -2893,7 +2893,7 @@ class Physics:
         # production rates are evaluated later in the calling sequence
         # Issue #557 Allow f_nd_protium_electrons impurity to be specified: 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
-        if physics_variables.alpha_rate_density_total < 1.0e-6:  # not calculated yet...
+        if physics_variables.fusden_alpha_total < 1.0e-6:  # not calculated yet...
             physics_variables.nd_protons = max(
                 physics_variables.f_nd_protium_electrons * physics_variables.dene,
                 physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
@@ -2903,7 +2903,7 @@ class Physics:
                 physics_variables.f_nd_protium_electrons * physics_variables.dene,
                 physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
-                / physics_variables.alpha_rate_density_total,
+                / physics_variables.fusden_alpha_total,
             )
 
         # ======================================================================
@@ -3144,7 +3144,7 @@ class Physics:
         te: float,
         nd_fuel_ions: float,
         fusden_total: float,
-        alpha_rate_density_total: float,
+        fusden_alpha_total: float,
         plasma_current: float,
         sbar: float,
         nd_alphas: float,
@@ -3159,7 +3159,7 @@ class Physics:
             te (float): Volume avergaed electron temperature (keV).
             nd_fuel_ions (float): Fuel ion density (/m3).
             fusden_total (float): Fusion reaction rate from plasma and beams (/m3/s).
-            alpha_rate_density_total (float): Alpha particle production rate (/m3/s).
+            fusden_alpha_total (float): Alpha particle production rate (/m3/s).
             plasma_current (float): Plasma current (A).
             sbar (float): Exponent for aspect ratio (normally 1).
             nd_alphas (float): Alpha ash density (/m3).
@@ -3190,8 +3190,8 @@ class Physics:
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
-        if alpha_rate_density_total != 0.0:
-            t_alpha_confinement = nd_alphas / alpha_rate_density_total
+        if fusden_alpha_total != 0.0:
+            t_alpha_confinement = nd_alphas / fusden_alpha_total
         else:  # only likely if DD is only active fusion reaction
             t_alpha_confinement = 0.0
 
@@ -4710,8 +4710,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha rate density: total (particles/m3/sec)",
-            "(alpha_rate_density_total)",
-            physics_variables.alpha_rate_density_total,
+            "(fusden_alpha_total)",
+            physics_variables.fusden_alpha_total,
             "OP ",
         )
         po.ovarre(
@@ -8235,7 +8235,7 @@ def init_physics_variables():
     physics_variables.i_alphaj = 0
     physics_variables.alphan = 0.25
     physics_variables.alphap = 0.0
-    physics_variables.alpha_rate_density_total = 0.0
+    physics_variables.fusden_alpha_total = 0.0
     physics_variables.alpha_rate_density_plasma = 0.0
     physics_variables.alphat = 0.5
     physics_variables.aspect = 2.907
