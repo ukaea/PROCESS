@@ -2148,7 +2148,7 @@ class Physics:
                 / physics_variables.vol_plasma
             )
             physics_variables.fusden_alpha_total = (
-                physics_variables.alpha_rate_density_plasma
+                physics_variables.fusden_plasma_alpha
                 + 1.0e6
                 * physics_variables.alpha_power_beams
                 / (constants.dt_alpha_energy)
@@ -2164,7 +2164,7 @@ class Physics:
                 physics_variables.fusden_plasma
             )
             physics_variables.fusden_alpha_total = (
-                physics_variables.alpha_rate_density_plasma
+                physics_variables.fusden_plasma_alpha
             )
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
@@ -4717,8 +4717,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha rate density: plasma (particles/m3/sec)",
-            "(alpha_rate_density_plasma)",
-            physics_variables.alpha_rate_density_plasma,
+            "(fusden_plasma_alpha)",
+            physics_variables.fusden_plasma_alpha,
             "OP ",
         )
         po.ovarre(
@@ -8236,7 +8236,7 @@ def init_physics_variables():
     physics_variables.alphan = 0.25
     physics_variables.alphap = 0.0
     physics_variables.fusden_alpha_total = 0.0
-    physics_variables.alpha_rate_density_plasma = 0.0
+    physics_variables.fusden_plasma_alpha = 0.0
     physics_variables.alphat = 0.5
     physics_variables.aspect = 2.907
     physics_variables.beamfus0 = 1.0

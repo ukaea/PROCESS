@@ -56,7 +56,7 @@ module physics_variables
   real(dp) :: fusden_alpha_total
   !! Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]
 
-  real(dp) :: alpha_rate_density_plasma
+  real(dp) :: fusden_plasma_alpha
   !! Alpha particle production rate per unit volume, just from plasma [particles/m3/sec]
 
   real(dp) :: alphat

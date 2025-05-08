@@ -536,7 +536,7 @@ class FusionReactionRate:
         physics_variables.charged_power_density = self.charged_power_density
         physics_variables.neutron_power_density_plasma = self.neutron_power_density
         physics_variables.fusden_plasma = self.fusion_rate_density
-        physics_variables.alpha_rate_density_plasma = self.alpha_rate_density
+        physics_variables.fusden_plasma_alpha = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
         physics_module.sigmav_dt_average = self.sigmav_dt_average
         physics_module.dt_power_density_plasma = self.dt_power_density
