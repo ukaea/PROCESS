@@ -710,7 +710,7 @@ def set_fusion_powers(
             - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
             - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
             - pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
-            - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
+            - f_pden_alpha_electron_mw (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power (float): Charged particle fusion power [MW].
             - p_fusion_total_mw (float): Total fusion power [MW].
@@ -772,7 +772,7 @@ def set_fusion_powers(
     alpha_power_ions_density = (
         physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_ion
     )
-    alpha_power_electron_density = (
+    f_pden_alpha_electron_mw = (
         physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_electron
     )
 
@@ -784,7 +784,7 @@ def set_fusion_powers(
         neutron_power_total,
         non_alpha_charged_power,
         pden_alpha_total_mw,
-        alpha_power_electron_density,
+        f_pden_alpha_electron_mw,
         alpha_power_ions_density,
         charged_particle_power,
         p_fusion_total_mw,

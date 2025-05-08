@@ -302,7 +302,7 @@
  Alpha_power:_plasma_only_(MW)____________________________________________ (p_plasma_alpha_mw)___________ 3.23657956519217578e+02 OP
  Alpha_power_density:_plasma_(MW/m^3)_____________________________________ (pden_plasma_alpha_mw)___ 1.71413463146233375e-01 OP
  Alpha_power:_beam-plasma_(MW)____________________________________________ (p_beam_alpha_mw)____________ 0.00000000000000000e+00 OP
- Alpha_power_per_unit_volume_transferred_to_electrons_(MW/m3)_____________ (alpha_power_electron_density)_ 1.17513473229255330e-01 OP
+ Alpha_power_per_unit_volume_transferred_to_electrons_(MW/m3)_____________ (f_pden_alpha_electron_mw)_ 1.17513473229255330e-01 OP
  Alpha_power_per_unit_volume_transferred_to_ions_(MW/m3)__________________ (alpha_power_ions_density)_____ 4.53293167596663799e-02 OP
  Neutron_power:_total_(MW)________________________________________________ (neutron_power_total)__________ 1.28469670088750900e+03 OP
  Neutron_power_density:_total_(MW/m^3)____________________________________ (neutron_power_density_total)__ 6.80392081072146104e-01 OP

@@ -2177,7 +2177,7 @@ class Physics:
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,
-            physics_variables.alpha_power_electron_density,
+            physics_variables.f_pden_alpha_electron_mw,
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
             physics_variables.p_fusion_total_mw,
@@ -4759,8 +4759,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to electrons (MW/m3)",
-            "(alpha_power_electron_density)",
-            physics_variables.alpha_power_electron_density,
+            "(f_pden_alpha_electron_mw)",
+            physics_variables.f_pden_alpha_electron_mw,
             "OP ",
         )
         po.ovarre(
@@ -8355,7 +8355,7 @@ def init_physics_variables():
     physics_variables.f_dd_branching_trit = 0.0
     physics_variables.pden_plasma_alpha_mw = 0.0
     physics_variables.pden_alpha_total_mw = 0.0
-    physics_variables.alpha_power_electron_density = 0.0
+    physics_variables.f_pden_alpha_electron_mw = 0.0
     physics_variables.p_fw_alpha_mw = 0.0
     physics_variables.alpha_power_ions_density = 0.0
     physics_variables.p_alpha_total_mw = 0.0
