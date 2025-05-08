@@ -594,7 +594,7 @@ module physics_variables
   real(dp) :: p_fw_alpha_mw
   !! alpha power escaping plasma and reaching first wall (MW)
 
-  real(dp) :: alpha_power_ions_density
+  real(dp) :: f_pden_alpha_ions_mw
   !! alpha power per volume to ions (MW/m3)
 
   real(dp) :: p_plasma_alpha_mw

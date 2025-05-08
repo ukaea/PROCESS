@@ -4281,7 +4281,7 @@ class Stellarator:
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
-            physics_variables.alpha_power_ions_density,
+            physics_variables.f_pden_alpha_ions_mw,
             physics_variables.charged_particle_power,
             physics_variables.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(

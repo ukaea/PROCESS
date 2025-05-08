@@ -517,10 +517,10 @@ contains
       !! pden_ion_transport_loss_mw : input real :  ion transport power per volume (MW/m3)
       !! piepv : input real : ion/electron equilibration power per volume (MW/m3)
       !! f_alpha_plasma : input real : fraction of alpha power deposited in plasma
-      !! alpha_power_ions_density : input real : alpha power per volume to ions (MW/m3)
+      !! f_pden_alpha_ions_mw : input real : alpha power per volume to ions (MW/m3)
       !! p_hcd_injected_ions_mw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
+      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, f_pden_alpha_ions_mw, vol_plasma
       use current_drive_variables, only: p_hcd_injected_ions_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -531,16 +531,16 @@ contains
 
 	   ! No assume plasma ignition:
       if (i_plasma_ignited == 0) then
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma)
+         tmp_con    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
       else
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw+piepv) / (f_alpha_plasma*alpha_power_ions_density)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density) * tmp_cc
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw+piepv) / (f_alpha_plasma*f_pden_alpha_ions_mw)
+         tmp_con    = (f_alpha_plasma*f_pden_alpha_ions_mw) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*f_pden_alpha_ions_mw) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
       end if

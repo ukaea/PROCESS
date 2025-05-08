@@ -2178,7 +2178,7 @@ class Physics:
             physics_variables.non_alpha_charged_power,
             physics_variables.pden_alpha_total_mw,
             physics_variables.f_pden_alpha_electron_mw,
-            physics_variables.alpha_power_ions_density,
+            physics_variables.f_pden_alpha_ions_mw,
             physics_variables.charged_particle_power,
             physics_variables.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
@@ -4766,8 +4766,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to ions (MW/m3)",
-            "(alpha_power_ions_density)",
-            physics_variables.alpha_power_ions_density,
+            "(f_pden_alpha_ions_mw)",
+            physics_variables.f_pden_alpha_ions_mw,
             "OP ",
         )
         po.osubhd(self.outfile, "Neutron Powers :")
@@ -8357,7 +8357,7 @@ def init_physics_variables():
     physics_variables.pden_alpha_total_mw = 0.0
     physics_variables.f_pden_alpha_electron_mw = 0.0
     physics_variables.p_fw_alpha_mw = 0.0
-    physics_variables.alpha_power_ions_density = 0.0
+    physics_variables.f_pden_alpha_ions_mw = 0.0
     physics_variables.p_alpha_total_mw = 0.0
     physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.p_beam_alpha_mw = 0.0
