@@ -41,7 +41,7 @@ class SetFusionPowersParam(NamedTuple):
 
     vol_plasma: Any = None
 
-    alpha_power_density_plasma: Any = None
+    pden_plasma_alpha_mw: Any = None
 
     neutron_power_density_plasma: Any = None
 
@@ -77,7 +77,7 @@ class SetFusionPowersParam(NamedTuple):
             alpha_power_beams=0,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
-            alpha_power_density_plasma=0.163,
+            pden_plasma_alpha_mw=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.163,
             expected_neutron_power_density=0.654,
@@ -97,7 +97,7 @@ class SetFusionPowersParam(NamedTuple):
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
-            alpha_power_density_plasma=0.163,
+            pden_plasma_alpha_mw=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
@@ -117,7 +117,7 @@ class SetFusionPowersParam(NamedTuple):
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
-            alpha_power_density_plasma=0.163,
+            pden_plasma_alpha_mw=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
@@ -137,7 +137,7 @@ class SetFusionPowersParam(NamedTuple):
             alpha_power_beams=100.5,
             charged_power_density=0.00066,
             vol_plasma=2426.25,
-            alpha_power_density_plasma=0.163,
+            pden_plasma_alpha_mw=0.163,
             neutron_power_density_plasma=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
@@ -185,7 +185,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         charged_power_density=setfusionpowersparam.charged_power_density,
         neutron_power_density_plasma=setfusionpowersparam.neutron_power_density_plasma,
         vol_plasma=setfusionpowersparam.vol_plasma,
-        alpha_power_density_plasma=setfusionpowersparam.alpha_power_density_plasma,
+        pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
     )
 
     assert pden_alpha_total_mw == pytest.approx(

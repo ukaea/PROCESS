@@ -2188,7 +2188,7 @@ class Physics:
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density_plasma,
             physics_variables.vol_plasma,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
@@ -2200,7 +2200,7 @@ class Physics:
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.pden_alpha_total_mw,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
         )
 
@@ -4745,8 +4745,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power density: plasma (MW/m^3)",
-            "(alpha_power_density_plasma)",
-            physics_variables.alpha_power_density_plasma,
+            "(pden_plasma_alpha_mw)",
+            physics_variables.pden_plasma_alpha_mw,
             "OP ",
         )
         po.ovarre(
@@ -8353,7 +8353,7 @@ def init_physics_variables():
     physics_variables.p0 = 0.0
     physics_variables.j_plasma_0 = 0.0
     physics_variables.f_dd_branching_trit = 0.0
-    physics_variables.alpha_power_density_plasma = 0.0
+    physics_variables.pden_plasma_alpha_mw = 0.0
     physics_variables.pden_alpha_total_mw = 0.0
     physics_variables.alpha_power_electron_density = 0.0
     physics_variables.p_fw_alpha_mw = 0.0

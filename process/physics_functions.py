@@ -220,7 +220,7 @@ def fast_alpha_beta(
     ten: float,
     tin: float,
     pden_alpha_total_mw: float,
-    alpha_power_density_plasma: float,
+    pden_plasma_alpha_mw: float,
     i_beta_fast_alpha: int,
 ) -> float:
     """
@@ -237,7 +237,7 @@ def fast_alpha_beta(
         ten (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
         pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
-        alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
+        pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
         i_beta_fast_alpha (int): Switch for fast alpha pressure method.
 
     Returns:
@@ -284,7 +284,7 @@ def fast_alpha_beta(
             )
 
         fact = max(fact, 0.0)
-        fact2 = pden_alpha_total_mw / alpha_power_density_plasma
+        fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
         beta_fast_alpha = beta_thermal * fact * fact2
 
     else:  # negligible alpha production, alpha_power_density = alpha_power_beams = 0

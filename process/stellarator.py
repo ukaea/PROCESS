@@ -4291,7 +4291,7 @@ class Stellarator:
             physics_variables.charged_power_density,
             physics_variables.neutron_power_density_plasma,
             physics_variables.vol_plasma,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
@@ -4303,7 +4303,7 @@ class Stellarator:
             physics_variables.ten,
             physics_variables.tin,
             physics_variables.pden_alpha_total_mw,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
         )
 

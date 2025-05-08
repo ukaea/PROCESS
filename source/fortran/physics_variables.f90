@@ -582,7 +582,7 @@ module physics_variables
   real(dp) :: f_dd_branching_trit
   !! branching ratio for DD -> T
 
-  real(dp) :: alpha_power_density_plasma
+  real(dp) :: pden_plasma_alpha_mw
   !! Alpha power per volume just from plasma [MW/m3]
 
   real(dp) :: pden_alpha_total_mw
