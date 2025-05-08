@@ -2186,7 +2186,7 @@ class Physics:
             physics_variables.f_alpha_ion,
             physics_variables.p_beam_alpha_mw,
             physics_variables.charged_power_density,
-            physics_variables.neutron_power_density_plasma,
+            physics_variables.pden_plasma_neutron_mw,
             physics_variables.vol_plasma,
             physics_variables.pden_plasma_alpha_mw,
         )
@@ -4795,8 +4795,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Neutron power density: plasma (MW/m^3)",
-            "(neutron_power_density_plasma)",
-            physics_variables.neutron_power_density_plasma,
+            "(pden_plasma_neutron_mw)",
+            physics_variables.pden_plasma_neutron_mw,
             "OP ",
         )
         po.ovarre(
@@ -8384,7 +8384,7 @@ def init_physics_variables():
     physics_variables.p_plasma_neutron_mw = 0.0
     physics_variables.p_neutron_total_mw = 0.0
     physics_variables.pden_neutron_total_mw = 0.0
-    physics_variables.neutron_power_density_plasma = 0.0
+    physics_variables.pden_plasma_neutron_mw = 0.0
     physics_variables.p_plasma_ohmic_mw = 0.0
     physics_variables.pden_plasma_ohmic_mw = 0.0
     physics_variables.p_plasma_loss_mw = 0.0

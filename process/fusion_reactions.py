@@ -534,7 +534,7 @@ class FusionReactionRate:
         """
         physics_variables.pden_plasma_alpha_mw = self.alpha_power_density
         physics_variables.charged_power_density = self.charged_power_density
-        physics_variables.neutron_power_density_plasma = self.neutron_power_density
+        physics_variables.pden_plasma_neutron_mw = self.neutron_power_density
         physics_variables.fusden_plasma = self.fusion_rate_density
         physics_variables.fusden_plasma_alpha = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
@@ -684,7 +684,7 @@ def set_fusion_powers(
     f_alpha_ion: float,
     p_beam_alpha_mw: float,
     charged_power_density: float,
-    neutron_power_density_plasma: float,
+    pden_plasma_neutron_mw: float,
     vol_plasma: float,
     pden_plasma_alpha_mw: float,
 ) -> tuple:
@@ -697,7 +697,7 @@ def set_fusion_powers(
         f_alpha_ion (float): Fraction of alpha energy to ions.
         p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
         charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
-        neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
+        pden_plasma_neutron_mw (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
         vol_plasma (float): Plasma volume (m^3).
         pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
 
@@ -736,10 +736,10 @@ def set_fusion_powers(
     # Neutron Power
 
     # Calculate neutron power produced just by the plasma
-    p_plasma_neutron_mw = neutron_power_density_plasma * vol_plasma
+    p_plasma_neutron_mw = pden_plasma_neutron_mw * vol_plasma
 
     # Add extra neutron power from beams
-    pden_neutron_total_mw = neutron_power_density_plasma + (
+    pden_neutron_total_mw = pden_plasma_neutron_mw + (
         (
             (
                 constants.dt_neutron_energy_fraction

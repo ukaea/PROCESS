@@ -675,7 +675,7 @@ module physics_variables
   real(dp) :: pden_neutron_total_mw
   !! neutron fusion power per volume from beams and plasma (MW/m3)
 
-  real(dp) :: neutron_power_density_plasma
+  real(dp) :: pden_plasma_neutron_mw
   !! neutron fusion power per volume just from plasma (MW/m3)
 
   real(dp) :: p_plasma_ohmic_mw
