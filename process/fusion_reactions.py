@@ -709,7 +709,7 @@ def set_fusion_powers(
             - neutron_power_plasma (float): Neutron fusion power from only the plasma [MW].
             - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
             - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
-            - alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
+            - pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
             - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
             - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
             - charged_particle_power (float): Charged particle fusion power [MW].
@@ -726,12 +726,12 @@ def set_fusion_powers(
     alpha_power_plasma = alpha_power_density_plasma * vol_plasma
 
     # Add neutral beam alpha power / volume
-    alpha_power_density_total = alpha_power_density_plasma + (
+    pden_alpha_total_mw = alpha_power_density_plasma + (
         alpha_power_beams / vol_plasma
     )
 
     # Total alpha power
-    p_alpha_total_mw = alpha_power_density_total * vol_plasma
+    p_alpha_total_mw = pden_alpha_total_mw * vol_plasma
 
     # Neutron Power
 
@@ -770,10 +770,10 @@ def set_fusion_powers(
     # and ion power balance equations only)
     # No consideration of charged_power_density here.
     alpha_power_ions_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_ion
+        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_ion
     )
     alpha_power_electron_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_electron
+        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_electron
     )
 
     return (
@@ -783,7 +783,7 @@ def set_fusion_powers(
         neutron_power_plasma,
         neutron_power_total,
         non_alpha_charged_power,
-        alpha_power_density_total,
+        pden_alpha_total_mw,
         alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,

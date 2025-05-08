@@ -4279,7 +4279,7 @@ class Stellarator:
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
-            physics_variables.alpha_power_density_total,
+            physics_variables.pden_alpha_total_mw,
             physics_variables.alpha_power_electron_density,
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
@@ -4302,7 +4302,7 @@ class Stellarator:
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
-            physics_variables.alpha_power_density_total,
+            physics_variables.pden_alpha_total_mw,
             physics_variables.alpha_power_density_plasma,
             physics_variables.i_beta_fast_alpha,
         )
@@ -4761,7 +4761,7 @@ class Stellarator:
         q_PROCESS = (
             (
                 physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4771,7 +4771,7 @@ class Stellarator:
         q_PROCESS_r1 = (
             (
                 physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4908,7 +4908,7 @@ class Stellarator:
 
         nominator = (
             physics_variables.f_alpha_plasma
-            * physics_variables.alpha_power_density_total
+            * physics_variables.pden_alpha_total_mw
             - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 

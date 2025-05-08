@@ -2176,7 +2176,7 @@ class Physics:
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
-            physics_variables.alpha_power_density_total,
+            physics_variables.pden_alpha_total_mw,
             physics_variables.alpha_power_electron_density,
             physics_variables.alpha_power_ions_density,
             physics_variables.charged_particle_power,
@@ -2199,7 +2199,7 @@ class Physics:
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
-            physics_variables.alpha_power_density_total,
+            physics_variables.pden_alpha_total_mw,
             physics_variables.alpha_power_density_plasma,
             physics_variables.i_beta_fast_alpha,
         )
@@ -4731,8 +4731,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power density: total (MW/m^3)",
-            "(alpha_power_density_total)",
-            physics_variables.alpha_power_density_total,
+            "(pden_alpha_total_mw)",
+            physics_variables.pden_alpha_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -7047,7 +7047,7 @@ class Physics:
                 ptrez
                 + ptriz
                 - physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.charged_power_density
                 - physics_variables.pden_plasma_ohmic_mw
             )
@@ -8354,7 +8354,7 @@ def init_physics_variables():
     physics_variables.j_plasma_0 = 0.0
     physics_variables.f_dd_branching_trit = 0.0
     physics_variables.alpha_power_density_plasma = 0.0
-    physics_variables.alpha_power_density_total = 0.0
+    physics_variables.pden_alpha_total_mw = 0.0
     physics_variables.alpha_power_electron_density = 0.0
     physics_variables.p_fw_alpha_mw = 0.0
     physics_variables.alpha_power_ions_density = 0.0

@@ -173,7 +173,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         neutron_power_plasma,
         neutron_power_total,
         non_alpha_charged_power,
-        alpha_power_density_total,
+        pden_alpha_total_mw,
         alpha_power_electron_density,
         alpha_power_ions_density,
         charged_particle_power,
@@ -188,7 +188,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         alpha_power_density_plasma=setfusionpowersparam.alpha_power_density_plasma,
     )
 
-    assert alpha_power_density_total == pytest.approx(
+    assert pden_alpha_total_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_density
     )
     assert neutron_power_density_total == pytest.approx(
