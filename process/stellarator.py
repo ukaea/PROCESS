@@ -4204,7 +4204,7 @@ class Stellarator:
         fusion_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given component
-        physics_variables.dt_power_plasma = (
+        physics_variables.p_plasma_dt_mw = (
             physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.dhe3_power = (
@@ -4258,7 +4258,7 @@ class Stellarator:
                 / physics_variables.vol_plasma
             )
             physics_variables.p_dt_total_mw = (
-                physics_variables.dt_power_plasma
+                physics_variables.p_plasma_dt_mw
                 + 5.0e0 * physics_variables.alpha_power_beams
             )
         else:
@@ -4269,7 +4269,7 @@ class Stellarator:
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
             )
-            physics_variables.p_dt_total_mw = physics_variables.dt_power_plasma
+            physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
         (

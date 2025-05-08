@@ -645,7 +645,7 @@ module physics_variables
   real(dp) :: p_dt_total_mw
   !!  Total deuterium-tritium fusion power, from plasma and beams [MW]
 
-  real(dp) :: dt_power_plasma
+  real(dp) :: p_plasma_dt_mw
   !!  Deuterium-tritium fusion power, just from plasma [MW]
 
   real(dp) :: p_plasma_outer_rad_mw
