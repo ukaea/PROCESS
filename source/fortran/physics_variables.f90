@@ -189,6 +189,9 @@ module physics_variables
   real(dp) :: beta_norm_max_tholerus
   !! Tholerus-like coefficient for beta scaling
 
+  real(dp) :: beta_norm_max_stambaugh
+  !! Stambaugh-like coefficient for beta scaling
+
   real(dp) :: dnelimt
   !! density limit (/m3)
 
