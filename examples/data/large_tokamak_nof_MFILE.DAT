@@ -370,7 +370,7 @@
  D-He3_fusion_power_(MW)__________________________________________________ (p_dhe3_total_mw)___________________ 0.00000000000000000e+00 OP
  Alpha_rate_density:_total_(particles/m3/sec)_____________________________ (fusden_alpha_total)_____ 3.27225993374781760e+17 OP
  Alpha_rate_density:_plasma_(particles/m3/sec)____________________________ (fusden_plasma_alpha)____ 3.27225993374781760e+17 OP
- Alpha_power:_total_(MW)__________________________________________________ (alpha_power_total)____________ 3.50542899600547457e+02 OP
+ Alpha_power:_total_(MW)__________________________________________________ (p_alpha_total_mw)____________ 3.50542899600547457e+02 OP
  Alpha_power_density:_total_(MW/m^3)______________________________________ (alpha_power_density_total)____ 1.85652078657564057e-01 OP
  Alpha_power:_plasma_only_(MW)____________________________________________ (alpha_power_plasma)___________ 3.50542899600547457e+02 OP
  Alpha_power_density:_plasma_(MW/m^3)_____________________________________ (alpha_power_density_plasma)___ 1.85652078657564057e-01 OP
@@ -1164,7 +1164,7 @@
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 3.21850327706303688e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.18176171262989300e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 4.40026498969293016e+02 OP
- Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*alpha_power_total)_ 3.33015754620520056e+02 OP
+ Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*p_alpha_total_mw)_ 3.33015754620520056e+02 OP
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (non_alpha_charged_power.)_____ 1.34669877478527300e+00 OP
  Ohmic_heating_(MW)_______________________________________________________ (p_plasma_ohmic_mw.)___________ 6.76139747896948751e-01 OP
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 1.04987905826090795e+02 OP

@@ -4275,7 +4275,7 @@ class Stellarator:
         (
             physics_variables.neutron_power_density_total,
             physics_variables.alpha_power_plasma,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
@@ -4392,7 +4392,7 @@ class Stellarator:
         #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
@@ -4433,7 +4433,7 @@ class Stellarator:
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -4468,7 +4468,7 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -4487,7 +4487,7 @@ class Stellarator:
             physics_variables.p_plasma_loss_mw,
         ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.nd_ions_total,

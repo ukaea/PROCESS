@@ -2172,7 +2172,7 @@ class Physics:
         (
             physics_variables.neutron_power_density_total,
             physics_variables.alpha_power_plasma,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.neutron_power_plasma,
             physics_variables.neutron_power_total,
             physics_variables.non_alpha_charged_power,
@@ -2328,7 +2328,7 @@ class Physics:
         )
 
         physics_variables.p_plasma_separatrix_mw = (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.non_alpha_charged_power
             + pinj
             + physics_variables.p_plasma_ohmic_mw
@@ -2366,7 +2366,7 @@ class Physics:
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -2400,7 +2400,7 @@ class Physics:
             physics_variables.p_plasma_loss_mw,
         ) = self.calculate_confinement_time(
             physics_variables.m_fuel_amu,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.nd_ions_total,
@@ -2670,7 +2670,7 @@ class Physics:
 
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -4724,8 +4724,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Alpha power: total (MW)",
-            "(alpha_power_total)",
-            physics_variables.alpha_power_total,
+            "(p_alpha_total_mw)",
+            physics_variables.p_alpha_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -4822,7 +4822,7 @@ class Physics:
             "OP ",
         )
         tot_power_plasma = (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
             + physics_variables.non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -6092,7 +6092,7 @@ class Physics:
                 _,
             ) = self.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
-                physics_variables.alpha_power_total,
+                physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
                 physics_variables.bt,
                 physics_variables.nd_ions_total,
@@ -7016,7 +7016,7 @@ class Physics:
                 _,
             ) = self.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
-                physics_variables.alpha_power_total,
+                physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
                 physics_variables.bt,
                 physics_variables.nd_ions_total,
@@ -7072,7 +7072,7 @@ class Physics:
     @staticmethod
     def calculate_confinement_time(
         m_fuel_amu: float,
-        alpha_power_total: float,
+        p_alpha_total_mw: float,
         aspect: float,
         bt: float,
         nd_ions_total: float,
@@ -7101,7 +7101,7 @@ class Physics:
         Calculate the confinement times and the transport power loss terms.
 
         :param m_fuel_amu: Average mass of fuel (amu)
-        :param alpha_power_total: Alpha particle power (MW)
+        :param p_alpha_total_mw: Alpha particle power (MW)
         :param aspect: Aspect ratio
         :param bt: Toroidal field on axis (T)
         :param nd_ions_total: Total ion density (/m3)
@@ -7140,7 +7140,7 @@ class Physics:
 
         # Calculate heating power (MW)
         p_plasma_loss_mw = (
-            physics_variables.f_alpha_plasma * alpha_power_total
+            physics_variables.f_alpha_plasma * p_alpha_total_mw
             + non_alpha_charged_power
             + physics_variables.p_plasma_ohmic_mw
         )
@@ -8358,7 +8358,7 @@ def init_physics_variables():
     physics_variables.alpha_power_electron_density = 0.0
     physics_variables.p_fw_alpha_mw = 0.0
     physics_variables.alpha_power_ions_density = 0.0
-    physics_variables.alpha_power_total = 0.0
+    physics_variables.p_alpha_total_mw = 0.0
     physics_variables.alpha_power_plasma = 0.0
     physics_variables.alpha_power_beams = 0.0
     physics_variables.non_alpha_charged_power = 0.0

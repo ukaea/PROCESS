@@ -44,11 +44,11 @@ def plot_full_sankey(
     pcharohmmw = (
         non_alpha_charged_power + p_plasma_ohmic_mw
     )  # The ohmic and charged particle power (MW)
-    alpha_power_total = m_file.data["alpha_power_total"].get_scan(
+    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(
         -1
     )  # Alpha power (MW)
     palpinjmw = (
-        alpha_power_total + p_hcd_injected_total_mw
+        p_alpha_total_mw + p_hcd_injected_total_mw
     )  # Alpha particle and HC&D power (MW)
 
     # Used in [NEUTRONICS]
@@ -79,7 +79,7 @@ def plot_full_sankey(
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    p_fw_alpha_mw = alpha_power_total * (
+    p_fw_alpha_mw = p_alpha_total_mw * (
         1 - f_alpha_plasma
     )  # Alpha particles hitting first wall (MW)
     p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(
@@ -475,7 +475,7 @@ def plot_full_sankey(
                 t.set_position((pos[0]-0.5*(non_alpha_charged_power/totalplasma)-0.05,pos[1]))
             if t == diagrams[0].texts[5]: # Alphas
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*(alpha_power_total/totalplasma)+0.05,pos[1]-0.1))
+                t.set_position((pos[0]+0.5*(p_alpha_total_mw/totalplasma)+0.05,pos[1]-0.1))
             if t == diagrams[1].texts[0]: # H&CD power
                 t.set_horizontalalignment('right')
                 t.set_position((pos[0]-0.5*((pinjht+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
@@ -570,13 +570,13 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # nuclear heating in the CP shield (MW)
     emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
-    alpha_power_total = m_file.data["alpha_power_total"].get_scan(
+    p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(
         -1
     )  # Alpha power (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
-    p_fw_alpha_mw = alpha_power_total * (
+    p_fw_alpha_mw = p_alpha_total_mw * (
         1 - f_alpha_plasma
     )  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
