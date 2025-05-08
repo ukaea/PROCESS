@@ -609,7 +609,7 @@ module physics_variables
   real(dp) :: p_non_alpha_charged_mw
   !! non-alpha charged particle fusion power (MW)
 
-  real(dp) :: charged_particle_power
+  real(dp) :: p_charged_particle_mw
   !! Total charged particle fusion power [MW]
 
   real(dp) :: charged_power_density
