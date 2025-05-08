@@ -642,7 +642,7 @@ module physics_variables
   real(dp) :: pdivmax
   !! power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)
 
-  real(dp) :: dt_power_total
+  real(dp) :: p_dt_total_mw
   !!  Total deuterium-tritium fusion power, from plasma and beams [MW]
 
   real(dp) :: dt_power_plasma

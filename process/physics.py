@@ -2154,7 +2154,7 @@ class Physics:
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.dt_power_total = (
+            physics_variables.p_dt_total_mw = (
                 physics_variables.dt_power_plasma
                 + 5.0e0 * physics_variables.alpha_power_beams
             )
@@ -2166,7 +2166,7 @@ class Physics:
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
             )
-            physics_variables.dt_power_total = physics_variables.dt_power_plasma
+            physics_variables.p_dt_total_mw = physics_variables.dt_power_plasma
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -4674,8 +4674,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "D-T fusion power: total (MW)",
-            "(dt_power_total)",
-            physics_variables.dt_power_total,
+            "(p_dt_total_mw)",
+            physics_variables.p_dt_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -8372,7 +8372,7 @@ def init_physics_variables():
     physics_variables.pdivl = 0.0
     physics_variables.pdivu = 0.0
     physics_variables.pdivmax = 0.0
-    physics_variables.dt_power_total = 0.0
+    physics_variables.p_dt_total_mw = 0.0
     physics_variables.dt_power_plasma = 0.0
     physics_variables.p_plasma_outer_rad_mw = 0.0
     physics_variables.pden_plasma_outer_rad_mw = 0.0

@@ -4257,7 +4257,7 @@ class Stellarator:
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.dt_power_total = (
+            physics_variables.p_dt_total_mw = (
                 physics_variables.dt_power_plasma
                 + 5.0e0 * physics_variables.alpha_power_beams
             )
@@ -4269,7 +4269,7 @@ class Stellarator:
             physics_variables.alpha_rate_density_total = (
                 physics_variables.alpha_rate_density_plasma
             )
-            physics_variables.dt_power_total = physics_variables.dt_power_plasma
+            physics_variables.p_dt_total_mw = physics_variables.dt_power_plasma
 
         # Create some derived values and add beam contribution to fusion power
         (
