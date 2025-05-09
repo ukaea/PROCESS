@@ -381,13 +381,14 @@ class NeutronFluxProfile:
         self.l_fw_2, self.l_bz_2 = {}, {}
 
     def solve_one_group(self) -> None:
+        """
+        Solve the first-group's neutron diffusion equation.
+        Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
+        self.l_bz_2[0], and self.integration_constants[0].
+        """
         i = 0
         if i in self.integration_constants:
             return  # skip if it has already been solved.
-        c1 = self.flux * ...
-        c2 = self.flux * ...
-        c3 = self.flux * ...
-        c4 = self.flux * ...
         self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
             self.fw_sigma_t[i],
             self.fw_sigma_s[i, i],
@@ -398,10 +399,29 @@ class NeutronFluxProfile:
             self.bz_sigma_s[i, i],
             self.bz_A,
         )
+        l_fw = np.sqrt(abs(self.l_fw_2))
+        l_bz = np.sqrt(abs(self.l_bz_2))
+        c1 = self.flux * ... * l_fw
+        c2 = self.flux * ... * l_bz
+        c3 = self.flux * ...
+        c4 = self.flux * ...
         self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
         self.integration_constants[i] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
+        """
+        Solve the n-th group of neutron's diffusion equation.
+        Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
+        self.l_bz_2[n-1], and self.integration_constants[n-1].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose constants are being solved.
+            allowed range: [1, self.n_groups]
+            This gets translated to the index i=n-1 used for the dictionaries of
+            constants attached to self.
+        """
         if n not in range(1, self.n_groups):
             raise ValueError(
                 f"n must be a positive integer between 1 and {self.n_groups}!"
@@ -414,10 +434,6 @@ class NeutronFluxProfile:
         i = n - 1
         if i in self.integration_constants:
             return  # skip if it has already been solved.
-        c1 = self.flux * ...
-        c2 = self.flux * ...
-        c3 = self.flux * ...
-        c4 = self.flux * ...
         self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
             self.fw_sigma_t[i],
             self.fw_sigma_s[i, i],
@@ -428,28 +444,67 @@ class NeutronFluxProfile:
             self.bz_sigma_s[i, i],
             self.bz_A,
         )
+        l_fw = np.sqrt(abs(self.l_fw_2))
+        l_bz = np.sqrt(abs(self.l_bz_2))
+        c1 = self.flux * ... * l_fw
+        c2 = self.flux * ... * l_bz
+        c3 = self.flux * ...
+        c4 = self.flux * ...
         self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
         self.integration_constants[i] = [c1, c2, c3, c4]
 
     @groupwise
     def neutron_flux_fw(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
-        """Neutron flux at the first wall."""
+        """Neutron flux at the first wall.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+        x:
+            The position where the neutron flux has to be evaluated.
+            Note that this function does not enforce a check for x=inside the first-wall,
+            thus if x is outside the first-wall, an extrapolated first-wall flux value up
+            to that point will be given, this flux is still guaranteed to be non-singular
+            i.e. finite, but not guaranteed to be positive.
+        """
         i = n - 1
         c1, c2 = self.integration_constants[i][:2]
         l_fw = np.sqrt(abs(self.l_fw_2[i]))
-        if self.l_fw_2 < 0:
-            return c1 * -np.sin(x / l_fw) + c2 * np.cos(x / l_fw)
-        return c1 * np.sinh(x / l_fw) + c2 * np.cosh(x / l_fw)
+        x_l_fw = abs(x) / l_fw
+        sinh, cosh = (
+            (np.sinh, np.cosh) if self.l_fw_2 > 0 else (np.sin, np.cos)
+        )
+        # we specially store c1 and c2 such that if l_fw_2 is imaginary, then a different
+        # then c1 * sin and c2 * cos becomes real again.
+        return c1 * sinh(x_l_fw) + c2 * cosh(x_l_fw)
 
     @groupwise
     def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
-        """Neutron flux at the blanket."""
+        """
+        Neutron flux at the blanket.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+        x:
+            The position where the neutron flux has to be evaluated.
+            Note that this function does not enforce a check for x=inside the blanket,
+            thus if x is outside the blanket, an extrapolated blanket flux value up to
+            that point will be given, this flux is still guaranteed to be non-singular
+            i.e. finite, but not guaranteed to be positive.
+        """
         i = n - 1
         c3, c4 = self.integration_constants[i][2:]
         l_bz = np.sqrt(abs(self.l_bz_2[i]))
-        if self.l_bz_2 < 0:
-            return c3 * -np.sin(x / l_bz) + c4 * np.cos(x / l_bz)
-        return c3 * np.sinh(x / l_bz) + c4 * np.cosh(x / l_bz)
+        x_l_bz = x / abs(l_bz)
+        sinh, cosh = (
+            (np.sinh, np.cosh) if self.l_bz_2 > 0 else (np.sin, np.cos)
+        )
+        # we specially store c3 and c4 such that if l_bz_2 is imaginary, then a different
+        # then c3 * sin and c4 * cos becomes real again.
+        return c3 * sinh(x_l_bz) + c4 * cosh(x_l_bz)
 
     @groupwise
     def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
@@ -461,6 +516,7 @@ class NeutronFluxProfile:
             Neutron group number
         x:
             The depth where we want the neutron flux (m).
+            Valid only between x= -extended boundary to +-extended boundary of that group
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
