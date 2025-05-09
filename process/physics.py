@@ -2181,7 +2181,7 @@ class Physics:
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
             physics_variables.p_beam_alpha_mw,
-            physics_variables.charged_power_density,
+            physics_variables.pden_charged_particle_mw,
             physics_variables.pden_plasma_neutron_mw,
             physics_variables.vol_plasma,
             physics_variables.pden_plasma_alpha_mw,
@@ -3028,7 +3028,7 @@ class Physics:
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
         # (used with electron and ion power balance equations only)
-        # No consideration of charged_power_density here...
+        # No consideration of pden_charged_particle_mw here...
 
         # pcoef now calculated in plasma_profiles, after the very first
         # call of plasma_composition; use old parabolic profile estimate
@@ -7044,7 +7044,7 @@ class Physics:
                 + ptriz
                 - physics_variables.f_alpha_plasma
                 * physics_variables.pden_alpha_total_mw
-                - physics_variables.charged_power_density
+                - physics_variables.pden_charged_particle_mw
                 - physics_variables.pden_plasma_ohmic_mw
             )
 
@@ -8358,7 +8358,7 @@ def init_physics_variables():
     physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.p_beam_alpha_mw = 0.0
     physics_variables.p_non_alpha_charged_mw = 0.0
-    physics_variables.charged_power_density = 0.0
+    physics_variables.pden_charged_particle_mw = 0.0
     physics_variables.pcoef = 0.0
     physics_variables.p_plasma_inner_rad_mw = 0.0
     physics_variables.pden_plasma_core_rad_mw = 0.0

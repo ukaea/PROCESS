@@ -84,7 +84,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 - `dd_power_density (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
 - `alpha_power_density (float)`: Power density of alpha particles produced.
-- `charged_power_density (float)`: Power density of charged particles produced.
+- `pden_charged_particle_mw (float)`: Power density of charged particles produced.
 - `neutron_power_density (float)`: Power density of neutrons produced.
 - `fusion_rate_density (float)`: Fusion reaction rate density.
 - `alpha_rate_density (float)`: Alpha particle production rate density.
@@ -137,7 +137,7 @@ The method updates the following attributes:
 - `self.sigmav_dt_average`: Average fusion reaction rate `<sigma v>` for D-T.
 - `self.dt_power_density`: Fusion power density produced by the D-T reaction.
 - `self.alpha_power_density`: Power density of alpha particles produced.
-- `self.charged_power_density`: Power density of charged particles produced.
+- `self.pden_charged_particle_mw`: Power density of charged particles produced.
 - `self.neutron_power_density`: Power density of neutrons produced.
 - `self.fusion_rate_density`: Fusion reaction rate density.
 - `self.alpha_rate_density`: Alpha particle production rate density.
@@ -181,7 +181,7 @@ This method sets the required physics variables in the `physics_variables` and `
 
 #### Updates:
 - `physics_variables.pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`
-- `physics_variables.charged_power_density`: Updated with `self.charged_power_density`
+- `physics_variables.pden_charged_particle_mw`: Updated with `self.pden_charged_particle_mw`
 - `physics_variables.pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
 - `physics_variables.fusden_plasma`: Updated with `self.fusion_rate_density`
 - `physics_variables.fusden_plasma_alpha`: Updated with `self.alpha_rate_density`
