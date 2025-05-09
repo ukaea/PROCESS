@@ -2159,6 +2159,10 @@ class Physics:
                 + (1.0 / (1.0 - constants.dt_neutron_energy_fraction))
                 * physics_variables.p_beam_alpha_mw
             )
+            physics_variables.p_beam_neutron_mw = physics_variables.p_beam_alpha_mw * (
+                constants.dt_neutron_energy_fraction
+                / (1 - constants.dt_neutron_energy_fraction)
+            )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
             physics_variables.fusden_total = physics_variables.fusden_plasma
@@ -4800,7 +4804,7 @@ class Physics:
             self.outfile,
             "Neutron power: beam-plasma (MW)",
             "(p_beam_neutron_mw)",
-            physics_variables.p_beam_alpha_mw * 4.0e0,
+            physics_variables.p_beam_neutron_mw,
             "OP ",
         )
         po.osubhd(self.outfile, "Charged Particle Powers :")
