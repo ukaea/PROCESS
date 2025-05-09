@@ -160,7 +160,7 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 
 fbeta_max = 0.8735070761063214 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fdene    = 1.0 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
-ffuspow  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
+fp_fusion_total_max_mw  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
 fiooic   = 0.9942981023320613 * f-value for TF coil operating current / critical current ratio
 fipir    = 0.5460655498423221 * f-value for Ip/Irod upper limit
 fl_h_threshold = 0.34445356794812293 * f-value for L-H power threshold (`constraint equation 15`; `iteration variable 103`)
@@ -172,7 +172,7 @@ fstrcase = 0.47408648750854704 * f-value for maximum TF coil case Tresca yield c
 fstrcond = 0.4359431939504875 * f-value for maxiumum TF coil conduit Tresca yield criterion
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
-powfmax  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
+p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
 pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 falpha_energy_confinement = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy

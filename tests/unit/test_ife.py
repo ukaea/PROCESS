@@ -2047,7 +2047,7 @@ class Ifepw1Param(NamedTuple):
     ifetyp: Any = None
     etadrv: Any = None
     pifecr: Any = None
-    powfmw: Any = None
+    p_fusion_total_mw: Any = None
     expected_p_blkt_nuclear_heat_total_mw: Any = None
     expected_priheat: Any = None
     expected_pthermmw: Any = None
@@ -2080,7 +2080,7 @@ class Ifepw1Param(NamedTuple):
             ifetyp=1,
             etadrv=0.28199999999999997,
             pifecr=10,
-            powfmw=2009.6999999999998,
+            p_fusion_total_mw=2009.6999999999998,
             expected_p_blkt_nuclear_heat_total_mw=1924.4887199999998,
             expected_priheat=2532.2219999999998,
             expected_pthermmw=2532.2219999999998,
@@ -2130,7 +2130,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     monkeypatch.setattr(ife_variables, "ifetyp", ifepw1param.ifetyp)
     monkeypatch.setattr(ife_variables, "etadrv", ifepw1param.etadrv)
     monkeypatch.setattr(ife_variables, "pifecr", ifepw1param.pifecr)
-    monkeypatch.setattr(physics_variables, "fusion_power", ifepw1param.powfmw)
+    monkeypatch.setattr(
+        physics_variables, "p_fusion_total_mw", ifepw1param.p_fusion_total_mw
+    )
 
     ife.ifepw1()
 

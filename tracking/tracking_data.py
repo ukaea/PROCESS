@@ -131,7 +131,7 @@ class ProcessTracker:
         "bt",
         "hfact",
         "kappa",
-        "fusion_power",
+        "p_fusion_total_mw",
         "teped",
         "p_plasma_loss_mw",
         "kappa95",

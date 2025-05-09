@@ -60,7 +60,7 @@ module scan_module
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
   !!         <LI> 23 boundu(72: fipir)
-  !!         <LI> 24 powfmax
+  !!         <LI> 24 p_fusion_total_max_mw
   !!         <LI> 25 kappa
   !!         <LI> 26 triang
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)

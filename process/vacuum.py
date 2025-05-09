@@ -55,7 +55,7 @@ class Vacuum:
         # as this is what f2py returns
         if self.vacuum_model == "old":
             pumpn, vacv.nvduct, vacv.dlscal, vacv.vacdshm, vacv.vcdimax = self.vacuum(
-                pv.fusion_power,
+                pv.p_fusion_total_mw,
                 pv.rmajor,
                 pv.rminor,
                 0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.dr_fw_plasma_gap_outboard),
@@ -448,7 +448,7 @@ class Vacuum:
                         break
 
                 else:
-                    eh.fdiags[0] = pv.fusion_power
+                    eh.fdiags[0] = pv.p_fusion_total_mw
                     eh.fdiags[1] = pv.te
                     eh.report_error(124)
 

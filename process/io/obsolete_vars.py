@@ -328,6 +328,8 @@ OBS_VARS = {
     "i_hldiv": "i_div_heat_load",
     "ignite": "i_plasma_ignited",
     "iprofile": None,
+    "powfmax": "p_fusion_total_max_mw",
+    "ffuspow": "fp_fusion_total_max_mw",
 }
 
 OBS_VARS_HELP = {

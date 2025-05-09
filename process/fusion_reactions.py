@@ -82,7 +82,7 @@ class FusionReactionRate:
         dd_power_density (float): Fusion power density produced by the D-D reactions.
         dt_power_density (float): Fusion power density produced by the D-T reaction.
         alpha_power_density (float): Power density of alpha particles produced.
-        charged_power_density (float): Power density of charged particles produced.
+        pden_non_alpha_charged_mw (float): Power density of charged particles produced.
         neutron_power_density (float): Power density of neutrons produced.
         fusion_rate_density (float): Fusion reaction rate density.
         alpha_rate_density (float): Alpha particle production rate density.
@@ -135,7 +135,7 @@ class FusionReactionRate:
             dd_power_density (float): Fusion power density produced by the D-D reactions.
             dt_power_density (float): Fusion power density produced by the D-T reaction.
             alpha_power_density (float): Power density of alpha particles produced.
-            charged_power_density (float): Power density of charged particles produced.
+            pden_non_alpha_charged_mw (float): Power density of charged particles produced.
             neutron_power_density (float): Power density of neutrons produced.
             fusion_rate_density (float): Fusion reaction rate density.
             alpha_rate_density (float): Alpha particle production rate density.
@@ -148,7 +148,7 @@ class FusionReactionRate:
         self.dd_power_density = 0.0
         self.dt_power_density = 0.0
         self.alpha_power_density = 0.0
-        self.charged_power_density = 0.0
+        self.pden_non_alpha_charged_mw = 0.0
         self.neutron_power_density = 0.0
         self.fusion_rate_density = 0.0
         self.alpha_rate_density = 0.0
@@ -197,7 +197,7 @@ class FusionReactionRate:
             - self.sigmav_dt_average: Average fusion reaction rate <sigma v> for D-T.
             - self.dt_power_density: Fusion power density produced by the D-T reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
-            - self.charged_power_density: Power density of charged particles produced.
+            - self.pden_non_alpha_charged_mw: Power density of charged particles produced.
             - self.neutron_power_density: Power density of neutrons produced.
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
@@ -235,7 +235,7 @@ class FusionReactionRate:
         alpha_power_density = (
             1.0 - constants.dt_neutron_energy_fraction
         ) * fusion_power_density
-        charged_power_density = 0.0
+        pden_non_alpha_charged_mw = 0.0
         neutron_power_density = (
             constants.dt_neutron_energy_fraction * fusion_power_density
         )
@@ -251,7 +251,7 @@ class FusionReactionRate:
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
             alpha_power_density,
-            charged_power_density,
+            pden_non_alpha_charged_mw,
             neutron_power_density,
             fusion_rate_density,
             alpha_rate_density,
@@ -269,7 +269,7 @@ class FusionReactionRate:
         The method updates the following attributes:
             - self.dhe3_power_density: Fusion power density produced by the D-3He reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
-            - self.charged_power_density: Power density of charged particles produced.
+            - self.pden_non_alpha_charged_mw: Power density of charged particles produced.
             - self.neutron_power_density: Power density of neutrons produced.
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
@@ -304,7 +304,7 @@ class FusionReactionRate:
         alpha_power_density = (
             1.0 - constants.dhelium_proton_energy_fraction
         ) * fusion_power_density
-        charged_power_density = (
+        pden_non_alpha_charged_mw = (
             constants.dhelium_proton_energy_fraction * fusion_power_density
         )
         neutron_power_density = 0.0
@@ -320,7 +320,7 @@ class FusionReactionRate:
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
             alpha_power_density,
-            charged_power_density,
+            pden_non_alpha_charged_mw,
             neutron_power_density,
             fusion_rate_density,
             alpha_rate_density,
@@ -339,7 +339,7 @@ class FusionReactionRate:
         The method updates the following attributes:
             - self.dd_power_density: Fusion power density produced by the D-D reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
-            - self.charged_power_density: Power density of charged particles produced.
+            - self.pden_non_alpha_charged_mw: Power density of charged particles produced.
             - self.neutron_power_density: Power density of neutrons produced.
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
@@ -375,7 +375,7 @@ class FusionReactionRate:
         # Power densities for different particles [MW/m^3]
         # Neutron particle gets approximately 75% of the fusion power
         alpha_power_density = 0.0
-        charged_power_density = (
+        pden_non_alpha_charged_mw = (
             1.0 - constants.dd_neutron_energy_fraction
         ) * fusion_power_density
         neutron_power_density = (
@@ -393,7 +393,7 @@ class FusionReactionRate:
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
             alpha_power_density,
-            charged_power_density,
+            pden_non_alpha_charged_mw,
             neutron_power_density,
             fusion_rate_density,
             alpha_rate_density,
@@ -412,7 +412,7 @@ class FusionReactionRate:
         The method updates the following attributes:
             - self.dd_power_density: Fusion power density produced by the D-D reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
-            - self.charged_power_density: Power density of charged particles produced.
+            - self.pden_non_alpha_charged_mw: Power density of charged particles produced.
             - self.neutron_power_density: Power density of neutrons produced.
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
@@ -447,7 +447,7 @@ class FusionReactionRate:
 
         # Power densities for different particles [MW/m^3]
         alpha_power_density = 0.0
-        charged_power_density = fusion_power_density
+        pden_non_alpha_charged_mw = fusion_power_density
         neutron_power_density = 0.0
 
         # Calculate the fusion rate density [reactions/m^3/second]
@@ -461,7 +461,7 @@ class FusionReactionRate:
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
             alpha_power_density,
-            charged_power_density,
+            pden_non_alpha_charged_mw,
             neutron_power_density,
             fusion_rate_density,
             alpha_rate_density,
@@ -494,7 +494,7 @@ class FusionReactionRate:
             None
         """
         self.alpha_power_density += alpha_power_add
-        self.charged_power_density += charged_power_add
+        self.pden_non_alpha_charged_mw += charged_power_add
         self.neutron_power_density += neutron_power_add
         self.fusion_rate_density += fusion_rate_add
         self.alpha_rate_density += alpha_rate_add
@@ -532,11 +532,11 @@ class FusionReactionRate:
         Returns:
             None
         """
-        physics_variables.alpha_power_density_plasma = self.alpha_power_density
-        physics_variables.charged_power_density = self.charged_power_density
-        physics_variables.neutron_power_density_plasma = self.neutron_power_density
-        physics_variables.fusion_rate_density_plasma = self.fusion_rate_density
-        physics_variables.alpha_rate_density_plasma = self.alpha_rate_density
+        physics_variables.pden_plasma_alpha_mw = self.alpha_power_density
+        physics_variables.pden_non_alpha_charged_mw = self.pden_non_alpha_charged_mw
+        physics_variables.pden_plasma_neutron_mw = self.neutron_power_density
+        physics_variables.fusden_plasma = self.fusion_rate_density
+        physics_variables.fusden_plasma_alpha = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
         physics_module.sigmav_dt_average = self.sigmav_dt_average
         physics_module.dt_power_density_plasma = self.dt_power_density
@@ -611,7 +611,7 @@ def bosch_hale_reactivity(
     ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
 ) -> np.ndarray:
     """
-    Calculate the volumetric fusion reaction rate <sigma v> (m^3/s) for one of four nuclear reactions using
+    Calculate the volumetric fusion reaction rate 〈sigmav〉 (m^3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
 
     The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
@@ -627,7 +627,7 @@ def bosch_hale_reactivity(
         reaction_constants (BoschHaleConstants): Bosch-Hale reaction constants.
 
     Returns:
-        np.ndarray: Volumetric fusion reaction rate <sigma v> in m^3/s for each point in the ion temperature profile.
+        np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in the ion temperature profile.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
@@ -661,7 +661,7 @@ def bosch_hale_reactivity(
 
     xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
 
-    # Volumetric reaction rate / reactivity <sigma v> (m^3/s)
+    # Volumetric reaction rate / reactivity 〈sigmav〉 (m^3/s)
     # Original form is in [cm^3/s], so multiply by 1.0e-6 to convert to [m^3/s]
     sigmav = (
         1.0e-6
@@ -682,11 +682,11 @@ def bosch_hale_reactivity(
 def set_fusion_powers(
     f_alpha_electron: float,
     f_alpha_ion: float,
-    alpha_power_beams: float,
-    charged_power_density: float,
-    neutron_power_density_plasma: float,
+    p_beam_alpha_mw: float,
+    pden_non_alpha_charged_mw: float,
+    pden_plasma_neutron_mw: float,
     vol_plasma: float,
-    alpha_power_density_plasma: float,
+    pden_plasma_alpha_mw: float,
 ) -> tuple:
     """
 
@@ -695,25 +695,25 @@ def set_fusion_powers(
     Parameters:
         f_alpha_electron (float): Fraction of alpha energy to electrons.
         f_alpha_ion (float): Fraction of alpha energy to ions.
-        alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
-        charged_power_density (float): Other charged particle fusion power per unit volume (MW/m^3).
-        neutron_power_density_plasma (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
+        p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
+        pden_non_alpha_charged_mw (float): Other charged particle fusion power per unit volume (MW/m^3).
+        pden_plasma_neutron_mw (float): Neutron fusion power per unit volume just from plasma (MW/m^3).
         vol_plasma (float): Plasma volume (m^3).
-        alpha_power_density_plasma (float): Alpha power per unit volume just from plasma (MW/m^3).
+        pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
 
     Returns:
         tuple: A tuple containing the following elements:
-            - neutron_power_density_total (float): Neutron fusion power per unit volume from plasma and beams [MW/m^3].
-            - alpha_power_plasma (float): Alpha fusion power from only the plasma [MW].
-            - alpha_power_total (float): Total alpha fusion power from plasma and beams [MW].
-            - neutron_power_plasma (float): Neutron fusion power from only the plasma [MW].
-            - neutron_power_total (float): Total neutron fusion power from plasma and beams [MW].
-            - non_alpha_charged_power (float): Other total charged particle fusion power [MW].
-            - alpha_power_density_total (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
-            - alpha_power_electron_density (float): Alpha power per unit volume to electrons [MW/m^3].
-            - alpha_power_ions_density (float): Alpha power per unit volume to ions [MW/m^3].
-            - charged_particle_power (float): Charged particle fusion power [MW].
-            - fusion_power (float): Total fusion power [MW].
+            - pden_neutron_total_mw (float): Neutron fusion power per unit volume from plasma and beams [MW/m^3].
+            - p_plasma_alpha_mw (float): Alpha fusion power from only the plasma [MW].
+            - p_alpha_total_mw (float): Total alpha fusion power from plasma and beams [MW].
+            - p_plasma_neutron_mw (float): Neutron fusion power from only the plasma [MW].
+            - p_neutron_total_mw (float): Total neutron fusion power from plasma and beams [MW].
+            - p_non_alpha_charged_mw (float): Other total charged particle fusion power [MW].
+            - pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma [MW/m^3].
+            - f_pden_alpha_electron_mw (float): Alpha power per unit volume to electrons [MW/m^3].
+            - f_pden_alpha_ions_mw (float): Alpha power per unit volume to ions [MW/m^3].
+            - p_charged_particle_mw (float): Charged particle fusion power [MW].
+            - p_fusion_total_mw (float): Total fusion power [MW].
 
     References:
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
@@ -723,69 +723,67 @@ def set_fusion_powers(
     # Alpha power
 
     # Calculate alpha power produced just by the plasma
-    alpha_power_plasma = alpha_power_density_plasma * vol_plasma
+    p_plasma_alpha_mw = pden_plasma_alpha_mw * vol_plasma
 
     # Add neutral beam alpha power / volume
-    alpha_power_density_total = alpha_power_density_plasma + (
-        alpha_power_beams / vol_plasma
-    )
+    pden_alpha_total_mw = pden_plasma_alpha_mw + (p_beam_alpha_mw / vol_plasma)
 
     # Total alpha power
-    alpha_power_total = alpha_power_density_total * vol_plasma
+    p_alpha_total_mw = pden_alpha_total_mw * vol_plasma
 
     # Neutron Power
 
     # Calculate neutron power produced just by the plasma
-    neutron_power_plasma = neutron_power_density_plasma * vol_plasma
+    p_plasma_neutron_mw = pden_plasma_neutron_mw * vol_plasma
 
     # Add extra neutron power from beams
-    neutron_power_density_total = neutron_power_density_plasma + (
+    pden_neutron_total_mw = pden_plasma_neutron_mw + (
         (
             (
                 constants.dt_neutron_energy_fraction
                 / (1.0 - constants.dt_neutron_energy_fraction)
             )
-            * alpha_power_beams
+            * p_beam_alpha_mw
         )
         / vol_plasma
     )
 
     # Total neutron power
-    neutron_power_total = neutron_power_density_total * vol_plasma
+    p_neutron_total_mw = pden_neutron_total_mw * vol_plasma
 
     # Charged particle power
 
     # Total non-alpha charged particle power
-    non_alpha_charged_power = charged_power_density * vol_plasma
+    p_non_alpha_charged_mw = pden_non_alpha_charged_mw * vol_plasma
 
     # Charged particle fusion power
-    charged_particle_power = alpha_power_total + non_alpha_charged_power
+    p_charged_particle_mw = p_alpha_total_mw + p_non_alpha_charged_mw
 
     # Total fusion power
-    fusion_power = alpha_power_total + neutron_power_total + non_alpha_charged_power
+    p_fusion_total_mw = p_alpha_total_mw + p_neutron_total_mw + p_non_alpha_charged_mw
 
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
-    # No consideration of charged_power_density here.
-    alpha_power_ions_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_ion
+    # No consideration of pden_non_alpha_charged_mw here.
+    f_pden_alpha_ions_mw = (
+        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_ion
     )
-    alpha_power_electron_density = (
-        physics_variables.f_alpha_plasma * alpha_power_density_total * f_alpha_electron
+    f_pden_alpha_electron_mw = (
+        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_electron
     )
 
     return (
-        neutron_power_density_total,
-        alpha_power_plasma,
-        alpha_power_total,
-        neutron_power_plasma,
-        neutron_power_total,
-        non_alpha_charged_power,
-        alpha_power_density_total,
-        alpha_power_electron_density,
-        alpha_power_ions_density,
-        charged_particle_power,
-        fusion_power,
+        pden_neutron_total_mw,
+        p_plasma_alpha_mw,
+        p_alpha_total_mw,
+        p_plasma_neutron_mw,
+        p_neutron_total_mw,
+        p_non_alpha_charged_mw,
+        pden_alpha_total_mw,
+        f_pden_alpha_electron_mw,
+        f_pden_alpha_ions_mw,
+        p_charged_particle_mw,
+        p_fusion_total_mw,
     )
 
 
@@ -837,7 +835,7 @@ def beam_fusion(
                 tuple: A tuple containing the following elements:
                     - beta_beam (float): Neutral beam beta component.
                     - beam_density_out (float): Hot beam ion density (m^-3).
-                    - alpha_power_beams (float): Alpha power from hot neutral beam ions (MW).
+                    - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
 
             Notes:
                 - The function uses the Bosch-Hale parametrization to compute the reactivity.
@@ -909,9 +907,7 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    alpha_power_beams = beamfus0 * (
-        deuterium_beam_alpha_power + tritium_beam_alpha_power
-    )
+    p_beam_alpha_mw = beamfus0 * (deuterium_beam_alpha_power + tritium_beam_alpha_power)
 
     # Neutral beam beta
     beta_beam = (
@@ -923,7 +919,7 @@ def beam_fusion(
         / (bt**2 + bp**2)
     )
 
-    return beta_beam, hot_beam_density, alpha_power_beams
+    return beta_beam, hot_beam_density, p_beam_alpha_mw
 
 
 def beamcalc(
