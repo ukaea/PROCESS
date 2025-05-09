@@ -2163,11 +2163,18 @@ class Physics:
                 constants.dt_neutron_energy_fraction
                 / (1 - constants.dt_neutron_energy_fraction)
             )
+            physics_variables.p_beam_dt_mw = physics_variables.p_beam_alpha_mw * (
+                1 / (1 - constants.dt_neutron_energy_fraction)
+            )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
             physics_variables.fusden_total = physics_variables.fusden_plasma
             physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
+
+        physics_variables.fusrat_total = (
+            physics_variables.fusden_total * physics_variables.vol_plasma
+        )
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -4644,6 +4651,8 @@ class Physics:
             "(f_helium3)",
             physics_variables.f_helium3,
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         po.osubhd(self.outfile, "Fusion Powers :")
         po.ocmmnt(
@@ -4660,16 +4669,23 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: total (particles/m3/sec)",
+            "Fusion rate: total (reactions/sec)",
+            "(fusrat_total)",
+            physics_variables.fusrat_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fusion rate density: total (reactions/m3/sec)",
             "(fusden_total)",
             physics_variables.fusden_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: plasma (particles/m3/sec)",
+            "Fusion rate density: plasma (reactions/m3/sec)",
             "(fusden_plasma)",
-            physics_variables.fusden_total,
+            physics_variables.fusden_plasma,
             "OP ",
         )
         po.ovarre(
@@ -4684,6 +4700,13 @@ class Physics:
             "D-T fusion power: plasma (MW)",
             "(p_plasma_dt_mw)",
             physics_variables.p_plasma_dt_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T fusion power: beam (MW)",
+            "(p_beam_dt_mw)",
+            physics_variables.p_beam_dt_mw,
             "OP ",
         )
         po.ovarre(
@@ -4707,6 +4730,9 @@ class Physics:
             physics_variables.p_dhe3_total_mw,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Alpha Powers :")
         po.ovarre(
             self.outfile,
@@ -4771,6 +4797,9 @@ class Physics:
             physics_variables.f_pden_alpha_ions_mw,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Neutron Powers :")
         po.ovarre(
             self.outfile,
@@ -4807,10 +4836,14 @@ class Physics:
             physics_variables.p_beam_neutron_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
         po.osubhd(self.outfile, "Charged Particle Powers :")
+
         po.ovarre(
             self.outfile,
-            "Charged particle power (excluding alphas) (MW)",
+            "Charged particle power (p, 3He, T) (excluding alphas) (MW)",
             "(p_non_alpha_charged_mw)",
             physics_variables.p_non_alpha_charged_mw,
             "OP ",
@@ -4820,19 +4853,6 @@ class Physics:
             "Total charged particle power (including alphas) (MW)",
             "(p_charged_particle_mw)",
             physics_variables.p_charged_particle_mw,
-            "OP ",
-        )
-        p_plasma_heating_total_mw = (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.p_non_alpha_charged_mw
-            + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.p_hcd_injected_total_mw
-        )
-        po.ovarre(
-            self.outfile,
-            "Total power deposited in plasma (MW)",
-            "(p_plasma_heating_total_mw)",
-            p_plasma_heating_total_mw,
             "OP ",
         )
 
@@ -8308,6 +8328,7 @@ def init_physics_variables():
     physics_variables.fne0 = 1.0
     physics_variables.f_tritium = 0.5
     physics_variables.fusden_total = 0.0
+    physics_variables.fusrat_total = 0.0
     physics_variables.fusden_plasma = 0.0
     physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4
@@ -8363,6 +8384,7 @@ def init_physics_variables():
     physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.p_beam_alpha_mw = 0.0
     physics_variables.p_beam_neutron_mw = 0.0
+    physics_variables.p_beam_dt_mw = 0.0
     physics_variables.p_non_alpha_charged_mw = 0.0
     physics_variables.pden_charged_particle_mw = 0.0
     physics_variables.pcoef = 0.0

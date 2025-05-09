@@ -282,7 +282,10 @@ module physics_variables
   !! tritium fuel fraction
 
   real(dp) :: fusden_total
-  !! fusion reaction rate, from beams and plasma (reactions/m3/sec)
+  !! fusion reaction rate density, from beams and plasma (reactions/m3/sec)
+
+  real(dp) :: fusrat_total
+  !! fusion reaction rate, from beams and plasma (reactions/sec)
 
   real(dp) :: fusden_plasma
   !! fusion reaction rate, just from plasma (reactions/m3/sec)
@@ -608,6 +611,9 @@ module physics_variables
 
   real(dp) :: p_beam_neutron_mw
   !! neutron power from hot neutral beam ions (MW)
+
+  real(dp) :: p_beam_dt_mw
+  !! D-T fusion power from hot neutral beam ions (MW)
 
   real(dp) :: p_non_alpha_charged_mw
   !! non-alpha charged particle fusion power (MW)
