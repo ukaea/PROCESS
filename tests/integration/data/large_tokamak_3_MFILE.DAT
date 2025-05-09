@@ -1244,9 +1244,9 @@ walalw = 2.0
 *--------------------------*
 
 icc = 9
-ixc = 26 * ffuspow
+ixc = 26 * fp_fusion_total_max_mw
 * Maximum allowable value fusion power [MW]
-powfmax = 3000
+p_fusion_total_max_mw = 3000
 
 * Burn time lower limit *
 *-----------------------*
