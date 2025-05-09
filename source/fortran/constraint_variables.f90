@@ -252,7 +252,7 @@ module constraint_variables
   real(dp) :: pnetelin
   !! required net electric power (MW) (`constraint equation 16`)
 
-  real(dp) :: powfmax
+  real(dp) :: p_fusion_total_max_mw
   !! maximum fusion power (MW) (`constraint equation 9`)
 
   real(dp) :: psepbqarmax
@@ -386,7 +386,7 @@ module constraint_variables
     f_fw_rad_max = 3.33D0
     pflux_fw_rad_max_mw = 0.0D0
     pnetelin = 1.0D3
-    powfmax = 1.5D3
+    p_fusion_total_max_mw = 1.5D3
     psepbqarmax = 9.5D0
     pseprmax = 25.0D0
     ptfnucmax = 1.0D-3

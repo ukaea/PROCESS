@@ -224,7 +224,7 @@ If the plasma is classed as ignited then the injected heating power density is n
 
 This constraint can be activated by stating `icc = 9` in the input file.
 
-The value of `powfmax` can be set to the desired maximum fusion power. The scaling value `ffuspow` can be varied also.
+The value of `p_fusion_total_max_mw` can be set to the desired maximum fusion power. The scaling value `ffuspow` can be varied also.
 
 ---------------------------------
 

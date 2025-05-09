@@ -775,13 +775,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for fusion power upper limit
       !! #=# physics
-      !! #=#=# ffuspow, powfmax
+      !! #=#=# ffuspow, p_fusion_total_max_mw
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! ffuspow : input real : f-value for maximum fusion power
-      !! powfmax : input real : maximum fusion power (MW)
+      !! p_fusion_total_max_mw : input real : maximum fusion power (MW)
       !! p_fusion_total_mw : input real : fusion power (MW)
-      use constraint_variables, only: ffuspow, powfmax
+      use constraint_variables, only: ffuspow, p_fusion_total_max_mw
       use physics_variables, only: p_fusion_total_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -790,8 +790,8 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  p_fusion_total_mw/powfmax - 1.0D0 * ffuspow
-      tmp_con = powfmax * (1.0D0 - tmp_cc)
+      tmp_cc =  p_fusion_total_mw/p_fusion_total_max_mw - 1.0D0 * ffuspow
+      tmp_con = p_fusion_total_max_mw * (1.0D0 - tmp_cc)
       tmp_err = p_fusion_total_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW'
