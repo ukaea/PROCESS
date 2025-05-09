@@ -8358,6 +8358,7 @@ def init_physics_variables():
     physics_variables.p_alpha_total_mw = 0.0
     physics_variables.p_plasma_alpha_mw = 0.0
     physics_variables.p_beam_alpha_mw = 0.0
+    physics_variables.p_beam_neutron_mw = 0.0
     physics_variables.p_non_alpha_charged_mw = 0.0
     physics_variables.pden_charged_particle_mw = 0.0
     physics_variables.pcoef = 0.0
