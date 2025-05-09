@@ -591,7 +591,7 @@ def fusion_rate_integral(
     sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
 
     # Integrand for the volume averaged fusion reaction rate sigmav:
-    # sigmav = integral(2 ρ (sigv(rho) ni(ρ)^2) dρ),
+    # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
     # divided by the square of the volume-averaged ion density
     # to retain the dimensions m^3/s (this is multiplied back in later)
 
@@ -611,7 +611,7 @@ def bosch_hale_reactivity(
     ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
 ) -> np.ndarray:
     """
-    Calculate the volumetric fusion reaction rate 〈σv〉 (m^3/s) for one of four nuclear reactions using
+    Calculate the volumetric fusion reaction rate 〈sigmav〉 (m^3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
 
     The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
@@ -627,7 +627,7 @@ def bosch_hale_reactivity(
         reaction_constants (BoschHaleConstants): Bosch-Hale reaction constants.
 
     Returns:
-        np.ndarray: Volumetric fusion reaction rate 〈σv〉 in m^3/s for each point in the ion temperature profile.
+        np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in the ion temperature profile.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
@@ -661,7 +661,7 @@ def bosch_hale_reactivity(
 
     xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
 
-    # Volumetric reaction rate / reactivity 〈σv〉 (m^3/s)
+    # Volumetric reaction rate / reactivity 〈sigmav〉 (m^3/s)
     # Original form is in [cm^3/s], so multiply by 1.0e-6 to convert to [m^3/s]
     sigmav = (
         1.0e-6

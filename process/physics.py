@@ -2156,7 +2156,8 @@ class Physics:
             )
             physics_variables.p_dt_total_mw = (
                 physics_variables.p_plasma_dt_mw
-                + 5.0e0 * physics_variables.p_beam_alpha_mw
+                + (1.0 / (1.0 - constants.dt_neutron_energy_fraction))
+                * physics_variables.p_beam_alpha_mw
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values

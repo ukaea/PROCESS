@@ -603,7 +603,9 @@ INPUT_VARIABLES = {
     ),
     "feffcd": InputVariable(fortran.current_drive_variables, float, range=(0.0, 20.0)),
     "fflutf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fp_fusion_total_max_mw": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fp_fusion_total_max_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fgamcd": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_a_fw_hcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fpflux_div_heat_load_mw": InputVariable(
@@ -1016,7 +1018,9 @@ INPUT_VARIABLES = {
     "poisson_al": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "poisson_copper": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "poisson_steel": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "p_fusion_total_max_mw": InputVariable(fortran.constraint_variables, float, range=(1.0, 10000.0)),
+    "p_fusion_total_max_mw": InputVariable(
+        fortran.constraint_variables, float, range=(1.0, 10000.0)
+    ),
     "prdiv": InputVariable(fortran.vacuum_variables, float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
