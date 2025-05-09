@@ -2193,7 +2193,7 @@ class Physics:
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
             physics_variables.p_beam_alpha_mw,
-            physics_variables.pden_charged_particle_mw,
+            physics_variables.pden_non_alpha_charged_mw,
             physics_variables.pden_plasma_neutron_mw,
             physics_variables.vol_plasma,
             physics_variables.pden_plasma_alpha_mw,
@@ -3040,7 +3040,7 @@ class Physics:
         # Fraction of alpha energy to ions and electrons
         # From Max Fenstermacher
         # (used with electron and ion power balance equations only)
-        # No consideration of pden_charged_particle_mw here...
+        # No consideration of pden_non_alpha_charged_mw here...
 
         # pcoef now calculated in plasma_profiles, after the very first
         # call of plasma_composition; use old parabolic profile estimate
@@ -4631,6 +4631,8 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
+        
+        po.oheadr(self.outfile, "Plasma Reactions :")
 
         po.osubhd(self.outfile, "Fuel Constituents :")
         po.ovarrf(
@@ -4653,20 +4655,7 @@ class Physics:
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-
-        po.osubhd(self.outfile, "Fusion Powers :")
-        po.ocmmnt(
-            self.outfile,
-            "Fusion power totals from the main plasma and beam-plasma interactions (if present)\n",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Total fusion power (MW)",
-            "(p_fusion_total_mw)",
-            physics_variables.p_fusion_total_mw,
-            "OP ",
-        )
+        po.osubhd(self.outfile, "Fusion rates :")
         po.ovarre(
             self.outfile,
             "Fusion rate: total (reactions/sec)",
@@ -4686,6 +4675,22 @@ class Physics:
             "Fusion rate density: plasma (reactions/m3/sec)",
             "(fusden_plasma)",
             physics_variables.fusden_plasma,
+            "OP ",
+        )
+        
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Fusion Powers :")
+        po.ocmmnt(
+            self.outfile,
+            "Fusion power totals from the main plasma and beam-plasma interactions (if present)\n",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total fusion power (MW)",
+            "(p_fusion_total_mw)",
+            physics_variables.p_fusion_total_mw,
             "OP ",
         )
         po.ovarre(
@@ -4846,6 +4851,13 @@ class Physics:
             "Charged particle power (p, 3He, T) (excluding alphas) (MW)",
             "(p_non_alpha_charged_mw)",
             physics_variables.p_non_alpha_charged_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Charged particle power density (p, 3He, T) (excluding alphas) (MW)",
+            "(pden_non_alpha_charged_mw)",
+            physics_variables.pden_non_alpha_charged_mw,
             "OP ",
         )
         po.ovarre(
@@ -7069,7 +7081,7 @@ class Physics:
                 + ptriz
                 - physics_variables.f_alpha_plasma
                 * physics_variables.pden_alpha_total_mw
-                - physics_variables.pden_charged_particle_mw
+                - physics_variables.pden_non_alpha_charged_mw
                 - physics_variables.pden_plasma_ohmic_mw
             )
 
@@ -8386,7 +8398,7 @@ def init_physics_variables():
     physics_variables.p_beam_neutron_mw = 0.0
     physics_variables.p_beam_dt_mw = 0.0
     physics_variables.p_non_alpha_charged_mw = 0.0
-    physics_variables.pden_charged_particle_mw = 0.0
+    physics_variables.pden_non_alpha_charged_mw = 0.0
     physics_variables.pcoef = 0.0
     physics_variables.p_plasma_inner_rad_mw = 0.0
     physics_variables.pden_plasma_core_rad_mw = 0.0

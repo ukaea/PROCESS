@@ -33,7 +33,7 @@ class SetFusionPowersParam(NamedTuple):
 
     p_beam_alpha_mw: Any = None
 
-    pden_charged_particle_mw: Any = None
+    pden_non_alpha_charged_mw: Any = None
 
     ten: Any = None
 
@@ -75,7 +75,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=0,
-            pden_charged_particle_mw=0.00066,
+            pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
             pden_plasma_neutron_mw=0.654,
@@ -95,7 +95,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
-            pden_charged_particle_mw=0.00066,
+            pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
             pden_plasma_neutron_mw=0.654,
@@ -115,7 +115,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
-            pden_charged_particle_mw=0.00066,
+            pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
             pden_plasma_neutron_mw=0.654,
@@ -135,7 +135,7 @@ class SetFusionPowersParam(NamedTuple):
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
-            pden_charged_particle_mw=0.00066,
+            pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
             pden_plasma_alpha_mw=0.163,
             pden_plasma_neutron_mw=0.654,
@@ -182,7 +182,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         f_alpha_electron=setfusionpowersparam.f_alpha_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
-        pden_charged_particle_mw=setfusionpowersparam.pden_charged_particle_mw,
+        pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
         pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
