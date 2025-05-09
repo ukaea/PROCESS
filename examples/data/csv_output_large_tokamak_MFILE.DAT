@@ -1249,7 +1249,7 @@ walalw = 2.0
 *--------------------------*
 
 icc = 9
-ixc = 26 * ffuspow
+ixc = 26 * fp_fusion_total_max_mw
 * Maximum allowable value fusion power [MW]
 p_fusion_total_max_mw = 3000
 

@@ -160,7 +160,7 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 
 fbeta_max = 0.8735070761063214 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fdene    = 1.0 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
-ffuspow  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
+fp_fusion_total_max_mw  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
 fiooic   = 0.9942981023320613 * f-value for TF coil operating current / critical current ratio
 fipir    = 0.5460655498423221 * f-value for Ip/Irod upper limit
 fl_h_threshold = 0.34445356794812293 * f-value for L-H power threshold (`constraint equation 15`; `iteration variable 103`)

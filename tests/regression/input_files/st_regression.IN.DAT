@@ -105,7 +105,7 @@ icc = 9
 * VARIABLES:     p_fusion_total_mw (fusion power) calculated in-situ
 
 ixc = 26
-ffuspow = 1.0
+fp_fusion_total_max_mw = 1.0
 *boundl(26) = 0.9
 *boundu(26) = 1.1
 * DESCRIPTION:   f-value for Maximum Fusion Power
