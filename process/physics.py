@@ -4631,7 +4631,7 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
-        
+
         po.oheadr(self.outfile, "Plasma Reactions :")
 
         po.osubhd(self.outfile, "Fuel Constituents :")
@@ -4677,7 +4677,7 @@ class Physics:
             physics_variables.fusden_plasma,
             "OP ",
         )
-        
+
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Fusion Powers :")
