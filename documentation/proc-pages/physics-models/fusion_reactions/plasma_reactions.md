@@ -12,7 +12,7 @@ $$
 Roughly 20% of the energy produced is given to the alpha particles (\(^4\)He). The remaining 80% is carried
 away by the neutrons, which deposit their energy within the blanket and shield and other reactor components.
 The fraction of the alpha energy deposited in the plasma is [`f_alpha_plasma`](#coupled-alpha-particle-power).
-**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
+
 
 PROCESS can also model D-\(^3\)He power plants, which utilise the following
 primary fusion reaction:
@@ -79,7 +79,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 
 #### Attributes:
 - `plasma_profile (PlasmaProfile)`: The parameterized temperature and density profiles of the plasma.
-- `sigmav_dt_average (float)`: Average fusion reaction rate $<\sigma v>$ for D-T.
+- `sigmav_dt_average (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
 - `dhe3_power_density (float)`: Fusion power density produced by the D-3He reaction.
 - `dd_power_density (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
@@ -201,8 +201,6 @@ This method sets the required physics variables in the `physics_variables` and `
     *"Present day experiments (1999) show that in a quiescent plasma the diffusion rate of the fast particles is close to the neoclassical level. Even if one considers the case when anomalous diffusion by the fast alpha particles is at a rate nearly the same as that predicted by empirical scaling for the particles in the main plasma, estimates show that the energy loss fraction will be less than the ITER design specification of 5%.[^2]"*
 
 The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
-
-**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
 
 -----------------------------
 
