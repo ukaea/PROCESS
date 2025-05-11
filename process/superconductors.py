@@ -519,68 +519,131 @@ def wstsc(temperature, bmax, strain, bc20max, tc0max):
 
 
 def bottura_scaling(
-    csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
-):
+    csc: float,
+    p: float,
+    q: float,
+    c_a1: float,
+    c_a2: float,
+    epsilon_0a: float,
+    temp_conductor: float,
+    b_conductor: float,
+    epsilon: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float, float]:
     """
-    This implements the scaling from
+    Implements the scaling from:
     Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
+
+
     Luca Bottura and Bernardo Bordini,
     IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
 
-    The parameters and scale factors vary from one wire type to another.
+    :param csc: Scaling constant C [AT/mm²].
+    :type csc: float
+    :param p: Low field exponent of the pinning force
+    :type p: float
+    :param q: High field exponent of the pinning force
+    :type q: float
+    :param c_a1: Strain fitting constant C_{a1}.
+    :type c_a1: float
+    :param c_a2: Strain fitting constant C_{a2}.
+    :type c_a2: float
+    :param epsilon_0a: Residual strain component
+    :type epsilon_0a: float
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param epsilon: Strain in superconductor.
+    :type epsilon: float
+    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param temp_c0max: Critical temperature (K) at zero field and strain.
+    :type temp_c0max: float
+    :return: A tuple containing:
+        - jscaling: Critical current density scaling factor (A/m²).
+        - bcrit: Critical field (T).
+        - tcrit: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+
+    :references:
+        - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
+        IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
+        doi: https://doi.org/10.1109/tasc.2009.2018278.
     """
 
-    epssh = (ca2 * eps0a) / (np.sqrt(ca1**2 - ca2**2))
+    epsilon_sh = (c_a2 * epsilon_0a) / (np.sqrt(c_a1**2 - c_a2**2))
 
     # Strain function
     # 0.83 < s < 1.0, for -0.005 < strain < 0.005
-    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt((strain - epssh) ** 2 + eps0a**2)
-    strfun = strfun * ca1 - ca2 * strain
-    strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
+    strfun = np.sqrt(epsilon_sh**2 + epsilon_0a**2) - np.sqrt(
+        (epsilon - epsilon_sh) ** 2 + epsilon_0a**2
+    )
+    strfun = strfun * c_a1 - (c_a2 * epsilon)
+    strfun = 1.0 + (1 / (1.0 - c_a1 * epsilon_0a)) * strfun
+
+    # ======================================================================
 
     # Critical field at zero temperature and current, corrected for strain
-    bc20eps = bc20max * strfun
+    b_c20_eps = b_c20max * strfun
 
     # Critical temperature at zero field and current, corrected for strain
-    tc0eps = tc0max * strfun ** (1 / 3)
+    temp_c0_eps = temp_c0max * strfun ** (1 / 3)
 
-    if temperature / tc0eps >= 1.0:
-        eh.fdiags[0] = temperature
-        eh.fdiags[1] = tc0eps
+    # If input temperature is over the strain adjusted critical temperature then report error
+    if temp_conductor / temp_c0_eps >= 1.0:
+        eh.fdiags[0] = temp_conductor
+        eh.fdiags[1] = temp_c0_eps
         eh.report_error(159)
 
     # Reduced temperature at zero field, corrected for strain
-    # t > 1 is permitted, indicating the temperature is above the critical value at zero field.
-    t = temperature / tc0eps
+    # f_temp_conductor_critical > 1 is permitted, indicating the temperature is above the critical value at zero field.
+    f_temp_conductor_critical_no_field = temp_conductor / temp_c0_eps
 
-    if bmax / bc20eps >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bc20eps
+    # If input field is over the strain adjusted critical field then report error
+    if b_conductor / b_c20_eps >= 1.0:
+        eh.fdiags[0] = b_conductor
+        eh.fdiags[1] = b_c20_eps
         eh.report_error(160)
 
     # Reduced field at zero temperature, taking account of strain
-    bzero = bmax / bc20eps
+    f_b_conductor_critical_no_temp = b_conductor / b_c20_eps
 
     # Critical temperature at given strain and field
     # tcrit is not used in the calculation of jcrit.
-    if bzero < 1.0:  # Normal case, field is within critical surface
-        tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)
+    if (
+        f_b_conductor_critical_no_temp < 1.0
+    ):  # Normal case, field is within critical surface
+        temp_critical = temp_c0_eps * (1.0 - f_b_conductor_critical_no_temp) ** (
+            1 / 1.52
+        )
     else:  # Abnormal case, field is too high.
-        tcrit = -tc0eps * abs(1.0 - bzero) ** (
+        temp_critical = -temp_c0_eps * abs(1.0 - f_b_conductor_critical_no_temp) ** (
             1 / 1.52
         )  # Prevents NaNs. Sets tcrit negative
 
     # Critical field (T) at given strain and temperature
-    bcrit = bc20eps * (1.0 - t**1.52)
+    b_critical = b_c20_eps * (1.0 - f_temp_conductor_critical_no_field**1.52)
 
-    jc1 = (csc / bmax) * strfun
+    jc1 = (csc / b_conductor) * strfun
 
     # Check if we are inside the critical surface
-    if (t > 0) and (t < 1) and (bmax > 0) and (bmax < bcrit) and (bcrit > 0):
+    if (
+        (f_temp_conductor_critical_no_field > 0)
+        and (f_temp_conductor_critical_no_field < 1)
+        and (b_conductor > 0)
+        and (b_conductor < b_critical)
+        and (b_critical > 0)
+    ):
         # Reduced field at given strain and temperature
-        bred = bmax / bcrit
+        bred = b_conductor / b_critical
 
-        jc2 = (1.0 - t**1.52) * (1.0 - t**2)
+        jc2 = (1.0 - f_temp_conductor_critical_no_field**1.52) * (
+            1.0 - f_temp_conductor_critical_no_field**2
+        )
         jc3 = bred**p * (1.0 - bred) ** q
         jscaling = jc1 * jc2 * jc3
 
@@ -588,11 +651,11 @@ def bottura_scaling(
         # Outside the critical surface.
         # We construct a simple function that is always negative and
         # becomes more negative as field and temperature increase.
-        jc2 = t
-        jc3 = bmax / max(bcrit, 1.0e-8)
+        jc2 = f_temp_conductor_critical_no_field
+        jc3 = b_conductor / max(b_critical, 1.0e-8)
         jscaling = -abs(jc1 * jc2 * jc3)
 
-    return jscaling, bcrit, tcrit
+    return jscaling, b_critical, temp_critical
 
 
 def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
