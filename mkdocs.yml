@@ -78,6 +78,7 @@ nav:
           - First Wall/Blanket: eng-models/fw-blanket.md
           - TF Coil: eng-models/tf-coil.md
           - PF Coil: eng-models/pf-coil.md
+          - Superconductors: eng-models/superconductors.md
           - Central Solenoid: eng-models/central-solenoid.md
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md
