@@ -12,6 +12,7 @@ import process.process_output as process_output
 from process.blanket_library import init_blanket_library, init_primary_pumping_variables
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
+from process.constraints import init_constraint_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
 from process.current_drive import init_current_drive_variables
@@ -43,6 +44,7 @@ from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_
 from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 from process.vacuum import init_vacuum_variables
+from process.warning_handler import WarningManager
 from process.water_use import init_watuse_variables
 
 
@@ -54,9 +56,6 @@ def init_process():
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.
     """
-    # Initialise error handling
-    fortran.error_handling.initialise_error_list()
-
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables()
 
@@ -240,11 +239,11 @@ def init_all_module_vars():
     run. This matters ever since Process is used as a shared library, rather
     than a 'run-once' executable.
     """
+    WarningManager.reinitialise()
     fortran.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
-    fortran.error_handling.init_error_handling()
     init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
@@ -268,7 +267,7 @@ def init_all_module_vars():
     init_vacuum_variables()
     init_pf_power_variables()
     init_build_variables()
-    fortran.constraint_variables.init_constraint_variables()
+    init_constraint_variables()
     init_pulse_variables()
     init_rebco_variables()
     init_reinke_variables()
@@ -276,8 +275,6 @@ def init_all_module_vars():
     init_cs_fatigue_variables()
     init_blanket_library()
     init_dcll_module()
-
-    fortran.init_module.init_fortran_modules()
 
 
 def check_process(inputs):  # noqa: ARG001

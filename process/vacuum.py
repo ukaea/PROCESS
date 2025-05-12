@@ -6,7 +6,6 @@ import numpy as np
 from process import process_output as po
 from process.fortran import build_variables as buv
 from process.fortran import constants
-from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
@@ -15,6 +14,7 @@ from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -448,9 +448,11 @@ class Vacuum:
                         break
 
                 else:
-                    eh.fdiags[0] = pv.fusion_power
-                    eh.fdiags[1] = pv.te
-                    eh.report_error(124)
+                    WarningManager.create_warning(
+                        "Newton's method not converging; check fusion power, te",
+                        fusion_power=pv.fusion_power,
+                        te=pv.te,
+                    )
 
                 theta = math.pi / ntf
 

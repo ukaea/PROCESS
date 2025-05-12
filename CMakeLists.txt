@@ -88,7 +88,6 @@ LIST(APPEND PROCESS_SRCS
     heat_transport_variables.f90
     buildings_variables.f90
     water_usage_variables.f90
-    constraint_equations.f90
     constants.f90
     build_variables.f90
     current_drive_variables.f90
@@ -96,7 +95,6 @@ LIST(APPEND PROCESS_SRCS
     structure_variables.f90
     output.f90
     init_module.f90
-    error_handling.f90
     global_variables.f90
     constraint_variables.f90
     vacuum_variables.f90
