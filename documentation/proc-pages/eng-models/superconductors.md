@@ -64,8 +64,23 @@ The following parameters [^2] following the [Bottura scaling](#bottura-scaling--
 - **\( p \)**: 0.593
 - **\( q \)**: 2.156
 
+The critical surface at zero strain looks as follows: 
+
+<figure markdown>
+![Wester Superconducting Ltd. Nb3Sn](./images/western_superconducting_Nb3Sn_zero_strain.png){ width = "100"}
+<figcaption>Figure 1: Critical current density surface for the Wester Superconducting Ltd. Nb<sub>3</sub>Sn superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+**An interactive version of the critical surface graph above can be found [here](./images/western_superconducting_Nb3Sn_zero_strain.html)**
+
 !!! quote "Excerpt"
     *"TF Coil: The initial choice of EUTF4 right leg (OST) and its parametrization can be replaced by the actual WST strand (ø = 1.5 mm) used and tested in the DEMO TF prototypes manufactured in 2014 and measured in 2015 and 2016. The EUTF4 OST strand parameterisation can still be employed in the conductor design, if the designers prefer. The parameters are measured in the scope of the 2014 activities and reported below. Compared to the EUTF4 right leg (OST), the performance of the WST at low strain is superior by about 10%."*[^2]
+
+
+
+
+
+
 
 [^1]: L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,” IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009, doi: https://doi.org/10.1109/tasc.2009.2018278.
 [^2]: V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”Accessed: May 12, 2025. [Online].

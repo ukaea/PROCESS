@@ -170,7 +170,9 @@ def test_gl_nbti():
 
 
 def test_wstsc():
-    jcrit, bcrit, tcrit = superconductors.western_superconducting_nb3sn(4.75, 27.0, 0.001, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
+        4.75, 27.0, 0.001, 30.0, 25.0
+    )
 
     assert jcrit == pytest.approx(195513.0673058944)
     assert bcrit == pytest.approx(27.329369840368482)
