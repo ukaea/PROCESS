@@ -48,4 +48,25 @@ $$
 - **\( C_{a1}, C_{a2} \)**: Material-specific strain fitting constants used in the strain scaling function.
 
 
+--------------------
+
+### Western Superconducting technologies Nb<sub>3</sub>Sn
+
+The following parameters [^2] following the [Bottura scaling](#bottura-scaling--bottura_scaling) are shown below:
+
+- **\( C_{\text{a1}} \)**: 50.06
+- **\( C_{\text{a2}} \)**: 0
+- **\( \epsilon_{\text{0,a}} \)**: 0.312%
+- **\( \epsilon_{\text{m}} \)**: -0.059%
+- **\( B_{C20 \text{max}}^* \)**: 33.24 $\text{T}$
+- **\( T_{C0 \text{max}}^* \)**: 16.34 $\text{K}$
+- **\( C \)**: 83075 $\text{AT/mm}^2$
+- **\( p \)**: 0.593
+- **\( q \)**: 2.156
+
+!!! quote "Excerpt"
+    *"TF Coil: The initial choice of EUTF4 right leg (OST) and its parametrization can be replaced by the actual WST strand (ø = 1.5 mm) used and tested in the DEMO TF prototypes manufactured in 2014 and measured in 2015 and 2016. The EUTF4 OST strand parameterisation can still be employed in the conductor design, if the designers prefer. The parameters are measured in the scope of the 2014 activities and reported below. Compared to the EUTF4 right leg (OST), the performance of the WST at low strain is superior by about 10%."*
+
 [^1]: L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,” IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009, doi: https://doi.org/10.1109/tasc.2009.2018278.
+[^2]: V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”Accessed: May 12, 2025. [Online].
+Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf

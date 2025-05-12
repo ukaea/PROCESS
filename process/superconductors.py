@@ -476,46 +476,80 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     return jcrit, bcrit, tcrit
 
 
-def wstsc(temperature, bmax, strain, bc20max, tc0max):
-    """Implementation of WST Nb3Sn critical surface implementation
-    author: J Morris, CCFE, Culham Science Centre
-    temperature : input real : SC temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    strain : input real : Strain in superconductor
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    tc0max : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    bcrit : output real : Critical field (T)
-    tcrit : output real : Critical temperature (K)
-    This routine calculates the critical current density and
-    temperature in the superconducting TF coils using the
-    WST Nb3Sn critical surface model.
-    V. Corato et al, "Common operating values for DEMO magnets design for 2016",
-    https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+def wstsc(
+    temp_conductor: float,
+    b_conductor: float,
+    strain: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float, float]:
     """
+    Calculate the critical current density, critical field, and critical temperature
+    for a WST Nb₃Sn superconductor using the ITER Nb₃Sn critical surface model.
 
-    # Scaling constant C [AT/mm2]
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at the superconductor (T).
+    :type b_conductor: float
+    :param strain: Strain in the superconductor.
+    :type strain: float
+    :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param temp_c0max: Critical temperature (K) at zero field and strain.
+    :type temp_c0max: float
+    :return: A tuple containing:
+        - j_critical: Critical current density in the superconductor (A/m²).
+        - b_crititical: Critical field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+        - This routine uses the WST Nb3Sn critical surface model.
+        - The scaling constants and parameters are based on the reference below.
+        - This assumes a strand size of 1.5mm.
+        - Compared to the EUTF4 (OST) ( European qualification samples for TF conductor),
+        the performance of the WST at low strain is superior by about 10%.
+
+    :references:
+        - V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”
+        Accessed: May 12, 2025. [Online].
+        Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+
+        - “Introduction of WST,” 2015. Accessed: May 12, 2025. [Online].
+        Available: https://indico.cern.ch/event/340703/contributions/802232/attachments/668814/919331/WST_INTRO_2015-3_for_FCC_WEEK.pdf
+
+    """
+    # Scaling constant C [AT/mm²]
     csc = 83075.0
     # Low field exponent p
     p = 0.593
     # High field exponent q
     q = 2.156
     # Strain fitting constant C_{a1}
-    ca1 = 50.06
+    c_a1 = 50.06
     # Strain fitting constant C_{a2}
-    ca2 = 0.0
-    # epsilon_{0,a}
-    eps0a = 0.00312
+    c_a2 = 0.0
+    # Residual strain component epsilon_{0,a}
+    epsilon_0a = 0.00312
 
-    jscaling, bcrit, tcrit = bottura_scaling(
-        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+    j_scaling, b_critical, t_critical = bottura_scaling(
+        csc=csc,
+        p=p,
+        q=q,
+        c_a1=c_a1,
+        c_a2=c_a2,
+        epsilon_0a=epsilon_0a,
+        temp_conductor=temp_conductor,
+        b_conductor=b_conductor,
+        epsilon=strain,
+        b_c20max=b_c20max,
+        temp_c0max=temp_c0max,
     )
 
-    # scale from mm2 to m2
+    # Scale from mm² to m²
     scalefac = 1.0e6
-    jcrit = jscaling * scalefac
-    return jcrit, bcrit, tcrit
+    j_critical = j_scaling * scalefac
+    return j_critical, b_critical, t_critical
 
 
 def bottura_scaling(
