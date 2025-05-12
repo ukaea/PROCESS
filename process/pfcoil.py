@@ -3061,7 +3061,7 @@ class PFCoil:
             # j_crit_sc returned by superconductors.itersc is the critical current density in the
             # superconductor - not the whole strand, which contains copper
 
-            j_crit_sc, _, _ = superconductors.wstsc(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(thelium, bmax, strain, bc20m, tc0m)
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 

@@ -476,7 +476,7 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     return jcrit, bcrit, tcrit
 
 
-def wstsc(
+def western_superconducting_nb3sn(
     temp_conductor: float,
     b_conductor: float,
     strain: float,
@@ -795,7 +795,7 @@ def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=Non
     if isumat == 4:
         jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 5:
-        jcrit, _, _ = wstsc(ttest, bmax, strain, bc20m, tc0m)
+        jcrit, _, _ = western_superconducting_nb3sn(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 7:
         jcrit, _, _ = gl_nbti(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 8:
