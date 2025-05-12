@@ -98,89 +98,132 @@ def current_sharing_rebco(bfield, j):
     return current_sharing_t
 
 
-def itersc(temperature, bmax, strain, bc20max, tc0max):
-    """Implementation of ITER Nb3Sn critical surface implementation
-    author: R Kemp, CCFE, Culham Science Centre
-    author: P J Knight, CCFE, Culham Science Centre
-    temperature : input real : superconductor temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    strain : input real : Strain in superconductor
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    tc0max : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    bcrit : output real : Critical field (T)
-    tcrit : output real : Critical temperature (K)
-    Critical current density and
-    temperature in the superconducting TF coils using the
-    ITER Nb3Sn critical surface model.
-    $J_C(B,T,\\epsilon)$ Parameterization for ITER Nb3Sn production,
-    L. Bottura, CERN-ITER Collaboration Report, Version 2, April 2nd 2008
-    (distributed by Arnaud Devred, ITER, 10th April 2008), now published as
-    Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
-    Luca Bottura and Bernardo Bordini,
-    IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
-
-    ITER Nb3Sn critical surface parameterization (2MMF7J) (2008),
-    https://user.iter.org/?uid=2MMF7J&action=get_document
-    ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
-    https://user.iter.org/?uid=2NBKXY&action=get_document
+def itersc(
+    temp_conductor: float,
+    b_conductor: float,
+    strain: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float, float]:
     """
+    Calculate the critical current density, critical field, and critical temperature
+    for an ITER Nb₃Sn superconductor using the ITER Nb₃Sn critical surface model.
 
-    csc = 19922.0  # scaling constant C [AT/mm2]
-    p = 0.63  # low field exponent p
-    q = 2.1  # high field exponent q
-    ca1 = 44.48  # strain fitting constant C_{a1}
-    ca2 = 0.0  # strain fitting constant C_{a2}
-    eps0a = 0.00256  # epsilon_{0,a}
-    diter = 0.82  # ITER strand diameter (mm)
-    cuiter = 0.5  # ITER strand copper fraction
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at the conductor (T).
+    :type b_conductor: float
+    :param strain: Strain in the superconductor.
+    :type strain: float
+    :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param temp_c0max: Critical temperature (K) at zero field and strain.
+    :type temp_c0max: float
+    :return: A tuple containing:
+        - j_critical: Critical current density in the superconductor (A/m²).
+        - b_critical: Critical field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
 
-    jscaling, bcrit, tcrit = bottura_scaling(
-        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+    :notes:
+        - This routine uses the ITER Nb₃Sn critical surface model.
+        - The model assumes a strand size of 0.82 mm diameter.
+
+    :references:
+        - ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
+          https://user.iter.org/?uid=2NBKXY&action=get_document
+    """
+    # Scaling constant C [AT/mm²]
+    csc = 19922.0
+    # Low field exponent
+    p = 0.63
+    # High field exponent
+    q = 2.1
+    # Strain fitting constant C_{a1}
+    ca1 = 44.48
+    # Strain fitting constant C_{a2}
+    ca2 = 0.0
+    # Residual strain component epsilon_{0,a}
+    epsilon_0a = 0.00256
+
+    # ITER strand diameter (mm)
+    diter = 0.82
+
+    # ITER strand copper fraction
+    f_a_strand_copper = 0.5
+
+    j_scaling, b_critical, temp_critical = bottura_scaling(
+        csc=csc,
+        p=p,
+        q=q,
+        c_a1=ca1,
+        c_a2=ca2,
+        epsilon_0a=epsilon_0a,
+        temp_conductor=temp_conductor,
+        b_conductor=b_conductor,
+        epsilon=strain,
+        b_c20max=b_c20max,
+        temp_c0max=temp_c0max,
     )
 
-    #  Critical current density in superconductor (A/m2)
-    #  ITER parameters are for the current in a single strand,
-    #  not per unit area, so scalefac converts to current density
-    #  Convert from mm2 to m2.
-    scalefac = np.pi * (0.5 * diter) ** 2 * (1.0 - cuiter) / 1.0e6
+    # Critical current density in superconductor (A/m²)
+    # ITER parameters are for the current in a single strand,
+    # not per unit area, so scalefac converts to current density.
+    # Convert from mm² to m².
+    scalefac = np.pi * (0.5 * diter) ** 2 * (1.0 - f_a_strand_copper) / 1.0e6
 
-    jcrit = jscaling / scalefac
+    j_critical = j_scaling / scalefac
 
-    return jcrit, bcrit, tcrit
+    return j_critical, b_critical, temp_critical
 
 
-def jcrit_nbti(temperature, bmax, c0, bc20max, tc0max):
-    """Critical current density in a NbTi superconductor strand
-    author: P J Knight, CCFE, Culham Science Centre
-    temperature : input real : SC temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    c0   : input real : Scaling constant (A/m2)
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    tc0max : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    tcrit : output real : Critical temperature (K)
-    This routine calculates the critical current density and temperature in
-    superconducting TF coils using NbTi superconductor.
+def jcrit_nbti(
+    temp_conductor: float,
+    b_conductor: float,
+    c0: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float]:
     """
+    Calculate the critical current density and critical temperature for a NbTi superconductor strand.
 
-    bratio = bmax / bc20max
+    :param temperature: Superconductor temperature (K).
+    :type temperature: float
+    :param bmax: Magnetic field at the conductor (T).
+    :type bmax: float
+    :param c0: Scaling constant (A/m²).
+    :type c0: float
+    :param bc20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+    :type bc20max: float
+    :param tc0max: Critical temperature (K) at zero field and strain.
+    :type tc0max: float
+    :return: A tuple containing:
+        - jcrit: Critical current density in the superconductor (A/m²).
+        - tcrit: Critical temperature (K).
+    :rtype: tuple[float, float]
+
+    :notes:
+        - If the magnetic field exceeds the upper critical field (bmax > bc20max),
+          the critical temperature is adjusted to ensure a real (negative) value.
+        - If the temperature exceeds the critical temperature, the critical surface
+          is considered exceeded, and the reduced temperature (tbar) becomes negative.
+    """
+    bratio = b_conductor / b_c20max
+
     # Critical temperature (K) at field
-    # Allow bmax > bc20max
-    # Fudge to give real (negative) value if bratio > 1
-    tcrit = (
-        (tc0max * (1.0 - bratio) ** 0.59) if bratio < 1 else (tc0max * (1.0 - bratio))
+    temp_critical = (
+        (temp_c0max * (1.0 - bratio) ** 0.59)
+        if bratio < 1
+        else (temp_c0max * (1.0 - bratio))
     )
 
-    # If temperature > tcrit then the critical surface has been exceeded and tbar is negative
-    tbar = 1.0 - temperature / tcrit
+    # Reduced temperature
+    tbar = 1.0 - temp_conductor / temp_critical
 
-    #  Critical current density (A/m2)
-    jcrit = c0 * (1.0 - bratio) * tbar
+    # Critical current density (A/m²)
+    j_critical = c0 * (1.0 - bratio) * tbar
 
-    return jcrit, tcrit
+    return j_critical, temp_critical
 
 
 def bi2212(bmax, jstrand, tsc, fhts):
