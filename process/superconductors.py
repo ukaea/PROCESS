@@ -533,11 +533,7 @@ def bottura_scaling(
 ) -> tuple[float, float, float]:
     """
     Implements the scaling from:
-    Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
-
-
-    Luca Bottura and Bernardo Bordini,
-    IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
+    Jc(B,T,epsilon) Parameterization for the ITER Nb₃Sn Production,
 
     :param csc: Scaling constant C [AT/mm²].
     :type csc: float
@@ -568,6 +564,13 @@ def bottura_scaling(
     :rtype: tuple[float, float, float]
 
     :notes:
+        - This is a generic scaling proposed for the characterization and production of
+        ITER Nb₃Sn strands. This is also known as the "ITER-2008 parametrization."
+
+        - Parameter ranges are strain (1.5% to 0.4%), temperature (2.35 to 16 K), and field (0.5 to 19 T).
+        The ITER-2008 parameterization achieves an average accuracy error of 3.8 Amps, with the best at 1.5 Amps and the worst at 7.5 Amps.
+
+        - The strain function is suitable only in the moderate strain region, down to 0.8%.
 
     :references:
         - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
@@ -639,13 +642,13 @@ def bottura_scaling(
         and (b_critical > 0)
     ):
         # Reduced field at given strain and temperature
-        bred = b_conductor / b_critical
+        b_reduced = b_conductor / b_critical
 
         jc2 = (1.0 - f_temp_conductor_critical_no_field**1.52) * (
             1.0 - f_temp_conductor_critical_no_field**2
         )
-        jc3 = bred**p * (1.0 - bred) ** q
-        jscaling = jc1 * jc2 * jc3
+        jc3 = b_reduced**p * (1.0 - b_reduced) ** q
+        j_scaling = jc1 * jc2 * jc3
 
     else:
         # Outside the critical surface.
@@ -653,9 +656,9 @@ def bottura_scaling(
         # becomes more negative as field and temperature increase.
         jc2 = f_temp_conductor_critical_no_field
         jc3 = b_conductor / max(b_critical, 1.0e-8)
-        jscaling = -abs(jc1 * jc2 * jc3)
+        j_scaling = -abs(jc1 * jc2 * jc3)
 
-    return jscaling, b_critical, temp_critical
+    return j_scaling, b_critical, temp_critical
 
 
 def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
