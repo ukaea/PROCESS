@@ -476,123 +476,223 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     return jcrit, bcrit, tcrit
 
 
-def wstsc(temperature, bmax, strain, bc20max, tc0max):
-    """Implementation of WST Nb3Sn critical surface implementation
-    author: J Morris, CCFE, Culham Science Centre
-    temperature : input real : SC temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    strain : input real : Strain in superconductor
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    tc0max : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    bcrit : output real : Critical field (T)
-    tcrit : output real : Critical temperature (K)
-    This routine calculates the critical current density and
-    temperature in the superconducting TF coils using the
-    WST Nb3Sn critical surface model.
-    V. Corato et al, "Common operating values for DEMO magnets design for 2016",
-    https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+def western_superconducting_nb3sn(
+    temp_conductor: float,
+    b_conductor: float,
+    strain: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float, float]:
     """
+    Calculate the critical current density, critical field, and critical temperature
+    for a WST Nb₃Sn superconductor using the ITER Nb₃Sn critical surface model.
 
-    # Scaling constant C [AT/mm2]
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at the superconductor (T).
+    :type b_conductor: float
+    :param strain: Strain in the superconductor.
+    :type strain: float
+    :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param temp_c0max: Critical temperature (K) at zero field and strain.
+    :type temp_c0max: float
+    :return: A tuple containing:
+        - j_critical: Critical current density in the superconductor (A/m²).
+        - b_crititical: Critical field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+        - This routine uses the WST Nb3Sn critical surface model.
+        - The scaling constants and parameters are based on the reference below.
+        - This assumes a strand size of 1.5mm.
+        - Compared to the EUTF4 (OST) ( European qualification samples for TF conductor),
+        the performance of the WST at low strain is superior by about 10%.
+
+    :references:
+        - V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”
+        Accessed: May 12, 2025. [Online].
+        Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+
+        - “Introduction of WST,” 2015. Accessed: May 12, 2025. [Online].
+        Available: https://indico.cern.ch/event/340703/contributions/802232/attachments/668814/919331/WST_INTRO_2015-3_for_FCC_WEEK.pdf
+
+    """
+    # Scaling constant C [AT/mm²]
     csc = 83075.0
     # Low field exponent p
     p = 0.593
     # High field exponent q
     q = 2.156
     # Strain fitting constant C_{a1}
-    ca1 = 50.06
+    c_a1 = 50.06
     # Strain fitting constant C_{a2}
-    ca2 = 0.0
-    # epsilon_{0,a}
-    eps0a = 0.00312
+    c_a2 = 0.0
+    # Residual strain component epsilon_{0,a}
+    epsilon_0a = 0.00312
 
-    jscaling, bcrit, tcrit = bottura_scaling(
-        csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
+    j_scaling, b_critical, t_critical = bottura_scaling(
+        csc=csc,
+        p=p,
+        q=q,
+        c_a1=c_a1,
+        c_a2=c_a2,
+        epsilon_0a=epsilon_0a,
+        temp_conductor=temp_conductor,
+        b_conductor=b_conductor,
+        epsilon=strain,
+        b_c20max=b_c20max,
+        temp_c0max=temp_c0max,
     )
 
-    # scale from mm2 to m2
+    # Scale from mm² to m²
     scalefac = 1.0e6
-    jcrit = jscaling * scalefac
-    return jcrit, bcrit, tcrit
+    j_critical = j_scaling * scalefac
+    return j_critical, b_critical, t_critical
 
 
 def bottura_scaling(
-    csc, p, q, ca1, ca2, eps0a, temperature, bmax, strain, bc20max, tc0max
-):
+    csc: float,
+    p: float,
+    q: float,
+    c_a1: float,
+    c_a2: float,
+    epsilon_0a: float,
+    temp_conductor: float,
+    b_conductor: float,
+    epsilon: float,
+    b_c20max: float,
+    temp_c0max: float,
+) -> tuple[float, float, float]:
     """
-    This implements the scaling from
-    Jc(B,T,epsilon) Parameterization for the ITER Nb3Sn Production,
-    Luca Bottura and Bernardo Bordini,
-    IEEE TRANSACTIONS ON APPLIED SUPERCONDUCTIVITY, VOL. 19, NO. 3, JUNE 2009.
+    Implements the scaling from:
+    Jc(B,T,epsilon) Parameterization for the ITER Nb₃Sn Production,
 
-    The parameters and scale factors vary from one wire type to another.
+    :param csc: Scaling constant C [AT/mm²].
+    :type csc: float
+    :param p: Low field exponent of the pinning force
+    :type p: float
+    :param q: High field exponent of the pinning force
+    :type q: float
+    :param c_a1: Strain fitting constant C_{a1}.
+    :type c_a1: float
+    :param c_a2: Strain fitting constant C_{a2}.
+    :type c_a2: float
+    :param epsilon_0a: Residual strain component
+    :type epsilon_0a: float
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param epsilon: Strain in superconductor.
+    :type epsilon: float
+    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param temp_c0max: Critical temperature (K) at zero field and strain.
+    :type temp_c0max: float
+    :return: A tuple containing:
+        - jscaling: Critical current density scaling factor (A/m²).
+        - bcrit: Critical field (T).
+        - tcrit: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+        - This is a generic scaling proposed for the characterization and production of
+        ITER Nb₃Sn strands. This is also known as the "ITER-2008 parametrization."
+
+        - Parameter ranges are strain (1.5% to 0.4%), temperature (2.35 to 16 K), and field (0.5 to 19 T).
+        The ITER-2008 parameterization achieves an average accuracy error of 3.8 Amps, with the best at 1.5 Amps and the worst at 7.5 Amps.
+
+        - The strain function is suitable only in the moderate strain region, down to 0.8%.
+
+    :references:
+        - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
+        IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
+        doi: https://doi.org/10.1109/tasc.2009.2018278.
     """
 
-    epssh = (ca2 * eps0a) / (np.sqrt(ca1**2 - ca2**2))
+    epsilon_sh = (c_a2 * epsilon_0a) / (np.sqrt(c_a1**2 - c_a2**2))
 
     # Strain function
     # 0.83 < s < 1.0, for -0.005 < strain < 0.005
-    strfun = np.sqrt(epssh**2 + eps0a**2) - np.sqrt((strain - epssh) ** 2 + eps0a**2)
-    strfun = strfun * ca1 - ca2 * strain
-    strfun = 1.0 + (1 / (1.0 - ca1 * eps0a)) * strfun
+    strfun = np.sqrt(epsilon_sh**2 + epsilon_0a**2) - np.sqrt(
+        (epsilon - epsilon_sh) ** 2 + epsilon_0a**2
+    )
+    strfun = strfun * c_a1 - (c_a2 * epsilon)
+    strfun = 1.0 + (1 / (1.0 - c_a1 * epsilon_0a)) * strfun
+
+    # ======================================================================
 
     # Critical field at zero temperature and current, corrected for strain
-    bc20eps = bc20max * strfun
+    b_c20_eps = b_c20max * strfun
 
     # Critical temperature at zero field and current, corrected for strain
-    tc0eps = tc0max * strfun ** (1 / 3)
+    temp_c0_eps = temp_c0max * strfun ** (1 / 3)
 
-    if temperature / tc0eps >= 1.0:
-        eh.fdiags[0] = temperature
-        eh.fdiags[1] = tc0eps
+    # If input temperature is over the strain adjusted critical temperature then report error
+    if temp_conductor / temp_c0_eps >= 1.0:
+        eh.fdiags[0] = temp_conductor
+        eh.fdiags[1] = temp_c0_eps
         eh.report_error(159)
 
     # Reduced temperature at zero field, corrected for strain
-    # t > 1 is permitted, indicating the temperature is above the critical value at zero field.
-    t = temperature / tc0eps
+    # f_temp_conductor_critical > 1 is permitted, indicating the temperature is above the critical value at zero field.
+    f_temp_conductor_critical_no_field = temp_conductor / temp_c0_eps
 
-    if bmax / bc20eps >= 1.0:
-        eh.fdiags[0] = bmax
-        eh.fdiags[1] = bc20eps
+    # If input field is over the strain adjusted critical field then report error
+    if b_conductor / b_c20_eps >= 1.0:
+        eh.fdiags[0] = b_conductor
+        eh.fdiags[1] = b_c20_eps
         eh.report_error(160)
 
     # Reduced field at zero temperature, taking account of strain
-    bzero = bmax / bc20eps
+    f_b_conductor_critical_no_temp = b_conductor / b_c20_eps
 
     # Critical temperature at given strain and field
     # tcrit is not used in the calculation of jcrit.
-    if bzero < 1.0:  # Normal case, field is within critical surface
-        tcrit = tc0eps * (1.0 - bzero) ** (1 / 1.52)
+    if (
+        f_b_conductor_critical_no_temp < 1.0
+    ):  # Normal case, field is within critical surface
+        temp_critical = temp_c0_eps * (1.0 - f_b_conductor_critical_no_temp) ** (
+            1 / 1.52
+        )
     else:  # Abnormal case, field is too high.
-        tcrit = -tc0eps * abs(1.0 - bzero) ** (
+        temp_critical = -temp_c0_eps * abs(1.0 - f_b_conductor_critical_no_temp) ** (
             1 / 1.52
         )  # Prevents NaNs. Sets tcrit negative
 
     # Critical field (T) at given strain and temperature
-    bcrit = bc20eps * (1.0 - t**1.52)
+    b_critical = b_c20_eps * (1.0 - f_temp_conductor_critical_no_field**1.52)
 
-    jc1 = (csc / bmax) * strfun
+    jc1 = (csc / b_conductor) * strfun
 
     # Check if we are inside the critical surface
-    if (t > 0) and (t < 1) and (bmax > 0) and (bmax < bcrit) and (bcrit > 0):
+    if (
+        (f_temp_conductor_critical_no_field > 0)
+        and (f_temp_conductor_critical_no_field < 1)
+        and (b_conductor > 0)
+        and (b_conductor < b_critical)
+        and (b_critical > 0)
+    ):
         # Reduced field at given strain and temperature
-        bred = bmax / bcrit
+        b_reduced = b_conductor / b_critical
 
-        jc2 = (1.0 - t**1.52) * (1.0 - t**2)
-        jc3 = bred**p * (1.0 - bred) ** q
-        jscaling = jc1 * jc2 * jc3
+        jc2 = (1.0 - f_temp_conductor_critical_no_field**1.52) * (
+            1.0 - f_temp_conductor_critical_no_field**2
+        )
+        jc3 = b_reduced**p * (1.0 - b_reduced) ** q
+        j_scaling = jc1 * jc2 * jc3
 
     else:
         # Outside the critical surface.
         # We construct a simple function that is always negative and
         # becomes more negative as field and temperature increase.
-        jc2 = t
-        jc3 = bmax / max(bcrit, 1.0e-8)
-        jscaling = -abs(jc1 * jc2 * jc3)
+        jc2 = f_temp_conductor_critical_no_field
+        jc3 = b_conductor / max(b_critical, 1.0e-8)
+        j_scaling = -abs(jc1 * jc2 * jc3)
 
-    return jscaling, bcrit, tcrit
+    return j_scaling, b_critical, temp_critical
 
 
 def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
@@ -695,7 +795,7 @@ def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=Non
     if isumat == 4:
         jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 5:
-        jcrit, _, _ = wstsc(ttest, bmax, strain, bc20m, tc0m)
+        jcrit, _, _ = western_superconducting_nb3sn(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 7:
         jcrit, _, _ = gl_nbti(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 8:
