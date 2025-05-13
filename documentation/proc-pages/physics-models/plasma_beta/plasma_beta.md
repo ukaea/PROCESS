@@ -255,6 +255,8 @@ $$
 \texttt{beta_norm_max_menard} = g =3.12+3.5\epsilon^{1.7}
 $$
 
+Found as a reasonable fit to the computed no wall limit at $f_{\text{BS}} \approx 50%$. Uses maximum $\kappa$ data from NSTX at $A = 1.45, A = 1.75.$ Along with record $\beta_{\text{T}}$ data from DIII-D at $A = 2.9$ and high $\kappa$.
+
 **This is only recommended for spherical tokamaks**
 
 **It is recommended to use this switch with [`i_ind_plasma_internal_norm = 2`](../plasma_current/plasma_inductance.md#menard-inductance-relation) as they are self-consistent with each other.**
