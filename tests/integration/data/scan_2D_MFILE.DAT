@@ -17541,7 +17541,7 @@ ixc = 26 * fp_fusion_total_max_mw
 boundl(26) = 0.01
 boundu(26) = 2.0
 * Maximum allowable value fusion power [MW]
-powfmax = 3000
+p_fusion_total_max_mw = 3000
 
 * Burn time lower limit *
 *-----------------------*
