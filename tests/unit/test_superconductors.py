@@ -62,11 +62,11 @@ def test_itersc(iterscparam):
     """
 
     jcrit, bcrit, tcrit = superconductors.itersc(
-        temperature=iterscparam.thelium,
-        bmax=iterscparam.bmax,
+        temp_conductor=iterscparam.thelium,
+        b_conductor=iterscparam.bmax,
         strain=iterscparam.strain,
-        bc20max=iterscparam.bc20max,
-        tc0max=iterscparam.tc0max,
+        b_c20max=iterscparam.bc20max,
+        temp_c0max=iterscparam.tc0max,
     )
 
     assert jcrit == pytest.approx(iterscparam.expected_jcrit)
@@ -129,11 +129,11 @@ def test_jcrit_nbti(jcritnbtiparam):
     """
 
     jcrit, tcrit = superconductors.jcrit_nbti(
-        temperature=jcritnbtiparam.temperature,
-        bmax=jcritnbtiparam.bmax,
+        temp_conductor=jcritnbtiparam.temperature,
+        b_conductor=jcritnbtiparam.bmax,
         c0=jcritnbtiparam.c0,
-        bc20max=jcritnbtiparam.bc20max,
-        tc0max=jcritnbtiparam.tc0max,
+        b_c20max=jcritnbtiparam.bc20max,
+        temp_c0max=jcritnbtiparam.tc0max,
     )
 
     assert jcrit == pytest.approx(jcritnbtiparam.expected_jcrit)
