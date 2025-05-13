@@ -226,58 +226,77 @@ def jcrit_nbti(
     return j_critical, temp_critical
 
 
-def bi2212(bmax, jstrand, tsc, fhts):
-    """Fitted parameterization to Bi-2212 superconductor properties
-    author: P J Knight, CCFE, Culham Science Centre
-    author: M Kovari, CCFE, Culham Science Centre
-    bmax    : input real : Magnetic field at conductor (T)
-    jstrand : input real : Current density in strand (A/m2)
-    tsc     : input real : Superconductor temperature (K)
-    fhts    : input real : Adjustment factor (<= 1) to account for strain,
-    radiation damage, fatigue or AC losses
-    jcrit : output real : Critical current density in strand (A/m2)
-    tmarg : output real : Temperature margin (K)
-    This routine calculates the critical current density and
-    the temperature margin for Bi-2212 superconductor in the TF coils
-    using a fit by M. Kovari to measurements described in the reference,
-    specifically from the points shown in Figure 6.
-    <P>Bi-2212 (Bi<SUB>2</SUB>Sr<SUB>2</SUB>CaCu<SUB>2</SUB>O<SUB>8-x</SUB>)
-    is a first-generation high temperature superconductor; it still needs
-    to be operated below about 10K, but remains superconducting at much
-    higher fields at that temperature than Nb3Sn etc.
-    The model's range of validity is T &lt; 20K, adjusted field
-    b &lt; 104 T, B &gt; 6 T.
-    A transformative superconducting magnet technology for fields well
-    above 30 T using isotropic round wire multifilament
-    Bi2Sr2CaCu2O8-x conductor, D. C. Larbalestier et al., preprint,
-    9th April 2013
+def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
     """
-    b = bmax / np.exp(-0.168 * (tsc - 4.2))
+        Fitted parameterization to Bi-2212 superconductor properties.
+
+        This function calculates the critical current density and the temperature margin
+        for Bi-2212 superconductor in the TF coils using a fit by M. Kovari to measurements
+        described in the reference, specifically from the points shown in Figure 6.
+
+        Bi-2212 (Bi₂Sr₂CaCu₂O₈₋ₓ) is a first-generation high-temperature superconductor.
+        It needs to be operated below about 10K but remains superconducting at much higher
+        fields at that temperature than Nb₃Sn, etc.
+
+        :param b_conductor: Magnetic field at conductor (T).
+        :type b_conductor: float
+        :param jstrand: Current density in strand (A/m²).
+        :type jstrand: float
+        :param temp_conductor: Superconductor temperature (K).
+        :type temp_conductor: float
+        :param f_strain: Adjustment factor (≤ 1) to account for strain, radiation damage,
+                     fatigue, or AC losses.
+        :type f_strain: float
+        :raises ProcessValueError: If the input parameters are outside the range of validity.
+        :return: A tuple containing:
+            - j_critical: Critical current density in strand (A/m²).
+            - temp_margin: Temperature margin (K).
+        :rtype: tuple[float, float]
+
+        :notes:
+            -The model's range of validity is:
+                T < 20K
+                Adjusted field b < 104 T
+                B > 6 T
+
+        :reference:
+            - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
+            “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
+            May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
+    ‌
+    """
+
+    b = b_conductor / np.exp(-0.168 * (temp_conductor - 4.2))
 
     #  Engineering (i.e. strand) critical current density (A/m2)
 
-    jcrit = fhts * (1.175e9 * np.exp(-0.02115 * b) - 1.288e8)
+    j_critical = f_strain * (1.175e9 * np.exp(-0.02115 * b) - 1.288e8)
 
     #  Temperature margin (K)
     #  Simple inversion of above calculation, using actual current density
     #  in strand instead of jcrit
 
-    tmarg = (
+    temp_margin = (
         1.0
         / 0.168
-        * np.log(np.log(1.175e9 / (jstrand / fhts + 1.288e8)) / (0.02115 * bmax))
+        * np.log(
+            np.log(1.175e9 / (jstrand / f_strain + 1.288e8)) / (0.02115 * b_conductor)
+        )
         + 4.2
-        - tsc
+        - temp_conductor
     )
 
     #  Check if ranges of validity have been violated
 
-    if (tsc > 20.0) or (bmax < 6.0) or (b > 104.0):
+    if (temp_conductor > 20.0) or (b_conductor < 6.0) or (b > 104.0):
         raise ProcessValueError(
-            "Fit extrapolated outside of range of validity", tsc=tsc, bmax=bmax, b=b
+            "Fit extrapolated outside of range of validity",
+            temp_conductor=temp_conductor,
+            b_conductor=b_conductor,
+            b=b,
         )
 
-    return jcrit, tmarg
+    return j_critical, temp_margin
 
 
 def gl_nbti(thelium, bmax, strain, bc20max, t_c0):

@@ -30,7 +30,7 @@ The critical surface at zero strain looks as follows:
 <figcaption>Figure 1: Critical current density surface for the Wester Superconducting Ltd. Nb<sub>3</sub>Sn superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
 </figure>
 
-**An interactive version of the critical surface graph above can be found [here](./images/western_superconducting_Nb3Sn_zero_strain.html)**
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/western_superconducting_Nb3Sn_zero_strain.html)** :bar_chart:
 
 !!! quote "Excerpt"
     *"TF Coil: The initial choice of EUTF4 right leg (OST) and its parametrization can be replaced by the actual WST strand (ø = 1.5 mm) used and tested in the DEMO TF prototypes manufactured in 2014 and measured in 2015 and 2016. The EUTF4 OST strand parameterisation can still be employed in the conductor design, if the designers prefer. The parameters are measured in the scope of the 2014 activities and reported below. Compared to the EUTF4 right leg (OST), the performance of the WST at low strain is superior by about 10%."*[^2]
@@ -92,17 +92,50 @@ $$
 
 ------------
 
+
+
+## High-temperature superconductors
+
 ### Bi-2212
 
+Bi-2212 has demonstrated tolerating magnetic fields up to 34 T, surpassing the 24 T limit of Nb<sub>3</sub>Sn, can be achieved using a multifilament round wire conductor made of the high-temperature superconductor Bi₂Sr₂CaCu₂O₈₋ₓ (Bi-2212). Despite having many high-angle grain boundaries and lacking macroscopic texture, Bi-2212 attains high superconducting critical current densities ($J_C$) of 2500 A/mm² at 20 T and 4.2 K. Unlike REBa₂Cu₃O₇₋ₓ (REBCO) conductors, Bi-2212 does not require extreme texture, has a lower aspect ratio, and is less sensitive to defects.[^3]
 
+This calculated critical current density and the temperature margin
+for Bi-2212 superconductor is done using a fit by M. Kovari to measurements
+described in the reference[^3], specifically from the points shown in Figure 6.
+
+The validity of the fit below is for:
+
+- $T < 20 \  \text{K}$
+- $B > 6 \  \text{T}$
+
+$$
+B = \frac{B_{\text{conductor}}}{e^{-0.168\left(T_{\text{conductor}}-4.2\right)}}
+$$
+
+$$
+J_C = f_{\text{strain}} \times \left(1.175\times 10^9 \times e^\left({-0.02115 \times B}\right)-1.288 \times 10^8\right)
+$$
+
+$B_{\text{conductor}}$ & $T_{\text{conductor}}$ are the field and temperature at the superconductor respectively. $f_{\text{strain}}$ can be used to account for strain, radiation damage,fatigue, or AC losses.
+
+
+
+The critical surface at zero strain looks as follows: 
+
+<figure markdown>
+![Bi-2212](./images/Bi_2212_zero_strain.png){ width = "100"}
+<figcaption>Figure 2: Critical current density surface for Bi-2212 superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/Bi_2212_zero_strain.html)** :bar_chart:
 
 
 -----------
-
-## High-temperature superconductors
 
 ### REBCO
 
 [^1]: L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,” IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009, doi: https://doi.org/10.1109/tasc.2009.2018278.
 [^2]: V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”Accessed: May 12, 2025. [Online].
 Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+[^3]: D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom, “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,” May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
