@@ -128,6 +128,102 @@ The critical surface at zero strain looks as follows:
 ------------
 
 
+#### Durham model | `gl_nbti()`
+
+Critical current density of the superconductor in an ITER
+Nb-Ti strand based on the Ginzburg-Landau theory of superconductivity
+
+This law is fitted to $J_c (B,T)$ measurements of five ITER specification Nb-Ti strands measured at Durham University. It accurately describes the behaviour of  $J_c (B,T)$ for all fields and temperatures. Additionally it incorporates the strain dependence of Nb-Ti’s $J_c$, as fit to a single filament of Nb-Ti. 
+
+##### Derivation
+
+The Durham scaling law is derived from the well-known equation for the volume pinning force $F_p$:
+
+$$
+F_p =  J_CB = A \frac{\left[B_{C2 }^*(T,\epsilon)\right]^n}{\left(\frac{2\pi h}{2\text{e}}\right)^{0.5}\mu_0 \left[\kappa_1^*(T,\epsilon)\right]^2} b^p(1-b)^q
+$$
+
+$\kappa_1^*$ is the effective Ginzburg-Landau parameter. The effective upper critical field, $B_{C2 }^*$ can be written in terms of $\kappa_1^*$ as:
+
+$$
+B_{C2 }^*(T,\epsilon) = \sqrt{2}\kappa_1^*(T,\epsilon)B_c(T,\epsilon)
+$$
+
+where $B_c$ is the thermodynamic critical field. From the two fluid model it is known:
+
+$$
+B_c(T) = B_c(0)(1-t^2)
+$$
+
+from the BCS equation $B_c (0,\epsilon) \propto T_c$ and extensive measurements have yielded:
+
+$$
+B_{c2}^*(T,\epsilon) = B_{c2}^*(0,\epsilon)(1-t^v)
+$$
+
+Substituting these equations into the $F_p$ equation gives:
+
+$$
+J_{\text{c,eng}}(B,T,\epsilon_I) = A^*(\epsilon_I)[T_c^*(\epsilon_I)(1-t^2)]^2[B_{c2}^*(\epsilon_I)(1-t^v)]^{n-3}b^{p-1}(1-b)^q
+$$
+
+where the introduced intrinsic strain $\epsilon_I$ and $A^*(\epsilon_I)$. The strain dependencies are related through:
+
+$$
+\frac{B_{c2}^*(0,\epsilon_I)}{B_{c2}^*(0,0)} = \left(\frac{T_c^*(\epsilon_I)}{T_c^*(0)}\right)^w = \left(\frac{A^*(\epsilon_I)}{A^*(0)}\right)^{\frac{w}{u}}
+$$
+
+By definition $\epsilon_a$ is the applied strain and $\epsilon_I = 0$ when J_c is maximum.
+
+$$
+\epsilon_I = \epsilon_a - \epsilon_m
+$$
+
+where $\epsilon_m$ is the applied strain at which $J_c$ is maximum. When $=0$, $A^*(\epsilon_I)$ is constant. The strain dependence of $B_{c2}^*$ can be specified as a polynomial given by:
+
+$$
+\frac{B_{c2}^*(0,\epsilon_I)}{B_{c2}^*(0,0)} = s(\epsilon_I) = 1+c_2\epsilon_I^2+c_3\epsilon_I^3+c_4\epsilon_I^4
+$$
+
+------------------
+
+The materials data is from five ITER PF coil specification Nb-Ti strands. The Nb-Ti strands were produced by Chapetskiy Mechanical Plant (Glasov, Russia) for ITER PF6. Magnetisation measurements were performed on samples at 4.2 K. Transport measurements were performed at temperatures of 3.5 K, 4.0 K, 4.2 K, 5.0 K, 5.5 K, 6.0 K, 7.0 K and 8.0 K. 
+
+The best fits of the Durham scaling law to the data calculated using the Python (version 3.7.4) `scipy.optimize.curve_fit` function. The strands’ diameters are 0.730 ± 0.005 mm, and they have a copper volume fraction of 69%. 
+
+This produces the recommended variable values of:
+
+- $A_{\text{non-Cu}}^*(0): 1102 \  \text{A}\text{T}^{3-n}\text{K}^{-2}$
+- $B_{c2}^*(0,0): 14.9 \  \text{T}$
+- $T_c^*(0): 9.0 \ \text{K}$
+- $p: 0.49$
+- $q: 0.56$
+- $n: 1.83$
+- $v: 1.42$
+- $u: 0.0$
+- $w: 2.2$
+
+The stress dependance is derived by observing bespoke single-filament wires. In a multifilamentary Nb-Ti wire considerable strain would be applied when winding and mounting it to a Walter's spring. In such a sample, the filaments would be significantly compressed on the inboard side of the wire and significantly tensioned on the outboard side while soldering the wire to the spring. Such an effect is minimised by choice to measure a small single filament wire because the filament lies on the neutral axis. The critical current densities were measured at 4.2 K, at fields of 7 T to 10 T and between intrinsic strains of -1.03 % and +1.26%.  The strain fit parameters are shown in Table 5. 
+
+The best fit parameters calculated below were done with Python (version 3.7.4) `curve_fit` function:
+
+- $c_2 : -0.0025$
+- $c_3 : -0.0003$
+- $c_4 : -0.0001$
+- $\epsilon_m : -2\times10^{-5}$
+
+This gives a RMS error of 0.067 Amperes.
+
+<figure markdown>
+![Durham NbTi](./images/Durham_NbTi_zero_strain.png){ width = "100"}
+<figcaption>Figure 3: Critical current density surface for Durham model NbTi superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/Durham_NbTi_zero_strain.html)** :bar_chart:
+
+------------
+
+
 
 ## High-temperature superconductors
 
