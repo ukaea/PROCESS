@@ -3286,7 +3286,7 @@ class Stellarator:
             #  j_crit_sc returned by itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
 
-            j_crit_sc, bcrit, tcrit = superconductors.wstsc(
+            j_crit_sc, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
                 thelium,
                 bmax,
                 strain,
