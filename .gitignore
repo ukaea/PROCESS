@@ -1,6 +1,5 @@
 *.o
 *.so*
-*.html
 *.x
 *.mod
 *.aux
