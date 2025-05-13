@@ -89,6 +89,41 @@ $$
 
 ### NbTi
 
+#### Old empirical | `jcrit_nbti()`
+
+The following parameters following the old empirical Lubell[^4] scaling are shown below:
+
+- $B_{C20 \text{max}}^*: 15.0 \ \text{T}$
+- $T_{C0 \text{max}}^*: 9.3 \ \text{K}$
+- $C_0: 1 \times 10^{10}$
+
+$$
+B = \frac{B_{\text{conductor}}}{B_{C20 \text{max}}^*}
+$$
+
+$$
+T_{\text{critical}} = T_{C0 \text{max}}^* \times (1-B)^{0.59}
+$$
+
+$$
+T = 1- \frac{T_{\text{conductor}}}{T_{\text{critical}}}
+$$
+
+$$
+J_{C} = C_0 \times (1-B)\times T
+$$
+
+The critical surface at zero strain looks as follows: 
+
+<figure markdown>
+![Old NbTi](./images/old_NbTi_zero_strain.png){ width = "100"}
+<figcaption>Figure 2: Critical current density surface for old NbTi superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/old_NbTi_zero_strain.html)** :bar_chart:
+
+!!! quote "Simon Chislett-McDonald and Prof. Damian P. Hampshire"
+    *"The existing Nb-Ti critical surface model in PROCESS is based on an antiquated scaling law that has not been used in the superconductivity field for at least three decades. It is somewhat simplistic and linear in $J_C (B)$ (for a fixed temperature), lacking accuracy in both the high and low field regions: it under predicts J_c at low fields and over predicts both $B_{C20 \text{max}}^*$ and $J_C$ at high fields. The Nb-Ti strands that the law was fit to were also made to a different specification to those used in ITER. As such, both the law itself and the fit have been revised."*
 
 ------------
 
@@ -96,7 +131,7 @@ $$
 
 ## High-temperature superconductors
 
-### Bi-2212
+### Bi-2212 | `bi2212()`
 
 Bi-2212 has demonstrated tolerating magnetic fields up to 34 T, surpassing the 24 T limit of Nb<sub>3</sub>Sn, can be achieved using a multifilament round wire conductor made of the high-temperature superconductor Bi₂Sr₂CaCu₂O₈₋ₓ (Bi-2212). Despite having many high-angle grain boundaries and lacking macroscopic texture, Bi-2212 attains high superconducting critical current densities ($J_C$) of 2500 A/mm² at 20 T and 4.2 K. Unlike REBa₂Cu₃O₇₋ₓ (REBCO) conductors, Bi-2212 does not require extreme texture, has a lower aspect ratio, and is less sensitive to defects.[^3]
 
@@ -139,3 +174,4 @@ The critical surface at zero strain looks as follows:
 [^2]: V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”Accessed: May 12, 2025. [Online].
 Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
 [^3]: D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom, “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,” May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
+[^4]: M. Lubell, “Empirical scaling formulas for critical current and critical field for commercial NbTi,” IEEE Transactions on Magnetics, vol. 19, no. 3, pp. 754-757, May 1983, doi: https://doi.org/10.1109/tmag.1983.1062311.

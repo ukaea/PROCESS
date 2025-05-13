@@ -185,28 +185,38 @@ def jcrit_nbti(
     temp_c0max: float,
 ) -> tuple[float, float]:
     """
-    Calculate the critical current density and critical temperature for a NbTi superconductor strand.
+        Calculate the critical current density and critical temperature for a NbTi superconductor strand using the old empirical
+        Lubell scaling law.
 
-    :param temperature: Superconductor temperature (K).
-    :type temperature: float
-    :param bmax: Magnetic field at the conductor (T).
-    :type bmax: float
-    :param c0: Scaling constant (A/m²).
-    :type c0: float
-    :param bc20max: Upper critical field (T) for the superconductor at zero temperature and strain.
-    :type bc20max: float
-    :param tc0max: Critical temperature (K) at zero field and strain.
-    :type tc0max: float
-    :return: A tuple containing:
-        - jcrit: Critical current density in the superconductor (A/m²).
-        - tcrit: Critical temperature (K).
-    :rtype: tuple[float, float]
+        :param temp_conductor: Superconductor temperature (K).
+        :type temp_conductor: float
+        :param b_conductor: Magnetic field at the conductor (T).
+        :type b_conductor: float
+        :param c0: Scaling constant (A/m²).
+        :type c0: float
+        :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+        :type b_c20max: float
+        :param temp_c0max: Critical temperature (K) at zero field and strain.
+        :type temp_c0max: float
+        :return: A tuple containing:
+            - jcrit: Critical current density in the superconductor (A/m²).
+            - tcrit: Critical temperature (K).
+        :rtype: tuple[float, float]
 
-    :notes:
-        - If the magnetic field exceeds the upper critical field (bmax > bc20max),
-          the critical temperature is adjusted to ensure a real (negative) value.
-        - If the temperature exceeds the critical temperature, the critical surface
-          is considered exceeded, and the reduced temperature (tbar) becomes negative.
+        :notes:
+            - If the magnetic field exceeds the upper critical field (bmax > bc20max),
+              the critical temperature is adjusted to ensure a real (negative) value.
+            - If the temperature exceeds the critical temperature, the critical surface
+              is considered exceeded, and the reduced temperature (tbar) becomes negative.
+
+            - This model uses an antiquated scaling law for NbTi, which is not used in the superconductor field for nearly 30 years.
+            - It is simplistic and linear in J_c (B) (for a fixed temperature), lacking accuracy in both the high and low field regions.
+
+        :references:
+            - M. Lubell, “Empirical scaling formulas for critical current and critical field for commercial NbTi,”
+            IEEE Transactions on Magnetics, vol. 19, no. 3, pp. 754-757, May 1983,
+            doi: https://doi.org/10.1109/tmag.1983.1062311.
+    ‌
     """
     bratio = b_conductor / b_c20max
 
