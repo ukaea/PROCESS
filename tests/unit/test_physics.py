@@ -3254,3 +3254,55 @@ def test_calculate_plasma_masses():
     assert m_plasma_alpha == pytest.approx(6.644657345e-06, abs=1e-30)
     assert m_plasma_electron == pytest.approx(9.1093837139e-09, abs=1e-34)
     assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
+
+
+def test_calculate_current_profile_index_wesson():
+    """Test calculate_current_profile_index_wesson()."""
+    qstar = 3.5
+    q0 = 1.5
+    result = Physics.calculate_current_profile_index_wesson(qstar, q0)
+    assert result == pytest.approx(1.33333, abs=0.0001)
+
+
+def test_calculate_internal_inductance_wesson():
+    """Test calculate_internal_inductance_wesson()."""
+    alphaj = 0.8
+    result = Physics.calculate_internal_inductance_wesson(alphaj)
+    assert result == pytest.approx(0.8595087177751706, abs=0.0001)
+
+
+def test_calculate_internal_inductance_menard():
+    """Test calculate_internal_inductance_menard()."""
+    kappa = 2.8
+    result = Physics.calculate_internal_inductance_menard(kappa)
+    assert result == pytest.approx(0.6, abs=0.001)
+
+
+def test_calculate_beta_norm_max_wesson():
+    """Test calculate_beta_norm_max_wesson()."""
+    ind_plasma_internal_norm = 1.5
+    result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
+    assert result == pytest.approx(6.0, abs=0.001)
+
+
+def test_calculate_beta_norm_max_original():
+    """Test calculate_beta_norm_max_original()"""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_original(eps)
+    assert result == pytest.approx(3.8932426932522994, abs=0.00001)
+
+
+def test_calculate_beta_norm_max_menard():
+    """Test calculate_beta_norm_max_menard()."""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_menard(eps)
+    assert result == pytest.approx(4.197251361676802, abs=0.000001)
+
+
+def test_calculate_beta_norm_max_thloreus():
+    """Test calculate_beta_norm_max_thloreus()"""
+    c_beta = 0.5
+    p0 = 2.0
+    vol_avg_pressure = 1.0
+    result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, vol_avg_pressure)
+    assert result == pytest.approx(5.075, abs=0.00001)
