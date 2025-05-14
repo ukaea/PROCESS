@@ -9,19 +9,19 @@
 
 ### Nb<sub>3</sub>Sn
 
-#### Western Superconducting technologies Nb<sub>3</sub>Sn
+#### Western Superconducting technologies Nb<sub>3</sub>Sn | `western_superconducting_nb3sn()`
 
-The following parameters [^2] following the [Bottura scaling](#bottura-scaling--bottura_scaling) are shown below:
+The following parameters [^2] following the [Bottura scaling](#bottura-scaling-bottura_scaling) are shown below:
 
-- **\( C_{\text{a1}} \)**: 50.06
-- **\( C_{\text{a2}} \)**: 0
-- **\( \epsilon_{\text{0,a}} \)**: 0.312%
-- **\( \epsilon_{\text{m}} \)**: -0.059%
-- **\( B_{C20 \text{max}}^* \)**: 33.24 $\text{T}$
-- **\( T_{C0 \text{max}}^* \)**: 16.34 $\text{K}$
-- **\( C \)**: 83075 $\text{AT/mm}^2$
-- **\( p \)**: 0.593
-- **\( q \)**: 2.156
+- $C_{\text{a1}}: 50.06$
+- $C_{\text{a2}}: 0$
+- $\epsilon_{\text{0,a}}: 0.312%$
+- $\epsilon_{\text{m}}: -0.059%$
+- $B_{C20 \text{max}}^* : 33.24 \ \text{T}$
+- $T_{C0 \text{max}}^*:  16.34 \ \text{K}$
+- $C: 83075 \ \text{AT/mm}^2$
+- $p: 0.593$
+- $q: 2.156$
 
 The critical surface at zero strain looks as follows: 
 
@@ -36,6 +36,33 @@ The critical surface at zero strain looks as follows:
     *"TF Coil: The initial choice of EUTF4 right leg (OST) and its parametrization can be replaced by the actual WST strand (ø = 1.5 mm) used and tested in the DEMO TF prototypes manufactured in 2014 and measured in 2015 and 2016. The EUTF4 OST strand parameterisation can still be employed in the conductor design, if the designers prefer. The parameters are measured in the scope of the 2014 activities and reported below. Compared to the EUTF4 right leg (OST), the performance of the WST at low strain is superior by about 10%."*[^2]
 
 ----------------
+
+#### EUTF4 Nb<sub>3</sub>Sn | `itersc()`
+
+
+
+The following parameters [^2] following the [Bottura scaling](#bottura-scaling-bottura_scaling) are shown below:
+
+- $C_{\text{a1}}: 44.48$
+- $C_{\text{a2}}: 0$
+- $\epsilon_{\text{0,a}}: 0.256%$
+- $\epsilon_{\text{m}}: -0.110%$
+- $B_{C20 \text{max}}^* : 32.97 \ \text{T}$
+- $T_{C0 \text{max}}^*:  16.06 \ \text{K}$
+- $C: 19922 \ \text{AT/mm}^2$
+- $p: 0.63$
+- $q: 2.10$
+
+The critical surface at zero strain looks as follows: 
+
+<figure markdown>
+![EUTF4 Nb3Sn](./images/eutf4_Nb3Sn_zero_strain.png){ width = "100"}
+<figcaption>Figure 2: Critical current density surface for the EUTF4 Nb<sub>3</sub>Sn superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/eutf4_Nb3Sn_zero_strain.html)** :bar_chart:
+
+---------------
 
 ##### Bottura scaling | `bottura_scaling()`
 
