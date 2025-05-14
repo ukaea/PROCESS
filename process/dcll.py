@@ -132,7 +132,7 @@ class DCLL:
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
-            physics_variables.neutron_power_total
+            physics_variables.p_neutron_total_mw
             * fwbs_variables.pnuc_fw_ratio_dcll
             * covf
         )
@@ -140,7 +140,7 @@ class DCLL:
         # Nuclear heating in the blanket with energy multiplication (MW)
         fwbs_variables.pnuc_blkt_ratio_dcll = 1 - fwbs_variables.pnuc_fw_ratio_dcll
         fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-            physics_variables.neutron_power_total
+            physics_variables.p_neutron_total_mw
             * fwbs_variables.pnuc_blkt_ratio_dcll
             * fwbs_variables.emult
             * covf
@@ -148,10 +148,7 @@ class DCLL:
 
         # Energy multiplication energy (MW)
         fwbs_variables.emultmw = (
-            (
-                physics_variables.neutron_power_total
-                * fwbs_variables.pnuc_blkt_ratio_dcll
-            )
+            (physics_variables.p_neutron_total_mw * fwbs_variables.pnuc_blkt_ratio_dcll)
             * (fwbs_variables.emult - 1)
             * covf
         )
@@ -162,7 +159,7 @@ class DCLL:
             # Double null configuration
             # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.neutron_power_total
+                physics_variables.p_neutron_total_mw
                 * 2
                 * fwbs_variables.f_ster_div_single
             )
@@ -174,7 +171,7 @@ class DCLL:
             # Single null configuration
             # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.neutron_power_total * fwbs_variables.f_ster_div_single
+                physics_variables.p_neutron_total_mw * fwbs_variables.f_ster_div_single
             )
             # Radiation power incident on divertor (MW)
             fwbs_variables.p_div_rad_total_mw = (

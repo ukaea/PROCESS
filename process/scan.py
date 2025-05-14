@@ -66,7 +66,7 @@ SCAN_VARIABLES = {
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
     22: ScanVariable("cfactr", "Plant_availability_factor"),
     23: ScanVariable("boundu(72)", "Ip/Irod_upper_bound"),
-    24: ScanVariable("powfmax", "Fusion_power_limit_(MW)"),
+    24: ScanVariable("p_fusion_total_max_mw", "Fusion_power_limit_(MW)"),
     25: ScanVariable("kappa", "Plasma_elongation"),
     26: ScanVariable("triang", "Plasma_triangularity"),
     27: ScanVariable("tbrmin", "Min_tritium_breed._ratio"),
@@ -926,7 +926,7 @@ class Scan:
             case 23:
                 numerics.boundu[71] = swp[iscn - 1]
             case 24:
-                constraint_variables.powfmax = swp[iscn - 1]
+                constraint_variables.p_fusion_total_max_mw = swp[iscn - 1]
             case 25:
                 physics_variables.kappa = swp[iscn - 1]
             case 26:

@@ -1186,7 +1186,7 @@ class Stellarator:
         #  shield)
 
         fwbs_variables.pnucloss = (
-            physics_variables.neutron_power_total * fwbs_variables.fhole
+            physics_variables.p_neutron_total_mw * fwbs_variables.fhole
         )
 
         # The peaking factor, obtained as precalculated parameter
@@ -1200,14 +1200,14 @@ class Stellarator:
 
             if heat_transport_variables.ipowerflow == 1:
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.p_fw_hcd_nuclear_heat_mw
@@ -1268,13 +1268,13 @@ class Stellarator:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 ) * fwbs_variables.emult
 
                 fwbs_variables.emultmw = pneut2 - (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 )
@@ -1315,20 +1315,20 @@ class Stellarator:
                 #  Neutron power incident on divertor (MW)
 
                 fwbs_variables.p_div_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     * fwbs_variables.f_ster_div_single
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.neutron_power_total * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
                 pnucfwbs = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
@@ -4204,13 +4204,13 @@ class Stellarator:
         fusion_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given component
-        physics_variables.dt_power_plasma = (
+        physics_variables.p_plasma_dt_mw = (
             physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
-        physics_variables.dhe3_power = (
+        physics_variables.p_dhe3_total_mw = (
             physics_module.dhe3_power_density * physics_variables.vol_plasma
         )
-        physics_variables.dd_power = (
+        physics_variables.p_dd_total_mw = (
             physics_module.dd_power_density * physics_variables.vol_plasma
         )
 
@@ -4223,7 +4223,7 @@ class Stellarator:
             (
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
-                physics_variables.alpha_power_beams,
+                physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
@@ -4243,55 +4243,51 @@ class Stellarator:
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
-            physics_variables.fusion_rate_density_total = (
-                physics_variables.fusion_rate_density_plasma
+            physics_variables.fusden_total = (
+                physics_variables.fusden_plasma
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.alpha_rate_density_total = (
-                physics_variables.alpha_rate_density_plasma
+            physics_variables.fusden_alpha_total = (
+                physics_variables.fusden_plasma_alpha
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.dt_power_total = (
-                physics_variables.dt_power_plasma
-                + 5.0e0 * physics_variables.alpha_power_beams
+            physics_variables.p_dt_total_mw = (
+                physics_variables.p_plasma_dt_mw
+                + 5.0e0 * physics_variables.p_beam_alpha_mw
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusion_rate_density_total = (
-                physics_variables.fusion_rate_density_plasma
-            )
-            physics_variables.alpha_rate_density_total = (
-                physics_variables.alpha_rate_density_plasma
-            )
-            physics_variables.dt_power_total = physics_variables.dt_power_plasma
+            physics_variables.fusden_total = physics_variables.fusden_plasma
+            physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
+            physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
         (
-            physics_variables.neutron_power_density_total,
-            physics_variables.alpha_power_plasma,
-            physics_variables.alpha_power_total,
-            physics_variables.neutron_power_plasma,
-            physics_variables.neutron_power_total,
-            physics_variables.non_alpha_charged_power,
-            physics_variables.alpha_power_density_total,
-            physics_variables.alpha_power_electron_density,
-            physics_variables.alpha_power_ions_density,
-            physics_variables.charged_particle_power,
-            physics_variables.fusion_power,
+            physics_variables.pden_neutron_total_mw,
+            physics_variables.p_plasma_alpha_mw,
+            physics_variables.p_alpha_total_mw,
+            physics_variables.p_plasma_neutron_mw,
+            physics_variables.p_neutron_total_mw,
+            physics_variables.p_non_alpha_charged_mw,
+            physics_variables.pden_alpha_total_mw,
+            physics_variables.f_pden_alpha_electron_mw,
+            physics_variables.f_pden_alpha_ions_mw,
+            physics_variables.p_charged_particle_mw,
+            physics_variables.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
-            physics_variables.alpha_power_beams,
-            physics_variables.charged_power_density,
-            physics_variables.neutron_power_density_plasma,
+            physics_variables.p_beam_alpha_mw,
+            physics_variables.pden_non_alpha_charged_mw,
+            physics_variables.pden_plasma_neutron_mw,
             physics_variables.vol_plasma,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
@@ -4302,8 +4298,8 @@ class Stellarator:
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
-            physics_variables.alpha_power_density_total,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_alpha_total_mw,
+            physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
         )
 
@@ -4312,14 +4308,14 @@ class Stellarator:
         if physics_variables.iwalld == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
-                * physics_variables.neutron_power_total
+                * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
                 physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
             else:
@@ -4330,7 +4326,7 @@ class Stellarator:
                         - fwbs_variables.f_a_fw_hcd
                         - fwbs_variables.f_ster_div_single
                     )
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
 
@@ -4392,8 +4388,8 @@ class Stellarator:
         #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
-            + physics_variables.non_alpha_charged_power
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
@@ -4433,7 +4429,7 @@ class Stellarator:
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.p_fw_alpha_mw = physics_variables.alpha_power_total * (
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
             1.0e0 - physics_variables.f_alpha_plasma
         )
 
@@ -4468,8 +4464,8 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
-            + physics_variables.non_alpha_charged_power
+            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
@@ -4487,7 +4483,7 @@ class Stellarator:
             physics_variables.p_plasma_loss_mw,
         ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.nd_ions_total,
@@ -4499,7 +4495,7 @@ class Stellarator:
             physics_variables.i_plasma_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.non_alpha_charged_power,
+            physics_variables.p_non_alpha_charged_mw,
             current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
@@ -4545,8 +4541,8 @@ class Stellarator:
             physics_variables.dene,
             physics_variables.te,
             physics_variables.nd_fuel_ions,
-            physics_variables.fusion_rate_density_total,
-            physics_variables.alpha_rate_density_total,
+            physics_variables.fusden_total,
+            physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,
@@ -4760,8 +4756,7 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
+                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4770,8 +4765,7 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
+                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4907,8 +4901,7 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.f_alpha_plasma
-            * physics_variables.alpha_power_density_total
+            physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
             - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 
@@ -5038,7 +5031,7 @@ class Stellarator:
         ):
             current_drive_variables.bigq = 1e18
         else:
-            current_drive_variables.bigq = physics_variables.fusion_power / (
+            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
                 current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw

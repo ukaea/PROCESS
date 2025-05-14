@@ -385,6 +385,23 @@ The above is concurrent with that of general efficiencies given [below](#efficie
 
 --------------
 
+
+##### Fusion rates
+
+- Fusion rates should start with the `fusrat_` prefix.
+
+This should be used for units of reactions per second.
+
+---------------------
+
+##### Fusion rate densities
+
+- Fusion rate densities should start with the `fusden_` prefix.
+
+This should be used for units of reactions per cubic metre, per second ($\text{reactions} \ \text{m}^{-3}\text{s}^{-1}$).
+
+---------------------
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
@@ -432,7 +449,7 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 
 ```fortran
 ! Fusion power [W]
-fusion_power = 1000.0d6
+p_fusion_total = 1000.0d6
 ```
 
 If a variable is not in SI units then its units should be put at the end of of the variable name.
@@ -440,7 +457,7 @@ Example:
 
 ```fortran
 ! Fusion power [MW]
-fusion_power_MW = 1000.0d0
+p_fusion_total_mw = 1000.0d0
 ```
 
 !!! note

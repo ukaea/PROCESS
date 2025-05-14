@@ -313,7 +313,7 @@ def main(args=None):
         21: "",
         22: "cfactr",
         23: "boundu(72)",
-        24: "powfmax",
+        24: "p_fusion_total_max_mw",
         25: "kappa",
         26: "triang",
         27: "tbrmin",

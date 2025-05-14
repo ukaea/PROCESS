@@ -65,7 +65,7 @@ module constraint_variables
   real(dp) :: fflutf
   !! f-value for neutron fluence on TF coil (`constraint equation 53`, `iteration variable 92`)
 
-  real(dp) :: ffuspow
+  real(dp) :: fp_fusion_total_max_mw
   !! f-value for maximum fusion power (`constraint equation 9`, `iteration variable 26`)
 
   real(dp) :: fgamcd
@@ -252,7 +252,7 @@ module constraint_variables
   real(dp) :: pnetelin
   !! required net electric power (MW) (`constraint equation 16`)
 
-  real(dp) :: powfmax
+  real(dp) :: p_fusion_total_max_mw
   !! maximum fusion power (MW) (`constraint equation 9`)
 
   real(dp) :: psepbqarmax
@@ -331,7 +331,7 @@ module constraint_variables
     fdene = 1.0D0
     fdtmp = 1.0D0
     fflutf = 1.0D0
-    ffuspow = 1.0D0
+    fp_fusion_total_max_mw = 1.0D0
     fgamcd = 1.0D0
     fpflux_div_heat_load_mw = 1.0D0
     fiooic = 0.5D0
@@ -386,7 +386,7 @@ module constraint_variables
     f_fw_rad_max = 3.33D0
     pflux_fw_rad_max_mw = 0.0D0
     pnetelin = 1.0D3
-    powfmax = 1.5D3
+    p_fusion_total_max_mw = 1.5D3
     psepbqarmax = 9.5D0
     pseprmax = 25.0D0
     ptfnucmax = 1.0D-3

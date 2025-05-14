@@ -231,7 +231,7 @@ module numerics
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
   !! <LI> (25) fpnetel (f-value for equation 16)
-  !! <LI> (26) ffuspow (f-value for equation 9)
+  !! <LI> (26) fp_fusion_total_max_mw (f-value for equation 9)
   !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
   !! <LI> (28) fradpwr (f-value for equation 17), total radiation fraction
   !! <LI> (29) dr_bore

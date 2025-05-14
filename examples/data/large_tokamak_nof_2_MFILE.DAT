@@ -287,31 +287,31 @@
  Deuterium_fuel_fraction__________________________________________________ (f_deuterium)__________________ 5.00000000000000000e-01
  Tritium_fuel_fraction____________________________________________________ (f_tritium)____________________ 5.00000000000000000e-01
  3-Helium_fuel_fraction___________________________________________________ (f_helium3)____________________ 0.00000000000000000e+00
- Total_fusion_power_(MW)__________________________________________________ (fusion_power)_________________ 1.60956116199862254e+03 OP
- Fusion_rate_density:_total_(particles/m3/sec)____________________________ (fusion_rate_density_total)____ 3.03874355943265088e+17 OP
- Fusion_rate_density:_plasma_(particles/m3/sec)___________________________ (fusion_rate_density_plasma)___ 3.03874355943265088e+17 OP
- D-T_fusion_power:_total_(MW)_____________________________________________ (dt_power_total)_______________ 1.60765157256174621e+03 OP
- D-T_fusion_power:_plasma_(MW)____________________________________________ (dt_power_plasma)______________ 1.60765157256174621e+03 OP
- D-D_fusion_power_(MW)____________________________________________________ (dd_power)_____________________ 1.90958943687632710e+00 OP
+ Total_fusion_power_(MW)__________________________________________________ (p_fusion_total_mw)_________________ 1.60956116199862254e+03 OP
+ Fusion_rate_density:_total_(particles/m3/sec)____________________________ (fusden_total)____ 3.03874355943265088e+17 OP
+ Fusion_rate_density:_plasma_(particles/m3/sec)___________________________ (fusden_plasma)___ 3.03874355943265088e+17 OP
+ D-T_fusion_power:_total_(MW)_____________________________________________ (p_dt_total_mw)_______________ 1.60765157256174621e+03 OP
+ D-T_fusion_power:_plasma_(MW)____________________________________________ (p_plasma_dt_mw)______________ 1.60765157256174621e+03 OP
+ D-D_fusion_power_(MW)____________________________________________________ (p_dd_total_mw)_____________________ 1.90958943687632710e+00 OP
  D-D_branching_ratio_for_tritium_producing_reactions______________________ (f_dd_branching_trit)__________ 4.75373665171270443e-01 OP
- D-He3_fusion_power_(MW)__________________________________________________ (dhe3_power)___________________ 0.00000000000000000e+00 OP
- Alpha_rate_density:_total_(particles/m3/sec)_____________________________ (alpha_rate_density_total)_____ 3.02129344101219072e+17 OP
- Alpha_rate_density:_plasma_(particles/m3/sec)____________________________ (alpha_rate_density_plasma)____ 3.02129344101219072e+17 OP
- Alpha_power:_total_(MW)__________________________________________________ (alpha_power_total)____________ 3.23657956519217578e+02 OP
- Alpha_power_density:_total_(MW/m^3)______________________________________ (alpha_power_density_total)____ 1.71413463146233375e-01 OP
- Alpha_power:_plasma_only_(MW)____________________________________________ (alpha_power_plasma)___________ 3.23657956519217578e+02 OP
- Alpha_power_density:_plasma_(MW/m^3)_____________________________________ (alpha_power_density_plasma)___ 1.71413463146233375e-01 OP
- Alpha_power:_beam-plasma_(MW)____________________________________________ (alpha_power_beams)____________ 0.00000000000000000e+00 OP
- Alpha_power_per_unit_volume_transferred_to_electrons_(MW/m3)_____________ (alpha_power_electron_density)_ 1.17513473229255330e-01 OP
- Alpha_power_per_unit_volume_transferred_to_ions_(MW/m3)__________________ (alpha_power_ions_density)_____ 4.53293167596663799e-02 OP
- Neutron_power:_total_(MW)________________________________________________ (neutron_power_total)__________ 1.28469670088750900e+03 OP
- Neutron_power_density:_total_(MW/m^3)____________________________________ (neutron_power_density_total)__ 6.80392081072146104e-01 OP
- Neutron_power:_plasma_only_(MW)__________________________________________ (neutron_power_plasma)_________ 1.28469670088750900e+03 OP
- Neutron_power_density:_plasma_(MW/m^3)___________________________________ (neutron_power_density_plasma)_ 6.80392081072146104e-01 OP
- Neutron_power:_beam-plasma_(MW)__________________________________________ (neutron_power_beams)__________ 0.00000000000000000e+00 OP
- Charged_particle_power_(excluding_alphas)_(MW)___________________________ (non_alpha_charged_power)______ 1.20650459189592762e+00 OP
- Total_charged_particle_power_(including_alphas)_(MW)_____________________ (charged_particle_power)_______ 3.24864461111113485e+02 OP
- Total_power_deposited_in_plasma_(MW)_____________________________________ (tot_power_plasma)_____________ 3.86898310614849436e+02 OP
+ D-He3_fusion_power_(MW)__________________________________________________ (p_dhe3_total_mw)___________________ 0.00000000000000000e+00 OP
+ Alpha_rate_density:_total_(particles/m3/sec)_____________________________ (fusden_alpha_total)_____ 3.02129344101219072e+17 OP
+ Alpha_rate_density:_plasma_(particles/m3/sec)____________________________ (fusden_plasma_alpha)____ 3.02129344101219072e+17 OP
+ Alpha_power:_total_(MW)__________________________________________________ (p_alpha_total_mw)____________ 3.23657956519217578e+02 OP
+ Alpha_power_density:_total_(MW/m^3)______________________________________ (pden_alpha_total_mw)____ 1.71413463146233375e-01 OP
+ Alpha_power:_plasma_only_(MW)____________________________________________ (p_plasma_alpha_mw)___________ 3.23657956519217578e+02 OP
+ Alpha_power_density:_plasma_(MW/m^3)_____________________________________ (pden_plasma_alpha_mw)___ 1.71413463146233375e-01 OP
+ Alpha_power:_beam-plasma_(MW)____________________________________________ (p_beam_alpha_mw)____________ 0.00000000000000000e+00 OP
+ Alpha_power_per_unit_volume_transferred_to_electrons_(MW/m3)_____________ (f_pden_alpha_electron_mw)_ 1.17513473229255330e-01 OP
+ Alpha_power_per_unit_volume_transferred_to_ions_(MW/m3)__________________ (f_pden_alpha_ions_mw)_____ 4.53293167596663799e-02 OP
+ Neutron_power:_total_(MW)________________________________________________ (p_neutron_total_mw)__________ 1.28469670088750900e+03 OP
+ Neutron_power_density:_total_(MW/m^3)____________________________________ (pden_neutron_total_mw)__ 6.80392081072146104e-01 OP
+ Neutron_power:_plasma_only_(MW)__________________________________________ (p_plasma_neutron_mw)_________ 1.28469670088750900e+03 OP
+ Neutron_power_density:_plasma_(MW/m^3)___________________________________ (pden_plasma_neutron_mw)_ 6.80392081072146104e-01 OP
+ Neutron_power:_beam-plasma_(MW)__________________________________________ (p_beam_neutron_mw)__________ 0.00000000000000000e+00 OP
+ Charged_particle_power_(excluding_alphas)_(MW)___________________________ (p_non_alpha_charged_mw)______ 1.20650459189592762e+00 OP
+ Total_charged_particle_power_(including_alphas)_(MW)_____________________ (p_charged_particle_mw)_______ 3.24864461111113485e+02 OP
+ Total_power_deposited_in_plasma_(MW)_____________________________________ (p_plasma_heating_total_mw)_____________ 3.86898310614849436e+02 OP
  Synchrotron_radiation_power_(MW)_________________________________________ (pden_plasma_sync_mw*vol_plasma)_ 1.51830269530638411e+01 OP
  Synchrotron_wall_reflectivity_factor_____________________________________ (f_sync_reflect)_______________ 6.00000000000000089e-01
  Normalised_minor_radius_defining_'core'__________________________________ (coreradius)___________________ 7.50000000000000111e-01
@@ -898,7 +898,7 @@
  Blanket_line_density_(tonne/m2)__________________________________________ (x_blanket)____________________ 2.29112070985279770e+00
  Unit_nuclear_heating_in_TF_coil_(W/GW)___________________________________ (tfc_nuc_heating)______________ 1.49757126200645089e+04
  Total_nuclear_heating_in_TF_coil_(MW)____________________________________ (ptfnuc.)______________________ 2.41043254065084651e-02
- fusion_power_____________________________________________________________ (fusion_power.)________________ 1.60956116199862254e+03
+ fusion_power_____________________________________________________________ (p_fusion_total_mw.)________________ 1.60956116199862254e+03
  total_mass_of_the_TF_coils_(kg)__________________________________________ (whttf)________________________ 1.15087108498561420e+07
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)__________ (dp_he)________________________ 5.50000000000000000e+05
@@ -1090,12 +1090,12 @@
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 2.67976424195365780e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.30345146305381149e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 3.98321570500746930e+02 OP
- Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*alpha_power_total)_ 3.07475058693256699e+02 OP
- Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (non_alpha_charged_power.)_____ 1.20650459189592762e+00 OP
+ Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*p_alpha_total_mw)_ 3.07475058693256699e+02 OP
+ Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (p_non_alpha_charged_mw.)_____ 1.20650459189592762e+00 OP
  Ohmic_heating_(MW)_______________________________________________________ (p_plasma_ohmic_mw.)___________ 6.88941757462895432e-01 OP
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 7.75278055722339587e+01 OP
  Total_(MW)_______________________________________________________________ _______________________________ 3.86898310614849436e+02 OP
- Fusion_power_(MW)________________________________________________________ (fusion_power)_________________ 1.60956116199862254e+03 OP
+ Fusion_power_(MW)________________________________________________________ (p_fusion_total_mw)_________________ 1.60956116199862254e+03 OP
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (emultmw)______________________ 3.05841320096784727e+02 OP
  Injected_power_(MW)______________________________________________________ (pinjmw.)______________________ 7.75278055722339587e+01 OP
  Ohmic_power_(MW)_________________________________________________________ (p_plasma_ohmic_mw.)___________ 6.88941757462895432e-01 OP
@@ -1120,15 +1120,15 @@
  Total_(MW)_______________________________________________________________ (tot_plant_power)______________ 8.67303641193163344e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 8.67303641193163344e+02 OP
  Gross_electrical_output*_(MW)____________________________________________ (pgrossmw)_____________________ 8.67303641193163458e+02 OP
- Fusion_power_(MW)________________________________________________________ (fusion_power)_________________ 1.60956116199862254e+03 OP
+ Fusion_power_(MW)________________________________________________________ (p_fusion_total_mw)_________________ 1.60956116199862254e+03 OP
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (emultmw)______________________ 3.05841320096784727e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91540248209540732e+03 OP
  Net_electrical_output_(MW)	______________________________________________ (pnetelmw)_____________________ 3.88019059400626361e+02 OP
  Heat_rejected_by_main_power_conversion_circuit_(MW)______________________ (rejected_main)________________ 1.30095546178974519e+03 OP
  Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (psechtmw)_____________________ 2.27456408964308480e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91643093015468003e+03 OP
- Net_electric_power_/_total_nuclear_power_(%)_____________________________ (pnetelmw/(fusion_power+emultmw)_ 2.02578342164484511e+01 OP
- Net_electric_power_/_total_fusion_power_(%)______________________________ (pnetelmw/fusion_power)________ 2.41071335816040531e+01 OP
+ Net_electric_power_/_total_nuclear_power_(%)_____________________________ (pnetelmw/(p_fusion_total_mw+emultmw)_ 2.02578342164484511e+01 OP
+ Net_electric_power_/_total_fusion_power_(%)______________________________ (pnetelmw/p_fusion_total_mw)________ 2.41071335816040531e+01 OP
  Gross_electric_power*_/_high_grade_heat_(%)______________________________ (etath)________________________ 4.00000000000000000e+01
  Recirculating_power_fraction_____________________________________________ (cirpowfr)_____________________ 5.52614515872639100e-01 OP
  # Water usage during plant operation (secondary cooling) #
@@ -1283,7 +1283,7 @@ fmaxvvstress = 1.0 * f-value for maximum permitted stress of the VV
 fvdump   = 1.0 * f-value for dump voltage (`constraint equation 34`; `iteration variable 51`)
 fwalld   = 1.0 * f-value for maximum wall load (`constraint equation 8`; `iteration variable 14`)
 pnetelin = 400.0 * required net electric power (MW) (`constraint equation 16`)
-powfmax  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
+p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
 psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
 t_burn_min   = 7200.0 * minimum burn time (s) (KE - no longer itv;; see issue #706)
 walalw   = 2.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
