@@ -10,19 +10,35 @@ from process.fortran import rebco_variables
 logger = logging.getLogger(__name__)
 
 
-def jcrit_rebco(temperature, b):
-    """Critical current density for "REBCO" 2nd generation HTS superconductor
-    temperature : input real : superconductor temperature (K)
-    b : input real : Magnetic field at superconductor (T)
-    jcrit : output real : Critical current density in superconductor (A/m2)
-
-    Will return a negative number if the temperature is greater than Tc0, the
-    zero-field critical temperature.
+def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
     """
-    tc0 = 90.0  # (K)
-    birr0 = 132.5  # (T)
-    a = 1.82962e8  # scaling constant
-    # exponents
+    Calculate the critical current density for a "REBCO" 2nd generation HTS superconductor.
+
+    :param temp_conductor: Superconductor temperature in Kelvin (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at the superconductor in Tesla (T).
+    :type b_conductor: float
+    :return: A tuple containing:
+        - j_critical: Critical current density in the superconductor (A/m²).
+        - validity: A boolean indicating whether the input parameters are within the valid range.
+    :rtype: tuple[float, bool]
+
+    :notes:
+        - Validity range:
+            - Temperature: 4.2 K ≤ temp_conductor ≤ 72.0 K
+            - Magnetic field:
+                - For temp_conductor < 65 K: 0.0 T ≤ b_conductor ≤ 15.0 T
+                - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
+
+    :references:
+
+    """
+    # Critical temperature (K) at zero field and strain.
+    temp_c0max = 90.0
+    # Upper critical field (T) for the superconductor at zero temperature and strain.
+    b_c20max = 132.5
+
+    C = 1.82962e8  # scaling constant
     p = 0.5875
     q = 1.7
     alpha = 1.54121
@@ -31,42 +47,42 @@ def jcrit_rebco(temperature, b):
 
     validity = True
 
-    if (temperature < 4.2) or (temperature > 72.0):
+    if (temp_conductor < 4.2) or (temp_conductor > 72.0):
         validity = False
-    if temperature < 65:
-        if (b < 0.0) or (b > 15.0):
+    if temp_conductor < 65:
+        if (b_conductor < 0.0) or (b_conductor > 15.0):
             validity = False
     else:
-        if (b < 0.0) or (b > 11.5):
+        if (b_conductor < 0.0) or (b_conductor > 11.5):
             validity = False
 
     if not validity:
         logger.warning(
             f"""jcrit_rebco: input out of range
-            temperature: {temperature}
-            Field: {b}
+            temperature: {temp_conductor}
+            Field: {b_conductor}
             """
         )
 
-    if temperature < tc0:
+    if temp_conductor < temp_c0max:
         # Normal case
-        birr = birr0 * (1 - temperature / tc0) ** alpha
+        birr = b_c20max * (1 - temp_conductor / temp_c0max) ** alpha
     else:
         # If temp is greater than critical temp, ensure result is real but negative.
-        birr = birr0 * (1 - temperature / tc0)
+        birr = b_c20max * (1 - temp_conductor / temp_c0max)
 
-    if b < birr:
+    if b_conductor < birr:
         # Normal case
-        factor = (b / birr) ** p * (1 - b / birr) ** q
-        jcrit = (a / b) * (birr**beta) * factor
+        factor = (b_conductor / birr) ** p * (1 - b_conductor / birr) ** q
+        j_critical = (C / b_conductor) * (birr**beta) * factor
     else:
         # Field is too high
         # Ensure result is real but negative, and varies with temperature.
         # tcb = critical temperature at field b
-        tcb = tc0 * (1 - (b / birr0) ** oneoveralpha)
-        jcrit = -(temperature - tcb)
+        tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
+        j_critical = -(temp_conductor - tcb)
 
-    return jcrit, validity
+    return j_critical, validity
 
 
 def current_sharing_rebco(bfield, j):

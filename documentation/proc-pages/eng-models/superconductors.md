@@ -254,7 +254,7 @@ This gives a RMS error of 0.067 Amperes.
 
 ## High-temperature superconductors
 
-### Bi-2212 | `bi2212()`
+#### Bi-2212 | `bi2212()`
 
 Bi-2212 has demonstrated tolerating magnetic fields up to 34 T, surpassing the 24 T limit of Nb<sub>3</sub>Sn, can be achieved using a multifilament round wire conductor made of the high-temperature superconductor Bi₂Sr₂CaCu₂O₈₋ₓ (Bi-2212). Despite having many high-angle grain boundaries and lacking macroscopic texture, Bi-2212 attains high superconducting critical current densities ($J_C$) of 2500 A/mm² at 20 T and 4.2 K. Unlike REBa₂Cu₃O₇₋ₓ (REBCO) conductors, Bi-2212 does not require extreme texture, has a lower aspect ratio, and is less sensitive to defects.[^3]
 
@@ -292,6 +292,40 @@ The critical surface at zero strain looks as follows:
 -----------
 
 ### REBCO
+
+
+---------------
+
+
+#### 2nd Generation REBCO | `jcrit_rebco()`
+
+The following parameters following the scaling are shown below:
+
+- $B_{C20 \text{max}}^*: 132.5 \ \text{T}$
+- $T_{C0 \text{max}}^*: 90.0 \ \text{K}$
+- $C: 1.82962 \times 10^8$
+- $p: 0.5875$
+- $q: 1.7$
+- $\alpha: 1.54121$
+- $\beta: 1.96679$
+
+$$
+B = B_{C20 \text{max}}^* \times \left(1-\frac{T_{\text{conductor}}}{T_{\text{C0max}}^*}\right)^{\alpha}
+$$
+
+$$
+J_c = \frac{C}{B_{\text{conductor}}}B^{\beta} \times \left(\frac{B_{\text{conductor}}}{B}\right)^p\left(1-\frac{B_{\text{conductor}}}{B}\right)^q
+$$
+
+<figure markdown>
+![2nd Generation REBCO](./images/2nd_gen_rebco_zero_strain.png){ width = "100"}
+<figcaption>Figure 3: Critical current density surface for 2nd generation REBCO superconductor as a function of magnetic field and temperature at the conductor.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/2nd_gen_rebco_zero_strain.html)** :bar_chart:
+
+
+
 
 [^1]: L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,” IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009, doi: https://doi.org/10.1109/tasc.2009.2018278.
 [^2]: V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”Accessed: May 12, 2025. [Online].
