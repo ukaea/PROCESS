@@ -3533,7 +3533,7 @@ def plot_physics_info(axis, mfile_data, scan):
         pthresh = mfile_data.data["l_h_threshold_powers(6)"].get_scan(scan)
 
     data = [
-        ("fusion_power", "Fusion power", "MW"),
+        ("p_fusion_total_mw", "Fusion power", "MW"),
         ("bigq", "$Q_{p}$", ""),
         ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
@@ -3735,7 +3735,7 @@ def plot_power_info(axis, mfile_data, scan):
 
     plant_eff = 100.0 * (
         mfile_data.data["pnetelmw"].get_scan(scan)
-        / mfile_data.data["fusion_power"].get_scan(scan)
+        / mfile_data.data["p_fusion_total_mw"].get_scan(scan)
     )
 
     # Define appropriate pedestal and impurity parameters

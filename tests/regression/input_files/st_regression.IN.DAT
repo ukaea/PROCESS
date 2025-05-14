@@ -102,16 +102,16 @@ bt = 3.0
 icc = 9
 * DESCRIPTION:   Fusion Power Upper Limit Constraint
 * JUSTIFICATION: Working to target fusion
-* VARIABLES:     fusion_power (fusion power) calculated in-situ
+* VARIABLES:     p_fusion_total_mw (fusion power) calculated in-situ
 
 ixc = 26
-ffuspow = 1.0
+fp_fusion_total_max_mw = 1.0
 *boundl(26) = 0.9
 *boundu(26) = 1.1
 * DESCRIPTION:   f-value for Maximum Fusion Power
 * JUSTIFICATION: Used with icc=9 to enforce Fusion Power limit
 
-powfmax = 2500.0 
+p_fusion_total_max_mw = 2500.0 
 * DESCRIPTION:   Maximum fusion power (MW) (icc=9)
 * JUSTIFICATION: 
 

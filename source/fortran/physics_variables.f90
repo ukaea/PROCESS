@@ -53,10 +53,10 @@ module physics_variables
   real(dp) :: alphap
   !! pressure profile index
 
-  real(dp) :: alpha_rate_density_total
+  real(dp) :: fusden_alpha_total
   !! Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]
 
-  real(dp) :: alpha_rate_density_plasma
+  real(dp) :: fusden_plasma_alpha
   !! Alpha particle production rate per unit volume, just from plasma [particles/m3/sec]
 
   real(dp) :: alphat
@@ -281,10 +281,13 @@ module physics_variables
   real(dp) :: f_tritium
   !! tritium fuel fraction
 
-  real(dp) :: fusion_rate_density_total
-  !! fusion reaction rate, from beams and plasma (reactions/m3/sec)
+  real(dp) :: fusden_total
+  !! fusion reaction rate density, from beams and plasma (reactions/m3/sec)
 
-  real(dp) :: fusion_rate_density_plasma
+  real(dp) :: fusrat_total
+  !! fusion reaction rate, from beams and plasma (reactions/sec)
+
+  real(dp) :: fusden_plasma
   !! fusion reaction rate, just from plasma (reactions/m3/sec)
 
   real(dp) :: f_c_plasma_non_inductive
@@ -582,37 +585,43 @@ module physics_variables
   real(dp) :: f_dd_branching_trit
   !! branching ratio for DD -> T
 
-  real(dp) :: alpha_power_density_plasma
+  real(dp) :: pden_plasma_alpha_mw
   !! Alpha power per volume just from plasma [MW/m3]
 
-  real(dp) :: alpha_power_density_total
+  real(dp) :: pden_alpha_total_mw
   !! Alpha power per volume from plasma and beams [MW/m3]
 
-  real(dp) :: alpha_power_electron_density
+  real(dp) :: f_pden_alpha_electron_mw
   !! Alpha power per volume to electrons [MW/m3]
 
   real(dp) :: p_fw_alpha_mw
   !! alpha power escaping plasma and reaching first wall (MW)
 
-  real(dp) :: alpha_power_ions_density
+  real(dp) :: f_pden_alpha_ions_mw
   !! alpha power per volume to ions (MW/m3)
 
-  real(dp) :: alpha_power_plasma
+  real(dp) :: p_plasma_alpha_mw
   !! Alpha power from only the plasma (MW)
 
-  real(dp) :: alpha_power_total
+  real(dp) :: p_alpha_total_mw
   !! Total alpha power from plasma and beams (MW)
 
-  real(dp) :: alpha_power_beams
+  real(dp) :: p_beam_alpha_mw
   !! alpha power from hot neutral beam ions (MW)
 
-  real(dp) :: non_alpha_charged_power
+  real(dp) :: p_beam_neutron_mw
+  !! neutron power from hot neutral beam ions (MW)
+
+  real(dp) :: p_beam_dt_mw
+  !! D-T fusion power from hot neutral beam ions (MW)
+
+  real(dp) :: p_non_alpha_charged_mw
   !! non-alpha charged particle fusion power (MW)
 
-  real(dp) :: charged_particle_power
+  real(dp) :: p_charged_particle_mw
   !! Total charged particle fusion power [MW]
 
-  real(dp) :: charged_power_density
+  real(dp) :: pden_non_alpha_charged_mw
   !! Non-alpha charged particle fusion power per volume [MW/m3]
 
   real(dp) :: pcoef
@@ -624,10 +633,10 @@ module physics_variables
   real(dp) :: pden_plasma_core_rad_mw
   !! total core radiation power per volume (MW/m3)
 
-  real(dp) :: dd_power
+  real(dp) :: p_dd_total_mw
   !! deuterium-deuterium fusion power (MW)
 
-  real(dp) :: dhe3_power
+  real(dp) :: p_dhe3_total_mw
   !! deuterium-helium3 fusion power (MW)
 
   real(dp) :: p_plasma_separatrix_mw
@@ -642,10 +651,10 @@ module physics_variables
   real(dp) :: pdivmax
   !! power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)
 
-  real(dp) :: dt_power_total
+  real(dp) :: p_dt_total_mw
   !!  Total deuterium-tritium fusion power, from plasma and beams [MW]
 
-  real(dp) :: dt_power_plasma
+  real(dp) :: p_plasma_dt_mw
   !!  Deuterium-tritium fusion power, just from plasma [MW]
 
   real(dp) :: p_plasma_outer_rad_mw
@@ -666,16 +675,16 @@ module physics_variables
   real(dp) :: plasma_current
   !! plasma current (A)
 
-  real(dp) :: neutron_power_plasma
+  real(dp) :: p_plasma_neutron_mw
   !! Neutron fusion power from just the plasma [MW]
 
-  real(dp) :: neutron_power_total
+  real(dp) :: p_neutron_total_mw
   !! Total neutron fusion power from plasma and beams [MW]
 
-  real(dp) :: neutron_power_density_total
+  real(dp) :: pden_neutron_total_mw
   !! neutron fusion power per volume from beams and plasma (MW/m3)
 
-  real(dp) :: neutron_power_density_plasma
+  real(dp) :: pden_plasma_neutron_mw
   !! neutron fusion power per volume just from plasma (MW/m3)
 
   real(dp) :: p_plasma_ohmic_mw
@@ -687,7 +696,7 @@ module physics_variables
   real(dp) :: p_plasma_loss_mw
   !! heating power (= transport loss power) (MW) used in confinement time calculation
 
-  real(dp) :: fusion_power
+  real(dp) :: p_fusion_total_mw
   !! fusion power (MW)
 
   real(dp) :: len_plasma_poloidal

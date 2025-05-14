@@ -360,6 +360,42 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Current drive efficiencies
+
+Absolute current drive efficiencies ($\eta_{\text{CD}}$) representing Amps driven per Watt of injected power start with the `eta_cd` prefix.
+
+$$
+\eta_{\text{CD}} = \frac{I_{\text{driven}}}{P_{\text{injected}}}
+$$
+
+Normalized current drive efficiecnies using major radius and volume averaged electron temperature start with the `eta_cd_norm` prefix
+
+$$
+\eta_{\text{CD,norm}} = R_0 n_{\text{e,20}} \eta_{\text{CD}}
+$$
+
+$\eta_{\text{CD,norm}}$ has the units of $\frac{1\times 10^{20} \text{A}}{\text{W} \text{m}^2}$
+
+The above is concurrent with that of general efficiencies given [below](#efficiencies).
+
+--------------
+
+##### Fusion rates
+
+- Fusion rates should start with the `fusrat_` prefix.
+
+This should be used for units of reactions per second.
+
+---------------------
+
+##### Fusion rate densities
+
+- Fusion rate densities should start with the `fusden_` prefix.
+
+This should be used for units of reactions per cubic metre, per second ($\text{reactions} \ \text{m}^{-3}\text{s}^{-1}$).
+
+---------------------
+
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
@@ -384,7 +420,6 @@ Try to keep names to a sensible length while also keeping the name explicit and 
 
 ---------------------
 
-
 ### Physical Type
 
 The physical type of the variable should form the first part of the variable name, e.g. for plasma resistance the variable should be named:
@@ -407,7 +442,7 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 
 ```fortran
 ! Fusion power [W]
-fusion_power = 1000.0d6
+p_fusion_total = 1000.0d6
 ```
 
 If a variable is not in SI units then its units should be put at the end of of the variable name.
@@ -415,7 +450,7 @@ Example:
 
 ```fortran
 ! Fusion power [MW]
-fusion_power_MW = 1000.0d0
+p_fusion_total_mw = 1000.0d0
 ```
 
 !!! note

@@ -72,7 +72,7 @@ def objective_function(minmax: int) -> float:
                 tfcoil_variables.tfcmw + 1e-3 * pf_power_variables.srcktpm
             ) / 10.0
         case 5:
-            objective_metric = physics_variables.fusion_power / (
+            objective_metric = physics_variables.p_fusion_total_mw / (
                 current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw

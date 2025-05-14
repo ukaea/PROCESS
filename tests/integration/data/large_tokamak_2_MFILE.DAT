@@ -416,7 +416,7 @@
  Greenwald_model_________________________________________________________ (dlimit(7))___________________      7.4445E+19 OP 
  Deuterium_fuel_fraction_________________________________________________ (fdeut)_______________________      5.0000E-01    
  Tritium_fuel_fraction___________________________________________________ (ftrit)_______________________      5.0000E-01    
- Total_fusion_power_(MW)_________________________________________________ (fusion_power)______________________      1.6202E+03 OP 
+ Total_fusion_power_(MW)_________________________________________________ (p_fusion_total_mw)______________________      1.6202E+03 OP 
  _=____D-T_fusion_power_(MW)_____________________________________________ (pdt)_________________________      1.6182E+03 OP 
  __+___D-D_fusion_power_(MW)_____________________________________________ (pdd)_________________________      1.9494E+00 OP 
  __+_D-He3_fusion_power_(MW)_____________________________________________ (pdhe3)_______________________      0.0000E+00 OP 
@@ -936,7 +936,7 @@
  Blanket_line_density_(tonne/m2)_________________________________________ (x_blanket)___________________      2.2911E+00    
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.4866E+04    
  Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.4085E-02    
- fusion_power__________________________________________________________________ (fusion_power.)_____________________      1.6202E+03    
+ fusion_power__________________________________________________________________ (p_fusion_total_mw.)_____________________      1.6202E+03    
  total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.1424E+07    
  # Pumping for primary coolant (helium) #
  Pressure_drop_in_FW_and_blanket_coolant_incl._hx_and_pipes_(Pa)_________ (dp_he)_______________________      5.5000E+05    
@@ -1139,7 +1139,7 @@
  Ohmic_heating_(MW)______________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.2284E-01    
  Injected_power_deposited_in_plasma_(MW)_________________________________ (p_hcd_injected_total_mw)______________________      8.0143E+01    
  Total_(MW)______________________________________________________________ ______________________________      3.8950E+02    
- Fusion_power_(MW)_______________________________________________________ (fusion_power)______________________      1.6202E+03    
+ Fusion_power_(MW)_______________________________________________________ (p_fusion_total_mw)______________________      1.6202E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0836E+02    
  Injected_power_(MW)_____________________________________________________ (p_hcd_injected_total_mw.)_____________________      8.0143E+01    
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.2284E-01    
@@ -1164,15 +1164,15 @@
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7006E+02    
  Total_(MW)______________________________________________________________ ______________________________      8.7006E+02    
  Gross_electrical_output*_(MW)___________________________________________ (pgrossmw)____________________      8.7006E+02    
- Fusion_power_(MW)_______________________________________________________ (fusion_power)______________________      1.6202E+03    
+ Fusion_power_(MW)_______________________________________________________ (p_fusion_total_mw)______________________      1.6202E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0836E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9285E+03    
  Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      4.0001E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.3051E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.2417E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9293E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(fusion_power+emultmw)____      2.0741E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/fusion_power)_____________      2.4689E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(p_fusion_total_mw+emultmw)____      2.0741E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/p_fusion_total_mw)_____________      2.4689E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      4.0000E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      5.4025E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -1244,9 +1244,9 @@ walalw = 2.0
 *--------------------------*
 
 icc = 9
-ixc = 26 * ffuspow
+ixc = 26 * fp_fusion_total_max_mw
 * Maximum allowable value fusion power [MW]
-powfmax = 3000
+p_fusion_total_max_mw = 3000
 
 * Burn time lower limit *
 *-----------------------*
