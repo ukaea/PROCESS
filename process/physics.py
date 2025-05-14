@@ -2163,7 +2163,7 @@ class Physics:
             (
                 physics_variables.beta_beam,
                 physics_variables.beam_density_out,
-                physics_variables.alpha_power_beams,
+                physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
@@ -8770,8 +8770,9 @@ def init_physics_variables():
     physics_variables.fpdivlim = 1.0
     physics_variables.fne0 = 1.0
     physics_variables.f_tritium = 0.5
-    physics_variables.fusion_rate_density_total = 0.0
-    physics_variables.fusion_rate_density_plasma = 0.0
+    physics_variables.fusden_total = 0.0
+    physics_variables.fusrat_total = 0.0
+    physics_variables.fusden_plasma = 0.0
     physics_variables.f_c_plasma_non_inductive = 1.0
     physics_variables.ejima_coeff = 0.4
     physics_variables.f_beta_alpha_beam_thermal = 0.0

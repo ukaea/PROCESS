@@ -460,7 +460,7 @@ contains
     !! vol_plasma : input real : plasma volume (m3)
 
     use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_ion_transport_loss_mw, pden_plasma_rad_mw, &
-                                  pden_plasma_core_rad_mw, f_alpha_plasma, alpha_power_density_total, charged_power_density, &
+                                  pden_plasma_core_rad_mw, f_alpha_plasma, pden_alpha_total_mw, pden_non_alpha_charged_mw, &
                                   pden_plasma_ohmic_mw, vol_plasma
     use current_drive_variables, only: p_hcd_injected_total_mw
 
@@ -488,7 +488,7 @@ contains
 
     ! if plasma not ignited include injected power
     if (i_plasma_ignited == 0) then
-      pdenom = f_alpha_plasma*alpha_power_density_total + charged_power_density + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
+      pdenom = f_alpha_plasma*pden_alpha_total_mw + pden_non_alpha_charged_mw + pden_plasma_ohmic_mw + p_hcd_injected_total_mw/vol_plasma
     else
       ! if plasma ignited
       pdenom = f_alpha_plasma*pden_alpha_total_mw + pden_non_alpha_charged_mw + pden_plasma_ohmic_mw
@@ -522,7 +522,7 @@ contains
       !! f_pden_alpha_ions_mw : input real : alpha power per volume to ions (MW/m3)
       !! p_hcd_injected_ions_mw : input real : auxiliary injected power to ions (MW)
       !! vol_plasma : input real : plasma volume (m3)
-      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, alpha_power_ions_density, vol_plasma
+      use physics_variables, only: i_plasma_ignited, pden_ion_transport_loss_mw, piepv, f_alpha_plasma, f_pden_alpha_ions_mw, vol_plasma
       use current_drive_variables, only: p_hcd_injected_ions_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -533,9 +533,9 @@ contains
 
 	   ! No assume plasma ignition:
       if (i_plasma_ignited == 0) then
-         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma)
-         tmp_con    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
-         tmp_err    = (f_alpha_plasma*alpha_power_ions_density + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
+         tmp_cc     = 1.0D0 - (pden_ion_transport_loss_mw + piepv) / (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma)
+         tmp_con    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * (1.0D0 - tmp_cc)
+         tmp_err    = (f_alpha_plasma*f_pden_alpha_ions_mw + p_hcd_injected_ions_mw/vol_plasma) * tmp_cc
          tmp_symbol = '='
          tmp_units  = 'MW/m3'
 	   ! Plasma ignited:
@@ -579,7 +579,7 @@ contains
       !! p_hcd_injected_electrons_mw : input real : auxiliary injected power to electrons (MW)
       !! vol_plasma : input real : plasma volume (m3)
       use physics_variables, only: i_rad_loss, i_plasma_ignited, pden_electron_transport_loss_mw, pden_plasma_core_rad_mw, f_alpha_plasma, &
-                                 alpha_power_electron_density, piepv, vol_plasma, pden_plasma_rad_mw
+                                 f_pden_alpha_electron_mw, piepv, vol_plasma, pden_plasma_rad_mw
       use current_drive_variables, only: p_hcd_injected_electrons_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -603,7 +603,7 @@ contains
 
       ! if plasma not ignited include injected power
       if (i_plasma_ignited == 0) then
-         pdenom = f_alpha_plasma*alpha_power_electron_density + piepv + p_hcd_injected_electrons_mw/vol_plasma
+         pdenom = f_alpha_plasma*f_pden_alpha_electron_mw + piepv + p_hcd_injected_electrons_mw/vol_plasma
       else
       ! if plasma ignited
          pdenom = f_alpha_plasma*f_pden_alpha_electron_mw + piepv

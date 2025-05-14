@@ -3526,7 +3526,7 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
-            current_drive_variables.bigq = physics_variables.fusion_power / (
+            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
                 current_drive_variables.p_hcd_injected_total_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw

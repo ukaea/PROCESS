@@ -2480,7 +2480,7 @@ class Costs:
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if cost_variables.ireactor == 0:
             pwrrej = (
-                physics_variables.fusion_power
+                physics_variables.p_fusion_total_mw
                 + heat_transport_variables.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )
