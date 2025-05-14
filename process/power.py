@@ -1354,22 +1354,22 @@ class Power:
         primsum = 0.0e0
         secsum = 0.0e0
 
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "High-grade             Low-grade              Total")
-        po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
+        # po.oblnkl(self.outfile)
+        # po.write(self.outfile, "High-grade             Low-grade              Total")
+        # po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
 
-        po.write(self.outfile, "First wall:")
-        po.dblcol(
-            self.outfile,
-            "p_fw_nuclear_heat_total_mw",
-            0.0e0,
-            fwbs_variables.p_fw_nuclear_heat_total_mw,
-        )
-        po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
-        po.dblcol(
-            self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw
-        )
-        po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
+        # po.write(self.outfile, "First wall:")
+        # po.dblcol(
+        #     self.outfile,
+        #     "p_fw_nuclear_heat_total_mw",
+        #     0.0e0,
+        #     fwbs_variables.p_fw_nuclear_heat_total_mw,
+        # )
+        # po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
+        # po.dblcol(
+        #     self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw
+        # )
+        # po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
 
         primsum = (
             primsum
@@ -1380,20 +1380,20 @@ class Power:
         )
         secsum = secsum
 
-        po.oblnkl(self.outfile)
+        # po.oblnkl(self.outfile)
 
-        po.write(self.outfile, "Blanket:")
-        po.dblcol(
-            self.outfile,
-            "p_blkt_nuclear_heat_total_mw",
-            0.0e0,
-            fwbs_variables.p_blkt_nuclear_heat_total_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.dblcol(
-            self.outfile, "htpmw_blkt", 0.0e0, heat_transport_variables.htpmw_blkt
-        )
+        # po.write(self.outfile, "Blanket:")
+        # po.dblcol(
+        #     self.outfile,
+        #     "p_blkt_nuclear_heat_total_mw",
+        #     0.0e0,
+        #     fwbs_variables.p_blkt_nuclear_heat_total_mw,
+        # )
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.dblcol(
+        #     self.outfile, "htpmw_blkt", 0.0e0, heat_transport_variables.htpmw_blkt
+        # )
 
         primsum = (
             primsum
@@ -1402,23 +1402,23 @@ class Power:
         )
         secsum = secsum
 
-        po.oblnkl(self.outfile)
+        # po.oblnkl(self.outfile)
 
-        po.write(self.outfile, "Shield:")
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.pnucshld * heat_transport_variables.iprimshld} {fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)} {fwbs_variables.pnucshld}"
-            ),
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(
-            self.outfile,
-            (
-                f"{heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
-            ),
-        )
+        # po.write(self.outfile, "Shield:")
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{fwbs_variables.pnucshld * heat_transport_variables.iprimshld} {fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)} {fwbs_variables.pnucshld}"
+        #     ),
+        # )
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
+        #     ),
+        # )
 
         primsum = (
             primsum
@@ -1432,33 +1432,33 @@ class Power:
             * (1 - heat_transport_variables.iprimshld)
         )
 
-        po.oblnkl(self.outfile)
+        # po.oblnkl(self.outfile)
 
-        po.write(self.outfile, "Divertor:")
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{physics_variables.p_plasma_separatrix_mw * self.iprimdiv} {physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)} {physics_variables.p_plasma_separatrix_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.p_div_rad_total_mw * self.iprimdiv} {fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_rad_total_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{heat_transport_variables.htpmw_div * self.iprimdiv} {heat_transport_variables.htpmw_div * (1 - self.iprimdiv)} {heat_transport_variables.htpmw_div}"
-            ),
-        )
+        # po.write(self.outfile, "Divertor:")
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
+        #     ),
+        # )
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{physics_variables.p_plasma_separatrix_mw * self.iprimdiv} {physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)} {physics_variables.p_plasma_separatrix_mw}"
+        #     ),
+        # )
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{fwbs_variables.p_div_rad_total_mw * self.iprimdiv} {fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_rad_total_mw}"
+        #     ),
+        # )
+        # po.write(
+        #     self.outfile,
+        #     (
+        #         f"{heat_transport_variables.htpmw_div * self.iprimdiv} {heat_transport_variables.htpmw_div * (1 - self.iprimdiv)} {heat_transport_variables.htpmw_div}"
+        #     ),
+        # )
 
         primsum = (
             primsum
@@ -1475,59 +1475,59 @@ class Power:
             + heat_transport_variables.htpmw_div * (1 - self.iprimdiv)
         )
 
-        if physics_variables.itart == 1:
-            po.oblnkl(self.outfile)
-            po.write(self.outfile, "TART centrepost:")
-            po.dblcol(self.outfile, "pnuc_cp", 0.0e0, fwbs_variables.pnuc_cp)
-            po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-            po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-            po.dblcol(self.outfile, "ppumpmw", 0.0e0, self.ppumpmw)  # check
+        # if physics_variables.itart == 1:
+        #     po.oblnkl(self.outfile)
+        #     po.write(self.outfile, "TART centrepost:")
+        #     po.dblcol(self.outfile, "pnuc_cp", 0.0e0, fwbs_variables.pnuc_cp)
+        #     po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        #     po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        #     po.dblcol(self.outfile, "ppumpmw", 0.0e0, self.ppumpmw)  # check
 
         primsum = primsum
         secsum = secsum + fwbs_variables.pnuc_cp + self.ppumpmw
 
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "TF coil:")
-        po.dblcol(self.outfile, "ptfnuc", 0.0e0, fwbs_variables.ptfnuc)
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.oblnkl(self.outfile)
+        # po.write(self.outfile, "TF coil:")
+        # po.dblcol(self.outfile, "ptfnuc", 0.0e0, fwbs_variables.ptfnuc)
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
 
         primsum = primsum
         secsum = secsum + fwbs_variables.ptfnuc
 
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
-        po.dblcol(
-            self.outfile,
-            "p_fw_hcd_nuclear_heat_mw",
-            0.0e0,
-            fwbs_variables.p_fw_hcd_nuclear_heat_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.dblcol(
-            self.outfile,
-            "p_fw_hcd_rad_total_mw",
-            0.0e0,
-            fwbs_variables.p_fw_hcd_rad_total_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.oblnkl(self.outfile)
+        # po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
+        # po.dblcol(
+        #     self.outfile,
+        #     "p_fw_hcd_nuclear_heat_mw",
+        #     0.0e0,
+        #     fwbs_variables.p_fw_hcd_nuclear_heat_mw,
+        # )
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
+        # po.dblcol(
+        #     self.outfile,
+        #     "p_fw_hcd_rad_total_mw",
+        #     0.0e0,
+        #     fwbs_variables.p_fw_hcd_rad_total_mw,
+        # )
+        # po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
 
-        primsum = primsum
-        secsum = (
-            secsum
-            + fwbs_variables.p_fw_hcd_nuclear_heat_mw
-            + fwbs_variables.p_fw_hcd_rad_total_mw
-        )
+        # primsum = primsum
+        # secsum = (
+        #     secsum
+        #     + fwbs_variables.p_fw_hcd_nuclear_heat_mw
+        #     + fwbs_variables.p_fw_hcd_rad_total_mw
+        # )
 
-        po.oblnkl(self.outfile)
-        #     write(self.outfile,'(t10,a)') repeat('-',88)
-        po.write(self.outfile, (f"{primsum} {secsum} {primsum + secsum}"))
-        # 10    format(t32,'neutrons',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 20    format(t14,'charged particle transport',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 30    format(t31,'radiation',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 40    format(t25,'coolant pumping',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 50    format(t34,'Totals',t50,f8.2,t70,f8.2,t90,f8.2)
+        # po.oblnkl(self.outfile)
+        # #     write(self.outfile,'(t10,a)') repeat('-',88)
+        # po.write(self.outfile, (f"{primsum} {secsum} {primsum + secsum}"))
+        # # 10    format(t32,'neutrons',t50,f8.2,t70,f8.2,t90,f8.2)
+        # # 20    format(t14,'charged particle transport',t50,f8.2,t70,f8.2,t90,f8.2)
+        # # 30    format(t31,'radiation',t50,f8.2,t70,f8.2,t90,f8.2)
+        # # 40    format(t25,'coolant pumping',t50,f8.2,t70,f8.2,t90,f8.2)
+        # # 50    format(t34,'Totals',t50,f8.2,t70,f8.2,t90,f8.2)
 
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -1610,7 +1610,7 @@ class Power:
         po.ovarin(
             self.outfile,
             "Number of primary heat exchangers",
-            "(nphx)",
+            " (nphx)",
             heat_transport_variables.nphx,
             "OP ",
         )
