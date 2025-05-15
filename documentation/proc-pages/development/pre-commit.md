@@ -87,7 +87,7 @@ your commits pass through pre-commit, then these jobs should not fail as your co
 Although not required, the `ruff` VSCode extension will ensure that all the Python files you save 
 will be ruff-compliant and, as such, won't need to modified by pre-commit.
 
-Open or create the file `.vscode/settings.sh` and add/modify the following settings:
+Open or create the file `.vscode/settings.json` and add/modify the following settings:
 ```json
 {
     "[python]": {
