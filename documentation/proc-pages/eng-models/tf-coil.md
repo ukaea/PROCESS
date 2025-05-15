@@ -77,7 +77,7 @@ $$
   The TF coil radial thickness (<em>dr_tf_inboard</em>) can parametrized in two ways in <em>PROCESS</em>:
 </p>
 - <p style='text-align: justify;'> 
-    **Direct parametrization**: the TF radial inboard thickness width is set as an input variable : `dr_tf_inboard` (iteration variable 57). The WP radial thickness (`dr_tf_wp`) is calculated from `dr_tf_inboard` and the two case radial thicknesses. This parametrization is used by default.
+    **Direct parametrization**: the TF radial inboard thickness width is set as an input variable : `dr_tf_inboard` (iteration variable 13). The WP radial thickness (`dr_tf_wp`) is calculated from `dr_tf_inboard` and the two case radial thicknesses. This parametrization is used by default.
   </p>
 - <p style='text-align: justify;'> 
     **WP thickness parametrization**: the TF inboard radial thickness is calculated from the the case and the WP radial thickness. This option is selected by using the WP thickness (`dr_tf_wp`, iteration variable 140) as an iteration variable. Doing so, any `dr_tf_inboard` values will be overwritten and for this reason `dr_tf_wp` and `dr_tf_inboard` cannot be used as iteration variables simultaneously. Although not set by default for backward compatibility, this parametrization provides a more stable optimization procedure (negative WP area layer cannot be obtained by construction) and is hence encouraged.
@@ -1243,86 +1243,101 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 
 ### General parameters
 
-|  Parameter | description | Default |
-| - | - | - |
-| `n_tf_coils` | Number of TF coils | 16 |
-| `i_tf_sup` | Swich selecting the conductor technology: <br>  - 0 : Water cooled copper (GLIDCOP) <br>  - 1 : Superconducting TF magnets <br>  - 2 : Helium cooled Aluminium magnets | 1 |
-| `i_tf_sc_mat` | Swich for superconducting material  <br> 1 : Nb$_3$Sn superconductor, ITER critical surface parameterization[^1], standard critical values <br> 2 : Bi-2212 high temperature superconductor <br> 3 : NbTi superconductor <br> 4 : Nb$_3$Sn superconductor, ITER critical surface  parameterization[^1], user-defined critical parameters <br> 5 : WST Nb$_3$Sn parameterization <br> 6 : REBCO HTS tape in CroCo strand <br> 7 : Durham Ginzburg-Landau critical surface model for Nb-Ti <br> 8 : Durham Ginzburg-Landau critical surface model for REBCO <br> 9 : Hazelton experimental data combined with Zhai conceptual model for REBCO | 1 |
+| Parameter     | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Default |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `n_tf_coils`  | Number of TF coils                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | 16      |
+| `i_tf_sup`    | Swich selecting the conductor technology: <br>  - 0 : Water cooled copper (GLIDCOP) <br>  - 1 : Superconducting TF magnets <br>  - 2 : Helium cooled Aluminium magnets                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 1       |
+| `i_tf_sc_mat` | Swich for superconducting material  <br> 1 : Nb$_3$Sn superconductor, ITER critical surface parameterization[^1], standard critical values <br> 2 : Bi-2212 high temperature superconductor <br> 3 : NbTi superconductor <br> 4 : Nb$_3$Sn superconductor, ITER critical surface  parameterization[^1], user-defined critical parameters <br> 5 : WST Nb$_3$Sn parameterization <br> 6 : REBCO HTS tape in CroCo strand <br> 7 : Durham Ginzburg-Landau critical surface model for Nb-Ti <br> 8 : Durham Ginzburg-Landau critical surface model for REBCO <br> 9 : Hazelton experimental data combined with Zhai conceptual model for REBCO | 1       |
 
 <br>
 
 ### Mid-plane geometry parameters
 
-|  Parameter | description | Iteration variable | Default | Unit |
-| - | - | - | - | - |
-| `i_tf_inside_cs` | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid |  - | 0 | - |
-| `dr_tf_inboard` | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable |  ixc = 13 | No default | m |
-| `tfootfi` | Outboard/inboard TF coil thickness ratio | - | 1 | - | 
-| `dr_tf_wp` | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140 | No default | m | 
-| `dr_tf_nose_case` | Nose/inner case radial thickness | ixc = 57 | 0.3 | m |
-| `dx_tf_side_case` | Minimal sidewall casing thickness | - | - | m |
-| `casths_fraction` | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value | - | 0.03 | - |
-| `dr_tf_plasma_case` | Minimal plasma side casing thickness | - | - | m |
-| `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value | - | 0.05 | - |
-| `i_tf_case_geom` | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing | - | 0 | - |
-| `i_tf_wp_geom` | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal | - | Integer turn : 0  <br> otherwise : 1  | - |
-| `tinstf` | WP ground insulation thickness | - | 0.018 | m |
-| `tfinsgap` | WP insertion gap thickness | - | 0.01 | m |
+| Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------ | ---- |
+| `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
+| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
+| `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
+| `dr_tf_wp`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
+| `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
+| `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
+| `casthi`              | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
+| `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value                         | -                  | 0.05                                 | -    |
+| `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
+| `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
+| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
+| Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
+| -                     | -                                                                                                                                                    | -                  | -                                    | -    |
+| `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
+| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
+| `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
+| `dr_tf_wp`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
+| `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
+| `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
+| `dr_tf_plasma_case`   | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
+| `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
+| `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
+| `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
+| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 
 <br>
 
 ### Turn parameters
 
-|  Parameter | description | Iteration variable | Default | Unit |
-| - | - | - | - | - |
-| `i_tf_turns_integer` | Switch activating the integer turn parametrization <br> - 0 : Integer number of turns <br> - 1 : non integer number of turn | - | 0 | - |
-| `n_layer` | Number of turns in the radial direction (`i_tf_turns_integer = 1` only) | - | 20 | - |
-| `n_pancake` | Number of turns in the toroidal direction (`i_tf_turns_integer = 1` only) | - | 10 | - |
-| `t_turn_tf` | TF turn squared size | - | No default | m |
-| `t_cable_tf` | TF cable diameter size | - | No default | m |
-| `f_t_turn_tf` | f-value for TF turn squared size constraint (icc = 86) | 175 | 1. | m |
-| `t_turn_tf_max` | Maximum turn squared size for constraint (icc = 86) | - | 0.05 | m |
-| `cpttf` | Current per turn <br> Overwitten if `t_turn_tf` is set by the user | ixc = 60 | $70.10^3$ | A |
-| `thicndut` | Turn insulation layer thickness | -  | $0.8.10^{-3}$ | m |
-| `thwcndut` | Steekl jacket/conduit thickness | 58 |  $8.10^{-3}$  | m |
-| `dhecoil`  | Helium cooling channel diameter | -  |  $5.10^{-3}$  | m |
-|   `vftf`   | Cable void fraction | -  | 0.4 | - |
-| `fcutfsu`  | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area | ixc = 59 | 0.69 | - |
+| Parameter            | description                                                                                                                 | Iteration variable | Default       | Unit |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------- | ---- |
+| `i_tf_turns_integer` | Switch activating the integer turn parametrization <br> - 0 : Integer number of turns <br> - 1 : non integer number of turn | -                  | 0             | -    |
+| `n_layer`            | Number of turns in the radial direction (`i_tf_turns_integer = 1` only)                                                     | -                  | 20            | -    |
+| `n_pancake`          | Number of turns in the toroidal direction (`i_tf_turns_integer = 1` only)                                                   | -                  | 10            | -    |
+| `t_turn_tf`          | TF turn squared size                                                                                                        | -                  | No default    | m    |
+| `t_cable_tf`         | TF cable diameter size                                                                                                      | -                  | No default    | m    |
+| `f_t_turn_tf`        | f-value for TF turn squared size constraint (icc = 86)                                                                      | 175                | 1.            | m    |
+| `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
+| `cpttf`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
+| `thicndut`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
+| `thwcndut`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
+| `dhecoil`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
+| `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
+| `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
 
 <br>
 
 ### Vertical shape
 
-|  Parameter | description | Iteration variable | Default | Unit |
-| - | - | - | - | - |
-| `itart` | Switch for tapered inboard TF section <br> 0 : conventional inboard leg <br> 1 : Tapered inboard leg (centrepost, CP) | - | 0 | - |
-| `i_tf_shape` | Switch selecting the TF coil shape <br> 1 : D-shape approximation <br> 2 : Rectangular (picture frame) shape | - | 1 : if `itart = 0` <br> 2 : if `itart = 1`| - |
-|  `r_cp_top` | CP TF coil top/bottom radius | ixc = 174 | No default | m |
-|  `f_r_cp` | CP TF top/mid-plane outer radius fraction | - | 1.4 | - |
-|  `i_r_cp_top` | Switch selecting the `r_cp_top` parametrization <br> 0 : `r_cp_top` calculated using the X-point location <br> 1 : Set by user <br> 2 : Set with `f_r_cp` | - | 0 | - |
+| Parameter    | description                                                                                                                                               | Iteration variable | Default                                    | Unit |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------ | ---- |
+| `itart`      | Switch for tapered inboard TF section <br> 0 : conventional inboard leg <br> 1 : Tapered inboard leg (centrepost, CP)                                     | -                  | 0                                          | -    |
+| `i_tf_shape` | Switch selecting the TF coil shape <br> 1 : D-shape approximation <br> 2 : Rectangular (picture frame) shape                                              | -                  | 1 : if `itart = 0` <br> 2 : if `itart = 1` | -    |
+| `r_cp_top`   | CP TF coil top/bottom radius                                                                                                                              | ixc = 174          | No default                                 | m    |
+| `f_r_cp`     | CP TF top/mid-plane outer radius fraction                                                                                                                 | -                  | 1.4                                        | -    |
+| `i_r_cp_top` | Switch selecting the `r_cp_top` parametrization <br> 0 : `r_cp_top` calculated using the X-point location <br> 1 : Set by user <br> 2 : Set with `f_r_cp` | -                  | 0                                          | -    |
 
 <br>
 
 ### TF coil joints
 
-|  Parameter | description | Iteration variable | Default | Unit |
-| - | - | - | - | - |
-|  `i_cp_joints` | Switch selecting the TF coil demoutable joints strategy <br> 0 : No demountable joints  <br> 1 : MAST like sliding joints  | - | 0 : if `itart = 0` <br> 1 : if `itart = 1` | - |
-|  `n_tf_joints` | Number of joints per coils | - | 4 | - |
-|  `n_tf_joints_contact` | Number of contacts per joints | - | 6 | - |
-|  `rho_tf_joints` | Joint surfacic resistivity | - | $2.5.10^{-10}$ | $\Omega.m$ |
-| `th_joint_contact` | Joint contact thickness | - | 0.03 | m |
+| Parameter             | description                                                                                                               | Iteration variable | Default                                    | Unit       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------ | ---------- |
+| `i_cp_joints`         | Switch selecting the TF coil demoutable joints strategy <br> 0 : No demountable joints  <br> 1 : MAST like sliding joints | -                  | 0 : if `itart = 0` <br> 1 : if `itart = 1` | -          |
+| `n_tf_joints`         | Number of joints per coils                                                                                                | -                  | 4                                          | -          |
+| `n_tf_joints_contact` | Number of contacts per joints                                                                                             | -                  | 6                                          | -          |
+| `rho_tf_joints`       | Joint surfacic resistivity                                                                                                | -                  | $2.5.10^{-10}$                             | $\Omega.m$ |
+| `th_joint_contact`    | Joint contact thickness                                                                                                   | -                  | 0.03                                       | m          |
 
 
 <br>
 
 ### TF coil inboard mid-plane stress
 
-|  Parameter | description | Iteration variable | Default | Unit |
-| - | - | - | - | - |
-| `f_vforce_inboard` | Fraction of the vertical force supported by the inboard leg | - | 0.5 | - |
-|  `i_tf_stress_model` | Switch to select the inboard mid-plane stress model <br> 1 : Plane stress <br> 0,2 : Generalized plane stress | - | 0 | - |
-|  `i_tf_bucking` | Switch to select the bucking strategy <br> 0 : No bucking structure <br> 1 : TF bucking structure <br> 2 : TF bucked on CS coil <br> 3 : TF bucked on CS coil (CS-TF layer included in the stress calc.) | - | 0 : if `i_tf_coil \= 1` <br> 1 : if `i_tf_coil = 1` | - |
+| Parameter           | description                                                                                                                                                                                              | Iteration variable | Default                                             | Unit |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------- | ---- |
+| `f_vforce_inboard`  | Fraction of the vertical force supported by the inboard leg                                                                                                                                              | -                  | 0.5                                                 | -    |
+| `i_tf_stress_model` | Switch to select the inboard mid-plane stress model <br> 1 : Plane stress <br> 0,2 : Generalized plane stress                                                                                            | -                  | 0                                                   | -    |
+| `i_tf_bucking`      | Switch to select the bucking strategy <br> 0 : No bucking structure <br> 1 : TF bucking structure <br> 2 : TF bucked on CS coil <br> 3 : TF bucked on CS coil (CS-TF layer included in the stress calc.) | -                  | 0 : if `i_tf_coil \= 1` <br> 1 : if `i_tf_coil = 1` | -    |
 
 <br>
 
