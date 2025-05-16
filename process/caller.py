@@ -78,9 +78,6 @@ class Caller:
             objf = objective_function(ft.numerics.minmax)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
-            # PyVMCON and other bits of PROCESS require a numpy array
-            conf = np.array(conf)
-
             if objf_prev is None and conf_prev is None:
                 # First run: run again to check idempotence
                 logger.debug("New optimisation parameter vector being evaluated")

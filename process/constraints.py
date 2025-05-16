@@ -2280,7 +2280,7 @@ def constraint_eqns(m: int, ieqn: int):
         symbol.append(tmp_symbol)
         units.append(tmp_units)
 
-    return cc, con, err, symbol, units
+    return np.array(cc), np.array(con), np.array(err), symbol, units
 
 
 def init_constraint_variables():
