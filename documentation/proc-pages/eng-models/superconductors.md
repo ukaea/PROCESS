@@ -91,7 +91,7 @@ $$
 
 #### Old empirical | `jcrit_nbti()`
 
-The following parameters following the old empirical Lubell[^4] scaling are shown below:
+Parameters following the old empirical Lubell[^4] scaling are shown below:
 
 - $B_{C20 \text{max}}^*: 15.0 \ \text{T}$
 - $T_{C0 \text{max}}^*: 9.3 \ \text{K}$
@@ -248,7 +248,7 @@ $$
 J_C = f_{\text{strain}} \times \left(1.175\times 10^9 \times e^\left({-0.02115 \times B}\right)-1.288 \times 10^8\right)
 $$
 
-$B_{\text{conductor}}$ & $T_{\text{conductor}}$ are the field and temperature at the superconductor respectively. $f_{\text{strain}}$ can be used to account for strain, radiation damage,fatigue, or AC losses.
+$B_{\text{conductor}}$ & $T_{\text{conductor}}$ are the field and temperature at the superconductor respectively. $f_{\text{strain}}$ can be used to account for strain, radiation damage, fatigue, or AC losses.
 
 
 
