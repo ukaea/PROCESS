@@ -2543,6 +2543,15 @@ class Physics:
             )
         )
 
+        # R. D. Stambaugh scaling law
+        physics_variables.beta_norm_max_stambaugh = (
+            self.calculate_beta_norm_max_stambaugh(
+                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
+                kappa=physics_variables.kappa,
+                aspect=physics_variables.aspect,
+            )
+        )
+
         # Map calculation methods to a dictionary
         beta_norm_max_calculations = {
             0: physics_variables.beta_norm_max,
@@ -2550,6 +2559,7 @@ class Physics:
             2: physics_variables.beta_norm_max_original_scaling,
             3: physics_variables.beta_norm_max_menard,
             4: physics_variables.beta_norm_max_thloreus,
+            5: physics_variables.beta_norm_max_stambaugh,
         }
 
         # Calculate beta_norm_max based on i_beta_norm_max
@@ -2885,6 +2895,45 @@ class Physics:
         """
         return 3.7 + (
             (c_beta / (p0 / vol_avg_pressure)) * (12.5 - 3.5 * (p0 / vol_avg_pressure))
+        )
+
+    @staticmethod
+    def calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap: float,
+        kappa: float,
+        aspect: float,
+    ) -> float:
+        """
+        Calculate the Stambaugh normalized beta upper limit.
+
+        :param f_c_plasma_bootstrap: Bootstrap current fraction.
+        :type f_c_plasma_bootstrap: float
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+        :param aspect: Plasma aspect ratio.
+        :type aspect: float
+
+        :return: The Stambaugh normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
+            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
+
+        :References:
+            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
+              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
+              doi: https://doi.org/10.13182/fst59-279.
+
+            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
+              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
+              doi: https://doi.org/10.1088/0029-5515/44/4/009.
+        """
+        return (
+            f_c_plasma_bootstrap
+            * 10
+            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
+            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
         )
 
     @staticmethod
@@ -4332,6 +4381,13 @@ class Physics:
                 "E. Thloreus normalised beta upper limit",
                 "(beta_norm_max_thloreus) ",
                 physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "R. Stambaugh normalised beta upper limit",
+                "(beta_norm_max_stambaugh) ",
+                physics_variables.beta_norm_max_stambaugh,
                 "OP ",
             )
 
@@ -8494,6 +8550,7 @@ def init_physics_variables():
     physics_variables.beta_norm_max_menard = 0.0
     physics_variables.beta_norm_max_original_scaling = 0.0
     physics_variables.beta_norm_max_tholerus = 0.0
+    physics_variables.beta_norm_max_stambaugh = 0.0
     physics_variables.dnelimt = 0.0
     physics_variables.nd_ions_total = 0.0
     physics_variables.dnla = 0.0

@@ -3306,3 +3306,14 @@ def test_calculate_beta_norm_max_thloreus():
     vol_avg_pressure = 1.0
     result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, vol_avg_pressure)
     assert result == pytest.approx(5.075, abs=0.00001)
+
+
+def test_calculate_beta_norm_max_stambaugh():
+    """Test calculate_beta_norm_max_thloreus()"""
+    f_c_plasma_bootstrap = 0.7
+    kappa = 2.0
+    aspect = 2.5
+    result = Physics.calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap, kappa, aspect
+    )
+    assert result == pytest.approx(3.840954484207041, abs=0.00001)
