@@ -1120,7 +1120,9 @@ INPUT_VARIABLES = {
     "robotics_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "roughness": InputVariable(fortran.fwbs_variables, float, range=(0.0, 0.01)),
+    "roughness_fw_channel": InputVariable(
+        fortran.fwbs_variables, float, range=(0.0, 0.01)
+    ),
     "routr": InputVariable(fortran.pfcoil_variables, float, range=(-3.0, 3.0)),
     "row": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "rpf1": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 3.0)),

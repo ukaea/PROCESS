@@ -330,6 +330,7 @@ OBS_VARS = {
     "iprofile": None,
     "powfmax": "p_fusion_total_max_mw",
     "ffuspow": "fp_fusion_total_max_mw",
+    "roughness": "roughness_fw_channel",
 }
 
 OBS_VARS_HELP = {

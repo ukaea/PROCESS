@@ -188,7 +188,7 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "radius_fw_channel", 1.0)
     monkeypatch.setattr(fwbs, "a_bz_liq", 1.0)
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
-    monkeypatch.setattr(fwbs, "roughness", 1.0e-6)
+    monkeypatch.setattr(fwbs, "roughness_fw_channel", 1.0e-6)
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
     assert blanket_library_fixture.pressure_drop(

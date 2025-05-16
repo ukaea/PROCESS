@@ -91,12 +91,6 @@ class DCLL:
         self.blanket_library = blanket_library
 
     def run(self, output: bool):
-        # MDK (27/11/2015)
-        build_variables.dr_fw_inboard = (
-            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
-        )
-        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
-
         self.blanket_library.component_volumes()
         self.blanket_library.primary_coolant_properties(output=output)
         self.blanket_library.liquid_breeder_properties(output)
