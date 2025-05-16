@@ -347,6 +347,12 @@ class Stellarator:
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
+        # First Wall
+        build_variables.dr_fw_inboard = (
+            2.0e0 * fwbs_variables.radius_fw_channel + 2.0e0 * fwbs_variables.dr_fw_wall
+        )
+        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+
         build_variables.dr_bore = physics_variables.rmajor - (
             build_variables.dr_cs
             + build_variables.dr_cs_tf_gap
