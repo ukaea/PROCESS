@@ -824,7 +824,7 @@ def plot_main_plasma_information(
         arrowprops={"facecolor": "grey", "edgecolor": "grey", "lw": 1},
     )
 
-    textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['neutron_power_total'].get_scan(scan):.2f} MW"
+    textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW"
 
     axis.text(
         0.75,
@@ -848,11 +848,11 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
         f"|  D: {mfile_data.data['f_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
-        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['fusion_power'].get_scan(scan):.2f} MW\n"
-        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['dt_power_total'].get_scan(scan):.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['dd_power'].get_scan(scan):.2f} MW\n"
-        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['dhe3_power'].get_scan(scan):.2f} MW\n"
-        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['alpha_power_total'].get_scan(scan):.2f} MW"
+        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
+        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
+        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['p_alpha_total_mw'].get_scan(scan):.2f} MW"
     )
 
     axis.text(

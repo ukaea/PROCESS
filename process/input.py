@@ -230,6 +230,9 @@ INPUT_VARIABLES = {
     "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
+    "f_c_plasma_bootstrap": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "breeder_f": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "breeder_multiplier": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
@@ -1480,7 +1483,7 @@ INPUT_VARIABLES = {
     "i_cp_lifetime": InputVariable(fortran.cost_variables, int, range=(0, 3)),
     "i_cs_precomp": InputVariable(fortran.build_variables, int, choices=[0, 1]),
     "i_cs_stress": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1]),
-    "i_density_limit": InputVariable(fortran.physics_variables, int, range=(1, 7)),
+    "i_density_limit": InputVariable(fortran.physics_variables, int, range=(1, 8)),
     "i_diamagnetic_current": InputVariable(
         fortran.physics_variables, int, choices=[0, 1, 2]
     ),
