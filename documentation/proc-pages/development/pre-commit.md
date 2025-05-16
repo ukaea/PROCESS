@@ -1,5 +1,10 @@
 # Pre-commit
 
+!!! Info "TL;DR: the quality job fails"
+    If the quality job fails, run pre-commit using `pre-commit run --all-files` and commit the file changes to your branch. If this doesn't solve
+    the problem then see below for more details.
+
+
 Pre-commit is PROCESS' way of ensuring all code pushed to our repository is of a certain quality 
 and style. One common style ensures PROCESS can be easily navigated and understood by all users. It 
 also reduces the "diffs" when reviewing code changes as often small style changes (such as the 
