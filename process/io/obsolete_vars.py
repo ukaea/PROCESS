@@ -331,6 +331,7 @@ OBS_VARS = {
     "powfmax": "p_fusion_total_max_mw",
     "ffuspow": "fp_fusion_total_max_mw",
     "roughness": "roughness_fw_channel",
+    "fvsbrnni": "f_c_plasma_non_inductive"
 }
 
 OBS_VARS_HELP = {
