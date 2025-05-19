@@ -579,7 +579,7 @@ class Power:
             and fwbs_variables.i_coolant_pumping == 2
         ):
             self.htpmwe_blkt_liq = (
-                heat_transport_variables.htpmw_blkt_liq / fwbs_variables.etahtp
+                heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
             )
 
         if (
@@ -589,7 +589,7 @@ class Power:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                + heat_transport_variables.htpmw_blkt_liq
+                + heat_transport_variables.p_blkt_breeder_pump_mw
                 + heat_transport_variables.htpmw_shld
                 + heat_transport_variables.htpmw_div
             )
@@ -634,9 +634,9 @@ class Power:
                 self.pthermblkt_liq = (
                     fwbs_variables.p_blkt_nuclear_heat_total_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
-                ) + heat_transport_variables.htpmw_blkt_liq
+                ) + heat_transport_variables.p_blkt_breeder_pump_mw
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
+                self.pthermblkt_liq = heat_transport_variables.p_blkt_breeder_pump_mw
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:
@@ -3084,7 +3084,7 @@ def init_heat_transport_variables():
     heat_transport_variables.helpow_cryal = 0.0
     heat_transport_variables.htpmw = 0.0
     heat_transport_variables.htpmw_blkt = 0.0
-    heat_transport_variables.htpmw_blkt_liq = 0.0
+    heat_transport_variables.p_blkt_breeder_pump_mw = 0.0
     heat_transport_variables.htpmw_blkt_tot = 0.0
     heat_transport_variables.htpmw_div = 0.0
     heat_transport_variables.p_fw_coolant_pump_mw = 0.0
