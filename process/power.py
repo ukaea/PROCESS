@@ -39,7 +39,7 @@ class Power:
         self.qcl = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qss = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.htpmwe_shld = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_div = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_div_coolant_pump_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -569,7 +569,7 @@ class Power:
             primary_pumping_variables.htpmw_fw_blkt / fwbs_variables.etahtp
         )
         self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
-        self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
+        self.p_div_coolant_pump_elec_mw = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
         if (
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.i_coolant_pumping == 2
@@ -597,7 +597,7 @@ class Power:
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.htpmwe_blkt_liq
                 + self.htpmwe_shld
-                + self.htpmwe_div,
+                + self.p_div_coolant_pump_elec_mw,
             )
         else:
             # Total mechanical pump power (deposited in coolant)
@@ -612,7 +612,7 @@ class Power:
             # Note that htpmw is an ELECTRICAL power
             heat_transport_variables.htpmw = max(
                 heat_transport_variables.htpmw_min,
-                self.p_fw_blkt_coolant_pump_elec_mw + self.htpmwe_shld + self.htpmwe_div,
+                self.p_fw_blkt_coolant_pump_elec_mw + self.htpmwe_shld + self.p_div_coolant_pump_elec_mw,
             )
 
         #  Heat lost through pump power inefficiencies (MW)
@@ -1196,8 +1196,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for divertor (MW)",
-            "(htpmwe_div)",
-            self.htpmwe_div,
+            "(p_div_coolant_pump_elec_mw)",
+            self.p_div_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
