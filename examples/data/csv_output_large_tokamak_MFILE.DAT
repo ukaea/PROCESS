@@ -1148,7 +1148,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0312E+02    
  Injected_power_(MW)_____________________________________________________ (p_hcd_injected_total_mw.)_____________________      7.5213E+01    
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.6172E-01    
- Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (htpmw_mech)__________________      1.6306E+02    
+ Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      1.6306E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.1347E+03    
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      1.8043E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.3967E+00    
