@@ -849,7 +849,7 @@ class PowerflowCalcParam(NamedTuple):
 
     fpumpshld: Any = None
 
-    htpmw_div: Any = None
+    p_div_coolant_pump_mw: Any = None
 
     fpumpdiv: Any = None
 
@@ -883,7 +883,7 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_p_shld_coolant_pump_mw: Any = None
 
-    expected_htpmw_div: Any = None
+    expected_p_div_coolant_pump_mw: Any = None
 
     expected_p_fw_blkt_coolant_pump_mw: Any = None
 
@@ -918,7 +918,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             p_shld_coolant_pump_mw=0,
             fpumpshld=0.0050000000000000001,
-            htpmw_div=0,
+            p_div_coolant_pump_mw=0,
             fpumpdiv=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
@@ -935,7 +935,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
             expected_p_shld_coolant_pump_mw=0.0068056297940224456,
-            expected_htpmw_div=1.7970292653352464,
+            expected_p_div_coolant_pump_mw=1.7970292653352464,
             expected_p_fw_blkt_coolant_pump_mw=202.00455086503842,
         ),
         PowerflowCalcParam(
@@ -965,7 +965,7 @@ class PowerflowCalcParam(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             p_shld_coolant_pump_mw=0.0068056297940224456,
             fpumpshld=0.0050000000000000001,
-            htpmw_div=1.7970292653352464,
+            p_div_coolant_pump_mw=1.7970292653352464,
             fpumpdiv=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
@@ -982,7 +982,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
             expected_p_shld_coolant_pump_mw=0.007019085478296147,
-            expected_htpmw_div=1.7961533897828594,
+            expected_p_div_coolant_pump_mw=1.7961533897828594,
             expected_p_fw_blkt_coolant_pump_mw=201.94492795635171,
         ),
     ),
@@ -1095,7 +1095,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "p_shld_coolant_pump_mw", powerflowcalcparam.p_shld_coolant_pump_mw
+        heat_transport_variables,
+        "p_shld_coolant_pump_mw",
+        powerflowcalcparam.p_shld_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
@@ -1103,7 +1105,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "htpmw_div", powerflowcalcparam.htpmw_div
+        heat_transport_variables,
+        "p_div_coolant_pump_mw",
+        powerflowcalcparam.p_div_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
@@ -1172,8 +1176,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_p_shld_coolant_pump_mw
     )
 
-    assert heat_transport_variables.htpmw_div == pytest.approx(
-        powerflowcalcparam.expected_htpmw_div
+    assert heat_transport_variables.p_div_coolant_pump_mw == pytest.approx(
+        powerflowcalcparam.expected_p_div_coolant_pump_mw
     )
 
     assert primary_pumping_variables.p_fw_blkt_coolant_pump_mw == pytest.approx(
