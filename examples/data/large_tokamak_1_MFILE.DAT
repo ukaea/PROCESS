@@ -1111,7 +1111,7 @@
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (htpmw_fw_blkt)_______________      1.6407E+02 OP 
  Mechanical_pumping_power_for_divertor_(MW)______________________________ (htpmw_div)___________________      1.6906E+00 OP 
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)______________ (htpmw_shld)__________________      7.0688E-03 OP 
- Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (htpmwe_fw_blkt)______________      1.8858E+02 OP 
+ Electrical_pumping_power_for_FW_and_blanket_(MW)________________________ (p_fw_blkt_coolant_pump_elec_mw)______________      1.8858E+02 OP 
  Electrical_pumping_power_for_shield_(MW)________________________________ (htpmwe_shld)_________________      8.1250E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (htpmwe_div)__________________      1.9433E+00 OP 
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (htpmw)_______________________      1.9053E+02 OP 
