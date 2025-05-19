@@ -1908,7 +1908,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the first wall (MW)
-            heat_transport_variables.htpmw_fw = self.pumppower(
+            heat_transport_variables.p_fw_coolant_pump_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_coolant_in.item(),
@@ -1941,7 +1941,7 @@ class BlanketLibrary:
 
             # Total mechanical pumping power (MW)
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
-                heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
+                heat_transport_variables.p_fw_coolant_pump_mw + heat_transport_variables.htpmw_blkt
             )
 
         # If the blanket has a liquid metal breeder...
@@ -2151,8 +2151,8 @@ class BlanketLibrary:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW (MW)",
-                    "(htpmw_fw)",
-                    fwbs_variables.htpmw_fw,
+                    "(p_fw_coolant_pump_mw)",
+                    fwbs_variables.p_fw_coolant_pump_mw,
                     "OP ",
                 )
                 po.ovarre(

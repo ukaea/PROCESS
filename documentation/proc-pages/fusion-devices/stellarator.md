@@ -267,7 +267,7 @@ fhole = 0. *Area fraction taken up by other holes (in addition to f_ster_div_sin
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
 i_coolant_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
 htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)
-htpmw_fw = 56. *First wall coolant mechanical pumping power (MW)
+p_fw_coolant_pump_mw = 56. *First wall coolant mechanical pumping power (MW)
 htpmw_div = 24. *Divertor coolant mechanical pumping power (MW)
 i_thermal_electric_conversion = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
