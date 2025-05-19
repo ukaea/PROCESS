@@ -351,8 +351,8 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-                    "(htpmw_fw_blkt)",
-                    primary_pumping_variables.htpmw_fw_blkt,
+                    "(p_fw_blkt_coolant_pump_mw)",
+                    primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
                     "OP ",
                 )
 

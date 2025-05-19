@@ -105,11 +105,11 @@ def plot_full_sankey(
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
         -1
     )  # Power extracted blanket & FW (MW)
-    htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
+    p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
         -1
     )  # Pump Power in FW and blanket (MW)
-    htpmwblkt = htpmw_fw_blkt / 2  # Pump power in blanket (MW)
-    htpmwfw = htpmw_fw_blkt / 2  # Pump power in FW (MW)
+    htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
+    htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
     pthermfw = (
         pthermfw_blkt - htpmwblkt - p_blkt_nuclear_heat_total_mw
     )  # Power extracted 1st wall (MW)
@@ -604,10 +604,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
         -1
     )  # Heat for electricity (MW)
-    htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
+    p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
         -1
     )  # 1st wall & blanket pumping (MW)
-    pthermmw_p = pthermfw_blkt - htpmw_fw_blkt  # Heat - pumping power (MW)
+    pthermmw_p = pthermfw_blkt - p_fw_blkt_coolant_pump_mw  # Heat - pumping power (MW)
 
     # Used in [PRIMARY]
     pgrossmw = m_file.data["pgrossmw"].get_scan(-1)  # gross electric power (MW)

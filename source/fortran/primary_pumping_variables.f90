@@ -46,7 +46,7 @@ module primary_pumping_variables
   real(dp) :: dp_liq
   !! pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]
 
-  real(dp) :: htpmw_fw_blkt
+  real(dp) :: p_fw_blkt_coolant_pump_mw
   !! mechanical pumping power for FW and blanket including heat exchanger and
   !! pipes (`i_coolant_pumping=3`) [MW]
 

@@ -981,7 +981,7 @@
  Inlet_temperature_of_FW_&_blanket_coolant_pump_(K)_______________________ (t_in_compressor)______________ 5.57026612891722721e+02 OP
  Coolant_pump_outlet/Inlet_temperature_of_FW_&_blanket_(K)________________ (t_in_bb)______________________ 5.73129999999999995e+02
  Outlet_temperature_of_FW_&_blanket_(K)___________________________________ (t_out_bb)_____________________ 7.73129999999999995e+02
- Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_exchanger_(MW)_ (htpmw_fw_blkt)________________ 1.81699855930887850e+02 OP
+ Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_exchanger_(MW)_ (p_fw_blkt_coolant_pump_mw)________________ 1.81699855930887850e+02 OP
  Mechanical_pumping_power_for_divertor_(MW)_______________________________ (htpmw_div)____________________ 1.64889539111383132e+00 OP
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)_______________ (htpmw_shld)___________________ 7.59364698693018158e-03 OP
  # First wall and blanket : CCFE HCPB model #
@@ -1138,7 +1138,7 @@
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(MW)_ (htpmw_fw)_____________________ 0.00000000000000000e+00 OP
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchanger_(MW)_ (htpmw_blkt)___________________ 0.00000000000000000e+00 OP
- Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_exchanger_(MW)_ (htpmw_fw_blkt)________________ 1.81699855930887850e+02 OP
+ Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_exchanger_(MW)_ (p_fw_blkt_coolant_pump_mw)________________ 1.81699855930887850e+02 OP
  Mechanical_pumping_power_for_divertor_(MW)_______________________________ (htpmw_div)____________________ 1.64889539111383132e+00 OP
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)_______________ (htpmw_shld)___________________ 7.59364698693018158e-03 OP
  Electrical_pumping_power_for_FW_and_blanket_(MW)_________________________ (p_fw_blkt_coolant_pump_elec_mw)_______________ 2.08850409115963032e+02 OP

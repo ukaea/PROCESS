@@ -871,7 +871,7 @@ class PowerflowCalcParam(NamedTuple):
 
     t_out_bb: Any = None
 
-    htpmw_fw_blkt: Any = None
+    p_fw_blkt_coolant_pump_mw: Any = None
 
     expected_p_div_rad_total_mw: Any = None
 
@@ -885,7 +885,7 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_htpmw_div: Any = None
 
-    expected_htpmw_fw_blkt: Any = None
+    expected_p_fw_blkt_coolant_pump_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -929,14 +929,14 @@ class PowerflowCalcParam(NamedTuple):
             gamma_he=1.667,
             t_in_bb=573.13,
             t_out_bb=773.13,
-            htpmw_fw_blkt=0,
+            p_fw_blkt_coolant_pump_mw=0,
             expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
             expected_htpmw_shld=0.0068056297940224456,
             expected_htpmw_div=1.7970292653352464,
-            expected_htpmw_fw_blkt=202.00455086503842,
+            expected_p_fw_blkt_coolant_pump_mw=202.00455086503842,
         ),
         PowerflowCalcParam(
             a_fw_outboard=1168.1172772224481,
@@ -976,14 +976,14 @@ class PowerflowCalcParam(NamedTuple):
             gamma_he=1.667,
             t_in_bb=573.13,
             t_out_bb=773.13,
-            htpmw_fw_blkt=202.00455086503842,
+            p_fw_blkt_coolant_pump_mw=202.00455086503842,
             expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
             expected_htpmw_shld=0.007019085478296147,
             expected_htpmw_div=1.7961533897828594,
-            expected_htpmw_fw_blkt=201.94492795635171,
+            expected_p_fw_blkt_coolant_pump_mw=201.94492795635171,
         ),
     ),
 )
@@ -1143,7 +1143,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables, "htpmw_fw_blkt", powerflowcalcparam.htpmw_fw_blkt
+        primary_pumping_variables,
+        "p_fw_blkt_coolant_pump_mw",
+        powerflowcalcparam.p_fw_blkt_coolant_pump_mw,
     )
 
     ccfe_hcpb.powerflow_calc(False)
@@ -1172,8 +1174,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_htpmw_div
     )
 
-    assert primary_pumping_variables.htpmw_fw_blkt == pytest.approx(
-        powerflowcalcparam.expected_htpmw_fw_blkt
+    assert primary_pumping_variables.p_fw_blkt_coolant_pump_mw == pytest.approx(
+        powerflowcalcparam.expected_p_fw_blkt_coolant_pump_mw
     )
 
 
