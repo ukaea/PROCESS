@@ -96,7 +96,9 @@ def plot_full_sankey(
     )  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
-    htpmw_div = m_file.data["htpmw_div"].get_scan(-1)  # Divertor coolant pumping power
+    p_div_coolant_pump_mw = m_file.data["p_div_coolant_pump_mw"].get_scan(
+        -1
+    )  # Divertor coolant pumping power
     pthermdiv = m_file.data["pthermdiv"].get_scan(
         -1
     )  # Total power extracted from divertor (MW)
@@ -284,7 +286,7 @@ def plot_full_sankey(
             p_plasma_separatrix_mw,
             p_div_nuclear_heat_total_mw,
             p_div_rad_total_mw,
-            htpmw_div,
+            p_div_coolant_pump_mw,
             -pthermdiv,
         ]
         sankey.add(
