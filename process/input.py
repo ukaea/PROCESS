@@ -809,7 +809,7 @@ INPUT_VARIABLES = {
     "htpmw_div": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "htpmw_fw": InputVariable(
+    "p_fw_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "htpmw_ife": InputVariable(fortran.ife_variables, float, range=(0.0, 1000.0)),

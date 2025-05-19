@@ -1229,7 +1229,7 @@ class Stellarator:
                     - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
-                heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
+                heat_transport_variables.p_fw_coolant_pump_mw = heat_transport_variables.fpumpfw * (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
                     + current_drive_variables.p_beam_orbit_loss_mw
@@ -1480,7 +1480,7 @@ class Stellarator:
                     #    Use input
                     pass
                 elif fwbs_variables.i_coolant_pumping == 1:
-                    heat_transport_variables.htpmw_fw = (
+                    heat_transport_variables.p_fw_coolant_pump_mw = (
                         heat_transport_variables.fpumpfw
                         * (
                             p_fw_inboard_nuclear_heat_mw

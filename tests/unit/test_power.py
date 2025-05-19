@@ -2107,7 +2107,7 @@ class Power2Param(NamedTuple):
 
     helpow: Any = None
 
-    htpmw_fw: Any = None
+    p_fw_coolant_pump_mw: Any = None
 
     precircmw: Any = None
 
@@ -2277,7 +2277,7 @@ class Power2Param(NamedTuple):
             htpmw_div=1.7942175899286208,
             nphx=3,
             helpow=76851.741036987034,
-            htpmw_fw=0,
+            p_fw_coolant_pump_mw=0,
             precircmw=0,
             pthermmw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
@@ -2379,7 +2379,7 @@ class Power2Param(NamedTuple):
             htpmw_div=1.7933419035282543,
             nphx=3,
             helpow=220505.71684249729,
-            htpmw_fw=0,
+            p_fw_coolant_pump_mw=0,
             precircmw=489.56557141942733,
             pthermmw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
@@ -2562,7 +2562,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "helpow", power2param.helpow)
 
-    monkeypatch.setattr(heat_transport_variables, "htpmw_fw", power2param.htpmw_fw)
+    monkeypatch.setattr(heat_transport_variables, "p_fw_coolant_pump_mw", power2param.p_fw_coolant_pump_mw)
 
     monkeypatch.setattr(heat_transport_variables, "precircmw", power2param.precircmw)
 
