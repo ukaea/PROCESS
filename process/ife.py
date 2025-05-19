@@ -1973,7 +1973,10 @@ class IFE:
 
         heat_transport_variables.crypmw = ife_variables.pifecr
         heat_transport_variables.helpow = (
-            1.0e6 * heat_transport_variables.crypmw * (0.13 * 4.5) / (293.0 - 4.5)
+            1.0e6
+            * heat_transport_variables.crypmw
+            * (0.13 * 4.5)
+            / (constants.temp_room - 4.5)
         )
 
     def ifepw2(self, output: bool = False):

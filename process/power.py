@@ -834,7 +834,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
             heat_transport_variables.crypmw = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.temp_tf_cryo)
+                * (constants.temp_room - tfcoil_variables.temp_tf_cryo)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
                 * heat_transport_variables.helpow
             )
@@ -856,7 +856,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.tcoolin)
+                * (constants.temp_room - tfcoil_variables.tcoolin)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
                 * heat_transport_variables.helpow_cryal
             )
@@ -1032,7 +1032,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
-            / (293.0e0 - tfcoil_variables.temp_tf_cryo),
+            / (constants.temp_room - tfcoil_variables.temp_tf_cryo),
             "OP ",
         )
         po.ovarre(
@@ -1040,7 +1040,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (293.0e0 - tfcoil_variables.tcoolin),
+            / (constants.temp_room - tfcoil_variables.tcoolin),
             "OP ",
         )
         po.ovarre(
