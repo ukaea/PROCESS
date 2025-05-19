@@ -1866,7 +1866,7 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = self.pumppower(
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = self.pumppower(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_coolant_in.item(),
@@ -1940,7 +1940,7 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.htpmw_fw_blkt = (
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
             )
 
@@ -1976,7 +1976,7 @@ class BlanketLibrary:
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
-                primary_pumping_variables.htpmw_fw_blkt
+                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                 + heat_transport_variables.htpmw_blkt_liq
             )
 
@@ -2173,8 +2173,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Total mechanical pumping power for FW and blanket (MW)",
-                "(htpmw_fw_blkt)",
-                primary_pumping_variables.htpmw_fw_blkt,
+                "(p_fw_blkt_coolant_pump_mw)",
+                primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
                 "OP ",
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
@@ -2994,5 +2994,5 @@ def init_primary_pumping_variables():
     primary_pumping_variables.dp_fw = 1.5e5  # Pa
     primary_pumping_variables.dp_blkt = 3.5e3  # Pa
     primary_pumping_variables.dp_liq = 1.0e7  # Pa
-    primary_pumping_variables.htpmw_fw_blkt = 0.0
+    primary_pumping_variables.p_fw_blkt_coolant_pump_mw = 0.0
     primary_pumping_variables.f_p_fw_blkt_pump = 1.0
