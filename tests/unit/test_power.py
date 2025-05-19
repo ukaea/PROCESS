@@ -2193,7 +2193,7 @@ class Power2Param(NamedTuple):
 
     htpmwe_shld: Any = None
 
-    htpmwe_div: Any = None
+    p_div_coolant_pump_elec_mw: Any = None
 
     htpmw_mech: Any = None
 
@@ -2320,7 +2320,7 @@ class Power2Param(NamedTuple):
             eff_tf_cryo=0.13,
             htpmw_fw_blkt=202.02739897087824,
             htpmwe_shld=0.0078214713655548,
-            htpmwe_div=2.0623190688834718,
+            p_div_coolant_pump_elec_mw=2.0623190688834718,
             htpmw_mech=203.8284212408949,
             pthermfw_blkt=2258.2163348769122,
             p_fw_blkt_coolant_pump_elec_mw=232.21540111595198,
@@ -2422,7 +2422,7 @@ class Power2Param(NamedTuple):
             eff_tf_cryo=0.13,
             htpmw_fw_blkt=201.96778859673452,
             htpmwe_shld=0.0080667886808651647,
-            htpmwe_div=2.0613125327910966,
+            p_div_coolant_pump_elec_mw=2.0613125327910966,
             htpmw_mech=203.76814860641511,
             pthermfw_blkt=2257.5500236671205,
             p_fw_blkt_coolant_pump_elec_mw=232.14688344452242,
@@ -2672,7 +2672,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "htpmwe_shld", power2param.htpmwe_shld)
 
-    monkeypatch.setattr(power, "htpmwe_div", power2param.htpmwe_div)
+    monkeypatch.setattr(power, "p_div_coolant_pump_elec_mw", power2param.p_div_coolant_pump_elec_mw)
 
     monkeypatch.setattr(power, "htpmw_mech", power2param.htpmw_mech)
 
