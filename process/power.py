@@ -561,7 +561,8 @@ class Power:
             and fwbs_variables.i_coolant_pumping != 3
         ):
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
-                heat_transport_variables.p_fw_coolant_pump_mw + heat_transport_variables.htpmw_blkt
+                heat_transport_variables.p_fw_coolant_pump_mw
+                + heat_transport_variables.htpmw_blkt
             )
 
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
@@ -570,7 +571,7 @@ class Power:
         self.p_fw_blkt_coolant_pump_elec_mw = (
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
         )
-        self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
+        self.htpmwe_shld = heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.etahtp
         self.p_div_coolant_pump_elec_mw = (
             heat_transport_variables.htpmw_div / fwbs_variables.etahtp
         )
@@ -590,7 +591,7 @@ class Power:
             self.htpmw_mech = (
                 primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
-                + heat_transport_variables.htpmw_shld
+                + heat_transport_variables.p_shld_coolant_pump_mw
                 + heat_transport_variables.htpmw_div
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
@@ -607,7 +608,7 @@ class Power:
             # Total mechanical pump power (deposited in coolant)
             self.htpmw_mech = (
                 primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                + heat_transport_variables.htpmw_shld
+                + heat_transport_variables.p_shld_coolant_pump_mw
                 + heat_transport_variables.htpmw_div
             )
 
@@ -708,7 +709,7 @@ class Power:
         self.pthermshld = (
             fwbs_variables.pnuc_cp_sh
             + fwbs_variables.pnucshld
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shld_coolant_pump_mw
         )
 
         #  Total thermal power deposited in divertor coolant (MW)
@@ -1180,8 +1181,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for shield and vacuum vessel (MW)",
-            "(htpmw_shld)",
-            heat_transport_variables.htpmw_shld,
+            "(p_shld_coolant_pump_mw)",
+            heat_transport_variables.p_shld_coolant_pump_mw,
             "OP ",
         )
 
@@ -1363,7 +1364,12 @@ class Power:
         po.dblcol(
             self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw
         )
-        po.dblcol(self.outfile, "p_fw_coolant_pump_mw", 0.0e0, heat_transport_variables.p_fw_coolant_pump_mw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_coolant_pump_mw",
+            0.0e0,
+            heat_transport_variables.p_fw_coolant_pump_mw,
+        )
 
         primsum = (
             primsum
@@ -1410,19 +1416,19 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
+                f"{heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.iprimshld} {heat_transport_variables.p_shld_coolant_pump_mw * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.p_shld_coolant_pump_mw}"
             ),
         )
 
         primsum = (
             primsum
             + fwbs_variables.pnucshld * heat_transport_variables.iprimshld
-            + heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld
+            + heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.iprimshld
         )
         secsum = (
             secsum
             + fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shld_coolant_pump_mw
             * (1 - heat_transport_variables.iprimshld)
         )
 
@@ -3088,7 +3094,7 @@ def init_heat_transport_variables():
     heat_transport_variables.htpmw_blkt_tot = 0.0
     heat_transport_variables.htpmw_div = 0.0
     heat_transport_variables.p_fw_coolant_pump_mw = 0.0
-    heat_transport_variables.htpmw_shld = 0.0
+    heat_transport_variables.p_shld_coolant_pump_mw = 0.0
     heat_transport_variables.htpsecmw = 0.0
     heat_transport_variables.ipowerflow = 1
     heat_transport_variables.iprimshld = 1

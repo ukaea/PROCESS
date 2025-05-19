@@ -370,7 +370,7 @@ def plot_full_sankey(
         """# --------------------------------------- SHIELD - 7 --------------------------------------
 
         # Neutrons, Coolant pumping, Total power
-        SHIELD = [pnucshld, htpmw_shld, -pthermshld]
+        SHIELD = [pnucshld, p_shld_coolant_pump_mw, -pthermshld]
         sankey.add(flows=SHIELD,
                    orientations=[-1, -1, 1],
                    trunklength=0.5,

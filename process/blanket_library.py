@@ -1941,7 +1941,8 @@ class BlanketLibrary:
 
             # Total mechanical pumping power (MW)
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
-                heat_transport_variables.p_fw_coolant_pump_mw + heat_transport_variables.htpmw_blkt
+                heat_transport_variables.p_fw_coolant_pump_mw
+                + heat_transport_variables.htpmw_blkt
             )
 
         # If the blanket has a liquid metal breeder...
@@ -2195,8 +2196,8 @@ class BlanketLibrary:
             po.ovarre(
                 self.outfile,
                 "Pumping power for shield and vacuum vessel (MW)",
-                "(htpmw_shld)",
-                heat_transport_variables.htpmw_shld,
+                "(p_shld_coolant_pump_mw)",
+                heat_transport_variables.p_shld_coolant_pump_mw,
                 "OP ",
             )
 
