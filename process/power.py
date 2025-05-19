@@ -42,7 +42,7 @@ class Power:
         self.htpmwe_div = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_fw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -406,19 +406,7 @@ class Power:
 
         # write(self.outfile,50)(times_variables.tim(time),time=1,6)
 
-    # 50    format(t45,'time (sec)'//t15,6f11.2)
-    #     # write(self.outfile,55)(times_variables.timelabel(time),time=1,6)
-    # 55    format(' Time point', t21,6a11)
-
-    #     # write(self.outfile,60) (poloidalenergy(time)/1.0e6,time=1,6)
-    # 60    format(' Energy (MJ)',t17,6(1pe11.3))
-    #     po.oblnkl(self.outfile)
-
-    #     write(outfile,65)(times_variables.intervallabel(time),time=1,5)
-    # 65    format(' Interval', t26,6a11)
-    #     write(outfile,70) (pf_power_variables.poloidalpower(time)/1.0e6,time=1,5)
-    # 70    format(' dE/dt (MW)',t22,5(1pe11.3))
-    #     po.oblnkl(outfile)
+    
 
     def acpow(self, output: bool):
         """
@@ -577,7 +565,7 @@ class Power:
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
-        self.htpmwe_fw_blkt = (
+        self.p_fw_blkt_coolant_pump_elec_mw = (
             primary_pumping_variables.htpmw_fw_blkt / fwbs_variables.etahtp
         )
         self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
@@ -606,7 +594,7 @@ class Power:
             # Note that htpmw is an ELECTRICAL power
             heat_transport_variables.htpmw = max(
                 heat_transport_variables.htpmw_min,
-                self.htpmwe_fw_blkt
+                self.p_fw_blkt_coolant_pump_elec_mw
                 + self.htpmwe_blkt_liq
                 + self.htpmwe_shld
                 + self.htpmwe_div,
@@ -624,7 +612,7 @@ class Power:
             # Note that htpmw is an ELECTRICAL power
             heat_transport_variables.htpmw = max(
                 heat_transport_variables.htpmw_min,
-                self.htpmwe_fw_blkt + self.htpmwe_shld + self.htpmwe_div,
+                self.p_fw_blkt_coolant_pump_elec_mw + self.htpmwe_shld + self.htpmwe_div,
             )
 
         #  Heat lost through pump power inefficiencies (MW)
@@ -1194,8 +1182,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for FW and blanket (MW)",
-            "(htpmwe_fw_blkt)",
-            self.htpmwe_fw_blkt,
+            "(p_fw_blkt_coolant_pump_elec_mw)",
+            self.p_fw_blkt_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
