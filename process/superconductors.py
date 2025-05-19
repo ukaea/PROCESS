@@ -357,6 +357,10 @@ def gl_nbti(
 
 
     :references:
+        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+        https://doi.org/10.1088/1742-6596/1559/1/012063.
 
     """
 
@@ -417,50 +421,72 @@ def gl_nbti(
     return j_critical, b_critical, t_critical
 
 
-def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
-    """Author: S B L Chislett-McDonald Durham University
-    Category: subroutine
-
-    Critical current density of a SuperPower REBCO tape based on measurements by P. Branch
-    at Durham University
-    https://git.ccfe.ac.uk/process/process/uploads/e98c6ea13da782cdc6fe16daea92078a/20200707_Branch-Osamura-Hampshire_-_accepted_SuST.pdf
-    and fit to state-of-the-art measurements at 4.2 K published in SuST
-    http://dx.doi.org/10.1088/0953-2048/24/3/035001
-
-    \\begin{equation}
-    J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
-    [B_{c2}(\\epsilon_I)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
-    \\end{equation}
-
-    - \\( \\thelium \\) -- Coolant/SC temperature [K]
-    - \\( \\bmax \\) -- Magnetic field at conductor [T]
-    - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
-    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
-    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
-    - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
-    - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
-    - \\( \\A(epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
-    - \\( \\J_{c,TS} \\) --  Critical current density in superconductor [A / m\\(^-2\\)]
-    - \\( \\epsilon_{m} \\) -- Strain at which peak in J_c occurs [\\%]
+def gl_rebco(
+    temp_conductor: float,
+    b_conductor: float,
+    strain: float,
+    b_c20max: float,
+    t_c0: float,
+) -> tuple[float, float, float]:
     """
-    # critical current density prefactor
+    Calculate the critical current density, critical field, and critical temperature
+    for a SuperPower REBCO tape based on measurements by P. Branch at Durham University and
+    the Ginzburg-Landau theory of superconductivity
+
+    :param temp_conductor: Coolant/superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param strain: Intrinsic strain in superconductor (%).
+    :type strain: float
+    :param b_c20max: Strain-dependent upper critical field at zero temperature (T).
+    :type b_c20max: float
+    :param t_c0: Strain-dependent critical temperature at zero strain (K).
+    :type t_c0: float
+    :return: Tuple containing:
+        - j_critical: Critical current density in superconductor (A/m²).
+        - b_critical: Critical magnetic field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+
+    :references:
+        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+        https://doi.org/10.1088/1742-6596/1559/1/012063.
+        -
+        -Fit to state-of-the-art measurements at 4.2 K:P. Branch, K. Osamura, and D. Hampshire,
+        “Weak emergence in the angular dependence of the critical current density of the high temperature superconductor coated conductor REBCO,”
+        Superconductor Science and Technology, vol. 33, no. 10, p. 104006, Sep. 2020,
+        doi: 10.1088/1361-6668/abaebe.
+
+
+    """
+    # Critical current density pre-factor
     a_0 = 2.95e2
-    # flux pinning field scaling parameters
+
+    # Flux pinning field scaling parameters
     p = 0.32
     q = 2.50
     n = 3.33
-    # temperatute scaling parameter
+    # temperature scaling parameter
     s = 5.27
-    # strain scaling parameters
+
+    # Strain scaling parameters
     c2 = -0.0191
     c3 = 0.0039
     c4 = 0.00103
-    em = 0.058
-    # strain conversion parameters
+    epsilon_m = 0.058
+
+    # Strain conversion parameters
     u = 0.0
     w = 2.2
 
-    epsilon_i = strain - em
+    # ==========================================================
+
+    epsilon_i = strain - epsilon_m
 
     strain_func = (
         1 + c2 * (epsilon_i) ** 2 + c3 * (epsilon_i) ** 3 + c4 * (epsilon_i) ** 4
@@ -468,28 +494,28 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
 
     t_e = t_c0 * strain_func ** (1 / w)
 
-    t_reduced = thelium / t_e
+    t_reduced = temp_conductor / t_e
 
     a_e = a_0 * strain_func ** (u / w)
 
     #  Critical Field
-    bcrit = bc20max * (1 - t_reduced) ** s * strain_func
+    b_critical = b_c20max * (1 - t_reduced) ** s * strain_func
 
-    b_reduced = bmax / bcrit
+    b_reduced = b_conductor / b_critical
 
     #  Critical temperature (K)
-    tcrit = t_e
+    temp_critical = t_e
 
     #  Critical current density (A/m2)
-    jcrit = (
+    j_critical = (
         a_e
         * (t_e * (1 - t_reduced**2)) ** 2
-        * bcrit ** (n - 3)
+        * b_critical ** (n - 3)
         * b_reduced ** (p - 1)
         * (1 - b_reduced) ** q
     )
 
-    return jcrit, bcrit, tcrit
+    return j_critical, b_critical, temp_critical
 
 
 def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
