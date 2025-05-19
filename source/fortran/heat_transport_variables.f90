@@ -94,7 +94,7 @@ module heat_transport_variables
     real(dp) :: p_fw_coolant_pump_mw
     !! first wall coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_shld
+    real(dp) :: p_shld_coolant_pump_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
     real(dp) :: htpsecmw
