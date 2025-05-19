@@ -42,7 +42,9 @@ class Power:
         self.p_div_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_coolant_pump_total_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
@@ -590,7 +592,7 @@ class Power:
             and fwbs_variables.i_coolant_pumping == 2
         ):
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
+            self.p_coolant_pump_total_mw = (
                 primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
                 + heat_transport_variables.p_shld_coolant_pump_mw
@@ -608,7 +610,7 @@ class Power:
             )
         else:
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
+            self.p_coolant_pump_total_mw = (
                 primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                 + heat_transport_variables.p_shld_coolant_pump_mw
                 + heat_transport_variables.p_div_coolant_pump_mw
@@ -626,7 +628,7 @@ class Power:
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.htpsecmw = (
-            heat_transport_variables.htpmw - self.htpmw_mech
+            heat_transport_variables.htpmw - self.p_coolant_pump_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
@@ -1808,15 +1810,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power deposited in primary coolant by pump (MW)",
-            "(htpmw_mech)",
-            self.htpmw_mech,
+            "(p_coolant_pump_total_mw)",
+            self.p_coolant_pump_total_mw,
             "OP ",
         )
         total = (
             physics_variables.p_fusion_total_mw
             + fwbs_variables.emultmw
             + pinj
-            + self.htpmw_mech
+            + self.p_coolant_pump_total_mw
             + physics_variables.p_plasma_ohmic_mw
         )
         po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
