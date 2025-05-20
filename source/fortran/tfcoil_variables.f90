@@ -772,7 +772,7 @@ module tfcoil_variables
   real(dp) :: ncool
   !! number of centrepost coolant tubes
 
-  real(dp) :: ppump
+  real(dp) :: p_cp_coolant_pump_elec
   !! centrepost coolant pump power (W)
 
   real(dp) :: p_cp_resistive

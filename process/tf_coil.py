@@ -2246,7 +2246,7 @@ class TFCoil:
 
         # Pressure drop calculation
         dpres = fricfac * (lcool / dcool) * coolant_density * 0.5e0 * tfv.vcool**2
-        tfv.ppump = dpres * acool * tfv.vcool / tfv.etapump
+        tfv.p_cp_coolant_pump_elec = dpres * acool * tfv.vcool / tfv.etapump
 
         # Critical pressure in saturation pressure calculations (Pa)
         pcrt = 2.24e7
@@ -2356,7 +2356,7 @@ class TFCoil:
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
 
-            po.ovarre(self.outfile, "Pump power (W)", "(ppump)", tfv.ppump)
+            po.ovarre(self.outfile, "Pump power (W)", "(p_cp_coolant_pump_elec)", tfv.p_cp_coolant_pump_elec)
 
     def tf_field_and_force(self):
         """
@@ -5410,7 +5410,7 @@ def init_tfcoil_variables():
     tfv.f_a_tf_cool_outboard = 0.2
     tfv.a_cp_cool = 0.0
     tfv.ncool = 0.0
-    tfv.ppump = 0.0
+    tfv.p_cp_coolant_pump_elec = 0.0
     tfv.p_cp_resistive = 0.0
     tfv.p_tf_leg_resistive = 0.0
     tfv.ptempalw = 473.15  # 200 C
