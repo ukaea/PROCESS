@@ -444,7 +444,7 @@ class Power:
         )  # Should be zero if i_plasma_ignited==1
 
         #  Power to cryogenic comp. motors, MW
-        crymw = heat_transport_variables.crypmw
+        crymw = heat_transport_variables.p_cryo_plant_electric_mw
 
         #  Facility base load, MW (loads not dependent on floor area)
         basemw = heat_transport_variables.baseel * 1.0e-6
@@ -816,7 +816,7 @@ class Power:
         # ---
         # Initialisation (unchanged if all coil resisitive)
         heat_transport_variables.helpow = 0.0e0
-        heat_transport_variables.crypmw = 0.0e0
+        heat_transport_variables.p_cryo_plant_electric_mw = 0.0e0
         p_tf_cryoal_cryo = 0.0e0
         tfcoil_variables.cryo_cool_req = 0.0e0
 
@@ -838,7 +838,7 @@ class Power:
             # Rem SK : This ITER efficiency is very low compare to the Strowbridge curve
             #          any reasons why?
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
-            heat_transport_variables.crypmw = (
+            heat_transport_variables.p_cryo_plant_electric_mw = (
                 1.0e-6
                 * (constants.temp_room - tfcoil_variables.temp_tf_cryo)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
@@ -868,8 +868,8 @@ class Power:
             )
 
             # Add to electric power requirement for cryogenic plant (MW)
-            heat_transport_variables.crypmw = (
-                heat_transport_variables.crypmw + p_tf_cryoal_cryo
+            heat_transport_variables.p_cryo_plant_electric_mw = (
+                heat_transport_variables.p_cryo_plant_electric_mw + p_tf_cryoal_cryo
             )
 
         # Calculate cryo cooling requirement at 4.5K (kW)
@@ -910,7 +910,7 @@ class Power:
         #  increase or decrease the poloidal field energy AND extra due to ohmic heating
         #  of the plasma.  Issue #713
         self.pcoresystems = (
-            heat_transport_variables.crypmw
+            heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.fachtmw
             + self.p_cp_coolant_pump_elec_mw
             + heat_transport_variables.tfacpd
@@ -1056,8 +1056,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electric power for cryogenic plant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
             "OP ",
         )
 
@@ -1566,8 +1566,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from cryogenic plant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1970,8 +1970,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for cryoplant (MW)",
-            "(crypmw)",
-            heat_transport_variables.crypmw,
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2001,7 +2001,7 @@ class Power:
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.crypmw
+            + heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.tfacpd
             + heat_transport_variables.fachtmw
             + pfcoil_variables.pfwpmw
@@ -2179,7 +2179,7 @@ class Power:
         p_cooling[0:6] = heat_transport_variables.p_coolant_pump_elec_total_mw
 
         # Cryoplant electrical power [MWe]
-        p_cryo[0:6] = heat_transport_variables.crypmw
+        p_cryo[0:6] = heat_transport_variables.p_cryo_plant_electric_mw
 
         # Vacuum electrical power [MWe]
         p_vac[0:6] = heat_transport_variables.vachtmw
@@ -3088,7 +3088,7 @@ def init_pf_power_variables():
 def init_heat_transport_variables():
     """Initialise heat transport variables"""
     heat_transport_variables.baseel = 5.0e6
-    heat_transport_variables.crypmw = 0.0
+    heat_transport_variables.p_cryo_plant_electric_mw = 0.0
     heat_transport_variables.crypmw_max = 50.0
     heat_transport_variables.f_crypmw = 1.0
     heat_transport_variables.etatf = 0.9
