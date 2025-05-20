@@ -932,18 +932,18 @@ class Power:
         #  Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
             #  Gross electric power
-            # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
+            # p_plant_electric_gross_mw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
                 and fwbs_variables.i_coolant_pumping == 2
             ):
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_plant_electric_gross_mw = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
                     + self.pthermblkt_liq * heat_transport_variables.etath_liq
                 )
             else:
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_plant_electric_gross_mw = (
                     heat_transport_variables.pthermmw * heat_transport_variables.etath
                 )
 
@@ -956,13 +956,15 @@ class Power:
 
             #  Net electric power
             heat_transport_variables.p_plant_electric_net_mw = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
+                heat_transport_variables.p_plant_electric_gross_mw
+                - heat_transport_variables.precircmw
             )
 
             #  Recirculating power fraction
             cirpowfr = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.p_plant_electric_net_mw
-            ) / heat_transport_variables.pgrossmw
+                heat_transport_variables.p_plant_electric_gross_mw
+                - heat_transport_variables.p_plant_electric_net_mw
+            ) / heat_transport_variables.p_plant_electric_gross_mw
 
         if output == 0:
             return
@@ -2003,15 +2005,18 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Gross electrical output* (MW)",
-            "(pgrossmw)",
-            heat_transport_variables.pgrossmw,
+            "(p_plant_electric_gross_mw)",
+            heat_transport_variables.p_plant_electric_gross_mw,
             "OP ",
         )
         po.ocmmnt(
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
         )
         po.oblnkl(self.outfile)
-        if abs(total_plant_power - heat_transport_variables.pgrossmw) > 5.0e0:
+        if (
+            abs(total_plant_power - heat_transport_variables.p_plant_electric_gross_mw)
+            > 5.0e0
+        ):
             logger.warning(
                 f"{'WARNING: Electrical Power balance is in error by more than 5 MW.'}"
             )
@@ -2214,7 +2219,7 @@ class Power:
 
         # Gross power [MWe]
         p_gross[0:3] = 0.0e0
-        p_gross[3] = heat_transport_variables.pgrossmw
+        p_gross[3] = heat_transport_variables.p_plant_electric_gross_mw
         p_gross[4:6] = 0.0e0
 
         # Net electric power [MWe]
@@ -3105,7 +3110,7 @@ def init_heat_transport_variables():
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
     heat_transport_variables.pfwdiv = 0.0
-    heat_transport_variables.pgrossmw = 0.0
+    heat_transport_variables.p_plant_electric_gross_mw = 0.0
     heat_transport_variables.pinjht = 0.0
     heat_transport_variables.pinjmax = 120.0
     heat_transport_variables.p_hcd_electric_total_mw = 0.0

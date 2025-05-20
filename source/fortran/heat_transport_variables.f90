@@ -124,7 +124,7 @@ module heat_transport_variables
     real(dp) :: pfwdiv
     !! heat removal from first wall/divertor (MW)
 
-    real(dp) :: pgrossmw
+    real(dp) :: p_plant_electric_gross_mw
     !! gross electric power (MW)
 
     real(dp) :: pinjht

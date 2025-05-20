@@ -891,7 +891,7 @@ class Costs2015:
         #  Cost of reference energy conversion system (Rolls Royce)
         self.s_cref[34] = 511.0e6
         #  Scale with gross electric power (MWe)
-        self.s_k[34] = heat_transport_variables.pgrossmw
+        self.s_k[34] = heat_transport_variables.p_plant_electric_gross_mw
         self.s_kref[34] = 692.0e0
         self.s_cost[34] = (
             self.s_cost_factor[34]

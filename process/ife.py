@@ -2011,7 +2011,7 @@ class IFE:
         # Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
             # Gross electric power
-            heat_transport_variables.pgrossmw = (
+            heat_transport_variables.p_plant_electric_gross_mw = (
                 heat_transport_variables.pthermmw * heat_transport_variables.etath
             )
 
@@ -2020,18 +2020,21 @@ class IFE:
                 0.5,
                 (
                     ife_variables.fauxbop
-                    / (heat_transport_variables.pgrossmw / 1000.0) ** 0.6
+                    / (heat_transport_variables.p_plant_electric_gross_mw / 1000.0)
+                    ** 0.6
                 ),
             )
 
             # Total recirculating power
             heat_transport_variables.precircmw = (
-                heat_transport_variables.fgrosbop * heat_transport_variables.pgrossmw
+                heat_transport_variables.fgrosbop
+                * heat_transport_variables.p_plant_electric_gross_mw
             ) + heat_transport_variables.pacpmw
 
             # Net electric power
             heat_transport_variables.p_plant_electric_net_mw = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
+                heat_transport_variables.p_plant_electric_gross_mw
+                - heat_transport_variables.precircmw
             )
 
             if not output:
@@ -2146,8 +2149,8 @@ class IFE:
                 process_output.ovarre(
                     self.outfile,
                     "Gross electric power (MW)",
-                    "(pgrossmw)",
-                    heat_transport_variables.pgrossmw,
+                    "(p_plant_electric_gross_mw)",
+                    heat_transport_variables.p_plant_electric_gross_mw,
                 )
                 process_output.ovarre(
                     self.outfile,
