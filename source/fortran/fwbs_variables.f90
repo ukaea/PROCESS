@@ -112,7 +112,7 @@ module fwbs_variables
   real(dp) :: pnuc_cp
   !! Total nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnuc_cp_sh
+  real(dp) :: p_cp_shield_nuclear_heat_mw
   !! Neutronic shield nuclear heating in the ST centrepost [MW]
 
   real(dp) :: pnuc_cp_tf
