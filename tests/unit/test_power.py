@@ -1906,7 +1906,7 @@ class AcpowParam(NamedTuple):
 
     tfacpd: Any = None
 
-    trithtmw: Any = None
+    p_tritium_plant_electric_mw: Any = None
 
     p_hcd_electric_total_mw: Any = None
 
@@ -1944,7 +1944,7 @@ class AcpowParam(NamedTuple):
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=0,
             peakmva=736.39062584245937,
@@ -1965,7 +1965,7 @@ class AcpowParam(NamedTuple):
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
             peakmva=90.673341440806112,
@@ -2009,7 +2009,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "tfacpd", acpowparam.tfacpd)
 
-    monkeypatch.setattr(heat_transport_variables, "trithtmw", acpowparam.trithtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tritium_plant_electric_mw",
+        acpowparam.p_tritium_plant_electric_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2135,7 +2139,7 @@ class Power2Param(NamedTuple):
 
     psechtmw: Any = None
 
-    trithtmw: Any = None
+    p_tritium_plant_electric_mw: Any = None
 
     psechcd: Any = None
 
@@ -2295,7 +2299,7 @@ class Power2Param(NamedTuple):
             fachtmw=0,
             p_plant_electric_gross_mw=0,
             psechtmw=0,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             psechcd=0,
             tfacpd=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.28554165620102,
@@ -2397,7 +2401,7 @@ class Power2Param(NamedTuple):
             fachtmw=61.882833632875375,
             p_plant_electric_gross_mw=982.58317918134742,
             psechtmw=233.80288075411508,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             psechcd=0,
             tfacpd=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.2162627659944,
@@ -2628,7 +2632,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "psechtmw", power2param.psechtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "trithtmw", power2param.trithtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tritium_plant_electric_mw",
+        power2param.p_tritium_plant_electric_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "psechcd", power2param.psechcd)
 
@@ -2818,7 +2826,7 @@ class Power3Param(NamedTuple):
 
     tfacpd: Any = None
 
-    trithtmw: Any = None
+    p_tritium_plant_electric_mw: Any = None
 
     p_hcd_electric_total_mw: Any = None
 
@@ -2855,7 +2863,7 @@ class Power3Param(NamedTuple):
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=61.882833632875375,
             p_plant_electric_gross_mw=982.58317918134742,
@@ -2882,7 +2890,7 @@ class Power3Param(NamedTuple):
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=62.237143915360818,
             p_plant_electric_gross_mw=982.28339460484608,
@@ -2947,7 +2955,11 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "tfacpd", power3param.tfacpd)
 
-    monkeypatch.setattr(heat_transport_variables, "trithtmw", power3param.trithtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tritium_plant_electric_mw",
+        power3param.p_tritium_plant_electric_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
