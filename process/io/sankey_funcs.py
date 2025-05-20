@@ -637,12 +637,20 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pfwpmw = m_file.data["pfwpmw"].get_scan(
         -1
     )  # Total mean wall plug power for PFC & CS (MW)
-    ppumpmw = (
+    p_cp_coolant_pump_elec_mw = (
         m_file.data["p_cp_coolant_pump_elec"].get_scan(-1) / 1e6
     )  # Set pumping power to MW by dividing by 1e6
 
     # Energy required for rest of power plant (MW)
-    pcoresystems = crypmw + fachtmw + tfacpd + trithtmw + vachtmw + pfwpmw + ppumpmw
+    pcoresystems = (
+        crypmw
+        + fachtmw
+        + tfacpd
+        + trithtmw
+        + vachtmw
+        + pfwpmw
+        + p_cp_coolant_pump_elec_mw
+    )
     p_hcd_electric_total_mw = m_file.data["p_hcd_electric_total_mw"].get_scan(
         -1
     )  # injector wall plug power (MW)
@@ -779,7 +787,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         recirc = [
             precircmw,
             -pcoresystems - p_coolant_pump_elec_total_mw,
-            -p_hcd_electric_total_mw + ppumpmw,
+            -p_hcd_electric_total_mw + p_cp_coolant_pump_elec_mw,
         ]
         # Check if difference >2 between recirculated power and the output sum
         if sum(recirc) ** 2 > 2:
@@ -787,7 +795,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 "Recirc. Power Balance",
                 precircmw,
                 -pcoresystems
-                + ppumpmw
+                + p_cp_coolant_pump_elec_mw
                 - p_hcd_electric_total_mw
                 - p_coolant_pump_elec_total_mw,
             )
@@ -804,9 +812,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
 
         # HCD: Heating system, -Plasma heating, -losses
         hcd = [
-            p_hcd_electric_total_mw - ppumpmw,
+            p_hcd_electric_total_mw - p_cp_coolant_pump_elec_mw,
             -p_hcd_injected_total_mw,
-            -p_hcd_electric_total_mw + p_hcd_injected_total_mw + ppumpmw,
+            -p_hcd_electric_total_mw
+            + p_hcd_injected_total_mw
+            + p_cp_coolant_pump_elec_mw,
         ]
         sankey.add(
             flows=hcd,
