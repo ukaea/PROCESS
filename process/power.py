@@ -60,9 +60,13 @@ class Power:
         self.p_fw_heat_deposited_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_blkt_heat_deposited_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.pthermshld = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_shld_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_cp_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -723,7 +727,7 @@ class Power:
             )
 
         #  Total power deposited in shield coolant (MW)
-        self.pthermshld = (
+        self.p_shld_heat_deposited_mw = (
             fwbs_variables.pnuc_cp_sh
             + fwbs_variables.pnucshld
             + heat_transport_variables.p_shld_coolant_pump_mw
@@ -761,7 +765,7 @@ class Power:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
                 self.p_fw_blkt_heat_deposited_mw
-                + heat_transport_variables.iprimshld * self.pthermshld
+                + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = self.pthermdiv
@@ -771,7 +775,7 @@ class Power:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
                 self.p_fw_blkt_heat_deposited_mw
-                + heat_transport_variables.iprimshld * self.pthermshld
+                + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
                 + self.pthermdiv
             )
             #  Secondary thermal power deposited in divertor (MW)
@@ -788,7 +792,7 @@ class Power:
         self.delta_eta = 0.339 * self.pdivfraction
 
         #  Secondary thermal power deposited in shield
-        heat_transport_variables.psecshld = self.pthermshld * (
+        heat_transport_variables.psecshld = self.p_shld_heat_deposited_mw * (
             1 - heat_transport_variables.iprimshld
         )
 
@@ -1861,8 +1865,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat extracted from shield  (MW)",
-            "(pthermshld)",
-            self.pthermshld,
+            "(p_shld_heat_deposited_mw)",
+            self.p_shld_heat_deposited_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1891,7 +1895,7 @@ class Power:
             "Total (MW)",
             "",
             self.p_fw_blkt_heat_deposited_mw
-            + self.pthermshld
+            + self.p_shld_heat_deposited_mw
             + self.pthermdiv
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc,
@@ -1903,7 +1907,7 @@ class Power:
                 total
                 - (
                     self.p_fw_blkt_heat_deposited_mw
-                    + self.pthermshld
+                    + self.p_shld_heat_deposited_mw
                     + self.pthermdiv
                     + heat_transport_variables.psechcd
                     + fwbs_variables.ptfnuc
