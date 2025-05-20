@@ -70,7 +70,7 @@ class Power:
         self.p_cp_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.pcoresystems = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_plant_core_systems_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -921,7 +921,7 @@ class Power:
         #  pfcoil_variables.pfwpmw = Mean electrical energy dissipated in PFC power supplies as they
         #  increase or decrease the poloidal field energy AND extra due to ohmic heating
         #  of the plasma.  Issue #713
-        self.pcoresystems = (
+        self.p_plant_core_systems_elec_mw = (
             heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.fachtmw
             + self.p_cp_coolant_pump_elec_mw
@@ -934,9 +934,9 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.pcoresystems + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
-            self.pcoresystems
+            self.p_plant_core_systems_elec_mw
             + heat_transport_variables.pinjht
             + heat_transport_variables.p_coolant_pump_loss_total_mw
             + heat_transport_variables.psecdiv
@@ -965,7 +965,7 @@ class Power:
 
             #  Total recirculating power
             heat_transport_variables.precircmw = (
-                self.pcoresystems
+                self.p_plant_core_systems_elec_mw
                 + heat_transport_variables.p_hcd_electric_total_mw
                 + heat_transport_variables.p_coolant_pump_elec_total_mw
             )

@@ -2217,7 +2217,7 @@ class Power2Param(NamedTuple):
 
     p_cp_coolant_pump_elec_mw: Any = None
 
-    pcoresystems: Any = None
+    p_plant_core_systems_elec_mw: Any = None
 
     pdivfraction: Any = None
 
@@ -2336,7 +2336,7 @@ class Power2Param(NamedTuple):
             p_fw_heat_deposited_mw=0,
             p_shld_heat_deposited_mw=1.3677406976945679,
             p_cp_coolant_pump_elec_mw=0,
-            pcoresystems=0,
+            p_plant_core_systems_elec_mw=0,
             pdivfraction=0.13763633828287813,
             qss=20361.633927097802,
             qac=3611.3456752656607,
@@ -2438,7 +2438,7 @@ class Power2Param(NamedTuple):
             p_fw_heat_deposited_mw=0,
             p_shld_heat_deposited_mw=1.4106393366228915,
             p_cp_coolant_pump_elec_mw=0,
-            pcoresystems=125.33391046215507,
+            p_plant_core_systems_elec_mw=125.33391046215507,
             pdivfraction=0.13761114839248584,
             qss=20342.863776957758,
             qac=102701.82327748176,
@@ -2760,7 +2760,7 @@ def test_power2(power2param, monkeypatch, power):
         power, "p_cp_coolant_pump_elec_mw", power2param.p_cp_coolant_pump_elec_mw
     )
 
-    monkeypatch.setattr(power, "pcoresystems", power2param.pcoresystems)
+    monkeypatch.setattr(power, "p_plant_core_systems_elec_mw", power2param.p_plant_core_systems_elec_mw)
 
     monkeypatch.setattr(power, "pdivfraction", power2param.pdivfraction)
 
@@ -2794,7 +2794,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_psechtmw
     )
 
-    assert power.pcoresystems == pytest.approx(power2param.expected_pcoresystems)
+    assert power.p_plant_core_systems_elec_mw == pytest.approx(power2param.expected_pcoresystems)
 
 
 class Power3Param(NamedTuple):
