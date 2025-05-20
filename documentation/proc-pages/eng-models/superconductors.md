@@ -407,13 +407,13 @@ $$
 J_{\text{c,eng}}(B,T,\epsilon_I) = A^*(\epsilon_I)[T_c^*(\epsilon_I)(1-t^2)]^2[B_{c2}^*(\epsilon_I)(1-t^v)]^{n-3}b^{p-1}(1-b)^q
 $$
 
-where the introduced intrinsic strain $\epsilon_I$ and $A^*(\epsilon_I)$. The strain dependencies are related through:
+with the introduced intrinsic strain $\epsilon_I$ and $A^*(\epsilon_I)$. The strain dependencies are related through:
 
 $$
 \frac{B_{c2}^*(0,\epsilon_I)}{B_{c2}^*(0,0)} = \left(\frac{T_c^*(\epsilon_I)}{T_c^*(0)}\right)^w = \left(\frac{A^*(\epsilon_I)}{A^*(0)}\right)^{\frac{w}{u}}
 $$
 
-By definition $\epsilon_a$ is the applied strain and $\epsilon_I = 0$ when J_c is maximum.
+By definition $\epsilon_a$ is the applied strain and $\epsilon_I = 0$ when $J_c$ is maximum.
 
 $$
 \epsilon_I = \epsilon_a - \epsilon_m
