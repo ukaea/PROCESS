@@ -1171,7 +1171,7 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0787E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9255E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      4.0001E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.3028E+03    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.3028E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.2345E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9262E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0774E+01    
