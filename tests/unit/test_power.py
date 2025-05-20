@@ -1900,7 +1900,7 @@ class AcpowParam(NamedTuple):
 
     baseel: Any = None
 
-    crypmw: Any = None
+    p_cryo_plant_electric_mw: Any = None
 
     vachtmw: Any = None
 
@@ -1941,7 +1941,7 @@ class AcpowParam(NamedTuple):
         AcpowParam(
             efloor=379218.8908858358,
             baseel=5000000,
-            crypmw=37.900388528497025,
+            p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
@@ -1962,7 +1962,7 @@ class AcpowParam(NamedTuple):
         AcpowParam(
             efloor=381580.9594357388,
             baseel=5000000,
-            crypmw=108.74512702403499,
+            p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
@@ -1999,7 +1999,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "baseel", acpowparam.baseel)
 
-    monkeypatch.setattr(heat_transport_variables, "crypmw", acpowparam.crypmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_cryo_plant_electric_mw",
+        acpowparam.p_cryo_plant_electric_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
 
@@ -2141,7 +2145,7 @@ class Power2Param(NamedTuple):
 
     etath: Any = None
 
-    crypmw: Any = None
+    p_cryo_plant_electric_mw: Any = None
 
     psecdiv: Any = None
 
@@ -2296,7 +2300,7 @@ class Power2Param(NamedTuple):
             tfacpd=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.28554165620102,
             etath=0.37500000000000006,
-            crypmw=37.900388528497025,
+            p_cryo_plant_electric_mw=37.900388528497025,
             psecdiv=0,
             pinjht=77.967671580642758,
             htpsecmw=30.457120415306122,
@@ -2398,7 +2402,7 @@ class Power2Param(NamedTuple):
             tfacpd=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.2162627659944,
             etath=0.37500000000000006,
-            crypmw=108.74512702403499,
+            p_cryo_plant_electric_mw=108.74512702403499,
             psecdiv=0,
             pinjht=77.967671580642758,
             htpsecmw=30.448114159579291,
@@ -2632,7 +2636,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "etath", power2param.etath)
 
-    monkeypatch.setattr(heat_transport_variables, "crypmw", power2param.crypmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_cryo_plant_electric_mw",
+        power2param.p_cryo_plant_electric_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "psecdiv", power2param.psecdiv)
 
@@ -2784,7 +2792,7 @@ class Power3Param(NamedTuple):
 
     pinjmax: Any = None
 
-    crypmw: Any = None
+    p_cryo_plant_electric_mw: Any = None
 
     vachtmw: Any = None
 
@@ -2824,7 +2832,7 @@ class Power3Param(NamedTuple):
             eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             p_coolant_pump_elec_total_mw=234.28554165620102,
             pinjmax=120,
-            crypmw=37.900388528497025,
+            p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
@@ -2851,7 +2859,7 @@ class Power3Param(NamedTuple):
             eta_hcd_primary_injector_wall_plug=0.40000000000000002,
             p_coolant_pump_elec_total_mw=234.2162627659944,
             pinjmax=120,
-            crypmw=108.74512702403499,
+            p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
             tfacpd=9.1507079104675704,
             trithtmw=15,
@@ -2909,7 +2917,11 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pinjmax", power3param.pinjmax)
 
-    monkeypatch.setattr(heat_transport_variables, "crypmw", power3param.crypmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_cryo_plant_electric_mw",
+        power3param.p_cryo_plant_electric_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power3param.vachtmw)
 
