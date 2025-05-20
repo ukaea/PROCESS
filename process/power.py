@@ -56,7 +56,9 @@ class Power:
         self.p_blkt_breeder_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.pthermdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_div_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_fw_heat_deposited_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -738,7 +740,7 @@ class Power:
         #  Total thermal power deposited in divertor coolant (MW)
         #  = (conduction to divertor, less radiation) + (neutron and radiation power)
         #  using physics_variables.p_plasma_separatrix_mw as calculated in physics.f90
-        self.pthermdiv = (
+        self.p_div_heat_deposited_mw = (
             physics_variables.p_plasma_separatrix_mw
             + (
                 fwbs_variables.p_div_nuclear_heat_total_mw
@@ -750,7 +752,7 @@ class Power:
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         if fwbs_variables.i_coolant_pumping != 3:
             heat_transport_variables.pfwdiv = (
-                self.p_fw_heat_deposited_mw + self.pthermdiv
+                self.p_fw_heat_deposited_mw + self.p_div_heat_deposited_mw
             )
 
         #  Thermal to electric efficiency
@@ -770,7 +772,7 @@ class Power:
                 + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = self.pthermdiv
+            heat_transport_variables.psecdiv = self.p_div_heat_deposited_mw
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
             self.iprimdiv = 0
         else:
@@ -778,7 +780,7 @@ class Power:
             heat_transport_variables.pthermmw = (
                 self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
-                + self.pthermdiv
+                + self.p_div_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = 0.0e0
@@ -789,7 +791,9 @@ class Power:
             logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
 
         # #284 Fraction of total high-grade thermal power to divertor
-        self.pdivfraction = self.pthermdiv / heat_transport_variables.pthermmw
+        self.pdivfraction = (
+            self.p_div_heat_deposited_mw / heat_transport_variables.pthermmw
+        )
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.pdivfraction
 
@@ -1875,8 +1879,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat extracted from divertor (MW)",
-            "(pthermdiv)",
-            self.pthermdiv,
+            "(p_div_heat_deposited_mw)",
+            self.p_div_heat_deposited_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1899,7 +1903,7 @@ class Power:
             "",
             self.p_fw_blkt_heat_deposited_mw
             + self.p_shld_heat_deposited_mw
-            + self.pthermdiv
+            + self.p_div_heat_deposited_mw
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc,
             "OP ",
@@ -1911,7 +1915,7 @@ class Power:
                 - (
                     self.p_fw_blkt_heat_deposited_mw
                     + self.p_shld_heat_deposited_mw
-                    + self.pthermdiv
+                    + self.p_div_heat_deposited_mw
                     + heat_transport_variables.psechcd
                     + fwbs_variables.ptfnuc
                 )
