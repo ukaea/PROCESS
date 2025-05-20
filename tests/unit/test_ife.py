@@ -2033,7 +2033,7 @@ class Ifepw1Param(NamedTuple):
     emult: Any = None
     fhole: Any = None
     p_blkt_nuclear_heat_total_mw: Any = None
-    pnucshld: Any = None
+    p_shld_nuclear_heat_mw: Any = None
     pnucloss: Any = None
     priheat: Any = None
     pthermmw: Any = None
@@ -2066,7 +2066,7 @@ class Ifepw1Param(NamedTuple):
             emult=1.26,
             fhole=0,
             p_blkt_nuclear_heat_total_mw=0,
-            pnucshld=0,
+            p_shld_nuclear_heat_mw=0,
             pnucloss=0,
             priheat=0,
             pthermmw=0,
@@ -2112,7 +2112,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
         "p_blkt_nuclear_heat_total_mw",
         ifepw1param.p_blkt_nuclear_heat_total_mw,
     )
-    monkeypatch.setattr(fwbs_variables, "pnucshld", ifepw1param.pnucshld)
+    monkeypatch.setattr(
+        fwbs_variables, "p_shld_nuclear_heat_mw", ifepw1param.p_shld_nuclear_heat_mw
+    )
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw1param.pthermmw)

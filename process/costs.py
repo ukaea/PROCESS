@@ -2136,7 +2136,7 @@ class Costs:
             * (
                 (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
                 + (1.0e6 * fwbs_variables.p_blkt_nuclear_heat_total_mw) ** exphts
-                + (1.0e6 * fwbs_variables.pnucshld) ** exphts
+                + (1.0e6 * fwbs_variables.p_shld_nuclear_heat_mw) ** exphts
             )
         )
 
