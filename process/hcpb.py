@@ -82,7 +82,7 @@ class CCFE_HCPB:
             # TF, shield and total CP nuclear heating [MW]
             (
                 fwbs_variables.pnuc_cp_tf,
-                fwbs_variables.pnuc_cp_sh,
+                fwbs_variables.p_cp_shield_nuclear_heat_mw,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
                 physics_variables.p_neutron_total_mw, build_variables.dr_shld_inboard
@@ -91,7 +91,7 @@ class CCFE_HCPB:
         else:  # No CP
             f_geom_cp = 0
             fwbs_variables.pnuc_cp_tf = 0
-            fwbs_variables.pnuc_cp_sh = 0
+            fwbs_variables.p_cp_shield_nuclear_heat_mw = 0
             fwbs_variables.pnuc_cp = 0
             fwbs_variables.neut_flux_cp = 0
 
@@ -182,7 +182,7 @@ class CCFE_HCPB:
         )
 
         # Power deposited in the CP
-        fwbs_variables.pnuc_cp_sh = (
+        fwbs_variables.p_cp_shield_nuclear_heat_mw = (
             f_geom_cp * physics_variables.p_neutron_total_mw - fwbs_variables.pnuc_cp_tf
         )
 
@@ -730,7 +730,10 @@ class CCFE_HCPB:
             )
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.p_shld_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -751,7 +754,10 @@ class CCFE_HCPB:
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.p_shld_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -803,7 +809,10 @@ class CCFE_HCPB:
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.p_shld_nuclear_heat_mw + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -1054,7 +1063,7 @@ class CCFE_HCPB:
 
             # WARINING, this is an extraoilation from TF heat ...
             # DO NOT TRUST THIS VALUE !!
-            pnuc_cp_sh = (pneut / 800.0) * np.exp(3.882) - pnuc_cp_tf
+            p_cp_shield_nuclear_heat_mw = (pneut / 800.0) * np.exp(3.882) - pnuc_cp_tf
             # ------------
 
         # Superconducting / copper CP
@@ -1136,12 +1145,12 @@ class CCFE_HCPB:
             pnuc_cp_tf = pnuc_cp_tf * f_wc_density
 
             # Shield nuclear heat [MW]
-            pnuc_cp_sh = pnuc_cp_sh_gam + pnuc_cp_sh_n
+            p_cp_shield_nuclear_heat_mw = pnuc_cp_sh_gam + pnuc_cp_sh_n
 
         # Total CP nuclear heat [MW]
-        pnuc_cp = pnuc_cp_tf + pnuc_cp_sh
+        pnuc_cp = pnuc_cp_tf + p_cp_shield_nuclear_heat_mw
 
-        return pnuc_cp_tf, pnuc_cp_sh, pnuc_cp
+        return pnuc_cp_tf, p_cp_shield_nuclear_heat_mw, pnuc_cp
 
     def write_output(self):
         po.oheadr(self.outfile, "First wall and blanket : CCFE HCPB model")
@@ -1302,8 +1311,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "ST centrepost shield heating (MW)",
-                "(pnuc_cp_sh)",
-                fwbs_variables.pnuc_cp_sh,
+                "(p_cp_shield_nuclear_heat_mw)",
+                fwbs_variables.p_cp_shield_nuclear_heat_mw,
                 "OP ",
             )
             po.ovarre(

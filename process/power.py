@@ -732,7 +732,7 @@ class Power:
 
         #  Total power deposited in shield coolant (MW)
         self.p_shld_heat_deposited_mw = (
-            fwbs_variables.pnuc_cp_sh
+            fwbs_variables.p_cp_shield_nuclear_heat_mw
             + fwbs_variables.p_shld_nuclear_heat_mw
             + heat_transport_variables.p_shld_coolant_pump_mw
         )
