@@ -353,7 +353,7 @@ def check_process(inputs):  # noqa: ARG001
 
     if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
         fortran.buildings_variables.triv = 0.0
-        fortran.heat_transport_variables.trithtmw = 0.0
+        fortran.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if fortran.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(

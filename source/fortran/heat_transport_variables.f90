@@ -178,7 +178,7 @@ module heat_transport_variables
     real(dp) :: tlvpmw
     !! estimate of total low voltage power (MW)
 
-    real(dp) :: trithtmw
+    real(dp) :: p_tritium_plant_electric_mw
     !! power required for tritium processing (MW)
 
     real(dp) :: temp_turbine_coolant_in

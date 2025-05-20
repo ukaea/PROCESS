@@ -2001,7 +2001,7 @@ class IFE:
             + fwbs_variables.pnucloss
             + heat_transport_variables.fachtmw
             + heat_transport_variables.vachtmw
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
             + heat_transport_variables.p_cryo_plant_electric_mw
@@ -2128,8 +2128,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from tritium plant (MW)",
-                "(trithtmw)",
-                heat_transport_variables.trithtmw,
+                "(p_tritium_plant_electric_mw)",
+                heat_transport_variables.p_tritium_plant_electric_mw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2188,7 +2188,7 @@ class IFE:
             + ife_variables.tdspmw
             + ife_variables.tfacmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_hcd_electric_total_mw
             + basemw
             + (buildings_variables.efloor * pmwpm2)
@@ -2203,7 +2203,7 @@ class IFE:
 
         heat_transport_variables.tlvpmw = (
             heat_transport_variables.fcsht
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
             + heat_transport_variables.vachtmw
             + 0.5 * heat_transport_variables.p_cryo_plant_electric_mw
@@ -2245,8 +2245,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Tritium processing plant (MW)",
-            "(trithtmw)",
-            heat_transport_variables.trithtmw,
+            "(p_tritium_plant_electric_mw)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
         )
         process_output.ovarre(
             self.outfile,

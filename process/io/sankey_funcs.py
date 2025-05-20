@@ -634,7 +634,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     tfacpd = m_file.data["tfacpd"].get_scan(
         -1
     )  # total steady state TF coil AC power demand (MW)
-    trithtmw = m_file.data["trithtmw"].get_scan(
+    p_tritium_plant_electric_mw = m_file.data["p_tritium_plant_electric_mw"].get_scan(
         -1
     )  # power required for tritium processing (MW)
     vachtmw = m_file.data["vachtmw"].get_scan(-1)  # vacuum pump power (MW)
@@ -650,7 +650,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         p_cryo_plant_electric_mw
         + fachtmw
         + tfacpd
-        + trithtmw
+        + p_tritium_plant_electric_mw
         + vachtmw
         + pfwpmw
         + p_cp_coolant_pump_elec_mw

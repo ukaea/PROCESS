@@ -2590,7 +2590,7 @@ class IfeacpParam(NamedTuple):
     pacpmw: Any = None
     p_cryo_plant_electric_mw: Any = None
     vachtmw: Any = None
-    trithtmw: Any = None
+    p_tritium_plant_electric_mw: Any = None
     p_hcd_electric_total_mw: Any = None
     fcsht: Any = None
     tlvpmw: Any = None
@@ -2615,7 +2615,7 @@ class IfeacpParam(NamedTuple):
             pacpmw=0,
             p_cryo_plant_electric_mw=10,
             vachtmw=0.5,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=81.914893617021278,
             fcsht=0,
             tlvpmw=0,
@@ -2653,7 +2653,11 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
         ifeacpparam.p_cryo_plant_electric_mw,
     )
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifeacpparam.vachtmw)
-    monkeypatch.setattr(heat_transport_variables, "trithtmw", ifeacpparam.trithtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tritium_plant_electric_mw",
+        ifeacpparam.p_tritium_plant_electric_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "p_hcd_electric_total_mw",
@@ -2842,7 +2846,7 @@ class Ifepw2Param(NamedTuple):
     psechtmw: Any = None
     pinjht: Any = None
     vachtmw: Any = None
-    trithtmw: Any = None
+    p_tritium_plant_electric_mw: Any = None
     p_cryo_plant_electric_mw: Any = None
     p_plant_electric_gross_mw: Any = None
     pthermmw: Any = None
@@ -2881,7 +2885,7 @@ class Ifepw2Param(NamedTuple):
             psechtmw=0,
             pinjht=58.814893617021283,
             vachtmw=0.5,
-            trithtmw=15,
+            p_tritium_plant_electric_mw=15,
             p_cryo_plant_electric_mw=10,
             p_plant_electric_gross_mw=0,
             pthermmw=2532.2219999999998,
@@ -2933,7 +2937,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)
     monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw2param.pinjht)
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifepw2param.vachtmw)
-    monkeypatch.setattr(heat_transport_variables, "trithtmw", ifepw2param.trithtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tritium_plant_electric_mw",
+        ifepw2param.p_tritium_plant_electric_mw,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "p_cryo_plant_electric_mw",

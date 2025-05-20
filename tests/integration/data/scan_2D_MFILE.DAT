@@ -1085,7 +1085,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.5426E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0256E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3039E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5323E+01 OP 
@@ -1126,7 +1126,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5323E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4391E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1807E+02    
@@ -1157,7 +1157,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.8762E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6258E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0256E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.3205E+00    
@@ -2248,7 +2248,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.3373E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0255E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2982E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5253E+01 OP 
@@ -2289,7 +2289,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5253E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4616E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1802E+02    
@@ -2320,7 +2320,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.8935E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6086E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0255E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2819E+00    
@@ -3411,7 +3411,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.1557E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0174E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5112E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2987E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5193E+01 OP 
@@ -3452,7 +3452,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5193E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4761E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5559E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1833E+02    
@@ -3483,7 +3483,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5112E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9047E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.5859E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0174E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2616E+00    
@@ -4574,7 +4574,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.1455E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0170E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2888E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5198E+01 OP 
@@ -4615,7 +4615,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5198E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4794E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1776E+02    
@@ -4646,7 +4646,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9072E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.5830E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0170E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2477E+00    
@@ -5737,7 +5737,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.3603E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0295E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3165E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5254E+01 OP 
@@ -5778,7 +5778,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5254E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4816E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1826E+02    
@@ -5809,7 +5809,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9089E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6107E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0295E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2645E+00    
@@ -6900,7 +6900,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.6101E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0439E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3393E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5330E+01 OP 
@@ -6941,7 +6941,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5330E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4721E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1868E+02    
@@ -6972,7 +6972,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9016E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6398E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0439E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2660E+00    
@@ -8063,7 +8063,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.6094E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0429E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3424E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5337E+01 OP 
@@ -8104,7 +8104,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5337E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4767E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1867E+02    
@@ -8135,7 +8135,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9051E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6363E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0429E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2523E+00    
@@ -9226,7 +9226,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.3781E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0349E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3197E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5271E+01 OP 
@@ -9267,7 +9267,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5271E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4818E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1837E+02    
@@ -9298,7 +9298,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9091E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6160E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0349E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2468E+00    
@@ -10389,7 +10389,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.1307E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0255E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.2848E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5208E+01 OP 
@@ -10430,7 +10430,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5208E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4736E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1790E+02    
@@ -10461,7 +10461,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9028E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.5938E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0255E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2408E+00    
@@ -11552,7 +11552,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.1627E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0256E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3002E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5212E+01 OP 
@@ -11593,7 +11593,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5212E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4894E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1805E+02    
@@ -11624,7 +11624,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9149E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.5931E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0256E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2326E+00    
@@ -12715,7 +12715,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.4154E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0355E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3407E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5277E+01 OP 
@@ -12756,7 +12756,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5277E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.5040E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1861E+02    
@@ -12787,7 +12787,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9262E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6168E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0355E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2418E+00    
@@ -13878,7 +13878,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.6225E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0456E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3635E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5342E+01 OP 
@@ -13919,7 +13919,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5342E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.5016E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1898E+02    
@@ -13950,7 +13950,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9243E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6396E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0456E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2484E+00    
@@ -15041,7 +15041,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.6452E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0455E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3759E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5346E+01 OP 
@@ -15082,7 +15082,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5346E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.5148E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1910E+02    
@@ -15113,7 +15113,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9345E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6384E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0455E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2391E+00    
@@ -16204,7 +16204,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.4595E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0373E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3653E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5281E+01 OP 
@@ -16245,7 +16245,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5281E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.5295E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1892E+02    
@@ -16276,7 +16276,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9458E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6204E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0373E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2421E+00    
@@ -17367,7 +17367,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      7.2799E+01 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      1.0288E+01 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.5000E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      5.3559E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      5.5216E+01 OP 
@@ -17408,7 +17408,7 @@
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5216E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.5450E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.5000E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.1874E+02    
@@ -17439,7 +17439,7 @@
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5000E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9577E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6020E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0288E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2451E+00    

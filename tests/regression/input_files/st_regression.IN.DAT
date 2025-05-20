@@ -3010,7 +3010,7 @@ etahtp = 0.87
 * DESCRIPTION:   Base AC power requirement (W/m2)
 * JUSTIFICATION: 
 
-*trithtmw = 
+*p_tritium_plant_electric_mw = 
 * DESCRIPTION:   Power required for tritium processing (MW) (default = 15MW)
 * JUSTIFICATION: 
 
