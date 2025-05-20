@@ -2356,7 +2356,12 @@ class TFCoil:
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
 
-            po.ovarre(self.outfile, "Pump power (W)", "(p_cp_coolant_pump_elec)", tfv.p_cp_coolant_pump_elec)
+            po.ovarre(
+                self.outfile,
+                "Pump power (W)",
+                "(p_cp_coolant_pump_elec)",
+                tfv.p_cp_coolant_pump_elec,
+            )
 
     def tf_field_and_force(self):
         """
