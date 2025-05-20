@@ -60,7 +60,7 @@ class Power:
         self.p_fw_heat_deposited_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_heat_deposited_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermshld = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_cp_coolant_pump_elec_mw = AnnotatedVariable(
@@ -714,12 +714,12 @@ class Power:
                 + current_drive_variables.p_beam_shine_through_mw
             )
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
-            self.pthermblkt = (
+            self.p_blkt_heat_deposited_mw = (
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
             self.p_fw_blkt_heat_deposited_mw = (
-                self.p_fw_heat_deposited_mw + self.pthermblkt
+                self.p_fw_heat_deposited_mw + self.p_blkt_heat_deposited_mw
             )
 
         #  Total power deposited in shield coolant (MW)
