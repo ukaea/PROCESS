@@ -633,7 +633,7 @@ class Power:
             )
 
         #  Heat lost through pump power inefficiencies (MW)
-        heat_transport_variables.htpsecmw = (
+        heat_transport_variables.p_coolant_pump_loss_total_mw = (
             heat_transport_variables.p_coolant_pump_elec_total_mw
             - self.p_coolant_pump_total_mw
         )
@@ -922,11 +922,11 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.pcoresystems + heat_transport_variables.pinjht + heat_transport_variables.htpsecmw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # psechtmw = self.pcoresystems + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.psechtmw = (
             self.pcoresystems
             + heat_transport_variables.pinjht
-            + heat_transport_variables.htpsecmw
+            + heat_transport_variables.p_coolant_pump_loss_total_mw
             + heat_transport_variables.psecdiv
             + heat_transport_variables.psecshld
             + heat_transport_variables.psechcd
@@ -1581,8 +1581,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Coolant pumping efficiency losses (MW)",
-            "(htpsecmw)",
-            heat_transport_variables.htpsecmw,
+            "(p_coolant_pump_loss_total_mw)",
+            heat_transport_variables.p_coolant_pump_loss_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -3112,7 +3112,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_div_coolant_pump_mw = 0.0
     heat_transport_variables.p_fw_coolant_pump_mw = 0.0
     heat_transport_variables.p_shld_coolant_pump_mw = 0.0
-    heat_transport_variables.htpsecmw = 0.0
+    heat_transport_variables.p_coolant_pump_loss_total_mw = 0.0
     heat_transport_variables.ipowerflow = 1
     heat_transport_variables.iprimshld = 1
     heat_transport_variables.nphx = 0
