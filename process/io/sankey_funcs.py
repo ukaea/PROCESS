@@ -104,7 +104,7 @@ def plot_full_sankey(
     )  # Total power extracted from divertor (MW)
 
     # Used in [FIRST_WALL]
-    pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
+    p_fw_blkt_heat_deposited_mw = m_file.data["p_fw_blkt_heat_deposited_mw"].get_scan(
         -1
     )  # Power extracted blanket & FW (MW)
     p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
@@ -113,7 +113,7 @@ def plot_full_sankey(
     htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
     htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
     pthermfw = (
-        pthermfw_blkt - htpmwblkt - p_blkt_nuclear_heat_total_mw
+        p_fw_blkt_heat_deposited_mw - htpmwblkt - p_blkt_nuclear_heat_total_mw
     )  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
     # p_beam_shine_through_mw = m_file.data['p_beam_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
@@ -603,13 +603,15 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         totalcpetc = pnuc_cp_sh
 
     # Used in [BLANKETSETC]
-    pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
+    p_fw_blkt_heat_deposited_mw = m_file.data["p_fw_blkt_heat_deposited_mw"].get_scan(
         -1
     )  # Heat for electricity (MW)
     p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
         -1
     )  # 1st wall & blanket pumping (MW)
-    pthermmw_p = pthermfw_blkt - p_fw_blkt_coolant_pump_mw  # Heat - pumping power (MW)
+    pthermmw_p = (
+        p_fw_blkt_heat_deposited_mw - p_fw_blkt_coolant_pump_mw
+    )  # Heat - pumping power (MW)
 
     # Used in [PRIMARY]
     p_plant_electric_gross_mw = m_file.data["p_plant_electric_gross_mw"].get_scan(
