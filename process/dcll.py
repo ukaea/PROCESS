@@ -335,7 +335,7 @@ class DCLL:
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld * 0
+                heat_transport_variables.fpumpshld * 0.0
             )
 
         if output:

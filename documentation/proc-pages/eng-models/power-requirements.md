@@ -48,7 +48,7 @@ divertor coolant is assumed to be at such low temperature that it cannot be used
 generation and is dumped to the environment.
 
 The resulting thermal efficiencies used are taken from studies that modelled Rankine cycles for
-the different options of a helium-cooled primary circuit with a top temperature of 500℃,(For historical reasons in both cases the divertor was cooled by water with a top temperature of 150℃)
+the different options of a helium-cooled primary circuit with a top temperature of 500℃,(For historical reasons in both cases the divertor was cooled by water with a top temperature of 150℃).
 Hence, no variation of efficiency with primary coolant temperature
 is possible using the simplified model; indeed, no temperatures
 are even considered in the model.
