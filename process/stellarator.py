@@ -1242,7 +1242,8 @@ class Stellarator:
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.p_shld_coolant_pump_mw = (
-                    heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
+                    heat_transport_variables.fpumpshld
+                    * fwbs_variables.p_shld_nuclear_heat_mw
                 )
                 heat_transport_variables.p_div_coolant_pump_mw = (
                     heat_transport_variables.fpumpdiv
@@ -1296,7 +1297,7 @@ class Stellarator:
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.pnucshld = (
+                fwbs_variables.p_shld_nuclear_heat_mw = (
                     pneut2 - fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
 
@@ -1565,7 +1566,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
                 )
 
-                fwbs_variables.pnucshld = pnucshldi + pnucshldo
+                fwbs_variables.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
 
                 #  Calculate coolant pumping powers from input fraction.
                 #  The pumping power is assumed to be a fraction, fpump, of the incident
@@ -2060,8 +2061,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Shield nuclear heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2080,8 +2081,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Shield heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,

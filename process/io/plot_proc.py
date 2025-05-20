@@ -3763,7 +3763,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("p_plasma_inner_rad_mw", "Inner zone radiation", "MW"),
         ("p_plasma_rad_mw", "Total radiation in LCFS", "MW"),
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
-        ("pnucshld", "Nuclear heating in shield", "MW"),
+        ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
         (p_cryo_plant_electric_mw, "TF cryogenic power", "MW"),
         ("p_plasma_separatrix_mw", "Power to divertor", "MW"),
         ("divlife", "Divertor life", "years"),

@@ -112,7 +112,7 @@ class ProcessTracker:
         "dr_shld_outboard",
         "dr_tf_inboard",
         "dr_shld_vv_gap_inboard",
-        "pnucshld",
+        "p_shld_nuclear_heat_mw",
         "p_blkt_nuclear_heat_total_mw",
         "triang",
         "triang95",
