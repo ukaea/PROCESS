@@ -47,7 +47,9 @@ class Power:
         self.p_coolant_pump_total_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_blkt_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -652,7 +654,7 @@ class Power:
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:
-                self.pthermfw_blkt = (
+                self.p_fw_blkt_heat_deposited_mw = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
@@ -666,7 +668,7 @@ class Power:
                     + current_drive_variables.p_beam_shine_through_mw
                 )
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.pthermfw_blkt = (
+                self.p_fw_blkt_heat_deposited_mw = (
                     self.pthermblkt_liq
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
@@ -677,7 +679,7 @@ class Power:
                     + current_drive_variables.p_beam_shine_through_mw
                 )
             else:
-                self.pthermfw_blkt = (
+                self.p_fw_blkt_heat_deposited_mw = (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
@@ -689,7 +691,7 @@ class Power:
 
         elif fwbs_variables.i_coolant_pumping == 3:
             # First wall and blanket coolant combined
-            self.pthermfw_blkt = (
+            self.p_fw_blkt_heat_deposited_mw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
@@ -714,7 +716,7 @@ class Power:
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
-            self.pthermfw_blkt = self.pthermfw + self.pthermblkt
+            self.p_fw_blkt_heat_deposited_mw = self.pthermfw + self.pthermblkt
 
         #  Total power deposited in shield coolant (MW)
         self.pthermshld = (
@@ -752,7 +754,7 @@ class Power:
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
-                self.pthermfw_blkt
+                self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.iprimshld * self.pthermshld
             )
             #  Secondary thermal power deposited in divertor (MW)
@@ -762,7 +764,7 @@ class Power:
         else:
             #  Primary thermal power (MW)
             heat_transport_variables.pthermmw = (
-                self.pthermfw_blkt
+                self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.iprimshld * self.pthermshld
                 + self.pthermdiv
             )
@@ -1846,8 +1848,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat extracted from first wall and blanket (MW)",
-            "(pthermfw_blkt)",
-            self.pthermfw_blkt,
+            "(p_fw_blkt_heat_deposited_mw)",
+            self.p_fw_blkt_heat_deposited_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1882,7 +1884,7 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            self.pthermfw_blkt
+            self.p_fw_blkt_heat_deposited_mw
             + self.pthermshld
             + self.pthermdiv
             + heat_transport_variables.psechcd
@@ -1894,7 +1896,7 @@ class Power:
             abs(
                 total
                 - (
-                    self.pthermfw_blkt
+                    self.p_fw_blkt_heat_deposited_mw
                     + self.pthermshld
                     + self.pthermdiv
                     + heat_transport_variables.psechcd
