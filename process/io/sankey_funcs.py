@@ -99,7 +99,7 @@ def plot_full_sankey(
     p_div_coolant_pump_mw = m_file.data["p_div_coolant_pump_mw"].get_scan(
         -1
     )  # Divertor coolant pumping power
-    pthermdiv = m_file.data["pthermdiv"].get_scan(
+    p_div_heat_deposited_mw = m_file.data["p_div_heat_deposited_mw"].get_scan(
         -1
     )  # Total power extracted from divertor (MW)
 
@@ -287,7 +287,7 @@ def plot_full_sankey(
             p_div_nuclear_heat_total_mw,
             p_div_rad_total_mw,
             p_div_coolant_pump_mw,
-            -pthermdiv,
+            -p_div_heat_deposited_mw,
         ]
         sankey.add(
             flows=divertor,
@@ -389,7 +389,7 @@ def plot_full_sankey(
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [p_fw_heat_deposited_mw, p_blkt_heat_deposited_mw, p_shld_heat_deposited_mw, pthermdiv, -pthermmw]
+        HEAT = [p_fw_heat_deposited_mw, p_blkt_heat_deposited_mw, p_shld_heat_deposited_mw, p_div_heat_deposited_mw, -pthermmw]
         sankey.add(flows=HEAT,
                    orientations=[1, 0, -1, 1, 0],
                    trunklength=0.5,
