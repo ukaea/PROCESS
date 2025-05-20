@@ -59,7 +59,9 @@ class Power:
         self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermshld = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.ppumpmw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_cp_coolant_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pcoresystems = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -893,9 +895,11 @@ class Power:
         None
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
-            self.ppumpmw = 1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
+            self.p_cp_coolant_pump_elec_mw = (
+                1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
+            )
         else:
-            self.ppumpmw = 0.0e0
+            self.p_cp_coolant_pump_elec_mw = 0.0e0
 
         #  Facility heat removal (heat_transport_variables.fcsht calculated in ACPOW)
         heat_transport_variables.fachtmw = heat_transport_variables.fcsht
@@ -908,7 +912,7 @@ class Power:
         self.pcoresystems = (
             heat_transport_variables.crypmw
             + heat_transport_variables.fachtmw
-            + self.ppumpmw
+            + self.p_cp_coolant_pump_elec_mw
             + heat_transport_variables.tfacpd
             + heat_transport_variables.trithtmw
             + heat_transport_variables.vachtmw
@@ -1496,10 +1500,15 @@ class Power:
             po.dblcol(self.outfile, "pnuc_cp", 0.0e0, fwbs_variables.pnuc_cp)
             po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
             po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-            po.dblcol(self.outfile, "ppumpmw", 0.0e0, self.ppumpmw)  # check
+            po.dblcol(
+                self.outfile,
+                "p_cp_coolant_pump_elec_mw",
+                0.0e0,
+                self.p_cp_coolant_pump_elec_mw,
+            )  # check
 
         primsum = primsum
-        secsum = secsum + fwbs_variables.pnuc_cp + self.ppumpmw
+        secsum = secsum + fwbs_variables.pnuc_cp + self.p_cp_coolant_pump_elec_mw
 
         po.oblnkl(self.outfile)
         po.write(self.outfile, "TF coil:")

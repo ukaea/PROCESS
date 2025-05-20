@@ -2211,7 +2211,7 @@ class Power2Param(NamedTuple):
 
     pthermshld: Any = None
 
-    ppumpmw: Any = None
+    p_cp_coolant_pump_elec_mw: Any = None
 
     pcoresystems: Any = None
 
@@ -2331,7 +2331,7 @@ class Power2Param(NamedTuple):
             pthermdiv=360.63773557565275,
             pthermfw=0,
             pthermshld=1.3677406976945679,
-            ppumpmw=0,
+            p_cp_coolant_pump_elec_mw=0,
             pcoresystems=0,
             pdivfraction=0.13763633828287813,
             qss=20361.633927097802,
@@ -2433,7 +2433,7 @@ class Power2Param(NamedTuple):
             pthermdiv=360.46172260917911,
             pthermfw=0,
             pthermshld=1.4106393366228915,
-            ppumpmw=0,
+            p_cp_coolant_pump_elec_mw=0,
             pcoresystems=125.33391046215507,
             pdivfraction=0.13761114839248584,
             qss=20342.863776957758,
@@ -2692,7 +2692,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "f_alpha_plasma", power2param.f_alpha_plasma)
 
-    monkeypatch.setattr(tfcoil_variables, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec)
+    monkeypatch.setattr(
+        tfcoil_variables, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", power2param.i_tf_sup)
 
@@ -2734,7 +2736,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power, "pthermshld", power2param.pthermshld)
 
-    monkeypatch.setattr(power, "ppumpmw", power2param.ppumpmw)
+    monkeypatch.setattr(
+        power, "p_cp_coolant_pump_elec_mw", power2param.p_cp_coolant_pump_elec_mw
+    )
 
     monkeypatch.setattr(power, "pcoresystems", power2param.pcoresystems)
 
