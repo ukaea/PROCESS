@@ -103,7 +103,7 @@ def acc2261_fix(costs, request, monkeypatch):
     # Mock variables used by acc2261()
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 1)
-    monkeypatch.setattr(htv, "pfwdiv", 0.0)
+    monkeypatch.setattr(htv, "p_fw_div_heat_deposited_mw", 0.0)
     monkeypatch.setattr(fv, "p_blkt_nuclear_heat_total_mw", 1558.0)
     monkeypatch.setattr(fv, "p_shld_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(htv, "pthermmw", 2647.0)
@@ -3843,7 +3843,7 @@ class Acc2261Param(NamedTuple):
 
     pthermmw: Any = None
 
-    pfwdiv: Any = None
+    p_fw_div_heat_deposited_mw: Any = None
 
     nphx: Any = None
 
@@ -3878,7 +3878,7 @@ class Acc2261Param(NamedTuple):
             p_shld_nuclear_heat_mw=1.3609360176065353,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             pthermmw=2620.2218111502593,
-            pfwdiv=0,
+            p_fw_div_heat_deposited_mw=0,
             nphx=3,
             c226=0,
             c2261=0,
@@ -3900,7 +3900,7 @@ class Acc2261Param(NamedTuple):
             p_shld_nuclear_heat_mw=1.4036212304705389,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             pthermmw=2619.4223856129224,
-            pfwdiv=0,
+            p_fw_div_heat_deposited_mw=0,
             nphx=3,
             c226=228.30921518184891,
             c2261=85.82488824875719,
@@ -3948,7 +3948,11 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2261param.pthermmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pfwdiv", acc2261param.pfwdiv)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_fw_div_heat_deposited_mw",
+        acc2261param.p_fw_div_heat_deposited_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "nphx", acc2261param.nphx)
 

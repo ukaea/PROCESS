@@ -1932,12 +1932,15 @@ class IFE:
         # conventional blanket
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
-            heat_transport_variables.pfwdiv = 0.24 * heat_transport_variables.pthermmw
+            heat_transport_variables.p_fw_div_heat_deposited_mw = (
+                0.24 * heat_transport_variables.pthermmw
+            )
             fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-                heat_transport_variables.pthermmw - heat_transport_variables.pfwdiv
+                heat_transport_variables.pthermmw
+                - heat_transport_variables.p_fw_div_heat_deposited_mw
             )
         else:
-            heat_transport_variables.pfwdiv = 0.0
+            heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
             fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                 heat_transport_variables.pthermmw
             )
@@ -2073,8 +2076,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "First wall nuclear heating (MW)",
-                "(pfwdiv)",
-                heat_transport_variables.pfwdiv,
+                "(p_fw_div_heat_deposited_mw)",
+                heat_transport_variables.p_fw_div_heat_deposited_mw,
             )
             process_output.ovarre(
                 self.outfile,
