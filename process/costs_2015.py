@@ -140,7 +140,7 @@ class Costs2015:
 
         # Electrical output (given availability) for a whole year
         self.mean_electric_output = (
-            heat_transport_variables.pnetelmw * cost_variables.cpfact
+            heat_transport_variables.p_plant_electric_net_mw * cost_variables.cpfact
         )
         self.annual_electric_output = self.mean_electric_output * 24.0e0 * 365.25e0
 
@@ -488,8 +488,8 @@ class Costs2015:
         po.ovarrf(
             self.outfile,
             "Net electric output (MW)",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(

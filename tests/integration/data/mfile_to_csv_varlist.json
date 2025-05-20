@@ -1,7 +1,7 @@
 {
   "vars": [
    "rmajor",
-   "pnetelmw",
+   "p_plant_electric_net_mw",
    "jwdgop"
   ]
 }

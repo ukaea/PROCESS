@@ -292,7 +292,7 @@ def main(args=None):
     nsweep_dict = {
         1: "aspect",
         2: "pflux_div_heat_load_max_mw",
-        3: "pnetelmw",
+        3: "p_plant_electric_net_mw",
         4: "hfact",
         5: "oacdcp",
         6: "walalw",

@@ -2030,7 +2030,7 @@ class IFE:
             ) + heat_transport_variables.pacpmw
 
             # Net electric power
-            heat_transport_variables.pnetelmw = (
+            heat_transport_variables.p_plant_electric_net_mw = (
                 heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
             )
 
@@ -2152,8 +2152,8 @@ class IFE:
                 process_output.ovarre(
                     self.outfile,
                     "Net electric power (MW)",
-                    "(pnetelmw)",
-                    heat_transport_variables.pnetelmw,
+                    "(p_plant_electric_net_mw)",
+                    heat_transport_variables.p_plant_electric_net_mw,
                 )
                 process_output.ovarre(
                     self.outfile,

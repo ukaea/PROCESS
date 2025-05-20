@@ -356,10 +356,10 @@ contains
     !! Error in: Equation for net electric power lower limit
     !! author: P B Lloyd, CCFE, Culham Science Centre
     use constraint_variables, only: fpnetel, pnetelin
-    use heat_transport_variables, only: pnetelmw
+    use heat_transport_variables, only: p_plant_electric_net_mw
     implicit none
     write(*,*) 'fpnetel = ', fpnetel
-    write(*,*) 'pnetelmw = ', pnetelmw
+    write(*,*) 'p_plant_electric_net_mw = ', p_plant_electric_net_mw
     write(*,*) 'pnetelin = ', pnetelin
    end subroutine
 
@@ -998,10 +998,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fpnetel : input real : f-value for net electric power
-      !! pnetelmw : input real : net electric power (MW)
+      !! p_plant_electric_net_mw : input real : net electric power (MW)
       !! pnetelin : input real : required net electric power (MW)
       use constraint_variables, only: fpnetel, pnetelin
-      use heat_transport_variables, only: pnetelmw
+      use heat_transport_variables, only: p_plant_electric_net_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -1009,9 +1009,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fpnetel * pnetelmw / pnetelin
+      tmp_cc =  1.0D0 - fpnetel * p_plant_electric_net_mw / pnetelin
       tmp_con = pnetelin
-      tmp_err = pnetelmw - pnetelin / fpnetel
+      tmp_err = p_plant_electric_net_mw - pnetelin / fpnetel
       tmp_symbol = '>'
       tmp_units = 'MW'
 

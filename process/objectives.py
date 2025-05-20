@@ -104,7 +104,7 @@ def objective_function(minmax: int) -> float:
                 times_variables.t_burn / 7200.0
             )
         case 17:
-            objective_metric = heat_transport_variables.pnetelmw / 500.0
+            objective_metric = heat_transport_variables.p_plant_electric_net_mw / 500.0
         case 18:
             objective_metric = 1.0
         case 19:
