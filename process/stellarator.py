@@ -1237,7 +1237,7 @@ class Stellarator:
                         + current_drive_variables.p_beam_orbit_loss_mw
                     )
                 )
-                heat_transport_variables.htpmw_blkt = (
+                heat_transport_variables.p_blkt_coolant_pump_mw = (
                     heat_transport_variables.fpumpblkt
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
@@ -1493,7 +1493,7 @@ class Stellarator:
                             + current_drive_variables.p_beam_orbit_loss_mw
                         )
                     )
-                    heat_transport_variables.htpmw_blkt = (
+                    heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
                             pnucbzi * fwbs_variables.emult

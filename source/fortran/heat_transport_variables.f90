@@ -79,7 +79,7 @@ module heat_transport_variables
     real(dp) :: htpmw
     !! heat transport system electrical pump power (MW)
 
-    real(dp) :: htpmw_blkt
+    real(dp) :: p_blkt_coolant_pump_mw
     !! blanket primary coolant mechanical pumping power (MW)
 
     real(dp) :: p_blkt_breeder_pump_mw

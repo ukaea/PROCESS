@@ -564,7 +564,7 @@ class Power:
         ):
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
-                + heat_transport_variables.htpmw_blkt
+                + heat_transport_variables.p_blkt_coolant_pump_mw
             )
 
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
@@ -705,7 +705,7 @@ class Power:
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
             self.pthermblkt = (
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
-                + heat_transport_variables.htpmw_blkt
+                + heat_transport_variables.p_blkt_coolant_pump_mw
             )
             self.pthermfw_blkt = self.pthermfw + self.pthermblkt
 
@@ -1147,8 +1147,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for blanket cooling loop including heat exchanger (MW)",
-            "(htpmw_blkt)",
-            heat_transport_variables.htpmw_blkt,
+            "(p_blkt_coolant_pump_mw)",
+            heat_transport_variables.p_blkt_coolant_pump_mw,
             "OP ",
         )
         po.ovarre(
@@ -1170,8 +1170,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for blanket (MW)",
-                "(htpmw_blkt)",
-                heat_transport_variables.htpmw_blkt,
+                "(p_blkt_coolant_pump_mw)",
+                heat_transport_variables.p_blkt_coolant_pump_mw,
                 "OP ",
             )
 
@@ -1396,13 +1396,16 @@ class Power:
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
-            self.outfile, "htpmw_blkt", 0.0e0, heat_transport_variables.htpmw_blkt
+            self.outfile,
+            "p_blkt_coolant_pump_mw",
+            0.0e0,
+            heat_transport_variables.p_blkt_coolant_pump_mw,
         )
 
         primsum = (
             primsum
             + fwbs_variables.p_blkt_nuclear_heat_total_mw
-            + heat_transport_variables.htpmw_blkt
+            + heat_transport_variables.p_blkt_coolant_pump_mw
         )
         secsum = secsum
 
@@ -3094,7 +3097,7 @@ def init_heat_transport_variables():
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
     heat_transport_variables.htpmw = 0.0
-    heat_transport_variables.htpmw_blkt = 0.0
+    heat_transport_variables.p_blkt_coolant_pump_mw = 0.0
     heat_transport_variables.p_blkt_breeder_pump_mw = 0.0
     heat_transport_variables.htpmw_blkt_tot = 0.0
     heat_transport_variables.p_div_coolant_pump_mw = 0.0

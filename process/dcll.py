@@ -288,7 +288,7 @@ class DCLL:
 
         # For i_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of htpmw_blkt, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
+        # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
 
         if fwbs_variables.i_coolant_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
@@ -301,7 +301,7 @@ class DCLL:
                     + fwbs_variables.psurffwo
                 )
             )
-            primary_pumping_variables.htpmw_blkt = (
+            primary_pumping_variables.p_blkt_coolant_pump_mw = (
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
@@ -354,8 +354,8 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (MW)",
-                    "(htpmw_blkt)",
-                    heat_transport_variables.htpmw_blkt,
+                    "(p_blkt_coolant_pump_mw)",
+                    heat_transport_variables.p_blkt_coolant_pump_mw,
                     "OP ",
                 )
             else:

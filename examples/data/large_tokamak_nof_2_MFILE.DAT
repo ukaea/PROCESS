@@ -1063,7 +1063,7 @@
  First_wall_area_fraction_________________________________________________ (1-fdiv-fhcd)__________________ 8.85000000000000009e-01
  Switch_for_pumping_of_primary_coolant___________________________________ (primary_pumping)_____________              3    
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(MW)_ (p_fw_coolant_pump_mw)_____________________ 0.00000000000000000e+00 OP
- Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchanger_(MW)_ (htpmw_blkt)___________________ 0.00000000000000000e+00 OP
+ Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchanger_(MW)_ (p_blkt_coolant_pump_mw)___________________ 0.00000000000000000e+00 OP
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_exchanger_(MW)_ (p_fw_blkt_coolant_pump_mw)________________ 1.73168125664281860e+02 OP
  Mechanical_pumping_power_for_divertor_(MW)_______________________________ (p_div_coolant_pump_mw)____________________ 1.15032805001027039e+00 OP
  Mechanical_pumping_power_for_shield_and_vacuum_vessel_(MW)_______________ (p_shld_coolant_pump_mw)___________________ 7.01107430315793621e-03 OP
