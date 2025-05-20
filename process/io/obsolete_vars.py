@@ -331,6 +331,10 @@ OBS_VARS = {
     "powfmax": "p_fusion_total_max_mw",
     "ffuspow": "fp_fusion_total_max_mw",
     "roughness": "roughness_fw_channel",
+    "htpmw_blkt": "p_blkt_coolant_pump_mw",
+    "htpmw_div": "p_div_coolant_pump_mw",
+    "htpmw_fw": "p_fw_coolant_pump_mw",
+    "htpmw_shld": "p_shld_coolant_pump_mw",
 }
 
 OBS_VARS_HELP = {
