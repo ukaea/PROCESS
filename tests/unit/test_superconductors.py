@@ -188,7 +188,9 @@ def test_gl_rebco():
 
 
 def test_hijc_rebco():
-    jcrit, bcrit, tcrit = superconductors.hijc_rebco(4.75, 7.0, 2, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.hijc_rebco(
+        4.75, 7.0, 30.0, 25.0, 1.0, 1.0, 1.0
+    )
 
     assert jcrit == pytest.approx(111046017.5)
     assert bcrit == pytest.approx(22.335736687814954)

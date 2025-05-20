@@ -319,6 +319,62 @@ The strain fit is a polynomial, and as such produces un-physical results for lar
 
 -------------
 
+#### Hazelton-Zhain REBCO | `hijc_rebco()`
+
+This model is based on the parametrization presented in Wolf et.al.[^8]
+
+$$
+I_c(B,T) = A\frac{B_0(T)^{\beta}}{B}\left(\frac{B}{B_0(T)}\right)^p\left(1- \frac{B}{B_0(T)}\right)^q
+$$
+
+$$
+B_0(T) = B_0\left(1- \frac{T}{T_0}\right)
+$$
+
+The value of $A$ is transformed into a function $A(T)$ based on a Newton polynomial fit
+considering $A(4.2 \ \text{K}) = 2.2 \times 10^8$, $A(20 \ \text{K}) = 2.3 \times 10^8$ and $A(65 \  \text{K}) = 3.5 \times 10^8.$
+
+These values were selected manually. A good fit to the published data can be seen in the $4-10 \ \text{T}$ range but the fit deviates at very low or very high field.
+Keep in mind that ITER's coils are measured against a critical current criterion of  $1\times 10^{-5} \  \text{V/m}$, while REBCO is measured against $1\times 10^{-4} \  \text{V/m}$.
+
+$$
+A(T) = A_0 + (uT^2)+vT
+$$
+
+The fitted coefficients are taken and fitted to both Hazelton et.al[^9] and the high $I_c$ parametrization fit adapted from Zhai et al[^10].
+
+The fit values are:
+
+- $T_c^*(0): 92 \ \text{K}$
+- $B_{c2}^*(0,0): 138 \  \text{T}$
+- $a: 1.4$
+- $b: 2.005$
+- $A_0: 2,2 \times 10^8$
+- $p: 0.39$
+- $q: 0.9$
+- $u: 33450.0$
+- $v: -176577.0$
+
+The output of the model only gives the critical current ($I_c$) and not the critical current density ($J_c$). Therefore the value is multiplied by the tape paramters to find the critical current density in the REBCO strand
+
+$$
+J_c = I_c \frac{w_{\text{tape}} \times \Delta x_{\text{REBCO}}}{w_{\text{tape}} \times \Delta x_{\text{tape}} }
+$$
+
+where $w_{\text{tape}}$ is the width of the superconducting tape, $\Delta x_{\text{REBCO}}$ is the thickness of the REBCO layer and $\Delta x_{\text{tape}}$ is the full thickness of the superconducting tape.
+
+The critical current density for a single REBCO strand can be seen below:
+
+
+<figure markdown>
+![Hazelton-Zhai REBCO](./images/Hazelton_Zhai_REBCO_zero_strain.png){ width = "100"}
+<figcaption>Figure 4: Critical current density surface for Hazelton-Zhai model REBCO superconductor as a function of magnetic field and temperature at the conductor. The critical current is assumed only for the REBCO tape strand.</figcaption>
+</figure>
+
+:bar_chart: **An interactive version of the critical surface graph above can be found [here](./images/Hazelton_Zhai_REBCO_zero_strain.html)** :bar_chart:
+
+-------------------------
+
 ### Durham Ginzburg-Landau Model Derivation
 
 The Durham scaling law [^6] is derived from the well-known equation for the volume pinning force $F_p$:
@@ -369,7 +425,6 @@ $$
 \frac{B_{c2}^*(0,\epsilon_I)}{B_{c2}^*(0,0)} = s(\epsilon_I) = 1+c_2\epsilon_I^2+c_3\epsilon_I^3+c_4\epsilon_I^4
 $$
 
-------------------
 
 
 [^1]: L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,” IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009, doi: https://doi.org/10.1109/tasc.2009.2018278.
@@ -380,5 +435,10 @@ Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP
 [^5]: N. High, “Plots - MagLab,” Nationalmaglab.org, 2018. https://nationalmaglab.org/magnet-development/applied-superconductivity-center/plots (accessed May 19, 2025).
 [^6]: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire, “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,” Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063–012063, Jun. 2020, doi: https://doi.org/10.1088/1742-6596/1559/1/012063.
 [^7]: P. Branch, K. Osamura, and D. Hampshire, “Weak emergence in the angular dependence of the critical current density of the high temperature superconductor coated conductor REBCO,” Superconductor Science and Technology, vol. 33, no. 10, p. 104006, Sep. 2020, doi: https://doi.org/10.1088/1361-6668/abaebe.
+[^8]: M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss, “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,” IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1–4, Jun. 2018, doi: https://doi.org/10.1109/tasc.2018.2815767.
+[^9]: D. W. Hazelton, “4th Workshop on Accelerator Magnets in HTS (WAMHTS-4) | 2G HTS Wire Development at SuperPower,”
+Indico, 2017. https://indico.cern.ch/event/588810/contributions/2473740/ (accessed May 20, 2025).
+[^10]: Y. Zhai, D. van der Laan, P. Connolly, and C. Kessel, “Conceptual design of HTS magnets for fusion nuclear science facility,” Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021, doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
+‌
 ‌
 ‌

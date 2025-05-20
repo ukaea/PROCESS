@@ -518,43 +518,62 @@ def gl_rebco(
     return j_critical, b_critical, temp_critical
 
 
-def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
-    """Implementation of High Current Density REBCO tape
-    author: R Chapman, UKAEA
-    thelium : input real : SC temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    strain : input real : Strain in superconductor
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    t_c0 : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    bcrit : output real : Critical field (T)
-    tcrit : output real : Critical temperature (K)
+def hijc_rebco(
+    temp_conductor: float,
+    b_conductor: float,
+    b_c20max: float,
+    t_c0: float,
+    tape_width: float,
+    rebco_thickness: float,
+    tape_thickness: float,
+) -> tuple[float, float, float]:
+    """
+    Calculates the critical current density, critical field, and critical temperature
+    for a high current density REBCO tape based Wolf et al. parameterization with data from Hazelton
+    and Zhai et al.
 
-    Returns the critical current of a REBCO tape based on a critical surface
-    (field, temperature) parameterization. Based in part on the parameterization
-    described in: M. J. Wolf, N. Bagrets, W. H. Fietz, C. Lange and K. Weiss,
-    "Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,"
-    in IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4,
-    June 2018, Art no. 4802404, doi: 10.1109/TASC.2018.2815767.
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param t_c0: Critical temperature (K) at zero field and strain.
+    :type t_c0: float
+    :param tape_width: Width of the tape (m).
+    :type tape_width: float
+    :param rebco_thickness: Thickness of the REBCO layer (m).
+    :type rebco_thickness: float
+    :param tape_thickness: Total thickness of the tape (m).
+    :type tape_thickness: float
+    :return: Tuple containing:
+        - j_critical: Critical current density in superconductor (A/m²).
+        - b_critical: Critical field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
 
-    And on the experimental
-    data presented here: "2G HTS Wire Development at SuperPower", Drew W. Hazelton,
-    February 16, 2017 https://indico.cern.ch/event/588810/contributions/2473740/
-    The high Ic parameterization is a result of modifications based on Ic values
-    observed in: "Conceptual design of HTS magnets for fusion nuclear science facility",
-    Yuhu Zhai, Danko van der Laan, Patrick Connolly, Charles Kessel, 2021,
-    https://doi.org/10.1016/j.fusengdes.2021.112611
+    :notes:
+        - The parameter A is transformed into a function A(T) based on a Newton polynomial fit
+          considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8.
 
-    The parameter A is transformed into a function A(T) based on a Newton polynomial fit
-    considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8. These values were
-    selected manually. A good fit to the pubished data can be seen in the 4-10 T range
-    but the fit deviates at very low or very high field.
+        - A scaling factor of 0.4 was originally applied to j_critical for CORC cables, but is not used here.
 
-    C. Ashe 2/11/23
-    A scaling factor of 0.4 was originally applied to jcrit to accomodate the models
-    original purpose of being used with CORC cables, which PROCESS did not model as it
-    assumed a stacked tape block design.
+    :references:
+        - Based in part on the parameterization described in:
+        M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss,
+        “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,”
+        IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4, Jun. 2018,
+        doi: https://doi.org/10.1109/tasc.2018.2815767.
+
+        - Fit values based on:
+        D. W. Hazelton, “4th Workshop on Accelerator Magnets in HTS (WAMHTS-4) | 2G HTS Wire Development at SuperPower,”
+        Indico, 2017. https://indico.cern.ch/event/588810/contributions/2473740/ (accessed May 20, 2025).
+
+        -The high Ic parameterization is a result of modifications based on Ic values observed in:
+        Y. Zhai, D. van der Laan, P. Connolly, and C. Kessel, “Conceptual design of HTS magnets for fusion nuclear science facility,”
+        Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021,
+        doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
+
     """
 
     a = 1.4
@@ -570,15 +589,15 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
 
     # Critical Field (T)
     # B_crit(T) calculated using temperature and critical temperature
-    bcrit = bc20max * (1.0 - thelium / t_c0) ** a
+    b_critical = b_c20max * (1.0 - temp_conductor / t_c0) ** a
 
     # Critical temperature (K)
     # scaled to match behaviour in GL_REBCO routine,
     # ONLY TO BE USED until a better suggestion is received
-    tcrit = 0.999965 * t_c0
+    temp_critical = 0.999965 * t_c0
 
     # finding A(T); constants based on a Newton polynomial fit to pubished data
-    a_t = a_0 + (u * thelium**2) + (v * thelium)
+    a_t = a_0 + (u * temp_conductor**2) + (v * temp_conductor)
 
     # Critical current density (A/m2)
     # In the original formula bcrit must be > bmax to prevent NaNs.
@@ -586,24 +605,31 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     # So when bcrit < bmax, I reverse the sign of the bracket,
     # giving a negative but real value of jcrit.
 
-    if bcrit > bmax:
-        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+    if b_critical > b_conductor:
+        j_critical = (
+            (a_t / b_conductor)
+            * b_critical**b
+            * (b_conductor / b_critical) ** p
+            * (1 - b_conductor / b_critical) ** q
+        )
     else:
-        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
-
-    # print("thelium = ", thelium, "   bcrit = ", bcrit, "   bmax = ", bmax, "   1 - bmax / bcrit = ", 1 - bmax / bcrit)
+        j_critical = (
+            (a_t / b_conductor)
+            * b_critical**b
+            * (b_conductor / b_critical) ** p
+            * (b_conductor / b_critical - 1) ** q
+        )
 
     # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
     # divided by the tape area to provide engineering Jc per tape,!
     # A scaling factor of 0.4 used to be applied below to assume the difference
     # between tape stacks and CORC cable layouts.
-    jcrit = (
-        jcrit
-        * (rebco_variables.tape_width * rebco_variables.rebco_thickness)
-        / (rebco_variables.tape_width * rebco_variables.tape_thickness)
+
+    j_critical = (
+        j_critical * (tape_width * rebco_thickness) / (tape_width * tape_thickness)
     )
 
-    return jcrit, bcrit, tcrit
+    return j_critical, b_critical, temp_critical
 
 
 def western_superconducting_nb3sn(
@@ -931,6 +957,15 @@ def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=Non
     elif isumat == 8:
         jcrit, _, _ = gl_rebco(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 9:
-        jcrit, _, _ = hijc_rebco(ttest, bmax, strain, bc20m, tc0m)
+        jcrit, _, _ = hijc_rebco(
+            ttest,
+            bmax,
+            strain,
+            bc20m,
+            tc0m,
+            rebco_variables.tape_width,
+            rebco_variables.rebco_thickness,
+            rebco_variables.tape_thickness,
+        )
 
     return jcrit - jsc
