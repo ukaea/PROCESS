@@ -142,7 +142,7 @@ module heat_transport_variables
     real(dp) :: p_hcd_primary_electric_mw
     !! Primary HCD system injector wall plug power (MW)
 
-    real(dp) :: pnetelmw
+    real(dp) :: p_plant_electric_net_mw
     !! net electric power (MW)
 
     real(dp) :: precircmw

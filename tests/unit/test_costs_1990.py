@@ -3667,7 +3667,7 @@ class Acc2253Param(NamedTuple):
 
     pthermmw: Any = None
 
-    pnetelmw: Any = None
+    p_plant_electric_net_mw: Any = None
 
     i_pulsed_plant: Any = None
 
@@ -3693,7 +3693,7 @@ class Acc2253Param(NamedTuple):
             ucblss=90,
             fkind=1,
             pthermmw=2620.2218111502593,
-            pnetelmw=493.01760776192009,
+            p_plant_electric_net_mw=493.01760776192009,
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
@@ -3707,7 +3707,7 @@ class Acc2253Param(NamedTuple):
             ucblss=90,
             fkind=1,
             pthermmw=2619.4223856129224,
-            pnetelmw=422.4198205312706,
+            p_plant_electric_net_mw=422.4198205312706,
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
@@ -3738,7 +3738,7 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2253param.pthermmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_net_mw", acc2253param.p_plant_electric_net_mw)
 
     monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
@@ -5345,7 +5345,7 @@ class Acc2253Param(NamedTuple):
 
     pthermmw: Any = None
 
-    pnetelmw: Any = None
+    p_plant_electric_net_mw: Any = None
 
     i_pulsed_plant: Any = None
 
@@ -5371,7 +5371,7 @@ class Acc2253Param(NamedTuple):
             ucblss=90,
             fkind=1,
             pthermmw=2620.2218111502593,
-            pnetelmw=493.01760776192009,
+            p_plant_electric_net_mw=493.01760776192009,
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
@@ -5385,7 +5385,7 @@ class Acc2253Param(NamedTuple):
             ucblss=90,
             fkind=1,
             pthermmw=2619.4223856129224,
-            pnetelmw=422.4198205312706,
+            p_plant_electric_net_mw=422.4198205312706,
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
@@ -5416,7 +5416,7 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2253param.pthermmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pnetelmw", acc2253param.pnetelmw)
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_net_mw", acc2253param.p_plant_electric_net_mw)
 
     monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
@@ -5520,7 +5520,7 @@ class CoelcParam(NamedTuple):
 
     reprat: Any = None
 
-    pnetelmw: Any = None
+    p_plant_electric_net_mw: Any = None
 
     itart: Any = None
 
@@ -5620,7 +5620,7 @@ class CoelcParam(NamedTuple):
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
-            pnetelmw=493.01760776192009,
+            p_plant_electric_net_mw=493.01760776192009,
             itart=0,
             wtgpd=507.88376577416528,
             f_helium3=0,
@@ -5704,7 +5704,7 @@ class CoelcParam(NamedTuple):
             uctarg=0.29999999999999999,
             ife=0,
             reprat=0,
-            pnetelmw=422.4198205312706,
+            p_plant_electric_net_mw=422.4198205312706,
             itart=0,
             wtgpd=507.72524666099866,
             f_helium3=0,
@@ -5815,7 +5815,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "reprat", coelcparam.reprat)
 
-    monkeypatch.setattr(heat_transport_variables, "pnetelmw", coelcparam.pnetelmw)
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_net_mw", coelcparam.p_plant_electric_net_mw)
 
     monkeypatch.setattr(physics_variables, "itart", coelcparam.itart)
 

@@ -955,13 +955,13 @@ class Power:
             )
 
             #  Net electric power
-            heat_transport_variables.pnetelmw = (
+            heat_transport_variables.p_plant_electric_net_mw = (
                 heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
             )
 
             #  Recirculating power fraction
             cirpowfr = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.pnetelmw
+                heat_transport_variables.pgrossmw - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.pgrossmw
 
         if output == 0:
@@ -1056,7 +1056,7 @@ class Power:
         )
 
         po.oheadr(self.outfile, "Plant Power / Heat Transport Balance")
-        if heat_transport_variables.pnetelmw < 0:
+        if heat_transport_variables.p_plant_electric_net_mw < 0:
             po.ocmmnt(
                 self.outfile, "WARNING: Calculated net electric power is negative"
             )
@@ -1920,8 +1920,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power output(MW)",
-            "(pnetelmw.)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw.)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1985,7 +1985,7 @@ class Power:
             "OP ",
         )
         total_plant_power = (
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_plant_electric_net_mw
             + heat_transport_variables.p_hcd_electric_total_mw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
@@ -2042,8 +2042,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electrical output (MW)	",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2064,7 +2064,7 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_plant_electric_net_mw
             + self.rejected_main
             + heat_transport_variables.psechtmw,
             "OP ",
@@ -2074,7 +2074,7 @@ class Power:
             abs(
                 total_power
                 - (
-                    heat_transport_variables.pnetelmw
+                    heat_transport_variables.p_plant_electric_net_mw
                     + self.rejected_main
                     + heat_transport_variables.psechtmw
                 )
@@ -2093,18 +2093,18 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(p_fusion_total_mw+emultmw)",
+            "(p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_plant_electric_net_mw
             / (physics_variables.p_fusion_total_mw + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/p_fusion_total_mw)",
+            "(p_plant_electric_net_mw/p_fusion_total_mw)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_plant_electric_net_mw
             / physics_variables.p_fusion_total_mw,
             "OP ",
         )
@@ -3110,7 +3110,7 @@ def init_heat_transport_variables():
     heat_transport_variables.pinjmax = 120.0
     heat_transport_variables.p_hcd_electric_total_mw = 0.0
     heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
-    heat_transport_variables.pnetelmw = 0.0
+    heat_transport_variables.p_plant_electric_net_mw = 0.0
     heat_transport_variables.precircmw = 0.0
     heat_transport_variables.priheat = 0.0
     heat_transport_variables.psecdiv = 0.0

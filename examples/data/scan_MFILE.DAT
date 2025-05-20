@@ -978,7 +978,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -994,12 +994,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -1973,7 +1973,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -1989,12 +1989,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -2968,7 +2968,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -2984,12 +2984,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -3963,7 +3963,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -3979,12 +3979,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -4958,7 +4958,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -4974,12 +4974,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -5953,7 +5953,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -5969,12 +5969,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -6948,7 +6948,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -6964,12 +6964,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -7943,7 +7943,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -7959,12 +7959,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
@@ -8938,7 +8938,7 @@
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
- Net_electric_power_output(MW)___________________________________________ (pnetelmw.)___________________      5.0000E+02    
+ Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
@@ -8954,12 +8954,12 @@
  Fusion_power_(MW)_______________________________________________________ (powfmw.)_____________________      2.0117E+03    
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
- Net_electrical_output_(MW)	_____________________________________________ (pnetelmw)____________________      5.0000E+02    
+ Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (pnetelmw/(powfmw+emultmw)____      2.0881E+01    
- Net_electric_power_/_total_fusion_power_(%)_____________________________ (pnetelmw/powfmw)_____________      2.4855E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
+ Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #

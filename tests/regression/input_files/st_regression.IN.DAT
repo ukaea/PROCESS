@@ -122,7 +122,7 @@ p_fusion_total_max_mw = 2500.0
 icc = 16
 * DESCRIPTION:   Net electric power lower limit
 * JUSTIFICATION: Required to generate 100MW
-* VARIABLES:     pnetelmw (net electric power) calculated in-situ
+* VARIABLES:     p_plant_electric_net_mw (net electric power) calculated in-situ
 
 pnetelin = 100.0
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)

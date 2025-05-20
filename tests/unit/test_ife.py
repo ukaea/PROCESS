@@ -2838,7 +2838,7 @@ class Ifepw2Param(NamedTuple):
     fgrosbop: Any = None
     precircmw: Any = None
     pacpmw: Any = None
-    pnetelmw: Any = None
+    p_plant_electric_net_mw: Any = None
     p_hcd_electric_total_mw: Any = None
     pfwdiv: Any = None
     nphx: Any = None
@@ -2852,7 +2852,7 @@ class Ifepw2Param(NamedTuple):
     expected_psechtmw: Any = None
     expected_pgrossmw: Any = None
     expected_precircmw: Any = None
-    expected_pnetelmw: Any = None
+    expected_p_plant_electric_net_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -2877,7 +2877,7 @@ class Ifepw2Param(NamedTuple):
             fgrosbop=0,
             precircmw=0,
             pacpmw=141.11271036807165,
-            pnetelmw=0,
+            p_plant_electric_net_mw=0,
             p_hcd_electric_total_mw=81.914893617021278,
             pfwdiv=607.73327999999992,
             nphx=3,
@@ -2891,7 +2891,7 @@ class Ifepw2Param(NamedTuple):
             expected_psechtmw=120.31271036807168,
             expected_pgrossmw=1139.4999,
             expected_precircmw=141.11271036807165,
-            expected_pnetelmw=998.38718963192832,
+            expected_p_plant_electric_net_mw=998.38718963192832,
         ),
     ),
 )
@@ -2929,7 +2929,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
     monkeypatch.setattr(heat_transport_variables, "precircmw", ifepw2param.precircmw)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifepw2param.pacpmw)
-    monkeypatch.setattr(heat_transport_variables, "pnetelmw", ifepw2param.pnetelmw)
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_net_mw", ifepw2param.p_plant_electric_net_mw)
     monkeypatch.setattr(
         heat_transport_variables,
         "p_hcd_electric_total_mw",
@@ -2958,6 +2958,6 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     assert heat_transport_variables.precircmw == pytest.approx(
         ifepw2param.expected_precircmw
     )
-    assert heat_transport_variables.pnetelmw == pytest.approx(
-        ifepw2param.expected_pnetelmw
+    assert heat_transport_variables.p_plant_electric_net_mw == pytest.approx(
+        ifepw2param.expected_p_plant_electric_net_mw
     )
