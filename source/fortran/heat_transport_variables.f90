@@ -181,7 +181,7 @@ module heat_transport_variables
     real(dp) :: trithtmw
     !! power required for tritium processing (MW)
 
-    real(dp) :: tturb
+    real(dp) :: temp_turbine_coolant_in
     !! coolant temperature at turbine inlet (K) (`i_thermal_electric_conversion = 3,4`)
 
     real(dp) :: vachtmw

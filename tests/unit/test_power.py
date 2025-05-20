@@ -2095,7 +2095,7 @@ class Power2Param(NamedTuple):
 
     fpumpshld: Any = None
 
-    tturb: Any = None
+    temp_turbine_coolant_in: Any = None
 
     pnetelmw: Any = None
 
@@ -2273,7 +2273,7 @@ class Power2Param(NamedTuple):
             p_blkt_coolant_pump_mw=0,
             psecshld=0,
             fpumpshld=0.0050000000000000001,
-            tturb=0,
+            temp_turbine_coolant_in=0,
             pnetelmw=0,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
@@ -2375,7 +2375,7 @@ class Power2Param(NamedTuple):
             p_blkt_coolant_pump_mw=0,
             psecshld=0,
             fpumpshld=0.0050000000000000001,
-            tturb=0,
+            temp_turbine_coolant_in=0,
             pnetelmw=493.01760776192009,
             fpumpdiv=0.0050000000000000001,
             fpumpblkt=0.0050000000000000001,
@@ -2558,7 +2558,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpshld", power2param.fpumpshld)
 
-    monkeypatch.setattr(heat_transport_variables, "tturb", power2param.tturb)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "temp_turbine_coolant_in",
+        power2param.temp_turbine_coolant_in,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pnetelmw", power2param.pnetelmw)
 
