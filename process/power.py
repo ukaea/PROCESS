@@ -38,7 +38,9 @@ class Power:
         self.qac = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qcl = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qss = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_shld = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_shld_coolant_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_div_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -49,7 +51,9 @@ class Power:
         self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_blkt_breeder_pump_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_breeder_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -573,7 +577,7 @@ class Power:
         self.p_fw_blkt_coolant_pump_elec_mw = (
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
         )
-        self.htpmwe_shld = (
+        self.p_shld_coolant_pump_elec_mw = (
             heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.etahtp
         )
         self.p_div_coolant_pump_elec_mw = (
@@ -605,7 +609,7 @@ class Power:
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.p_blkt_breeder_pump_elec_mw
-                + self.htpmwe_shld
+                + self.p_shld_coolant_pump_elec_mw
                 + self.p_div_coolant_pump_elec_mw,
             )
         else:
@@ -622,7 +626,7 @@ class Power:
             heat_transport_variables.htpmw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_coolant_pump_elec_mw
-                + self.htpmwe_shld
+                + self.p_shld_coolant_pump_elec_mw
                 + self.p_div_coolant_pump_elec_mw,
             )
 
@@ -1200,8 +1204,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical pumping power for shield (MW)",
-            "(htpmwe_shld)",
-            self.htpmwe_shld,
+            "(p_shld_coolant_pump_elec_mw)",
+            self.p_shld_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
