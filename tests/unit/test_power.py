@@ -2213,7 +2213,7 @@ class Power2Param(NamedTuple):
 
     p_fw_heat_deposited_mw: Any = None
 
-    pthermshld: Any = None
+    p_shld_heat_deposited_mw: Any = None
 
     p_cp_coolant_pump_elec_mw: Any = None
 
@@ -2334,7 +2334,7 @@ class Power2Param(NamedTuple):
             p_fw_blkt_coolant_pump_elec_mw=232.21540111595198,
             pthermdiv=360.63773557565275,
             p_fw_heat_deposited_mw=0,
-            pthermshld=1.3677406976945679,
+            p_shld_heat_deposited_mw=1.3677406976945679,
             p_cp_coolant_pump_elec_mw=0,
             pcoresystems=0,
             pdivfraction=0.13763633828287813,
@@ -2436,7 +2436,7 @@ class Power2Param(NamedTuple):
             p_fw_blkt_coolant_pump_elec_mw=232.14688344452242,
             pthermdiv=360.46172260917911,
             p_fw_heat_deposited_mw=0,
-            pthermshld=1.4106393366228915,
+            p_shld_heat_deposited_mw=1.4106393366228915,
             p_cp_coolant_pump_elec_mw=0,
             pcoresystems=125.33391046215507,
             pdivfraction=0.13761114839248584,
@@ -2750,7 +2750,9 @@ def test_power2(power2param, monkeypatch, power):
         power, "p_fw_heat_deposited_mw", power2param.p_fw_heat_deposited_mw
     )
 
-    monkeypatch.setattr(power, "pthermshld", power2param.pthermshld)
+    monkeypatch.setattr(
+        power, "p_shld_heat_deposited_mw", power2param.p_shld_heat_deposited_mw
+    )
 
     monkeypatch.setattr(
         power, "p_cp_coolant_pump_elec_mw", power2param.p_cp_coolant_pump_elec_mw
