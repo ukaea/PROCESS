@@ -473,7 +473,7 @@ class Power:
             + crymw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + pheatingmw
         )
 
@@ -494,7 +494,7 @@ class Power:
         # It is used in the old cost routine, so I will leave it in place.
         heat_transport_variables.tlvpmw = (
             heat_transport_variables.fcsht
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + 0.5e0 * (crymw + ppfmw)
@@ -535,8 +535,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Tritium processing (MW)",
-            "(trithtmw..)",
-            heat_transport_variables.trithtmw,
+            "(p_tritium_plant_electric_mw..)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
         )
         po.ovarre(
             self.outfile,
@@ -928,7 +928,7 @@ class Power:
             + heat_transport_variables.fachtmw
             + self.p_cp_coolant_pump_elec_mw
             + heat_transport_variables.tfacpd
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.vachtmw
             + pfcoil_variables.pfwpmw
         )
@@ -1610,8 +1610,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from tritium plant (MW)",
-            "(trithtmw)",
-            heat_transport_variables.trithtmw,
+            "(p_tritium_plant_electric_mw)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1979,8 +1979,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for tritium plant (MW)",
-            "(trithtmw)",
-            heat_transport_variables.trithtmw,
+            "(p_tritium_plant_electric_mw)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
         )
         po.ovarrf(
             self.outfile,
@@ -2015,7 +2015,7 @@ class Power:
             + heat_transport_variables.p_hcd_electric_total_mw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
-            + heat_transport_variables.trithtmw
+            + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.tfacpd
             + heat_transport_variables.fachtmw
@@ -2200,7 +2200,7 @@ class Power:
         p_vac[0:6] = heat_transport_variables.vachtmw
 
         # Tritium system electrical power [MWe]
-        p_tritium[0:6] = heat_transport_variables.trithtmw
+        p_tritium[0:6] = heat_transport_variables.p_tritium_plant_electric_mw
 
         # Facilities electrical power [MWe]
         p_fac[0:6] = heat_transport_variables.fachtmw
@@ -3151,6 +3151,6 @@ def init_heat_transport_variables():
     heat_transport_variables.pwpm2 = 150.0
     heat_transport_variables.tfacpd = 0.0
     heat_transport_variables.tlvpmw = 0.0
-    heat_transport_variables.trithtmw = 15.0
+    heat_transport_variables.p_tritium_plant_electric_mw = 15.0
     heat_transport_variables.temp_turbine_coolant_in = 0.0
     heat_transport_variables.vachtmw = 0.5

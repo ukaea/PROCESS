@@ -1302,7 +1302,7 @@ INPUT_VARIABLES = {
     "trcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "triang": InputVariable(fortran.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "trithtmw": InputVariable(
+    "p_tritium_plant_electric_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "triv": InputVariable(
