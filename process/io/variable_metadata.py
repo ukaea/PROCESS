@@ -106,7 +106,7 @@ var_dicts = {
         description="Mid-plane outboard TF coil leg radius at the middle of the coil",
         units="m",
     ),
-    "pgrossmw": VariableMetadata(
+    "p_plant_electric_gross_mw": VariableMetadata(
         latex=r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]",
         description="Gross electrical power",
         units="MW",

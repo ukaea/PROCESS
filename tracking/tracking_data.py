@@ -149,7 +149,7 @@ class ProcessTracker:
         "a_plasma_surface",
         "p_plant_electric_net_mw",
         "etath",
-        "pgrossmw",
+        "p_plant_electric_gross_mw",
         "tftmp",
         "n_tf_coils",
         "b_tf_inboard_peak",

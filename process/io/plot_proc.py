@@ -3718,13 +3718,13 @@ def plot_power_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     gross_eff = 100.0 * (
-        mfile_data.data["pgrossmw"].get_scan(scan)
+        mfile_data.data["p_plant_electric_gross_mw"].get_scan(scan)
         / mfile_data.data["pthermmw"].get_scan(scan)
     )
 
     net_eff = 100.0 * (
         (
-            mfile_data.data["pgrossmw"].get_scan(scan)
+            mfile_data.data["p_plant_electric_gross_mw"].get_scan(scan)
             - mfile_data.data["p_coolant_pump_elec_total_mw"].get_scan(scan)
         )
         / (
@@ -3768,7 +3768,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("pthermmw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
-        ("pgrossmw", "Gross electric power", "MW"),
+        ("p_plant_electric_gross_mw", "Gross electric power", "MW"),
         ("p_plant_electric_net_mw", "Net electric power", "MW"),
         (
             plant_eff,
