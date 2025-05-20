@@ -97,7 +97,7 @@ module heat_transport_variables
     real(dp) :: p_shld_coolant_pump_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
-    real(dp) :: htpsecmw
+    real(dp) :: p_coolant_pump_loss_total_mw
     !! Waste power lost from primary coolant pumps (MW)
 
     integer :: ipowerflow

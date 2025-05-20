@@ -2151,7 +2151,7 @@ class Power2Param(NamedTuple):
 
     pinjht: Any = None
 
-    htpsecmw: Any = None
+    p_coolant_pump_loss_total_mw: Any = None
 
     helpow_cryal: Any = None
 
@@ -2303,7 +2303,7 @@ class Power2Param(NamedTuple):
             p_cryo_plant_electric_mw=37.900388528497025,
             psecdiv=0,
             pinjht=77.967671580642758,
-            htpsecmw=30.457120415306122,
+            p_coolant_pump_loss_total_mw=30.457120415306122,
             helpow_cryal=0,
             pfwpmw=0.89998039031509891,
             p_alpha_total_mw=396.66154806848488,
@@ -2405,7 +2405,7 @@ class Power2Param(NamedTuple):
             p_cryo_plant_electric_mw=108.74512702403499,
             psecdiv=0,
             pinjht=77.967671580642758,
-            htpsecmw=30.448114159579291,
+            p_coolant_pump_loss_total_mw=30.448114159579291,
             helpow_cryal=0,
             pfwpmw=0.068213156646500808,
             p_alpha_total_mw=396.53774329057228,
@@ -2646,7 +2646,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pinjht", power2param.pinjht)
 
-    monkeypatch.setattr(heat_transport_variables, "htpsecmw", power2param.htpsecmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_coolant_pump_loss_total_mw",
+        power2param.p_coolant_pump_loss_total_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
