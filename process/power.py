@@ -2435,9 +2435,7 @@ class Power:
         """
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  CCFE HCPB Model (with or without TBR)
-            if (
-                fwbs_variables.i_blanket_type == 1
-            ) or fwbs_variables.i_blanket_type == 2:
+            if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2454,10 +2452,6 @@ class Power:
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                etath = 0.411e0 - self.delta_eta
-
-                #  KIT HCPB model
-            elif fwbs_variables.i_blanket_type == 2:
                 etath = 0.411e0 - self.delta_eta
             else:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
@@ -2499,26 +2493,6 @@ class Power:
                     - self.delta_eta
                 )
 
-                #  KIT HCPB Model
-            elif fwbs_variables.i_blanket_type == 2:
-                #  Same as fwbs_variables.i_blanket_type = 1
-                heat_transport_variables.temp_turbine_coolant_in = (
-                    fwbs_variables.temp_blkt_coolant_out - 20.0e0
-                )
-                if (heat_transport_variables.temp_turbine_coolant_in < 657.0e0) or (
-                    heat_transport_variables.temp_turbine_coolant_in > 915.0e0
-                ):
-                    error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = (
-                        heat_transport_variables.temp_turbine_coolant_in
-                    )
-                    error_handling.report_error(166)
-
-                etath = (
-                    0.1802e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
-                    - 0.7823
-                    - self.delta_eta
-                )
             else:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
