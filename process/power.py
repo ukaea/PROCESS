@@ -74,7 +74,7 @@ class Power:
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.rejected_main = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_turbine_loss_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
 
     def pfpwr(self, output: bool):
         """
@@ -1929,13 +1929,13 @@ class Power:
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.i_coolant_pumping == 2
         ):
-            self.rejected_main = (
+            self.p_turbine_loss_mw = (
                 heat_transport_variables.pthermmw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.etath) + self.pthermblkt_liq * (
                 1 - heat_transport_variables.etath_liq
             )
         else:
-            self.rejected_main = heat_transport_variables.pthermmw * (
+            self.p_turbine_loss_mw = heat_transport_variables.pthermmw * (
                 1 - heat_transport_variables.etath
             )
 
@@ -2076,8 +2076,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat rejected by main power conversion circuit (MW)",
-            "(rejected_main)",
-            self.rejected_main,
+            "(p_turbine_loss_mw)",
+            self.p_turbine_loss_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2092,7 +2092,7 @@ class Power:
             "Total (MW)",
             "",
             heat_transport_variables.p_plant_electric_net_mw
-            + self.rejected_main
+            + self.p_turbine_loss_mw
             + heat_transport_variables.psechtmw,
             "OP ",
         )
@@ -2102,7 +2102,7 @@ class Power:
                 total_power
                 - (
                     heat_transport_variables.p_plant_electric_net_mw
-                    + self.rejected_main
+                    + self.p_turbine_loss_mw
                     + heat_transport_variables.psechtmw
                 )
             )
