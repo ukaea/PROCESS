@@ -460,7 +460,7 @@ class Power:
             + ptfmw
             + crymw
             + heat_transport_variables.vachtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.trithtmw
             + pheatingmw
         )
@@ -483,7 +483,7 @@ class Power:
         heat_transport_variables.tlvpmw = (
             heat_transport_variables.fcsht
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + 0.5e0 * (crymw + ppfmw)
         )
@@ -505,8 +505,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Primary coolant pumps (MW)",
-            "(htpmw..)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw..)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
 
@@ -604,8 +604,8 @@ class Power:
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.p_blkt_breeder_pump_elec_mw
@@ -622,8 +622,8 @@ class Power:
 
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.p_shld_coolant_pump_elec_mw
@@ -632,7 +632,8 @@ class Power:
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.htpsecmw = (
-            heat_transport_variables.htpmw - self.p_coolant_pump_total_mw
+            heat_transport_variables.p_coolant_pump_elec_total_mw
+            - self.p_coolant_pump_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
@@ -950,7 +951,7 @@ class Power:
             heat_transport_variables.precircmw = (
                 self.pcoresystems
                 + heat_transport_variables.p_hcd_electric_total_mw
-                + heat_transport_variables.htpmw
+                + heat_transport_variables.p_coolant_pump_elec_total_mw
             )
 
             #  Net electric power
@@ -1218,8 +1219,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total electrical pumping power for primary coolant (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
 
@@ -1939,8 +1940,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for primary coolant pumps (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1986,7 +1987,7 @@ class Power:
         total_plant_power = (
             heat_transport_variables.pnetelmw
             + heat_transport_variables.p_hcd_electric_total_mw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.crypmw
@@ -2161,7 +2162,7 @@ class Power:
         # Continuous power usage
 
         # Primary pumping electrical power [MWe]
-        p_cooling[0:6] = heat_transport_variables.htpmw
+        p_cooling[0:6] = heat_transport_variables.p_coolant_pump_elec_total_mw
 
         # Cryoplant electrical power [MWe]
         p_cryo[0:6] = heat_transport_variables.crypmw
@@ -3100,7 +3101,7 @@ def init_heat_transport_variables():
     heat_transport_variables.htpmw_min = 0.0
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
-    heat_transport_variables.htpmw = 0.0
+    heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0
     heat_transport_variables.p_blkt_coolant_pump_mw = 0.0
     heat_transport_variables.p_blkt_breeder_pump_mw = 0.0
     heat_transport_variables.htpmw_blkt_tot = 0.0

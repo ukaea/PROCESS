@@ -75,7 +75,7 @@ DEFAULT_COMPARE_PARAMS = [
     "sig_tf_case_max",
     "sig_tf_wp_max",
     "pgrossmw",
-    "htpmw",
+    "p_coolant_pump_elec_total_mw",
     "pnetelmw",
     "pflux_fw_neutron_mw",
     "f_nd_alpha_electron",
