@@ -70,7 +70,9 @@ class Power:
         self.p_cp_coolant_pump_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_plant_core_systems_elec_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_plant_core_systems_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -964,7 +966,7 @@ class Power:
                 )
 
             #  Total recirculating power
-            heat_transport_variables.precircmw = (
+            heat_transport_variables.p_plant_electric_recirc_mw = (
                 self.p_plant_core_systems_elec_mw
                 + heat_transport_variables.p_hcd_electric_total_mw
                 + heat_transport_variables.p_coolant_pump_elec_total_mw
@@ -973,7 +975,7 @@ class Power:
             #  Net electric power
             heat_transport_variables.p_plant_electric_net_mw = (
                 heat_transport_variables.p_plant_electric_gross_mw
-                - heat_transport_variables.precircmw
+                - heat_transport_variables.p_plant_electric_recirc_mw
             )
 
             #  Recirculating power fraction
@@ -3138,7 +3140,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_hcd_electric_total_mw = 0.0
     heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
     heat_transport_variables.p_plant_electric_net_mw = 0.0
-    heat_transport_variables.precircmw = 0.0
+    heat_transport_variables.p_plant_electric_recirc_mw = 0.0
     heat_transport_variables.priheat = 0.0
     heat_transport_variables.psecdiv = 0.0
     heat_transport_variables.psechcd = 0.0

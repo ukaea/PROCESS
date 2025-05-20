@@ -145,7 +145,7 @@ module heat_transport_variables
     real(dp) :: p_plant_electric_net_mw
     !! net electric power (MW)
 
-    real(dp) :: precircmw
+    real(dp) :: p_plant_electric_recirc_mw
     !! recirculating electric power (MW)
 
     real(dp) :: priheat

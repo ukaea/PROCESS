@@ -2026,7 +2026,7 @@ class IFE:
             )
 
             # Total recirculating power
-            heat_transport_variables.precircmw = (
+            heat_transport_variables.p_plant_electric_recirc_mw = (
                 heat_transport_variables.fgrosbop
                 * heat_transport_variables.p_plant_electric_gross_mw
             ) + heat_transport_variables.pacpmw
@@ -2034,7 +2034,7 @@ class IFE:
             # Net electric power
             heat_transport_variables.p_plant_electric_net_mw = (
                 heat_transport_variables.p_plant_electric_gross_mw
-                - heat_transport_variables.precircmw
+                - heat_transport_variables.p_plant_electric_recirc_mw
             )
 
             if not output:
