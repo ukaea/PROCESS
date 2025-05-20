@@ -763,7 +763,7 @@ def init_fwbs_variables():
     fwbs_variables.etaiso = 0.85
     fwbs_variables.etahtp = 0.95
     fwbs_variables.pnuc_cp = 0.0
-    fwbs_variables.pnuc_cp_sh = 0.0
+    fwbs_variables.p_cp_shield_nuclear_heat_mw = 0.0
     fwbs_variables.pnuc_cp_tf = 0.0
     fwbs_variables.neut_flux_cp = 0.0
     fwbs_variables.i_fw_blkt_shared_coolant = 0
