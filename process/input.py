@@ -803,7 +803,7 @@ INPUT_VARIABLES = {
     ),
     "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
-    "htpmw_blkt": InputVariable(
+    "p_blkt_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "p_div_coolant_pump_mw": InputVariable(
