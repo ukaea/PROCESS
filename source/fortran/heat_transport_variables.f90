@@ -121,7 +121,7 @@ module heat_transport_variables
     real(dp) :: peakmva
     !! peak MVA requirement
 
-    real(dp) :: pfwdiv
+    real(dp) :: p_fw_div_heat_deposited_mw
     !! heat removal from first wall/divertor (MW)
 
     real(dp) :: p_plant_electric_gross_mw

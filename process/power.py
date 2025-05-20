@@ -751,7 +751,7 @@ class Power:
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         if fwbs_variables.i_coolant_pumping != 3:
-            heat_transport_variables.pfwdiv = (
+            heat_transport_variables.p_fw_div_heat_deposited_mw = (
                 self.p_fw_heat_deposited_mw + self.p_div_heat_deposited_mw
             )
 
@@ -3137,7 +3137,7 @@ def init_heat_transport_variables():
     heat_transport_variables.nphx = 0
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
-    heat_transport_variables.pfwdiv = 0.0
+    heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
     heat_transport_variables.p_plant_electric_gross_mw = 0.0
     heat_transport_variables.pinjht = 0.0
     heat_transport_variables.pinjmax = 120.0
