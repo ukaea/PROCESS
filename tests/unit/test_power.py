@@ -2117,7 +2117,7 @@ class Power2Param(NamedTuple):
 
     p_fw_coolant_pump_mw: Any = None
 
-    precircmw: Any = None
+    p_plant_electric_recirc_mw: Any = None
 
     pthermmw: Any = None
 
@@ -2286,7 +2286,7 @@ class Power2Param(NamedTuple):
             nphx=3,
             helpow=76851.741036987034,
             p_fw_coolant_pump_mw=0,
-            precircmw=0,
+            p_plant_electric_recirc_mw=0,
             pthermmw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
             fcsht=61.882833632875375,
@@ -2388,7 +2388,7 @@ class Power2Param(NamedTuple):
             nphx=3,
             helpow=220505.71684249729,
             p_fw_coolant_pump_mw=0,
-            precircmw=489.56557141942733,
+            p_plant_electric_recirc_mw=489.56557141942733,
             pthermmw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
             fcsht=62.237143915360818,
@@ -2598,7 +2598,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_fw_coolant_pump_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "precircmw", power2param.precircmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_recirc_mw",
+        power2param.p_plant_electric_recirc_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pthermmw", power2param.pthermmw)
 
@@ -2760,7 +2764,9 @@ def test_power2(power2param, monkeypatch, power):
         power, "p_cp_coolant_pump_elec_mw", power2param.p_cp_coolant_pump_elec_mw
     )
 
-    monkeypatch.setattr(power, "p_plant_core_systems_elec_mw", power2param.p_plant_core_systems_elec_mw)
+    monkeypatch.setattr(
+        power, "p_plant_core_systems_elec_mw", power2param.p_plant_core_systems_elec_mw
+    )
 
     monkeypatch.setattr(power, "pdivfraction", power2param.pdivfraction)
 
@@ -2778,7 +2784,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_p_plant_electric_net_mw
     )
 
-    assert heat_transport_variables.precircmw == pytest.approx(
+    assert heat_transport_variables.p_plant_electric_recirc_mw == pytest.approx(
         power2param.expected_precircmw
     )
 
@@ -2794,7 +2800,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_psechtmw
     )
 
-    assert power.p_plant_core_systems_elec_mw == pytest.approx(power2param.expected_pcoresystems)
+    assert power.p_plant_core_systems_elec_mw == pytest.approx(
+        power2param.expected_pcoresystems
+    )
 
 
 class Power3Param(NamedTuple):

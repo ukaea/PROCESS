@@ -2848,7 +2848,7 @@ class Ifepw2Param(NamedTuple):
     pthermmw: Any = None
     etath: Any = None
     fgrosbop: Any = None
-    precircmw: Any = None
+    p_plant_electric_recirc_mw: Any = None
     pacpmw: Any = None
     p_plant_electric_net_mw: Any = None
     p_hcd_electric_total_mw: Any = None
@@ -2887,7 +2887,7 @@ class Ifepw2Param(NamedTuple):
             pthermmw=2532.2219999999998,
             etath=0.45000000000000001,
             fgrosbop=0,
-            precircmw=0,
+            p_plant_electric_recirc_mw=0,
             pacpmw=141.11271036807165,
             p_plant_electric_net_mw=0,
             p_hcd_electric_total_mw=81.914893617021278,
@@ -2947,7 +2947,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw2param.pthermmw)
     monkeypatch.setattr(heat_transport_variables, "etath", ifepw2param.etath)
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
-    monkeypatch.setattr(heat_transport_variables, "precircmw", ifepw2param.precircmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_recirc_mw",
+        ifepw2param.p_plant_electric_recirc_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifepw2param.pacpmw)
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2979,7 +2983,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     assert heat_transport_variables.p_plant_electric_gross_mw == pytest.approx(
         ifepw2param.expected_p_plant_electric_gross_mw
     )
-    assert heat_transport_variables.precircmw == pytest.approx(
+    assert heat_transport_variables.p_plant_electric_recirc_mw == pytest.approx(
         ifepw2param.expected_precircmw
     )
     assert heat_transport_variables.p_plant_electric_net_mw == pytest.approx(
