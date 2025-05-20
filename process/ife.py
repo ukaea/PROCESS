@@ -1942,7 +1942,7 @@ class IFE:
                 heat_transport_variables.pthermmw
             )
 
-        fwbs_variables.pnucshld = 0.0
+        fwbs_variables.p_shld_nuclear_heat_mw = 0.0
 
         # Lost fusion power (MW)
 

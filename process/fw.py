@@ -657,7 +657,7 @@ def init_fwbs_variables():
     fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
     fwbs_variables.pnucloss = 0.0
     fwbs_variables.pnucvvplus = 0.0
-    fwbs_variables.pnucshld = 0.0
+    fwbs_variables.p_shld_nuclear_heat_mw = 0.0
     fwbs_variables.m_blkt_total = 0.0
     fwbs_variables.m_blkt_steel_total = 0.0
     fwbs_variables.armour_fw_bl_mass = 0.0
