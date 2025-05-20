@@ -57,7 +57,9 @@ class Power:
             float, 0.0, docstring="", units=""
         )
         self.pthermdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermshld = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -703,7 +705,7 @@ class Power:
 
         else:
             #  Total power deposited in first wall coolant (MW)
-            self.pthermfw = (
+            self.p_fw_heat_deposited_mw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + heat_transport_variables.p_fw_coolant_pump_mw
@@ -716,7 +718,9 @@ class Power:
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
-            self.p_fw_blkt_heat_deposited_mw = self.pthermfw + self.pthermblkt
+            self.p_fw_blkt_heat_deposited_mw = (
+                self.p_fw_heat_deposited_mw + self.pthermblkt
+            )
 
         #  Total power deposited in shield coolant (MW)
         self.pthermshld = (
@@ -739,7 +743,9 @@ class Power:
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         if fwbs_variables.i_coolant_pumping != 3:
-            heat_transport_variables.pfwdiv = self.pthermfw + self.pthermdiv
+            heat_transport_variables.pfwdiv = (
+                self.p_fw_heat_deposited_mw + self.pthermdiv
+            )
 
         #  Thermal to electric efficiency
         heat_transport_variables.etath = self.plant_thermal_efficiency(
@@ -1844,7 +1850,7 @@ class Power:
         )
         po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
         po.oblnkl(self.outfile)
-        # po.ovarrf(self.outfile,'Heat extracted from armour and first wall (MW)','(pthermfw)',pthermfw, 'OP ')
+        # po.ovarrf(self.outfile,'Heat extracted from armour and first wall (MW)','(p_fw_heat_deposited_mw)',p_fw_heat_deposited_mw, 'OP ')
         po.ovarrf(
             self.outfile,
             "Heat extracted from first wall and blanket (MW)",

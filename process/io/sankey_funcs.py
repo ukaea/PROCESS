@@ -112,7 +112,7 @@ def plot_full_sankey(
     )  # Pump Power in FW and blanket (MW)
     htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
     htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
-    pthermfw = (
+    p_fw_heat_deposited_mw = (
         p_fw_blkt_heat_deposited_mw - htpmwblkt - p_blkt_nuclear_heat_total_mw
     )  # Power extracted 1st wall (MW)
     # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
@@ -325,7 +325,7 @@ def plot_full_sankey(
             p_fw_nuclear_heat_total_mw,
             p_fw_rad_total_mw,
             htpmwfw,
-            -pthermfw,
+            -p_fw_heat_deposited_mw,
         ]
         sankey.add(
             flows=first_wall,
@@ -389,7 +389,7 @@ def plot_full_sankey(
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [pthermfw, pthermblkt, pthermshld, pthermdiv, -pthermmw]
+        HEAT = [p_fw_heat_deposited_mw, pthermblkt, pthermshld, pthermdiv, -pthermmw]
         sankey.add(flows=HEAT,
                    orientations=[1, 0, -1, 1, 0],
                    trunklength=0.5,
