@@ -646,7 +646,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     )  # Set pumping power to MW by dividing by 1e6
 
     # Energy required for rest of power plant (MW)
-    pcoresystems = (
+    p_plant_core_systems_elec_mw = (
         p_cryo_plant_electric_mw
         + fachtmw
         + tfacpd
@@ -790,7 +790,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # Recirculated power, -Core Systems, -Heating System
         recirc = [
             precircmw,
-            -pcoresystems - p_coolant_pump_elec_total_mw,
+            -p_plant_core_systems_elec_mw - p_coolant_pump_elec_total_mw,
             -p_hcd_electric_total_mw + p_cp_coolant_pump_elec_mw,
         ]
         # Check if difference >2 between recirculated power and the output sum
@@ -798,7 +798,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             print(
                 "Recirc. Power Balance",
                 precircmw,
-                -pcoresystems
+                -p_plant_core_systems_elec_mw
                 + p_cp_coolant_pump_elec_mw
                 - p_hcd_electric_total_mw
                 - p_coolant_pump_elec_total_mw,
