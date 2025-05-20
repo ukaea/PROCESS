@@ -92,7 +92,7 @@ SCAN_VARIABLES = {
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
     54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
     55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
-    56: ScanVariable("crypmw_max", "max allowable crypmw"),
+    56: ScanVariable("crypmw_max", "max allowable p_cryo_plant_electric_mw"),
     57: ScanVariable("boundl(2)", "bt minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),

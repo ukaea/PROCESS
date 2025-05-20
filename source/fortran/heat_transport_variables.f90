@@ -18,7 +18,7 @@ module heat_transport_variables
     real(dp) :: baseel
     !! base plant electric load (W)
 
-    real(dp) :: crypmw
+    real(dp) :: p_cryo_plant_electric_mw
     !! cryogenic plant power (MW)
 
     real(dp) :: crypmw_max
