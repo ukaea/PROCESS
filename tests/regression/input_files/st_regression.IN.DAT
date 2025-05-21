@@ -2983,9 +2983,9 @@ iprimshld = 1
 *icc = 87
 * DESCRIPTION:   Constraint equation for limiting the cryogenic plant power
 * JUSTIFICATION: Turned off, not concerned with cryogenic plant power
-* VARIABLES:     crypmw_max (Max cryo plant power [MW]). p_cryo_plant_electric_mw calculated in-situ
+* VARIABLES:     p_cryo_plant_electric_max_mw (Max cryo plant power [MW]). p_cryo_plant_electric_mw calculated in-situ
 
-*crypmw_max = 
+*p_cryo_plant_electric_max_mw = 
 * DESCRIPTION: Maximum cryogenic plant power (MW)
 * JUSTIFICATION: Turned off, not using icc=85
 
