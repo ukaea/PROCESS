@@ -80,10 +80,10 @@ where $f$ is the fraction of heat to the divertor.
 
 This model is set with `i_thermal_electric_conversion = 3`.
 
-The efficiency of the power generation cycle is input by the user via `etath`.
+The efficiency of the power generation cycle is input by the user via `eta_turbine`.
   
 $$
-\eta_{\text{thermal → electric}} = \texttt{etath}
+\eta_{\text{thermal → electric}} = \texttt{eta_turbine}
 $$
 
 -----------------
@@ -117,7 +117,7 @@ This model is set with `i_thermal_electric_conversion = 4`.
 It can be used with water or helium primary coolants.
 
 A supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
-efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
+efficiency (`eta_turbine`) is calculated from the coolant outlet temperature using simple relations 
 between temperature and efficiency from :
 
 $$

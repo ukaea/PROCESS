@@ -2860,7 +2860,7 @@ class Ifepw2Param(NamedTuple):
     p_cryo_plant_electric_mw: Any = None
     p_plant_electric_gross_mw: Any = None
     pthermmw: Any = None
-    etath: Any = None
+    eta_turbine: Any = None
     fgrosbop: Any = None
     p_plant_electric_recirc_mw: Any = None
     pacpmw: Any = None
@@ -2899,7 +2899,7 @@ class Ifepw2Param(NamedTuple):
             p_cryo_plant_electric_mw=10,
             p_plant_electric_gross_mw=0,
             pthermmw=2532.2219999999998,
-            etath=0.45000000000000001,
+            eta_turbine=0.45000000000000001,
             fgrosbop=0,
             p_plant_electric_recirc_mw=0,
             pacpmw=141.11271036807165,
@@ -2963,7 +2963,9 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         ifepw2param.p_plant_electric_gross_mw,
     )
     monkeypatch.setattr(heat_transport_variables, "pthermmw", ifepw2param.pthermmw)
-    monkeypatch.setattr(heat_transport_variables, "etath", ifepw2param.etath)
+    monkeypatch.setattr(
+        heat_transport_variables, "eta_turbine", ifepw2param.eta_turbine
+    )
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
     monkeypatch.setattr(
         heat_transport_variables,

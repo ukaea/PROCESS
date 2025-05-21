@@ -364,7 +364,7 @@ def main(args=None):
         73: "pnuc_fw_ratio_dcll",
         74: "f_nuc_pow_bz_struct",
         75: "dx_fw_module",
-        76: "etath",
+        76: "eta_turbine",
         77: "startupratio",
         78: "fkind",
         79: "eta_ecrh_injector_wall_plug",
