@@ -1049,7 +1049,13 @@ class SuperconductingTFCoil(TFCoil):
             #  and based on Hazelton experimental data and Zhai conceptual model;
             #  see subroutine for full references
             j_crit_sc, _, _ = superconductors.hijc_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                bc20m,
+                tc0m,
+                rebco_variables.tape_width,
+                rebco_variables.rebco_thickness,
+                rebco_variables.tape_thickness,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
