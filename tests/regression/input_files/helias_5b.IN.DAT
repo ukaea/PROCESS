@@ -136,7 +136,7 @@ radius_fw_channel = 0.008 *Inner radius of first wall coolant channel (m) is 0.0
 
 *-------------Heat Transport Variables-------------*
 
-etath    = 0.4          *Thermal to electric conversion efficiency; if seconday_cycle=2
+eta_turbine    = 0.4          *Thermal to electric conversion efficiency; if seconday_cycle=2
 
 *------------Impurity Radiation Module-------------*
 
