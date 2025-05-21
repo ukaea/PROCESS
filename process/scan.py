@@ -92,7 +92,7 @@ SCAN_VARIABLES = {
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
     54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
     55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
-    56: ScanVariable("crypmw_max", "max allowable p_cryo_plant_electric_mw"),
+    56: ScanVariable("p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"),
     57: ScanVariable("boundl(2)", "bt minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
@@ -1023,7 +1023,7 @@ class Scan:
             case 55:
                 build_variables.dr_shld_inboard = swp[iscn - 1]
             case 56:
-                heat_transport_variables.crypmw_max = swp[iscn - 1]
+                heat_transport_variables.p_cryo_plant_electric_max_mw = swp[iscn - 1]
             case 57:
                 numerics.boundl[1] = swp[iscn - 1]
             case 58:

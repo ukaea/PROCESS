@@ -3269,9 +3269,9 @@ contains
       !! residual error in physical units; output string; units string
       !! p_cryo_plant_electric_mw : input real : cryogenic plant power (MW)
       !! f_crypmw : input real : f-value for maximum cryogenic plant power
-      !! crypmw_max : input real : Maximum cryogenic plant power (MW)
+      !! p_cryo_plant_electric_max_mw : input real : Maximum cryogenic plant power (MW)
 
-      use heat_transport_variables, only: p_cryo_plant_electric_mw, crypmw_max, f_crypmw
+      use heat_transport_variables, only: p_cryo_plant_electric_mw, p_cryo_plant_electric_max_mw, f_crypmw
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -3279,8 +3279,8 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  p_cryo_plant_electric_mw / crypmw_max - 1.0D0 * f_crypmw
-      tmp_con = crypmw_max * (1.0D0 - tmp_cc)
+      tmp_cc =  p_cryo_plant_electric_mw / p_cryo_plant_electric_max_mw - 1.0D0 * f_crypmw
+      tmp_con = p_cryo_plant_electric_max_mw * (1.0D0 - tmp_cc)
       tmp_err = p_cryo_plant_electric_mw * tmp_cc
       tmp_symbol = '<'
       tmp_units = 'MW'

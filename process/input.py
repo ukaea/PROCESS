@@ -343,7 +343,7 @@ INPUT_VARIABLES = {
     "cryostore_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "crypmw_max": InputVariable(
+    "p_cryo_plant_electric_max_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.01, 200.0)
     ),
     "csi": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
