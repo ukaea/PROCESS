@@ -3107,7 +3107,7 @@ def init_heat_transport_variables():
     """Initialise heat transport variables"""
     heat_transport_variables.p_plant_electric_base = 5.0e6
     heat_transport_variables.p_cryo_plant_electric_mw = 0.0
-    heat_transport_variables.crypmw_max = 50.0
+    heat_transport_variables.p_cryo_plant_electric_max_mw = 50.0
     heat_transport_variables.f_crypmw = 1.0
     heat_transport_variables.etatf = 0.9
     heat_transport_variables.etath = 0.35
