@@ -12,7 +12,7 @@ from process import fortran as ft
 from process import process_output as op
 from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
-from process.fortran import constants, numerics
+from process.fortran import constants, numerics, rebco_variables
 from process.fortran import constraint_variables as ctv
 from process.fortran import cs_fatigue_variables as csfv
 from process.fortran import error_handling as eh
@@ -3114,7 +3114,13 @@ class PFCoil:
             bc20m = 138
             tc0m = 92
             j_crit_sc, _, _ = superconductors.hijc_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium,
+                bmax,
+                bc20m,
+                tc0m,
+                rebco_variables.tape_width,
+                rebco_variables.rebco_thickness,
+                rebco_variables.tape_thickness,
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable

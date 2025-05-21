@@ -10,19 +10,35 @@ from process.fortran import rebco_variables
 logger = logging.getLogger(__name__)
 
 
-def jcrit_rebco(temperature, b):
-    """Critical current density for "REBCO" 2nd generation HTS superconductor
-    temperature : input real : superconductor temperature (K)
-    b : input real : Magnetic field at superconductor (T)
-    jcrit : output real : Critical current density in superconductor (A/m2)
-
-    Will return a negative number if the temperature is greater than Tc0, the
-    zero-field critical temperature.
+def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
     """
-    tc0 = 90.0  # (K)
-    birr0 = 132.5  # (T)
-    a = 1.82962e8  # scaling constant
-    # exponents
+    Calculate the critical current density for a "REBCO" 2nd generation HTS superconductor.
+
+    :param temp_conductor: Superconductor temperature in Kelvin (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at the superconductor in Tesla (T).
+    :type b_conductor: float
+    :return: A tuple containing:
+        - j_critical: Critical current density in the superconductor (A/m²).
+        - validity: A boolean indicating whether the input parameters are within the valid range.
+    :rtype: tuple[float, bool]
+
+    :notes:
+        - Validity range:
+            - Temperature: 4.2 K ≤ temp_conductor ≤ 72.0 K
+            - Magnetic field:
+                - For temp_conductor < 65 K: 0.0 T ≤ b_conductor ≤ 15.0 T
+                - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
+
+    :references:
+
+    """
+    # Critical temperature (K) at zero field and strain.
+    temp_c0max = 90.0
+    # Upper critical field (T) for the superconductor at zero temperature and strain.
+    b_c20max = 132.5
+
+    C = 1.82962e8  # scaling constant
     p = 0.5875
     q = 1.7
     alpha = 1.54121
@@ -31,42 +47,42 @@ def jcrit_rebco(temperature, b):
 
     validity = True
 
-    if (temperature < 4.2) or (temperature > 72.0):
+    if (temp_conductor < 4.2) or (temp_conductor > 72.0):
         validity = False
-    if temperature < 65:
-        if (b < 0.0) or (b > 15.0):
+    if temp_conductor < 65:
+        if (b_conductor < 0.0) or (b_conductor > 15.0):
             validity = False
     else:
-        if (b < 0.0) or (b > 11.5):
+        if (b_conductor < 0.0) or (b_conductor > 11.5):
             validity = False
 
     if not validity:
         logger.warning(
             f"""jcrit_rebco: input out of range
-            temperature: {temperature}
-            Field: {b}
+            temperature: {temp_conductor}
+            Field: {b_conductor}
             """
         )
 
-    if temperature < tc0:
+    if temp_conductor < temp_c0max:
         # Normal case
-        birr = birr0 * (1 - temperature / tc0) ** alpha
+        birr = b_c20max * (1 - temp_conductor / temp_c0max) ** alpha
     else:
         # If temp is greater than critical temp, ensure result is real but negative.
-        birr = birr0 * (1 - temperature / tc0)
+        birr = b_c20max * (1 - temp_conductor / temp_c0max)
 
-    if b < birr:
+    if b_conductor < birr:
         # Normal case
-        factor = (b / birr) ** p * (1 - b / birr) ** q
-        jcrit = (a / b) * (birr**beta) * factor
+        factor = (b_conductor / birr) ** p * (1 - b_conductor / birr) ** q
+        j_critical = (C / b_conductor) * (birr**beta) * factor
     else:
         # Field is too high
         # Ensure result is real but negative, and varies with temperature.
         # tcb = critical temperature at field b
-        tcb = tc0 * (1 - (b / birr0) ** oneoveralpha)
-        jcrit = -(temperature - tcb)
+        tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
+        j_critical = -(temp_conductor - tcb)
 
-    return jcrit, validity
+    return j_critical, validity
 
 
 def current_sharing_rebco(bfield, j):
@@ -341,6 +357,10 @@ def gl_nbti(
 
 
     :references:
+        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+        https://doi.org/10.1088/1742-6596/1559/1/012063.
 
     """
 
@@ -401,50 +421,72 @@ def gl_nbti(
     return j_critical, b_critical, t_critical
 
 
-def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
-    """Author: S B L Chislett-McDonald Durham University
-    Category: subroutine
-
-    Critical current density of a SuperPower REBCO tape based on measurements by P. Branch
-    at Durham University
-    https://git.ccfe.ac.uk/process/process/uploads/e98c6ea13da782cdc6fe16daea92078a/20200707_Branch-Osamura-Hampshire_-_accepted_SuST.pdf
-    and fit to state-of-the-art measurements at 4.2 K published in SuST
-    http://dx.doi.org/10.1088/0953-2048/24/3/035001
-
-    \\begin{equation}
-    J_{c,TS}(B,T,\\epsilon_{I}) = A(\\epsilon_{I}) \\left[T_{c}(\\epsilon_{I})*(1-t^2)\\right]^2\\left
-    [B_{c2}(\\epsilon_I)*(1-t)^s\\right]^{n-3}b^{p-1}(1-b)^q~.
-    \\end{equation}
-
-    - \\( \\thelium \\) -- Coolant/SC temperature [K]
-    - \\( \\bmax \\) -- Magnetic field at conductor [T]
-    - \\( \\epsilon_{I} \\) -- Intrinsic strain in superconductor [\\%]
-    - \\( \\B_{c2}(\\epsilon_I) \\) -- Strain dependent upper critical field [T]
-    - \\( \\b \\) -- Reduced field = bmax / \\B_{c2}(\\epsilon_I)*(1-t^\\nu) [unitless]
-    - \\( \\T_{c}(\\epsilon_{I}) \\) -- Strain dependent critical temperature (K)
-    - \\( \\t \\) -- Reduced temperature = thelium / \\T_{c}(\\epsilon_{I}) [unitless]
-    - \\( \\A(epsilon_{I}) \\) -- Strain dependent Prefactor [A / ( m\\(^2\\) K\\(^-2) T\\(^n-3))]
-    - \\( \\J_{c,TS} \\) --  Critical current density in superconductor [A / m\\(^-2\\)]
-    - \\( \\epsilon_{m} \\) -- Strain at which peak in J_c occurs [\\%]
+def gl_rebco(
+    temp_conductor: float,
+    b_conductor: float,
+    strain: float,
+    b_c20max: float,
+    t_c0: float,
+) -> tuple[float, float, float]:
     """
-    # critical current density prefactor
+    Calculate the critical current density, critical field, and critical temperature
+    for a SuperPower REBCO tape based on measurements by P. Branch at Durham University and
+    the Ginzburg-Landau theory of superconductivity
+
+    :param temp_conductor: Coolant/superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param strain: Intrinsic strain in superconductor (%).
+    :type strain: float
+    :param b_c20max: Strain-dependent upper critical field at zero temperature (T).
+    :type b_c20max: float
+    :param t_c0: Strain-dependent critical temperature at zero strain (K).
+    :type t_c0: float
+    :return: Tuple containing:
+        - j_critical: Critical current density in superconductor (A/m²).
+        - b_critical: Critical magnetic field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
+
+    :notes:
+
+    :references:
+        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+        https://doi.org/10.1088/1742-6596/1559/1/012063.
+        -
+        -Fit to state-of-the-art measurements at 4.2 K:P. Branch, K. Osamura, and D. Hampshire,
+        “Weak emergence in the angular dependence of the critical current density of the high temperature superconductor coated conductor REBCO,”
+        Superconductor Science and Technology, vol. 33, no. 10, p. 104006, Sep. 2020,
+        doi: 10.1088/1361-6668/abaebe.
+
+
+    """
+    # Critical current density pre-factor
     a_0 = 2.95e2
-    # flux pinning field scaling parameters
+
+    # Flux pinning field scaling parameters
     p = 0.32
     q = 2.50
     n = 3.33
-    # temperatute scaling parameter
+    # temperature scaling parameter
     s = 5.27
-    # strain scaling parameters
+
+    # Strain scaling parameters
     c2 = -0.0191
     c3 = 0.0039
     c4 = 0.00103
-    em = 0.058
-    # strain conversion parameters
+    epsilon_m = 0.058
+
+    # Strain conversion parameters
     u = 0.0
     w = 2.2
 
-    epsilon_i = strain - em
+    # ==========================================================
+
+    epsilon_i = strain - epsilon_m
 
     strain_func = (
         1 + c2 * (epsilon_i) ** 2 + c3 * (epsilon_i) ** 3 + c4 * (epsilon_i) ** 4
@@ -452,67 +494,86 @@ def gl_rebco(thelium, bmax, strain, bc20max, t_c0):
 
     t_e = t_c0 * strain_func ** (1 / w)
 
-    t_reduced = thelium / t_e
+    t_reduced = temp_conductor / t_e
 
     a_e = a_0 * strain_func ** (u / w)
 
     #  Critical Field
-    bcrit = bc20max * (1 - t_reduced) ** s * strain_func
+    b_critical = b_c20max * (1 - t_reduced) ** s * strain_func
 
-    b_reduced = bmax / bcrit
+    b_reduced = b_conductor / b_critical
 
     #  Critical temperature (K)
-    tcrit = t_e
+    temp_critical = t_e
 
     #  Critical current density (A/m2)
-    jcrit = (
+    j_critical = (
         a_e
         * (t_e * (1 - t_reduced**2)) ** 2
-        * bcrit ** (n - 3)
+        * b_critical ** (n - 3)
         * b_reduced ** (p - 1)
         * (1 - b_reduced) ** q
     )
 
-    return jcrit, bcrit, tcrit
+    return j_critical, b_critical, temp_critical
 
 
-def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
-    """Implementation of High Current Density REBCO tape
-    author: R Chapman, UKAEA
-    thelium : input real : SC temperature (K)
-    bmax : input real : Magnetic field at conductor (T)
-    strain : input real : Strain in superconductor
-    bc20max : input real : Upper critical field (T) for superconductor
-    at zero temperature and strain
-    t_c0 : input real : Critical temperature (K) at zero field and strain
-    jcrit : output real : Critical current density in superconductor (A/m2)
-    bcrit : output real : Critical field (T)
-    tcrit : output real : Critical temperature (K)
+def hijc_rebco(
+    temp_conductor: float,
+    b_conductor: float,
+    b_c20max: float,
+    t_c0: float,
+    tape_width: float,
+    rebco_thickness: float,
+    tape_thickness: float,
+) -> tuple[float, float, float]:
+    """
+    Calculates the critical current density, critical field, and critical temperature
+    for a high current density REBCO tape based Wolf et al. parameterization with data from Hazelton
+    and Zhai et al.
 
-    Returns the critical current of a REBCO tape based on a critical surface
-    (field, temperature) parameterization. Based in part on the parameterization
-    described in: M. J. Wolf, N. Bagrets, W. H. Fietz, C. Lange and K. Weiss,
-    "Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,"
-    in IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4,
-    June 2018, Art no. 4802404, doi: 10.1109/TASC.2018.2815767.
+    :param temp_conductor: Superconductor temperature (K).
+    :type temp_conductor: float
+    :param b_conductor: Magnetic field at conductor (T).
+    :type b_conductor: float
+    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
+    :type b_c20max: float
+    :param t_c0: Critical temperature (K) at zero field and strain.
+    :type t_c0: float
+    :param tape_width: Width of the tape (m).
+    :type tape_width: float
+    :param rebco_thickness: Thickness of the REBCO layer (m).
+    :type rebco_thickness: float
+    :param tape_thickness: Total thickness of the tape (m).
+    :type tape_thickness: float
+    :return: Tuple containing:
+        - j_critical: Critical current density in superconductor (A/m²).
+        - b_critical: Critical field (T).
+        - temp_critical: Critical temperature (K).
+    :rtype: tuple[float, float, float]
 
-    And on the experimental
-    data presented here: "2G HTS Wire Development at SuperPower", Drew W. Hazelton,
-    February 16, 2017 https://indico.cern.ch/event/588810/contributions/2473740/
-    The high Ic parameterization is a result of modifications based on Ic values
-    observed in: "Conceptual design of HTS magnets for fusion nuclear science facility",
-    Yuhu Zhai, Danko van der Laan, Patrick Connolly, Charles Kessel, 2021,
-    https://doi.org/10.1016/j.fusengdes.2021.112611
+    :notes:
+        - The parameter A is transformed into a function A(T) based on a Newton polynomial fit
+          considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8.
 
-    The parameter A is transformed into a function A(T) based on a Newton polynomial fit
-    considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8. These values were
-    selected manually. A good fit to the pubished data can be seen in the 4-10 T range
-    but the fit deviates at very low or very high field.
+        - A scaling factor of 0.4 was originally applied to j_critical for CORC cables, but is not used here.
 
-    C. Ashe 2/11/23
-    A scaling factor of 0.4 was originally applied to jcrit to accomodate the models
-    original purpose of being used with CORC cables, which PROCESS did not model as it
-    assumed a stacked tape block design.
+    :references:
+        - Based in part on the parameterization described in:
+        M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss,
+        “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,”
+        IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4, Jun. 2018,
+        doi: https://doi.org/10.1109/tasc.2018.2815767.
+
+        - Fit values based on:
+        D. W. Hazelton, “4th Workshop on Accelerator Magnets in HTS (WAMHTS-4) | 2G HTS Wire Development at SuperPower,”
+        Indico, 2017. https://indico.cern.ch/event/588810/contributions/2473740/ (accessed May 20, 2025).
+
+        -The high Ic parameterization is a result of modifications based on Ic values observed in:
+        Y. Zhai, D. van der Laan, P. Connolly, and C. Kessel, “Conceptual design of HTS magnets for fusion nuclear science facility,”
+        Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021,
+        doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
+
     """
 
     a = 1.4
@@ -528,15 +589,15 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
 
     # Critical Field (T)
     # B_crit(T) calculated using temperature and critical temperature
-    bcrit = bc20max * (1.0 - thelium / t_c0) ** a
+    b_critical = b_c20max * (1.0 - temp_conductor / t_c0) ** a
 
     # Critical temperature (K)
     # scaled to match behaviour in GL_REBCO routine,
     # ONLY TO BE USED until a better suggestion is received
-    tcrit = 0.999965 * t_c0
+    temp_critical = 0.999965 * t_c0
 
     # finding A(T); constants based on a Newton polynomial fit to pubished data
-    a_t = a_0 + (u * thelium**2) + (v * thelium)
+    a_t = a_0 + (u * temp_conductor**2) + (v * temp_conductor)
 
     # Critical current density (A/m2)
     # In the original formula bcrit must be > bmax to prevent NaNs.
@@ -544,24 +605,31 @@ def hijc_rebco(thelium, bmax, _strain, bc20max, t_c0):
     # So when bcrit < bmax, I reverse the sign of the bracket,
     # giving a negative but real value of jcrit.
 
-    if bcrit > bmax:
-        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (1 - bmax / bcrit) ** q
+    if b_critical > b_conductor:
+        j_critical = (
+            (a_t / b_conductor)
+            * b_critical**b
+            * (b_conductor / b_critical) ** p
+            * (1 - b_conductor / b_critical) ** q
+        )
     else:
-        jcrit = (a_t / bmax) * bcrit**b * (bmax / bcrit) ** p * (bmax / bcrit - 1) ** q
-
-    # print("thelium = ", thelium, "   bcrit = ", bcrit, "   bmax = ", bmax, "   1 - bmax / bcrit = ", 1 - bmax / bcrit)
+        j_critical = (
+            (a_t / b_conductor)
+            * b_critical**b
+            * (b_conductor / b_critical) ** p
+            * (b_conductor / b_critical - 1) ** q
+        )
 
     # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
     # divided by the tape area to provide engineering Jc per tape,!
     # A scaling factor of 0.4 used to be applied below to assume the difference
     # between tape stacks and CORC cable layouts.
-    jcrit = (
-        jcrit
-        * (rebco_variables.tape_width * rebco_variables.rebco_thickness)
-        / (rebco_variables.tape_width * rebco_variables.tape_thickness)
+
+    j_critical = (
+        j_critical * (tape_width * rebco_thickness) / (tape_width * tape_thickness)
     )
 
-    return jcrit, bcrit, tcrit
+    return j_critical, b_critical, temp_critical
 
 
 def western_superconducting_nb3sn(
@@ -889,6 +957,14 @@ def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=Non
     elif isumat == 8:
         jcrit, _, _ = gl_rebco(ttest, bmax, strain, bc20m, tc0m)
     elif isumat == 9:
-        jcrit, _, _ = hijc_rebco(ttest, bmax, strain, bc20m, tc0m)
+        jcrit, _, _ = hijc_rebco(
+            ttest,
+            bmax,
+            bc20m,
+            tc0m,
+            rebco_variables.tape_width,
+            rebco_variables.rebco_thickness,
+            rebco_variables.tape_thickness,
+        )
 
     return jcrit - jsc
