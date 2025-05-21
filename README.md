@@ -13,7 +13,7 @@ Due to this ongoing conversion work, **PROCESS version 3 is unstable and does no
 
 
 ![Blender_and_output](./documentation/proc-pages/images/README_image.PNG)
-<center>Overview of some outputs for a DEMO-like reactor (3D image generated using Fusrr-pipeline).</center>
+<center>Overview of some outputs for a DEMO-like reactor.</center>
 
 
 ## Getting Started
