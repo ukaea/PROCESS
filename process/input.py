@@ -182,7 +182,7 @@ INPUT_VARIABLES = {
     "b_crit_upper_nbti": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 30.0)
     ),
-    "baseel": InputVariable(
+    "p_plant_electric_base": InputVariable(
         fortran.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
     "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
