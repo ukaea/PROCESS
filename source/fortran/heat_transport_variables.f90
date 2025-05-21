@@ -34,7 +34,7 @@ module heat_transport_variables
     real(dp) :: etatf
     !! AC to resistive power conversion for TF coils
 
-    real(dp) :: etath
+    real(dp) :: eta_turbine
     !! thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated.
 
     real(dp) :: etath_liq

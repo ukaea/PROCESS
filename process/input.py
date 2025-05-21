@@ -488,7 +488,9 @@ INPUT_VARIABLES = {
     "etapsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
-    "etath": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
+    "eta_turbine": InputVariable(
+        fortran.heat_transport_variables, float, range=(0.0, 1.0)
+    ),
     "eyoung_al": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "eyoung_cond_axial": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 10000000000000.0)

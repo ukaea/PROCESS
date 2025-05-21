@@ -92,7 +92,9 @@ SCAN_VARIABLES = {
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
     54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
     55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
-    56: ScanVariable("p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"),
+    56: ScanVariable(
+        "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"
+    ),
     57: ScanVariable("boundl(2)", "bt minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
@@ -130,7 +132,7 @@ SCAN_VARIABLES = {
         "Fraction of BZ power cooled by primary coolant for dual-coolant balnket",
     ),
     75: ScanVariable("dx_fw_module", "dx_fw_module of first wall cooling channels (m)"),
-    76: ScanVariable("etath", "Thermal conversion eff."),
+    76: ScanVariable("eta_turbine", "Thermal conversion eff."),
     77: ScanVariable("startupratio", "Gyrotron redundancy"),
     78: ScanVariable("fkind", "Multiplier for Nth of a kind costs"),
     79: ScanVariable(
@@ -1063,7 +1065,7 @@ class Scan:
             case 75:
                 fwbs_variables.dx_fw_module = swp[iscn - 1]
             case 76:
-                heat_transport_variables.etath = swp[iscn - 1]
+                heat_transport_variables.eta_turbine = swp[iscn - 1]
             case 77:
                 cost_variables.startupratio = swp[iscn - 1]
             case 78:

@@ -189,7 +189,7 @@ maxcal   = 200 * maximum number of VMCON iterations
 
 *-------------Heat Transport Variables-------------*
 
-etath    = 0.4 * thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated;
+eta_turbine    = 0.4 * thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated;
 p_blkt_coolant_pump_mw = 120. * blanket primary coolant mechanical pumping power (MW)
 p_div_coolant_pump_mw = 24. * divertor coolant mechanical pumping power (MW)
 p_fw_coolant_pump_mw = 56. * first wall coolant mechanical pumping power (MW)

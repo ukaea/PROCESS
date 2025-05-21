@@ -1148,7 +1148,7 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield_________________ (fpumpshld)____________________ 5.00000000000000010e-03
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor_______________ (fpumpdiv)_____________________ 5.00000000000000010e-03
  Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (etahtp)_______________________ 8.70000000000000107e-01
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (etath)________________________ 4.00000000000000022e-01
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (eta_turbine)________________________ 4.00000000000000022e-01
  Fraction_of_total_high-grade_thermal_power_to_divertor___________________ (pdivfraction)_________________ 1.40200687853449329e-01 OP
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)_________ _______________________________ 2.18230014219860914e+03 OP
  Heat_removal_from_cryogenic_plant_(MW)___________________________________ (p_cryo_plant_electric_mw)_______________________ 4.19967613866769440e+01 OP
@@ -1203,7 +1203,7 @@
  Total_(MW)_______________________________________________________________ _______________________________ 2.07563273671468733e+03 OP
  Net_electric_power_/_total_nuclear_power_(%)_____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)_ 1.95063372981934933e+01 OP
  Net_electric_power_/_total_fusion_power_(%)______________________________ (p_plant_electric_net_mw/p_fusion_total_mw)________ 2.32127725855597227e+01 OP
- Gross_electric_power*_/_high_grade_heat_(%)______________________________ (etath)________________________ 4.00000000000000000e+01
+ Gross_electric_power*_/_high_grade_heat_(%)______________________________ (eta_turbine)________________________ 4.00000000000000000e+01
  Recirculating_power_fraction_____________________________________________ (cirpowfr)_____________________ 5.72035101409239854e-01 OP
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)____________________________________ (waterusetower)________________ 6.03016824933250100e+04 OP
@@ -1705,7 +1705,7 @@ etaiso = 0.9
 secondary_cycle = 2
 
 * Thermal to electric conversion efficiency
-etath = 0.4
+eta_turbine = 0.4
 
 * Switch for shield thermal power density
 iprimshld = 1

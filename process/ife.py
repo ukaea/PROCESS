@@ -2015,7 +2015,7 @@ class IFE:
         if cost_variables.ireactor == 1:
             # Gross electric power
             heat_transport_variables.p_plant_electric_gross_mw = (
-                heat_transport_variables.pthermmw * heat_transport_variables.etath
+                heat_transport_variables.pthermmw * heat_transport_variables.eta_turbine
             )
 
             # Balance of plant recirculating power fraction

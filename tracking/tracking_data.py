@@ -148,7 +148,7 @@ class ProcessTracker:
         "vol_plasma",
         "a_plasma_surface",
         "p_plant_electric_net_mw",
-        "etath",
+        "eta_turbine",
         "p_plant_electric_gross_mw",
         "tftmp",
         "n_tf_coils",

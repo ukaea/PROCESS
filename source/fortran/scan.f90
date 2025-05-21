@@ -111,7 +111,7 @@ module scan_module
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
   !!         <LI> 75 dx_fw_module : pitch of first wall cooling channels (m)
-  !!         <LI> 76 etath : Thermal conversion eff.
+  !!         <LI> 76 eta_turbine : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
   !!         <LI> 79 eta_ecrh_injector_wall_plug : ECH wall plug to injector efficiency

@@ -273,14 +273,14 @@ module fwbs_variables
   !!
   !! - =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
   !! - =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_turbine)
   !! - =3 steam Rankine cycle
   !! - =4 supercritical CO2 cycle
 
   integer :: secondary_cycle_liq
   !! Switch for power conversion cycle for the liquid breeder component of the blanket:
   !!
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_turbine)
   !! - =4 supercritical CO2 cycle
 
   integer :: i_blkt_coolant_type

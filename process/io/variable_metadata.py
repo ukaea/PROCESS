@@ -370,7 +370,7 @@ var_dicts = {
         description="Divertor power per major radius",
         units="MW/m",
     ),
-    "etath": VariableMetadata(
+    "eta_turbine": VariableMetadata(
         latex=r"Thermal to Electric efficiency",
         description="Thermal to electric efficiency",
         units="",

@@ -514,7 +514,7 @@ etaiso = 0.9
 i_thermal_electric_conversion = 2
 
 * Thermal to electric conversion efficiency
-etath = 0.4
+eta_turbine = 0.4
 
 * Switch for shield thermal power density
 iprimshld = 1
