@@ -960,7 +960,6 @@ def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=Non
         jcrit, _, _ = hijc_rebco(
             ttest,
             bmax,
-            strain,
             bc20m,
             tc0m,
             rebco_variables.tape_width,
