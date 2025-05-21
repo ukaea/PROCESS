@@ -337,7 +337,7 @@ OBS_VARS = {
     "htpmw_div": "p_div_coolant_pump_mw",
     "htpmw_fw": "p_fw_coolant_pump_mw",
     "htpmw_shld": "p_shld_coolant_pump_mw",
-    "htpmw_min": None
+    "htpmw_min": None,
 }
 
 OBS_VARS_HELP = {

@@ -15,7 +15,7 @@ module heat_transport_variables
 
     public
 
-    real(dp) :: baseel
+    real(dp) :: p_plant_electric_base
     !! base plant electric load (W)
 
     real(dp) :: p_cryo_plant_electric_mw
@@ -66,9 +66,6 @@ module heat_transport_variables
     real(dp) :: fpumpshld
     !! fraction of total shield thermal power required to drive the shield coolant
     !! pumps (default assumes water coolant)
-
-    real(dp) :: htpmw_min
-    !! Minimum total electrical power for primary coolant pumps (MW) (NOT RECOMMENDED)
 
     real(dp) :: helpow
     !! Heat removal at cryogenic temperature temp_tf_cryo (W)
