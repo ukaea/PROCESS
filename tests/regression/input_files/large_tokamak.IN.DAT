@@ -583,9 +583,6 @@ sigpfcf = 0.666
 * TF Coil *
 ***********
 
-* Inboard TF coil thickness [m]
-dr_tf_inboard = 1.2
-
 * Inboard TF coil plasma-facing case thickness [m]
 dr_tf_plasma_case = 0.06
 
