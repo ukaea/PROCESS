@@ -619,13 +619,13 @@ class Power:
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
             # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
-            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
-                heat_transport_variables.htpmw_min,
+            heat_transport_variables.p_coolant_pump_elec_total_mw = (
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.p_blkt_breeder_pump_elec_mw
                 + self.p_shld_coolant_pump_elec_mw
-                + self.p_div_coolant_pump_elec_mw,
+                + self.p_div_coolant_pump_elec_mw
             )
+
         else:
             # Total mechanical pump power (deposited in coolant)
             self.p_coolant_pump_total_mw = (
@@ -637,8 +637,7 @@ class Power:
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
             # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
-            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
-                heat_transport_variables.htpmw_min,
+            heat_transport_variables.p_coolant_pump_elec_total_mw = (
                 self.p_fw_blkt_coolant_pump_elec_mw
                 + self.p_shld_coolant_pump_elec_mw
                 + self.p_div_coolant_pump_elec_mw,
@@ -3121,7 +3120,6 @@ def init_heat_transport_variables():
     heat_transport_variables.fpumpdiv = 0.005
     heat_transport_variables.fpumpfw = 0.005
     heat_transport_variables.fpumpshld = 0.005
-    heat_transport_variables.htpmw_min = 0.0
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
     heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0
