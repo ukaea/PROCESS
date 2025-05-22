@@ -1143,7 +1143,7 @@
  Injected_power_deposited_in_plasma_(MW)_________________________________ (p_hcd_injected_total_mw)______________________      7.9710E+01    
  Total_(MW)______________________________________________________________ ______________________________      3.8856E+02    
  Fusion_power_(MW)_______________________________________________________ (p_fusion_total_mw)______________________      1.6176E+03    
- Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0787E+02    
+ Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (p_blkt_multiplication_mw)_____________________      3.0787E+02    
  Injected_power_(MW)_____________________________________________________ (p_hcd_injected_total_mw.)_____________________      7.9710E+01    
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      6.0733E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      1.6536E+02    
@@ -1168,13 +1168,13 @@
  Total_(MW)______________________________________________________________ ______________________________      8.6850E+02    
  Gross_electrical_output*_(MW)___________________________________________ (p_plant_electric_gross_mw)____________________      8.6850E+02    
  Fusion_power_(MW)_______________________________________________________ (p_fusion_total_mw)______________________      1.6176E+03    
- Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.0787E+02    
+ Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (p_blkt_multiplication_mw)_____________________      3.0787E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9255E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      4.0001E+02    
  Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.3028E+03    
  Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.2345E+02    
  Total_(MW)______________________________________________________________ ______________________________      1.9262E+03    
- Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)____      2.0774E+01    
+ Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+p_blkt_multiplication_mw)____      2.0774E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/p_fusion_total_mw)_____________      2.4728E+01    
  Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      4.0000E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      5.3943E-01    

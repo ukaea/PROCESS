@@ -41,7 +41,7 @@ module fwbs_variables
   real(dp) :: f_p_blkt_multiplication
   !! energy multiplication in blanket and shield
 
-  real(dp) :: emultmw
+  real(dp) :: p_blkt_multiplication_mw
   !! power due to energy multiplication in blanket and shield [MW]
 
   real(dp) :: fblss

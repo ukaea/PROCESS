@@ -1699,8 +1699,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power from energy multiplication in blanket and shield (MW)",
-            "(emultmw)",
-            fwbs_variables.emultmw,
+            "(p_blkt_multiplication_mw)",
+            fwbs_variables.p_blkt_multiplication_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1726,7 +1726,7 @@ class Power:
         )
         total = (
             physics_variables.p_fusion_total_mw
-            + fwbs_variables.emultmw
+            + fwbs_variables.p_blkt_multiplication_mw
             + pinj
             + self.p_coolant_pump_total_mw
             + physics_variables.p_plasma_ohmic_mw
@@ -1941,11 +1941,14 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power from energy multiplication in blanket and shield (MW)",
-            "(emultmw)",
-            fwbs_variables.emultmw,
+            "(p_blkt_multiplication_mw)",
+            fwbs_variables.p_blkt_multiplication_mw,
             "OP ",
         )
-        total_power = physics_variables.p_fusion_total_mw + fwbs_variables.emultmw
+        total_power = (
+            physics_variables.p_fusion_total_mw
+            + fwbs_variables.p_blkt_multiplication_mw
+        )
         po.ovarrf(self.outfile, "Total (MW)", "", total_power, "OP ")
         po.oblnkl(self.outfile)
         po.ovarrf(
@@ -2002,10 +2005,13 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)",
+            "(p_plant_electric_net_mw/(p_fusion_total_mw+p_blkt_multiplication_mw)",
             100.0e0
             * heat_transport_variables.p_plant_electric_net_mw
-            / (physics_variables.p_fusion_total_mw + fwbs_variables.emultmw),
+            / (
+                physics_variables.p_fusion_total_mw
+                + fwbs_variables.p_blkt_multiplication_mw
+            ),
             "OP ",
         )
         po.ovarrf(

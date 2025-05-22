@@ -1277,7 +1277,7 @@ class Stellarator:
                     - fwbs_variables.pnuc_cp
                 ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.emultmw = pneut2 - (
+                fwbs_variables.p_blkt_multiplication_mw = pneut2 - (
                     physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
@@ -1506,7 +1506,7 @@ class Stellarator:
                         "i_coolant_pumping = 0 or 1 only for stellarator"
                     )
 
-                fwbs_variables.emultmw = (
+                fwbs_variables.p_blkt_multiplication_mw = (
                     heat_transport_variables.fpumpblkt
                     * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
                     * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
@@ -1524,9 +1524,11 @@ class Stellarator:
                     pnucbzi + pnucbzo
                 ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.emultmw = fwbs_variables.emultmw + (
-                    pnucbzi + pnucbzo
-                ) * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                fwbs_variables.p_blkt_multiplication_mw = (
+                    fwbs_variables.p_blkt_multiplication_mw
+                    + (pnucbzi + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                )
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
