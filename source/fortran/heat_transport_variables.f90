@@ -154,7 +154,7 @@ module heat_transport_variables
     real(dp) :: psechcd
     !! Low-grade heat lost into HCD apparatus (MW)
 
-    real(dp) :: psechtmw
+    real(dp) :: p_plant_secondary_heat_mw
     !! Low-grade heat (MW)
 
     real(dp) :: pseclossmw
