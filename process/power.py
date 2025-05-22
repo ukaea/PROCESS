@@ -944,94 +944,6 @@ class Power:
         if output == 0:
             return
 
-        # TODO: Can output unphysical values if there are no cryogenics - could be omitted from OUT.DAT in this case but leave in for MFILE?
-        #  Output section
-        po.oheadr(self.outfile, "Cryogenics")
-        po.ovarre(
-            self.outfile,
-            "Conduction and radiation heat loads on cryogenic components (MW)",
-            "(qss/1.0d6)",
-            self.qss / 1.0e6,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Nuclear heating of cryogenic components (MW)",
-            "(qnuc/1.0d6)",
-            fwbs_variables.qnuc / 1.0e6,
-            "OP ",
-        )
-        if fwbs_variables.inuclear == 1:
-            po.ocmmnt(
-                self.outfile, "Nuclear heating of cryogenic components is a user input."
-            )
-        po.ovarre(
-            self.outfile,
-            "AC losses in cryogenic components (MW)",
-            "(qac/1.0d6)",
-            self.qac / 1.0e6,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Resistive losses in current leads (MW)",
-            "(qcl/1.0d6)",
-            self.qcl / 1.0e6,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "45% allowance for heat loads in transfer lines, storage tanks etc (MW)",
-            "(qmisc/1.0d6)",
-            self.qmisc / 1.0e6,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & tcoolin) (MW)",
-            "(helpow + helpow_cryal/1.0d6)",
-            (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
-            * 1.0e-6,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Temperature of cryogenic superconducting components (K)",
-            "(temp_tf_cryo)",
-            tfcoil_variables.temp_tf_cryo,
-        )
-        po.ovarre(
-            self.outfile,
-            "Temperature of cryogenic aluminium components (K)",
-            "(tcoolin)",
-            tfcoil_variables.tcoolin,
-        )
-        # TODO: Both of these efficiencies are printed when it should be either 13% (ITER) or 40% (Strawbrige) - subset of TODO on line 1118
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
-            / (constants.temp_room - tfcoil_variables.temp_tf_cryo),
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (constants.temp_room - tfcoil_variables.tcoolin),
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electric power for cryogenic plant (MW)",
-            "(p_cryo_plant_electric_mw)",
-            heat_transport_variables.p_cryo_plant_electric_mw,
-            "OP ",
-        )
-
         po.oheadr(self.outfile, "Plant Power / Heat Transport Balance")
         if heat_transport_variables.p_plant_electric_net_mw < 0:
             po.ocmmnt(
@@ -2410,6 +2322,103 @@ class Power:
         return max(
             0.0e0,
             self.qmisc + self.qss + fwbs_variables.qnuc + self.qac + self.qcl,
+        )
+
+    def output_cryogenics(self) -> None:
+        """
+        Outputs cryogenic system heat loads and related parameters to the output file.
+
+        This method prints the breakdown of cryogenic heat loads, including conduction/radiation,
+        nuclear heating, AC losses, resistive losses in current leads, miscellaneous allowances,
+        and total heat removal at cryogenic temperatures. It also outputs the temperatures and
+        efficiencies of the cryogenic systems, as well as the electric power required for the
+        cryogenic plant.
+        """
+
+        po.oheadr(self.outfile, "Cryogenics")
+        po.ovarre(
+            self.outfile,
+            "Conduction and radiation heat loads on cryogenic components (MW)",
+            "(qss/1.0d6)",
+            self.qss / 1.0e6,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nuclear heating of cryogenic components (MW)",
+            "(qnuc/1.0d6)",
+            fwbs_variables.qnuc / 1.0e6,
+            "OP ",
+        )
+        if fwbs_variables.inuclear == 1:
+            po.ocmmnt(
+                self.outfile, "Nuclear heating of cryogenic components is a user input."
+            )
+        po.ovarre(
+            self.outfile,
+            "AC losses in cryogenic components (MW)",
+            "(qac/1.0d6)",
+            self.qac / 1.0e6,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Resistive losses in current leads (MW)",
+            "(qcl/1.0d6)",
+            self.qcl / 1.0e6,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "45% allowance for heat loads in transfer lines, storage tanks etc (MW)",
+            "(qmisc/1.0d6)",
+            self.qmisc / 1.0e6,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & tcoolin) (MW)",
+            "(helpow + helpow_cryal/1.0d6)",
+            (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
+            * 1.0e-6,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Temperature of cryogenic superconducting components (K)",
+            "(temp_tf_cryo)",
+            tfcoil_variables.temp_tf_cryo,
+        )
+        po.ovarre(
+            self.outfile,
+            "Temperature of cryogenic aluminium components (K)",
+            "(tcoolin)",
+            tfcoil_variables.tcoolin,
+        )
+        # TODO: Both of these efficiencies are printed when it should be either 13% (ITER) or 40% (Strawbrige) - subset of TODO on line 1118
+        po.ovarre(
+            self.outfile,
+            "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
+            "",
+            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
+            / (constants.temp_room - tfcoil_variables.temp_tf_cryo),
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
+            "",
+            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
+            / (constants.temp_room - tfcoil_variables.tcoolin),
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power for cryogenic plant (MW)",
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
+            "OP ",
         )
 
     def plant_thermal_efficiency(self, eta_turbine):
