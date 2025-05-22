@@ -42,8 +42,8 @@ OBS_VARS = {
     "turnstf": "n_tf_turn",
     "awptf": "a_tf_wp",
     "dr_tf_case_in": "dr_tf_nose_case",
-    "f_tf_case_out": "casthi_fraction",
-    "dr_tf_case_out": "casthi",
+    "f_tf_case_out": "f_dr_tf_plasma_case",
+    "dr_tf_case_out": "dr_tf_plasma_case",
     "eyoung_reinforced_al": "eyoung_nibron",
     "thkwp": "dr_tf_wp",
     "leni": "t_cable",
@@ -331,7 +331,8 @@ OBS_VARS = {
     "powfmax": "p_fusion_total_max_mw",
     "ffuspow": "fp_fusion_total_max_mw",
     "roughness": "roughness_fw_channel",
-    "fvsbrnni": "f_c_plasma_non_inductive"
+    "casthi_is_fraction": "i_f_dr_tf_plasma_case",
+    "casthi_fraction": "f_dr_tf_plasma_case",
 }
 
 OBS_VARS_HELP = {

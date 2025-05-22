@@ -73,14 +73,14 @@ module tfcoil_variables
   real(dp) :: casestr
   !! case strain
 
-  real(dp) :: casthi
+  real(dp) :: dr_tf_plasma_case
   !! inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 
-  real(dp) :: casthi_fraction
+  real(dp) :: f_dr_tf_plasma_case
   !! inboard TF coil case plasma side thickness as a fraction of dr_tf_inboard
 
-  logical :: casthi_is_fraction
-  !! logical switch to make casthi a fraction of TF coil thickness (`casthi_fraction`)
+  logical :: i_f_dr_tf_plasma_case
+  !! logical switch to make dr_tf_plasma_case a fraction of TF coil thickness (`f_dr_tf_plasma_case`)
 
   real(dp) :: dx_tf_side_case
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
