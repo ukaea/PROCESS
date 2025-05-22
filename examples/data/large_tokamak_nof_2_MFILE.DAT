@@ -1366,7 +1366,7 @@ runtitle = generic large tokamak * short descriptive title for the run
 
 eta_turbine    = 0.4 * thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated;
 ipowerflow = 0 * switch for power flow model;
-iprimshld = 1 * Switch for shield thermal power destiny;
+i_shld_primary_heat = 1 * Switch for shield thermal power destiny;
 
 *--------------------Ife Module--------------------*
 

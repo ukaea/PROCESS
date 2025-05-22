@@ -762,13 +762,14 @@ class Power:
             heat_transport_variables.etath_liq
         )
 
-        #  Primary (high-grade) thermal power, available for electricity generation.  Switch heat_transport_variables.iprimshld
+        #  Primary (high-grade) thermal power, available for electricity generation.  Switch heat_transport_variables.i_shld_primary_heat
         #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  Primary thermal power (MW)
             heat_transport_variables.p_plant_primary_heat_mw = (
                 self.p_fw_blkt_heat_deposited_mw
-                + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
+                + heat_transport_variables.i_shld_primary_heat
+                * self.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.psecdiv = self.p_div_heat_deposited_mw
@@ -778,7 +779,8 @@ class Power:
             #  Primary thermal power (MW)
             heat_transport_variables.p_plant_primary_heat_mw = (
                 self.p_fw_blkt_heat_deposited_mw
-                + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
+                + heat_transport_variables.i_shld_primary_heat
+                * self.p_shld_heat_deposited_mw
                 + self.p_div_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
@@ -799,7 +801,7 @@ class Power:
 
         #  Secondary thermal power deposited in shield
         heat_transport_variables.psecshld = self.p_shld_heat_deposited_mw * (
-            1 - heat_transport_variables.iprimshld
+            1 - heat_transport_variables.i_shld_primary_heat
         )
 
         #  Secondary thermal power lost to HCD apparatus and diagnostics
@@ -1299,12 +1301,12 @@ class Power:
                 "Divertor thermal power is not used, but rejected directly to the environment.",
             )
 
-        if heat_transport_variables.iprimshld == 1:
+        if heat_transport_variables.i_shld_primary_heat == 1:
             po.ocmmnt(
                 self.outfile,
                 "Shield thermal power is collected at only 150 C and is used to preheat the coolant in the power cycle",
             )
-        elif heat_transport_variables.iprimshld == 0:
+        elif heat_transport_variables.i_shld_primary_heat == 0:
             po.ocmmnt(
                 self.outfile,
                 "Shield thermal power is not used, but rejected directly to the environment.",
@@ -1448,7 +1450,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.p_shld_nuclear_heat_mw * heat_transport_variables.iprimshld} {fwbs_variables.p_shld_nuclear_heat_mw * (1 - heat_transport_variables.iprimshld)} {fwbs_variables.p_shld_nuclear_heat_mw}"
+                f"{fwbs_variables.p_shld_nuclear_heat_mw * heat_transport_variables.i_shld_primary_heat} {fwbs_variables.p_shld_nuclear_heat_mw * (1 - heat_transport_variables.i_shld_primary_heat)} {fwbs_variables.p_shld_nuclear_heat_mw}"
             ),
         )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
@@ -1456,22 +1458,23 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.iprimshld} {heat_transport_variables.p_shld_coolant_pump_mw * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.p_shld_coolant_pump_mw}"
+                f"{heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.i_shld_primary_heat} {heat_transport_variables.p_shld_coolant_pump_mw * (1 - heat_transport_variables.i_shld_primary_heat)} {heat_transport_variables.p_shld_coolant_pump_mw}"
             ),
         )
 
         primsum = (
             primsum
-            + fwbs_variables.p_shld_nuclear_heat_mw * heat_transport_variables.iprimshld
+            + fwbs_variables.p_shld_nuclear_heat_mw
+            * heat_transport_variables.i_shld_primary_heat
             + heat_transport_variables.p_shld_coolant_pump_mw
-            * heat_transport_variables.iprimshld
+            * heat_transport_variables.i_shld_primary_heat
         )
         secsum = (
             secsum
             + fwbs_variables.p_shld_nuclear_heat_mw
-            * (1 - heat_transport_variables.iprimshld)
+            * (1 - heat_transport_variables.i_shld_primary_heat)
             + heat_transport_variables.p_shld_coolant_pump_mw
-            * (1 - heat_transport_variables.iprimshld)
+            * (1 - heat_transport_variables.i_shld_primary_heat)
         )
 
         po.oblnkl(self.outfile)
@@ -3137,7 +3140,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_shld_coolant_pump_mw = 0.0
     heat_transport_variables.p_coolant_pump_loss_total_mw = 0.0
     heat_transport_variables.ipowerflow = 1
-    heat_transport_variables.iprimshld = 1
+    heat_transport_variables.i_shld_primary_heat = 1
     heat_transport_variables.nphx = 0
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
