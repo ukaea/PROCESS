@@ -66,7 +66,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     fw_armour_thickness: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     f_a_fw_coolant_inboard: Any = None
 
@@ -98,7 +98,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     tfc_nuc_heating: Any = None
 
-    expected_ptfnuc: Any = None
+    expected_p_tf_nuclear_heat_mw: Any = None
 
     expected_f_a_fw_coolant_inboard: Any = None
 
@@ -143,7 +143,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             m_vv=9043937.8018644415,
             vol_vv=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0,
+            p_tf_nuclear_heat_mw=0,
             f_a_fw_coolant_inboard=0,
             f_a_fw_coolant_outboard=0,
             p_fusion_total_mw=1986.0623241661431,
@@ -159,7 +159,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=0,
             x_shield=0,
             tfc_nuc_heating=0,
-            expected_ptfnuc=0.044541749095475737,
+            expected_p_tf_nuclear_heat_mw=0.044541749095475737,
             expected_f_a_fw_coolant_inboard=0.31415926535897931,
             expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -190,7 +190,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             m_vv=9056931.558219457,
             vol_vv=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0.044184461825198453,
+            p_tf_nuclear_heat_mw=0.044184461825198453,
             f_a_fw_coolant_inboard=0.31415926535897931,
             f_a_fw_coolant_outboard=0.31415926535897931,
             p_fusion_total_mw=1985.4423932312809,
@@ -206,7 +206,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=2.3374537748527975,
             x_shield=4.056,
             tfc_nuc_heating=22427.165831352642,
-            expected_ptfnuc=0.044556605747797934,
+            expected_p_tf_nuclear_heat_mw=0.044556605747797934,
             expected_f_a_fw_coolant_inboard=0.31415926535897931,
             expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -299,7 +299,11 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         nuclearheatingmagnetsparam.fw_armour_thickness,
     )
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_tf_nuclear_heat_mw",
+        nuclearheatingmagnetsparam.p_tf_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -367,8 +371,8 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     ccfe_hcpb.nuclear_heating_magnets(False)
 
-    assert fwbs_variables.ptfnuc == pytest.approx(
-        nuclearheatingmagnetsparam.expected_ptfnuc
+    assert fwbs_variables.p_tf_nuclear_heat_mw == pytest.approx(
+        nuclearheatingmagnetsparam.expected_p_tf_nuclear_heat_mw
     )
 
     assert fwbs_variables.f_a_fw_coolant_inboard == pytest.approx(
