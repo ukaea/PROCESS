@@ -570,7 +570,7 @@ class Power:
         # MDK Remove this output: no idea what this is
         # po.ovarre(self.outfile,'Total low voltage power (MW)','(tlvpmw)',tlvpmw)
 
-    def power1(self):
+    def component_thermal_powers(self):
         """
         Calculates the first part of the heat transport
         and plant power balance constituents
@@ -625,6 +625,12 @@ class Power:
         heat_transport_variables.p_coolant_pump_loss_total_mw = (
             heat_transport_variables.p_coolant_pump_elec_total_mw
             - self.p_coolant_pump_total_mw
+        )
+
+        # Heat lost in power supplies for heating and current drive
+        heat_transport_variables.pinjht = (
+            heat_transport_variables.p_hcd_electric_total_mw
+            - current_drive_variables.p_hcd_injected_total_mw
         )
 
         # Liquid metal breeder/coolant
@@ -728,7 +734,7 @@ class Power:
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
             self.i_div_primary_heat = 0
         else:
-            #  Primary thermal power (MW)
+            #  Primary thermal power used to generate electricity (MW)
             heat_transport_variables.p_plant_primary_heat_mw = (
                 self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.i_shld_primary_heat
@@ -751,6 +757,10 @@ class Power:
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.f_p_div_primary_heat
 
+        # ===============================================
+        #  Secondary thermal powers
+        # ================================================
+
         #  Secondary thermal power deposited in shield
         heat_transport_variables.p_shld_secondary_heat_mw = (
             self.p_shld_heat_deposited_mw
@@ -767,23 +777,6 @@ class Power:
         heat_transport_variables.nphx = math.ceil(
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
-
-        #  Secondary heat (some of it... rest calculated in POWER2)
-        #  Wall plug injection power
-        # MDK
-        # heat_transport_variables.p_hcd_electric_total_mw = (current_drive_variables.p_hcd_injected_total_mw + current_drive_variables.p_beam_orbit_loss_mw + physics_variables.p_fw_alpha_mw)/eta_hcd_primary_injector_wall_plug
-        # heat_transport_variables.p_hcd_electric_total_mw calculated in current_drive.f90
-
-        #  Waste injection power
-        if physics_variables.i_plasma_ignited == 0:
-            # MDK
-            # pinjht = heat_transport_variables.p_hcd_electric_total_mw - current_drive_variables.p_hcd_injected_total_mw - current_drive_variables.p_beam_orbit_loss_mw - physics_variables.p_fw_alpha_mw
-            heat_transport_variables.pinjht = (
-                heat_transport_variables.p_hcd_electric_total_mw
-                - current_drive_variables.p_hcd_injected_total_mw
-            )
-        else:
-            heat_transport_variables.pinjht = 0.0e0
 
         #  Cryogenic power
         # ---

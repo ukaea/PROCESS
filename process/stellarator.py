@@ -167,7 +167,7 @@ class Stellarator:
         self.stdiv(False)
 
         self.power.tfpwr(output=False)
-        self.power.power1()
+        self.power.component_thermal_powers()
         self.buildings.run(output=False)
         self.vacuum.run(output=False)
         self.power.acpow(output=False)
