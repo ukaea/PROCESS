@@ -142,7 +142,7 @@ BASELINE_LIST = [
     "p_shld_nuclear_heat_mw",
     "p_plasma_separatrix_mw",
     "divlife",
-    "pthermmw",
+    "p_plant_primary_heat_mw",
     "dr_bore",
     "dr_cs",
     "dr_cs_precomp",

@@ -163,7 +163,7 @@ module heat_transport_variables
     real(dp) :: psecshld
     !! Low-grade heat deposited in shield (MW)
 
-    real(dp) :: pthermmw
+    real(dp) :: p_plant_primary_heat_mw
     !! High-grade heat useful for electric production (MW)
 
     real(dp) :: pwpm2
