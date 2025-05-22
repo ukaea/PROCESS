@@ -427,7 +427,7 @@ def plot_full_sankey(
         """# ---------------------------------------- HCD - 11 ----------------------------------------
 
         # HCD loss + injected, -injected, -HCD loss
-        HCD = [pinjht+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -pinjht]
+        HCD = [p_hcd_electric_loss_mw+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -p_hcd_electric_loss_mw]
         assert(sum(HCD)**2 < 0.5)
         sankey.add(flows=HCD,
                    # [down(in), up(out), down(out)]
@@ -480,10 +480,10 @@ def plot_full_sankey(
                 t.set_position((pos[0]+0.5*(p_alpha_total_mw/totalplasma)+0.05,pos[1]-0.1))
             if t == diagrams[1].texts[0]: # H&CD power
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*((pinjht+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*((p_hcd_electric_loss_mw+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
             if t == diagrams[1].texts[2]: # H&CD losses
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+(pinjht/totalplasma)+0.05,pos[1]))
+                t.set_position((pos[0]+(p_hcd_electric_loss_mw/totalplasma)+0.05,pos[1]))
             if t == diagrams[2].texts[1]: # Energy Multiplication
                 t.set_horizontalalignment('center')
                 t.set_position((pos[0],pos[1]-0.2))
