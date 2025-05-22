@@ -75,7 +75,7 @@ class Power:
         self.p_plant_core_systems_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.f_p_div_primary_heat = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.i_div_primary_heat = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_turbine_loss_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -794,12 +794,12 @@ class Power:
             logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
 
         # #284 Fraction of total high-grade thermal power to divertor
-        self.pdivfraction = (
+        self.f_p_div_primary_heat = (
             self.p_div_heat_deposited_mw
             / heat_transport_variables.p_plant_primary_heat_mw
         )
         # Loss in efficiency as this primary power is collecetd at very low temperature
-        self.delta_eta = 0.339 * self.pdivfraction
+        self.delta_eta = 0.339 * self.f_p_div_primary_heat
 
         #  Secondary thermal power deposited in shield
         heat_transport_variables.psecshld = self.p_shld_heat_deposited_mw * (
@@ -1366,8 +1366,8 @@ class Power:
             po.ovarrf(
                 self.outfile,
                 "Fraction of total high-grade thermal power to divertor",
-                "(pdivfraction)",
-                self.pdivfraction,
+                "(f_p_div_primary_heat)",
+                self.f_p_div_primary_heat,
                 "OP ",
             )
 
