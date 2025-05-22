@@ -578,10 +578,7 @@ class Power:
         and plant power balance constituents.
         None
         """
-        if (
-            fwbs_variables.i_coolant_pumping != 2
-            and fwbs_variables.i_coolant_pumping != 3
-        ):
+        if int(fwbs_variables.i_coolant_pumping) not in (2, 3):
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
@@ -590,6 +587,7 @@ class Power:
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
+
         self.p_fw_blkt_coolant_pump_elec_mw = (
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
         )
@@ -599,51 +597,27 @@ class Power:
         self.p_div_coolant_pump_elec_mw = (
             heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.etahtp
         )
-        if (
-            fwbs_variables.i_blkt_dual_coolant > 0
-            and fwbs_variables.i_coolant_pumping == 2
-        ):
-            self.p_blkt_breeder_pump_elec_mw = (
-                heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
-            )
 
-        if (
-            fwbs_variables.i_blkt_dual_coolant > 0
-            and fwbs_variables.i_coolant_pumping == 2
-        ):
-            # Total mechanical pump power (deposited in coolant)
-            self.p_coolant_pump_total_mw = (
-                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                + heat_transport_variables.p_blkt_breeder_pump_mw
-                + heat_transport_variables.p_shld_coolant_pump_mw
-                + heat_transport_variables.p_div_coolant_pump_mw
-            )
-            # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
-            # Recommended to leave the minimum value at zero.
-            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
-            heat_transport_variables.p_coolant_pump_elec_total_mw = (
-                self.p_fw_blkt_coolant_pump_elec_mw
-                + self.p_blkt_breeder_pump_elec_mw
-                + self.p_shld_coolant_pump_elec_mw
-                + self.p_div_coolant_pump_elec_mw
-            )
+        # Secondary breeder coolant loop. Should return zero if not used.
+        self.p_blkt_breeder_pump_elec_mw = (
+            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
+        )
 
-        else:
-            # Total mechanical pump power (deposited in coolant)
-            self.p_coolant_pump_total_mw = (
-                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                + heat_transport_variables.p_shld_coolant_pump_mw
-                + heat_transport_variables.p_div_coolant_pump_mw
-            )
+        # Total mechanical pump power needed (deposited in coolant)
+        self.p_coolant_pump_total_mw = (
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+            + heat_transport_variables.p_blkt_breeder_pump_mw
+            + heat_transport_variables.p_shld_coolant_pump_mw
+            + heat_transport_variables.p_div_coolant_pump_mw
+        )
 
-            # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
-            # Recommended to leave the minimum value at zero.
-            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
-            heat_transport_variables.p_coolant_pump_elec_total_mw = (
-                self.p_fw_blkt_coolant_pump_elec_mw
-                + self.p_shld_coolant_pump_elec_mw
-                + self.p_div_coolant_pump_elec_mw,
-            )
+        # Minimum total electrical power for primary coolant pumps (MW)
+        heat_transport_variables.p_coolant_pump_elec_total_mw = (
+            self.p_fw_blkt_coolant_pump_elec_mw
+            + self.p_blkt_breeder_pump_elec_mw
+            + self.p_shld_coolant_pump_elec_mw
+            + self.p_div_coolant_pump_elec_mw
+        )
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.p_coolant_pump_loss_total_mw = (
@@ -651,10 +625,9 @@ class Power:
             - self.p_coolant_pump_total_mw
         )
 
-        # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
-
         if fwbs_variables.i_coolant_pumping == 2:
             # Liquid metal breeder/coolant
+            # Calculate fraction of blanket nuclear power deposited in liquid breeder
             if fwbs_variables.i_blkt_dual_coolant == 2:
                 self.pthermblkt_liq = (
                     fwbs_variables.p_blkt_nuclear_heat_total_mw
