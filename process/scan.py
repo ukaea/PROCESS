@@ -3,6 +3,7 @@ from dataclasses import astuple, dataclass
 import numpy as np
 from tabulate import tabulate
 
+import process.constraints as constraints
 import process.process_output as process_output
 from process.caller import write_output_files
 from process.exceptions import ProcessValueError
@@ -10,7 +11,6 @@ from process.fortran import (
     build_variables,
     constants,
     constraint_variables,
-    constraints,
     cost_variables,
     cs_fatigue_variables,
     current_drive_variables,
@@ -429,8 +429,8 @@ class Scan:
             equality_constraint_table.append([
                 name,
                 sym[i],
-                f"{con2[i]} {f2py_compatible_to_string(lab[i])}",
-                f"{err[i]} {f2py_compatible_to_string(lab[i])}",
+                f"{con2[i]} {lab[i]}",
+                f"{err[i]} {lab[i]}",
                 con1[i],
             ])
             process_output.ovarre(
@@ -468,8 +468,8 @@ class Scan:
                 inequality_constraint_table.append([
                     name,
                     sym[i],
-                    f"{con2[i]} {f2py_compatible_to_string(lab[i])}",
-                    f"{err[i]} {f2py_compatible_to_string(lab[i])}",
+                    f"{con2[i]} {lab[i]}",
+                    f"{err[i]} {lab[i]}",
                 ])
                 process_output.ovarre(
                     constants.mfile,
