@@ -2853,7 +2853,7 @@ class Ifepw2Param(NamedTuple):
     p_blkt_nuclear_heat_total_mw: Any = None
     fachtmw: Any = None
     fcsht: Any = None
-    psechtmw: Any = None
+    p_plant_secondary_heat_mw: Any = None
     pinjht: Any = None
     vachtmw: Any = None
     p_tritium_plant_electric_mw: Any = None
@@ -2875,7 +2875,7 @@ class Ifepw2Param(NamedTuple):
     ifetyp: Any = None
     taufall: Any = None
     expected_fachtmw: Any = None
-    expected_psechtmw: Any = None
+    expected_p_plant_secondary_heat_mw: Any = None
     expected_p_plant_electric_gross_mw: Any = None
     expected_precircmw: Any = None
     expected_p_plant_electric_net_mw: Any = None
@@ -2892,7 +2892,7 @@ class Ifepw2Param(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1924.4887199999998,
             fachtmw=0,
             fcsht=24.322206046559071,
-            psechtmw=0,
+            p_plant_secondary_heat_mw=0,
             pinjht=58.814893617021283,
             vachtmw=0.5,
             p_tritium_plant_electric_mw=15,
@@ -2914,7 +2914,7 @@ class Ifepw2Param(NamedTuple):
             ifetyp=1,
             taufall=0,
             expected_fachtmw=24.322206046559071,
-            expected_psechtmw=120.31271036807168,
+            expected_p_plant_secondary_heat_mw=120.31271036807168,
             expected_p_plant_electric_gross_mw=1139.4999,
             expected_precircmw=141.11271036807165,
             expected_p_plant_electric_net_mw=998.38718963192832,
@@ -2944,7 +2944,11 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     )
     monkeypatch.setattr(heat_transport_variables, "fachtmw", ifepw2param.fachtmw)
     monkeypatch.setattr(heat_transport_variables, "fcsht", ifepw2param.fcsht)
-    monkeypatch.setattr(heat_transport_variables, "psechtmw", ifepw2param.psechtmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_secondary_heat_mw",
+        ifepw2param.p_plant_secondary_heat_mw,
+    )
     monkeypatch.setattr(heat_transport_variables, "pinjht", ifepw2param.pinjht)
     monkeypatch.setattr(heat_transport_variables, "vachtmw", ifepw2param.vachtmw)
     monkeypatch.setattr(
@@ -3001,8 +3005,8 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     assert heat_transport_variables.fachtmw == pytest.approx(
         ifepw2param.expected_fachtmw
     )
-    assert heat_transport_variables.psechtmw == pytest.approx(
-        ifepw2param.expected_psechtmw
+    assert heat_transport_variables.p_plant_secondary_heat_mw == pytest.approx(
+        ifepw2param.expected_p_plant_secondary_heat_mw
     )
     assert heat_transport_variables.p_plant_electric_gross_mw == pytest.approx(
         ifepw2param.expected_p_plant_electric_gross_mw
