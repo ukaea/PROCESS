@@ -2149,7 +2149,7 @@ class Costs:
             * heat_transport_variables.nphx
             * (
                 1.0e6
-                * heat_transport_variables.pthermmw
+                * heat_transport_variables.p_plant_primary_heat_mw
                 / heat_transport_variables.nphx
             )
             ** exphts
@@ -2481,7 +2481,7 @@ class Costs:
             )
         else:
             pwrrej = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_plant_primary_heat_mw
                 - heat_transport_variables.p_plant_electric_gross_mw
             )
 
@@ -2596,7 +2596,7 @@ class Costs:
                 shcss = 520.0e0
                 self.c2253 = (
                     cost_variables.ucblss
-                    * (heat_transport_variables.pthermmw * 1.0e6)
+                    * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
                     * times_variables.tdown
                     / (shcss * pulse_variables.dtstor)
                 )

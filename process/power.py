@@ -766,7 +766,7 @@ class Power:
         #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  Primary thermal power (MW)
-            heat_transport_variables.pthermmw = (
+            heat_transport_variables.p_plant_primary_heat_mw = (
                 self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
             )
@@ -776,7 +776,7 @@ class Power:
             self.iprimdiv = 0
         else:
             #  Primary thermal power (MW)
-            heat_transport_variables.pthermmw = (
+            heat_transport_variables.p_plant_primary_heat_mw = (
                 self.p_fw_blkt_heat_deposited_mw
                 + heat_transport_variables.iprimshld * self.p_shld_heat_deposited_mw
                 + self.p_div_heat_deposited_mw
@@ -786,12 +786,13 @@ class Power:
             # Divertor primary/secondary power switch: contributes to energy generation cycle
             self.iprimdiv = 1
 
-        if abs(heat_transport_variables.pthermmw) < 1.0e-4:
+        if abs(heat_transport_variables.p_plant_primary_heat_mw) < 1.0e-4:
             logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
 
         # #284 Fraction of total high-grade thermal power to divertor
         self.pdivfraction = (
-            self.p_div_heat_deposited_mw / heat_transport_variables.pthermmw
+            self.p_div_heat_deposited_mw
+            / heat_transport_variables.p_plant_primary_heat_mw
         )
         # Loss in efficiency as this primary power is collecetd at very low temperature
         self.delta_eta = 0.339 * self.pdivfraction
@@ -809,7 +810,7 @@ class Power:
 
         #  Number of primary heat exchangers
         heat_transport_variables.nphx = math.ceil(
-            heat_transport_variables.pthermmw / 1000.0e0
+            heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
 
         #  Secondary heat (some of it... rest calculated in POWER2)
@@ -953,19 +954,22 @@ class Power:
         #  Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
             #  Gross electric power
-            # p_plant_electric_gross_mw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.eta_turbine
+            # p_plant_electric_gross_mw = (heat_transport_variables.p_plant_primary_heat_mw-hthermmw) * heat_transport_variables.eta_turbine
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
                 and fwbs_variables.i_coolant_pumping == 2
             ):
                 heat_transport_variables.p_plant_electric_gross_mw = (
-                    (heat_transport_variables.pthermmw - self.pthermblkt_liq)
+                    (
+                        heat_transport_variables.p_plant_primary_heat_mw
+                        - self.pthermblkt_liq
+                    )
                     * heat_transport_variables.eta_turbine
                     + self.pthermblkt_liq * heat_transport_variables.etath_liq
                 )
             else:
                 heat_transport_variables.p_plant_electric_gross_mw = (
-                    heat_transport_variables.pthermmw
+                    heat_transport_variables.p_plant_primary_heat_mw
                     * heat_transport_variables.eta_turbine
                 )
 
@@ -1644,8 +1648,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Total High-grade thermal power (MW)",
-            "(pthermmw)",
-            heat_transport_variables.pthermmw,
+            "(p_plant_primary_heat_mw)",
+            heat_transport_variables.p_plant_primary_heat_mw,
             "OP ",
         )
 
@@ -1936,13 +1940,14 @@ class Power:
             and fwbs_variables.i_coolant_pumping == 2
         ):
             self.p_turbine_loss_mw = (
-                heat_transport_variables.pthermmw - self.pthermblkt_liq
+                heat_transport_variables.p_plant_primary_heat_mw - self.pthermblkt_liq
             ) * (1 - heat_transport_variables.eta_turbine) + self.pthermblkt_liq * (
                 1 - heat_transport_variables.etath_liq
             )
         else:
-            self.p_turbine_loss_mw = heat_transport_variables.pthermmw * (
-                1 - heat_transport_variables.eta_turbine
+            self.p_turbine_loss_mw = (
+                heat_transport_variables.p_plant_primary_heat_mw
+                * (1 - heat_transport_variables.eta_turbine)
             )
 
         po.ocmmnt(self.outfile, "Electrical Power Balance :")
@@ -3150,7 +3155,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_plant_secondary_heat_mw = 0.0
     heat_transport_variables.pseclossmw = 0.0
     heat_transport_variables.psecshld = 0.0
-    heat_transport_variables.pthermmw = 0.0
+    heat_transport_variables.p_plant_primary_heat_mw = 0.0
     heat_transport_variables.pwpm2 = 150.0
     heat_transport_variables.tfacpd = 0.0
     heat_transport_variables.tlvpmw = 0.0

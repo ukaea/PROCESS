@@ -1921,8 +1921,8 @@ class IFE:
 
         # Useful (high-grade) thermal power (MW)
 
-        heat_transport_variables.pthermmw = heat_transport_variables.priheat * (
-            1.0 - fwbs_variables.fhole
+        heat_transport_variables.p_plant_primary_heat_mw = (
+            heat_transport_variables.priheat * (1.0 - fwbs_variables.fhole)
         )
 
         # Assume 0.24 of thermal power is intercepted by the first wall
@@ -1933,16 +1933,16 @@ class IFE:
 
         if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
             heat_transport_variables.p_fw_div_heat_deposited_mw = (
-                0.24 * heat_transport_variables.pthermmw
+                0.24 * heat_transport_variables.p_plant_primary_heat_mw
             )
             fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_plant_primary_heat_mw
                 - heat_transport_variables.p_fw_div_heat_deposited_mw
             )
         else:
             heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
             fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_plant_primary_heat_mw
             )
 
         fwbs_variables.p_shld_nuclear_heat_mw = 0.0
@@ -1950,13 +1950,14 @@ class IFE:
         # Lost fusion power (MW)
 
         fwbs_variables.pnucloss = (
-            heat_transport_variables.priheat - heat_transport_variables.pthermmw
+            heat_transport_variables.priheat
+            - heat_transport_variables.p_plant_primary_heat_mw
         )  # = priheat*fhole
 
         # Number of primary heat exchangers
 
         heat_transport_variables.nphx = np.ceil(
-            heat_transport_variables.pthermmw / 1000.0
+            heat_transport_variables.p_plant_primary_heat_mw / 1000.0
         )
 
         # Secondary heat (some of it... rest calculated in IFEPW2)
@@ -2015,7 +2016,8 @@ class IFE:
         if cost_variables.ireactor == 1:
             # Gross electric power
             heat_transport_variables.p_plant_electric_gross_mw = (
-                heat_transport_variables.pthermmw * heat_transport_variables.eta_turbine
+                heat_transport_variables.p_plant_primary_heat_mw
+                * heat_transport_variables.eta_turbine
             )
 
             # Balance of plant recirculating power fraction
@@ -2088,8 +2090,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Primary heat (MW)",
-                "(pthermmw)",
-                heat_transport_variables.pthermmw,
+                "(p_plant_primary_heat_mw)",
+                heat_transport_variables.p_plant_primary_heat_mw,
             )
             process_output.ovarre(
                 self.outfile,

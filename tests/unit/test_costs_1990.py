@@ -106,7 +106,7 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(htv, "p_fw_div_heat_deposited_mw", 0.0)
     monkeypatch.setattr(fv, "p_blkt_nuclear_heat_total_mw", 1558.0)
     monkeypatch.setattr(fv, "p_shld_nuclear_heat_mw", 1.478)
-    monkeypatch.setattr(htv, "pthermmw", 2647.0)
+    monkeypatch.setattr(htv, "p_plant_primary_heat_mw", 2647.0)
     monkeypatch.setattr(htv, "nphx", 3)
     monkeypatch.setattr(costs, "c2261", 0)
 
@@ -604,7 +604,7 @@ def acc26_param(**kwargs):
         "p_fusion_total_mw": 2000.0,
         "p_hcd_electric_total_mw": 250.0,
         "tfcmw": 50.0,
-        "pthermmw": htv.pthermmw,
+        "p_plant_primary_heat_mw": htv.p_plant_primary_heat_mw,
         "p_plant_electric_gross_mw": htv.p_plant_electric_gross_mw,
         "expected": approx(87.9, abs=0.01),
     }
@@ -629,7 +629,7 @@ def acc26_params():
             p_fusion_total_mw=fortran.physics_variables.p_fusion_total_mw,
             p_hcd_electric_total_mw=htv.p_hcd_electric_total_mw,
             tfcmw=fortran.tfcoil_variables.tfcmw,
-            pthermmw=3000.0,
+            p_plant_primary_heat_mw=3000.0,
             p_plant_electric_gross_mw=700.0,
         ),
     ]
@@ -659,7 +659,9 @@ def acc26_fix(request, monkeypatch, costs):
         htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
     )
     monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
-    monkeypatch.setattr(htv, "pthermmw", param["pthermmw"])
+    monkeypatch.setattr(
+        htv, "p_plant_primary_heat_mw", param["p_plant_primary_heat_mw"]
+    )
     monkeypatch.setattr(
         htv, "p_plant_electric_gross_mw", param["p_plant_electric_gross_mw"]
     )
@@ -3667,7 +3669,7 @@ class Acc2253Param(NamedTuple):
 
     fkind: Any = None
 
-    pthermmw: Any = None
+    p_plant_primary_heat_mw: Any = None
 
     p_plant_electric_net_mw: Any = None
 
@@ -3694,7 +3696,7 @@ class Acc2253Param(NamedTuple):
         Acc2253Param(
             ucblss=90,
             fkind=1,
-            pthermmw=2620.2218111502593,
+            p_plant_primary_heat_mw=2620.2218111502593,
             p_plant_electric_net_mw=493.01760776192009,
             i_pulsed_plant=1,
             dtstor=300,
@@ -3708,7 +3710,7 @@ class Acc2253Param(NamedTuple):
         Acc2253Param(
             ucblss=90,
             fkind=1,
-            pthermmw=2619.4223856129224,
+            p_plant_primary_heat_mw=2619.4223856129224,
             p_plant_electric_net_mw=422.4198205312706,
             i_pulsed_plant=1,
             dtstor=300,
@@ -3738,7 +3740,11 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2253param.fkind)
 
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2253param.pthermmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_primary_heat_mw",
+        acc2253param.p_plant_primary_heat_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -3841,7 +3847,7 @@ class Acc2261Param(NamedTuple):
 
     p_blkt_nuclear_heat_total_mw: Any = None
 
-    pthermmw: Any = None
+    p_plant_primary_heat_mw: Any = None
 
     p_fw_div_heat_deposited_mw: Any = None
 
@@ -3877,7 +3883,7 @@ class Acc2261Param(NamedTuple):
             i_blkt_coolant_type=1,
             p_shld_nuclear_heat_mw=1.3609360176065353,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
-            pthermmw=2620.2218111502593,
+            p_plant_primary_heat_mw=2620.2218111502593,
             p_fw_div_heat_deposited_mw=0,
             nphx=3,
             c226=0,
@@ -3899,7 +3905,7 @@ class Acc2261Param(NamedTuple):
             i_blkt_coolant_type=1,
             p_shld_nuclear_heat_mw=1.4036212304705389,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
-            pthermmw=2619.4223856129224,
+            p_plant_primary_heat_mw=2619.4223856129224,
             p_fw_div_heat_deposited_mw=0,
             nphx=3,
             c226=228.30921518184891,
@@ -3946,7 +3952,11 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
         acc2261param.p_blkt_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2261param.pthermmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_primary_heat_mw",
+        acc2261param.p_plant_primary_heat_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -5173,7 +5183,7 @@ class Acc26Param(NamedTuple):
 
     lsa: Any = None
 
-    pthermmw: Any = None
+    p_plant_primary_heat_mw: Any = None
 
     p_hcd_electric_total_mw: Any = None
 
@@ -5195,7 +5205,7 @@ class Acc26Param(NamedTuple):
             ireactor=1,
             uchrs=87900000,
             lsa=2,
-            pthermmw=2620.2218111502593,
+            p_plant_primary_heat_mw=2620.2218111502593,
             p_hcd_electric_total_mw=129.94611930107126,
             p_plant_electric_gross_mw=982.58317918134742,
             p_fusion_total_mw=1985.785106643267,
@@ -5207,7 +5217,7 @@ class Acc26Param(NamedTuple):
             ireactor=1,
             uchrs=87900000,
             lsa=2,
-            pthermmw=2619.4223856129224,
+            p_plant_primary_heat_mw=2619.4223856129224,
             p_hcd_electric_total_mw=129.94611930107126,
             p_plant_electric_gross_mw=982.28339460484608,
             p_fusion_total_mw=1985.1653095257811,
@@ -5236,7 +5246,11 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc26param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", acc26param.pthermmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_primary_heat_mw",
+        acc26param.p_plant_primary_heat_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -5371,7 +5385,7 @@ class Acc2253Param(NamedTuple):
 
     fkind: Any = None
 
-    pthermmw: Any = None
+    p_plant_primary_heat_mw: Any = None
 
     p_plant_electric_net_mw: Any = None
 
@@ -5398,7 +5412,7 @@ class Acc2253Param(NamedTuple):
         Acc2253Param(
             ucblss=90,
             fkind=1,
-            pthermmw=2620.2218111502593,
+            p_plant_primary_heat_mw=2620.2218111502593,
             p_plant_electric_net_mw=493.01760776192009,
             i_pulsed_plant=1,
             dtstor=300,
@@ -5412,7 +5426,7 @@ class Acc2253Param(NamedTuple):
         Acc2253Param(
             ucblss=90,
             fkind=1,
-            pthermmw=2619.4223856129224,
+            p_plant_primary_heat_mw=2619.4223856129224,
             p_plant_electric_net_mw=422.4198205312706,
             i_pulsed_plant=1,
             dtstor=300,
@@ -5442,7 +5456,11 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2253param.fkind)
 
-    monkeypatch.setattr(heat_transport_variables, "pthermmw", acc2253param.pthermmw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_primary_heat_mw",
+        acc2253param.p_plant_primary_heat_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
