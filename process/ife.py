@@ -2196,13 +2196,15 @@ class IFE:
             + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_hcd_electric_total_mw
             + basemw
-            + (buildings_variables.efloor * pmwpm2)
+            + (buildings_variables.a_plant_floor_effective * pmwpm2)
             + ife_variables.lipmw
         )
 
         # Total baseline power to facility loads, MW
 
-        heat_transport_variables.fcsht = basemw + (buildings_variables.efloor * pmwpm2)
+        heat_transport_variables.fcsht = basemw + (
+            buildings_variables.a_plant_floor_effective * pmwpm2
+        )
 
         # Estimate of the total low voltage power, MW
 
@@ -2226,8 +2228,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Total floor space (m2)",
-            "(efloor)",
-            buildings_variables.efloor,
+            "(a_plant_floor_effective)",
+            buildings_variables.a_plant_floor_effective,
         )
         process_output.ovarre(
             self.outfile, "Power/floor area (MW/m2)", "(pmwpm2)", pmwpm2
@@ -2407,7 +2409,7 @@ class IFE:
 
         # Calculate effective floor area for ac power module
 
-        buildings_variables.efloor = (
+        buildings_variables.a_plant_floor_effective = (
             rbv
             + rmbv
             + wsv
@@ -2452,8 +2454,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Effective floor area (m2)",
-            "(efloor)",
-            buildings_variables.efloor,
+            "(a_plant_floor_effective)",
+            buildings_variables.a_plant_floor_effective,
         )
         process_output.ovarre(
             self.outfile, "Reactor building volume (m3)", "(rbv)", rbv

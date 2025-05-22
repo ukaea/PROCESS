@@ -2594,7 +2594,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
 
 class IfeacpParam(NamedTuple):
-    efloor: Any = None
+    a_plant_floor_effective: Any = None
     p_plant_electric_base: Any = None
     pwpm2: Any = None
     pacpmw: Any = None
@@ -2619,7 +2619,7 @@ class IfeacpParam(NamedTuple):
     "ifeacpparam",
     (
         IfeacpParam(
-            efloor=128814.70697706047,
+            a_plant_floor_effective=128814.70697706047,
             p_plant_electric_base=5000000,
             pwpm2=150,
             pacpmw=0,
@@ -2653,7 +2653,11 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(buildings_variables, "efloor", ifeacpparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        ifeacpparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(
         heat_transport_variables,
         "p_plant_electric_base",
@@ -2704,7 +2708,7 @@ class IfebdgParam(NamedTuple):
     wgt2: Any = None
     stcl: Any = None
     pibv: Any = None
-    efloor: Any = None
+    a_plant_floor_effective: Any = None
     triv: Any = None
     conv: Any = None
     admv: Any = None
@@ -2727,7 +2731,7 @@ class IfebdgParam(NamedTuple):
     zu6: Any = None
     r6: Any = None
     expected_wrbi: Any = None
-    expected_efloor: Any = None
+    expected_a_plant_floor_effective: Any = None
     expected_admvol: Any = None
     expected_convol: Any = None
     expected_elevol: Any = None
@@ -2753,7 +2757,7 @@ class IfebdgParam(NamedTuple):
             wgt2=100000,
             stcl=3,
             pibv=40000,
-            efloor=0,
+            a_plant_floor_effective=0,
             triv=40000,
             conv=60000,
             admv=100000,
@@ -2776,7 +2780,7 @@ class IfebdgParam(NamedTuple):
             zu6=5.3600000000000003,
             r6=6.5000000000000009,
             expected_wrbi=10,
-            expected_efloor=128814.70697706047,
+            expected_a_plant_floor_effective=128814.70697706047,
             expected_admvol=100000,
             expected_convol=60000,
             expected_elevol=40000,
@@ -2811,7 +2815,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "wgt2", ifebdgparam.wgt2)
     monkeypatch.setattr(buildings_variables, "stcl", ifebdgparam.stcl)
     monkeypatch.setattr(buildings_variables, "pibv", ifebdgparam.pibv)
-    monkeypatch.setattr(buildings_variables, "efloor", ifebdgparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        ifebdgparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(buildings_variables, "triv", ifebdgparam.triv)
     monkeypatch.setattr(buildings_variables, "conv", ifebdgparam.conv)
     monkeypatch.setattr(buildings_variables, "admv", ifebdgparam.admv)
@@ -2837,7 +2845,9 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     ife.ifebdg()
 
     assert buildings_variables.wrbi == pytest.approx(ifebdgparam.expected_wrbi)
-    assert buildings_variables.efloor == pytest.approx(ifebdgparam.expected_efloor)
+    assert buildings_variables.a_plant_floor_effective == pytest.approx(
+        ifebdgparam.expected_a_plant_floor_effective
+    )
     assert buildings_variables.admvol == pytest.approx(ifebdgparam.expected_admvol)
     assert buildings_variables.convol == pytest.approx(ifebdgparam.expected_convol)
     assert buildings_variables.elevol == pytest.approx(ifebdgparam.expected_elevol)

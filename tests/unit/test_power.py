@@ -1896,7 +1896,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-    efloor: Any = None
+    a_plant_floor_effective: Any = None
 
     p_plant_electric_base: Any = None
 
@@ -1939,7 +1939,7 @@ class AcpowParam(NamedTuple):
     "acpowparam",
     (
         AcpowParam(
-            efloor=379218.8908858358,
+            a_plant_floor_effective=379218.8908858358,
             p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
@@ -1960,7 +1960,7 @@ class AcpowParam(NamedTuple):
             expected_pacpmw=1164.244494532182,
         ),
         AcpowParam(
-            efloor=381580.9594357388,
+            a_plant_floor_effective=381580.9594357388,
             p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
@@ -1995,7 +1995,11 @@ def test_acpow(acpowparam, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "efloor", acpowparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        acpowparam.a_plant_floor_effective,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
