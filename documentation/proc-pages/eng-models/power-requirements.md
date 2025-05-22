@@ -13,7 +13,7 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ---
 
-### Main power conversion | `power1()`
+### Main power conversion | `component_thermal_powers()`
 
 1: Calculate the electric wall plug power for the different coolant systems by dividing by the pump wall plug efficiencies
 
@@ -40,6 +40,12 @@ $$
 
 $$
 \underbrace{P_{\text{pump loss,total}}}_{\texttt{p_coolant_pump_loss_total_mw}} = P_{\text{pump total, electric}} - P_{\text{pump,total}}
+$$
+
+5: The electrical heat loss in the heating and current drive power supplies is calculated:
+
+$$
+\overbrace{P_{\text{HCD, electric-loss}}}^{\texttt{pinjht}} = P_{\text{HCD, electric}} + P_{\text{HCD, injected}}
 $$
 
 5: If their is a secondary breeder/coolant loop in the blanket (`i_blkt_dual_coolant == 2`) then the heat deposited in the secondary coolant is the fraction of the total blanket nuclear heat and the mechanical pump power.
@@ -78,6 +84,26 @@ $$
 
 $$
 \overbrace{P_{\text{div, heat}}}^{\texttt{p_div_heat_deposited_mw}} = \underbrace{P_{\text{plasma,sep}}}_{\texttt{p_plasma_separatrix_mw}} + P_{\text{div, nuclear}} + P_{\text{div,}\gamma} + P_{\text{div, pump}}
+$$
+
+10: The thermal to electric conversion efficiency for the turbine is calculated with the [`plant_thermal_efficiency()`](#plant-thermal-efficiency--plant_thermal_efficiency)
+
+The same is done for the liquid breeder but with plant_thermal_efficiency_2
+
+11: The primary thermal power used to generate electricity is calculated:
+
+$$
+\overbrace{P_{\text{plant,primary-heat}}}^{\texttt{p_plant_primary_heat_mw}} = P_{\text{FW-Blkt, heat}} + \underbrace{P_{\text{Shield, heat}}}_{\text{If } \texttt{i_shld_primary_heat = 1}} + P_{\text{div, heat}}
+$$
+
+12: The secondary thermal powers for the shield and H&CD are calculated:
+
+$$
+\overbrace{P_{\text{Shield,secondary-heat}}}^{\texttt{p_shld_secondary_heat_mw}} = \underbrace{P_{\text{Shield, heat}}}_{\texttt{i_shld_primary_heat = 0}}
+$$
+
+$$
+\overbrace{P_{\text{HCD,secondary-heat}}}^{\texttt{p_hcd_secondary_heat_mw}} = P_{\text{HCD, nuclear}} + P_{\text{HCD,}\gamma}
 $$
 
 ---
