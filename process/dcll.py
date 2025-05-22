@@ -288,44 +288,55 @@ class DCLL:
 
         # For i_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of htpmw_blkt, htpmw_div, htpmw_fw, htpmw_shld set in input file
+        # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
 
         if fwbs_variables.i_coolant_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
-            heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                fwbs_variables.p_fw_nuclear_heat_total_mw
-                + fwbs_variables.psurffwi
-                + fwbs_variables.psurffwo
+            heat_transport_variables.p_fw_coolant_pump_mw = (
+                heat_transport_variables.fpumpfw
+                * (
+                    fwbs_variables.p_fw_nuclear_heat_total_mw
+                    + fwbs_variables.psurffwi
+                    + fwbs_variables.psurffwo
+                )
             )
-            primary_pumping_variables.htpmw_blkt = (
+            primary_pumping_variables.p_blkt_coolant_pump_mw = (
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
-            # For CCFE HCPB: htpmw_shld = fpumpshld * ( pnucshld + pnuc_cp_sh )
+            # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( pnucshld + pnuc_cp_sh )
             # Use same as KIT HCLL for now "pnucshld is not available and is very small
             # compared to other powers so set to zero."
-            heat_transport_variables.htpmw_shld = (
+            heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld * 0.0
             )
-            heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.p_plasma_separatrix_mw
-                + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.p_div_rad_total_mw
+            heat_transport_variables.p_div_coolant_pump_mw = (
+                heat_transport_variables.fpumpdiv
+                * (
+                    physics_variables.p_plasma_separatrix_mw
+                    + fwbs_variables.p_div_nuclear_heat_total_mw
+                    + fwbs_variables.p_div_rad_total_mw
+                )
             )
 
         elif fwbs_variables.i_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
             self.blanket_library.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
-            heat_transport_variables.htpmw_div = heat_transport_variables.fpumpdiv * (
-                physics_variables.p_plasma_separatrix_mw
-                + fwbs_variables.p_div_nuclear_heat_total_mw
-                + fwbs_variables.p_div_rad_total_mw
+            heat_transport_variables.p_div_coolant_pump_mw = (
+                heat_transport_variables.fpumpdiv
+                * (
+                    physics_variables.p_plasma_separatrix_mw
+                    + fwbs_variables.p_div_nuclear_heat_total_mw
+                    + fwbs_variables.p_div_rad_total_mw
+                )
             )
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
-            heat_transport_variables.htpmw_shld = heat_transport_variables.fpumpshld * 0
+            heat_transport_variables.p_shld_coolant_pump_mw = (
+                heat_transport_variables.fpumpshld * 0.0
+            )
 
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
@@ -336,23 +347,23 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for first wall (MW)",
-                    "(htpmw_fw)",
-                    heat_transport_variables.htpmw_fw,
+                    "(p_fw_coolant_pump_mw)",
+                    heat_transport_variables.p_fw_coolant_pump_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (MW)",
-                    "(htpmw_blkt)",
-                    heat_transport_variables.htpmw_blkt,
+                    "(p_blkt_coolant_pump_mw)",
+                    heat_transport_variables.p_blkt_coolant_pump_mw,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-                    "(htpmw_fw_blkt)",
-                    primary_pumping_variables.htpmw_fw_blkt,
+                    "(p_fw_blkt_coolant_pump_mw)",
+                    primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
                     "OP ",
                 )
 
@@ -360,23 +371,23 @@ class DCLL:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for liquid metal breeder (MW)",
-                    "(htpmw_blkt_liq)",
-                    heat_transport_variables.htpmw_blkt_liq,
+                    "(p_blkt_breeder_pump_mw)",
+                    heat_transport_variables.p_blkt_breeder_pump_mw,
                     "OP ",
                 )
 
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for divertor (MW)",
-                "(htpmw_div)",
-                heat_transport_variables.htpmw_div,
+                "(p_div_coolant_pump_mw)",
+                heat_transport_variables.p_div_coolant_pump_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for shield and vacuum vessel (MW)",
-                "(htpmw_shld)",
-                heat_transport_variables.htpmw_shld,
+                "(p_shld_coolant_pump_mw)",
+                heat_transport_variables.p_shld_coolant_pump_mw,
                 "OP ",
             )
 

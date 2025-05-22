@@ -803,20 +803,20 @@ INPUT_VARIABLES = {
     ),
     "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
-    "htpmw_blkt": InputVariable(
+    "p_blkt_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "htpmw_div": InputVariable(
+    "p_div_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "htpmw_fw": InputVariable(
+    "p_fw_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "htpmw_ife": InputVariable(fortran.ife_variables, float, range=(0.0, 1000.0)),
     "htpmw_min": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 500.0)
     ),
-    "htpmw_shld": InputVariable(
+    "p_shld_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "hw_storage_h": InputVariable(

@@ -76,25 +76,25 @@ module heat_transport_variables
     real(dp) :: helpow_cryal
     !! Heat removal at cryogenic temperature tcoolin (W)
 
-    real(dp) :: htpmw
+    real(dp) :: p_coolant_pump_elec_total_mw
     !! heat transport system electrical pump power (MW)
 
-    real(dp) :: htpmw_blkt
+    real(dp) :: p_blkt_coolant_pump_mw
     !! blanket primary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_blkt_liq
+    real(dp) :: p_blkt_breeder_pump_mw
     !! blanket secondary coolant mechanical pumping power (MW)
 
     real(dp) :: htpmw_blkt_tot
     !! blanket primary + secondary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_div
+    real(dp) :: p_div_coolant_pump_mw
     !! divertor coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_fw
+    real(dp) :: p_fw_coolant_pump_mw
     !! first wall coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_shld
+    real(dp) :: p_shld_coolant_pump_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
     real(dp) :: htpsecmw
@@ -124,7 +124,7 @@ module heat_transport_variables
     real(dp) :: pfwdiv
     !! heat removal from first wall/divertor (MW)
 
-    real(dp) :: pgrossmw
+    real(dp) :: p_plant_electric_gross_mw
     !! gross electric power (MW)
 
     real(dp) :: pinjht
@@ -142,7 +142,7 @@ module heat_transport_variables
     real(dp) :: p_hcd_primary_electric_mw
     !! Primary HCD system injector wall plug power (MW)
 
-    real(dp) :: pnetelmw
+    real(dp) :: p_plant_electric_net_mw
     !! net electric power (MW)
 
     real(dp) :: precircmw
@@ -181,7 +181,7 @@ module heat_transport_variables
     real(dp) :: trithtmw
     !! power required for tritium processing (MW)
 
-    real(dp) :: tturb
+    real(dp) :: temp_turbine_coolant_in
     !! coolant temperature at turbine inlet (K) (`i_thermal_electric_conversion = 3,4`)
 
     real(dp) :: vachtmw

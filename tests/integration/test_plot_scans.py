@@ -14,7 +14,14 @@ def test_plot_scans(temp_data, scan_mfile_name):
     mfile = temp_data / scan_mfile_name
 
     plot_scans.main(
-        args=["-f", str(mfile), "-yv", "pnetelmw", "--outputdir", str(temp_data)]
+        args=[
+            "-f",
+            str(mfile),
+            "-yv",
+            "p_plant_electric_net_mw",
+            "--outputdir",
+            str(temp_data),
+        ]
     )
 
     assert len(list(temp_data.glob("*.pdf")))
@@ -35,7 +42,7 @@ def test_plot_scans_stack(temp_data, scan_mfile_name):
             "-f",
             str(mfile),
             "-yv",
-            "pnetelmw bt rmajor",
+            "p_plant_electric_net_mw bt rmajor",
             "-stc",
             "--outputdir",
             str(temp_data),

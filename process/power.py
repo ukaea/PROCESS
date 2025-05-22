@@ -38,12 +38,22 @@ class Power:
         self.qac = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qcl = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.qss = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_shld = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_div = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmw_mech = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_shld_coolant_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_div_coolant_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_coolant_pump_total_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermfw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_fw_blkt = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.htpmwe_blkt_liq = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_fw_blkt_coolant_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
+        self.p_blkt_breeder_pump_elec_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.pthermdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermfw = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.pthermblkt = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -406,20 +416,6 @@ class Power:
 
         # write(self.outfile,50)(times_variables.tim(time),time=1,6)
 
-    # 50    format(t45,'time (sec)'//t15,6f11.2)
-    #     # write(self.outfile,55)(times_variables.timelabel(time),time=1,6)
-    # 55    format(' Time point', t21,6a11)
-
-    #     # write(self.outfile,60) (poloidalenergy(time)/1.0e6,time=1,6)
-    # 60    format(' Energy (MJ)',t17,6(1pe11.3))
-    #     po.oblnkl(self.outfile)
-
-    #     write(outfile,65)(times_variables.intervallabel(time),time=1,5)
-    # 65    format(' Interval', t26,6a11)
-    #     write(outfile,70) (pf_power_variables.poloidalpower(time)/1.0e6,time=1,5)
-    # 70    format(' dE/dt (MW)',t22,5(1pe11.3))
-    #     po.oblnkl(outfile)
-
     def acpow(self, output: bool):
         """
         AC power requirements
@@ -464,7 +460,7 @@ class Power:
             + ptfmw
             + crymw
             + heat_transport_variables.vachtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.trithtmw
             + pheatingmw
         )
@@ -487,7 +483,7 @@ class Power:
         heat_transport_variables.tlvpmw = (
             heat_transport_variables.fcsht
             + heat_transport_variables.trithtmw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + 0.5e0 * (crymw + ppfmw)
         )
@@ -509,8 +505,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Primary coolant pumps (MW)",
-            "(htpmw..)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw..)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
 
@@ -570,24 +566,29 @@ class Power:
             fwbs_variables.i_coolant_pumping != 2
             and fwbs_variables.i_coolant_pumping != 3
         ):
-            primary_pumping_variables.htpmw_fw_blkt = (
-                heat_transport_variables.htpmw_fw + heat_transport_variables.htpmw_blkt
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
+                heat_transport_variables.p_fw_coolant_pump_mw
+                + heat_transport_variables.p_blkt_coolant_pump_mw
             )
 
         #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
         #  100% efficient so the electric power to run them is greater than the power deposited
         #  in the coolant.  The difference should be lost as secondary heat.
-        self.htpmwe_fw_blkt = (
-            primary_pumping_variables.htpmw_fw_blkt / fwbs_variables.etahtp
+        self.p_fw_blkt_coolant_pump_elec_mw = (
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
         )
-        self.htpmwe_shld = heat_transport_variables.htpmw_shld / fwbs_variables.etahtp
-        self.htpmwe_div = heat_transport_variables.htpmw_div / fwbs_variables.etahtp
+        self.p_shld_coolant_pump_elec_mw = (
+            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.etahtp
+        )
+        self.p_div_coolant_pump_elec_mw = (
+            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.etahtp
+        )
         if (
             fwbs_variables.i_blkt_dual_coolant > 0
             and fwbs_variables.i_coolant_pumping == 2
         ):
-            self.htpmwe_blkt_liq = (
-                heat_transport_variables.htpmw_blkt_liq / fwbs_variables.etahtp
+            self.p_blkt_breeder_pump_elec_mw = (
+                heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
             )
 
         if (
@@ -595,41 +596,44 @@ class Power:
             and fwbs_variables.i_coolant_pumping == 2
         ):
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
-                primary_pumping_variables.htpmw_fw_blkt
-                + heat_transport_variables.htpmw_blkt_liq
-                + heat_transport_variables.htpmw_shld
-                + heat_transport_variables.htpmw_div
+            self.p_coolant_pump_total_mw = (
+                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                + heat_transport_variables.p_blkt_breeder_pump_mw
+                + heat_transport_variables.p_shld_coolant_pump_mw
+                + heat_transport_variables.p_div_coolant_pump_mw
             )
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
-                self.htpmwe_fw_blkt
-                + self.htpmwe_blkt_liq
-                + self.htpmwe_shld
-                + self.htpmwe_div,
+                self.p_fw_blkt_coolant_pump_elec_mw
+                + self.p_blkt_breeder_pump_elec_mw
+                + self.p_shld_coolant_pump_elec_mw
+                + self.p_div_coolant_pump_elec_mw,
             )
         else:
             # Total mechanical pump power (deposited in coolant)
-            self.htpmw_mech = (
-                primary_pumping_variables.htpmw_fw_blkt
-                + heat_transport_variables.htpmw_shld
-                + heat_transport_variables.htpmw_div
+            self.p_coolant_pump_total_mw = (
+                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                + heat_transport_variables.p_shld_coolant_pump_mw
+                + heat_transport_variables.p_div_coolant_pump_mw
             )
 
             # Minimum total electrical power for primary coolant pumps  (MW) Issue #303
             # Recommended to leave the minimum value at zero.
-            # Note that htpmw is an ELECTRICAL power
-            heat_transport_variables.htpmw = max(
+            # Note that p_coolant_pump_elec_total_mw is an ELECTRICAL power
+            heat_transport_variables.p_coolant_pump_elec_total_mw = max(
                 heat_transport_variables.htpmw_min,
-                self.htpmwe_fw_blkt + self.htpmwe_shld + self.htpmwe_div,
+                self.p_fw_blkt_coolant_pump_elec_mw
+                + self.p_shld_coolant_pump_elec_mw
+                + self.p_div_coolant_pump_elec_mw,
             )
 
         #  Heat lost through pump power inefficiencies (MW)
         heat_transport_variables.htpsecmw = (
-            heat_transport_variables.htpmw - self.htpmw_mech
+            heat_transport_variables.p_coolant_pump_elec_total_mw
+            - self.p_coolant_pump_total_mw
         )
 
         # Calculate total deposited power (MW), n.b. energy multiplication in p_blkt_nuclear_heat_total_mw already
@@ -640,9 +644,9 @@ class Power:
                 self.pthermblkt_liq = (
                     fwbs_variables.p_blkt_nuclear_heat_total_mw
                     * fwbs_variables.f_nuc_pow_bz_liq
-                ) + heat_transport_variables.htpmw_blkt_liq
+                ) + heat_transport_variables.p_blkt_breeder_pump_mw
             elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.pthermblkt_liq = heat_transport_variables.htpmw_blkt_liq
+                self.pthermblkt_liq = heat_transport_variables.p_blkt_breeder_pump_mw
 
             # First wall and blanket coolant combined
             if fwbs_variables.i_blkt_dual_coolant == 2:
@@ -654,7 +658,7 @@ class Power:
                         fwbs_variables.p_blkt_nuclear_heat_total_mw
                         * (1 - fwbs_variables.f_nuc_pow_bz_liq)
                     )
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                     + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
@@ -665,7 +669,7 @@ class Power:
                     + fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                     + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
@@ -675,7 +679,7 @@ class Power:
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.p_fw_rad_total_mw
                     + fwbs_variables.p_blkt_nuclear_heat_total_mw
-                    + primary_pumping_variables.htpmw_fw_blkt
+                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                     + current_drive_variables.p_beam_orbit_loss_mw
                     + physics_variables.p_fw_alpha_mw
                     + current_drive_variables.p_beam_shine_through_mw
@@ -687,7 +691,7 @@ class Power:
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
-                + primary_pumping_variables.htpmw_fw_blkt
+                + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
@@ -698,7 +702,7 @@ class Power:
             self.pthermfw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
-                + heat_transport_variables.htpmw_fw
+                + heat_transport_variables.p_fw_coolant_pump_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
@@ -706,7 +710,7 @@ class Power:
             #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
             self.pthermblkt = (
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
-                + heat_transport_variables.htpmw_blkt
+                + heat_transport_variables.p_blkt_coolant_pump_mw
             )
             self.pthermfw_blkt = self.pthermfw + self.pthermblkt
 
@@ -714,7 +718,7 @@ class Power:
         self.pthermshld = (
             fwbs_variables.pnuc_cp_sh
             + fwbs_variables.pnucshld
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shld_coolant_pump_mw
         )
 
         #  Total thermal power deposited in divertor coolant (MW)
@@ -726,7 +730,7 @@ class Power:
                 fwbs_variables.p_div_nuclear_heat_total_mw
                 + fwbs_variables.p_div_rad_total_mw
             )
-            + heat_transport_variables.htpmw_div
+            + heat_transport_variables.p_div_coolant_pump_mw
         )
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
@@ -834,7 +838,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
             heat_transport_variables.crypmw = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.temp_tf_cryo)
+                * (constants.temp_room - tfcoil_variables.temp_tf_cryo)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
                 * heat_transport_variables.helpow
             )
@@ -856,7 +860,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (293.0e0 - tfcoil_variables.tcoolin)
+                * (constants.temp_room - tfcoil_variables.tcoolin)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
                 * heat_transport_variables.helpow_cryal
             )
@@ -928,18 +932,18 @@ class Power:
         #  Calculate powers relevant to a power-producing plant
         if cost_variables.ireactor == 1:
             #  Gross electric power
-            # pgrossmw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
+            # p_plant_electric_gross_mw = (heat_transport_variables.pthermmw-hthermmw) * heat_transport_variables.etath
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
                 and fwbs_variables.i_coolant_pumping == 2
             ):
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_plant_electric_gross_mw = (
                     (heat_transport_variables.pthermmw - self.pthermblkt_liq)
                     * heat_transport_variables.etath
                     + self.pthermblkt_liq * heat_transport_variables.etath_liq
                 )
             else:
-                heat_transport_variables.pgrossmw = (
+                heat_transport_variables.p_plant_electric_gross_mw = (
                     heat_transport_variables.pthermmw * heat_transport_variables.etath
                 )
 
@@ -947,18 +951,20 @@ class Power:
             heat_transport_variables.precircmw = (
                 self.pcoresystems
                 + heat_transport_variables.p_hcd_electric_total_mw
-                + heat_transport_variables.htpmw
+                + heat_transport_variables.p_coolant_pump_elec_total_mw
             )
 
             #  Net electric power
-            heat_transport_variables.pnetelmw = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.precircmw
+            heat_transport_variables.p_plant_electric_net_mw = (
+                heat_transport_variables.p_plant_electric_gross_mw
+                - heat_transport_variables.precircmw
             )
 
             #  Recirculating power fraction
             cirpowfr = (
-                heat_transport_variables.pgrossmw - heat_transport_variables.pnetelmw
-            ) / heat_transport_variables.pgrossmw
+                heat_transport_variables.p_plant_electric_gross_mw
+                - heat_transport_variables.p_plant_electric_net_mw
+            ) / heat_transport_variables.p_plant_electric_gross_mw
 
         if output == 0:
             return
@@ -1032,7 +1038,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
-            / (293.0e0 - tfcoil_variables.temp_tf_cryo),
+            / (constants.temp_room - tfcoil_variables.temp_tf_cryo),
             "OP ",
         )
         po.ovarre(
@@ -1040,7 +1046,7 @@ class Power:
             "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
             "",
             (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (293.0e0 - tfcoil_variables.tcoolin),
+            / (constants.temp_room - tfcoil_variables.tcoolin),
             "OP ",
         )
         po.ovarre(
@@ -1052,7 +1058,7 @@ class Power:
         )
 
         po.oheadr(self.outfile, "Plant Power / Heat Transport Balance")
-        if heat_transport_variables.pnetelmw < 0:
+        if heat_transport_variables.p_plant_electric_net_mw < 0:
             po.ocmmnt(
                 self.outfile, "WARNING: Calculated net electric power is negative"
             )
@@ -1141,22 +1147,22 @@ class Power:
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for FW cooling loop including heat exchanger (MW)",
-            "(htpmw_fw)",
-            heat_transport_variables.htpmw_fw,
+            "(p_fw_coolant_pump_mw)",
+            heat_transport_variables.p_fw_coolant_pump_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for blanket cooling loop including heat exchanger (MW)",
-            "(htpmw_blkt)",
-            heat_transport_variables.htpmw_blkt,
+            "(p_blkt_coolant_pump_mw)",
+            heat_transport_variables.p_blkt_coolant_pump_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-            "(htpmw_fw_blkt)",
-            primary_pumping_variables.htpmw_fw_blkt,
+            "(p_fw_blkt_coolant_pump_mw)",
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
             "OP ",
         )
 
@@ -1164,59 +1170,59 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for FW (MW)",
-                "(htpmw_fw)",
-                heat_transport_variables.htpmw_fw,
+                "(p_fw_coolant_pump_mw)",
+                heat_transport_variables.p_fw_coolant_pump_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for blanket (MW)",
-                "(htpmw_blkt)",
-                heat_transport_variables.htpmw_blkt,
+                "(p_blkt_coolant_pump_mw)",
+                heat_transport_variables.p_blkt_coolant_pump_mw,
                 "OP ",
             )
 
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for divertor (MW)",
-            "(htpmw_div)",
-            heat_transport_variables.htpmw_div,
+            "(p_div_coolant_pump_mw)",
+            heat_transport_variables.p_div_coolant_pump_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Mechanical pumping power for shield and vacuum vessel (MW)",
-            "(htpmw_shld)",
-            heat_transport_variables.htpmw_shld,
+            "(p_shld_coolant_pump_mw)",
+            heat_transport_variables.p_shld_coolant_pump_mw,
             "OP ",
         )
 
         po.ovarre(
             self.outfile,
             "Electrical pumping power for FW and blanket (MW)",
-            "(htpmwe_fw_blkt)",
-            self.htpmwe_fw_blkt,
+            "(p_fw_blkt_coolant_pump_elec_mw)",
+            self.p_fw_blkt_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Electrical pumping power for shield (MW)",
-            "(htpmwe_shld)",
-            self.htpmwe_shld,
+            "(p_shld_coolant_pump_elec_mw)",
+            self.p_shld_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Electrical pumping power for divertor (MW)",
-            "(htpmwe_div)",
-            self.htpmwe_div,
+            "(p_div_coolant_pump_elec_mw)",
+            self.p_div_coolant_pump_elec_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total electrical pumping power for primary coolant (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
 
@@ -1323,8 +1329,8 @@ class Power:
                 po.ovarrf(
                     self.outfile,
                     "Coolant temperature at turbine inlet (K)",
-                    "(tturb)",
-                    heat_transport_variables.tturb,
+                    "(temp_turbine_coolant_in)",
+                    heat_transport_variables.temp_turbine_coolant_in,
                 )
 
             po.ovarrf(
@@ -1369,14 +1375,19 @@ class Power:
         po.dblcol(
             self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw
         )
-        po.dblcol(self.outfile, "htpmw_fw", 0.0e0, heat_transport_variables.htpmw_fw)
+        po.dblcol(
+            self.outfile,
+            "p_fw_coolant_pump_mw",
+            0.0e0,
+            heat_transport_variables.p_fw_coolant_pump_mw,
+        )
 
         primsum = (
             primsum
             + fwbs_variables.p_fw_nuclear_heat_total_mw
             + physics_variables.p_fw_alpha_mw
             + fwbs_variables.p_fw_rad_total_mw
-            + heat_transport_variables.htpmw_fw
+            + heat_transport_variables.p_fw_coolant_pump_mw
         )
         secsum = secsum
 
@@ -1392,13 +1403,16 @@ class Power:
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.dblcol(
-            self.outfile, "htpmw_blkt", 0.0e0, heat_transport_variables.htpmw_blkt
+            self.outfile,
+            "p_blkt_coolant_pump_mw",
+            0.0e0,
+            heat_transport_variables.p_blkt_coolant_pump_mw,
         )
 
         primsum = (
             primsum
             + fwbs_variables.p_blkt_nuclear_heat_total_mw
-            + heat_transport_variables.htpmw_blkt
+            + heat_transport_variables.p_blkt_coolant_pump_mw
         )
         secsum = secsum
 
@@ -1416,19 +1430,20 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld} {heat_transport_variables.htpmw_shld * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.htpmw_shld}"
+                f"{heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.iprimshld} {heat_transport_variables.p_shld_coolant_pump_mw * (1 - heat_transport_variables.iprimshld)} {heat_transport_variables.p_shld_coolant_pump_mw}"
             ),
         )
 
         primsum = (
             primsum
             + fwbs_variables.pnucshld * heat_transport_variables.iprimshld
-            + heat_transport_variables.htpmw_shld * heat_transport_variables.iprimshld
+            + heat_transport_variables.p_shld_coolant_pump_mw
+            * heat_transport_variables.iprimshld
         )
         secsum = (
             secsum
             + fwbs_variables.pnucshld * (1 - heat_transport_variables.iprimshld)
-            + heat_transport_variables.htpmw_shld
+            + heat_transport_variables.p_shld_coolant_pump_mw
             * (1 - heat_transport_variables.iprimshld)
         )
 
@@ -1456,7 +1471,7 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.htpmw_div * self.iprimdiv} {heat_transport_variables.htpmw_div * (1 - self.iprimdiv)} {heat_transport_variables.htpmw_div}"
+                f"{heat_transport_variables.p_div_coolant_pump_mw * self.iprimdiv} {heat_transport_variables.p_div_coolant_pump_mw * (1 - self.iprimdiv)} {heat_transport_variables.p_div_coolant_pump_mw}"
             ),
         )
 
@@ -1465,14 +1480,14 @@ class Power:
             + fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv
             + physics_variables.p_plasma_separatrix_mw * self.iprimdiv
             + fwbs_variables.p_div_rad_total_mw * self.iprimdiv
-            + heat_transport_variables.htpmw_div * self.iprimdiv
+            + heat_transport_variables.p_div_coolant_pump_mw * self.iprimdiv
         )
         secsum = (
             secsum
             + fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)
             + physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)
             + fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)
-            + heat_transport_variables.htpmw_div * (1 - self.iprimdiv)
+            + heat_transport_variables.p_div_coolant_pump_mw * (1 - self.iprimdiv)
         )
 
         if physics_variables.itart == 1:
@@ -1805,15 +1820,15 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Power deposited in primary coolant by pump (MW)",
-            "(htpmw_mech)",
-            self.htpmw_mech,
+            "(p_coolant_pump_total_mw)",
+            self.p_coolant_pump_total_mw,
             "OP ",
         )
         total = (
             physics_variables.p_fusion_total_mw
             + fwbs_variables.emultmw
             + pinj
-            + self.htpmw_mech
+            + self.p_coolant_pump_total_mw
             + physics_variables.p_plasma_ohmic_mw
         )
         po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
@@ -1907,8 +1922,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power output(MW)",
-            "(pnetelmw.)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw.)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1927,8 +1942,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for primary coolant pumps (MW)",
-            "(htpmw)",
-            heat_transport_variables.htpmw,
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1972,9 +1987,9 @@ class Power:
             "OP ",
         )
         total_plant_power = (
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_plant_electric_net_mw
             + heat_transport_variables.p_hcd_electric_total_mw
-            + heat_transport_variables.htpmw
+            + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.trithtmw
             + heat_transport_variables.crypmw
@@ -1990,15 +2005,18 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Gross electrical output* (MW)",
-            "(pgrossmw)",
-            heat_transport_variables.pgrossmw,
+            "(p_plant_electric_gross_mw)",
+            heat_transport_variables.p_plant_electric_gross_mw,
             "OP ",
         )
         po.ocmmnt(
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
         )
         po.oblnkl(self.outfile)
-        if abs(total_plant_power - heat_transport_variables.pgrossmw) > 5.0e0:
+        if (
+            abs(total_plant_power - heat_transport_variables.p_plant_electric_gross_mw)
+            > 5.0e0
+        ):
             logger.warning(
                 f"{'WARNING: Electrical Power balance is in error by more than 5 MW.'}"
             )
@@ -2029,8 +2047,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electrical output (MW)	",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2051,7 +2069,7 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            heat_transport_variables.pnetelmw
+            heat_transport_variables.p_plant_electric_net_mw
             + self.rejected_main
             + heat_transport_variables.psechtmw,
             "OP ",
@@ -2061,7 +2079,7 @@ class Power:
             abs(
                 total_power
                 - (
-                    heat_transport_variables.pnetelmw
+                    heat_transport_variables.p_plant_electric_net_mw
                     + self.rejected_main
                     + heat_transport_variables.psechtmw
                 )
@@ -2080,18 +2098,18 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Net electric power / total nuclear power (%)",
-            "(pnetelmw/(p_fusion_total_mw+emultmw)",
+            "(p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_plant_electric_net_mw
             / (physics_variables.p_fusion_total_mw + fwbs_variables.emultmw),
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Net electric power / total fusion power (%)",
-            "(pnetelmw/p_fusion_total_mw)",
+            "(p_plant_electric_net_mw/p_fusion_total_mw)",
             100.0e0
-            * heat_transport_variables.pnetelmw
+            * heat_transport_variables.p_plant_electric_net_mw
             / physics_variables.p_fusion_total_mw,
             "OP ",
         )
@@ -2149,7 +2167,7 @@ class Power:
         # Continuous power usage
 
         # Primary pumping electrical power [MWe]
-        p_cooling[0:6] = heat_transport_variables.htpmw
+        p_cooling[0:6] = heat_transport_variables.p_coolant_pump_elec_total_mw
 
         # Cryoplant electrical power [MWe]
         p_cryo[0:6] = heat_transport_variables.crypmw
@@ -2201,7 +2219,7 @@ class Power:
 
         # Gross power [MWe]
         p_gross[0:3] = 0.0e0
-        p_gross[3] = heat_transport_variables.pgrossmw
+        p_gross[3] = heat_transport_variables.p_plant_electric_gross_mw
         p_gross[4:6] = 0.0e0
 
         # Net electric power [MWe]
@@ -2422,9 +2440,7 @@ class Power:
         """
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  CCFE HCPB Model (with or without TBR)
-            if (
-                fwbs_variables.i_blanket_type == 1
-            ) or fwbs_variables.i_blanket_type == 2:
+            if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
@@ -2441,10 +2457,6 @@ class Power:
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                etath = 0.411e0 - self.delta_eta
-
-                #  KIT HCPB model
-            elif fwbs_variables.i_blanket_type == 2:
                 etath = 0.411e0 - self.delta_eta
             else:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
@@ -2467,41 +2479,25 @@ class Power:
                 #  https://www.sciencedirect.com/science/article/pii/S0920379616300072
 
                 #  Superheated steam Rankine cycle correlation (C. Harrington)
-                #  Range of validity: 657 K < heat_transport_variables.tturb < 915 K
-                heat_transport_variables.tturb = (
+                #  Range of validity: 657 K < heat_transport_variables.temp_turbine_coolant_in < 915 K
+                heat_transport_variables.temp_turbine_coolant_in = (
                     fwbs_variables.temp_blkt_coolant_out - 20.0e0
                 )
-                if (heat_transport_variables.tturb < 657.0e0) or (
-                    heat_transport_variables.tturb > 915.0e0
+                if (heat_transport_variables.temp_turbine_coolant_in < 657.0e0) or (
+                    heat_transport_variables.temp_turbine_coolant_in > 915.0e0
                 ):
                     error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
+                    error_handling.fdiags[0] = (
+                        heat_transport_variables.temp_turbine_coolant_in
+                    )
                     error_handling.report_error(166)
 
                 etath = (
-                    0.1802e0 * np.log(heat_transport_variables.tturb)
+                    0.1802e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
                     - 0.7823
                     - self.delta_eta
                 )
 
-                #  KIT HCPB Model
-            elif fwbs_variables.i_blanket_type == 2:
-                #  Same as fwbs_variables.i_blanket_type = 1
-                heat_transport_variables.tturb = (
-                    fwbs_variables.temp_blkt_coolant_out - 20.0e0
-                )
-                if (heat_transport_variables.tturb < 657.0e0) or (
-                    heat_transport_variables.tturb > 915.0e0
-                ):
-                    error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = heat_transport_variables.tturb
-                    error_handling.report_error(166)
-
-                etath = (
-                    0.1802e0 * np.log(heat_transport_variables.tturb)
-                    - 0.7823
-                    - self.delta_eta
-                )
             else:
                 logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
 
@@ -2515,18 +2511,23 @@ class Power:
             #  very low and the correlation will reflect this.
 
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.tturb < 1023 K
-            heat_transport_variables.tturb = (
+            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_coolant_in < 1023 K
+            heat_transport_variables.temp_turbine_coolant_in = (
                 fwbs_variables.temp_blkt_coolant_out - 20.0e0
             )
-            if (heat_transport_variables.tturb < 408.0e0) or (
-                heat_transport_variables.tturb > 1023.0e0
+            if (heat_transport_variables.temp_turbine_coolant_in < 408.0e0) or (
+                heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
                 error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
+                error_handling.fdiags[0] = (
+                    heat_transport_variables.temp_turbine_coolant_in
+                )
                 error_handling.report_error(166)
 
-            etath = 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
+            etath = (
+                0.4347e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
+                - 2.5043e0
+            )
 
         else:
             logger.log(
@@ -2546,16 +2547,23 @@ class Power:
         if fwbs_variables.secondary_cycle_liq == 4:
             #  Supercritical CO2 cycle to be used
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.tturb < 1023 K
-            heat_transport_variables.tturb = fwbs_variables.outlet_temp_liq - 20.0e0
-            if (heat_transport_variables.tturb < 408.0e0) or (
-                heat_transport_variables.tturb > 1023.0e0
+            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_coolant_in < 1023 K
+            heat_transport_variables.temp_turbine_coolant_in = (
+                fwbs_variables.outlet_temp_liq - 20.0e0
+            )
+            if (heat_transport_variables.temp_turbine_coolant_in < 408.0e0) or (
+                heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
                 error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = heat_transport_variables.tturb
+                error_handling.fdiags[0] = (
+                    heat_transport_variables.temp_turbine_coolant_in
+                )
                 error_handling.report_error(166)
 
-            return 0.4347e0 * np.log(heat_transport_variables.tturb) - 2.5043e0
+            return (
+                0.4347e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
+                - 2.5043e0
+            )
 
         raise ProcessValueError(
             f"secondary_cycle_liq ={fwbs_variables.secondary_cycle_liq} is an invalid option."
@@ -3088,13 +3096,13 @@ def init_heat_transport_variables():
     heat_transport_variables.htpmw_min = 0.0
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
-    heat_transport_variables.htpmw = 0.0
-    heat_transport_variables.htpmw_blkt = 0.0
-    heat_transport_variables.htpmw_blkt_liq = 0.0
+    heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0
+    heat_transport_variables.p_blkt_coolant_pump_mw = 0.0
+    heat_transport_variables.p_blkt_breeder_pump_mw = 0.0
     heat_transport_variables.htpmw_blkt_tot = 0.0
-    heat_transport_variables.htpmw_div = 0.0
-    heat_transport_variables.htpmw_fw = 0.0
-    heat_transport_variables.htpmw_shld = 0.0
+    heat_transport_variables.p_div_coolant_pump_mw = 0.0
+    heat_transport_variables.p_fw_coolant_pump_mw = 0.0
+    heat_transport_variables.p_shld_coolant_pump_mw = 0.0
     heat_transport_variables.htpsecmw = 0.0
     heat_transport_variables.ipowerflow = 1
     heat_transport_variables.iprimshld = 1
@@ -3102,12 +3110,12 @@ def init_heat_transport_variables():
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
     heat_transport_variables.pfwdiv = 0.0
-    heat_transport_variables.pgrossmw = 0.0
+    heat_transport_variables.p_plant_electric_gross_mw = 0.0
     heat_transport_variables.pinjht = 0.0
     heat_transport_variables.pinjmax = 120.0
     heat_transport_variables.p_hcd_electric_total_mw = 0.0
     heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
-    heat_transport_variables.pnetelmw = 0.0
+    heat_transport_variables.p_plant_electric_net_mw = 0.0
     heat_transport_variables.precircmw = 0.0
     heat_transport_variables.priheat = 0.0
     heat_transport_variables.psecdiv = 0.0
@@ -3120,5 +3128,5 @@ def init_heat_transport_variables():
     heat_transport_variables.tfacpd = 0.0
     heat_transport_variables.tlvpmw = 0.0
     heat_transport_variables.trithtmw = 15.0
-    heat_transport_variables.tturb = 0.0
+    heat_transport_variables.temp_turbine_coolant_in = 0.0
     heat_transport_variables.vachtmw = 0.5
