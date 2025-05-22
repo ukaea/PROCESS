@@ -1151,7 +1151,7 @@
  Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      1.8294E+03    
  Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4186E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.4045E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      2.5460E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.1713E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      4.0001E+02    

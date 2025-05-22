@@ -151,7 +151,7 @@ module heat_transport_variables
     real(dp) :: p_div_secondary_heat_mw
     !! Low-grade heat lost in divertor (MW)
 
-    real(dp) :: psechcd
+    real(dp) :: p_hcd_secondary_heat_mw
     !! Low-grade heat lost into HCD apparatus (MW)
 
     real(dp) :: p_plant_secondary_heat_mw
