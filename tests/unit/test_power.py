@@ -2065,7 +2065,7 @@ class Power2Param(NamedTuple):
 
     p_hcd_injected_total_mw: Any = None
 
-    emultmw: Any = None
+    p_blkt_multiplication_mw: Any = None
 
     inuclear: Any = None
 
@@ -2266,7 +2266,7 @@ class Power2Param(NamedTuple):
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
-            emultmw=377.93233088402548,
+            p_blkt_multiplication_mw=377.93233088402548,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             p_fw_rad_total_mw=254.87601794907812,
@@ -2368,7 +2368,7 @@ class Power2Param(NamedTuple):
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
-            emultmw=377.8143718115644,
+            p_blkt_multiplication_mw=377.8143718115644,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             p_fw_rad_total_mw=254.87601794907812,
@@ -2492,7 +2492,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_hcd_injected_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "emultmw", power2param.emultmw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_blkt_multiplication_mw", power2param.p_blkt_multiplication_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "inuclear", power2param.inuclear)
 

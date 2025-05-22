@@ -141,7 +141,7 @@ class DCLL:
         )
 
         # Energy multiplication energy (MW)
-        fwbs_variables.emultmw = (
+        fwbs_variables.p_blkt_multiplication_mw = (
             (physics_variables.p_neutron_total_mw * fwbs_variables.pnuc_blkt_ratio_dcll)
             * (fwbs_variables.f_p_blkt_multiplication - 1)
             * covf
