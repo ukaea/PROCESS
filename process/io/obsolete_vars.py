@@ -338,6 +338,11 @@ OBS_VARS = {
     "htpmw_fw": "p_fw_coolant_pump_mw",
     "htpmw_shld": "p_shld_coolant_pump_mw",
     "htpmw_min": None,
+    "baseel": "p_plant_electric_base",
+    "crypmw_max": "p_cryo_plant_electric_max_mw",
+    "etath": "eta_turbine",
+    "trithtmw": "p_tritium_plant_electric_mw",
+    "iprimshld": "i_shld_primary_heat",
 }
 
 OBS_VARS_HELP = {
