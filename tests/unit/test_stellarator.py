@@ -2887,7 +2887,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     expected_ptfiwp: Any = None
     expected_ptfowp: Any = None
     expected_raddose: Any = None
-    expected_ptfnuc: Any = None
+    expected_p_tf_nuclear_heat_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -2918,7 +2918,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             expected_ptfiwp=0,
             expected_ptfowp=0,
             expected_raddose=588883584.03266943,
-            expected_ptfnuc=0,
+            expected_p_tf_nuclear_heat_mw=0,
         ),
     ),
 )
@@ -3008,7 +3008,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         ptfiwp,
         ptfowp,
         raddose,
-        ptfnuc,
+        p_tf_nuclear_heat_mw,
     ) = stellarator.sctfcoil_nuclear_heating_iter90()
 
     assert coilhtmx == pytest.approx(
@@ -3022,4 +3022,6 @@ def test_sctfcoil_nuclear_heating_iter90(
     assert ptfiwp == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfiwp)
     assert ptfowp == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfowp)
     assert raddose == pytest.approx(sctfcoilnuclearheatingiter90param.expected_raddose)
-    assert ptfnuc == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfnuc)
+    assert p_tf_nuclear_heat_mw == pytest.approx(
+        sctfcoilnuclearheatingiter90param.expected_p_tf_nuclear_heat_mw
+    )

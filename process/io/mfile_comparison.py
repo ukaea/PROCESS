@@ -199,7 +199,7 @@ BLANKET_COMPARE_PARAMS = [
     "p_fusion_total_mw",
     "p_blkt_nuclear_heat_total_mw",
     "p_fw_nuclear_heat_total_mw",
-    "ptfnuc",
+    "p_tf_nuclear_heat_mw",
     "p_shld_nuclear_heat_mw",
     "p_div_nuclear_heat_total_mw",
     "tbr",

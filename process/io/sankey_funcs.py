@@ -68,7 +68,9 @@ def plot_full_sankey(
     p_shld_nuclear_heat_mw = m_file.data["p_shld_nuclear_heat_mw"].get_scan(
         -1
     )  # Nuclear heating in the shield (MW)
-    ptfnuc = m_file.data["ptfnuc"].get_scan(-1)  # Nuclear heating in the TF coil (MW)
+    p_tf_nuclear_heat_mw = m_file.data["p_tf_nuclear_heat_mw"].get_scan(
+        -1
+    )  # Nuclear heating in the TF coil (MW)
 
     # Used in [CHARGEP]
     p_plasma_separatrix_mw = m_file.data["p_plasma_separatrix_mw"].get_scan(
@@ -173,7 +175,7 @@ def plot_full_sankey(
             -p_div_nuclear_heat_total_mw,
             -p_fw_nuclear_heat_total_mw,
             -p_shld_nuclear_heat_mw,
-            -ptfnuc,
+            -p_tf_nuclear_heat_mw,
             -pnucemblkt,
         ]
         sankey.add(

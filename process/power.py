@@ -852,7 +852,7 @@ class Power:
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.tfcryoarea,
                 structure_variables.coldmass,
-                fwbs_variables.ptfnuc,
+                fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
                 tfcoil_variables.cpttf,
@@ -946,8 +946,8 @@ class Power:
 
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
-        #  Included fwbs_variables.ptfnuc
-        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.p_hcd_secondary_heat_mw + fwbs_variables.ptfnuc
+        #  Included fwbs_variables.p_tf_nuclear_heat_mw
+        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.p_hcd_secondary_heat_mw + fwbs_variables.p_tf_nuclear_heat_mw
         heat_transport_variables.p_plant_secondary_heat_mw = (
             self.p_plant_core_systems_elec_mw
             + heat_transport_variables.pinjht
@@ -955,7 +955,7 @@ class Power:
             + heat_transport_variables.p_div_secondary_heat_mw
             + heat_transport_variables.p_shld_secondary_heat_mw
             + heat_transport_variables.p_hcd_secondary_heat_mw
-            + fwbs_variables.ptfnuc
+            + fwbs_variables.p_tf_nuclear_heat_mw
         )
 
         #  Calculate powers relevant to a power-producing plant
@@ -1544,13 +1544,18 @@ class Power:
 
         po.oblnkl(self.outfile)
         po.write(self.outfile, "TF coil:")
-        po.dblcol(self.outfile, "ptfnuc", 0.0e0, fwbs_variables.ptfnuc)
+        po.dblcol(
+            self.outfile,
+            "p_tf_nuclear_heat_mw",
+            0.0e0,
+            fwbs_variables.p_tf_nuclear_heat_mw,
+        )
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
         po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
 
         primsum = primsum
-        secsum = secsum + fwbs_variables.ptfnuc
+        secsum = secsum + fwbs_variables.p_tf_nuclear_heat_mw
 
         po.oblnkl(self.outfile)
         po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
@@ -1590,7 +1595,7 @@ class Power:
             self.outfile,
             "Total power leaving reactor (across vacuum vessel boundary) (MW)",
             "",
-            primsum + secsum + fwbs_variables.ptfnuc,
+            primsum + secsum + fwbs_variables.p_tf_nuclear_heat_mw,
             "OP ",
         )
 
@@ -1906,8 +1911,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Nuclear power lost to TF (MW)",
-            "(ptfnuc)",
-            fwbs_variables.ptfnuc,
+            "(p_tf_nuclear_heat_mw)",
+            fwbs_variables.p_tf_nuclear_heat_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1918,7 +1923,7 @@ class Power:
             + self.p_shld_heat_deposited_mw
             + self.p_div_heat_deposited_mw
             + heat_transport_variables.p_hcd_secondary_heat_mw
-            + fwbs_variables.ptfnuc,
+            + fwbs_variables.p_tf_nuclear_heat_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1930,7 +1935,7 @@ class Power:
                     + self.p_shld_heat_deposited_mw
                     + self.p_div_heat_deposited_mw
                     + heat_transport_variables.p_hcd_secondary_heat_mw
-                    + fwbs_variables.ptfnuc
+                    + fwbs_variables.p_tf_nuclear_heat_mw
                 )
             )
             > 5.0e0
@@ -2413,7 +2418,7 @@ class Power:
         i_tf_sup,
         tfcryoarea,
         coldmass,
-        ptfnuc,
+        p_tf_nuclear_heat_mw,
         ensxpfm,
         t_pulse_repetition,
         cpttf,
@@ -2428,7 +2433,7 @@ class Power:
         coldmass : input real : Mass of cold (cryogenic) components (kg),
         including TF coils, PF coils, cryostat, and
         intercoil structure
-        ptfnuc : input real : Nuclear heating in TF coils (MW)
+        p_tf_nuclear_heat_mw : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
         t_pulse_repetition : input real : Pulse length of cycle (s)
         cpttf : input real : Current per turn in TF coils (A)
@@ -2443,7 +2448,7 @@ class Power:
 
         #  Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:
-            fwbs_variables.qnuc = 1.0e6 * ptfnuc
+            fwbs_variables.qnuc = 1.0e6 * p_tf_nuclear_heat_mw
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses

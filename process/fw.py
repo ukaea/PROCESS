@@ -728,7 +728,7 @@ def init_fwbs_variables():
     fwbs_variables.p_fw_rad_total_mw = 0.0
     fwbs_variables.p_fw_hcd_rad_total_mw = 0.0
     fwbs_variables.pradloss = 0.0
-    fwbs_variables.ptfnuc = 0.0
+    fwbs_variables.p_tf_nuclear_heat_mw = 0.0
     fwbs_variables.ptfnucpm3 = 0.0
     fwbs_variables.r_cryostat_inboard = 0.0
     fwbs_variables.z_cryostat_half_inside = 0.0

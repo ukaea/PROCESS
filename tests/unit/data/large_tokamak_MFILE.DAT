@@ -938,7 +938,7 @@
  Shield_line_density_(tonne/m2)__________________________________________ (x_shield)____________________      4.0560E+00    
  Blanket_line_density_(tonne/m2)_________________________________________ (x_blanket)___________________      2.2911E+00    
  Unit_nuclear_heating_in_TF_coil_(W/GW)__________________________________ (tfc_nuc_heating)_____________      1.5092E+04    
- Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (ptfnuc.)_____________________      2.4413E-02    
+ Total_nuclear_heating_in_TF_coil_(MW)___________________________________ (p_tf_nuclear_heat_mw.)_____________________      2.4413E-02    
  powfmw__________________________________________________________________ (powfmw.)_____________________      1.6176E+03    
  total_mass_of_the_TF_coils_(kg)_________________________________________ (m_tf_coils_total)_______________________      1.1598E+07    
  # Pumping for primary coolant (helium) #
@@ -971,7 +971,7 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      3.2350E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4498E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      7.9388E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      2.5460E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      2.5460E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      1.6290E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.2880E+03 OP 
  Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4115E+00 OP 
@@ -1152,7 +1152,7 @@
  Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4186E+00    
  Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.4045E+02    
  Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      2.5460E-02    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      2.5460E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.1713E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      4.0001E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    

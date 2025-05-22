@@ -388,7 +388,7 @@ module fwbs_variables
   !! Radiation power lost through holes (eventually hits shield) (MW)
   !! Only used for stellarator
 
-  real(dp) :: ptfnuc
+  real(dp) :: p_tf_nuclear_heat_mw
   !! nuclear heating in the TF coil (MW)
 
   real(dp) :: ptfnucpm3

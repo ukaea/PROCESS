@@ -53,7 +53,7 @@ class CryoParam(NamedTuple):
 
     ensxpfm: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     n_tf_coils: Any = None
 
@@ -86,7 +86,7 @@ class CryoParam(NamedTuple):
             coldmass=47352637.039762333,
             cpttf=74026.751437500003,
             ensxpfm=37429.525515086898,
-            ptfnuc=0.044178296011112193,
+            p_tf_nuclear_heat_mw=0.044178296011112193,
             n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=10364.426139387357,
@@ -107,7 +107,7 @@ class CryoParam(NamedTuple):
             coldmass=47308985.527808741,
             cpttf=74026.751437500003,
             ensxpfm=37427.228965055205,
-            ptfnuc=0.045535131445547841,
+            p_tf_nuclear_heat_mw=0.045535131445547841,
             n_tf_coils=16,
             tfcryoarea=0,
             t_pulse_repetition=364.42613938735633,
@@ -149,7 +149,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         coldmass=cryoparam.coldmass,
         cpttf=cryoparam.cpttf,
         ensxpfm=cryoparam.ensxpfm,
-        ptfnuc=cryoparam.ptfnuc,
+        p_tf_nuclear_heat_mw=cryoparam.p_tf_nuclear_heat_mw,
         n_tf_coils=cryoparam.n_tf_coils,
         tfcryoarea=cryoparam.tfcryoarea,
         t_pulse_repetition=cryoparam.t_pulse_repetition,
@@ -2093,7 +2093,7 @@ class Power2Param(NamedTuple):
 
     i_coolant_pumping: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     p_fw_hcd_nuclear_heat_mw: Any = None
 
@@ -2280,7 +2280,7 @@ class Power2Param(NamedTuple):
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.69222981118057,
             i_coolant_pumping=3,
-            ptfnuc=0.044178296011112193,
+            p_tf_nuclear_heat_mw=0.044178296011112193,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.3609360176065353,
             p_fw_hcd_rad_total_mw=0,
@@ -2382,7 +2382,7 @@ class Power2Param(NamedTuple):
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.6352084763719,
             i_coolant_pumping=3,
-            ptfnuc=0.045535131445547841,
+            p_tf_nuclear_heat_mw=0.045535131445547841,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.4036212304705389,
             p_fw_hcd_rad_total_mw=0,
@@ -2540,7 +2540,9 @@ def test_power2(power2param, monkeypatch, power):
         fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
     )
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", power2param.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables, "p_tf_nuclear_heat_mw", power2param.p_tf_nuclear_heat_mw
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "p_fw_hcd_nuclear_heat_mw", power2param.p_fw_hcd_nuclear_heat_mw
