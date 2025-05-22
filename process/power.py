@@ -628,7 +628,7 @@ class Power:
         )
 
         # Heat lost in power supplies for heating and current drive
-        heat_transport_variables.pinjht = (
+        heat_transport_variables.p_hcd_electric_loss_mw = (
             heat_transport_variables.p_hcd_electric_total_mw
             - current_drive_variables.p_hcd_injected_total_mw
         )
@@ -888,10 +888,10 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.p_tf_nuclear_heat_mw
-        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.p_hcd_secondary_heat_mw + fwbs_variables.p_tf_nuclear_heat_mw
+        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.p_hcd_electric_loss_mw + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.p_hcd_secondary_heat_mw + fwbs_variables.p_tf_nuclear_heat_mw
         heat_transport_variables.p_plant_secondary_heat_mw = (
             self.p_plant_core_systems_elec_mw
-            + heat_transport_variables.pinjht
+            + heat_transport_variables.p_hcd_electric_loss_mw
             + heat_transport_variables.p_coolant_pump_loss_total_mw
             + heat_transport_variables.p_div_secondary_heat_mw
             + heat_transport_variables.p_shld_secondary_heat_mw
@@ -1567,8 +1567,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat removal from injection power (MW)",
-            "(pinjht)",
-            heat_transport_variables.pinjht,
+            "(p_hcd_electric_loss_mw)",
+            heat_transport_variables.p_hcd_electric_loss_mw,
             "OP ",
         )
         po.ovarrf(
@@ -3102,7 +3102,7 @@ def init_heat_transport_variables():
     heat_transport_variables.peakmva = 0.0
     heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
     heat_transport_variables.p_plant_electric_gross_mw = 0.0
-    heat_transport_variables.pinjht = 0.0
+    heat_transport_variables.p_hcd_electric_loss_mw = 0.0
     heat_transport_variables.pinjmax = 120.0
     heat_transport_variables.p_hcd_electric_total_mw = 0.0
     heat_transport_variables.p_hcd_secondary_electric_mw = 0.0

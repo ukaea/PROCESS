@@ -124,7 +124,7 @@ module heat_transport_variables
     real(dp) :: p_plant_electric_gross_mw
     !! gross electric power (MW)
 
-    real(dp) :: pinjht
+    real(dp) :: p_hcd_electric_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
     real(dp) :: pinjmax

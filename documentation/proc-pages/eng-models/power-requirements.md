@@ -45,7 +45,7 @@ $$
 5: The electrical heat loss in the heating and current drive power supplies is calculated:
 
 $$
-\overbrace{P_{\text{HCD, electric-loss}}}^{\texttt{pinjht}} = P_{\text{HCD, electric}} + P_{\text{HCD, injected}}
+\overbrace{P_{\text{HCD, electric-loss}}}^{\texttt{p_hcd_electric_loss_mw}} = P_{\text{HCD, electric}} + P_{\text{HCD, injected}}
 $$
 
 5: If their is a secondary breeder/coolant loop in the blanket (`i_blkt_dual_coolant == 2`) then the heat deposited in the secondary coolant is the fraction of the total blanket nuclear heat and the mechanical pump power.

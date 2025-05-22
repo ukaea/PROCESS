@@ -1123,7 +1123,7 @@
  Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      3.6566E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      5.5490E+01    
  Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      2.4769E+01    
- Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      8.0143E+01    
+ Heat_removal_from_injection_power_(MW)__________________________________ (p_hcd_electric_loss_mw)______________________      8.0143E+01    
  Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
