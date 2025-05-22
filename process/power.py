@@ -772,7 +772,7 @@ class Power:
                 * self.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = self.p_div_heat_deposited_mw
+            heat_transport_variables.p_div_secondary_heat_mw = self.p_div_heat_deposited_mw
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
             self.iprimdiv = 0
         else:
@@ -784,7 +784,7 @@ class Power:
                 + self.p_div_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.psecdiv = 0.0e0
+            heat_transport_variables.p_div_secondary_heat_mw = 0.0e0
             # Divertor primary/secondary power switch: contributes to energy generation cycle
             self.iprimdiv = 1
 
@@ -942,12 +942,12 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.p_plant_secondary_heat_mw = (
             self.p_plant_core_systems_elec_mw
             + heat_transport_variables.pinjht
             + heat_transport_variables.p_coolant_pump_loss_total_mw
-            + heat_transport_variables.psecdiv
+            + heat_transport_variables.p_div_secondary_heat_mw
             + heat_transport_variables.psecshld
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc
@@ -3153,7 +3153,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_plant_electric_net_mw = 0.0
     heat_transport_variables.p_plant_electric_recirc_mw = 0.0
     heat_transport_variables.priheat = 0.0
-    heat_transport_variables.psecdiv = 0.0
+    heat_transport_variables.p_div_secondary_heat_mw = 0.0
     heat_transport_variables.psechcd = 0.0
     heat_transport_variables.p_plant_secondary_heat_mw = 0.0
     heat_transport_variables.pseclossmw = 0.0

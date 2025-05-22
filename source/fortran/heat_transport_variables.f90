@@ -148,7 +148,7 @@ module heat_transport_variables
     real(dp) :: priheat
     !! total thermal power removed from fusion core (MW)
 
-    real(dp) :: psecdiv
+    real(dp) :: p_div_secondary_heat_mw
     !! Low-grade heat lost in divertor (MW)
 
     real(dp) :: psechcd
