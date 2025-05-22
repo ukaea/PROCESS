@@ -42,7 +42,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     cdtfleg: Any = None
 
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
 
     a_tf_coil_wp_turn_insulation: Any = None
 
@@ -87,7 +87,7 @@ class ResTfInternalGeomParam(NamedTuple):
             fcoolcp=0.12725,
             cpttf=70000,
             cdtfleg=0,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0,
             acasetf=0,
             tinstf=0,
@@ -114,7 +114,7 @@ class ResTfInternalGeomParam(NamedTuple):
             fcoolcp=0.12725,
             cpttf=2125000,
             cdtfleg=421788350.27812088,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             acasetf=0.00061190425043863676,
             tinstf=0,
@@ -178,7 +178,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "cdtfleg", restfinternalgeomparam.cdtfleg)
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", restfinternalgeomparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", restfinternalgeomparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -279,7 +281,7 @@ class TfResHeatingParam(NamedTuple):
     frholeg: Any = None
     frhocp: Any = None
     fcoolcp: Any = None
-    casthi: Any = None
+    dr_tf_plasma_case: Any = None
     a_cp_cool: Any = None
     f_a_tf_cool_outboard: Any = None
     i_cp_joints: Any = None
@@ -333,7 +335,7 @@ class TfResHeatingParam(NamedTuple):
             frholeg=1,
             frhocp=1,
             fcoolcp=0.12725,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             a_cp_cool=0,
             f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
@@ -383,7 +385,7 @@ class TfResHeatingParam(NamedTuple):
             frholeg=1,
             frhocp=1,
             fcoolcp=0.12725,
-            casthi=0.0077415000000000019,
+            dr_tf_plasma_case=0.0077415000000000019,
             a_cp_cool=0.00068328705812121333,
             f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
@@ -496,7 +498,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(tfcoil_variables, "fcoolcp", tfresheatingparam.fcoolcp)
 
-    monkeypatch.setattr(tfcoil_variables, "casthi", tfresheatingparam.casthi)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_plasma_case", tfresheatingparam.dr_tf_plasma_case
+    )
 
     monkeypatch.setattr(tfcoil_variables, "a_cp_cool", tfresheatingparam.a_cp_cool)
 

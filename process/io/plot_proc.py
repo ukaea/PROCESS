@@ -4561,7 +4561,7 @@ def main(args=None):
     global dr_tf_wp
     global tinstf
     global dr_tf_nose_case
-    global casthi
+    global dr_tf_plasma_case
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
@@ -4573,7 +4573,7 @@ def main(args=None):
         dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
 
         # To be re-inergrated to resistives when in-plane stresses is integrated
-        casthi = m_file.data["casthi"].get_scan(scan)
+        dr_tf_plasma_case = m_file.data["dr_tf_plasma_case"].get_scan(scan)
 
     global dx_beam_shield
     global rtanbeam

@@ -577,7 +577,7 @@ i_cs_superconductor = 1
 ***********
 
 * Inboard TF coil plasma-facing case thickness [m]
-casthi = 0.06
+dr_tf_plasma_case = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
 dx_tf_side_case = 0.05

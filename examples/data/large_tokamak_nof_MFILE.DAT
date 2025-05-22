@@ -727,7 +727,7 @@
  Total_Insulation_cross-section_(total)_(m2)______________________________ (a_tf_ins*n_tf_coils)__________ 8.42445642252714899e-01
  Total_Insulation_fraction________________________________________________ (f_tf_ins)_____________________ 5.15205411590458559e-02
  Casing_cross_section_area_(per_leg)_(m2)_________________________________ (acasetf)______________________ 4.71874695000614297e-01
- Inboard_leg_case_plasma_side_wall_thickness_(m)__________________________ (casthi)_______________________ 5.99999999999999978e-02
+ Inboard_leg_case_plasma_side_wall_thickness_(m)__________________________ (dr_tf_plasma_case)_______________________ 5.99999999999999978e-02
  Inboard_leg_case_inboard_"nose"_thickness_(m)____________________________ (thkcas)_______________________ 1.98870224263661521e-01
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)___________ (casths)_______________________ 5.00000000000000028e-02
  External_case_mass_per_coil_(kg)_________________________________________ (whtcas)_______________________ 4.56395156849202933e+05 OP
@@ -1777,7 +1777,7 @@ isumatoh = 1
 ***********
 
 * Inboard TF coil plasma-facing case thickness [m]
-casthi = 0.06
+dr_tf_plasma_case = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
 casths = 0.05
