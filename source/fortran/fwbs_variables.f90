@@ -112,7 +112,7 @@ module fwbs_variables
   real(dp) :: pnuc_cp
   !! Total nuclear heating in the ST centrepost [MW]
 
-  real(dp) :: pnuc_cp_sh
+  real(dp) :: p_cp_shield_nuclear_heat_mw
   !! Neutronic shield nuclear heating in the ST centrepost [MW]
 
   real(dp) :: pnuc_cp_tf
@@ -133,7 +133,7 @@ module fwbs_variables
   real(dp) :: pnucvvplus
   !! nuclear heating to vacuum vessel and beyond [MW]
 
-  real(dp) :: pnucshld
+  real(dp) :: p_shld_nuclear_heat_mw
   !! nuclear heating in the shield [MW]
 
   real(dp) :: m_blkt_total
@@ -273,14 +273,14 @@ module fwbs_variables
   !!
   !! - =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
   !! - =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_turbine)
   !! - =3 steam Rankine cycle
   !! - =4 supercritical CO2 cycle
 
   integer :: secondary_cycle_liq
   !! Switch for power conversion cycle for the liquid breeder component of the blanket:
   !!
-  !! - =2 user input thermal-electric efficiency (etath)
+  !! - =2 user input thermal-electric efficiency (eta_turbine)
   !! - =4 supercritical CO2 cycle
 
   integer :: i_blkt_coolant_type
@@ -388,7 +388,7 @@ module fwbs_variables
   !! Radiation power lost through holes (eventually hits shield) (MW)
   !! Only used for stellarator
 
-  real(dp) :: ptfnuc
+  real(dp) :: p_tf_nuclear_heat_mw
   !! nuclear heating in the TF coil (MW)
 
   real(dp) :: ptfnucpm3
