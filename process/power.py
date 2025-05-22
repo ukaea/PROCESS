@@ -490,7 +490,7 @@ class Power:
 
         #  Total baseline power to facility loads, MW
         heat_transport_variables.fcsht = (
-            basemw + buildings_variables.efloor * pkwpm2 / 1000.0e0
+            basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
         )
 
         # Estimate of the total low voltage power, MW
