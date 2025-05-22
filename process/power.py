@@ -65,7 +65,9 @@ class Power:
         self.p_blkt_heat_deposited_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.p_blkt_liquid_breeder_heat_deposited_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.p_blkt_liquid_breeder_heat_deposited_mw = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.p_shld_heat_deposited_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
@@ -625,56 +627,34 @@ class Power:
             - self.p_coolant_pump_total_mw
         )
 
-        if fwbs_variables.i_coolant_pumping == 2:
-            # Liquid metal breeder/coolant
-            # Calculate fraction of blanket nuclear power deposited in liquid breeder
-            if fwbs_variables.i_blkt_dual_coolant == 2:
-                self.p_blkt_liquid_breeder_heat_deposited_mw = (
-                    fwbs_variables.p_blkt_nuclear_heat_total_mw
-                    * fwbs_variables.f_nuc_pow_bz_liq
-                ) + heat_transport_variables.p_blkt_breeder_pump_mw
-            elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.p_blkt_liquid_breeder_heat_deposited_mw = heat_transport_variables.p_blkt_breeder_pump_mw
+        # Liquid metal breeder/coolant
+        # Calculate fraction of blanket nuclear power deposited in liquid breeder / coolant
+        if fwbs_variables.i_blkt_dual_coolant == 2:
+            self.p_blkt_liquid_breeder_heat_deposited_mw = (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                * fwbs_variables.f_nuc_pow_bz_liq
+            ) + heat_transport_variables.p_blkt_breeder_pump_mw
 
-            # First wall and blanket coolant combined
-            if fwbs_variables.i_blkt_dual_coolant == 2:
-                self.p_fw_blkt_heat_deposited_mw = (
-                    self.p_blkt_liquid_breeder_heat_deposited_mw
-                    + fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.p_fw_rad_total_mw
-                    + (
-                        fwbs_variables.p_blkt_nuclear_heat_total_mw
-                        * (1 - fwbs_variables.f_nuc_pow_bz_liq)
-                    )
-                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.p_beam_shine_through_mw
-                )
-            elif fwbs_variables.i_blkt_dual_coolant == 1:
-                self.p_fw_blkt_heat_deposited_mw = (
-                    self.p_blkt_liquid_breeder_heat_deposited_mw
-                    + fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.p_fw_rad_total_mw
-                    + fwbs_variables.p_blkt_nuclear_heat_total_mw
-                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.p_beam_shine_through_mw
-                )
-            else:
-                self.p_fw_blkt_heat_deposited_mw = (
-                    fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.p_fw_rad_total_mw
-                    + fwbs_variables.p_blkt_nuclear_heat_total_mw
-                    + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
-                    + physics_variables.p_fw_alpha_mw
-                    + current_drive_variables.p_beam_shine_through_mw
-                )
+        # Liquid breeder is circulated but does no cooling
+        elif fwbs_variables.i_blkt_dual_coolant == 1:
+            self.p_blkt_liquid_breeder_heat_deposited_mw = (
+                heat_transport_variables.p_blkt_breeder_pump_mw
+            )
 
-        elif fwbs_variables.i_coolant_pumping == 3:
-            # First wall and blanket coolant combined
+        # Liquid breeder also acts a coolant
+        if int(fwbs_variables.i_blkt_dual_coolant) in [1, 2]:
+            self.p_fw_blkt_heat_deposited_mw = (
+                +fwbs_variables.p_fw_nuclear_heat_total_mw
+                + fwbs_variables.p_fw_rad_total_mw
+                + fwbs_variables.p_blkt_nuclear_heat_total_mw
+                + heat_transport_variables.p_blkt_breeder_pump_mw
+                + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
+                + physics_variables.p_fw_alpha_mw
+                + current_drive_variables.p_beam_shine_through_mw
+            )
+        else:
+            # No secondary liquid metal breeder/coolant
             self.p_fw_blkt_heat_deposited_mw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
@@ -685,24 +665,21 @@ class Power:
                 + current_drive_variables.p_beam_shine_through_mw
             )
 
-        else:
-            #  Total power deposited in first wall coolant (MW)
-            self.p_fw_heat_deposited_mw = (
-                fwbs_variables.p_fw_nuclear_heat_total_mw
-                + fwbs_variables.p_fw_rad_total_mw
-                + heat_transport_variables.p_fw_coolant_pump_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.p_beam_shine_through_mw
-            )
-            #  Total power deposited in blanket coolant (MW) (energy multiplication in fwbs_variables.p_blkt_nuclear_heat_total_mw already)
-            self.p_blkt_heat_deposited_mw = (
-                fwbs_variables.p_blkt_nuclear_heat_total_mw
-                + heat_transport_variables.p_blkt_coolant_pump_mw
-            )
-            self.p_fw_blkt_heat_deposited_mw = (
-                self.p_fw_heat_deposited_mw + self.p_blkt_heat_deposited_mw
-            )
+        #  Total power deposited in first wall coolant (MW)
+        self.p_fw_heat_deposited_mw = (
+            fwbs_variables.p_fw_nuclear_heat_total_mw
+            + fwbs_variables.p_fw_rad_total_mw
+            + heat_transport_variables.p_fw_coolant_pump_mw
+            + current_drive_variables.p_beam_orbit_loss_mw
+            + physics_variables.p_fw_alpha_mw
+            + current_drive_variables.p_beam_shine_through_mw
+        )
+
+        #  Total power deposited in blanket coolant (MW)
+        self.p_blkt_heat_deposited_mw = (
+            fwbs_variables.p_blkt_nuclear_heat_total_mw
+            + heat_transport_variables.p_blkt_coolant_pump_mw
+        )
 
         #  Total power deposited in shield coolant (MW)
         self.p_shld_heat_deposited_mw = (
@@ -711,9 +688,7 @@ class Power:
             + heat_transport_variables.p_shld_coolant_pump_mw
         )
 
-        #  Total thermal power deposited in divertor coolant (MW)
-        #  = (conduction to divertor, less radiation) + (neutron and radiation power)
-        #  using physics_variables.p_plasma_separatrix_mw as calculated in physics.f90
+        #  Total thermal power deposited in divertor (MW)
         self.p_div_heat_deposited_mw = (
             physics_variables.p_plasma_separatrix_mw
             + (
@@ -945,7 +920,8 @@ class Power:
                         - self.p_blkt_liquid_breeder_heat_deposited_mw
                     )
                     * heat_transport_variables.eta_turbine
-                    + self.p_blkt_liquid_breeder_heat_deposited_mw * heat_transport_variables.etath_liq
+                    + self.p_blkt_liquid_breeder_heat_deposited_mw
+                    * heat_transport_variables.etath_liq
                 )
             else:
                 heat_transport_variables.p_plant_electric_gross_mw = (
@@ -1927,8 +1903,11 @@ class Power:
             and fwbs_variables.i_coolant_pumping == 2
         ):
             self.p_turbine_loss_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw - self.p_blkt_liquid_breeder_heat_deposited_mw
-            ) * (1 - heat_transport_variables.eta_turbine) + self.p_blkt_liquid_breeder_heat_deposited_mw * (
+                heat_transport_variables.p_plant_primary_heat_mw
+                - self.p_blkt_liquid_breeder_heat_deposited_mw
+            ) * (
+                1 - heat_transport_variables.eta_turbine
+            ) + self.p_blkt_liquid_breeder_heat_deposited_mw * (
                 1 - heat_transport_variables.etath_liq
             )
         else:

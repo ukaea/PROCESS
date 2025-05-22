@@ -42,6 +42,43 @@ $$
 \underbrace{P_{\text{pump loss,total}}}_{\texttt{p_coolant_pump_loss_total_mw}} = P_{\text{pump total, electric}} - P_{\text{pump,total}}
 $$
 
+5: If their is a secondary breeder/coolant loop in the blanket (`i_blkt_dual_coolant == 2`) then the heat deposited in the secondary coolant is the fraction of the total blanket nuclear heat and the mechanical pump power.
+
+$$
+P_{\text{blkt-breeder-heat}} = \left(P_{\text{blkt,nuclear}} \times \texttt{f_nuc_pow_bz_liq}\right) + P_{\text{pump,blkt-secondary}}
+$$
+
+6: If `i_blkt_dual_coolant == 1` the secondary breeder is only pumped for tritium extraction and not cooling so: 
+
+$$
+P_{\text{blkt-breeder-heat}} =  P_{\text{pump,blkt-secondary}}
+$$
+
+7: The total heat deposited in the first wall and blanket is simply:
+
+$$
+\overbrace{P_{\text{FW-Blkt, heat}}}^{\texttt{p_fw_blkt_heat_deposited_mw}} = \\
+ \underbrace{\left[P_{\text{FW, nuclear}} + P_{\text{FW,}\gamma} + P_{\text{FW, pump}} + \underbrace{P_{\text{NB, orbit-loss}} + P_{\text{NB, shine-through}}}_{\text{Neutral beam effects (if present)}} + P_{\alpha,\text{loss}}\right]}_{\texttt{p_fw_heat_deposited_mw}} \\
+ + \underbrace{\left[P_{\text{Blkt, nuclear}} + P_{\text{Blkt, pump}}\right]}_{\texttt{p_blkt_heat_deposited_mw}}
+$$
+
+  - $P_{\text{FW, nuclear}}$ & $P_{\text{Blkt, nuclear}}$ is the nuclear heating from neutron interaction (which includes the energy multiplication (`emult`) for the blanket.)
+  - $P_{\text{FW,}\gamma}$ is the photon radiation incident on the FW (`p_fw_rad_total_mw`).
+  - $P_{\alpha,\text{loss}}$ is the plasma lost alpha power (`p_fw_alpha_mw`)
+
+
+8: The thermal power deposited in the shields is calculated:
+
+$$
+\overbrace{P_{\text{Shield, heat}}}^{\texttt{p_shld_heat_deposited_mw}} = \underbrace{P_{\text{CP shield, nuclear}}}_{\text{ST Centrepost nuclear heating (if present)}} \\
+ + P_{\text{VV-Shield, nuclear}} + P_{\text{VV-Shield, pump}}
+$$
+
+9: The thermal power deposited in the divertor(s) is calculated:
+
+$$
+\overbrace{P_{\text{div, heat}}}^{\texttt{p_div_heat_deposited_mw}} = \underbrace{P_{\text{plasma,sep}}}_{\texttt{p_plasma_separatrix_mw}} + P_{\text{div, nuclear}} + P_{\text{div,}\gamma} + P_{\text{div, pump}}
+$$
 
 ---
 
