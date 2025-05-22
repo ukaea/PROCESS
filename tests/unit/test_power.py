@@ -2672,7 +2672,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_cryo_plant_electric_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "p_div_secondary_heat_mw", power2param.p_div_secondary_heat_mw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_div_secondary_heat_mw",
+        power2param.p_div_secondary_heat_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "pinjht", power2param.pinjht)
 
