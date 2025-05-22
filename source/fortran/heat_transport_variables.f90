@@ -103,7 +103,7 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimshld
+    integer :: i_shld_primary_heat
     !! Switch for shield thermal power destiny:
     !!
     !! - =0 does not contribute to energy generation cycle

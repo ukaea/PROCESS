@@ -1551,7 +1551,9 @@ INPUT_VARIABLES = {
     "i_pf_conductor": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1]),
     "ipnet": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
-    "iprimshld": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
+    "i_shld_primary_heat": InputVariable(
+        fortran.heat_transport_variables, int, choices=[0, 1]
+    ),
     "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 5)),
     "i_ind_plasma_internal_norm": InputVariable(
         fortran.physics_variables, int, range=(0, 2)

@@ -2133,7 +2133,7 @@ class Power2Param(NamedTuple):
 
     fcsht: Any = None
 
-    iprimshld: Any = None
+    i_shld_primary_heat: Any = None
 
     p_hcd_electric_total_mw: Any = None
 
@@ -2298,7 +2298,7 @@ class Power2Param(NamedTuple):
             p_plant_primary_heat_mw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
             fcsht=61.882833632875375,
-            iprimshld=1,
+            i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=0,
             p_plant_electric_gross_mw=0,
@@ -2400,7 +2400,7 @@ class Power2Param(NamedTuple):
             p_plant_primary_heat_mw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
             fcsht=62.237143915360818,
-            iprimshld=1,
+            i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=61.882833632875375,
             p_plant_electric_gross_mw=982.58317918134742,
@@ -2622,7 +2622,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fcsht", power2param.fcsht)
 
-    monkeypatch.setattr(heat_transport_variables, "iprimshld", power2param.iprimshld)
+    monkeypatch.setattr(
+        heat_transport_variables, "i_shld_primary_heat", power2param.i_shld_primary_heat
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
