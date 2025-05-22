@@ -34,7 +34,7 @@ var_dicts = {
     "p_hcd_injected_electrons_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "pnetelmw": VariableMetadata(
+    "p_plant_electric_net_mw": VariableMetadata(
         latex=r"$P_\mathrm{Net\ elec}$ [$MW$]",
         description="Net electrical power",
         units="MW",
@@ -106,12 +106,12 @@ var_dicts = {
         description="Mid-plane outboard TF coil leg radius at the middle of the coil",
         units="m",
     ),
-    "pgrossmw": VariableMetadata(
+    "p_plant_electric_gross_mw": VariableMetadata(
         latex=r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]",
         description="Gross electrical power",
         units="MW",
     ),
-    "htpmw": VariableMetadata(
+    "p_coolant_pump_elec_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]",
         description="Primary coolant power",
         units="MW",

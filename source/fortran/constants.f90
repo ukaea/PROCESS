@@ -250,6 +250,10 @@ module constants
   ! Density of Tungsten [kg/m3]
   real(dp), parameter :: den_tungsten = 19250.0D0
 
+  ! Room temperature in Kelvin
+  ! Assume the room is at 20 degrees Celsius
+  real(dp), parameter :: temp_room = 293.15D0
+
   ! pi
   real(dp), parameter :: pi = 3.1415926535897932D0
 

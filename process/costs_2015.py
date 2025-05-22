@@ -140,7 +140,7 @@ class Costs2015:
 
         # Electrical output (given availability) for a whole year
         self.mean_electric_output = (
-            heat_transport_variables.pnetelmw * cost_variables.cpfact
+            heat_transport_variables.p_plant_electric_net_mw * cost_variables.cpfact
         )
         self.annual_electric_output = self.mean_electric_output * 24.0e0 * 365.25e0
 
@@ -488,8 +488,8 @@ class Costs2015:
         po.ovarrf(
             self.outfile,
             "Net electric output (MW)",
-            "(pnetelmw)",
-            heat_transport_variables.pnetelmw,
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -891,7 +891,7 @@ class Costs2015:
         #  Cost of reference energy conversion system (Rolls Royce)
         self.s_cref[34] = 511.0e6
         #  Scale with gross electric power (MWe)
-        self.s_k[34] = heat_transport_variables.pgrossmw
+        self.s_k[34] = heat_transport_variables.p_plant_electric_gross_mw
         self.s_kref[34] = 692.0e0
         self.s_cost[34] = (
             self.s_cost_factor[34]

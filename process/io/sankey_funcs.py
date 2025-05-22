@@ -96,7 +96,9 @@ def plot_full_sankey(
     )  # Radiation deposited in the FW (MW)
 
     # Used in [DIVERTOR]
-    htpmw_div = m_file.data["htpmw_div"].get_scan(-1)  # Divertor coolant pumping power
+    p_div_coolant_pump_mw = m_file.data["p_div_coolant_pump_mw"].get_scan(
+        -1
+    )  # Divertor coolant pumping power
     pthermdiv = m_file.data["pthermdiv"].get_scan(
         -1
     )  # Total power extracted from divertor (MW)
@@ -105,11 +107,11 @@ def plot_full_sankey(
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
         -1
     )  # Power extracted blanket & FW (MW)
-    htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
+    p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
         -1
     )  # Pump Power in FW and blanket (MW)
-    htpmwblkt = htpmw_fw_blkt / 2  # Pump power in blanket (MW)
-    htpmwfw = htpmw_fw_blkt / 2  # Pump power in FW (MW)
+    htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
+    htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
     pthermfw = (
         pthermfw_blkt - htpmwblkt - p_blkt_nuclear_heat_total_mw
     )  # Power extracted 1st wall (MW)
@@ -284,7 +286,7 @@ def plot_full_sankey(
             p_plasma_separatrix_mw,
             p_div_nuclear_heat_total_mw,
             p_div_rad_total_mw,
-            htpmw_div,
+            p_div_coolant_pump_mw,
             -pthermdiv,
         ]
         sankey.add(
@@ -370,7 +372,7 @@ def plot_full_sankey(
         """# --------------------------------------- SHIELD - 7 --------------------------------------
 
         # Neutrons, Coolant pumping, Total power
-        SHIELD = [pnucshld, htpmw_shld, -pthermshld]
+        SHIELD = [pnucshld, p_shld_coolant_pump_mw, -pthermshld]
         sankey.add(flows=SHIELD,
                    orientations=[-1, -1, 1],
                    trunklength=0.5,
@@ -404,7 +406,7 @@ def plot_full_sankey(
         """# ------------------------------- ELECTRICITY CONVERSION - 8 ------------------------------
 
         # Total thermal, Elctricty conversion loss, Gross Electricity
-        GROSS = [pthermmw, -pelectloss, -pgrossmw]
+        GROSS = [pthermmw, -pelectloss, -p_plant_electric_gross_mw]
         sankey.add(flows=GROSS,
                    orientations=[0, -1, 0],
                    trunklength=0.5,
@@ -604,17 +606,23 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     pthermfw_blkt = m_file.data["pthermfw_blkt"].get_scan(
         -1
     )  # Heat for electricity (MW)
-    htpmw_fw_blkt = m_file.data["htpmw_fw_blkt"].get_scan(
+    p_fw_blkt_coolant_pump_mw = m_file.data["p_fw_blkt_coolant_pump_mw"].get_scan(
         -1
     )  # 1st wall & blanket pumping (MW)
-    pthermmw_p = pthermfw_blkt - htpmw_fw_blkt  # Heat - pumping power (MW)
+    pthermmw_p = pthermfw_blkt - p_fw_blkt_coolant_pump_mw  # Heat - pumping power (MW)
 
     # Used in [PRIMARY]
-    pgrossmw = m_file.data["pgrossmw"].get_scan(-1)  # gross electric power (MW)
+    p_plant_electric_gross_mw = m_file.data["p_plant_electric_gross_mw"].get_scan(
+        -1
+    )  # gross electric power (MW)
 
     # Used in [NET]
-    pnetelmw = m_file.data["pnetelmw"].get_scan(-1)  # net electric power (MW)
-    precircmw = pgrossmw - pnetelmw  # Recirculating power (MW)
+    p_plant_electric_net_mw = m_file.data["p_plant_electric_net_mw"].get_scan(
+        -1
+    )  # net electric power (MW)
+    precircmw = (
+        p_plant_electric_gross_mw - p_plant_electric_net_mw
+    )  # Recirculating power (MW)
 
     # Used in [RECIRC]
     crypmw = m_file.data["crypmw"].get_scan(-1)  # cryogenic plant power (MW)
@@ -638,7 +646,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_hcd_electric_total_mw = m_file.data["p_hcd_electric_total_mw"].get_scan(
         -1
     )  # injector wall plug power (MW)
-    htpmw = m_file.data["htpmw"].get_scan(
+    p_coolant_pump_elec_total_mw = m_file.data["p_coolant_pump_elec_total_mw"].get_scan(
         -1
     )  # heat transport system electrical pump power (MW)
 
@@ -723,8 +731,12 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # Primary heat, -Gross electric power, -difference (loss)
         primary = [
             pthermmw_p + totaldivetc + totalcpetc + pnucshld,
-            -pgrossmw,
-            -pthermmw_p + pgrossmw - totaldivetc - totalcpetc - pnucshld,
+            -p_plant_electric_gross_mw,
+            -pthermmw_p
+            + p_plant_electric_gross_mw
+            - totaldivetc
+            - totalcpetc
+            - pnucshld,
         ]
         sankey.add(
             flows=primary,
@@ -738,9 +750,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # ------------------------------------ ELECTRICITY - 4 ------------------------------------
 
         # If net electric is +ve or -ve changes the flow organisation
-        if pnetelmw >= 0:  # net electric is +ve
+        if p_plant_electric_net_mw >= 0:  # net electric is +ve
             # Gross electric power, -net electric power, -recirculated power
-            net = [pgrossmw, -pnetelmw, -precircmw]
+            net = [p_plant_electric_gross_mw, -p_plant_electric_net_mw, -precircmw]
             sankey.add(
                 flows=net,
                 orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
@@ -749,9 +761,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                 pathlengths=[0.1, 0.25, 1.5],
                 labels=[None, "Net elec.", "Recirc. Power"],
             )
-        elif pnetelmw < 0:  # net electric is -ve
+        elif p_plant_electric_net_mw < 0:  # net electric is -ve
             # Gross electric power, -net electric power, -recirculated power
-            net = [-pnetelmw, pgrossmw, -precircmw]
+            net = [-p_plant_electric_net_mw, p_plant_electric_gross_mw, -precircmw]
             sankey.add(
                 flows=net,
                 orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
@@ -764,13 +776,20 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
 
         # Recirculated power, -Core Systems, -Heating System
-        recirc = [precircmw, -pcoresystems - htpmw, -p_hcd_electric_total_mw + ppumpmw]
+        recirc = [
+            precircmw,
+            -pcoresystems - p_coolant_pump_elec_total_mw,
+            -p_hcd_electric_total_mw + ppumpmw,
+        ]
         # Check if difference >2 between recirculated power and the output sum
         if sum(recirc) ** 2 > 2:
             print(
                 "Recirc. Power Balance",
                 precircmw,
-                -pcoresystems + ppumpmw - p_hcd_electric_total_mw - htpmw,
+                -pcoresystems
+                + ppumpmw
+                - p_hcd_electric_total_mw
+                - p_coolant_pump_elec_total_mw,
             )
         sankey.add(
             flows=recirc,
@@ -834,37 +853,39 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             if t == diagrams[3].texts[1]:  # Gross Electric
                 t.set_horizontalalignment("right")
                 t.set_position((
-                    pos[0] - 0.5 * (pgrossmw / totalplasma) - 0.1,
+                    pos[0] - 0.5 * (p_plant_electric_gross_mw / totalplasma) - 0.1,
                     pos[1] + 0.1,
                 ))
             if t == diagrams[3].texts[2]:  # Losses
                 t.set_horizontalalignment("right")
                 t.set_position((pos[0] - 0.2, pos[1]))
-            if pnetelmw >= 1:
+            if p_plant_electric_net_mw >= 1:
                 if t == diagrams[4].texts[1]:  # Net electric
                     t.set_horizontalalignment("center")
                     t.set_position((pos[0], pos[1] - 0.2))
-            elif pnetelmw < 1 and t == diagrams[4].texts[0]:  # Net electric
+            elif (
+                p_plant_electric_net_mw < 1 and t == diagrams[4].texts[0]
+            ):  # Net electric
                 t.set_horizontalalignment("left")
                 t.set_position((pos[0] + 0.2, pos[1]))
             if t == diagrams[4].texts[2]:  # Recirc. Power
-                if pnetelmw >= 1:
+                if p_plant_electric_net_mw >= 1:
                     t.set_position((
                         pos[0] + 0.15,
                         pos[1] + 0.5 * (precircmw / totalplasma) + 0.2,
                     ))
-                elif pnetelmw < 1:
+                elif p_plant_electric_net_mw < 1:
                     t.set_horizontalalignment("left")
                     t.set_position((pos[0] + 0.2, pos[1]))
             if t == diagrams[5].texts[1]:  # Core Systems
                 t.set_position((pos[0], pos[1] - 0.2))
             if t == diagrams[5].texts[2]:  # Heating System
-                if pnetelmw >= 1:
+                if p_plant_electric_net_mw >= 1:
                     t.set_position((
                         pos[0] + 0.15,
                         pos[1] + 0.5 * (p_hcd_electric_total_mw / totalplasma) + 0.2,
                     ))
-                if pnetelmw < 1:
+                if p_plant_electric_net_mw < 1:
                     t.set_position((
                         pos[0] + 0.15,
                         pos[1] + 0.5 * (p_hcd_electric_total_mw / totalplasma) + 0.2,

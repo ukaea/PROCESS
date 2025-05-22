@@ -11466,7 +11466,7 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
 
 
 class CalcEnergyConversionSystemParam(NamedTuple):
-    pgrossmw: Any = None
+    p_plant_electric_gross_mw: Any = None
 
     cost_factor_bop: Any = None
 
@@ -11497,7 +11497,7 @@ class CalcEnergyConversionSystemParam(NamedTuple):
     "calcenergyconversionsystemparam",
     (
         CalcEnergyConversionSystemParam(
-            pgrossmw=893.59786239725906,
+            p_plant_electric_gross_mw=893.59786239725906,
             cost_factor_bop=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -12582,7 +12582,7 @@ class CalcEnergyConversionSystemParam(NamedTuple):
             ).transpose(),
         ),
         CalcEnergyConversionSystemParam(
-            pgrossmw=792.46889728924157,
+            p_plant_electric_gross_mw=792.46889728924157,
             cost_factor_bop=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -13684,7 +13684,9 @@ def test_calc_energy_conversion_system(
     """
 
     monkeypatch.setattr(
-        heat_transport_variables, "pgrossmw", calcenergyconversionsystemparam.pgrossmw
+        heat_transport_variables,
+        "p_plant_electric_gross_mw",
+        calcenergyconversionsystemparam.p_plant_electric_gross_mw,
     )
 
     monkeypatch.setattr(

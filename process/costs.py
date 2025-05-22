@@ -2354,7 +2354,8 @@ class Costs:
             self.c23 = (
                 1.0e-6
                 * cost_variables.ucturb[fwbs_variables.i_blkt_coolant_type - 1]
-                * (heat_transport_variables.pgrossmw / 1200.0e0) ** exptpe
+                * (heat_transport_variables.p_plant_electric_gross_mw / 1200.0e0)
+                ** exptpe
             )
 
     def acc24(self):
@@ -2479,7 +2480,8 @@ class Costs:
             )
         else:
             pwrrej = (
-                heat_transport_variables.pthermmw - heat_transport_variables.pgrossmw
+                heat_transport_variables.pthermmw
+                - heat_transport_variables.p_plant_electric_gross_mw
             )
 
         # cost_variables.uchrs - reference cost of heat rejection system [$]
@@ -2606,7 +2608,9 @@ class Costs:
         if pulse_variables.istore < 3:
             #  Scale self.c2253 with net electric power
 
-            self.c2253 = self.c2253 * heat_transport_variables.pnetelmw / 1200.0e0
+            self.c2253 = (
+                self.c2253 * heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+            )
 
             #  It is necessary to convert from 1992 pounds to 1990 dollars
             #  Reasonable guess for the exchange rate + inflation factor
@@ -2631,14 +2635,14 @@ class Costs:
         if ife_variables.ife == 1:
             kwhpy = (
                 1.0e3
-                * heat_transport_variables.pnetelmw
+                * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.n_day_year)
                 * cost_variables.cfactr
             )
         else:
             kwhpy = (
                 1.0e3
-                * heat_transport_variables.pnetelmw
+                * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.n_day_year)
                 * cost_variables.cfactr
                 * times_variables.t_burn
@@ -2802,7 +2806,7 @@ class Costs:
         #  Annual cost of operation and maintenance
 
         annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.pnetelmw / 1200.0e0
+            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
         )
 
         #  Additional cost due to pulsed reactor thermal storage
@@ -2819,7 +2823,7 @@ class Costs:
         #
         #  Scale with net electric power
         #
-        #         annoam1 = annoam1 * heat_transport_variables.pnetelmw/1200.0e0
+        #         annoam1 = annoam1 * heat_transport_variables.p_plant_electric_net_mw/1200.0e0
         #
         #  It is necessary to convert from 1992 pounds to 1990 dollars
         #  Reasonable guess for the exchange rate + inflation factor
@@ -2843,7 +2847,9 @@ class Costs:
         if ife_variables.ife != 1:
             #  Sum D-T fuel cost and He3 fuel cost
             annfuel = (
-                cost_variables.ucfuel * heat_transport_variables.pnetelmw / 1200.0e0
+                cost_variables.ucfuel
+                * heat_transport_variables.p_plant_electric_net_mw
+                / 1200.0e0
                 + 1.0e-6
                 * physics_variables.f_helium3
                 * physics_variables.wtgpd
@@ -2871,7 +2877,7 @@ class Costs:
         #  Annual cost of waste disposal
 
         annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.pnetelmw / 1200.0e0
+            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
         )
 
         #  Cost of electricity due to waste disposal

@@ -1229,19 +1229,22 @@ class Stellarator:
                     - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
-                heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                    fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.p_fw_rad_total_mw
-                    + current_drive_variables.p_beam_orbit_loss_mw
+                heat_transport_variables.p_fw_coolant_pump_mw = (
+                    heat_transport_variables.fpumpfw
+                    * (
+                        fwbs_variables.p_fw_nuclear_heat_total_mw
+                        + fwbs_variables.p_fw_rad_total_mw
+                        + current_drive_variables.p_beam_orbit_loss_mw
+                    )
                 )
-                heat_transport_variables.htpmw_blkt = (
+                heat_transport_variables.p_blkt_coolant_pump_mw = (
                     heat_transport_variables.fpumpblkt
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
-                heat_transport_variables.htpmw_shld = (
+                heat_transport_variables.p_shld_coolant_pump_mw = (
                     heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
                 )
-                heat_transport_variables.htpmw_div = (
+                heat_transport_variables.p_div_coolant_pump_mw = (
                     heat_transport_variables.fpumpdiv
                     * (
                         physics_variables.p_plasma_separatrix_mw
@@ -1480,7 +1483,7 @@ class Stellarator:
                     #    Use input
                     pass
                 elif fwbs_variables.i_coolant_pumping == 1:
-                    heat_transport_variables.htpmw_fw = (
+                    heat_transport_variables.p_fw_coolant_pump_mw = (
                         heat_transport_variables.fpumpfw
                         * (
                             p_fw_inboard_nuclear_heat_mw
@@ -1490,7 +1493,7 @@ class Stellarator:
                             + current_drive_variables.p_beam_orbit_loss_mw
                         )
                     )
-                    heat_transport_variables.htpmw_blkt = (
+                    heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
                             pnucbzi * fwbs_variables.emult
@@ -1572,12 +1575,12 @@ class Stellarator:
 
                 if fwbs_variables.i_coolant_pumping == 1:
                     #  Shield pumping power (MW)
-                    heat_transport_variables.htpmw_shld = (
+                    heat_transport_variables.p_shld_coolant_pump_mw = (
                         heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
-                    heat_transport_variables.htpmw_div = (
+                    heat_transport_variables.p_div_coolant_pump_mw = (
                         heat_transport_variables.fpumpdiv
                         * (
                             physics_variables.p_plasma_separatrix_mw
