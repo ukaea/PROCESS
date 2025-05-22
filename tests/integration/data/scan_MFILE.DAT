@@ -928,7 +928,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -1923,7 +1923,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -2918,7 +2918,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -3913,7 +3913,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -4908,7 +4908,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -5903,7 +5903,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -6898,7 +6898,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -7893,7 +7893,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
@@ -8888,7 +8888,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
  Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
+ Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
  H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
  First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    

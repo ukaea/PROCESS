@@ -1066,7 +1066,7 @@ class Stellarator:
         self.hcpb.nuclear_heating_shield()
 
         # Energy multiplication factor
-        fwbs_variables.emult = 1.269
+        fwbs_variables.f_p_blkt_multiplication = 1.269
 
         # Use older model to calculate neutron fluence since it
         # is not calculated in the CCFE blanket model
@@ -1275,7 +1275,7 @@ class Stellarator:
                     physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                ) * fwbs_variables.emult
+                ) * fwbs_variables.f_p_blkt_multiplication
 
                 fwbs_variables.emultmw = pneut2 - (
                     physics_variables.p_neutron_total_mw
@@ -1497,8 +1497,8 @@ class Stellarator:
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
-                            pnucbzi * fwbs_variables.emult
-                            + pnucbzo * fwbs_variables.emult
+                            pnucbzi * fwbs_variables.f_p_blkt_multiplication
+                            + pnucbzo * fwbs_variables.f_p_blkt_multiplication
                         )
                     )
                 else:
@@ -1508,8 +1508,8 @@ class Stellarator:
 
                 fwbs_variables.emultmw = (
                     heat_transport_variables.fpumpblkt
-                    * (pnucbzi * fwbs_variables.emult + pnucbzo)
-                    * (fwbs_variables.emult - 1.0e0)
+                    * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
                 )
 
                 #  Total nuclear heating of first wall (MW)
@@ -1522,11 +1522,11 @@ class Stellarator:
 
                 fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                     pnucbzi + pnucbzo
-                ) * fwbs_variables.emult
+                ) * fwbs_variables.f_p_blkt_multiplication
 
                 fwbs_variables.emultmw = fwbs_variables.emultmw + (
                     pnucbzi + pnucbzo
-                ) * (fwbs_variables.emult - 1.0e0)
+                ) * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
@@ -2089,8 +2089,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Energy multiplication in blanket",
-                    "(emult)",
-                    fwbs_variables.emult,
+                    "(f_p_blkt_multiplication)",
+                    fwbs_variables.f_p_blkt_multiplication,
                 )
                 po.ovarin(
                     self.outfile,

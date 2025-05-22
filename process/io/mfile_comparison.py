@@ -205,7 +205,7 @@ BLANKET_COMPARE_PARAMS = [
     "tbr",
     "f_blkt_li6_enrichment",
     "a_fw_total",
-    "emult",
+    "f_p_blkt_multiplication",
 ]
 
 GENERIC_LIST = [

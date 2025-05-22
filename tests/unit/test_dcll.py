@@ -59,7 +59,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     pnuc_blkt_ratio_dcll: Any = None
 
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
 
     emultmw: Any = None
 
@@ -107,7 +107,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_blkt_nuclear_heat_total_mw=0,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
-            emult=1.2689999999999999,
+            f_p_blkt_multiplication=1.2689999999999999,
             emultmw=0,
             p_tf_nuclear_heat_mw=0,
             n_divertors=1,
@@ -139,7 +139,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
-            emult=1.2689999999999999,
+            f_p_blkt_multiplication=1.2689999999999999,
             emultmw=325.06710220789364,
             p_tf_nuclear_heat_mw=0,
             n_divertors=1,
@@ -260,7 +260,11 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.pnuc_blkt_ratio_dcll,
     )
 
-    monkeypatch.setattr(fwbs_variables, "emult", dcllneutronicsandpowerparam.emult)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_p_blkt_multiplication",
+        dcllneutronicsandpowerparam.f_p_blkt_multiplication,
+    )
 
     monkeypatch.setattr(fwbs_variables, "emultmw", dcllneutronicsandpowerparam.emultmw)
 

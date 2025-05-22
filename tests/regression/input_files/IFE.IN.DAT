@@ -230,7 +230,7 @@ v3matf(26)  = 0.0000   *Void 3 material fraction (upper lithium)
 v3matf(27)  = 0.0000   *Void 3 material fraction (lower lithium)
 
 *------------------FWBS Variables------------------*
-emult       = 1.26     *Energy multiplication in blanket and shield
+f_p_blkt_multiplication       = 1.26     *Energy multiplication in blanket and shield
 fhole       = 0.0      *Area fraction taken up by other holes 
 
 *-----------------Cost Variables-------------------*

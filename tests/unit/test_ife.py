@@ -2030,7 +2030,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
 
 
 class Ifepw1Param(NamedTuple):
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
     fhole: Any = None
     p_blkt_nuclear_heat_total_mw: Any = None
     p_shld_nuclear_heat_mw: Any = None
@@ -2063,7 +2063,7 @@ class Ifepw1Param(NamedTuple):
     "ifepw1param",
     (
         Ifepw1Param(
-            emult=1.26,
+            f_p_blkt_multiplication=1.26,
             fhole=0,
             p_blkt_nuclear_heat_total_mw=0,
             p_shld_nuclear_heat_mw=0,
@@ -2105,7 +2105,9 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "emult", ifepw1param.emult)
+    monkeypatch.setattr(
+        fwbs_variables, "f_p_blkt_multiplication", ifepw1param.f_p_blkt_multiplication
+    )
     monkeypatch.setattr(fwbs_variables, "fhole", ifepw1param.fhole)
     monkeypatch.setattr(
         fwbs_variables,
@@ -2184,7 +2186,7 @@ class Bld2019Param(NamedTuple):
     trcl: Any = None
     stcl: Any = None
     tbr: Any = None
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
     ifetyp: Any = None
     chrad: Any = None
     r1: Any = None
@@ -2276,7 +2278,7 @@ class Bld2019Param(NamedTuple):
             trcl=1,
             stcl=3,
             tbr=0,
-            emult=1.26,
+            f_p_blkt_multiplication=1.26,
             ifetyp=4,
             chrad=3.5,
             r1=0,
@@ -2512,7 +2514,9 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
-    monkeypatch.setattr(fwbs_variables, "emult", bld2019param.emult)
+    monkeypatch.setattr(
+        fwbs_variables, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
+    )
     monkeypatch.setattr(ife_variables, "ifetyp", bld2019param.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", bld2019param.chrad)
     monkeypatch.setattr(ife_variables, "r1", bld2019param.r1)
@@ -2568,7 +2572,9 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
     assert build_variables.a_fw_total == pytest.approx(bld2019param.expected_a_fw_total)
     assert fwbs_variables.tbr == pytest.approx(bld2019param.expected_tbr)
-    assert fwbs_variables.emult == pytest.approx(bld2019param.expected_emult)
+    assert fwbs_variables.f_p_blkt_multiplication == pytest.approx(
+        bld2019param.expected_emult
+    )
     assert ife_variables.r1 == pytest.approx(bld2019param.expected_r1)
     assert ife_variables.r2 == pytest.approx(bld2019param.expected_r2)
     assert ife_variables.r3 == pytest.approx(bld2019param.expected_r3)
@@ -2868,7 +2874,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
 class Ifepw2Param(NamedTuple):
     ireactor: Any = None
     pnucloss: Any = None
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
     tbr: Any = None
     p_blkt_nuclear_heat_total_mw: Any = None
     fachtmw: Any = None
@@ -2907,7 +2913,7 @@ class Ifepw2Param(NamedTuple):
         Ifepw2Param(
             ireactor=1,
             pnucloss=0,
-            emult=1.26,
+            f_p_blkt_multiplication=1.26,
             tbr=0,
             p_blkt_nuclear_heat_total_mw=1924.4887199999998,
             fachtmw=0,
@@ -2955,7 +2961,9 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     """
     monkeypatch.setattr(cost_variables, "ireactor", ifepw2param.ireactor)
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw2param.pnucloss)
-    monkeypatch.setattr(fwbs_variables, "emult", ifepw2param.emult)
+    monkeypatch.setattr(
+        fwbs_variables, "f_p_blkt_multiplication", ifepw2param.f_p_blkt_multiplication
+    )
     monkeypatch.setattr(fwbs_variables, "tbr", ifepw2param.tbr)
     monkeypatch.setattr(
         fwbs_variables,
