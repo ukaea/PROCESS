@@ -1158,7 +1158,7 @@
  Heat_removal_from_tritium_plant_(MW)_____________________________________ (p_tritium_plant_electric_mw)_____________________ 1.50000000000000000e+01 OP
  Heat_removal_from_vacuum_pumps_(MW)______________________________________ (vachtmw)______________________ 5.00000000000000000e-01 OP
  TF_coil_resistive_power_(MW)_____________________________________________ (tfcmw)________________________ 0.00000000000000000e+00 OP
- Total_low-grade_thermal_power_(MW)_______________________________________ (psechtmw)_____________________ 2.52584620983478175e+02 OP
+ Total_low-grade_thermal_power_(MW)_______________________________________ (p_plant_secondary_heat_mw)_____________________ 2.52584620983478175e+02 OP
  Total_High-grade_thermal_power_(MW)______________________________________ (pthermmw)_____________________ 2.36395397689003630e+03 OP
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 3.21850327706303688e+02 OP
@@ -1199,7 +1199,7 @@
  Total_(MW)_______________________________________________________________ _______________________________ 2.07458593282227821e+03 OP
  Net_electrical_output_(MW)	______________________________________________ (p_plant_electric_net_mw)_____________________ 4.04675729597187456e+02 OP
  Heat_rejected_by_main_power_conversion_circuit_(MW)______________________ (p_turbine_loss_mw)________________ 1.41837238613402178e+03 OP
- Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (psechtmw)_____________________ 2.52584620983478175e+02 OP
+ Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (p_plant_secondary_heat_mw)_____________________ 2.52584620983478175e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.07563273671468733e+03 OP
  Net_electric_power_/_total_nuclear_power_(%)_____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)_ 1.95063372981934933e+01 OP
  Net_electric_power_/_total_fusion_power_(%)______________________________ (p_plant_electric_net_mw/p_fusion_total_mw)________ 2.32127725855597227e+01 OP

@@ -939,8 +939,8 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # psechtmw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
-        heat_transport_variables.psechtmw = (
+        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.psecdiv + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        heat_transport_variables.p_plant_secondary_heat_mw = (
             self.p_plant_core_systems_elec_mw
             + heat_transport_variables.pinjht
             + heat_transport_variables.p_coolant_pump_loss_total_mw
@@ -1637,8 +1637,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Total low-grade thermal power (MW)",
-            "(psechtmw)",
-            heat_transport_variables.psechtmw,
+            "(p_plant_secondary_heat_mw)",
+            heat_transport_variables.p_plant_secondary_heat_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2089,8 +2089,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Heat rejected by other cooling circuits (MW)",
-            "(psechtmw)",
-            heat_transport_variables.psechtmw,
+            "(p_plant_secondary_heat_mw)",
+            heat_transport_variables.p_plant_secondary_heat_mw,
             "OP ",
         )
         po.ovarrf(
@@ -2099,7 +2099,7 @@ class Power:
             "",
             heat_transport_variables.p_plant_electric_net_mw
             + self.p_turbine_loss_mw
-            + heat_transport_variables.psechtmw,
+            + heat_transport_variables.p_plant_secondary_heat_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -2109,7 +2109,7 @@ class Power:
                 - (
                     heat_transport_variables.p_plant_electric_net_mw
                     + self.p_turbine_loss_mw
-                    + heat_transport_variables.psechtmw
+                    + heat_transport_variables.p_plant_secondary_heat_mw
                 )
             )
             > 5.0e0
@@ -3147,7 +3147,7 @@ def init_heat_transport_variables():
     heat_transport_variables.priheat = 0.0
     heat_transport_variables.psecdiv = 0.0
     heat_transport_variables.psechcd = 0.0
-    heat_transport_variables.psechtmw = 0.0
+    heat_transport_variables.p_plant_secondary_heat_mw = 0.0
     heat_transport_variables.pseclossmw = 0.0
     heat_transport_variables.psecshld = 0.0
     heat_transport_variables.pthermmw = 0.0
