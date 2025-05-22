@@ -75,7 +75,9 @@ class Power:
         self.p_plant_core_systems_elec_mw = AnnotatedVariable(
             float, 0.0, docstring="", units=""
         )
-        self.f_p_div_primary_heat = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.f_p_div_primary_heat = AnnotatedVariable(
+            float, 0.0, docstring="", units=""
+        )
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.i_div_primary_heat = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_turbine_loss_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
@@ -802,8 +804,9 @@ class Power:
         self.delta_eta = 0.339 * self.f_p_div_primary_heat
 
         #  Secondary thermal power deposited in shield
-        heat_transport_variables.psecshld = self.p_shld_heat_deposited_mw * (
-            1 - heat_transport_variables.i_shld_primary_heat
+        heat_transport_variables.p_shld_secondary_heat_mw = (
+            self.p_shld_heat_deposited_mw
+            * (1 - heat_transport_variables.i_shld_primary_heat)
         )
 
         #  Secondary thermal power lost to HCD apparatus and diagnostics
@@ -944,13 +947,13 @@ class Power:
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
         #  Included fwbs_variables.ptfnuc
-        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.psecshld + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
+        # p_plant_secondary_heat_mw = self.p_plant_core_systems_elec_mw + heat_transport_variables.pinjht + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.psechcd + fwbs_variables.ptfnuc
         heat_transport_variables.p_plant_secondary_heat_mw = (
             self.p_plant_core_systems_elec_mw
             + heat_transport_variables.pinjht
             + heat_transport_variables.p_coolant_pump_loss_total_mw
             + heat_transport_variables.p_div_secondary_heat_mw
-            + heat_transport_variables.psecshld
+            + heat_transport_variables.p_shld_secondary_heat_mw
             + heat_transport_variables.psechcd
             + fwbs_variables.ptfnuc
         )
@@ -3160,7 +3163,7 @@ def init_heat_transport_variables():
     heat_transport_variables.psechcd = 0.0
     heat_transport_variables.p_plant_secondary_heat_mw = 0.0
     heat_transport_variables.pseclossmw = 0.0
-    heat_transport_variables.psecshld = 0.0
+    heat_transport_variables.p_shld_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_primary_heat_mw = 0.0
     heat_transport_variables.pwpm2 = 150.0
     heat_transport_variables.tfacpd = 0.0
