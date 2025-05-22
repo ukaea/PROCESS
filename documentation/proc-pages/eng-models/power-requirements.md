@@ -15,6 +15,34 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ### Main power conversion | `power1()`
 
+1: Calculate the electric wall plug power for the different coolant systems by dividing by the pump wall plug efficiencies
+
+$$
+P_{\text{pump,electric}} = \frac{P_{\text{pump}}}{\underbrace{\eta_{\text{pump}}}_{\texttt{etahtp}}}
+$$
+
+This is done for the first wall, blanket, vacuum vessel shield, divertor and blanket secondary breeder coolant (if present).
+
+2: The total mechanical pumping required for all the coolants is calculated:
+
+$$
+\underbrace{P_{\text{pump,total}}}_{\texttt{p_coolant_pump_total_mw}} = P_{\text{pump,FW-Blkt}} + P_{\text{pump,blkt-secondary}} \\
+  + P_{\text{pump,shield}} + P_{\text{pump,div}}
+$$
+
+3: The total electric power fo the coolant pumps is calculated:
+
+$$
+\underbrace{P_{\text{pump total,electric}}}_{\texttt{p_coolant_pump_elec_total_mw}} = \sum_{n}{P_{\text{pump,electric},n}}
+$$
+
+4: The electrical heat loss due to pump inefficiencies is calculated:
+
+$$
+\underbrace{P_{\text{pump loss,total}}}_{\texttt{p_coolant_pump_loss_total_mw}} = P_{\text{pump total, electric}} - P_{\text{pump,total}}
+$$
+
+
 ---
 
 ### Remainder power conversion | `power2()`
