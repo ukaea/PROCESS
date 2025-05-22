@@ -77,7 +77,7 @@ class Power:
         )
         self.pdivfraction = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.delta_eta = AnnotatedVariable(float, 0.0, docstring="", units="")
-        self.iprimdiv = AnnotatedVariable(float, 0.0, docstring="", units="")
+        self.i_div_primary_heat = AnnotatedVariable(float, 0.0, docstring="", units="")
         self.p_turbine_loss_mw = AnnotatedVariable(float, 0.0, docstring="", units="")
 
     def pfpwr(self, output: bool):
@@ -772,9 +772,11 @@ class Power:
                 * self.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
-            heat_transport_variables.p_div_secondary_heat_mw = self.p_div_heat_deposited_mw
+            heat_transport_variables.p_div_secondary_heat_mw = (
+                self.p_div_heat_deposited_mw
+            )
             # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
-            self.iprimdiv = 0
+            self.i_div_primary_heat = 0
         else:
             #  Primary thermal power (MW)
             heat_transport_variables.p_plant_primary_heat_mw = (
@@ -786,7 +788,7 @@ class Power:
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.p_div_secondary_heat_mw = 0.0e0
             # Divertor primary/secondary power switch: contributes to energy generation cycle
-            self.iprimdiv = 1
+            self.i_div_primary_heat = 1
 
         if abs(heat_transport_variables.p_plant_primary_heat_mw) < 1.0e-4:
             logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
@@ -1290,12 +1292,12 @@ class Power:
         )
         # #284
         po.osubhd(self.outfile, "Plant thermodynamics: options :")
-        if self.iprimdiv == 1:
+        if self.i_div_primary_heat == 1:
             po.ocmmnt(
                 self.outfile,
                 "Divertor thermal power is collected at only 150 C and is used to preheat the coolant in the power cycle",
             )
-        elif self.iprimdiv == 0:
+        elif self.i_div_primary_heat == 0:
             po.ocmmnt(
                 self.outfile,
                 "Divertor thermal power is not used, but rejected directly to the environment.",
@@ -1483,41 +1485,42 @@ class Power:
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
+                f"{fwbs_variables.p_div_nuclear_heat_total_mw * self.i_div_primary_heat} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.i_div_primary_heat)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{physics_variables.p_plasma_separatrix_mw * self.iprimdiv} {physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)} {physics_variables.p_plasma_separatrix_mw}"
+                f"{physics_variables.p_plasma_separatrix_mw * self.i_div_primary_heat} {physics_variables.p_plasma_separatrix_mw * (1 - self.i_div_primary_heat)} {physics_variables.p_plasma_separatrix_mw}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{fwbs_variables.p_div_rad_total_mw * self.iprimdiv} {fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)} {fwbs_variables.p_div_rad_total_mw}"
+                f"{fwbs_variables.p_div_rad_total_mw * self.i_div_primary_heat} {fwbs_variables.p_div_rad_total_mw * (1 - self.i_div_primary_heat)} {fwbs_variables.p_div_rad_total_mw}"
             ),
         )
         po.write(
             self.outfile,
             (
-                f"{heat_transport_variables.p_div_coolant_pump_mw * self.iprimdiv} {heat_transport_variables.p_div_coolant_pump_mw * (1 - self.iprimdiv)} {heat_transport_variables.p_div_coolant_pump_mw}"
+                f"{heat_transport_variables.p_div_coolant_pump_mw * self.i_div_primary_heat} {heat_transport_variables.p_div_coolant_pump_mw * (1 - self.i_div_primary_heat)} {heat_transport_variables.p_div_coolant_pump_mw}"
             ),
         )
 
         primsum = (
             primsum
-            + fwbs_variables.p_div_nuclear_heat_total_mw * self.iprimdiv
-            + physics_variables.p_plasma_separatrix_mw * self.iprimdiv
-            + fwbs_variables.p_div_rad_total_mw * self.iprimdiv
-            + heat_transport_variables.p_div_coolant_pump_mw * self.iprimdiv
+            + fwbs_variables.p_div_nuclear_heat_total_mw * self.i_div_primary_heat
+            + physics_variables.p_plasma_separatrix_mw * self.i_div_primary_heat
+            + fwbs_variables.p_div_rad_total_mw * self.i_div_primary_heat
+            + heat_transport_variables.p_div_coolant_pump_mw * self.i_div_primary_heat
         )
         secsum = (
             secsum
-            + fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.iprimdiv)
-            + physics_variables.p_plasma_separatrix_mw * (1 - self.iprimdiv)
-            + fwbs_variables.p_div_rad_total_mw * (1 - self.iprimdiv)
-            + heat_transport_variables.p_div_coolant_pump_mw * (1 - self.iprimdiv)
+            + fwbs_variables.p_div_nuclear_heat_total_mw * (1 - self.i_div_primary_heat)
+            + physics_variables.p_plasma_separatrix_mw * (1 - self.i_div_primary_heat)
+            + fwbs_variables.p_div_rad_total_mw * (1 - self.i_div_primary_heat)
+            + heat_transport_variables.p_div_coolant_pump_mw
+            * (1 - self.i_div_primary_heat)
         )
 
         if physics_variables.itart == 1:
