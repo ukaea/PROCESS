@@ -256,7 +256,7 @@ There are two blanket modules implemented in stellarator-PROCESS at the moment,
 The KIT HCPB model is documented elsewhere, for the simple module the following set of input parameters should be provided:
 ```
 blkttype = 0,1,2 (only relevant for mass calculations)
-emult = 1.18 *Energy multiplication in blanket and shield
+f_p_blkt_multiplication = 1.18 *Energy multiplication in blanket and shield
 etahtp = 1. *Electrical efficiency of primary coolant pumps
 fblbe = 0.47 *Beryllium fraction of blanket by volume (only relevant for mass calculations)
 fblli2o = 0.07 *Lithium oxide fraction of blanket by volume (only relevant for mass calculations)

@@ -2077,7 +2077,7 @@ class Power2Param(NamedTuple):
 
     etahtp: Any = None
 
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
 
     p_div_rad_total_mw: Any = None
 
@@ -2272,7 +2272,7 @@ class Power2Param(NamedTuple):
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
-            emult=1.2690000534057617,
+            f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
             f_a_fw_hcd=0,
@@ -2374,7 +2374,7 @@ class Power2Param(NamedTuple):
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
-            emult=1.2690000534057617,
+            f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
             f_a_fw_hcd=0,
@@ -2510,7 +2510,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "etahtp", power2param.etahtp)
 
-    monkeypatch.setattr(fwbs_variables, "emult", power2param.emult)
+    monkeypatch.setattr(
+        fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "p_div_rad_total_mw", power2param.p_div_rad_total_mw

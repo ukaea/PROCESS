@@ -950,7 +950,7 @@ class IFE:
         )
 
         # Energy Multiplication
-        fwbs_variables.emult = (
+        fwbs_variables.f_p_blkt_multiplication = (
             2.2414
             * (1.0 / (1.0 + np.exp(-3.0038 * ife_variables.bldrc)) - 0.5)
             * li_frac
@@ -1916,7 +1916,7 @@ class IFE:
         # Total thermal power removed from fusion core
 
         heat_transport_variables.priheat = (
-            fwbs_variables.emult * physics_variables.p_fusion_total_mw
+            fwbs_variables.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)
@@ -2055,8 +2055,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Power multiplication factor",
-                "(emult)",
-                fwbs_variables.emult,
+                "(f_p_blkt_multiplication)",
+                fwbs_variables.f_p_blkt_multiplication,
             )
             if ife_variables.ifetyp == 4:
                 process_output.ovarre(

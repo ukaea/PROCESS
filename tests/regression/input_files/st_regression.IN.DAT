@@ -2237,7 +2237,7 @@ i_fw_blkt_shared_coolant = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*emult = 
+*f_p_blkt_multiplication = 
 * DESCRIPTION:   Energy multiplication in blanket and shield
 * JUSTIFICATION: Not yet set
 

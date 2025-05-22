@@ -143,7 +143,7 @@ class CCFE_HCPB:
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.emult
+            * fwbs_variables.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
@@ -154,7 +154,7 @@ class CCFE_HCPB:
                 fwbs_variables.p_blkt_nuclear_heat_total_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.emult
+            * fwbs_variables.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
@@ -166,7 +166,7 @@ class CCFE_HCPB:
                 fwbs_variables.p_shld_nuclear_heat_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.emult
+            * fwbs_variables.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
@@ -175,7 +175,7 @@ class CCFE_HCPB:
         # The power deposited in the CP conductor is added back here
         fwbs_variables.p_tf_nuclear_heat_mw = (
             (fwbs_variables.p_tf_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
-            * fwbs_variables.emult
+            * fwbs_variables.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
             + fwbs_variables.pnuc_cp_tf
@@ -195,7 +195,7 @@ class CCFE_HCPB:
 
         # New code, a bit simpler
         fwbs_variables.emultmw = (
-            (fwbs_variables.emult - 1)
+            (fwbs_variables.f_p_blkt_multiplication - 1)
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
@@ -628,7 +628,7 @@ class CCFE_HCPB:
         """
         # Unfortunately the divertor heating was not tallied in the neutronics calcs
         # Assume that all the neutron energy + energy multiplication is absorbed in the reactor +
-        # coils. It turns out that emult is also approx constant, but this is not used. No energy
+        # coils. It turns out that f_p_blkt_multiplication is also approx constant, but this is not used. No energy
         # multiplication in the divertor
 
         # Overwrite global variable for f_ster_div_single 07/11/18 SIM: Removed having spoken to JM
@@ -1339,12 +1339,15 @@ class CCFE_HCPB:
         )
         po.ovarre(
             self.outfile,
-            "Total nuclear heating in the blanket (including emult) (MW)",
+            "Total nuclear heating in the blanket (including f_p_blkt_multiplication) (MW)",
             "(p_blkt_nuclear_heat_total_mw)",
             fwbs_variables.p_blkt_nuclear_heat_total_mw,
             "OP ",
         )
-        po.ocmmnt(self.outfile, "(Note: emult is fixed for this model inside the code)")
+        po.ocmmnt(
+            self.outfile,
+            "(Note: f_p_blkt_multiplication is fixed for this model inside the code)",
+        )
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the shield (MW)",

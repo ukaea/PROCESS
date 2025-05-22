@@ -136,14 +136,14 @@ class DCLL:
         fwbs_variables.p_blkt_nuclear_heat_total_mw = (
             physics_variables.p_neutron_total_mw
             * fwbs_variables.pnuc_blkt_ratio_dcll
-            * fwbs_variables.emult
+            * fwbs_variables.f_p_blkt_multiplication
             * covf
         )
 
         # Energy multiplication energy (MW)
         fwbs_variables.emultmw = (
             (physics_variables.p_neutron_total_mw * fwbs_variables.pnuc_blkt_ratio_dcll)
-            * (fwbs_variables.emult - 1)
+            * (fwbs_variables.f_p_blkt_multiplication - 1)
             * covf
         )
 
@@ -230,16 +230,17 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Energy multiplication in the blanket",
-                "(emult)",
-                fwbs_variables.emult,
+                "(f_p_blkt_multiplication)",
+                fwbs_variables.f_p_blkt_multiplication,
                 "OP ",
             )
             po.ocmmnt(
-                self.outfile, "(Note: emult is fixed for this model inside the code)"
+                self.outfile,
+                "(Note: f_p_blkt_multiplication is fixed for this model inside the code)",
             )
             po.ovarre(
                 self.outfile,
-                "Total nuclear heating in the blanket (including emult) (MW)",
+                "Total nuclear heating in the blanket (including f_p_blkt_multiplication) (MW)",
                 "(p_blkt_nuclear_heat_total_mw)",
                 fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 "OP ",

@@ -469,7 +469,9 @@ INPUT_VARIABLES = {
     "elecstore_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "emult": InputVariable(fortran.fwbs_variables, float, range=(1.0, 2.0)),
+    "f_p_blkt_multiplication": InputVariable(
+        fortran.fwbs_variables, float, range=(1.0, 2.0)
+    ),
     "esbldgm3": InputVariable(
         fortran.buildings_variables, float, range=(1000.0, 1000000.0)
     ),

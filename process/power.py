@@ -958,8 +958,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Neutron power multiplication in blanket",
-            "(emult)",
-            fwbs_variables.emult,
+            "(f_p_blkt_multiplication)",
+            fwbs_variables.f_p_blkt_multiplication,
         )
 
         if physics_variables.n_divertors == 2:
