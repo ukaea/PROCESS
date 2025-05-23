@@ -668,7 +668,7 @@
     {
       "no": 132,
       "level": 2,
-      "message": "DOOPT: Optimisation solver VMCON returns with ifail /= 1"
+      "message": "DOOPT: Solver returns with ifail /= 1"
     },
     {
       "no": 133,
@@ -678,7 +678,7 @@
     {
       "no": 134,
       "level": 2,
-      "message": "DOOPT: High final VMCON constraint residues"
+      "message": "DOOPT: High final constraint residues"
     },
     {
       "no": 135,

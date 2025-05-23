@@ -1561,7 +1561,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for component_masses.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param componentmassesparam: the data used to mock and assert in this test.
     :type componentmassesparam: componentmassesparam
