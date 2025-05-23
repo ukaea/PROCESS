@@ -7,14 +7,18 @@ vast extension package allowing ease of use with a range of languages. Visual St
 available for install [here](https://code.visualstudio.com/) and more information can be found on
 the [docs pages](https://code.visualstudio.com/docs).
 
-<h2>WSL with VS Code</h2>
+-------------
+
+## WSL with VS Code
 
 To connect WSL to VS Code, the following extension should be installed in VS Code upon
 opening: `Remote - WSL`. This allows for opening of any folder in the Windows Subsystem for
 Linux. This is performed by using `Ctrl+Shift+X` on VS Code, searching for `Remote - WSL` and
 then installing.
 
-<h2>Automatically activating virtual environment on VS Code Open</h2>
+--------------
+
+## Automatically activating virtual environment on VS Code Open
 
 When VS Code is first opened, you are able to set it such that the command:
 
