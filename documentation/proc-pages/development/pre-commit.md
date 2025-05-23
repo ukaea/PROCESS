@@ -1,5 +1,10 @@
 # Pre-commit
 
+!!! Info "TL;DR: the quality job fails"
+    If the quality job fails, run pre-commit using `pre-commit run --all-files` and fix any failures (some issues may be fixed automatically). Add and commit the changes until pre-commit no longer fails. If this doesn't solve
+    the problem then see below for more details.
+
+
 Pre-commit is PROCESS' way of ensuring all code pushed to our repository is of a certain quality 
 and style. One common style ensures PROCESS can be easily navigated and understood by all users. It 
 also reduces the "diffs" when reviewing code changes as often small style changes (such as the 
@@ -87,7 +92,7 @@ your commits pass through pre-commit, then these jobs should not fail as your co
 Although not required, the `ruff` VSCode extension will ensure that all the Python files you save 
 will be ruff-compliant and, as such, won't need to modified by pre-commit.
 
-Open or create the file `.vscode/settings.sh` and add/modify the following settings:
+Open or create the file `.vscode/settings.json` and add/modify the following settings:
 ```json
 {
     "[python]": {
