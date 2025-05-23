@@ -1,7 +1,7 @@
 # Pre-commit
 
 !!! Info "TL;DR: the quality job fails"
-    If the quality job fails, run pre-commit using `pre-commit run --all-files` and commit the file changes to your branch. If this doesn't solve
+    If the quality job fails, run pre-commit using `pre-commit run --all-files` and fix any failures (some issues may be fixed automatically). Add and commit the changes until pre-commit no longer fails. If this doesn't solve
     the problem then see below for more details.
 
 
