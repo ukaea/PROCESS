@@ -1,14 +1,16 @@
-import numpy as np
-from typing import Final, Tuple
+from typing import Final
 
+import numpy as np
 
 # Material property parameterisations
+
 
 def copper_density(temperature: float) -> float:
     """
     Calculate the density of cryogenic copper [kg/m^3].
     """
     return 8960.0  # No plans to include T-dependence
+
 
 def copper_specific_heat_capacity(temperature: float) -> float:
     """
@@ -23,16 +25,19 @@ def copper_specific_heat_capacity(temperature: float) -> float:
     Returns:
         float: Specific heat capacity [J/(kg·K)].
     """
-    GAMMA: Final[float] = 0.011       # [J/K²/kg] (Grueneisen)
-    BETA: Final[float] = 0.0011       # [J/K⁴/kg] (Debye)
-    CP_300: Final[float] = 385.491    # Room-temperature specific heat [J/K/kg]
+    GAMMA: Final[float] = 0.011  # [J/K²/kg] (Grueneisen)
+    BETA: Final[float] = 0.0011  # [J/K⁴/kg] (Debye)
+    CP_300: Final[float] = 385.491  # Room-temperature specific heat [J/K/kg]
 
     cp_low = BETA * temperature**3 + GAMMA * temperature
     cp = 1.0 / (1.0 / CP_300 + 1.0 / cp_low)
 
     return cp
 
-def copper_electrical_resistivity(temperature: float, field: float, rrr: float) -> float:
+
+def copper_electrical_resistivity(
+    temperature: float, field: float, rrr: float
+) -> float:
     """
     Calculate the electrical resistivity of cryogenic copper with temperature and field dependence [Ω·m].
 
@@ -66,15 +71,15 @@ def copper_electrical_resistivity(temperature: float, field: float, rrr: float) 
 
     # TODO: Implement PROCESS standard for kludging / warning
     t = np.clip(temperature, 4.0)
-    # TODO: this function at present has the potential to return poor values at low 
-    # field... 
+    # TODO: this function at present has the potential to return poor values at low
+    # field...
     rrr = np.clip(rrr, 1.0)
 
     t = temperature
 
     # Compute rho1
     numerator = P1 * t**P2
-    denominator = 1.0 + P3 * t**P4 * np.exp(-(P5 / t)**P6)
+    denominator = 1.0 + P3 * t**P4 * np.exp(-((P5 / t) ** P6))
     rho1 = numerator / denominator
 
     # Compute rho2
@@ -94,7 +99,7 @@ def copper_irradiation_resistivity(fluence: float) -> float:
 
     References:
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad)
-          K:\Technology Program\3PT\WP12\PEX\Super-Xdivertor for DEMO\Coil calcs 7
+          K:\\Technology Program\3PT\\WP12\\PEX\\Super-Xdivertor for DEMO\\Coil calcs 7
         - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K",
           Phys. Rev. B 16, 5285 (1977)
           https://doi.org/10.1103/PhysRevB.16.5285
@@ -126,7 +131,7 @@ def nb3sn_density(temperature: float) -> float:
 
 def nb3sn_specific_heat_capacity(temperature: float) -> float:
     """
-    Calculate the specific heat capacity of Nb3Sn [J/(kg·K)] 
+    Calculate the specific heat capacity of Nb3Sn [J/(kg·K)]
     as a function of temperature.
 
     References:
@@ -139,9 +144,9 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
         V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting
         Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
         G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors
-        obtained from heat capacity measurements, 
+        obtained from heat capacity measurements,
         Phys.Rev B, 13, no.9, pp 3783-3789, 1976.
-    
+
     Notes:
         Ignoring the superconducting part for quench
 
@@ -151,9 +156,9 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     Returns:
         float: Specific heat capacity [J/(kg·K)].
     """
-    GAMMA: Final[float] = 0.1       # [J/K²/kg] - Electronic contribution
-    BETA: Final[float] = 0.001      # [J/K⁴/kg] - Lattice (Debye) contribution
-    CP_HIGH: Final[float] = 210.0   # [J/K/kg] - High temperature limit
+    GAMMA: Final[float] = 0.1  # [J/K²/kg] - Electronic contribution
+    BETA: Final[float] = 0.001  # [J/K⁴/kg] - Lattice (Debye) contribution
+    CP_HIGH: Final[float] = 210.0  # [J/K/kg] - High temperature limit
 
     # Normally conducting specific heat capacity (i.e. ignoring transition from
     # superconducting state)
@@ -161,6 +166,7 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     cp = 1.0 / (1.0 / CP_HIGH + 1.0 / cp_low)
 
     return cp
+
 
 def helium_density(temperature: float) -> float:
     # TODO: Replace with T-dependent formulation
@@ -172,15 +178,12 @@ def helium_specific_heat_capacity(temperature: float) -> float:
     return 4750.0
 
 
-# Quench model 
+# Quench model
+
 
 def quench_integrals(
-    t_he_peak: float,
-    t_max: float,
-    field: float,
-    rrr: float,
-    fluence: float
-) -> Tuple[float, float, float]:
+    t_he_peak: float, t_max: float, field: float, rrr: float, fluence: float
+) -> tuple[float, float, float]:
     """
     Calculates the material property integrals for quench protection.
 
@@ -208,7 +211,7 @@ def quench_integrals(
     icu = 0.0
     isc = 0.0
 
-    for xi, wi in zip(nodes, weights):
+    for xi, wi in zip(nodes, weights, strict=False):
         ti = 0.5 * (xi + 1.0) * (t_max - t_he_peak) + t_he_peak
         dti = 0.5 * wi * (t_max - t_he_peak)
 
@@ -244,8 +247,8 @@ def calculate_quench_protection_current_density_magnetoresistive(
 
         where:
 
-        I_He = ∫[T₀ to T_max] (ρ_He(T) * c_P,He(T)) / η_Cu(T, B, RRR) dT  
-        I_Cu = ∫[T₀ to T_max] (ρ_Cu(T) * c_P,Cu(T)) / η_Cu(T, B, RRR) dT  
+        I_He = ∫[T₀ to T_max] (ρ_He(T) * c_P,He(T)) / η_Cu(T, B, RRR) dT
+        I_Cu = ∫[T₀ to T_max] (ρ_Cu(T) * c_P,Cu(T)) / η_Cu(T, B, RRR) dT
         I_sc = ∫[T₀ to T_max] (ρ_sc(T) * c_P,sc(T)) / η_Cu(T, B, RRR) dT
 
     Parameters:
@@ -264,9 +267,11 @@ def calculate_quench_protection_current_density_magnetoresistive(
     """
     i_he, i_cu, i_sc = quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
 
-    f_cond = 1.0 - f_he                 # Fraction of the cable XS area that is not helium
-    f_cu_cable = f_cond * f_cu          # Fraction of the cable XS that is copper
-    f_sc_cable = f_cond * (1.0 - f_cu)  # Fraction of the cable XS that is superconductor
+    f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
+    f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
+    f_sc_cable = f_cond * (
+        1.0 - f_cu
+    )  # Fraction of the cable XS that is superconductor
 
     factor = 1.0 / (0.5 * tau_discharge + detection_time)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
