@@ -5,7 +5,7 @@ produce infeasible results; that is, the code will not find a consistent set of 
 The highly non-linear nature of the numerics of PROCESS is the reason for this difficulty, and 
 it often requires a great deal of painstaking adjustment of the input file to overcome.
 
-<h2>Error handling</h2>
+## Error handling
 
 In general, errors detected during a run are handled in a consistent manner, with the code 
 producing useful diagnostic messages to help the user understand what has happened.
