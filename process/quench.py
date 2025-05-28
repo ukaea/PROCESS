@@ -8,7 +8,7 @@ def copper_density(temperature: float) -> float:
     """
     Calculate the density of cryogenic copper [kg/m^3].
     """
-    return 8960.0
+    return 8960.0  # No plans to include T-dependence
 
 def copper_specific_heat_capacity(temperature: float) -> float:
     """
@@ -23,8 +23,8 @@ def copper_specific_heat_capacity(temperature: float) -> float:
     Returns:
         float: Specific heat capacity [J/(kg·K)].
     """
-    GAMMA: Final[float] = 0.011       # [J/K²/kg]
-    BETA: Final[float] = 0.0011       # [J/K⁴/kg]
+    GAMMA: Final[float] = 0.011       # [J/K²/kg] (Grueneisen)
+    BETA: Final[float] = 0.0011       # [J/K⁴/kg] (Debye)
     CP_300: Final[float] = 385.491    # Room-temperature specific heat [J/K/kg]
 
     cp_low = BETA * temperature**3 + GAMMA * temperature
@@ -105,6 +105,7 @@ def copper_irradiation_resistivity(fluence: float) -> float:
     Returns:
         float: Radiation-induced resistivity [Ω·m].
     """
+    # TODO: Check with M. Kovari and document
     C1: Final[float] = 0.00283
     C2: Final[float] = -0.0711
     C3: Final[float] = 0.77982
@@ -120,7 +121,7 @@ def nb3sn_density(temperature: float) -> float:
     """
     Calculate the density of Nb3Sn [kg/m^3].
     """
-    return 8040.0
+    return 8040.0  # No plans to include T-dependence
 
 
 def nb3sn_specific_heat_capacity(temperature: float) -> float:
@@ -132,6 +133,14 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
         EFDA Material Data Compilation for Superconductor Simulation,
         P. Bauer, H. Rajainmaki, E. Salpietro,
         EFDA CSU, Garching, 04/18/07.
+        ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-
+        05 R 0.1, Thermal, Electrical and Mechanical Properties of Materials at Cryogenic
+        Temperatures
+        V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting
+        Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
+        G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors
+        obtained from heat capacity measurements, 
+        Phys.Rev B, 13, no.9, pp 3783-3789, 1976.
     
     Notes:
         Ignoring the superconducting part for quench
@@ -146,16 +155,20 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     BETA: Final[float] = 0.001      # [J/K⁴/kg] - Lattice (Debye) contribution
     CP_HIGH: Final[float] = 210.0   # [J/K/kg] - High temperature limit
 
+    # Normally conducting specific heat capacity (i.e. ignoring transition from
+    # superconducting state)
     cp_low = BETA * temperature**3 + GAMMA * temperature
     cp = 1.0 / (1.0 / CP_HIGH + 1.0 / cp_low)
 
     return cp
 
 def helium_density(temperature: float) -> float:
+    # TODO: Replace with T-dependent formulation
     return 150.0
 
 
 def helium_specific_heat_capacity(temperature: float) -> float:
+    # TODO: Replace with T-dependent formulation
     return 4750.0
 
 
@@ -257,5 +270,7 @@ def calculate_quench_protection_current_density_magnetoresistive(
 
     factor = 1.0 / (0.5 * tau_discharge + detection_time)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
+
+    # TODO: Work in the full cable / WP fraction of conducting region / (conducting + jacket + ins)
 
     return np.sqrt(factor * f_cu_cable * total_integral)
