@@ -28,7 +28,7 @@ def buildings():
 
 class BldgsSizesParam(NamedTuple):
     i_bldgs_v: Any
-    efloor: Any
+    a_plant_floor_effective: Any
     volnucb: Any
     bioshld_thk: Any
     reactor_wall_thk: Any
@@ -171,7 +171,7 @@ class BldgsSizesParam(NamedTuple):
     (
         BldgsSizesParam(
             i_bldgs_v=0,
-            efloor=0,
+            a_plant_floor_effective=0,
             volnucb=0,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
@@ -310,7 +310,7 @@ class BldgsSizesParam(NamedTuple):
         ),
         BldgsSizesParam(
             i_bldgs_v=0,
-            efloor=1539392.0963074313,
+            a_plant_floor_effective=1539392.0963074313,
             volnucb=5212998.1139194397,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
@@ -451,7 +451,11 @@ class BldgsSizesParam(NamedTuple):
 )
 def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
-    monkeypatch.setattr(buildings_variables, "efloor", bldgssizesparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        bldgssizesparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
@@ -775,7 +779,7 @@ class BldgsParam(NamedTuple):
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
-    efloor: Any
+    a_plant_floor_effective: Any
     admvol: Any
     triv: Any
     conv: Any
@@ -800,7 +804,7 @@ class BldgsParam(NamedTuple):
     crr: Any
     helpow: Any
     expected_wrbi: Any
-    expected_efloor: Any
+    expected_a_plant_floor_effective: Any
     expected_admvol: Any
     expected_shovol: Any
     expected_convol: Any
@@ -839,7 +843,7 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            efloor=0,
+            a_plant_floor_effective=0,
             admvol=0,
             triv=40000,
             conv=60000,
@@ -864,7 +868,7 @@ class BldgsParam(NamedTuple):
             crr=19.48258241468535,
             helpow=77840.021662652987,
             expected_wrbi=42.612047089019569,
-            expected_efloor=379235.17804514873,
+            expected_a_plant_floor_effective=379235.17804514873,
             expected_admvol=100000,
             expected_shovol=100000,
             expected_convol=60000,
@@ -899,7 +903,7 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            efloor=379235.17804514873,
+            a_plant_floor_effective=379235.17804514873,
             admvol=100000,
             triv=40000,
             conv=60000,
@@ -924,7 +928,7 @@ class BldgsParam(NamedTuple):
             crr=19.482980877139834,
             helpow=221493.99746816326,
             expected_wrbi=42.612445551474053,
-            expected_efloor=381590.59475257091,
+            expected_a_plant_floor_effective=381590.59475257091,
             expected_admvol=100000,
             expected_shovol=100000,
             expected_convol=60000,
@@ -963,7 +967,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
-    monkeypatch.setattr(buildings_variables, "efloor", bldgsparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        bldgsparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(buildings_variables, "admvol", bldgsparam.admvol)
     monkeypatch.setattr(buildings_variables, "triv", bldgsparam.triv)
     monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
@@ -991,7 +999,9 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     )
 
     assert buildings_variables.wrbi == pytest.approx(bldgsparam.expected_wrbi)
-    assert buildings_variables.efloor == pytest.approx(bldgsparam.expected_efloor)
+    assert buildings_variables.a_plant_floor_effective == pytest.approx(
+        bldgsparam.expected_a_plant_floor_effective
+    )
     assert buildings_variables.admvol == pytest.approx(bldgsparam.expected_admvol)
     assert buildings_variables.shovol == pytest.approx(bldgsparam.expected_shovol)
     assert buildings_variables.convol == pytest.approx(bldgsparam.expected_convol)

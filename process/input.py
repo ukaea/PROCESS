@@ -182,7 +182,7 @@ INPUT_VARIABLES = {
     "b_crit_upper_nbti": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 30.0)
     ),
-    "baseel": InputVariable(
+    "p_plant_electric_base": InputVariable(
         fortran.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
     "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
@@ -343,7 +343,7 @@ INPUT_VARIABLES = {
     "cryostore_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "crypmw_max": InputVariable(
+    "p_cryo_plant_electric_max_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.01, 200.0)
     ),
     "csi": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
@@ -488,7 +488,9 @@ INPUT_VARIABLES = {
     "etapsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
-    "etath": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
+    "eta_turbine": InputVariable(
+        fortran.heat_transport_variables, float, range=(0.0, 1.0)
+    ),
     "eyoung_al": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "eyoung_cond_axial": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 10000000000000.0)
@@ -813,9 +815,6 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "htpmw_ife": InputVariable(fortran.ife_variables, float, range=(0.0, 1000.0)),
-    "htpmw_min": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 500.0)
-    ),
     "p_shld_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -1302,7 +1301,7 @@ INPUT_VARIABLES = {
     "trcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "triang": InputVariable(fortran.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "trithtmw": InputVariable(
+    "p_tritium_plant_electric_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "triv": InputVariable(
@@ -1552,7 +1551,9 @@ INPUT_VARIABLES = {
     "i_pf_conductor": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1]),
     "ipnet": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
-    "iprimshld": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
+    "i_shld_primary_heat": InputVariable(
+        fortran.heat_transport_variables, int, choices=[0, 1]
+    ),
     "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 5)),
     "i_ind_plasma_internal_norm": InputVariable(
         fortran.physics_variables, int, range=(0, 2)

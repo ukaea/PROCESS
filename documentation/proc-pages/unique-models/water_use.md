@@ -4,7 +4,7 @@ The routines documented here can be used to estimate the amount of water used in
 
 The water *used* by a power plant is defined as that withdrawn from the environment, and includes the water evaporated [^1].
 
-The water evaporated can be estimated from the waste heat remaining after electricity generation: equal to the high-grade heat useful for electricity production (`pthermmw`) minus the gross electricity produced (`p_plant_electric_gross_mw`).  
+The water evaporated can be estimated from the waste heat remaining after electricity generation: equal to the high-grade heat useful for electricity production (`p_plant_primary_heat_mw`) minus the gross electricity produced (`p_plant_electric_gross_mw`).  
 
 ### Cooling Towers
 

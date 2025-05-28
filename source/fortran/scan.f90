@@ -91,7 +91,7 @@ module scan_module
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness
-  !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
+  !!         <LI> 56 p_cryo_plant_electric_max_mw: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
@@ -111,7 +111,7 @@ module scan_module
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
   !!         <LI> 75 dx_fw_module : pitch of first wall cooling channels (m)
-  !!         <LI> 76 etath : Thermal conversion eff.
+  !!         <LI> 76 eta_turbine : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
   !!         <LI> 79 eta_ecrh_injector_wall_plug : ECH wall plug to injector efficiency

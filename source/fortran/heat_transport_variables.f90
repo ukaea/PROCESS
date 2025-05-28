@@ -15,13 +15,13 @@ module heat_transport_variables
 
     public
 
-    real(dp) :: baseel
+    real(dp) :: p_plant_electric_base
     !! base plant electric load (W)
 
-    real(dp) :: crypmw
+    real(dp) :: p_cryo_plant_electric_mw
     !! cryogenic plant power (MW)
 
-    real(dp) :: crypmw_max
+    real(dp) :: p_cryo_plant_electric_max_mw
     !! Maximum cryogenic plant power (MW)
     !! Constraint equation icc = 87
     !! Scan variable nwseep = 56
@@ -34,7 +34,7 @@ module heat_transport_variables
     real(dp) :: etatf
     !! AC to resistive power conversion for TF coils
 
-    real(dp) :: etath
+    real(dp) :: eta_turbine
     !! thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated.
 
     real(dp) :: etath_liq
@@ -67,9 +67,6 @@ module heat_transport_variables
     !! fraction of total shield thermal power required to drive the shield coolant
     !! pumps (default assumes water coolant)
 
-    real(dp) :: htpmw_min
-    !! Minimum total electrical power for primary coolant pumps (MW) (NOT RECOMMENDED)
-
     real(dp) :: helpow
     !! Heat removal at cryogenic temperature temp_tf_cryo (W)
 
@@ -97,7 +94,7 @@ module heat_transport_variables
     real(dp) :: p_shld_coolant_pump_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
-    real(dp) :: htpsecmw
+    real(dp) :: p_coolant_pump_loss_total_mw
     !! Waste power lost from primary coolant pumps (MW)
 
     integer :: ipowerflow
@@ -106,7 +103,7 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimshld
+    integer :: i_shld_primary_heat
     !! Switch for shield thermal power destiny:
     !!
     !! - =0 does not contribute to energy generation cycle
@@ -121,7 +118,7 @@ module heat_transport_variables
     real(dp) :: peakmva
     !! peak MVA requirement
 
-    real(dp) :: pfwdiv
+    real(dp) :: p_fw_div_heat_deposited_mw
     !! heat removal from first wall/divertor (MW)
 
     real(dp) :: p_plant_electric_gross_mw
@@ -145,28 +142,28 @@ module heat_transport_variables
     real(dp) :: p_plant_electric_net_mw
     !! net electric power (MW)
 
-    real(dp) :: precircmw
+    real(dp) :: p_plant_electric_recirc_mw
     !! recirculating electric power (MW)
 
     real(dp) :: priheat
     !! total thermal power removed from fusion core (MW)
 
-    real(dp) :: psecdiv
+    real(dp) :: p_div_secondary_heat_mw
     !! Low-grade heat lost in divertor (MW)
 
-    real(dp) :: psechcd
+    real(dp) :: p_hcd_secondary_heat_mw
     !! Low-grade heat lost into HCD apparatus (MW)
 
-    real(dp) :: psechtmw
+    real(dp) :: p_plant_secondary_heat_mw
     !! Low-grade heat (MW)
 
     real(dp) :: pseclossmw
     !! Low-grade heat (VV + lost)(MW)
 
-    real(dp) :: psecshld
+    real(dp) :: p_shld_secondary_heat_mw
     !! Low-grade heat deposited in shield (MW)
 
-    real(dp) :: pthermmw
+    real(dp) :: p_plant_primary_heat_mw
     !! High-grade heat useful for electric production (MW)
 
     real(dp) :: pwpm2
@@ -178,7 +175,7 @@ module heat_transport_variables
     real(dp) :: tlvpmw
     !! estimate of total low voltage power (MW)
 
-    real(dp) :: trithtmw
+    real(dp) :: p_tritium_plant_electric_mw
     !! power required for tritium processing (MW)
 
     real(dp) :: temp_turbine_coolant_in

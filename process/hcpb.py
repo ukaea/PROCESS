@@ -82,7 +82,7 @@ class CCFE_HCPB:
             # TF, shield and total CP nuclear heating [MW]
             (
                 fwbs_variables.pnuc_cp_tf,
-                fwbs_variables.pnuc_cp_sh,
+                fwbs_variables.p_cp_shield_nuclear_heat_mw,
                 fwbs_variables.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
                 physics_variables.p_neutron_total_mw, build_variables.dr_shld_inboard
@@ -91,7 +91,7 @@ class CCFE_HCPB:
         else:  # No CP
             f_geom_cp = 0
             fwbs_variables.pnuc_cp_tf = 0
-            fwbs_variables.pnuc_cp_sh = 0
+            fwbs_variables.p_cp_shield_nuclear_heat_mw = 0
             fwbs_variables.pnuc_cp = 0
             fwbs_variables.neut_flux_cp = 0
 
@@ -119,15 +119,15 @@ class CCFE_HCPB:
         ccfe_hcpb_module.pnuc_tot_blk_sector = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
             + fwbs_variables.p_blkt_nuclear_heat_total_mw
-            + fwbs_variables.pnucshld
-            + fwbs_variables.ptfnuc
+            + fwbs_variables.p_shld_nuclear_heat_mw
+            + fwbs_variables.p_tf_nuclear_heat_mw
         )
 
         # Total nuclear power deposited in the
         # if ( pnuc_tot_blk_sector < 1.0d0 .or. pnuc_tot_blk_sector /= pnuc_tot_blk_sector ) then
         # #TODO This can flood the terminal, and should be logged once in Python
         # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ', 'p_blkt_nuclear_heat_total_mw =', p_blkt_nuclear_heat_total_mw
-        # write(*,*)'pnucshld =', pnucshld, ' ptfnuc =', ptfnuc
+        # write(*,*)'p_shld_nuclear_heat_mw =', p_shld_nuclear_heat_mw, ' p_tf_nuclear_heat_mw =', p_tf_nuclear_heat_mw
         # end if
 
         # Solid angle fraction taken by the breeding blankets/shields
@@ -161,8 +161,11 @@ class CCFE_HCPB:
 
         # Power to the shield(MW)
         # The power deposited in the CP shield is added back in powerflow_calc
-        fwbs_variables.pnucshld = (
-            (fwbs_variables.pnucshld / ccfe_hcpb_module.pnuc_tot_blk_sector)
+        fwbs_variables.p_shld_nuclear_heat_mw = (
+            (
+                fwbs_variables.p_shld_nuclear_heat_mw
+                / ccfe_hcpb_module.pnuc_tot_blk_sector
+            )
             * fwbs_variables.emult
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
@@ -170,8 +173,8 @@ class CCFE_HCPB:
 
         # Power to the TF coils (MW)
         # The power deposited in the CP conductor is added back here
-        fwbs_variables.ptfnuc = (
-            (fwbs_variables.ptfnuc / ccfe_hcpb_module.pnuc_tot_blk_sector)
+        fwbs_variables.p_tf_nuclear_heat_mw = (
+            (fwbs_variables.p_tf_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
             * fwbs_variables.emult
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
@@ -179,7 +182,7 @@ class CCFE_HCPB:
         )
 
         # Power deposited in the CP
-        fwbs_variables.pnuc_cp_sh = (
+        fwbs_variables.p_cp_shield_nuclear_heat_mw = (
             f_geom_cp * physics_variables.p_neutron_total_mw - fwbs_variables.pnuc_cp_tf
         )
 
@@ -187,7 +190,7 @@ class CCFE_HCPB:
         # ---
         # p_div_nuclear_heat_total_mw is not changed.
         # The energy due to multiplication, by subtraction:
-        # emultmw = p_fw_nuclear_heat_total_mw + p_blkt_nuclear_heat_total_mw + pnucshld + ptfnuc + p_div_nuclear_heat_total_mw - p_neutron_total_mw
+        # emultmw = p_fw_nuclear_heat_total_mw + p_blkt_nuclear_heat_total_mw + p_shld_nuclear_heat_mw + p_tf_nuclear_heat_mw + p_div_nuclear_heat_total_mw - p_neutron_total_mw
         # ---
 
         # New code, a bit simpler
@@ -485,7 +488,7 @@ class CCFE_HCPB:
             )
 
         # Total heating (MW)
-        fwbs_variables.ptfnuc = (
+        fwbs_variables.p_tf_nuclear_heat_mw = (
             ccfe_hcpb_module.tfc_nuc_heating
             * (physics_variables.p_fusion_total_mw / 1000.0)
             / 1.0e6
@@ -514,8 +517,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in TF coil (MW)",
-                "(ptfnuc.)",
-                fwbs_variables.ptfnuc,
+                "(p_tf_nuclear_heat_mw.)",
+                fwbs_variables.p_tf_nuclear_heat_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -612,7 +615,7 @@ class CCFE_HCPB:
         )
 
         # Total nuclear heating in shield (MW)
-        fwbs_variables.pnucshld = (
+        fwbs_variables.p_shld_nuclear_heat_mw = (
             ccfe_hcpb_module.shld_u_nuc_heating
             * (physics_variables.p_fusion_total_mw / 1000)
             / 1.0e6
@@ -727,7 +730,10 @@ class CCFE_HCPB:
             )
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -748,7 +754,10 @@ class CCFE_HCPB:
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -800,7 +809,10 @@ class CCFE_HCPB:
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld
-                * (fwbs_variables.pnucshld + fwbs_variables.pnuc_cp_sh)
+                * (
+                    fwbs_variables.p_shld_nuclear_heat_mw
+                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -1051,7 +1063,7 @@ class CCFE_HCPB:
 
             # WARINING, this is an extraoilation from TF heat ...
             # DO NOT TRUST THIS VALUE !!
-            pnuc_cp_sh = (pneut / 800.0) * np.exp(3.882) - pnuc_cp_tf
+            p_cp_shield_nuclear_heat_mw = (pneut / 800.0) * np.exp(3.882) - pnuc_cp_tf
             # ------------
 
         # Superconducting / copper CP
@@ -1133,12 +1145,12 @@ class CCFE_HCPB:
             pnuc_cp_tf = pnuc_cp_tf * f_wc_density
 
             # Shield nuclear heat [MW]
-            pnuc_cp_sh = pnuc_cp_sh_gam + pnuc_cp_sh_n
+            p_cp_shield_nuclear_heat_mw = pnuc_cp_sh_gam + pnuc_cp_sh_n
 
         # Total CP nuclear heat [MW]
-        pnuc_cp = pnuc_cp_tf + pnuc_cp_sh
+        pnuc_cp = pnuc_cp_tf + p_cp_shield_nuclear_heat_mw
 
-        return pnuc_cp_tf, pnuc_cp_sh, pnuc_cp
+        return pnuc_cp_tf, p_cp_shield_nuclear_heat_mw, pnuc_cp
 
     def write_output(self):
         po.oheadr(self.outfile, "First wall and blanket : CCFE HCPB model")
@@ -1299,8 +1311,8 @@ class CCFE_HCPB:
             po.ovarre(
                 self.outfile,
                 "ST centrepost shield heating (MW)",
-                "(pnuc_cp_sh)",
-                fwbs_variables.pnuc_cp_sh,
+                "(p_cp_shield_nuclear_heat_mw)",
+                fwbs_variables.p_cp_shield_nuclear_heat_mw,
                 "OP ",
             )
             po.ovarre(
@@ -1314,8 +1326,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Total nuclear heating in TF+PF coils (CS is negligible) (MW)",
-            "(ptfnuc)",
-            fwbs_variables.ptfnuc,
+            "(p_tf_nuclear_heat_mw)",
+            fwbs_variables.p_tf_nuclear_heat_mw,
             "OP ",
         )
         po.ovarre(
@@ -1336,8 +1348,8 @@ class CCFE_HCPB:
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the shield (MW)",
-            "(pnucshld)",
-            fwbs_variables.pnucshld,
+            "(p_shld_nuclear_heat_mw)",
+            fwbs_variables.p_shld_nuclear_heat_mw,
             "OP ",
         )
         po.ovarre(
