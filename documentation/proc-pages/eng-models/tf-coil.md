@@ -1200,6 +1200,8 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 
 To be done. Please contact the PROCESS team if you need more informations.
 
+## Quench protection (TODO)
+
 ## Code structure
 
 The TF coil structure is illustrated by the box diagram in Figure 14.
