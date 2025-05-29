@@ -18,6 +18,7 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
+from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -1669,6 +1670,42 @@ class SuperconductingTFCoil(TFCoil):
         return ajwpro, vd
 
         # ---
+
+    def protect_new(
+        self,
+        aio,
+        tfes,
+        acs,
+        aturn,
+        tdump,
+        fcond,
+        fcu,
+        tba,
+        tmax,
+        peak_field,
+        cu_rrr,
+        detection_time,
+        fluence,
+    ):
+        #  Dump voltage
+        vd = 2.0e0 * tfes / (tdump * aio)
+        ajwpro = (
+            acs
+            / aturn
+            * calculate_quench_protection_current_density(
+                tdump,
+                peak_field,
+                fcu,
+                1.0 - fcond,
+                tba,
+                tmax,
+                cu_rrr,
+                detection_time,
+                fluence,
+            )
+        )
+
+        return ajwpro, vd
 
     def vv_stress_on_quench(self):
         """Calculate the Tresca stress [Pa] of the Vacuum Vessel (VV)
