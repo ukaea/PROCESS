@@ -74,11 +74,8 @@ def copper_electrical_resistivity(
     p9: Final[float] = 1.553e-8
     poly_coeffs: Final[list[float]] = [-2.662, 0.3168, 0.6229, -0.1839, 0.01827]
 
-    # TODO: Implement PROCESS standard for kludging / warning
-    t = np.clip(temperature, 4.0)
     # TODO: this function at present has the potential to return poor values at low
     # field...
-    rrr = np.clip(rrr, 1.0)
 
     t = temperature
 
@@ -167,9 +164,6 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     gamma: Final[float] = 0.1  # [J/K²/kg] (Grueneisen)
     beta: Final[float] = 0.001  # [J/K⁴/kg] (Debye)
     cp_300: Final[float] = 210.0  # [J/K/kg] Room-temperature specific heat
-
-    # TODO: Apply PROCESS-style kludging
-    temperature = np.clip(temperature, 2.0, 300.0)
 
     # Normally conducting specific heat capacity (i.e. ignoring transition from
     # superconducting state)
@@ -279,6 +273,13 @@ def calculate_quench_protection_current_density(
         vs. total WP cross-section (including jacket and insulation).
         - Presently only applicable to LTS TF coil winding packs (Nb3Sn assumed)
     """
+    # Input warnings
+    # TODO: Apply PROCESS kludging / warning conventions
+    cu_rrr = np.clip(cu_rrr, 1.0)
+    t_he_peak = np.clip(t_he_peak, 4.0, 300.0)
+    t_max = np.clip(t_max, 4.0, 300.0)
+    fluence = np.clip(fluence, 0.0)
+    tau_discharge = np.clip(tau_discharge, 1e-3)
 
     i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
 
