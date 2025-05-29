@@ -307,6 +307,14 @@ def check_process(inputs):  # noqa: ARG001
             nvar=fortran.numerics.nvar,
         )
 
+    # Check that dr_tf_wp (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
+    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 13).any() and (
+        fortran.numerics.ixc[: fortran.numerics.nvar] == 140
+    ).any():
+        raise ProcessValidationError(
+            "Iteration variables 13 and 140 cannot be used simultaneously",
+        )
+
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 0
     ).any():
