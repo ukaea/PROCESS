@@ -984,6 +984,93 @@ $$
 </p>
 
 
+## Critical current density for the superconductor 
+The minimum conductor cross-section is derived from the critical current density for the superconductor in the operating magnetic field and temperature, and is enforced using constraint 33.
+
+Switch `i_tf_sc_mat` specifies which superconducting material is to be used:
+
+- `i_tf_sc_mat == 1` -- Nb$_3$Sn superconductor, ITER critical surface parameterization[^5], standard critical values
+- `i_tf_sc_mat == 2` -- Bi-2212 high temperature superconductor
+- `i_tf_sc_mat == 3` -- NbTi superconductor
+- `i_tf_sc_mat == 4` -- Nb$_3$Sn superconductor, ITER critical surface parameterization[^5], user-defined critical parameters
+- `i_tf_sc_mat == 5` -- WST Nb$_3$Sn parameterization
+- `i_tf_sc_mat == 6` -- REBCO HTS tape in CroCo strand
+- `i_tf_sc_mat == 7` -- Durham Ginzburg-Landau critical surface model for Nb-Ti
+- `i_tf_sc_mat == 8` -- Durham Ginzburg-Landau critical surface model for REBCO
+- `i_tf_sc_mat == 9` -- Hazelton experimental data combined with Zhai conceptual model for REBCO
+
+The fraction of copper present in the superconducting filaments is given by `fcutfsu` (iteration variable number 59). For cases where REBCO tape is used this copper fraction does not include the copper within the tape.
+
+For `i_tf_sc_mat = 2`, a technology adjustment factor `fhts` may be used to modify 
+the critical current density fit for the Bi-2212 superconductor, to describe the 
+level of technology assumed (i.e. to account for stress, fatigue, radiation, 
+AC losses, joints or manufacturing variations). The default value for `fhts` is 
+0.5 (a value of 1.0 would be very optimistic).
+
+For `i_tf_sc_mat = 4`, important superconductor properties may be input as follows:
+- Upper critical field at zero temperature and strain: `bcritsc`,
+- Critical temperature at zero field and strain: `tcritsc`.
+
+The toroidal field falls off at a rate $1/R$, with the peak value occurring at the outer edge of the inboard portion of the TF coil winding pack (radius `r_b_tf_inboard_peak`). 
+
+Three constraints are relevant to the operating current density $J_{\mbox{op}}$ in the TF coils.
+
+- Criticial current (`constraint 33`): $J_{\mbox{op}}$ must not exceed the critical value $J_{\mbox{crit}}$.  Iteration variable 50 must be active (`fiooic`).  The current density margin can be set using the upper bound of `fiooic`:
+
+$$
+  J_{\mbox{op}} < \texttt{fiooic} \cdot J_{\mbox{crit}}
+$$
+
+- `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the current density protection limit, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
+
+- Temperature margin (`constraint 36`) -- The critical current density $J_{\mbox{crit}}$ falls with 
+  the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$
+can be set using `tmargmin` together with constraint equation 36 and iteration variable 54 (`ftmargtf`). Note that if the temperature margin is positive, $J_{\mbox{op}}$ is guaranteed to be lower than \jcrit, and so constraints 33 and 36 need not both be turned on. It is recommended that only one of these two constraints is activated.
+
+### Resistive heating
+
+To be done. Please contact the PROCESS team if you need more informations.
+
+## Quench protection (TODO)
+
+## Code structure
+
+The TF coil structure is illustrated by the box diagram in Figure 14.
+
+<figure>
+    <center>
+    <img src="../../images/tfcoil_code_structure.png" alt="TF_code_structure" 
+    title="Inboard mid-plane superconducting TF coil stress layers"
+    width="700" height="100" />
+    <br>
+    <figcaption><i>
+      <p style='text-align: justify;'>
+        Figure 14: Box diagram illustrating the TF coil codes structure in
+        <em>PROCESS</em>. The neutronic/plasma ripple/magnet cooling boxes are
+        effectively placed in other modules, but should be effectively contained
+        in an eventual standalone version of the module.
+      </p>
+    </i></figcaption>
+    <br>
+    </center>
+</figure>
+More technically, models are coded in the `sctfcoil` subroutine, structured in
+the following order:
+
+1. `ripple_amplitude`: Plasma ripple. Subroutine effectively contained in
+  `machine_build.f90`
+2. `tf_global_geometry` : In/outboard leg areas at mid-lane
+3. `tf_current` : Calculate the TF coil currents
+4. `sc_tf_internal_geom`/`res_tf_internal_geom` : Set the exact superconducting/resistive magnets inboard mid-plane geometry, including the Turn geometry.
+5. `coilhap`: Define the vertical TF coil shape
+6. `tf_res_heating`: Estimate the TF coil resistive heating (not used for SC magnets)
+7. `tf_field_and_force`: Estimate the inboard/outboard vertical tensions
+8. `tf_coil_self_inductance`: Estimate the TF coil inductance
+9. `tf_coil_area_and_masses`: Estimate the mass of the different coil materials
+10. `peak_tf_with_ripple`: Estimate the ripple peak field correction.
+11. `stresscl`: Estimate the inboard mid-plane stress distributions.
+
+Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check on the TF superconducting properties.
 
 ## TF coil parameter summary table
 
