@@ -5,7 +5,7 @@ import numpy as np
 # Material property parameterisations
 
 
-def copper_density(temperature: float) -> float:
+def copper_density(temperature: float) -> float:  # noqa: ARG001
     """
     Calculate the density of cryogenic copper [kg/m^3].
     """
@@ -14,60 +14,65 @@ def copper_density(temperature: float) -> float:
 
 def copper_specific_heat_capacity(temperature: float) -> float:
     """
-    Calculate the specific heat capacity of cryogenic copper [J/(kg·K)] at a given temperature.
+    Calculates the specific heat capacity of cryogenic copper at a given temperature [J/(kg·K)].
 
-    References:
-        - L. Dresner, “Stability of Superconductors”, Plenum Press, NY, 1995
+    :author M. Coleman, UKAEA
 
-    Parameters:
-        temperature (float): Temperature [K].
+    :param float temperature: Temperature [K].
+    :returns: Specific heat capacity of copper at the given temperature [J/(kg·K)].
+    :rtype: float
 
-    Returns:
-        float: Specific heat capacity [J/(kg·K)].
+    :notes:
+        - Assumes high-purity copper with negligible impurity effects.
+
+    :references:
+        - L. Dresner, *Stability of Superconductors*, Plenum Press, New York, 1995.
     """
-    GAMMA: Final[float] = 0.011  # [J/K²/kg] (Grueneisen)
-    BETA: Final[float] = 0.0011  # [J/K⁴/kg] (Debye)
-    CP_300: Final[float] = 385.491  # Room-temperature specific heat [J/K/kg]
 
-    cp_low = BETA * temperature**3 + GAMMA * temperature
-    cp = 1.0 / (1.0 / CP_300 + 1.0 / cp_low)
+    gamma: Final[float] = 0.011  # [J/K²/kg] (Grueneisen)
+    beta: Final[float] = 0.0011  # [J/K⁴/kg] (Debye)
+    cp_300: Final[float] = 385.491  # [J/K/kg] Room-temperature specific heat
 
-    return cp
+    cp_low = beta * temperature**3 + gamma * temperature
+    return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
 def copper_electrical_resistivity(
     temperature: float, field: float, rrr: float
 ) -> float:
     """
-    Calculate the electrical resistivity of cryogenic copper with temperature and field dependence [Ω·m].
+    Calculates the electrical resistivity of cryogenic copper with temperature and magnetic
+    field dependence  [Ω·m].
 
-    References:
-        - NIST MONOGRAPH 177: J. Simon, E. S. Drexler, and R. P. Reed,
-          "Properties of Copper and Copper Alloys at Cryogenic Temperatures",
-          U.S. Government Printing Office, February 1992.
-          draft version from 1987, implemented as found in:
-        - EFDA Material Data Compilation for Superconductor Simulation:
-          P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
+    :author M. Coleman, UKAEA
 
-    Parameters:
-        temperature (float): Operating temperature [K].
-        field (float): Operating magnetic field [T].
-        rrr (float): Residual resistivity ratio (dimensionless).
+    :param float temperature: Operating temperature [K].
+    :param float field: Operating magnetic field [T].
+    :param float rrr: Residual resistivity ratio (dimensionless).
+    :returns: Electrical resistivity of copper [Ω·m].
+    :rtype: float
+    :raises ValueError: If any input is unphysical or outside the supported model range.
 
-    Returns:
-        float: The electrical resistivity [Ω·m].
+    :notes:
+        - Resistivity increases with magnetic field due to magnetoresistance effects.
+
+    :references:
+        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
+        at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki,
+        E. Salpietro, EFDA CSU, Garching, 04/18/07.
     """
     # Constants from EFDA documentation (Page 2-17)
-    P1: Final[float] = 1.171e-17
-    P2: Final[float] = 4.49
-    P3: Final[float] = 4.5e-7
-    P4: Final[float] = 3.35
-    P5: Final[float] = 50.0
-    P6: Final[float] = 6.428
-    P7: Final[float] = 1.69e-8
-    P8: Final[float] = 0.4531
-    P9: Final[float] = 1.553e-8
-    POLY_COEFFS: Final[list[float]] = [-2.662, 0.3168, 0.6229, -0.1839, 0.01827]
+    p1: Final[float] = 1.171e-17
+    p2: Final[float] = 4.49
+    p3: Final[float] = 4.5e-7
+    p4: Final[float] = 3.35
+    p5: Final[float] = 50.0
+    p6: Final[float] = 6.428
+    p7: Final[float] = 1.69e-8
+    p8: Final[float] = 0.4531
+    p9: Final[float] = 1.553e-8
+    poly_coeffs: Final[list[float]] = [-2.662, 0.3168, 0.6229, -0.1839, 0.01827]
 
     # TODO: Implement PROCESS standard for kludging / warning
     t = np.clip(temperature, 4.0)
@@ -78,16 +83,16 @@ def copper_electrical_resistivity(
     t = temperature
 
     # Compute rho1
-    numerator = P1 * t**P2
-    denominator = 1.0 + P3 * t**P4 * np.exp(-((P5 / t) ** P6))
+    numerator = p1 * t**p2
+    denominator = 1.0 + p3 * t**p4 * np.exp(-((p5 / t) ** p6))
     rho1 = numerator / denominator
 
     # Compute rho2
-    rho2 = P7 / rrr + rho1 + P8 * (P7 * rho1) / (rrr * rho1 + P7)
+    rho2 = p7 / rrr + rho1 + p8 * (p7 * rho1) / (rrr * rho1 + p7)
 
     # Compute magnetic field correction factor
-    x = np.log10(P9 * field / rho2)
-    a = sum(c * x**i for i, c in enumerate(POLY_COEFFS))
+    x = np.log10(p9 * field / rho2)
+    a = sum(c * x**i for i, c in enumerate(poly_coeffs))
 
     # Final resistivity
     return rho2 * (1.0 + 10**a)
@@ -95,34 +100,40 @@ def copper_electrical_resistivity(
 
 def copper_irradiation_resistivity(fluence: float) -> float:
     """
-    Calculate the radiation-induced electrical resistivity of copper [Ω·m].
+    Calculates the radiation-induced electrical resistivity of copper.
 
-    References:
-        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad)
-          K:\\Technology Program\3PT\\WP12\\PEX\\Super-Xdivertor for DEMO\\Coil calcs 7
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K",
-          Phys. Rev. B 16, 5285 (1977)
-          https://doi.org/10.1103/PhysRevB.16.5285
+    Estimates the increase in copper's electrical resistivity [Ω·m] due to neutron irradiation,
+    as a function of total neutron fluence.
 
-    Parameters:
-        fluence (float): Total neutron fluence [n/m²].
+    :author M. Coleman, UKAEA
 
-    Returns:
-        float: Radiation-induced resistivity [Ω·m].
+    :param float fluence: Total neutron fluence [n/m²].
+    :returns: Radiation-induced resistivity of copper [Ω·m].
+    :rtype: float
+    :raises ValueError: If fluence is negative or exceeds empirical model limits.
+
+    :notes:
+        - Assumes low-temperature conditions (around 4.6 K).
+        - This does not account for transmutation effects.
+        - This is an additive contribution to the base residual resistivity of copper.
+
+    :references:
+        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
+        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
     """
     # TODO: Check with M. Kovari and document
-    C1: Final[float] = 0.00283
-    C2: Final[float] = -0.0711
-    C3: Final[float] = 0.77982
-    RES_SCALE: Final[float] = 1e-9
-    FLU_SCALE: Final[float] = 1e-22
+    c1: Final[float] = 0.00283
+    c2: Final[float] = -0.0711
+    c3: Final[float] = 0.77982
+    res_scale: Final[float] = 1e-9
+    flu_scale: Final[float] = 1e-22
 
-    fluence_norm = FLU_SCALE * fluence
+    fluence_norm = flu_scale * fluence
 
-    return RES_SCALE * (C1 * fluence_norm**3 + C2 * fluence_norm**2 + C3 * fluence_norm)
+    return res_scale * (c1 * fluence_norm**3 + c2 * fluence_norm**2 + c3 * fluence_norm)
 
 
-def nb3sn_density(temperature: float) -> float:
+def nb3sn_density(temperature: float) -> float:  # noqa: ARG001
     """
     Calculate the density of Nb3Sn [kg/m^3].
     """
@@ -131,49 +142,47 @@ def nb3sn_density(temperature: float) -> float:
 
 def nb3sn_specific_heat_capacity(temperature: float) -> float:
     """
-    Calculate the specific heat capacity of Nb3Sn [J/(kg·K)]
-    as a function of temperature.
+    Calculates the specific heat capacity of Nb₃Sn as a function of temperature.
 
-    References:
-        EFDA Material Data Compilation for Superconductor Simulation,
-        P. Bauer, H. Rajainmaki, E. Salpietro,
-        EFDA CSU, Garching, 04/18/07.
-        ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-
-        05 R 0.1, Thermal, Electrical and Mechanical Properties of Materials at Cryogenic
-        Temperatures
-        V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting
-        Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
-        G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors
-        obtained from heat capacity measurements,
-        Phys.Rev B, 13, no.9, pp 3783-3789, 1976.
+    Provides the temperature-dependent specific heat capacity [J/(kg·K)] of the A15
+    superconductor Nb₃Sn.
 
-    Notes:
-        Ignoring the superconducting part for quench
+    :author M. Coleman, UKAEA
 
-    Parameters:
-        temperature (float): Temperature [K].
+    :param float temperature: Temperature [K].
+    :returns: Specific heat capacity of Nb₃Sn at the given temperature [J/(kg·K)].
+    :rtype: float
+    :raises ValueError: If the temperature is outside the supported range for this model.
 
-    Returns:
-        float: Specific heat capacity [J/(kg·K)].
+    :notes:
+        - The superconducting part is ignored, which is typical in thermal quench calculations.
+        - Assumes polycrystalline, isotropic Nb₃Sn.
+
+    :references:
+        - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
+        - ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-05 R 0.1.
+        - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
+        - G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
     """
-    GAMMA: Final[float] = 0.1  # [J/K²/kg] - Electronic contribution
-    BETA: Final[float] = 0.001  # [J/K⁴/kg] - Lattice (Debye) contribution
-    CP_HIGH: Final[float] = 210.0  # [J/K/kg] - High temperature limit
+    gamma: Final[float] = 0.1  # [J/K²/kg] (Grueneisen)
+    beta: Final[float] = 0.001  # [J/K⁴/kg] (Debye)
+    cp_300: Final[float] = 210.0  # [J/K/kg] Room-temperature specific heat
+
+    # TODO: Apply PROCESS-style kludging
+    temperature = np.clip(temperature, 2.0, 300.0)
 
     # Normally conducting specific heat capacity (i.e. ignoring transition from
     # superconducting state)
-    cp_low = BETA * temperature**3 + GAMMA * temperature
-    cp = 1.0 / (1.0 / CP_HIGH + 1.0 / cp_low)
-
-    return cp
+    cp_low = beta * temperature**3 + gamma * temperature
+    return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
-def helium_density(temperature: float) -> float:
+def helium_density(temperature: float) -> float:  # noqa: ARG001
     # TODO: Replace with T-dependent formulation
     return 150.0
 
 
-def helium_specific_heat_capacity(temperature: float) -> float:
+def helium_specific_heat_capacity(temperature: float) -> float:  # noqa: ARG001
     # TODO: Replace with T-dependent formulation
     return 4750.0
 
@@ -181,31 +190,33 @@ def helium_specific_heat_capacity(temperature: float) -> float:
 # Quench model
 
 
-def quench_integrals(
+def _quench_integrals(
     t_he_peak: float, t_max: float, field: float, rrr: float, fluence: float
 ) -> tuple[float, float, float]:
     """
     Calculates the material property integrals for quench protection.
 
-    Equation:
-        I_He = ∫ [ρ_He(T) · c_He(T)] / η_Cu(T, B, RRR) dT
-        I_Cu = ∫ [ρ_Cu(T) · c_Cu(T)] / η_Cu(T, B, RRR) dT
-        I_sc = ∫ [ρ_sc(T) · c_sc(T)] / η_Cu(T, B, RRR) dT
+    Evaluates the integrals over temperature for helium, copper, and superconductor contributions.
+    These integrals are used in determining current density limits during a quench.
 
-    Parameters:
-        t_he_peak (float): Lower temperature bound of integration [K].
-        t_max (float): Upper temperature bound of integration [K].
-        field (float): Magnetic field [T].
-        rrr (float): Residual resistivity ratio of copper.
-        fluence (float): Neutron fluence [n/cm²] (for irradiation effects).
+    :author M. Coleman, UKAEA
 
-    Returns:
-        Tuple[float, float, float]: (I_He, I_Cu, I_sc)
+    :param float t_he_peak: Lower temperature bound of integration [K].
+    :param float t_max: Upper temperature bound of integration [K].
+    :param float field: Magnetic field [T].
+    :param float rrr: Residual resistivity ratio of copper.
+    :param float fluence: Neutron fluence [n/cm²] (for irradiation effects).
+    :returns: Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
+    :rtype: Tuple[float, float, float]
+    :raises ValueError: If temperature bounds are invalid or parameters are unphysical.
+
+    :notes:
+        - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
     """
     nu_irr_cu = copper_irradiation_resistivity(fluence)
 
-    N_QUAD: Final[int] = 30
-    nodes, weights = np.polynomial.legendre.leggauss(N_QUAD)
+    n_quad: Final[int] = 30
+    nodes, weights = np.polynomial.legendre.leggauss(n_quad)
 
     ihe = 0.0
     icu = 0.0
@@ -262,7 +273,7 @@ def calculate_quench_protection_current_density_magnetoresistive(
         than that of the TF coil.
     """
 
-    i_he, i_cu, i_sc = quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
+    i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
     f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
