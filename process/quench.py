@@ -236,35 +236,32 @@ def calculate_quench_protection_current_density_magnetoresistive(
     fluence: float,
 ) -> float:
     """
-    Calculates the current density limited by the protection limit, using temperature
-    and field-dependent material properties. The field is assumed not to decay with time.
+    Calculates the current density limited by the protection limit.
 
-    Equation:
-        J = sqrt[
-            (1 / (τ_discharge / 2 + t_detection)) * f_Cu *
-            (f_He * I_He + f_Cu * I_Cu + f_sc * I_sc)
-        ]
+    Uses temperature- and magnetic field-dependent material properties to determine the
+    maximum allowable winding pack current density during a quench. Assumes that the magnetic
+    field does not decay over time and accounts for contributions from copper, helium, and
+    superconductor materials using temperature integrals weighted by material properties.
 
-        where:
+    :author M. Coleman, UKAEA
 
-        I_He = ∫[T₀ to T_max] (ρ_He(T) * c_P,He(T)) / η_Cu(T, B, RRR) dT
-        I_Cu = ∫[T₀ to T_max] (ρ_Cu(T) * c_P,Cu(T)) / η_Cu(T, B, RRR) dT
-        I_sc = ∫[T₀ to T_max] (ρ_sc(T) * c_P,sc(T)) / η_Cu(T, B, RRR) dT
+    :param float tau_discharge: Quench discharge time constant [s].
+    :param float peak_field: Magnetic field at the peak point [T].
+    :param float f_cu: Fraction of conductor cross-section that is copper.
+    :param float f_he: Fraction of cable occupied by helium.
+    :param float t_he_peak: Peak helium temperature at quench initiation [K].
+    :param float t_max: Maximum allowed conductor temperature during quench [K].
+    :param float cu_rrr: Residual resistivity ratio of copper.
+    :param float detection_time: Detection time delay [s].
+    :param float fluence: Neutron fluence [n/m²].
+    :returns: Maximum allowable winding pack current density [A/m²].
 
-    Parameters:
-        tau_discharge: Quench discharge time constant [s]
-        peak_field: Magnetic field at the peak point [T]
-        f_cu: Fraction of conductor cross-section that is copper
-        f_he: Fraction of cable occupied by helium
-        t_he_peak: Peak helium temperature at quench initiation [K]
-        t_max: Maximum allowed conductor temperature during quench [K]
-        cu_rrr: Residual resistivity ratio of copper
-        detection_time: Detection time delay [s]
-        fluence: Neutron fluence [n/m^2]
-
-    Returns:
-        float: Maximum allowable winding pack current density [A/m²]
+    :notes:
+        - Assumes constant magnetic field over the duration of the quench.
+        - Assumes the dump resistor has a constant resistance much higher
+        than that of the TF coil.
     """
+
     i_he, i_cu, i_sc = quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
