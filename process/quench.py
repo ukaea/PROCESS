@@ -277,6 +277,7 @@ def calculate_quench_protection_current_density(
         jacket and insulation are ignored. The actual allowable WP current
         density must be weighted with the ratio of current-carrying cross-section
         vs. total WP cross-section (including jacket and insulation).
+        - Presently only applicable to LTS TF coil winding packs (Nb3Sn assumed)
     """
 
     i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
