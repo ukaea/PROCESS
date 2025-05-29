@@ -1021,8 +1021,6 @@ $$
   J_{\mbox{op}} < \texttt{fiooic} \cdot J_{\mbox{crit}}
 $$
 
-- `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the current density protection limit, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
-
 - Temperature margin (`constraint 36`) -- The critical current density $J_{\mbox{crit}}$ falls with 
   the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$
 can be set using `tmargmin` together with constraint equation 36 and iteration variable 54 (`ftmargtf`). Note that if the temperature margin is positive, $J_{\mbox{op}}$ is guaranteed to be lower than \jcrit, and so constraints 33 and 36 need not both be turned on. It is recommended that only one of these two constraints is activated.
@@ -1032,6 +1030,8 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 To be done. Please contact the PROCESS team if you need more informations.
 
 ## Quench protection (TODO)
+
+- `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
 
 ## Code structure
 
