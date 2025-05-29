@@ -235,7 +235,7 @@ def _quench_integrals(
     return ihe, icu, isc
 
 
-def calculate_quench_protection_current_density_magnetoresistive(
+def calculate_quench_protection_current_density(
     tau_discharge: float,
     peak_field: float,
     f_cu: float,
@@ -248,6 +248,8 @@ def calculate_quench_protection_current_density_magnetoresistive(
 ) -> float:
     """
     Calculates the current density limited by the protection limit.
+
+    Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
     Uses temperature- and magnetic field-dependent material properties to determine the
     maximum allowable winding pack current density during a quench. Assumes that the magnetic
@@ -271,6 +273,10 @@ def calculate_quench_protection_current_density_magnetoresistive(
         - Assumes constant magnetic field over the duration of the quench.
         - Assumes the dump resistor has a constant resistance much higher
         than that of the TF coil.
+        - Operates on the current-carring cross-section of a conductor. The
+        jacket and insulation are ignored. The actual allowable WP current
+        density must be weighted with the ratio of current-carrying cross-section
+        vs. total WP cross-section (including jacket and insulation).
     """
 
     i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
@@ -283,7 +289,5 @@ def calculate_quench_protection_current_density_magnetoresistive(
 
     factor = 1.0 / (0.5 * tau_discharge + detection_time)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
-
-    # TODO: Work in the full cable / WP fraction of conducting region / (conducting + jacket + ins)
 
     return np.sqrt(factor * f_cu_cable * total_integral)
