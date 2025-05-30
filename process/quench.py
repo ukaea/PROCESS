@@ -1,6 +1,7 @@
 from typing import Final
 
 import numpy as np
+from CoolProp import PropsSI
 
 # Material property parameterisations
 
@@ -171,14 +172,32 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
-def helium_density(temperature: float) -> float:  # noqa: ARG001
-    # TODO: Replace with T-dependent formulation
-    return 150.0
+def helium_density(temperature: float, pressure: float) -> float:
+    """
+    Calculate helium density at a specified temperature and pressure.
+
+    :param float temperature: He temperature [K].
+    :param float pressure: He pressure [Pa].
+    :returns: density [kg/m^3]
+    :rtype: float
+
+    :notes: CoolProp benchmarked with NIST data and virtually indistinguishable.
+    """
+    return PropsSI("D", "T", temperature, "P", pressure, "Helium")
 
 
-def helium_specific_heat_capacity(temperature: float) -> float:  # noqa: ARG001
-    # TODO: Replace with T-dependent formulation
-    return 4750.0
+def helium_specific_heat_capacity(temperature: float, pressure: float) -> float:
+    """
+    Calculate helium specific heat capacity at a specified temperature and (constant) pressure.
+
+    :param float temperature: He temperature [K].
+    :param float pressure: He pressure [Pa].
+    :returns: specific heat capacity [J/kg/K]
+    :rtype: float
+
+    :notes: CoolProp benchmarked with NIST data and virtually indistinguishable.
+    """
+    return PropsSI("CPMASS", "T", temperature, "P", pressure, "Helium")
 
 
 # Quench model
@@ -207,6 +226,7 @@ def _quench_integrals(
     :notes:
         - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
     """
+    pressure = 6e5  # Helium pressure (assumed to be constant throughout quench) - no plans to make input
     nu_irr_cu = copper_irradiation_resistivity(fluence)
 
     n_quad: Final[int] = 30
@@ -222,7 +242,12 @@ def _quench_integrals(
 
         nu_cu = copper_electrical_resistivity(ti, field, rrr) + nu_irr_cu
 
-        ihe += dti * helium_specific_heat_capacity(ti) * helium_density(ti) / nu_cu
+        ihe += (
+            dti
+            * helium_specific_heat_capacity(ti, pressure)
+            * helium_density(ti, pressure)
+            / nu_cu
+        )
         icu += dti * copper_specific_heat_capacity(ti) * copper_density(ti) / nu_cu
         isc += dti * nb3sn_specific_heat_capacity(ti) * nb3sn_density(ti) / nu_cu
 
@@ -262,6 +287,7 @@ def calculate_quench_protection_current_density(
     :param float detection_time: Detection time delay [s].
     :param float fluence: Neutron fluence [n/m²].
     :returns: Maximum allowable winding pack current density [A/m²].
+    :rtype: float
 
     :notes:
         - Assumes constant magnetic field over the duration of the quench.
