@@ -3,17 +3,19 @@ from typing import Final
 import numpy as np
 from CoolProp import PropsSI
 
+__all__ = ["calculate_quench_protection_current_density"]
+
 # Material property parameterisations
 
 
-def copper_density(temperature: float) -> float:  # noqa: ARG001
+def _copper_density(temperature: float) -> float:  # noqa: ARG001
     """
     Calculate the density of cryogenic copper [kg/m^3].
     """
     return 8960.0  # No plans to include T-dependence
 
 
-def copper_specific_heat_capacity(temperature: float) -> float:
+def _copper_specific_heat_capacity(temperature: float) -> float:
     """
     Calculates the specific heat capacity of cryogenic copper at a given temperature [J/(kg·K)].
 
@@ -38,7 +40,7 @@ def copper_specific_heat_capacity(temperature: float) -> float:
     return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
-def copper_electrical_resistivity(
+def _copper_electrical_resistivity(
     temperature: float, field: float, rrr: float
 ) -> float:
     """
@@ -96,7 +98,7 @@ def copper_electrical_resistivity(
     return rho2 * (1.0 + 10**a)
 
 
-def copper_irradiation_resistivity(fluence: float) -> float:
+def _copper_irradiation_resistivity(fluence: float) -> float:
     """
     Calculates the radiation-induced electrical resistivity of copper.
 
@@ -131,14 +133,14 @@ def copper_irradiation_resistivity(fluence: float) -> float:
     return res_scale * (c1 * fluence_norm**3 + c2 * fluence_norm**2 + c3 * fluence_norm)
 
 
-def nb3sn_density(temperature: float) -> float:  # noqa: ARG001
+def _nb3sn_density(temperature: float) -> float:  # noqa: ARG001
     """
     Calculate the density of Nb3Sn [kg/m^3].
     """
     return 8040.0  # No plans to include T-dependence
 
 
-def nb3sn_specific_heat_capacity(temperature: float) -> float:
+def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     """
     Calculates the specific heat capacity of Nb₃Sn as a function of temperature.
 
@@ -172,7 +174,7 @@ def nb3sn_specific_heat_capacity(temperature: float) -> float:
     return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
-def helium_density(temperature: float, pressure: float) -> float:
+def _helium_density(temperature: float, pressure: float) -> float:
     """
     Calculate helium density at a specified temperature and pressure.
 
@@ -186,7 +188,7 @@ def helium_density(temperature: float, pressure: float) -> float:
     return PropsSI("D", "T", temperature, "P", pressure, "Helium")
 
 
-def helium_specific_heat_capacity(temperature: float, pressure: float) -> float:
+def _helium_specific_heat_capacity(temperature: float, pressure: float) -> float:
     """
     Calculate helium specific heat capacity at a specified temperature and (constant) pressure.
 
@@ -227,7 +229,7 @@ def _quench_integrals(
         - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
     """
     pressure = 6e5  # Helium pressure (assumed to be constant throughout quench) - no plans to make input
-    nu_irr_cu = copper_irradiation_resistivity(fluence)
+    nu_irr_cu = _copper_irradiation_resistivity(fluence)
 
     n_quad: Final[int] = 30
     nodes, weights = np.polynomial.legendre.leggauss(n_quad)
@@ -240,16 +242,16 @@ def _quench_integrals(
         ti = 0.5 * (xi + 1.0) * (t_max - t_he_peak) + t_he_peak
         dti = 0.5 * wi * (t_max - t_he_peak)
 
-        nu_cu = copper_electrical_resistivity(ti, field, rrr) + nu_irr_cu
+        nu_cu = _copper_electrical_resistivity(ti, field, rrr) + nu_irr_cu
 
         ihe += (
             dti
-            * helium_specific_heat_capacity(ti, pressure)
-            * helium_density(ti, pressure)
+            * _helium_specific_heat_capacity(ti, pressure)
+            * _helium_density(ti, pressure)
             / nu_cu
         )
-        icu += dti * copper_specific_heat_capacity(ti) * copper_density(ti) / nu_cu
-        isc += dti * nb3sn_specific_heat_capacity(ti) * nb3sn_density(ti) / nu_cu
+        icu += dti * _copper_specific_heat_capacity(ti) * _copper_density(ti) / nu_cu
+        isc += dti * _nb3sn_specific_heat_capacity(ti) * _nb3sn_density(ti) / nu_cu
 
     return ihe, icu, isc
 
