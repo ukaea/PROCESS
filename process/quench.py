@@ -156,7 +156,6 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
 
     :notes:
         - The superconducting part is ignored, which is typical in thermal quench calculations.
-        - Assumes polycrystalline, isotropic Nb₃Sn.
 
     :references:
         - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
@@ -227,8 +226,11 @@ def _quench_integrals(
 
     :notes:
         - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
+        - Helium is assumed to be at constant pressure throughout the quench (i.e. some PRV in the
+        cooling system)
     """
-    pressure = 6e5  # Helium pressure (assumed to be constant throughout quench) - no plans to make input
+    # Helium pressure [Pa] (assumed to be constant throughout quench) - no plans to make input
+    pressure = 6e5  # ITER TF coolant pressure
     nu_irr_cu = _copper_irradiation_resistivity(fluence)
 
     n_quad: Final[int] = 30
@@ -243,15 +245,15 @@ def _quench_integrals(
         dti = 0.5 * wi * (t_max - t_he_peak)
 
         nu_cu = _copper_electrical_resistivity(ti, field, rrr) + nu_irr_cu
+        factor = dti / nu_cu
 
         ihe += (
-            dti
+            factor
             * _helium_specific_heat_capacity(ti, pressure)
             * _helium_density(ti, pressure)
-            / nu_cu
         )
-        icu += dti * _copper_specific_heat_capacity(ti) * _copper_density(ti) / nu_cu
-        isc += dti * _nb3sn_specific_heat_capacity(ti) * _nb3sn_density(ti) / nu_cu
+        icu += factor * _copper_specific_heat_capacity(ti) * _copper_density(ti)
+        isc += factor * _nb3sn_specific_heat_capacity(ti) * _nb3sn_density(ti)
 
     return ihe, icu, isc
 
