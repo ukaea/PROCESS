@@ -114,7 +114,7 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
 
     :notes:
         - Fit to data at low-temperature conditions (around 4.6 K).
-        - Fit to data in fast neutron spectrum (E > 0.1 MeV). 
+        - Fit to data in fast neutron spectrum (E > 0.1 MeV).
         - Damage and transmutation effects therefore both included, but transmutation effects
         may be underestimated.
         - This is an additive contribution to the base residual resistivity of copper.
