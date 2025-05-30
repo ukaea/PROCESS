@@ -113,15 +113,17 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
     :raises ValueError: If fluence is negative or exceeds empirical model limits.
 
     :notes:
-        - Assumes low-temperature conditions (around 4.6 K).
-        - This does not account for transmutation effects.
+        - Fit to data at low-temperature conditions (around 4.6 K).
+        - Fit to data in fast neutron spectrum (E > 0.1 MeV). 
+        - Damage and transmutation effects therefore both included, but transmutation effects
+        may be underestimated.
         - This is an additive contribution to the base residual resistivity of copper.
 
     :references:
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
         - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+        Figure 6
     """
-    # TODO: Check with M. Kovari and document
     c1: Final[float] = 0.00283
     c2: Final[float] = -0.0711
     c3: Final[float] = 0.77982
@@ -277,7 +279,7 @@ def calculate_quench_protection_current_density(
     Uses temperature- and magnetic field-dependent material properties to determine the
     maximum allowable winding pack current density during a quench. Assumes that the magnetic
     field does not decay over time and accounts for contributions from copper, helium, and
-    superconductor materials using temperature integrals weighted by material properties.
+    superconductor materials using temperature integrals.
 
     :author M. Coleman, UKAEA
 
