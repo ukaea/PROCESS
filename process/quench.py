@@ -1,7 +1,7 @@
 from typing import Final
 
 import numpy as np
-from CoolProp import PropsSI
+from CoolProp.CoolProp import PropsSI
 
 __all__ = ["calculate_quench_protection_current_density"]
 
