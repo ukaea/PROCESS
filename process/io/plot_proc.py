@@ -361,6 +361,24 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_main_power_flow(axis, mfile_data, scan):
+
+    # Load the plasma image
+    plasma = mpimg.imread(
+        resources.path("process.io", "plasma.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [-0.2, 0.5, 0.45, 0.45], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(plasma)
+    new_ax.axis("off")
+
+    # Hide the axes for a cleaner look
+    axis.axis("off")
+
+
 def plot_main_plasma_information(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int, fig: plt.Figure
 ) -> None:
@@ -6352,6 +6370,9 @@ def main_plot(
 
     plot_30 = fig14.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
+
+    plot_24 = fig10.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_24, m_file_data, scan)
 
 
 def main(args=None):
