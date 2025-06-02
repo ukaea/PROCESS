@@ -195,7 +195,7 @@ class PfpwrParam(NamedTuple):
 
     c_pf_coil_turn: Any = None
 
-    pfwpmw: Any = None
+    p_pf_electric_supplies_mw: Any = None
 
     rho_pf_coil: Any = None
 
@@ -430,7 +430,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pfwpmw=0,
+            p_pf_electric_supplies_mw=0,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -1173,7 +1173,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pfwpmw=0.89998039031509891,
+            p_pf_electric_supplies_mw=0.89998039031509891,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -1802,7 +1802,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
 
-    monkeypatch.setattr(pfcoil_variables, "pfwpmw", pfpwrparam.pfwpmw)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "p_pf_electric_supplies_mw",
+        pfpwrparam.p_pf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", pfpwrparam.rho_pf_coil)
 
@@ -2171,7 +2175,7 @@ class Power2Param(NamedTuple):
 
     helpow_cryal: Any = None
 
-    pfwpmw: Any = None
+    p_pf_electric_supplies_mw: Any = None
 
     p_alpha_total_mw: Any = None
 
@@ -2321,7 +2325,7 @@ class Power2Param(NamedTuple):
             p_hcd_electric_loss_mw=77.967671580642758,
             p_coolant_pump_loss_total_mw=30.457120415306122,
             helpow_cryal=0,
-            pfwpmw=0.89998039031509891,
+            p_pf_electric_supplies_mw=0.89998039031509891,
             p_alpha_total_mw=396.66154806848488,
             i_plasma_ignited=0,
             p_plasma_inner_rad_mw=113.53817859231452,
@@ -2423,7 +2427,7 @@ class Power2Param(NamedTuple):
             p_hcd_electric_loss_mw=77.967671580642758,
             p_coolant_pump_loss_total_mw=30.448114159579291,
             helpow_cryal=0,
-            pfwpmw=0.068213156646500808,
+            p_pf_electric_supplies_mw=0.068213156646500808,
             p_alpha_total_mw=396.53774329057228,
             i_plasma_ignited=0,
             p_plasma_inner_rad_mw=113.53817859231452,
@@ -2720,7 +2724,11 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
     )
 
-    monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "p_pf_electric_supplies_mw",
+        power2param.p_pf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_alpha_total_mw", power2param.p_alpha_total_mw

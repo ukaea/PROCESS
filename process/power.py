@@ -339,12 +339,12 @@ class Power:
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
-        # pfwpmw = physics_variables.p_plasma_ohmic_mw / pfcoil_variables.etapsu
+        # p_pf_electric_supplies_mw = physics_variables.p_plasma_ohmic_mw / pfcoil_variables.etapsu
         wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
             1.0e0 / pfcoil_variables.etapsu - 1.0e0
         )
         # Total mean wall plug power dissipated in PFC and CS power supplies.  Issue #713
-        pfcoil_variables.pfwpmw = wall_plug_ohmicmw + pfpowermw
+        pfcoil_variables.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
 
         #  Output Section
         if output == 0:
@@ -650,7 +650,7 @@ class Power:
         # Liquid breeder also acts a coolant
         if int(fwbs_variables.i_blkt_dual_coolant) in [1, 2]:
             self.p_fw_blkt_heat_deposited_mw = (
-                +fwbs_variables.p_fw_nuclear_heat_total_mw
+                fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
                 + fwbs_variables.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
@@ -872,7 +872,7 @@ class Power:
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
-        #  pfcoil_variables.pfwpmw = Mean electrical energy dissipated in PFC power supplies as they
+        #  pfcoil_variables.p_pf_electric_supplies_mw = Mean electrical energy dissipated in PFC power supplies as they
         #  increase or decrease the poloidal field energy AND extra due to ohmic heating
         #  of the plasma.  Issue #713
         self.p_plant_core_systems_elec_mw = (
@@ -882,7 +882,7 @@ class Power:
             + heat_transport_variables.p_tf_electric_supplies_mw
             + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.vachtmw
-            + pfcoil_variables.pfwpmw
+            + pfcoil_variables.p_pf_electric_supplies_mw
         )
 
         #  Total secondary heat
@@ -1879,8 +1879,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Electric power for PF coils (MW)",
-            "(pfwpmw)",
-            pfcoil_variables.pfwpmw,
+            "(p_pf_electric_supplies_mw)",
+            pfcoil_variables.p_pf_electric_supplies_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1899,7 +1899,7 @@ class Power:
             + heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.p_tf_electric_supplies_mw
             + heat_transport_variables.fachtmw
-            + pfcoil_variables.pfwpmw
+            + pfcoil_variables.p_pf_electric_supplies_mw
         )
         po.ovarrf(
             self.outfile, "Total (MW)", "(tot_plant_power)", total_plant_power, "OP "

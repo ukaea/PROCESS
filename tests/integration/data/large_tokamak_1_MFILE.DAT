@@ -1158,7 +1158,7 @@
  Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6566E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electric_supplies_mw)______________________      1.0434E+01    
- Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2422E+00    
+ Electric_power_for_PF_coils_(MW)________________________________________ (p_pf_electric_supplies_mw)______________________      1.2422E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5490E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.7006E+02    
  Total_(MW)______________________________________________________________ ______________________________      8.7006E+02    
