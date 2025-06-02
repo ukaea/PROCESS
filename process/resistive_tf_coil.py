@@ -579,7 +579,7 @@ class ResistiveTFCoil(TFCoil):
                 )
 
                 # Total joints resistive power losses
-                tfcoil_variables.pres_joints = (
+                tfcoil_variables.p_tf_joints_resistive = (
                     tfcoil_variables.n_tf_joints
                     * tfcoil_variables.rho_tf_joints
                     * tfcoil_variables.c_tf_total**2
@@ -587,7 +587,7 @@ class ResistiveTFCoil(TFCoil):
                 )
             else:
                 # Joints resistance to be evaluated for SC
-                tfcoil_variables.pres_joints = 0.0e0
+                tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
             # ---
 
@@ -606,7 +606,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.p_tf_leg_resistive = 0.0e0
 
             # No joints if physics_variables.itart = 0
-            tfcoil_variables.pres_joints = 0.0e0
+            tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
     @staticmethod
     @numba.njit(cache=True)

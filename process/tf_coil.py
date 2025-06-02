@@ -1598,8 +1598,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "joints resistive power loss (W)",
-                    "(pres_joints)",
-                    tfcoil_variables.pres_joints,
+                    "(p_tf_joints_resistive)",
+                    tfcoil_variables.p_tf_joints_resistive,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5356,7 +5356,7 @@ def init_tfcoil_variables():
     tfv.n_tf_joints_contact = 6
     tfv.n_tf_joints = 4
     tfv.th_joint_contact = 0.03
-    tfv.pres_joints = 0.0
+    tfv.p_tf_joints_resistive = 0.0
     tfv.len_tf_coil = 0.0
     tfv.eff_tf_cryo = -1.0
     tfv.n_tf_coils = 16.0

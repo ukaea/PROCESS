@@ -573,7 +573,7 @@ module tfcoil_variables
   real(dp) :: th_joint_contact
   !! TF sliding joints contact pad width [m]
 
-  real(dp) :: pres_joints
+  real(dp) :: p_tf_joints_resistive
   !! Calculated TF joints resistive power losses [W]
 
   real(dp) :: len_tf_coil

@@ -821,7 +821,7 @@ class Power:
             heat_transport_variables.helpow_cryal = (
                 tfcoil_variables.p_cp_resistive
                 + tfcoil_variables.p_tf_leg_resistive
-                + tfcoil_variables.pres_joints
+                + tfcoil_variables.p_tf_joints_resistive
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
             )
 
@@ -2629,7 +2629,9 @@ class Power:
             tfcoil_variables.p_tf_leg_resistive_mw = (
                 1.0e-6 * tfcoil_variables.p_tf_leg_resistive
             )  # outboard legs
-            tfcoil_variables.tfjtsmw = 1.0e-6 * tfcoil_variables.pres_joints  # Joints
+            tfcoil_variables.tfjtsmw = (
+                1.0e-6 * tfcoil_variables.p_tf_joints_resistive
+            )  # Joints
             tfbusmw = (
                 1.0e-6 * tfcoil_variables.c_tf_turn**2 * tfbusres
             )  # TF coil bus => Dodgy #
