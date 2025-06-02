@@ -635,7 +635,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # cryogenic plant power (MW)
     fachtmw = m_file.data["fachtmw"].get_scan(-1)  # facility heat removal (MW)
-    tfacpd = m_file.data["tfacpd"].get_scan(
+    p_tf_electric_supplies_mw = m_file.data["p_tf_electric_supplies_mw"].get_scan(
         -1
     )  # total steady state TF coil AC power demand (MW)
     p_tritium_plant_electric_mw = m_file.data["p_tritium_plant_electric_mw"].get_scan(
@@ -653,7 +653,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_plant_core_systems_elec_mw = (
         p_cryo_plant_electric_mw
         + fachtmw
-        + tfacpd
+        + p_tf_electric_supplies_mw
         + p_tritium_plant_electric_mw
         + vachtmw
         + pfwpmw

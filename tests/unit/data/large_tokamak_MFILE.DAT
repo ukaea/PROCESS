@@ -1025,7 +1025,7 @@
  TF_coil_power_conversion_floor_space_(m2)_______________________________ (tfcfsp)______________________      1.8451E+03 OP 
  TF_coil_power_conv._building_volume_(m3)________________________________ (tfcbv)_______________________      1.1070E+04 OP 
  TF_coil_AC_inductive_power_demand_(MW)__________________________________ (xpwrmw)______________________      1.9151E+01 OP 
- Total_steady_state_AC_power_demand_(MW)_________________________________ (tfacpd)______________________      1.0217E+01 OP 
+ Total_steady_state_AC_power_demand_(MW)_________________________________ (p_tf_electric_supplies_mw)______________________      1.0217E+01 OP 
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits______________________________________________ (pfckts)______________________      1.2000E+01    
  Sum_of_PF_power_supply_ratings_(MVA)____________________________________ (spsmva)______________________      3.0397E+02 OP 
@@ -1161,7 +1161,7 @@
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
  Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      3.6515E+01    
- Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      1.0217E+01    
+ Electric_power_for_TF_coils_(MW)________________________________________ (p_tf_electric_supplies_mw)______________________      1.0217E+01    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.2252E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      5.5547E+01    
  Total_(MW)______________________________________________________________ (tot_plant_power)_____________      8.6850E+02    
