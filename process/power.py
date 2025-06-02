@@ -2629,7 +2629,7 @@ class Power:
             tfcoil_variables.p_tf_leg_resistive_mw = (
                 1.0e-6 * tfcoil_variables.p_tf_leg_resistive
             )  # outboard legs
-            tfcoil_variables.tfjtsmw = (
+            tfcoil_variables.p_tf_joints_resistive_mw = (
                 1.0e-6 * tfcoil_variables.p_tf_joints_resistive
             )  # Joints
             tfbusmw = (
@@ -2650,7 +2650,7 @@ class Power:
                 + tfcoil_variables.p_tf_leg_resistive_mw
                 + tfbusmw
                 + tfreacmw
-                + tfcoil_variables.tfjtsmw
+                + tfcoil_variables.p_tf_joints_resistive_mw
             )
 
             # Total steady state AC power demand (MW)
@@ -2736,8 +2736,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Power dissipation in TF coil set: joints",
-                "(tfjtsmw)",
-                tfcoil_variables.tfjtsmw,
+                "(p_tf_joints_resistive_mw)",
+                tfcoil_variables.p_tf_joints_resistive_mw,
                 "OP ",
             )
 
