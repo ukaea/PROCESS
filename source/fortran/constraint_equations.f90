@@ -1098,10 +1098,10 @@ contains
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! tfcpmw : input real : peak resistive TF coil inboard leg power (total) (MW)
-      !! tflegmw : input real : TF coil outboard leg resistive power (total) (MW)
+      !! p_tf_leg_resistive_mw : input real : TF coil outboard leg resistive power (total) (MW)
       !! fmva : input real : f-value for maximum MVA
       !! mvalim : input real : MVA limit for resistive TF coil set (total) (MW)
-      use tfcoil_variables, only: tfcpmw, tflegmw
+      use tfcoil_variables, only: tfcpmw, p_tf_leg_resistive_mw
       use constraint_variables, only: fmva, mvalim
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1112,7 +1112,7 @@ contains
       ! totmva : local real : total MVA in TF coil (MW)
       real(dp) :: totmva
 
-      totmva = tfcpmw + tflegmw
+      totmva = tfcpmw + p_tf_leg_resistive_mw
       tmp_cc =  totmva/mvalim - 1.0D0 * fmva
       tmp_con = mvalim * (1.0D0 - tmp_cc)
       tmp_err = totmva * tmp_cc

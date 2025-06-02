@@ -2626,7 +2626,7 @@ class Power:
             tfcoil_variables.tfcpmw = (
                 1.0e-6 * tfcoil_variables.p_cp_resistive
             )  # inboard legs (called centrepost, CP for tart design)
-            tfcoil_variables.tflegmw = (
+            tfcoil_variables.p_tf_leg_resistive_mw = (
                 1.0e-6 * tfcoil_variables.p_tf_leg_resistive
             )  # outboard legs
             tfcoil_variables.tfjtsmw = 1.0e-6 * tfcoil_variables.pres_joints  # Joints
@@ -2645,7 +2645,7 @@ class Power:
             # Total power consumption (MW)
             tfcoil_variables.tfcmw = (
                 tfcoil_variables.tfcpmw
-                + tfcoil_variables.tflegmw
+                + tfcoil_variables.p_tf_leg_resistive_mw
                 + tfbusmw
                 + tfreacmw
                 + tfcoil_variables.tfjtsmw
@@ -2719,8 +2719,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Power dissipation in TF coil set: outboard legs (MW)",
-            "(tflegmw)",
-            tfcoil_variables.tflegmw,
+            "(p_tf_leg_resistive_mw)",
+            tfcoil_variables.p_tf_leg_resistive_mw,
             "OP ",
         )
         po.ovarre(

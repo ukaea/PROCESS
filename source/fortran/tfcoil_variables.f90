@@ -532,7 +532,7 @@ module tfcoil_variables
   real(dp) :: tfinsgap
   !! TF coil WP insertion gap (m)
 
-  real(dp) :: tflegmw
+  real(dp) :: p_tf_leg_resistive_mw
   !! TF coil outboard leg resistive power (MW)
 
   real(dp) :: rho_cp

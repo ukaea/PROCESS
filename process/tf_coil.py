@@ -5346,7 +5346,7 @@ def init_tfcoil_variables():
     tfv.tficrn = 0.0
     tfv.ind_tf_coil = 0.0
     tfv.tfinsgap = 0.01
-    tfv.tflegmw = 0.0
+    tfv.p_tf_leg_resistive_mw = 0.0
     tfv.rho_cp = 0.0
     tfv.rho_tf_leg = 0.0
     tfv.rho_tf_bus = 1.86e-8
