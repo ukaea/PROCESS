@@ -333,6 +333,7 @@ OBS_VARS = {
     "roughness": "roughness_fw_channel",
     "casthi_is_fraction": "i_f_dr_tf_plasma_case",
     "casthi_fraction": "f_dr_tf_plasma_case",
+    "casthi": "dr_tf_plasma_case",
     "htpmw_blkt": "p_blkt_coolant_pump_mw",
     "htpmw_div": "p_div_coolant_pump_mw",
     "htpmw_fw": "p_fw_coolant_pump_mw",
