@@ -5,7 +5,7 @@
 !!! note 
 
     The majority of the output plots can be automatically generated at the end of the `PROCESS` run by using the `--full-output` flag.
-    See the [running process section](./running-process.md) section for more info.
+    See the [running process](./running-process.md) section for more info.
 
 ### Summary document
 
