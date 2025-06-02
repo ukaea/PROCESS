@@ -3,17 +3,33 @@
 The main power flow is controlled by `power.py`. The main class `Power` controls this.
 ## Power requirements | `Power`
 
----
+### TF Coils
 
-### PF power | `pfpwr()`
-
----
-
-### AC power | `acpow()`
+#### Resistive TF coil power requirements | `tfpwr()`
 
 ---
 
-### Main power conversion | `component_thermal_powers()`
+#### Superconducting TF coil power requirements | `tfcpwr()`
+
+---
+
+#### TF coil power conversion system parameters | `tfcpwr()`
+
+---
+
+### PF Coils
+
+#### PF power | `pfpwr()`
+
+---
+
+#### AC power | `acpow()`
+
+---
+
+### Power Plant
+
+#### Main power conversion | `component_thermal_powers()`
 
 1: Calculate the electric wall plug power for the different coolant systems by dividing by the pump wall plug efficiencies
 
@@ -108,26 +124,22 @@ $$
 
 ---
 
-### Remainder power conversion | `power2()`
+#### Remainder power conversion | `power2()`
 
 ---
 
-### Time dependent power requirements | `power3()`
+#### Time dependent power requirements | `power3()`
 
 ---
 
-### Cryogenic power requirements | `cryo()`
-
----
-
-### Plant thermal efficiency | `plant_thermal_efficiency()`
+#### Plant thermal efficiency | `plant_thermal_efficiency()`
 
 `i_thermal_electric_conversion` : This switch controls the calculation of the thermal to electric conversion 
 efficiency in the secondary cycle.
 
 ----------------
 
-#### Use CCFE HCPB Model Value
+##### Use CCFE HCPB Model Value
 
 This model is set with `i_thermal_electric_conversion = 0`.
 
@@ -151,7 +163,7 @@ $$
 
 -------------------
 
-#### Use CCFE HCPB Model Value with divertor
+##### Use CCFE HCPB Model Value with divertor
 
 This model is set with `i_thermal_electric_conversion = 1`.
 
@@ -167,7 +179,7 @@ where $f$ is the fraction of heat to the divertor.
 
 --------------
 
-#### User input
+##### User input
 
 This model is set with `i_thermal_electric_conversion = 3`.
 
@@ -179,7 +191,7 @@ $$
 
 -----------------
 
-#### Steam Rankine Cycle
+##### Steam Rankine Cycle
 
 This model is set with `i_thermal_electric_conversion = 3`.
 
@@ -201,7 +213,7 @@ If the Rankine cycle is chosen and the primary coolant is water, it is assumed t
 
 ------------
 
-#### Supercritical CO2 Brayton Cycle
+##### Supercritical CO2 Brayton Cycle
   
 This model is set with `i_thermal_electric_conversion = 4`.
 
@@ -228,21 +240,20 @@ The correlation of efficiency with temperature is derived from results of cycle 
 
 ---
 
-### Liquid metal breeder plant thermal efficiency | `plant_thermal_efficiency_2()`
+#### Liquid metal breeder plant thermal efficiency | `plant_thermal_efficiency_2()`
 
 ---
 
-### Resistive TF coil power requirements | `tfpwr()`
+
+
+
+### Cryogenic power requirements | `cryo()`
 
 ---
 
-### Superconducting TF coil power requirements | `tfpwr()`
 
----
 
-### TF coil power conversion system parameters | `tfcpwr()`
 
----
 
 Figure 1 shows a simplified description of the power flow. 
 
