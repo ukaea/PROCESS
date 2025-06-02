@@ -1006,7 +1006,7 @@ boundu(50) = 1.0
 *icc = 19
 * DESCRIPTION:   Constraint equation for MVA upper limit in TF coil
 * JUSTIFICATION: Turned off, dont care about limit
-* VARIABLES:     mvalim,p_tf_leg_resistive_mw,tfcpmw calculated in-situ
+* VARIABLES:     mvalim,p_tf_leg_resistive_mw,p_cp_resistive_mw calculated in-situ
 
 *mvalim =  
 * DESCRIPTION:   Maximum MVA limit (`constraint equation 19`) (default = 40.0)

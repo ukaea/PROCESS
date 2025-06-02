@@ -514,7 +514,7 @@ module tfcoil_variables
   real(dp) :: tfcmw
   !! Peak power per TF power supply (MW)
 
-  real(dp) :: tfcpmw
+  real(dp) :: p_cp_resistive_mw
   !! Peak resistive TF coil inboard leg power (MW)
 
   real(dp) :: p_tf_joints_resistive_mw

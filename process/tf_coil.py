@@ -5340,7 +5340,7 @@ def init_tfcoil_variables():
     tfv.m_tf_bus = 0.0
     tfv.tfckw = 0.0
     tfv.tfcmw = 0.0
-    tfv.tfcpmw = 0.0
+    tfv.p_cp_resistive_mw = 0.0
     tfv.p_tf_joints_resistive_mw = 0.0
     tfv.tfcryoarea = 0.0
     tfv.tficrn = 0.0
