@@ -98,7 +98,7 @@ module tfcoil_variables
   !! TF coil turn edge length including turn insulation [m]
   !!   If the turn is not a square (i_tf_turns_integer = 1) a squared turn of
   !!   equivelent size is use to calculated this quantity
-  !!   If the t_turn_tf is non zero, cpttf is calculated
+  !!   If the t_turn_tf is non zero, c_tf_turn is calculated
 
   logical :: t_turn_tf_is_input
   !! Boolean switch to activated when the user set the TF coil turn dimensions
@@ -121,7 +121,7 @@ module tfcoil_variables
   !! TF coil superconducting cable squared/rounded dimensions [m]
   !!   If the turn is not a square (i_tf_turns_integer = 1) a squared cable of
   !!   equivelent size is use to calculated this quantity
-  !!   If the t_cable_tf is non zero, cpttf is calculated
+  !!   If the t_cable_tf is non zero, c_tf_turn is calculated
 
   logical :: t_cable_tf_is_input
   !! Boolean switch to activated when the user set the TF coil cable dimensions
@@ -139,7 +139,7 @@ module tfcoil_variables
   real(dp) :: cplen
   !! length of TF coil inboard leg ('centrepost') (`i_tf_sup = 1`)
 
-  real(dp) :: cpttf
+  real(dp) :: c_tf_turn
   !! TF coil current per turn (A). (calculated for stellarators) (calculated for
   !! integer-turn TF coils `i_tf_turns_integer=1`) (`iteration variable 60`)
 

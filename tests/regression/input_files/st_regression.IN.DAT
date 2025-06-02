@@ -1122,15 +1122,15 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*cpttf can be used to calculate number of turns
+*c_tf_turn can be used to calculate number of turns
 
 *icc = 77
 * DESCRIPTION:   Constraint equation for maximum TF current per turn upper limit
 * JUSTIFICATION: Turned off, not concerned with current per turn
-* VARIABLES:     cpttf_max (Allowable TF coil current per turn [A/turn]). cpttf calculated in-situ
+* VARIABLES:     cpttf_max (Allowable TF coil current per turn [A/turn]). c_tf_turn calculated in-situ
 
 *ixc = 60
-*cpttf =  
+*c_tf_turn =  
 *boundl(60) = 
 *boundu(60) = 
 * DESCRIPTION:   TF coil leg current per turn (A) (icc=77)
@@ -1146,7 +1146,7 @@ i_tf_turns_integer = 0
 * DESCRIPTION:   TF coil superconducting cable squared/rounded dimensions [m]
 * If the turn is not a square (i_tf_turns_integer = 1) a squared cable of
 * equivelent size is use to calculated this quantity
-* If the t_cable_tf is non zero, cpttf is calculated
+* If the t_cable_tf is non zero, c_tf_turn is calculated
 * Sets the cable space and allows the turn size to be calculated
 * JUSTIFICATION: Not set, as i_tf_turns_integer = 0
 

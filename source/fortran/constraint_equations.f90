@@ -2944,14 +2944,14 @@ contains
       !! args : output structure : residual error; constraint value; residual error in physical units; output string; units string
       !! Equation for maximum TF current per turn upper limit
       !! #=# tfcoil
-      !! #=#=# fcpttf, cpttf, cpttf_max
+      !! #=#=# fcpttf, c_tf_turn, cpttf_max
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fcpttf : input : f-value for TF coil current per turn
       !! cpttf_max  : input : allowable TF coil current per turn [A/turn]
-      !! cpttf  : input : TF coil current per turn [A/turn]
+      !! c_tf_turn  : input : TF coil current per turn [A/turn]
       use constraint_variables, only: fcpttf
-      use tfcoil_variables, only: cpttf_max, cpttf
+      use tfcoil_variables, only: cpttf_max, c_tf_turn
       implicit none
             real(dp), intent(out) :: tmp_cc
       real(dp), intent(out) :: tmp_con
@@ -2959,7 +2959,7 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc = cpttf / cpttf_max - 1.0D0 * fcpttf
+      tmp_cc = c_tf_turn / cpttf_max - 1.0D0 * fcpttf
       tmp_con = cpttf_max
       tmp_err = cpttf_max * tmp_cc
       tmp_symbol = '<'

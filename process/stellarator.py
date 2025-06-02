@@ -2667,7 +2667,7 @@ class Stellarator:
         tfcoil_variables.n_tf_turn = (
             awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
-        tfcoil_variables.cpttf = (
+        tfcoil_variables.c_tf_turn = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
@@ -3017,12 +3017,12 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(cpttf,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
             tfcoil_variables.tdmptf,
-            tfcoil_variables.cpttf,
+            tfcoil_variables.c_tf_turn,
         )
 
         # comparison
@@ -3922,7 +3922,10 @@ class Stellarator:
             t_turn_tf,
         )
         po.ovarre(
-            self.outfile, "Current per turn (A)", "(cpttf)", tfcoil_variables.cpttf
+            self.outfile,
+            "Current per turn (A)",
+            "(c_tf_turn)",
+            tfcoil_variables.c_tf_turn,
         )
         po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(

@@ -38,7 +38,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     fcoolcp: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     cdtfleg: Any = None
 
@@ -85,7 +85,7 @@ class ResTfInternalGeomParam(NamedTuple):
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
-            cpttf=70000,
+            c_tf_turn=70000,
             cdtfleg=0,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0,
@@ -112,7 +112,7 @@ class ResTfInternalGeomParam(NamedTuple):
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
-            cpttf=2125000,
+            c_tf_turn=2125000,
             cdtfleg=421788350.27812088,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0.00030678028680367151,
@@ -174,7 +174,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "fcoolcp", restfinternalgeomparam.fcoolcp)
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", restfinternalgeomparam.cpttf)
+    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", restfinternalgeomparam.c_tf_turn)
 
     monkeypatch.setattr(tfcoil_variables, "cdtfleg", restfinternalgeomparam.cdtfleg)
 
@@ -218,7 +218,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_n_tf_turn
     )
 
-    assert tfcoil_variables.cpttf == pytest.approx(
+    assert tfcoil_variables.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 
@@ -238,7 +238,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_n_tf_turn
     )
 
-    assert tfcoil_variables.cpttf == pytest.approx(
+    assert tfcoil_variables.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 

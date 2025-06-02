@@ -1373,8 +1373,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Outboard leg current per turn (A)",
-                "(cpttf)",
-                tfcoil_variables.cpttf,
+                "(c_tf_turn)",
+                tfcoil_variables.c_tf_turn,
             )
             po.ovarre(
                 self.outfile,
@@ -5248,7 +5248,7 @@ def init_tfcoil_variables():
     tfv.cdtfleg = 0.0
     tfv.cforce = 0.0
     tfv.cplen = 0.0
-    tfv.cpttf = 7.0e4
+    tfv.c_tf_turn = 7.0e4
     tfv.cpttf_max = 9.0e4
     tfv.dcase = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]

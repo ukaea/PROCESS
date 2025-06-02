@@ -3291,7 +3291,7 @@ class Acc2251Param(NamedTuple):
 
     n_tf_coils: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     c22: Any = None
 
@@ -3340,7 +3340,7 @@ class Acc2251Param(NamedTuple):
             m_tf_bus=0,
             tfckw=32474.753636211804,
             n_tf_coils=16,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             c22=0,
             c225=0,
             c2251=0,
@@ -3371,7 +3371,7 @@ class Acc2251Param(NamedTuple):
             m_tf_bus=0,
             tfckw=32505.257577809778,
             n_tf_coils=16,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2251=98.457845594540643,
@@ -3430,7 +3430,7 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2251param.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", acc2251param.cpttf)
+    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", acc2251param.c_tf_turn)
 
     monkeypatch.setattr(costs, "c22", acc2251param.c22)
 

@@ -770,7 +770,7 @@
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5100E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.1025E+05 OP 
- Actual_current_(A)______________________________________________________ (cpttf)_______________________      8.0573E+04 ITV
+ Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.0573E+04 ITV
  Actual_current_/_critical_current_______________________________________ (iooic)_______________________      7.3084E-01 OP 
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)____________________              1    
@@ -1459,7 +1459,7 @@ fcutfsu = 0.8
 ixc = 60
 boundl(60) = 65000.0
 boundu(60) = 90000.0
-cpttf = 65000.0
+c_tf_turn = 65000.0
 
 * Helium fraction (f_nd_alpha_electron)
 ixc = 109

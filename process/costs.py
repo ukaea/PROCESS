@@ -1988,8 +1988,9 @@ class Costs:
             self.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
                 * tfcoil_variables.n_tf_coils
-                * (tfcoil_variables.cpttf * tfcoil_variables.vtfskv * 1.0e3) ** expel
-                + cost_variables.uctfsw * tfcoil_variables.cpttf
+                * (tfcoil_variables.c_tf_turn * tfcoil_variables.vtfskv * 1.0e3)
+                ** expel
+                + cost_variables.uctfsw * tfcoil_variables.c_tf_turn
             )
         else:
             self.c22512 = 0.0e0
@@ -2019,7 +2020,7 @@ class Costs:
             self.c22515 = (
                 1.0e-6
                 * cost_variables.ucbus
-                * tfcoil_variables.cpttf
+                * tfcoil_variables.c_tf_turn
                 * tfcoil_variables.len_tf_bus
             )
 

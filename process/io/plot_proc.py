@@ -3057,7 +3057,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
     internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
-    cpttf = mfile_data.data["cpttf"].get_scan(scan)
+    c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 
     # Plot the total turn shape
     if integer_turns == 0:
@@ -3102,7 +3102,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_width / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {c_tf_turn:.2f} A",
                 edgecolor="black",
             ),
         )
@@ -3156,7 +3156,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_height / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {cpttf:.2f} A",
+                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {c_tf_turn:.2f} A",
                 edgecolor="black",
             ),
         )

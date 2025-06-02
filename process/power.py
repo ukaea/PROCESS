@@ -796,7 +796,7 @@ class Power:
                 fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
                 times_variables.t_pulse_repetition,
-                tfcoil_variables.cpttf,
+                tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coils,
             )
 
@@ -2284,7 +2284,7 @@ class Power:
         p_tf_nuclear_heat_mw,
         ensxpfm,
         t_pulse_repetition,
-        cpttf,
+        c_tf_turn,
         n_tf_coils,
     ):
         """
@@ -2299,7 +2299,7 @@ class Power:
         p_tf_nuclear_heat_mw : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
         t_pulse_repetition : input real : Pulse length of cycle (s)
-        cpttf : input real : Current per turn in TF coils (A)
+        c_tf_turn : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
         This routine calculates the cryogenic heat load.
@@ -2319,7 +2319,7 @@ class Power:
 
         #  Current leads
         if i_tf_sup == 1:
-            self.qcl = 13.6e-3 * n_tf_coils * cpttf
+            self.qcl = 13.6e-3 * n_tf_coils * c_tf_turn
         else:
             self.qcl = 0.0e0
 
@@ -2589,9 +2589,9 @@ class Power:
         """
         if tfcoil_variables.i_tf_sup != 1:
             # Cross-sectional area of bus
-            # tfcoil_variables.cpttf  - current per TFC turn (A)
+            # tfcoil_variables.c_tf_turn  - current per TFC turn (A)
             # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
-            a_tf_bus = tfcoil_variables.cpttf / tfcoil_variables.j_tf_bus
+            a_tf_bus = tfcoil_variables.c_tf_turn / tfcoil_variables.j_tf_bus
 
             # Bus resistance [ohm]
             # Bus resistivity (tfcoil_variables.rho_tf_bus)
@@ -2618,7 +2618,7 @@ class Power:
             tfcoil_variables.vtfkv = (
                 1.0e-3
                 * res_tf_system_total
-                * tfcoil_variables.cpttf
+                * tfcoil_variables.c_tf_turn
                 / tfcoil_variables.n_tf_coils
             )
 
@@ -2631,7 +2631,7 @@ class Power:
             )  # outboard legs
             tfcoil_variables.tfjtsmw = 1.0e-6 * tfcoil_variables.pres_joints  # Joints
             tfbusmw = (
-                1.0e-6 * tfcoil_variables.cpttf**2 * tfbusres
+                1.0e-6 * tfcoil_variables.c_tf_turn**2 * tfbusres
             )  # TF coil bus => Dodgy #
 
             #  TF coil reactive power
@@ -2758,7 +2758,7 @@ class Power:
 
         #  TF coil current (kA)
 
-        itfka = 1.0e-3 * tfcoil_variables.cpttf
+        itfka = 1.0e-3 * tfcoil_variables.c_tf_turn
 
         (
             tfcoil_variables.tfckw,

@@ -727,7 +727,7 @@
  Minimum_allowed_temperature_margin_in_superconductor_(K)_________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
  Actual_temperature_margin_in_superconductor_(K)__________________________ (tmarg)________________________ 1.84958797271245423e+00 OP
  Critical_current_(A)_____________________________________________________ (icrit)________________________ 1.31684724877303030e+05 OP
- Actual_current_(A)_______________________________________________________ (cpttf)________________________ 8.54626750025380170e+04 OP
+ Actual_current_(A)_______________________________________________________ (c_tf_turn)________________________ 8.54626750025380170e+04 OP
  Actual_current_/_critical_current________________________________________ (iooic)________________________ 6.48994597377696492e-01 OP
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              1    
@@ -1210,7 +1210,7 @@ boundl(58) = 0.008
 ixc = 59 * fcutfsu
 boundl(59) = 0.50
 boundu(59) = 0.94
-ixc = 60 * cpttf
+ixc = 60 * c_tf_turn
 boundl(60) = 65000.0
 boundu(60) = 90000.0
 ixc = 109 * ralpne
@@ -1552,7 +1552,7 @@ sig_tf_case_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in T
 sig_tf_wp_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
 dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 casths   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
-cpttf    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
+c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
 dhecoil  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;

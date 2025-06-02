@@ -390,7 +390,7 @@ class ResistiveTFCoil(TFCoil):
         ) - sctfcoil_module.awpc
 
         # Current per turn
-        tfcoil_variables.cpttf = tfcoil_variables.c_tf_total / (
+        tfcoil_variables.c_tf_turn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.n_tf_turn * tfcoil_variables.n_tf_coils
         )
 

@@ -508,7 +508,7 @@
     {
       "no": 100,
       "level": 2,
-      "message": "SCTFCOIL: Negative cable space dimension; reduce conduit thicknesses or raise cpttf"
+      "message": "SCTFCOIL: Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn"
     },
     {
       "no": 101,
