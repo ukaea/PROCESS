@@ -301,7 +301,7 @@ class Buildings:
         )
 
         # Calculate effective floor area for ac power module
-        buildings_variables.efloor = (
+        buildings_variables.a_plant_floor_effective = (
             rbv
             + rmbv
             + wsv
@@ -338,8 +338,8 @@ class Buildings:
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
-                "(efloor)",
-                buildings_variables.efloor,
+                "(a_plant_floor_effective)",
+                buildings_variables.a_plant_floor_effective,
             )
             po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
             po.ovarre(
@@ -962,7 +962,7 @@ class Buildings:
         # Calculate 'effective floor area for AC power module'
         # This is the total floor area (m2) across the site, allowing for multiple floors
         # within buildings by assuming an average storey height of 6m:
-        buildings_variables.efloor = buildings_total_vol / 6.0e0
+        buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
         buildings_variables.volnucb = reactor_build_totvol + hotcell_vol_ext
@@ -1165,8 +1165,8 @@ class Buildings:
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
-                "(efloor)",
-                buildings_variables.efloor,
+                "(a_plant_floor_effective)",
+                buildings_variables.a_plant_floor_effective,
             )
             po.ovarre(
                 self.outfile,
@@ -1528,7 +1528,7 @@ def init_buildings_variables():
     buildings_variables.cryostore_h = 20.0
     buildings_variables.cryostat_clrnc = 2.5
     buildings_variables.cryvol = 0.0
-    buildings_variables.efloor = 0.0
+    buildings_variables.a_plant_floor_effective = 0.0
     buildings_variables.elecdist_l = 380.0
     buildings_variables.elecdist_w = 350.0
     buildings_variables.elecdist_h = 5.0

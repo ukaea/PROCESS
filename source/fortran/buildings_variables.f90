@@ -70,7 +70,7 @@ module buildings_variables
     real(dp) :: cryvol
     !! volume of cryoplant building (m3)
 
-    real(dp) :: efloor
+    real(dp) :: a_plant_floor_effective
     !! effective total floor space (m2)
 
     real(dp) :: elecdist_l, elecdist_w, elecdist_h

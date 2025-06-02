@@ -17,7 +17,7 @@ var_dicts = {
     "rmajor": VariableMetadata(
         latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
     ),
-    "crypmw": VariableMetadata(
+    "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
     "bt": VariableMetadata(
@@ -370,7 +370,7 @@ var_dicts = {
         description="Divertor power per major radius",
         units="MW/m",
     ),
-    "etath": VariableMetadata(
+    "eta_turbine": VariableMetadata(
         latex=r"Thermal to Electric efficiency",
         description="Thermal to electric efficiency",
         units="",

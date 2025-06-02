@@ -15,8 +15,8 @@ All of the charged particle transport power leaving the plasma (excluding the `1
 the alpha power that escapes directly to the first wall) is assumed to be absorbed in the divertor, 
 along with a proportion `f_ster_div_single` of the radiation power and the neutron power.
 
-Switch `iprimdiv` may be used to specify whether the thermal power deposited in the divertor becomes 
-high-grade thermal power (`iprimdiv` = 1) or low-grade waste heat (see Figure 1).
+Switch `i_div_primary_heat` may be used to specify whether the thermal power deposited in the divertor becomes 
+high-grade thermal power (`i_div_primary_heat` = 1) or low-grade waste heat (see Figure 1).
 
 ## First wall
 
@@ -55,8 +55,7 @@ for the primary coolant.
     - The mechanical pumping power required for the first wall and breeder zone is calculated using 
       the Darcy friction factor, estimated from the Haaland equation, an approximation to the 
       ColebrookWhite equation. (If you consider that the calculated value for the pumping power is 
-      too low, then you can add an additional electric power requirement using `baseel`. Do not use 
-      `htpmw_min` as this prevents the optimisation of the first wall.) The inlet and outlet temperatures 
+      too low, then you can add an additional electric power requirement using `p_plant_electric_base`.) The inlet and outlet temperatures 
       of the first wall and blanket can be different. The isentropic efficiency of the first wall and 
       blanket coolant pumps (enthalpy increase in the fluid for isentropic compression divided by the 
       mechanical power used) is specified by the parameter `etaiso`. Note that the mechanical pumping 
@@ -88,7 +87,7 @@ efficiency in the secondary cycle.
     divertor heat is used for electricity generation.
   - If `i_thermal_electric_conversion` = 2, the efficiency of the power generation cycle is input by the user.
   - If `i_thermal_electric_conversion` = 3, a steam Rankine cycle is assumed. The secondary cycle thermal 
-    efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
+    efficiency (`eta_turbine`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency[^1]:
 
     $\begin{eqnarray*}
@@ -97,7 +96,7 @@ efficiency in the secondary cycle.
     \end{eqnarray*}$
 
   - If `i_thermal_electric_conversion` = 4, a supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
-    efficiency (`etath`) is calculated from the coolant outlet temperature using simple relations 
+    efficiency (`eta_turbine`) is calculated from the coolant outlet temperature using simple relations 
     between temperature and efficiency from [^1]:
 
     $$
@@ -108,7 +107,7 @@ In the above three equations, *T* is the temperature (K) of the (secondary) cool
 to the turbine, assumed to be 20 K below the outlet temperature of the primary coolant.
 
 The electrical power required to operate the power plant itself is the so-called recirculating 
-electric power (`precircmw`). Any surplus is exported to the electricity grid as net electric 
+electric power (`p_plant_electric_recirc_mw`). Any surplus is exported to the electricity grid as net electric 
 power (`p_plant_electric_net_mw`).
 
 The recirculating power comprises the electrical power required to run all of the associated 

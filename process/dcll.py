@@ -247,8 +247,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in the shield (MW)",
-                "(pnucshld)",
-                fwbs_variables.pnucshld,
+                "(p_shld_nuclear_heat_mw)",
+                fwbs_variables.p_shld_nuclear_heat_mw,
                 "OP ",
             )
             po.ovarre(
@@ -261,8 +261,8 @@ class DCLL:
             po.ovarre(
                 self.outfile,
                 "Total nuclear heating in TF+PF coils (CS is negligible) (MW)",
-                "(ptfnuc)",
-                fwbs_variables.ptfnuc,
+                "(p_tf_nuclear_heat_mw)",
+                fwbs_variables.p_tf_nuclear_heat_mw,
                 "OP ",
             )
 
@@ -305,8 +305,8 @@ class DCLL:
                 heat_transport_variables.fpumpblkt
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
-            # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( pnucshld + pnuc_cp_sh )
-            # Use same as KIT HCLL for now "pnucshld is not available and is very small
+            # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
+            # Use same as KIT HCLL for now "p_shld_nuclear_heat_mw is not available and is very small
             # compared to other powers so set to zero."
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.fpumpshld * 0.0

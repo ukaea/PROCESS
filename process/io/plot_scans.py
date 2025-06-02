@@ -344,7 +344,7 @@ def main(args=None):
         52: "rad_fraction_sol",
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",
-        56: "crypmw_max",
+        56: "p_cryo_plant_electric_max_mw",
         57: "bt",  # Genuinly bt lower bound
         58: "dr_fw_plasma_gap_inboard",
         59: "dr_fw_plasma_gap_outboard",
@@ -364,7 +364,7 @@ def main(args=None):
         73: "pnuc_fw_ratio_dcll",
         74: "f_nuc_pow_bz_struct",
         75: "dx_fw_module",
-        76: "etath",
+        76: "eta_turbine",
         77: "startupratio",
         78: "fkind",
         79: "eta_ecrh_injector_wall_plug",

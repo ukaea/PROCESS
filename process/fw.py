@@ -657,7 +657,7 @@ def init_fwbs_variables():
     fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
     fwbs_variables.pnucloss = 0.0
     fwbs_variables.pnucvvplus = 0.0
-    fwbs_variables.pnucshld = 0.0
+    fwbs_variables.p_shld_nuclear_heat_mw = 0.0
     fwbs_variables.m_blkt_total = 0.0
     fwbs_variables.m_blkt_steel_total = 0.0
     fwbs_variables.armour_fw_bl_mass = 0.0
@@ -728,7 +728,7 @@ def init_fwbs_variables():
     fwbs_variables.p_fw_rad_total_mw = 0.0
     fwbs_variables.p_fw_hcd_rad_total_mw = 0.0
     fwbs_variables.pradloss = 0.0
-    fwbs_variables.ptfnuc = 0.0
+    fwbs_variables.p_tf_nuclear_heat_mw = 0.0
     fwbs_variables.ptfnucpm3 = 0.0
     fwbs_variables.r_cryostat_inboard = 0.0
     fwbs_variables.z_cryostat_half_inside = 0.0
@@ -763,7 +763,7 @@ def init_fwbs_variables():
     fwbs_variables.etaiso = 0.85
     fwbs_variables.etahtp = 0.95
     fwbs_variables.pnuc_cp = 0.0
-    fwbs_variables.pnuc_cp_sh = 0.0
+    fwbs_variables.p_cp_shield_nuclear_heat_mw = 0.0
     fwbs_variables.pnuc_cp_tf = 0.0
     fwbs_variables.neut_flux_cp = 0.0
     fwbs_variables.i_fw_blkt_shared_coolant = 0

@@ -191,9 +191,9 @@ ipowerflow = 0 * Switch for power flow model;  HAS NO EFFECT?
 i_coolant_pumping = 3 * Switch for pumping power for primary coolant
 etahtp = 0.87 * electrical efficiency of FW and blanket coolant pumps
 etaiso = 0.9  * isentropic efficiency of FW and blanket coolant pumps
-i_thermal_electric_conversion = 2  * user input thermal-electric efficiency (etath)
-iprimshld = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle
-etath = 0.375D0  * thermal to electric conversion efficiency
+i_thermal_electric_conversion = 2  * user input thermal-electric efficiency (eta_turbine)
+i_shld_primary_heat = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle
+eta_turbine = 0.375D0  * thermal to electric conversion efficiency
 
 *------------Impurity Radiation Module-------------*
 

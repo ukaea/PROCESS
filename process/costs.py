@@ -2134,9 +2134,9 @@ class Costs:
             1.0e-6
             * cost_variables.uchts[fwbs_variables.i_blkt_coolant_type - 1]
             * (
-                (1.0e6 * heat_transport_variables.pfwdiv) ** exphts
+                (1.0e6 * heat_transport_variables.p_fw_div_heat_deposited_mw) ** exphts
                 + (1.0e6 * fwbs_variables.p_blkt_nuclear_heat_total_mw) ** exphts
-                + (1.0e6 * fwbs_variables.pnucshld) ** exphts
+                + (1.0e6 * fwbs_variables.p_shld_nuclear_heat_mw) ** exphts
             )
         )
 
@@ -2149,7 +2149,7 @@ class Costs:
             * heat_transport_variables.nphx
             * (
                 1.0e6
-                * heat_transport_variables.pthermmw
+                * heat_transport_variables.p_plant_primary_heat_mw
                 / heat_transport_variables.nphx
             )
             ** exphts
@@ -2174,9 +2174,10 @@ class Costs:
             * cost_variables.ucahts
             * (
                 (1.0e6 * heat_transport_variables.pinjht) ** exphts
-                + (1.0e6 * heat_transport_variables.crypmw) ** exphts
+                + (1.0e6 * heat_transport_variables.p_cryo_plant_electric_mw) ** exphts
                 + (1.0e6 * heat_transport_variables.vachtmw) ** exphts
-                + (1.0e6 * heat_transport_variables.trithtmw) ** exphts
+                + (1.0e6 * heat_transport_variables.p_tritium_plant_electric_mw)
+                ** exphts
                 + (1.0e6 * heat_transport_variables.fachtmw) ** exphts
             )
         )
@@ -2480,7 +2481,7 @@ class Costs:
             )
         else:
             pwrrej = (
-                heat_transport_variables.pthermmw
+                heat_transport_variables.p_plant_primary_heat_mw
                 - heat_transport_variables.p_plant_electric_gross_mw
             )
 
@@ -2595,7 +2596,7 @@ class Costs:
                 shcss = 520.0e0
                 self.c2253 = (
                     cost_variables.ucblss
-                    * (heat_transport_variables.pthermmw * 1.0e6)
+                    * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
                     * times_variables.tdown
                     / (shcss * pulse_variables.dtstor)
                 )

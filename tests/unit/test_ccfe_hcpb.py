@@ -66,7 +66,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     fw_armour_thickness: Any = None
 
-    ptfnuc: Any = None
+    p_tf_nuclear_heat_mw: Any = None
 
     f_a_fw_coolant_inboard: Any = None
 
@@ -98,7 +98,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     tfc_nuc_heating: Any = None
 
-    expected_ptfnuc: Any = None
+    expected_p_tf_nuclear_heat_mw: Any = None
 
     expected_f_a_fw_coolant_inboard: Any = None
 
@@ -143,7 +143,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             m_vv=9043937.8018644415,
             vol_vv=1159.4792053672361,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0,
+            p_tf_nuclear_heat_mw=0,
             f_a_fw_coolant_inboard=0,
             f_a_fw_coolant_outboard=0,
             p_fusion_total_mw=1986.0623241661431,
@@ -159,7 +159,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=0,
             x_shield=0,
             tfc_nuc_heating=0,
-            expected_ptfnuc=0.044541749095475737,
+            expected_p_tf_nuclear_heat_mw=0.044541749095475737,
             expected_f_a_fw_coolant_inboard=0.31415926535897931,
             expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -190,7 +190,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             m_vv=9056931.558219457,
             vol_vv=1161.1450715665972,
             fw_armour_thickness=0.0050000000000000001,
-            ptfnuc=0.044184461825198453,
+            p_tf_nuclear_heat_mw=0.044184461825198453,
             f_a_fw_coolant_inboard=0.31415926535897931,
             f_a_fw_coolant_outboard=0.31415926535897931,
             p_fusion_total_mw=1985.4423932312809,
@@ -206,7 +206,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             x_blanket=2.3374537748527975,
             x_shield=4.056,
             tfc_nuc_heating=22427.165831352642,
-            expected_ptfnuc=0.044556605747797934,
+            expected_p_tf_nuclear_heat_mw=0.044556605747797934,
             expected_f_a_fw_coolant_inboard=0.31415926535897931,
             expected_f_a_fw_coolant_outboard=0.31415926535897931,
             expected_armour_density=13202.434141839649,
@@ -299,7 +299,11 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         nuclearheatingmagnetsparam.fw_armour_thickness,
     )
 
-    monkeypatch.setattr(fwbs_variables, "ptfnuc", nuclearheatingmagnetsparam.ptfnuc)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_tf_nuclear_heat_mw",
+        nuclearheatingmagnetsparam.p_tf_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -367,8 +371,8 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     ccfe_hcpb.nuclear_heating_magnets(False)
 
-    assert fwbs_variables.ptfnuc == pytest.approx(
-        nuclearheatingmagnetsparam.expected_ptfnuc
+    assert fwbs_variables.p_tf_nuclear_heat_mw == pytest.approx(
+        nuclearheatingmagnetsparam.expected_p_tf_nuclear_heat_mw
     )
 
     assert fwbs_variables.f_a_fw_coolant_inboard == pytest.approx(
@@ -575,7 +579,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     whtshld: Any = None
 
-    pnucshld: Any = None
+    p_shld_nuclear_heat_mw: Any = None
 
     p_fusion_total_mw: Any = None
 
@@ -591,7 +595,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
     exp_shield2: Any = None
 
-    expected_pnucshld: Any = None
+    expected_p_shld_nuclear_heat_mw: Any = None
 
     expected_shld_u_nuc_heating: Any = None
 
@@ -607,7 +611,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             whtshld=2294873.8131476045,
-            pnucshld=0,
+            p_shld_nuclear_heat_mw=0,
             p_fusion_total_mw=1986.0623241661431,
             itart=0,
             shield_density=3119.9999999999995,
@@ -615,7 +619,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shld_u_nuc_heating=0,
             exp_shield1=0,
             exp_shield2=0,
-            expected_pnucshld=1.3721323841005297,
+            expected_p_shld_nuclear_heat_mw=1.3721323841005297,
             expected_shld_u_nuc_heating=690880.82856444374,
             expected_exp_shield1=0.0017209365527675318,
             expected_exp_shield2=0.25426760591013942,
@@ -624,7 +628,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             whtshld=2297808.3935174854,
-            pnucshld=1.3611259588044891,
+            p_shld_nuclear_heat_mw=1.3611259588044891,
             p_fusion_total_mw=1985.4423932312809,
             itart=0,
             shield_density=3120,
@@ -632,7 +636,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             shld_u_nuc_heating=690880.82856444374,
             exp_shield1=0.0017209365527675318,
             exp_shield2=0.25426760591013942,
-            expected_pnucshld=1.3734581585671393,
+            expected_p_shld_nuclear_heat_mw=1.3734581585671393,
             expected_shld_u_nuc_heating=691764.29557941214,
             expected_exp_shield1=0.0017209365527675303,
             expected_exp_shield2=0.25426760591013942,
@@ -662,7 +666,11 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingshieldparam.whtshld)
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", nuclearheatingshieldparam.pnucshld)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shld_nuclear_heat_mw",
+        nuclearheatingshieldparam.p_shld_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -696,8 +704,8 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
 
     ccfe_hcpb.nuclear_heating_shield()
 
-    assert fwbs_variables.pnucshld == pytest.approx(
-        nuclearheatingshieldparam.expected_pnucshld
+    assert fwbs_variables.p_shld_nuclear_heat_mw == pytest.approx(
+        nuclearheatingshieldparam.expected_p_shld_nuclear_heat_mw
     )
 
     assert ccfe_hcpb_module.shld_u_nuc_heating == pytest.approx(
@@ -827,11 +835,11 @@ class PowerflowCalcParam(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    pnucshld: Any = None
+    p_shld_nuclear_heat_mw: Any = None
 
     etaiso: Any = None
 
-    pnuc_cp_sh: Any = None
+    p_cp_shield_nuclear_heat_mw: Any = None
 
     psurffwi: Any = None
 
@@ -907,9 +915,9 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_nuclear_heat_total_mw=276.80690153753221,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             p_div_nuclear_heat_total_mw=182.71773382328519,
-            pnucshld=1.3611259588044891,
+            p_shld_nuclear_heat_mw=1.3611259588044891,
             etaiso=0.90000000000000002,
-            pnuc_cp_sh=0,
+            p_cp_shield_nuclear_heat_mw=0,
             psurffwi=0,
             psurffwo=0,
             p_fw_coolant_pump_mw=0,
@@ -954,9 +962,9 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_nuclear_heat_total_mw=230.98304919926957,
             p_blkt_nuclear_heat_total_mw=1550.1447895848396,
             p_div_nuclear_heat_total_mw=182.66070017727785,
-            pnucshld=1.4038170956592293,
+            p_shld_nuclear_heat_mw=1.4038170956592293,
             etaiso=0.90000000000000002,
-            pnuc_cp_sh=0,
+            p_cp_shield_nuclear_heat_mw=0,
             psurffwi=97.271629070225231,
             psurffwo=176.95628839065773,
             p_fw_coolant_pump_mw=0,
@@ -1068,11 +1076,19 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_div_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnucshld", powerflowcalcparam.pnucshld)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_shld_nuclear_heat_mw",
+        powerflowcalcparam.p_shld_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "etaiso", powerflowcalcparam.etaiso)
 
-    monkeypatch.setattr(fwbs_variables, "pnuc_cp_sh", powerflowcalcparam.pnuc_cp_sh)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_cp_shield_nuclear_heat_mw",
+        powerflowcalcparam.p_cp_shield_nuclear_heat_mw,
+    )
 
     monkeypatch.setattr(fwbs_variables, "psurffwi", powerflowcalcparam.psurffwi)
 
@@ -1310,7 +1326,7 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
 
     expected_pnuc_cp_tf: Any = None
 
-    expected_pnuc_cp_sh: Any = None
+    expected_p_cp_shield_nuclear_heat_mw: Any = None
 
     expected_pnuc_cp: Any = None
 
@@ -1324,7 +1340,7 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
             pneut=400.65875490746737,
             sh_width=0.60000000000000009,
             expected_pnuc_cp_tf=0.0073082167825651127,
-            expected_pnuc_cp_sh=111.82272602156291,
+            expected_p_cp_shield_nuclear_heat_mw=111.82272602156291,
             expected_pnuc_cp=111.83003423834548,
         ),
         StCentrepostNuclearHeatingParam(
@@ -1333,7 +1349,7 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
             pneut=409.82485143909827,
             sh_width=0.60000000000000009,
             expected_pnuc_cp_tf=0.0074754109838213612,
-            expected_pnuc_cp_sh=114.3809576553144,
+            expected_p_cp_shield_nuclear_heat_mw=114.3809576553144,
             expected_pnuc_cp=114.38843306629822,
         ),
     ),
@@ -1361,17 +1377,19 @@ def test_st_centrepost_nuclear_heating(
         tfcoil_variables, "i_tf_sup", stcentrepostnuclearheatingparam.i_tf_sup
     )
 
-    pnuc_cp_tf, pnuc_cp_sh, pnuc_cp = ccfe_hcpb.st_centrepost_nuclear_heating(
-        pneut=stcentrepostnuclearheatingparam.pneut,
-        sh_width=stcentrepostnuclearheatingparam.sh_width,
+    pnuc_cp_tf, p_cp_shield_nuclear_heat_mw, pnuc_cp = (
+        ccfe_hcpb.st_centrepost_nuclear_heating(
+            pneut=stcentrepostnuclearheatingparam.pneut,
+            sh_width=stcentrepostnuclearheatingparam.sh_width,
+        )
     )
 
     assert pnuc_cp_tf == pytest.approx(
         stcentrepostnuclearheatingparam.expected_pnuc_cp_tf
     )
 
-    assert pnuc_cp_sh == pytest.approx(
-        stcentrepostnuclearheatingparam.expected_pnuc_cp_sh
+    assert p_cp_shield_nuclear_heat_mw == pytest.approx(
+        stcentrepostnuclearheatingparam.expected_p_cp_shield_nuclear_heat_mw
     )
 
     assert pnuc_cp == pytest.approx(stcentrepostnuclearheatingparam.expected_pnuc_cp)
