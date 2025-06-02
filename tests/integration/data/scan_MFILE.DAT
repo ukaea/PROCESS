@@ -797,10 +797,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8227E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -894,7 +894,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -913,7 +913,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -926,7 +926,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -945,18 +945,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -972,19 +972,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -995,12 +995,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -1792,10 +1792,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8227E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -1889,7 +1889,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -1908,7 +1908,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -1921,7 +1921,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -1940,18 +1940,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -1967,19 +1967,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8227E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -1990,12 +1990,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -2787,10 +2787,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -2884,7 +2884,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -2903,7 +2903,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -2916,7 +2916,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -2935,18 +2935,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -2962,19 +2962,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -2985,12 +2985,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -3782,10 +3782,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -3879,7 +3879,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -3898,7 +3898,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -3911,7 +3911,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -3930,18 +3930,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -3957,19 +3957,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -3980,12 +3980,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -4777,10 +4777,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -4874,7 +4874,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -4893,7 +4893,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -4906,7 +4906,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -4925,18 +4925,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -4952,19 +4952,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -4975,12 +4975,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -5772,10 +5772,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -5869,7 +5869,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -5888,7 +5888,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -5901,7 +5901,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -5920,18 +5920,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -5947,19 +5947,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -5970,12 +5970,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -6767,10 +6767,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -6864,7 +6864,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -6883,7 +6883,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -6896,7 +6896,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -6915,18 +6915,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -6942,19 +6942,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -6965,12 +6965,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -7762,10 +7762,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -7859,7 +7859,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -7878,7 +7878,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -7891,7 +7891,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -7910,18 +7910,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -7937,19 +7937,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -7960,12 +7960,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -8757,10 +8757,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)_______________________ (armour_fw_bl_mass)___________      4.0498E+06 OP 
  Shield_Mass_(kg)________________________________________________________ (whtshld)_____________________      2.4235E+06 OP 
  Vacuum_vessel_mass_(kg)_________________________________________________ (m_vv)______________________      9.5369E+06 OP 
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (ptfnuc)______________________      5.8228E-02 OP 
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)____________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02 OP 
  Total_nuclear_heating_in_FW_(MW)________________________________________ (p_fw_nuclear_heat_total_mw)______________________      2.4609E+02 OP 
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)_____________ (p_blkt_nuclear_heat_total_mw)____________________      1.5585E+03 OP 
- Total_nuclear_heating_in_the_shield_(MW)________________________________ (pnucshld)____________________      1.4885E+00 OP 
+ Total_nuclear_heating_in_the_shield_(MW)________________________________ (p_shld_nuclear_heat_mw)____________________      1.4885E+00 OP 
  Total_nuclear_heating_in_the_divertor_(MW)______________________________ (p_div_nuclear_heat_total_mw)_____________________      1.8507E+02 OP 
  Blanket_exponential_factor______________________________________________ (exp_blanket)_________________      9.9990E-01 OP 
  Shield:_first_exponential_______________________________________________ (exp_shield1)_________________      1.7209E-03 OP 
@@ -8854,7 +8854,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)________________________________ (vrci)________________________      1.3050E+06    
  Dist_from_centre_of_torus_to_bldg_wall_(m)______________________________ (wrbi)________________________      4.3796E+01    
- Effective_floor_area_(m2)_______________________________________________ (efloor)______________________      4.0022E+05    
+ Effective_floor_area_(m2)_______________________________________________ (a_plant_floor_effective)______________________      4.0022E+05    
  Reactor_building_volume_(m3)____________________________________________ (rbv)_________________________      1.4646E+06    
  Reactor_maintenance_building_volume_(m3)________________________________ (rmbv)________________________      4.3638E+05    
  Warmshop_volume_(m3)____________________________________________________ (wsv)_________________________      1.3262E+05    
@@ -8873,7 +8873,7 @@
  PF_coil_power_supplies_(MW)_____________________________________________ (ppfmw)_______________________      1.4037E+02 OP 
  TF_coil_power_supplies_(MW)_____________________________________________ (ptfmw)_______________________      9.5161E+00 OP 
  Plasma_heating_supplies_(MW)____________________________________________ (pheatingmw)__________________      1.2750E+02 OP 
- Tritium_processing_(MW)_________________________________________________ (trithtmw..)__________________      1.5000E+01    
+ Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
  Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
@@ -8886,7 +8886,7 @@
  Sum_=_Total_heat_removal_at_cryogenic_temperatures_(W)__________________ (helpow/1.0D6)________________      8.2594E-02 OP 
  Temperature_of_cryogenic_components_(K)_________________________________ (temp_tf_cryo)______________________      4.5000E+00    
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_v ______________________________      2.0277E-03 OP 
- Electric_power_for_cryogenic_plant_(MW)_________________________________ (crypmw)______________________      4.0732E+01 OP 
+ Electric_power_for_cryogenic_plant_(MW)_________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01 OP 
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (emult)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
@@ -8905,18 +8905,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (etahtp)______________________      8.7000E-01    
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (etath)_______________________      3.7500E-01    
- Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (pdivfraction)________________      1.4754E-01    
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      3.7500E-01    
+ Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.4754E-01    
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)________ ______________________________      2.4483E+03    
- Heat_removal_from_cryogenic_plant_(MW)__________________________________ (crypmw)______________________      4.0732E+01    
+ Heat_removal_from_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Heat_removal_from_facilities_(MW)_______________________________________ (fachtmw)_____________________      6.5033E+01    
- Coolant_pumping_efficiency_losses_(MW)__________________________________ (htpsecmw)____________________      3.0472E+01    
+ Coolant_pumping_efficiency_losses_(MW)__________________________________ (p_coolant_pump_loss_total_mw)____________________      3.0472E+01    
  Heat_removal_from_injection_power_(MW)__________________________________ (pinjht)______________________      7.6500E+01    
- Heat_removal_from_tritium_plant_(MW)____________________________________ (trithtmw)____________________      1.5000E+01    
+ Heat_removal_from_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
  Heat_removal_from_vacuum_pumps_(MW)_____________________________________ (vachtmw)_____________________      5.0000E-01    
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
- Total_low-grade_thermal_power_(MW)______________________________________ (psechtmw)____________________      2.3892E+02    
- Total_High-grade_thermal_power_(MW)_____________________________________ (pthermmw)____________________      2.6501E+03    
+ Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
+ Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
@@ -8932,19 +8932,19 @@
  Ohmic_power_(MW)________________________________________________________ (p_plasma_ohmic_mw.)_____________________      5.7803E-01    
  Power_deposited_in_primary_coolant_by_pump_(MW)_________________________ (p_coolant_pump_total_mw)__________________      2.0393E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.6500E+03    
- Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (pthermfw_blkt)_______________      2.2576E+03    
- Heat_extracted_from_shield__(MW)________________________________________ (pthermshld)__________________      1.4959E+00    
- Heat_extracted_from_divertor_(MW)_______________________________________ (pthermdiv)___________________      3.9100E+02    
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (psechcd)_____________________      0.0000E+00    
- Nuclear_power_lost_to_TF_(MW)___________________________________________ (ptfnuc)______________________      5.8228E-02    
+ Heat_extracted_from_first_wall_and_blanket_(MW)_________________________ (p_fw_blkt_heat_deposited_mw)_______________      2.2576E+03    
+ Heat_extracted_from_shield__(MW)________________________________________ (p_shld_heat_deposited_mw)__________________      1.4959E+00    
+ Heat_extracted_from_divertor_(MW)_______________________________________ (p_div_heat_deposited_mw)___________________      3.9100E+02    
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)_______________________ (p_hcd_secondary_heat_mw)_____________________      0.0000E+00    
+ Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
  Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
- Electric_power_for_tritium_plant_(MW)___________________________________ (trithtmw)____________________      1.5000E+01    
- Electric_power_for_cryoplant_(MW)_______________________________________ (crypmw)______________________      4.0732E+01    
+ Electric_power_for_tritium_plant_(MW)___________________________________ (p_tritium_plant_electric_mw)____________________      1.5000E+01    
+ Electric_power_for_cryoplant_(MW)_______________________________________ (p_cryo_plant_electric_mw)______________________      4.0732E+01    
  Electric_power_for_TF_coils_(MW)________________________________________ (tfacpd)______________________      9.5161E+00    
  Electric_power_for_PF_coils_(MW)________________________________________ (pfwpmw)______________________      1.1136E+00    
  All_other_internal_electric_power_requirements_(MW)_____________________ (fachtmw)_____________________      6.5033E+01    
@@ -8955,12 +8955,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)_____________ (emultmw)_____________________      3.8286E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3945E+03    
  Net_electrical_output_(MW)	_____________________________________________ (p_plant_electric_net_mw)____________________      5.0000E+02    
- Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (rejected_main)_______________      1.6563E+03    
- Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (psechtmw)____________________      2.3892E+02    
+ Heat_rejected_by_main_power_conversion_circuit_(MW)_____________________ (p_turbine_loss_mw)_______________      1.6563E+03    
+ Heat_rejected_by_other_cooling_circuits_(MW)____________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_(MW)______________________________________________________________ ______________________________      2.3952E+03    
  Net_electric_power_/_total_nuclear_power_(%)____________________________ (p_plant_electric_net_mw/(powfmw+emultmw)____      2.0881E+01    
  Net_electric_power_/_total_fusion_power_(%)_____________________________ (p_plant_electric_net_mw/powfmw)_____________      2.4855E+01    
- Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (etath)_______________________      3.7500E+01    
+ Gross_electric_power*_/_high_grade_heat_(%)_____________________________ (eta_turbine)_______________________      3.7500E+01    
  Recirculating_power_fraction____________________________________________ (cirpowfr)____________________      4.9688E-01    
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)___________________________________ (waterusetower)_______________      7.0418E+04 OP 
@@ -9170,9 +9170,9 @@ ipowerflow = 0 * Switch for power flow model;  HAS NO EFFECT?
 i_coolant_pumping = 3 * Switch for pumping power for primary coolant
 etahtp = 0.87 * electrical efficiency of FW and blanket coolant pumps
 etaiso = 0.9  * isentropic efficiency of FW and blanket coolant pumps
-i_thermal_electric_conversion = 2  * user input thermal-electric efficiency (etath)
-iprimshld = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle
-etath = 0.375D0  * thermal to electric conversion efficiency
+i_thermal_electric_conversion = 2  * user input thermal-electric efficiency (eta_turbine)
+i_shld_primary_heat = 1  * switch for shield thermal power destiny: = 1 contributes to energy generation cycle
+eta_turbine = 0.375D0  * thermal to electric conversion efficiency
 
 *------------Impurity Radiation Module-------------*
 

@@ -1060,7 +1060,7 @@ class Stellarator:
             * tfcoil_variables.n_tf_coils
         )
 
-        fwbs_variables.ptfnucpm3 = fwbs_variables.ptfnuc / tf_volume
+        fwbs_variables.ptfnucpm3 = fwbs_variables.p_tf_nuclear_heat_mw / tf_volume
 
         # heating of the shield
         self.hcpb.nuclear_heating_shield()
@@ -1242,7 +1242,8 @@ class Stellarator:
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.p_shld_coolant_pump_mw = (
-                    heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
+                    heat_transport_variables.fpumpshld
+                    * fwbs_variables.p_shld_nuclear_heat_mw
                 )
                 heat_transport_variables.p_div_coolant_pump_mw = (
                     heat_transport_variables.fpumpdiv
@@ -1296,7 +1297,7 @@ class Stellarator:
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.pnucshld = (
+                fwbs_variables.p_shld_nuclear_heat_mw = (
                     pneut2 - fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
 
@@ -1311,7 +1312,7 @@ class Stellarator:
                     ptfiwp,
                     ptfowp,
                     raddose,
-                    fwbs_variables.ptfnuc,
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 ) = self.sctfcoil_nuclear_heating_iter90()
 
             else:  # heat_transport_variables.ipowerflow == 1
@@ -1565,7 +1566,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
                 )
 
-                fwbs_variables.pnucshld = pnucshldi + pnucshldo
+                fwbs_variables.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
 
                 #  Calculate coolant pumping powers from input fraction.
                 #  The pumping power is assumed to be a fraction, fpump, of the incident
@@ -1594,9 +1595,11 @@ class Stellarator:
                 #  coils, and so contributes to the cryogenic load
 
                 if tfcoil_variables.i_tf_sup == 1:
-                    fwbs_variables.ptfnuc = pnucsi + pnucso - pnucshldi - pnucshldo
+                    fwbs_variables.p_tf_nuclear_heat_mw = (
+                        pnucsi + pnucso - pnucshldi - pnucshldo
+                    )
                 else:  # resistive coils
-                    fwbs_variables.ptfnuc = 0.0e0
+                    fwbs_variables.p_tf_nuclear_heat_mw = 0.0e0
 
         #  heat_transport_variables.ipowerflow
 
@@ -2060,14 +2063,14 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Shield nuclear heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Coil nuclear heating (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
             else:
                 po.osubhd(self.outfile, "Blanket neutronics :")
@@ -2080,8 +2083,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Shield heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2163,8 +2166,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Total nuclear heating on coil (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2334,7 +2337,7 @@ class Stellarator:
         ptfiwp : output real : inboard TF coil winding pack heating (MW)
         ptfowp : output real : outboard TF coil winding pack heating (MW)
         raddose : output real : insulator dose (rad)
-        ptfnuc : output real : TF coil nuclear heating (MW)
+        p_tf_nuclear_heat_mw : output real : TF coil nuclear heating (MW)
         This subroutine calculates the nuclear heating in the
         superconducting TF coils, assuming an exponential neutron
         attenuation through the blanket and shield materials.
@@ -2360,7 +2363,7 @@ class Stellarator:
             raddose = 0.0
             nflutf = 0.0
             dpacop = 0.0
-            ptfnuc = 0.0
+            p_tf_nuclear_heat_mw = 0.0
 
         else:
             # TF coil nuclear heating coefficients in region i (first element),
@@ -2451,7 +2454,7 @@ class Stellarator:
             ptfi = ptfiwp + pheci
             ptfo = ptfowp + pheco
 
-            ptfnuc = ptfi + ptfo
+            p_tf_nuclear_heat_mw = ptfi + ptfo
 
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
@@ -2505,7 +2508,7 @@ class Stellarator:
             ptfiwp,
             ptfowp,
             raddose,
-            ptfnuc,
+            p_tf_nuclear_heat_mw,
         )
 
     def stcoil(self, output: bool):

@@ -2945,18 +2945,18 @@ i_thermal_electric_conversion = 2
 * DESCRIPTION:   Switch for power conversion cycle (2: User Input Thermal-Electric Efficiency) 
 *  =0 Set efficiency for chosen blanket, from detailed models (divertor heat not used)
 *  =1 Set efficiency for chosen blanket, from detailed models (divertor heat used)
-*  =2 user input thermal-electric efficiency (etath)
+*  =2 user input thermal-electric efficiency (eta_turbine)
 *  =3 steam Rankine cycle
 *  =4 supercritical CO2 cycle
 * JUSTIFICATION: Chosen to use input efficiency due to uncertainty in other models
 
 *secondary_cycle_liq = 2 
 * DESCRIPTION:   Switch for power conversion cycle for the liquid breeder component of the blanket
-*  =2 user input thermal-electric efficiency (etath)
+*  =2 user input thermal-electric efficiency (eta_turbine)
 *  =4 supercritical CO2 cycle
 * JUSTIFICATION: Not yet set
 
-etath = 0.40
+eta_turbine = 0.40
 * DESCRIPTION:   Thermal-to-Electric Conversion Efficiency
 * JUSTIFICATION: 
 
@@ -2972,7 +2972,7 @@ ipowerflow = 0
 * DESCRIPTION:   Switch for Power Flow Model (0: Pre-2014 Version)
 * JUSTIFICATION: 
 
-iprimshld = 1
+i_shld_primary_heat = 1
 * DESCRIPTION:   Switch for shield thermal power destiny:
 *=0 does not contribute to energy generation cycle
 *=1 contributes to energy generation cycle
@@ -2983,9 +2983,9 @@ iprimshld = 1
 *icc = 87
 * DESCRIPTION:   Constraint equation for limiting the cryogenic plant power
 * JUSTIFICATION: Turned off, not concerned with cryogenic plant power
-* VARIABLES:     crypmw_max (Max cryo plant power [MW]). crypmw calculated in-situ
+* VARIABLES:     p_cryo_plant_electric_max_mw (Max cryo plant power [MW]). p_cryo_plant_electric_mw calculated in-situ
 
-*crypmw_max = 
+*p_cryo_plant_electric_max_mw = 
 * DESCRIPTION: Maximum cryogenic plant power (MW)
 * JUSTIFICATION: Turned off, not using icc=85
 
@@ -2998,7 +2998,7 @@ iprimshld = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*baseel = 
+*p_plant_electric_base = 
 * DESCRIPTION:   Base plant electric load (W) (default = 5E6)
 * JUSTIFICATION: 
 
@@ -3010,7 +3010,7 @@ etahtp = 0.87
 * DESCRIPTION:   Base AC power requirement (W/m2)
 * JUSTIFICATION: 
 
-*trithtmw = 
+*p_tritium_plant_electric_mw = 
 * DESCRIPTION:   Power required for tritium processing (MW) (default = 15MW)
 * JUSTIFICATION: 
 

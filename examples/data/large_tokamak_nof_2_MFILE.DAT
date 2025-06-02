@@ -897,7 +897,7 @@
  Shield_line_density_(tonne/m2)___________________________________________ (x_shield)_____________________ 4.05600000000000005e+00
  Blanket_line_density_(tonne/m2)__________________________________________ (x_blanket)____________________ 2.29112070985279770e+00
  Unit_nuclear_heating_in_TF_coil_(W/GW)___________________________________ (tfc_nuc_heating)______________ 1.49757126200645089e+04
- Total_nuclear_heating_in_TF_coil_(MW)____________________________________ (ptfnuc.)______________________ 2.41043254065084651e-02
+ Total_nuclear_heating_in_TF_coil_(MW)____________________________________ (p_tf_nuclear_heat_mw.)______________________ 2.41043254065084651e-02
  fusion_power_____________________________________________________________ (p_fusion_total_mw.)________________ 1.60956116199862254e+03
  total_mass_of_the_TF_coils_(kg)__________________________________________ (whttf)________________________ 1.15087108498561420e+07
  # Pumping for primary coolant (helium) #
@@ -930,10 +930,10 @@
  Total_mass_of_armour,_first_wall_and_blanket_(kg)________________________ (armour_fw_bl_mass)____________ 3.23504685815625731e+06 OP
  Shield_Mass_(kg)_________________________________________________________ (whtshld)______________________ 2.44981883384921774e+06 OP
  Vacuum_vessel_mass_(kg)__________________________________________________ (vvmass)_______________________ 7.93881636893480737e+06 OP
- Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)_____________ (ptfnuc)_______________________ 2.50975326006813229e-02 OP
+ Total_nuclear_heating_in_TF+PF_coils_(CS_is_negligible)_(MW)_____________ (p_tf_nuclear_heat_mw)_______________________ 2.50975326006813229e-02 OP
  Total_nuclear_heating_in_FW_(MW)_________________________________________ (p_fw_nuclear_heat_total_mw)___ 1.61821114772304014e+02 OP
  Total_nuclear_heating_in_the_blanket_(including_emult)_(MW)______________ (pnucblkt)_____________________ 1.27954947321669374e+03 OP
- Total_nuclear_heating_in_the_shield_(MW)_________________________________ (pnucshld)_____________________ 1.40221486063158718e+00 OP
+ Total_nuclear_heating_in_the_shield_(MW)_________________________________ (p_shld_nuclear_heat_mw)_____________________ 1.40221486063158718e+00 OP
  Total_nuclear_heating_in_the_divertor_(MW)_______________________________ (pnucdiv)______________________ 1.48079626903873304e+02 OP
  Blanket_exponential_factor_______________________________________________ (exp_blanket)__________________ 9.99355930883657262e-01 OP
  Shield:_first_exponential________________________________________________ (exp_shield1)__________________ 1.95234963072531522e-03 OP
@@ -1021,7 +1021,7 @@
  # Plant Buildings System #
  Internal_volume_of_reactor_building_(m3)_________________________________ (vrci)_________________________ 9.98591576865378302e+05
  Dist_from_centre_of_torus_to_bldg_wall_(m)_______________________________ (wrbi)_________________________ 3.95553614658542898e+01
- Effective_floor_area_(m2)________________________________________________ (efloor)_______________________ 3.37089204846565437e+05
+ Effective_floor_area_(m2)________________________________________________ (a_plant_floor_effective)_______________________ 3.37089204846565437e+05
  Reactor_building_volume_(m3)_____________________________________________ (rbv)__________________________ 1.13259970929607027e+06
  Reactor_maintenance_building_volume_(m3)_________________________________ (rmbv)_________________________ 3.96414102956714691e+05
  Warmshop_volume_(m3)_____________________________________________________ (wsv)__________________________ 1.25307123728488907e+05
@@ -1040,7 +1040,7 @@
  PF_coil_power_supplies_(MW)______________________________________________ (ppfmw)________________________ 9.36049264757256907e+01 OP
  TF_coil_power_supplies_(MW)______________________________________________ (ptfmw)________________________ 7.04959669427709468e+00 OP
  Plasma_heating_supplies_(MW)_____________________________________________ (pheatingmw)___________________ 1.55055611144467917e+02 OP
- Tritium_processing_(MW)__________________________________________________ (trithtmw..)___________________ 1.50000000000000000e+01
+ Tritium_processing_(MW)__________________________________________________ (p_tritium_plant_electric_mw..)___________________ 1.50000000000000000e+01
  Vacuum_pumps__(MW)_______________________________________________________ (vachtmw..)____________________ 5.00000000000000000e-01
  Total_pulsed_power_(MW)__________________________________________________ (pacpmw)_______________________ 5.15819084515978261e+02 OP
  Total_base_power_required_at_all_times_(MW)______________________________ (fcsht)________________________ 5.55633807269848106e+01 OP
@@ -1055,7 +1055,7 @@
  Temperature_of_cryogenic_aluminium_components_(K)________________________ (tcoolin)______________________ 3.13149999999999977e+02
  Efficiency_(figure_of_merit)_of_cryogenic_plant_is_13%_of_ideal_Carnot_value:_ _______________________________ 2.02772963604852660e-03 OP
  Efficiency_(figure_of_merit)_of_cryogenic_aluminium_plant_is_40%_of_ideal_Carnot_value:_ _______________________________ -2.02032258064516368e+00 OP
- Electric_power_for_cryogenic_plant_(MW)__________________________________ (crypmw)_______________________ 4.42348527433520431e+01 OP
+ Electric_power_for_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket__________________________________ (emult)________________________ 1.26899999999999991e+00
  Divertor_area_fraction_of_whole_toroid_surface___________________________ (fdiv)_________________________ 1.15000000000000005e-01
@@ -1074,18 +1074,18 @@
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield_________________ (fpumpshld)____________________ 5.00000000000000010e-03
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor_______________ (fpumpdiv)_____________________ 5.00000000000000010e-03
  Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (etahtp)_______________________ 8.70000000000000107e-01
- Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (etath)________________________ 4.00000000000000022e-01
- Fraction_of_total_high-grade_thermal_power_to_divertor___________________ (pdivfraction)_________________ 1.06636673511010222e-01 OP
+ Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (eta_turbine)________________________ 4.00000000000000022e-01
+ Fraction_of_total_high-grade_thermal_power_to_divertor___________________ (f_p_div_primary_heat)_________________ 1.06636673511010222e-01 OP
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)_________ _______________________________ 1.99514117238382801e+03 OP
- Heat_removal_from_cryogenic_plant_(MW)___________________________________ (crypmw)_______________________ 4.42348527433520431e+01 OP
+ Heat_removal_from_cryogenic_plant_(MW)___________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
  Heat_removal_from_facilities_(MW)________________________________________ (fachtmw)______________________ 5.55633807269848106e+01 OP
- Coolant_pumping_efficiency_losses_(MW)___________________________________ (htpsecmw)_____________________ 2.60486326695601917e+01 OP
+ Coolant_pumping_efficiency_losses_(MW)___________________________________ (p_coolant_pump_loss_total_mw)_____________________ 2.60486326695601917e+01 OP
  Heat_removal_from_injection_power_(MW)___________________________________ (pinjht)_______________________ 7.75278055722339587e+01 OP
- Heat_removal_from_tritium_plant_(MW)_____________________________________ (trithtmw)_____________________ 1.50000000000000000e+01 OP
+ Heat_removal_from_tritium_plant_(MW)_____________________________________ (p_tritium_plant_electric_mw)_____________________ 1.50000000000000000e+01 OP
  Heat_removal_from_vacuum_pumps_(MW)______________________________________ (vachtmw)______________________ 5.00000000000000000e-01 OP
  TF_coil_resistive_power_(MW)_____________________________________________ (tfcmw)________________________ 0.00000000000000000e+00 OP
- Total_low-grade_thermal_power_(MW)_______________________________________ (psechtmw)_____________________ 2.27456408964308480e+02 OP
- Total_High-grade_thermal_power_(MW)______________________________________ (pthermmw)_____________________ 2.16825910298290864e+03 OP
+ Total_low-grade_thermal_power_(MW)_______________________________________ (p_plant_secondary_heat_mw)_____________________ 2.27456408964308480e+02 OP
+ Total_High-grade_thermal_power_(MW)______________________________________ (p_plant_primary_heat_mw)_____________________ 2.16825910298290864e+03 OP
  Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 2.67976424195365780e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.30345146305381149e+02 OP
@@ -1101,19 +1101,19 @@
  Ohmic_power_(MW)_________________________________________________________ (p_plasma_ohmic_mw.)___________ 6.88941757462895432e-01 OP
  Power_deposited_in_primary_coolant_by_pump_(MW)__________________________ (p_coolant_pump_total_mw)___________________ 1.74325464788595298e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.16794469421369968e+03 OP
- Heat_extracted_from_first_wall_and_blanket_(MW)__________________________ (pthermfw_blkt)________________ 1.93563393899590938e+03 OP
- Heat_extracted_from_shield__(MW)_________________________________________ (pthermshld)___________________ 1.40922593493474513e+00 OP
- Heat_extracted_from_divertor_(MW)________________________________________ (pthermdiv)____________________ 2.31215938052064331e+02 OP
- Nuclear_and_photon_power_lost_to_H/CD_system_(MW)________________________ (psechcd)______________________ 0.00000000000000000e+00 OP
- Nuclear_power_lost_to_TF_(MW)____________________________________________ (ptfnuc)_______________________ 2.50975326006813229e-02 OP
+ Heat_extracted_from_first_wall_and_blanket_(MW)__________________________ (p_fw_blkt_heat_deposited_mw)________________ 1.93563393899590938e+03 OP
+ Heat_extracted_from_shield__(MW)_________________________________________ (p_shld_heat_deposited_mw)___________________ 1.40922593493474513e+00 OP
+ Heat_extracted_from_divertor_(MW)________________________________________ (p_div_heat_deposited_mw)____________________ 2.31215938052064331e+02 OP
+ Nuclear_and_photon_power_lost_to_H/CD_system_(MW)________________________ (p_hcd_secondary_heat_mw)______________________ 0.00000000000000000e+00 OP
+ Nuclear_power_lost_to_TF_(MW)____________________________________________ (p_tf_nuclear_heat_mw)_______________________ 2.50975326006813229e-02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.16828420051550938e+03 OP
  Net_electric_power_output(MW)____________________________________________ (p_plant_electric_net_mw.)____________________ 3.88019059400626361e+02 OP
  Required_Net_electric_power_output(MW)___________________________________ (pnetelin)_____________________ 4.00000000000000000e+02
  Electric_power_for_heating_and_current_drive_(MW)________________________ (pinjwp)_______________________ 1.55055611144467917e+02 OP
  Electric_power_for_primary_coolant_pumps_(MW)____________________________ (p_coolant_pump_elec_total_mw)________________________ 2.00374097458155489e+02 OP
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
- Electric_power_for_tritium_plant_(MW)____________________________________ (trithtmw)_____________________ 1.50000000000000000e+01
- Electric_power_for_cryoplant_(MW)________________________________________ (crypmw)_______________________ 4.42348527433520431e+01 OP
+ Electric_power_for_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)_____________________ 1.50000000000000000e+01
+ Electric_power_for_cryoplant_(MW)________________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
  Electric_power_for_TF_coils_(MW)_________________________________________ (tfacpd)_______________________ 7.04959669427709468e+00 OP
  Electric_power_for_PF_coils_(MW)_________________________________________ (pfwpmw)_______________________ 1.50704302529968892e+00 OP
  All_other_internal_electric_power_requirements_(MW)______________________ (fachtmw)______________________ 5.55633807269848106e+01 OP
@@ -1124,12 +1124,12 @@
  Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (emultmw)______________________ 3.05841320096784727e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91540248209540732e+03 OP
  Net_electrical_output_(MW)	______________________________________________ (p_plant_electric_net_mw)_____________________ 3.88019059400626361e+02 OP
- Heat_rejected_by_main_power_conversion_circuit_(MW)______________________ (rejected_main)________________ 1.30095546178974519e+03 OP
- Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (psechtmw)_____________________ 2.27456408964308480e+02 OP
+ Heat_rejected_by_main_power_conversion_circuit_(MW)______________________ (p_turbine_loss_mw)________________ 1.30095546178974519e+03 OP
+ Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (p_plant_secondary_heat_mw)_____________________ 2.27456408964308480e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91643093015468003e+03 OP
  Net_electric_power_/_total_nuclear_power_(%)_____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)_ 2.02578342164484511e+01 OP
  Net_electric_power_/_total_fusion_power_(%)______________________________ (p_plant_electric_net_mw/p_fusion_total_mw)________ 2.41071335816040531e+01 OP
- Gross_electric_power*_/_high_grade_heat_(%)______________________________ (etath)________________________ 4.00000000000000000e+01
+ Gross_electric_power*_/_high_grade_heat_(%)______________________________ (eta_turbine)________________________ 4.00000000000000000e+01
  Recirculating_power_fraction_____________________________________________ (cirpowfr)_____________________ 5.52614515872639100e-01 OP
  # Water usage during plant operation (secondary cooling) #
  Volume_used_in_cooling_tower_(m3/day)____________________________________ (waterusetower)________________ 5.53097366825001955e+04 OP
@@ -1364,9 +1364,9 @@ runtitle = generic large tokamak * short descriptive title for the run
 
 *-------------Heat Transport Variables-------------*
 
-etath    = 0.4 * thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated;
+eta_turbine    = 0.4 * thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated;
 ipowerflow = 0 * switch for power flow model;
-iprimshld = 1 * Switch for shield thermal power destiny;
+i_shld_primary_heat = 1 * Switch for shield thermal power destiny;
 
 *--------------------Ife Module--------------------*
 

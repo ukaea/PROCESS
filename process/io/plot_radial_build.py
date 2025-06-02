@@ -203,7 +203,7 @@ def main(args=None):
         "",
         "b_crit_upper_nbti",
         "dr_shld_inboard",
-        "crypmw_max",
+        "p_cryo_plant_electric_max_mw",
         "bt",  # Genuinly bt lower bound
         "dr_fw_plasma_gap_inboard",
         "dr_fw_plasma_gap_outboard",
