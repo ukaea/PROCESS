@@ -361,8 +361,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def plot_main_power_flow(axis, mfile_data, scan):
-
+def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Load the plasma image
     plasma = mpimg.imread(
         resources.path("process.io", "plasma.png")
@@ -370,13 +369,137 @@ def plot_main_power_flow(axis, mfile_data, scan):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [-0.2, 0.5, 0.45, 0.45], transform=axis.transAxes, zorder=10
+        [-0.15, 0.6, 0.45, 0.45], transform=axis.transAxes, zorder=1
     )
     new_ax.imshow(plasma)
     new_ax.axis("off")
 
+    # Add fusion power to plasma
+    axis.text(
+        0.25,
+        0.775,
+        "$P_{{fus}}$\n"
+        f"{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+    )
+
+    # Add radiation power to plasma
+    axis.text(
+        0.25,
+        0.7,
+        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+    )
+
     # Hide the axes for a cleaner look
     axis.axis("off")
+
+    # =========================================
+
+    # Heating systems
+
+    # Add plasma volume, areas and shaping information
+    textstr_hcd_primary = f"$P_{{\\text{{HCD,primary}}}}$: {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan) + mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.2f} MW"
+
+    axis.text(
+        0.0725,
+        0.85,
+        textstr_hcd_primary,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add plasma volume, areas and shaping information
+    textstr_hcd_secondary = f"$P_{{\\text{{HCD,secondary}}}}$: {mfile_data.data['p_hcd_secondary_injected_mw'].get_scan(scan) + mfile_data.data['p_hcd_secondary_extra_heat_mw'].get_scan(scan):.2f} MW"
+
+    axis.text(
+        0.0725,
+        0.725,
+        textstr_hcd_secondary,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Load the plasma image
+    hcd_injector_1 = hcd_injector_2 = mpimg.imread(
+        resources.path("process.io", "hcd_injector.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [-0.2, 0.8, 0.15, 0.15], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(hcd_injector_1)
+    new_ax.axis("off")
+    new_ax = axis.inset_axes(
+        [-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(hcd_injector_2)
+    new_ax.axis("off")
+
+    # Draw a dashed line with an arrow tip coming from the left of each injector
+    for y in [0.875, 0.75]:
+        axis.annotate(
+            "",
+            xy=(-0.2, y),
+            xytext=(-0.28, y),
+            xycoords=axis.transAxes,
+            arrowprops=dict(
+                arrowstyle="->",
+                color="black",
+                linestyle="--",
+                linewidth=1.5,
+                zorder=11,
+            ),
+            annotation_clip=False,
+        )
+    axis.plot(
+        [-0.28, -0.28],
+        [0.875, 0.4],
+        transform=axis.transAxes,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        zorder=11,
+        clip_on=False,
+    )
+    axis.text(
+        0.04,
+        0.45,
+        "\n\nH&CD Power Supply\n\n",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def plot_main_plasma_information(
@@ -6372,7 +6495,7 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
 
     plot_24 = fig10.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_24, m_file_data, scan)
+    plot_main_power_flow(plot_24, m_file_data, scan, fig10)
 
 
 def main(args=None):
