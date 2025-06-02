@@ -358,6 +358,24 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
+def plot_main_power_flow(axis, mfile_data, scan):
+
+    # Load the plasma image
+    plasma = mpimg.imread(
+        resources.path("process.io", "plasma.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [-0.2, 0.5, 0.45, 0.45], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(plasma)
+    new_ax.axis("off")
+
+    # Hide the axes for a cleaner look
+    axis.axis("off")
+
+
 def plot_main_plasma_information(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int, fig: plt.Figure
 ) -> None:
@@ -4354,6 +4372,7 @@ def main_plot(
     fig7,
     fig8,
     fig9,
+    fig10,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -4486,6 +4505,9 @@ def main_plot(
 
     plot_23 = fig9.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
+
+    plot_24 = fig10.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_24, m_file_data, scan)
 
 
 def main(args=None):
@@ -4758,6 +4780,7 @@ def main(args=None):
     page7 = plt.figure(figsize=(12, 9), dpi=80)
     page8 = plt.figure(figsize=(12, 9), dpi=80)
     page9 = plt.figure(figsize=(12, 9), dpi=80)
+    page10 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -4770,6 +4793,7 @@ def main(args=None):
         page7,
         page8,
         page9,
+        page10,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -4787,6 +4811,7 @@ def main(args=None):
         pdf.savefig(page7)
         pdf.savefig(page8)
         pdf.savefig(page9)
+        pdf.savefig(page10)
 
     # show fig if option used
     if args.show:
@@ -4801,6 +4826,7 @@ def main(args=None):
     plt.close(page7)
     plt.close(page8)
     plt.close(page9)
+    plt.close(page10)
 
 
 if __name__ == "__main__":
