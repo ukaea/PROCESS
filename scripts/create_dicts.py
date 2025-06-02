@@ -17,16 +17,20 @@ information in the Process Fortran source code.
 """
 
 import argparse
+import ast
+import inspect
 import json
 import logging
 import pickle
 import re
+from itertools import pairwise
 from pathlib import Path
 
 import create_dicts_config
 import numpy as np
 from python_dicts import get_python_variables
 
+from process.data_structure import cost_variables_python
 from process.input import INPUT_VARIABLES
 from process.iteration_variables import ITERATION_VARIABLES
 from process.scan import SCAN_VARIABLES
@@ -879,6 +883,49 @@ def create_dicts(project):
         dict_object.make_dict()
         dict_object.post_process()
         dict_object.publish()
+
+    # TODO add here to make the cost dict
+    cost_module_tree = ast.parse(inspect.getsource(cost_variables_python))
+    initial_values_dict = {}
+    variable_names = []
+    var_names_and_descriptions = {}
+    dict_module_entry = {}
+    # get the variable names and initial values
+    for node in ast.walk(cost_module_tree):
+        if isinstance(node, ast.AnnAssign):
+            # for each variable in the file, get the initial value
+            # (either is None, or value initialised in init_example_variables fn)
+            # set default to be None if variable is not being initialised eg if you
+            # just have `example_double: float` instead of `example_double: float = None`
+            initial_values_dict[node.target.id] = getattr(
+                cost_variables_python, node.target.id, None
+            )
+            # get the variable names
+            var_name = node.target.id
+            # add variable name to the list if not already there
+            if var_name not in variable_names:
+                variable_names.append(var_name)
+
+    # get the variable descriptions
+    for a, b in pairwise(cost_module_tree.body):
+        if isinstance(a, ast.AnnAssign) and isinstance(b, ast.Expr):
+            # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+            var_names_and_descriptions[a.target.id] = b.value.value
+        if isinstance(a, ast.AnnAssign) and not isinstance(b, ast.Expr):
+            # if no docstring for variable, have a blank description
+            var_names_and_descriptions[a.target.id] = ""
+    # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
+    # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
+    lastvar = cost_module_tree.body[-1]
+
+    if isinstance(lastvar, ast.AnnAssign) and lastvar not in var_names_and_descriptions:
+        var_names_and_descriptions[lastvar.target.id] = ""
+
+    # Add to relevant dicts
+    dict_module_entry["cost_variables_annotated_vars"] = variable_names
+    output_dict["DICT_MODULE"].update(dict_module_entry)
+    output_dict["DICT_DEFAULT"].update(initial_values_dict)
+    output_dict["DICT_DESCRIPTIONS"].update(var_names_and_descriptions)
 
     # Save output_dict as JSON, to be used by utilities scripts
     with open(DICTS_FILENAME, "w") as dicts_file:
