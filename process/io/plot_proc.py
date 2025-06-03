@@ -376,10 +376,48 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Add fusion power to plasma
     axis.text(
-        0.25,
-        0.775,
+        0.24,
+        0.78,
         "$P_{{fus}}$\n"
         f"{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+    )
+    # Load the plasma image
+    neutron = mpimg.imread(
+        resources.path("process.io", "neutron.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.3, 0.9, 0.03, 0.03], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(neutron)
+    new_ax.axis("off")
+    
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.4, 0.8),
+        xytext=(0.3, 0.8),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="grey",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Add lost alpha power
+    axis.text(
+        0.24,
+        0.725,
+        "$P_{\\alpha,{loss}}$\n"
+        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -388,17 +426,64 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Add radiation power to plasma
     axis.text(
-        0.25,
-        0.7,
+        0.24,
+        0.675,
         f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
         zorder=2,
     )
+    
+    axis.annotate(
+        "",
+        xy=(0.4, 0.675),
+        xytext=(0.3, 0.675),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="blue",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
 
     # Hide the axes for a cleaner look
     axis.axis("off")
+    
+    # Load the plasma image
+    alpha = mpimg.imread(
+        resources.path("process.io", "alpha_particle.PNG")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.3, 0.85, 0.025, 0.025], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(alpha)
+    new_ax.axis("off")
+
+    # Hide the axes for a cleaner look
+    axis.axis("off")
+    
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.4, 0.75),
+        xytext=(0.3, 0.75),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="red",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    
 
     # =========================================
 
@@ -621,6 +706,85 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "linewidth": 2,
         },
     )
+    
+    
+    # =============================================
+    # Low grade heat total
+    
+    axis.text(
+        0.45,
+        0.4,
+        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="center",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+        zorder=4,
+    )
+    
+    
+    
+    #=============================================
+    
+    
+    # Load the plasma image
+    turbine = mpimg.imread(
+        resources.path("process.io", "turbine.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.95, 0.1, 0.15, 0.15], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(turbine)
+    new_ax.axis("off")
+    
+    axis.text(
+        0.8,
+        0.485,
+        f"$P_{{\\text{{primary,thermal}}}}$:\n {mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):.2f} MW \n $\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    # Load the plasma image
+    generator = mpimg.imread(
+        resources.path("process.io", "generator.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [1.1, 0.1, 0.15, 0.15], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(generator)
+    new_ax.axis("off")
+    
+    # Load the plasma image
+    pylon = mpimg.imread(
+        resources.path("process.io", "pylon.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [1.15, -0.075, 0.1, 0.1], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(pylon)
+    new_ax.axis("off")
+    
 
 
 def plot_main_plasma_information(
