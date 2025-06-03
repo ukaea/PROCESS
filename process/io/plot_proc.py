@@ -477,18 +477,139 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         )
     axis.plot(
         [-0.28, -0.28],
-        [0.875, 0.4],
+        [0.875, 0.5],
         transform=axis.transAxes,
         color="black",
         linestyle="--",
         linewidth=1.5,
-        zorder=11,
+        zorder=3,
         clip_on=False,
     )
     axis.text(
         0.04,
         0.45,
         "\n\nH&CD Power Supply\n\n",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+        zorder=4,
+    )
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.25, 0.5),
+        xytext=(0.1, 0.5),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.2",  # solid filled head
+            color="black",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    axis.text(
+        0.25,
+        0.435,
+        f"$P_{{\\text{{secondary,loss}}}}$:\n {mfile_data.data['p_hcd_secondary_electric_mw'].get_scan(scan)*(1.0-mfile_data.data['eta_hcd_secondary_injector_wall_plug'].get_scan(scan)):.2f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    
+    axis.annotate(
+        "",
+        xy=(0.25, 0.46),
+        xytext=(0.1, 0.46),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.2",  # solid filled head
+            color="black",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    axis.text(
+        0.25,
+        0.485,
+        f"$P_{{\\text{{primary,loss}}}}$:\n {mfile_data.data['p_hcd_primary_electric_mw'].get_scan(scan)*(1.0-mfile_data.data['eta_hcd_primary_injector_wall_plug'].get_scan(scan)):.2f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Draw two arrows pointing to the bottom of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.06, 0.45),
+        xytext=(0.06, 0.38),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="->",
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+        ),
+    )
+    axis.annotate(
+        "",
+        xy=(0.12, 0.45),
+        xytext=(0.12, 0.38),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="->",
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+        ),
+    )
+
+    axis.text(
+        0.12,
+        0.35,
+        f"$P_{{\\text{{secondary}}}}$:\n {mfile_data.data['p_hcd_secondary_electric_mw'].get_scan(scan):.2f} MWe \n $\\eta$: {mfile_data.data['eta_hcd_secondary_injector_wall_plug'].get_scan(scan):.2f}",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.025,
+        0.35,
+        f"$P_{{\\text{{primary}}}}$:\n {mfile_data.data['p_hcd_primary_electric_mw'].get_scan(scan):.2f} MWe\n $\\eta$: {mfile_data.data['eta_hcd_primary_injector_wall_plug'].get_scan(scan):.2f}",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
