@@ -377,7 +377,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Add fusion power to plasma
     axis.text(
         0.24,
-        0.78,
+        0.725,
         "$P_{{fus}}$\n"
         f"{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
@@ -392,7 +392,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.3, 0.9, 0.03, 0.03], transform=axis.transAxes, zorder=10
+        [0.2, 0.85, 0.03, 0.03], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(neutron)
     new_ax.axis("off")
@@ -400,8 +400,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.4, 0.8),
-        xytext=(0.3, 0.8),
+        xy=(0.95, 0.75),
+        xytext=(0.3, 0.75),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -415,7 +415,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Add lost alpha power
     axis.text(
         0.24,
-        0.725,
+        0.8,
         "$P_{\\alpha,{loss}}$\n"
         f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
@@ -437,7 +437,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     axis.annotate(
         "",
-        xy=(0.4, 0.675),
+        xy=(0.56, 0.675),
         xytext=(0.3, 0.675),
         xycoords=fig.transFigure,
         arrowprops=dict(
@@ -460,7 +460,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.3, 0.85, 0.025, 0.025], transform=axis.transAxes, zorder=10
+        [0.16, 0.95, 0.025, 0.025], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(alpha)
     new_ax.axis("off")
@@ -471,8 +471,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.4, 0.75),
-        xytext=(0.3, 0.75),
+        xy=(0.56, 0.825),
+        xytext=(0.3, 0.825),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -713,7 +713,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     axis.text(
         0.45,
-        0.4,
+        0.2,
         f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
@@ -784,6 +784,234 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     new_ax.imshow(pylon)
     new_ax.axis("off")
+    
+    
+    
+    # ================================
+    
+    # First wall
+    
+    # Load the plasma image
+    fw = mpimg.imread(
+        resources.path("process.io", "fw.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(fw)
+    new_ax.axis("off")
+    
+    
+    axis.text(
+        0.5,
+        0.9,
+        "First Wall",
+        fontsize=11,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+    )
+    
+    
+    axis.text(
+        0.46,
+        0.85,
+        f"$P_{{\\text{{FW, }}\\alpha}}$:\n {mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.46,
+        0.775,
+        f"$P_{{\\text{{FW,nuclear}}}}$:\n {mfile_data.data['p_fw_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.46,
+        0.7,
+        f"$P_{{\\text{{FW,rad}}}}$:\n {mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "blue",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    
+    
+    # ==========================================
+    
+    # Load the plasma image
+    blanket = mpimg.imread(
+        resources.path("process.io", "blanket_with_coolant.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.7, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(blanket)
+    new_ax.axis("off")
+    
+    axis.text(
+        0.7,
+        0.9,
+        "Blanket",
+        fontsize=11,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+    )
+    
+    axis.text(
+        0.6,
+        0.8,
+        f"$P_{{\\text{{Blkt,nuclear}}}}$:\n {mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n $P_{{\\text{{Blkt,multiplication}}}}$:\n {mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW ",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    
+    
+    
+    # ===========================================
+    
+    
+    
+    # Load the plasma image
+    vv = mpimg.imread(
+        resources.path("process.io", "vv.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.975, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(vv)
+    new_ax.axis("off")
+    
+    
+    axis.text(
+        0.9,
+        0.9,
+        "Vacuum Vessel",
+        fontsize=11,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+    )
+    
+    # ==========================================
+    
+    # Divertor
+    
+    # Load the plasma image
+    divertor = mpimg.imread(
+        resources.path("process.io", "divertor.png")
+    )  # Use importlib.resources to locate the image
+
+    # Display the plasma image over the figure, not the axes
+    new_ax = axis.inset_axes(
+        [0.25, 0.4, 0.25, 0.25], transform=axis.transAxes, zorder=10
+    )
+    new_ax.imshow(divertor)
+    new_ax.axis("off")
+    
+    axis.annotate(
+        "",
+        xy=(0.4, 0.55),
+        xytext=(0.4, 0.675),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="blue",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    axis.text(
+        0.335,
+        0.58,
+        f"$P_{{\\text{{div,rad}}}}$:\n {mfile_data.data['p_div_rad_total_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "blue",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.annotate(
+        "",
+        xy=(0.45, 0.55),
+        xytext=(0.45, 0.75),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="grey",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    axis.text(
+        0.46,
+        0.58,
+        f"$P_{{\\text{{div,nuclear}}}}$:\n {mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    # ===========================================
+    
     
 
 
