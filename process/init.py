@@ -15,6 +15,9 @@ from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
 from process.current_drive import init_current_drive_variables
+from process.data_structure.cost_2015_variables import init_cost_2015_variables
+from process.data_structure.cost_python_variables import init_cost_variables_new
+from process.data_structure.power_variables import init_power_variables
 from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
 from process.exceptions import ProcessValidationError
@@ -279,6 +282,9 @@ def init_all_module_vars():
     init_cs_fatigue_variables()
     init_blanket_library()
     init_dcll_module()
+    init_cost_2015_variables()
+    init_power_variables()
+    init_cost_variables_new()
 
     fortran.init_module.init_fortran_modules()
 
