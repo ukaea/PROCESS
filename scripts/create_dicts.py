@@ -23,6 +23,7 @@ import json
 import logging
 import pickle
 import re
+from importlib import import_module
 from itertools import pairwise
 from pathlib import Path
 
@@ -30,7 +31,7 @@ import create_dicts_config
 import numpy as np
 from python_dicts import get_python_variables
 
-from process.data_structure import cost_variables_python
+from process.init import init_all_module_vars
 from process.input import INPUT_VARIABLES
 from process.iteration_variables import ITERATION_VARIABLES
 from process.scan import SCAN_VARIABLES
@@ -71,7 +72,7 @@ class ProjectDictionary(Dictionary):
         Dictionary.__init__(self, name)
         self.project = project  # The Ford project object
         self.python_variables = (
-            python_variables  # List of AnnotatedVariables from Python PhysEng models
+            python_variables  # List of variables from Python PhysEng models
         )
         self.value_type = value_type
         # The attribute in the project to make a dict for
@@ -858,6 +859,7 @@ def create_dicts(project):
 
     python_variables = get_python_variables()
 
+    init_all_module_vars()
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
@@ -884,48 +886,69 @@ def create_dicts(project):
         dict_object.post_process()
         dict_object.publish()
 
-    # TODO add here to make the cost dict
-    cost_module_tree = ast.parse(inspect.getsource(cost_variables_python))
-    initial_values_dict = {}
-    variable_names = []
-    var_names_and_descriptions = {}
-    dict_module_entry = {}
-    # get the variable names and initial values
-    for node in ast.walk(cost_module_tree):
-        if isinstance(node, ast.AnnAssign):
-            # for each variable in the file, get the initial value
-            # (either is None, or value initialised in init_example_variables fn)
-            # set default to be None if variable is not being initialised eg if you
-            # just have `example_double: float` instead of `example_double: float = None`
-            initial_values_dict[node.target.id] = getattr(
-                cost_variables_python, node.target.id, None
-            )
-            # get the variable names
-            var_name = node.target.id
-            # add variable name to the list if not already there
-            if var_name not in variable_names:
-                variable_names.append(var_name)
+    variable_module_location = Path.cwd().parent / "process/data_structure"
+    module_names = [
+        file.name for file in variable_module_location.iterdir() if file.is_file()
+    ]
 
-    # get the variable descriptions
-    for a, b in pairwise(cost_module_tree.body):
-        if isinstance(a, ast.AnnAssign) and isinstance(b, ast.Expr):
-            # if docstring immediately follows the variable declaration, add docstring to descriptions dict
-            var_names_and_descriptions[a.target.id] = b.value.value
-        if isinstance(a, ast.AnnAssign) and not isinstance(b, ast.Expr):
-            # if no docstring for variable, have a blank description
-            var_names_and_descriptions[a.target.id] = ""
-    # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
-    # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
-    lastvar = cost_module_tree.body[-1]
+    for module_name in module_names:
+        if module_name == "__init__.py":
+            continue
+        module = import_module(f"process.data_structure.{module_name.split('.', 1)[0]}")
 
-    if isinstance(lastvar, ast.AnnAssign) and lastvar not in var_names_and_descriptions:
-        var_names_and_descriptions[lastvar.target.id] = ""
+        module_tree = ast.parse(inspect.getsource(module))
+        initial_values_dict = {}
+        variable_names = []
+        var_names_and_descriptions = {}
+        dict_module_entry = {}
+        # get the variable names and initial values
+        for node in ast.walk(module_tree):
+            if isinstance(node, ast.AnnAssign):
+                # for each variable in the file, get the initial value
+                # (either is None, or value initialised in init_variables fn)
+                # set default to be None if variable is not being initialised eg if you
+                # just have `example_double: float` instead of `example_double: float = None`
+                value = getattr(module, node.target.id, None)
+                # JSON doesn't like arrays
+                if type(value) is np.ndarray:
+                    value = value.tolist()
+                initial_values_dict[node.target.id] = value
+                expr = ast.Expression(body=node.value)
+                ast.fix_missing_locations(expr)
+                config = eval(compile(expr, "", "eval"))
+                if type(config) is np.ndarray:
+                    config = config.tolist()
+                if config is not value and config is not None:
+                    initial_values_dict[node.target.id] = config
+                # get the variable names
+                var_name = node.target.id
+                # add variable name to the list if not already there
+                if var_name not in variable_names:
+                    variable_names.append(var_name)
 
-    # Add to relevant dicts
-    dict_module_entry["cost_variables_annotated_vars"] = variable_names
-    output_dict["DICT_MODULE"].update(dict_module_entry)
-    output_dict["DICT_DEFAULT"].update(initial_values_dict)
-    output_dict["DICT_DESCRIPTIONS"].update(var_names_and_descriptions)
+        # get the variable descriptions
+        for a, b in pairwise(module_tree.body):
+            if isinstance(a, ast.AnnAssign) and isinstance(b, ast.Expr):
+                # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+                var_names_and_descriptions[a.target.id] = b.value.value
+            if isinstance(a, ast.AnnAssign) and not isinstance(b, ast.Expr):
+                # if no docstring for variable, have a blank description
+                var_names_and_descriptions[a.target.id] = ""
+        # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
+        # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
+        lastvar = module_tree.body[-1]
+
+        if (
+            isinstance(lastvar, ast.AnnAssign)
+            and lastvar not in var_names_and_descriptions
+        ):
+            var_names_and_descriptions[lastvar.target.id] = ""
+        # Add to relevant dicts
+        dict_module_entry[f"{module_name}_variables_annotated_vars"] = variable_names
+
+        output_dict["DICT_MODULE"].update(dict_module_entry)
+        output_dict["DICT_DEFAULT"].update(initial_values_dict)
+        output_dict["DICT_DESCRIPTIONS"].update(var_names_and_descriptions)
 
     # Save output_dict as JSON, to be used by utilities scripts
     with open(DICTS_FILENAME, "w") as dicts_file:
