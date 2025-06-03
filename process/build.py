@@ -18,7 +18,6 @@ from process.fortran import (
     physics_variables,
     tfcoil_variables,
 )
-from process.variables import AnnotatedVariable
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class Build:
     def __init__(self):
         self.outfile = constants.nout
         self.mfile = constants.mfile
-        self.ripflag = AnnotatedVariable(int, 0)
+        self.ripflag = 0
 
     def portsz(self):
         """Port size calculation
