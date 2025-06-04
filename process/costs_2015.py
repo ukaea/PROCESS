@@ -1045,7 +1045,7 @@ class Costs2015:
         cost_2015_variables.s_cref[44] = 724.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         cost_2015_variables.s_k[44] = (
-            heat_transport_variables.cost_2015_variables
+            heat_transport_variables.p_plant_primary_heat_mw
             + heat_transport_variables.p_plant_secondary_heat_mw
         )
         cost_2015_variables.s_kref[44] = 550.0e0
