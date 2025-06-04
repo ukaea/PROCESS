@@ -134,7 +134,7 @@ def test_acc2262(monkeypatch, costs):
     # Mock module variables
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(htv, "pinjht", 76.5)
+    monkeypatch.setattr(htv, "p_hcd_electric_loss_mw", 76.5)
     monkeypatch.setattr(htv, "p_cryo_plant_electric_mw", 39.936)
     monkeypatch.setattr(htv, "vachtmw", 0.5)
     monkeypatch.setattr(htv, "p_tritium_plant_electric_mw", 15.0)
@@ -3291,7 +3291,7 @@ class Acc2251Param(NamedTuple):
 
     n_tf_coils: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     c22: Any = None
 
@@ -3340,7 +3340,7 @@ class Acc2251Param(NamedTuple):
             m_tf_bus=0,
             tfckw=32474.753636211804,
             n_tf_coils=16,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             c22=0,
             c225=0,
             c2251=0,
@@ -3371,7 +3371,7 @@ class Acc2251Param(NamedTuple):
             m_tf_bus=0,
             tfckw=32505.257577809778,
             n_tf_coils=16,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2251=98.457845594540643,
@@ -3430,7 +3430,7 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2251param.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", acc2251param.cpttf)
+    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", acc2251param.c_tf_turn)
 
     monkeypatch.setattr(costs, "c22", acc2251param.c22)
 
@@ -3996,7 +3996,7 @@ class Acc2262Param(NamedTuple):
 
     tdspmw: Any = None
 
-    pinjht: Any = None
+    p_hcd_electric_loss_mw: Any = None
 
     vachtmw: Any = None
 
@@ -4030,7 +4030,7 @@ class Acc2262Param(NamedTuple):
             tfacmw=0,
             ife=0,
             tdspmw=0.01,
-            pinjht=77.967671580642758,
+            p_hcd_electric_loss_mw=77.967671580642758,
             vachtmw=0.5,
             p_tritium_plant_electric_mw=15,
             fachtmw=61.882833632875375,
@@ -4049,7 +4049,7 @@ class Acc2262Param(NamedTuple):
             tfacmw=0,
             ife=0,
             tdspmw=0.01,
-            pinjht=77.967671580642758,
+            p_hcd_electric_loss_mw=77.967671580642758,
             vachtmw=0.5,
             p_tritium_plant_electric_mw=15,
             fachtmw=62.237143915360818,
@@ -4087,7 +4087,11 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "tdspmw", acc2262param.tdspmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pinjht", acc2262param.pinjht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electric_loss_mw",
+        acc2262param.p_hcd_electric_loss_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", acc2262param.vachtmw)
 

@@ -950,7 +950,7 @@ class IFE:
         )
 
         # Energy Multiplication
-        fwbs_variables.emult = (
+        fwbs_variables.f_p_blkt_multiplication = (
             2.2414
             * (1.0 / (1.0 + np.exp(-3.0038 * ife_variables.bldrc)) - 0.5)
             * li_frac
@@ -1916,7 +1916,7 @@ class IFE:
         # Total thermal power removed from fusion core
 
         heat_transport_variables.priheat = (
-            fwbs_variables.emult * physics_variables.p_fusion_total_mw
+            fwbs_variables.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)
@@ -1968,7 +1968,7 @@ class IFE:
 
         # Waste driver power (MW)
 
-        heat_transport_variables.pinjht = (
+        heat_transport_variables.p_hcd_electric_loss_mw = (
             heat_transport_variables.p_hcd_electric_total_mw - pdrvmw
         )
 
@@ -2001,7 +2001,7 @@ class IFE:
 
         # Total secondary heat
         heat_transport_variables.p_plant_secondary_heat_mw = (
-            heat_transport_variables.pinjht
+            heat_transport_variables.p_hcd_electric_loss_mw
             + fwbs_variables.pnucloss
             + heat_transport_variables.fachtmw
             + heat_transport_variables.vachtmw
@@ -2055,8 +2055,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Power multiplication factor",
-                "(emult)",
-                fwbs_variables.emult,
+                "(f_p_blkt_multiplication)",
+                fwbs_variables.f_p_blkt_multiplication,
             )
             if ife_variables.ifetyp == 4:
                 process_output.ovarre(
@@ -2103,8 +2103,8 @@ class IFE:
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from driver power (MW)",
-                "(pinjht)",
-                heat_transport_variables.pinjht,
+                "(p_hcd_electric_loss_mw)",
+                heat_transport_variables.p_hcd_electric_loss_mw,
             )
             process_output.ovarre(
                 self.outfile,

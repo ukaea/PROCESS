@@ -106,7 +106,7 @@ class SuperconParam(NamedTuple):
 
     dhecoil: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     bmaxtfrp: Any = None
 
@@ -182,7 +182,7 @@ class SuperconParam(NamedTuple):
             temp_margin=0,
             jwdgpro=0,
             dhecoil=0.010000000000000002,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
@@ -222,7 +222,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
             dhecoil=0.010000000000000002,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
@@ -262,7 +262,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
             dhecoil=0.010000000000000002,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
@@ -324,7 +324,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "dhecoil", superconparam.dhecoil)
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", superconparam.cpttf)
+    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", superconparam.c_tf_turn)
 
     monkeypatch.setattr(tfcoil_variables, "bmaxtfrp", superconparam.bmaxtfrp)
 
@@ -1126,7 +1126,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         acstf,
         acndttf,
         insulation_area,
-        cpttf,
+        c_tf_turn,
         n_tf_turn,
     ) = sctfcoil.tf_integer_turn_geom(
         n_layer=tfintegerturngeomparam.n_layer,
@@ -1179,7 +1179,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.expected_insulation_area
     )
 
-    assert cpttf == pytest.approx(tfintegerturngeomparam.expected_cpttf)
+    assert c_tf_turn == pytest.approx(tfintegerturngeomparam.expected_cpttf)
 
     assert n_tf_turn == pytest.approx(tfintegerturngeomparam.expected_n_tf_turn)
 
@@ -1193,7 +1193,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     t_turn_tf_is_input: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     t_cable_tf: Any = None
 
@@ -1242,7 +1242,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_conductor=0,
             t_turn_tf=0,
             t_turn_tf_is_input=False,
-            cpttf=65000,
+            c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
@@ -1268,7 +1268,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_conductor=0.047932469413859431,
             t_turn_tf=0.049532469413859428,
             t_turn_tf_is_input=False,
-            cpttf=65000,
+            c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
@@ -1294,7 +1294,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_conductor=5.712e-02,
             t_turn_tf=0.05872,
             t_turn_tf_is_input=True,
-            cpttf=0,
+            c_tf_turn=0,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
@@ -1320,7 +1320,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_conductor=0.058296,
             t_turn_tf=0,
             t_turn_tf_is_input=False,
-            cpttf=0,
+            c_tf_turn=0,
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
             awptf=0.60510952642236249,
@@ -1374,7 +1374,9 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.t_turn_tf_is_input,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", tfaveragedturngeomparam.cpttf)
+    monkeypatch.setattr(
+        tfcoil_variables, "c_tf_turn", tfaveragedturngeomparam.c_tf_turn
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "t_cable_tf", tfaveragedturngeomparam.t_cable_tf

@@ -240,7 +240,7 @@ module pfcoil_variables
   real(dp) :: r_pf_coil_outer_max
   !! radius of largest PF coil (m)
 
-  real(dp) :: pfwpmw
+  real(dp) :: p_pf_electric_supplies_mw
   !! Total mean wall plug power dissipated in PFC and CS power supplies (MW) (issue #713)
 
   real(dp) :: p_cs_resistive_flat_top

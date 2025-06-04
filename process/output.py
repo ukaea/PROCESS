@@ -128,6 +128,7 @@ def write(models, _outfile):
     models.power.acpow(output=True)
 
     # Plant heat transport pt 2 & 3
+    models.power.output_cryogenics()
     models.power.power2(output=True)
     models.power.power3(output=True)
 

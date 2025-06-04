@@ -167,7 +167,7 @@ class Stellarator:
         self.stdiv(False)
 
         self.power.tfpwr(output=False)
-        self.power.power1()
+        self.power.component_thermal_powers()
         self.buildings.run(output=False)
         self.vacuum.run(output=False)
         self.power.acpow(output=False)
@@ -1066,7 +1066,7 @@ class Stellarator:
         self.hcpb.nuclear_heating_shield()
 
         # Energy multiplication factor
-        fwbs_variables.emult = 1.269
+        fwbs_variables.f_p_blkt_multiplication = 1.269
 
         # Use older model to calculate neutron fluence since it
         # is not calculated in the CCFE blanket model
@@ -1275,9 +1275,9 @@ class Stellarator:
                     physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                ) * fwbs_variables.emult
+                ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.emultmw = pneut2 - (
+                fwbs_variables.p_blkt_multiplication_mw = pneut2 - (
                     physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
@@ -1497,8 +1497,8 @@ class Stellarator:
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
-                            pnucbzi * fwbs_variables.emult
-                            + pnucbzo * fwbs_variables.emult
+                            pnucbzi * fwbs_variables.f_p_blkt_multiplication
+                            + pnucbzo * fwbs_variables.f_p_blkt_multiplication
                         )
                     )
                 else:
@@ -1506,10 +1506,10 @@ class Stellarator:
                         "i_coolant_pumping = 0 or 1 only for stellarator"
                     )
 
-                fwbs_variables.emultmw = (
+                fwbs_variables.p_blkt_multiplication_mw = (
                     heat_transport_variables.fpumpblkt
-                    * (pnucbzi * fwbs_variables.emult + pnucbzo)
-                    * (fwbs_variables.emult - 1.0e0)
+                    * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
                 )
 
                 #  Total nuclear heating of first wall (MW)
@@ -1522,11 +1522,13 @@ class Stellarator:
 
                 fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                     pnucbzi + pnucbzo
-                ) * fwbs_variables.emult
+                ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.emultmw = fwbs_variables.emultmw + (
-                    pnucbzi + pnucbzo
-                ) * (fwbs_variables.emult - 1.0e0)
+                fwbs_variables.p_blkt_multiplication_mw = (
+                    fwbs_variables.p_blkt_multiplication_mw
+                    + (pnucbzi + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                )
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
@@ -2089,8 +2091,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Energy multiplication in blanket",
-                    "(emult)",
-                    fwbs_variables.emult,
+                    "(f_p_blkt_multiplication)",
+                    fwbs_variables.f_p_blkt_multiplication,
                 )
                 po.ovarin(
                     self.outfile,
@@ -2665,7 +2667,7 @@ class Stellarator:
         tfcoil_variables.n_tf_turn = (
             awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
-        tfcoil_variables.cpttf = (
+        tfcoil_variables.c_tf_turn = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
@@ -3015,12 +3017,12 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(cpttf,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
             tfcoil_variables.tdmptf,
-            tfcoil_variables.cpttf,
+            tfcoil_variables.c_tf_turn,
         )
 
         # comparison
@@ -3920,7 +3922,10 @@ class Stellarator:
             t_turn_tf,
         )
         po.ovarre(
-            self.outfile, "Current per turn (A)", "(cpttf)", tfcoil_variables.cpttf
+            self.outfile,
+            "Current per turn (A)",
+            "(c_tf_turn)",
+            tfcoil_variables.c_tf_turn,
         )
         po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(

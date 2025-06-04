@@ -335,7 +335,7 @@ class SuperconductingTFCoil(TFCoil):
             (tfcoil_variables.jwdgcrt, tfcoil_variables.tmargtf) = self.supercon_croco(
                 aturn,
                 tfcoil_variables.bmaxtfrp,
-                tfcoil_variables.cpttf,
+                tfcoil_variables.c_tf_turn,
                 tfcoil_variables.tftmp,
                 output=output,
             )
@@ -355,7 +355,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.bmaxtfrp,
                 tfcoil_variables.vftf,
                 tfcoil_variables.fcutfsu,
-                tfcoil_variables.cpttf,
+                tfcoil_variables.c_tf_turn,
                 tfcoil_variables.j_tf_wp,
                 tfcoil_variables.i_tf_sc_mat,
                 tfcoil_variables.fhts,
@@ -383,7 +383,7 @@ class SuperconductingTFCoil(TFCoil):
                     sctfcoil_module.e_tf_magnetic_stored_total
                     / tfcoil_variables.n_tf_coils
                 )
-                / tfcoil_variables.cpttf
+                / tfcoil_variables.c_tf_turn
             )
         elif f2py_compatible_to_string(tfcoil_variables.quench_model) == "exponential":
             sctfcoil_module.tau2 = tfcoil_variables.tdmptf
@@ -394,7 +394,7 @@ class SuperconductingTFCoil(TFCoil):
                     sctfcoil_module.e_tf_magnetic_stored_total
                     / tfcoil_variables.n_tf_coils
                 )
-                / tfcoil_variables.cpttf
+                / tfcoil_variables.c_tf_turn
             )
         else:
             return 0.0
@@ -831,8 +831,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Actual current (A)",
-                "(cpttf)",
-                tfcoil_variables.cpttf,
+                "(c_tf_turn)",
+                tfcoil_variables.c_tf_turn,
                 "OP ",
             )
             po.ovarre(
@@ -1416,8 +1416,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Actual current (A)",
-                "(cpttf)",
-                tfcoil_variables.cpttf,
+                "(c_tf_turn)",
+                tfcoil_variables.c_tf_turn,
                 "OP ",
             )
             po.ovarre(
@@ -1725,7 +1725,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.acstf,
                 tfcoil_variables.acndttf,
                 tfcoil_variables.insulation_area,
-                tfcoil_variables.cpttf,
+                tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_turn,
             ) = self.tf_integer_turn_geom(
                 tfcoil_variables.n_layer,
@@ -2077,7 +2077,7 @@ class SuperconductingTFCoil(TFCoil):
         n_tf_turn = np.double(n_layer * n_pancake)
 
         # Current per turn [A/turn]
-        cpttf = sctfcoil_module.c_tf_coil / n_tf_turn
+        c_tf_turn = sctfcoil_module.c_tf_coil / n_tf_turn
 
         # Radial and toroidal dimension of conductor [m]
         sctfcoil_module.t_conductor_radial = (
@@ -2137,7 +2137,7 @@ class SuperconductingTFCoil(TFCoil):
             - acndttf
             - acstf
         )
-        return acstf, acndttf, insulation_area, cpttf, n_tf_turn
+        return acstf, acndttf, insulation_area, c_tf_turn, n_tf_turn
 
         # -------------
 
@@ -2170,7 +2170,7 @@ class SuperconductingTFCoil(TFCoil):
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
-            tfcoil_variables.cpttf = a_turn * j_tf_wp
+            tfcoil_variables.c_tf_turn = a_turn * j_tf_wp
 
         # Turn cable dimension is an input
         elif tfcoil_variables.t_cable_tf_is_input:
@@ -2183,14 +2183,14 @@ class SuperconductingTFCoil(TFCoil):
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
-            tfcoil_variables.cpttf = a_turn * j_tf_wp
+            tfcoil_variables.c_tf_turn = a_turn * j_tf_wp
 
         # Current per turn is an input
         else:
             # Turn area [m2]
             # Allow for additional inter-layer insulation MDK 13/11/18
             # Area of turn including conduit and inter-layer insulation
-            a_turn = tfcoil_variables.cpttf / j_tf_wp
+            a_turn = tfcoil_variables.c_tf_turn / j_tf_wp
 
             # Dimension of square cross-section of each turn including inter-turn insulation [m]
             tfcoil_variables.t_turn_tf = np.sqrt(a_turn)

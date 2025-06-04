@@ -49,7 +49,7 @@ class CryoParam(NamedTuple):
 
     coldmass: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     ensxpfm: Any = None
 
@@ -84,7 +84,7 @@ class CryoParam(NamedTuple):
             qmisc=0,
             i_tf_sup=1,
             coldmass=47352637.039762333,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             ensxpfm=37429.525515086898,
             p_tf_nuclear_heat_mw=0.044178296011112193,
             n_tf_coils=16,
@@ -105,7 +105,7 @@ class CryoParam(NamedTuple):
             qmisc=23850.540321823562,
             i_tf_sup=1,
             coldmass=47308985.527808741,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             ensxpfm=37427.228965055205,
             p_tf_nuclear_heat_mw=0.045535131445547841,
             n_tf_coils=16,
@@ -147,7 +147,7 @@ def test_cryo(cryoparam, monkeypatch, power):
     helpow = power.cryo(
         i_tf_sup=cryoparam.i_tf_sup,
         coldmass=cryoparam.coldmass,
-        cpttf=cryoparam.cpttf,
+        c_tf_turn=cryoparam.c_tf_turn,
         ensxpfm=cryoparam.ensxpfm,
         p_tf_nuclear_heat_mw=cryoparam.p_tf_nuclear_heat_mw,
         n_tf_coils=cryoparam.n_tf_coils,
@@ -195,7 +195,7 @@ class PfpwrParam(NamedTuple):
 
     c_pf_coil_turn: Any = None
 
-    pfwpmw: Any = None
+    p_pf_electric_supplies_mw: Any = None
 
     rho_pf_coil: Any = None
 
@@ -430,7 +430,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pfwpmw=0,
+            p_pf_electric_supplies_mw=0,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -1173,7 +1173,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            pfwpmw=0.89998039031509891,
+            p_pf_electric_supplies_mw=0.89998039031509891,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -1802,7 +1802,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
 
-    monkeypatch.setattr(pfcoil_variables, "pfwpmw", pfpwrparam.pfwpmw)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "p_pf_electric_supplies_mw",
+        pfpwrparam.p_pf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", pfpwrparam.rho_pf_coil)
 
@@ -1904,7 +1908,7 @@ class AcpowParam(NamedTuple):
 
     vachtmw: Any = None
 
-    tfacpd: Any = None
+    p_tf_electric_supplies_mw: Any = None
 
     p_tritium_plant_electric_mw: Any = None
 
@@ -1943,7 +1947,7 @@ class AcpowParam(NamedTuple):
             p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=0,
@@ -1964,7 +1968,7 @@ class AcpowParam(NamedTuple):
             p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
@@ -2015,7 +2019,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", acpowparam.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tf_electric_supplies_mw",
+        acpowparam.p_tf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2065,7 +2073,7 @@ class Power2Param(NamedTuple):
 
     p_hcd_injected_total_mw: Any = None
 
-    emultmw: Any = None
+    p_blkt_multiplication_mw: Any = None
 
     inuclear: Any = None
 
@@ -2077,7 +2085,7 @@ class Power2Param(NamedTuple):
 
     etahtp: Any = None
 
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
 
     p_div_rad_total_mw: Any = None
 
@@ -2151,7 +2159,7 @@ class Power2Param(NamedTuple):
 
     p_hcd_secondary_heat_mw: Any = None
 
-    tfacpd: Any = None
+    p_tf_electric_supplies_mw: Any = None
 
     p_coolant_pump_elec_total_mw: Any = None
 
@@ -2161,13 +2169,13 @@ class Power2Param(NamedTuple):
 
     p_div_secondary_heat_mw: Any = None
 
-    pinjht: Any = None
+    p_hcd_electric_loss_mw: Any = None
 
     p_coolant_pump_loss_total_mw: Any = None
 
     helpow_cryal: Any = None
 
-    pfwpmw: Any = None
+    p_pf_electric_supplies_mw: Any = None
 
     p_alpha_total_mw: Any = None
 
@@ -2266,13 +2274,13 @@ class Power2Param(NamedTuple):
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
-            emultmw=377.93233088402548,
+            p_blkt_multiplication_mw=377.93233088402548,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
-            emult=1.2690000534057617,
+            f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
             f_a_fw_hcd=0,
@@ -2309,15 +2317,15 @@ class Power2Param(NamedTuple):
             p_plant_secondary_heat_mw=0,
             p_tritium_plant_electric_mw=15,
             p_hcd_secondary_heat_mw=0,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.28554165620102,
             eta_turbine=0.37500000000000006,
             p_cryo_plant_electric_mw=37.900388528497025,
             p_div_secondary_heat_mw=0,
-            pinjht=77.967671580642758,
+            p_hcd_electric_loss_mw=77.967671580642758,
             p_coolant_pump_loss_total_mw=30.457120415306122,
             helpow_cryal=0,
-            pfwpmw=0.89998039031509891,
+            p_pf_electric_supplies_mw=0.89998039031509891,
             p_alpha_total_mw=396.66154806848488,
             i_plasma_ignited=0,
             p_plasma_inner_rad_mw=113.53817859231452,
@@ -2368,13 +2376,13 @@ class Power2Param(NamedTuple):
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
-            emultmw=377.8143718115644,
+            p_blkt_multiplication_mw=377.8143718115644,
             inuclear=1,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
             etahtp=0.87000000000000011,
-            emult=1.2690000534057617,
+            f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
             f_a_fw_hcd=0,
@@ -2411,15 +2419,15 @@ class Power2Param(NamedTuple):
             p_plant_secondary_heat_mw=233.80288075411508,
             p_tritium_plant_electric_mw=15,
             p_hcd_secondary_heat_mw=0,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_coolant_pump_elec_total_mw=234.2162627659944,
             eta_turbine=0.37500000000000006,
             p_cryo_plant_electric_mw=108.74512702403499,
             p_div_secondary_heat_mw=0,
-            pinjht=77.967671580642758,
+            p_hcd_electric_loss_mw=77.967671580642758,
             p_coolant_pump_loss_total_mw=30.448114159579291,
             helpow_cryal=0,
-            pfwpmw=0.068213156646500808,
+            p_pf_electric_supplies_mw=0.068213156646500808,
             p_alpha_total_mw=396.53774329057228,
             i_plasma_ignited=0,
             p_plasma_inner_rad_mw=113.53817859231452,
@@ -2492,7 +2500,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_hcd_injected_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "emultmw", power2param.emultmw)
+    monkeypatch.setattr(
+        fwbs_variables, "p_blkt_multiplication_mw", power2param.p_blkt_multiplication_mw
+    )
 
     monkeypatch.setattr(fwbs_variables, "inuclear", power2param.inuclear)
 
@@ -2510,7 +2520,9 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "etahtp", power2param.etahtp)
 
-    monkeypatch.setattr(fwbs_variables, "emult", power2param.emult)
+    monkeypatch.setattr(
+        fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "p_div_rad_total_mw", power2param.p_div_rad_total_mw
@@ -2668,7 +2680,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_hcd_secondary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", power2param.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tf_electric_supplies_mw",
+        power2param.p_tf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2692,7 +2708,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_div_secondary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "pinjht", power2param.pinjht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_hcd_electric_loss_mw",
+        power2param.p_hcd_electric_loss_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2704,7 +2724,11 @@ def test_power2(power2param, monkeypatch, power):
         heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
     )
 
-    monkeypatch.setattr(pfcoil_variables, "pfwpmw", power2param.pfwpmw)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "p_pf_electric_supplies_mw",
+        power2param.p_pf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_alpha_total_mw", power2param.p_alpha_total_mw
@@ -2860,7 +2884,7 @@ class Power3Param(NamedTuple):
 
     vachtmw: Any = None
 
-    tfacpd: Any = None
+    p_tf_electric_supplies_mw: Any = None
 
     p_tritium_plant_electric_mw: Any = None
 
@@ -2898,7 +2922,7 @@ class Power3Param(NamedTuple):
             pinjmax=120,
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=61.882833632875375,
@@ -2925,7 +2949,7 @@ class Power3Param(NamedTuple):
             pinjmax=120,
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
-            tfacpd=9.1507079104675704,
+            p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=62.237143915360818,
@@ -2989,7 +3013,11 @@ def test_power3(power3param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power3param.vachtmw)
 
-    monkeypatch.setattr(heat_transport_variables, "tfacpd", power3param.tfacpd)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_tf_electric_supplies_mw",
+        power3param.p_tf_electric_supplies_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,

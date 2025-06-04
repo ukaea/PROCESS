@@ -59,9 +59,9 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     pnuc_blkt_ratio_dcll: Any = None
 
-    emult: Any = None
+    f_p_blkt_multiplication: Any = None
 
-    emultmw: Any = None
+    p_blkt_multiplication_mw: Any = None
 
     p_tf_nuclear_heat_mw: Any = None
 
@@ -83,7 +83,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     expected_p_blkt_nuclear_heat_total_mw: Any = None
 
-    expected_emultmw: Any = None
+    expected_p_blkt_multiplication_mw: Any = None
 
 
 @pytest.mark.parametrize(
@@ -107,8 +107,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_blkt_nuclear_heat_total_mw=0,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
-            emult=1.2689999999999999,
-            emultmw=0,
+            f_p_blkt_multiplication=1.2689999999999999,
+            p_blkt_multiplication_mw=0,
             p_tf_nuclear_heat_mw=0,
             n_divertors=1,
             p_neutron_total_mw=1587.7386535917431,
@@ -119,7 +119,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
             expected_p_blkt_nuclear_heat_total_mw=1533.4949914565693,
-            expected_emultmw=325.06710220789364,
+            expected_p_blkt_multiplication_mw=325.06710220789364,
         ),
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=1168.1172772224481,
@@ -139,8 +139,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
-            emult=1.2689999999999999,
-            emultmw=325.06710220789364,
+            f_p_blkt_multiplication=1.2689999999999999,
+            p_blkt_multiplication_mw=325.06710220789364,
             p_tf_nuclear_heat_mw=0,
             n_divertors=1,
             p_neutron_total_mw=1587.2430556964196,
@@ -151,7 +151,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
-            expected_emultmw=324.96563552675644,
+            expected_p_blkt_multiplication_mw=324.96563552675644,
         ),
     ),
 )
@@ -260,9 +260,17 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.pnuc_blkt_ratio_dcll,
     )
 
-    monkeypatch.setattr(fwbs_variables, "emult", dcllneutronicsandpowerparam.emult)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_p_blkt_multiplication",
+        dcllneutronicsandpowerparam.f_p_blkt_multiplication,
+    )
 
-    monkeypatch.setattr(fwbs_variables, "emultmw", dcllneutronicsandpowerparam.emultmw)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "p_blkt_multiplication_mw",
+        dcllneutronicsandpowerparam.p_blkt_multiplication_mw,
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -312,8 +320,8 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
-    assert fwbs_variables.emultmw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_emultmw
+    assert fwbs_variables.p_blkt_multiplication_mw == pytest.approx(
+        dcllneutronicsandpowerparam.expected_p_blkt_multiplication_mw
     )
 
 

@@ -74,11 +74,11 @@ boundu(103) = 10.0
 ixc = 117 *fpsepbqar
 ixc = 113 *ftaucq
 
-ixc = 60 * cpttf
+ixc = 60 * c_tf_turn
 boundl(60) = 6.0e4
 boundu(60) = 9.0e4
 
-*icc = 77  * Max cpttf
+*icc = 77  * Max c_tf_turn
 *ixc = 145 * fcpttf
 *cpttf_max = 9.0e4
 
@@ -301,7 +301,7 @@ fpeakb = 1.0
 bmxlim = 11.2
 dr_tf_plasma_case   = 0.06 * Inboard tf coil case inner \(plasma side) thickness (m)
 dx_tf_side_case   = 0.05 * Inboard tf coil sidewall case thickness (m)
-cpttf    = 6.5e+04 * Tf coil current per turn (a);
+c_tf_turn    = 6.5e+04 * Tf coil current per turn (a);
 ripmax   = 0.6 * Maximum allowable toroidal field ripple amplitude
 tdmptf   = 30.0 * Dump time for tf coil (s)
 n_tf_coils     = 16 * Number of tf coils (default = 50 for stellarators)
@@ -364,7 +364,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fl_h_threshold      =  1.4972E+00
                      fpsepbqar      =  1.0000E+00
                      ftaucq         =  9.1874E-01
-                     cpttf          =  6.5000E+04
+                     c_tf_turn          =  6.5000E+04
                      fcutfsu        =  8.0884E-01
                      ftmargtf       =  1.0000E+00
                      ftmargoh       =  1.0000E+00

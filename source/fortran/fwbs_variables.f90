@@ -38,10 +38,10 @@ module fwbs_variables
   !! total mass of vacuum vessel + cryostat [kg] (calculated if blktmodel>0)
   !# TODO: blktmodel needs consolidating with i_blanket_type
 
-  real(dp) :: emult
+  real(dp) :: f_p_blkt_multiplication
   !! energy multiplication in blanket and shield
 
-  real(dp) :: emultmw
+  real(dp) :: p_blkt_multiplication_mw
   !! power due to energy multiplication in blanket and shield [MW]
 
   real(dp) :: fblss

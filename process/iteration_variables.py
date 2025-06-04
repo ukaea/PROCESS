@@ -101,7 +101,7 @@ ITERATION_VARIABLES = {
     57: IterationVariable("dr_tf_nose_case", fortran.tfcoil_variables, 0.05, 1.0),
     58: IterationVariable("thwcndut", fortran.tfcoil_variables, 0.001, 0.1),
     59: IterationVariable("fcutfsu", fortran.tfcoil_variables, 0.001, 1.0),
-    60: IterationVariable("cpttf", fortran.tfcoil_variables, 0.001, 4.0e4),
+    60: IterationVariable("c_tf_turn", fortran.tfcoil_variables, 0.001, 4.0e4),
     61: IterationVariable(
         "dr_shld_vv_gap_inboard", fortran.build_variables, 0.001, 10.00
     ),

@@ -13,7 +13,7 @@
         "rmajor",
         "dr_tf_inboard",
         "dr_cs",
-        "cpttf",
+        "c_tf_turn",
         "dr_tf_wp",
         "dr_cryostat",
         "dr_shld_outboard",

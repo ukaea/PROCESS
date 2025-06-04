@@ -184,9 +184,9 @@ turns. The number of turns can be parametrized in three different ways :
 
 - <p style='text-align: justify;'>
     **Current per turn parametrization (default):** `i_tf_turns_integer = 0` the
-    user sets the value of the current flowing in each turns `cpttf`. The number
+    user sets the value of the current flowing in each turns `c_tf_turn`. The number
     of turns necessary to carry the total TF coil current is then deduced from
-    `cpttf`. There is no guarantee that a realistic turn configuration (with all
+    `c_tf_turn`. There is no guarantee that a realistic turn configuration (with all
     the turn geometrically fitting in the allocated space) or even have an
     integer number of turn is used with this parametrization. If the turn
     thickness `t_turn_tf` or the cable thickness `t_cable_tf` is defined by
@@ -200,7 +200,7 @@ turns. The number of turns can be parametrized in three different ways :
     fill the WP area is deduced. There is no guarantee that a realistic turn
     configuration (with all the turn geometrically fitting in the allocated
     space) or even have an integer number of turns is used with this parametrization.
-    The current per turn `cpttf` will be overwitten.
+    The current per turn `c_tf_turn` will be overwitten.
   </p>
 - <p style='text-align: justify;'>
     **Cable size parametrization:** the dimension of the SC cable `t_cable_tf`
@@ -211,7 +211,7 @@ turns. The number of turns can be parametrized in three different ways :
     necessary to fill the WP area is then deduced. There is no guarantee that a
     realistic turn configuration (with all the turn geometrically fitting in the
     allocated space) or even have an integer number of turns is used with this
-    parametrization. The current per turn `cpttf` will be overwitten.
+    parametrization. The current per turn `c_tf_turn` will be overwitten.
   </p> 
 - <p style='text-align: justify;'> 
     **Integer turn parametrization:** `i_tf_turns_integer = 1` the user sets the
@@ -1297,7 +1297,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `t_cable_tf`         | TF cable diameter size                                                                                                      | -                  | No default    | m    |
 | `f_t_turn_tf`        | f-value for TF turn squared size constraint (icc = 86)                                                                      | 175                | 1.            | m    |
 | `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
-| `cpttf`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
+| `c_tf_turn`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
 | `thicndut`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `thwcndut`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dhecoil`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |

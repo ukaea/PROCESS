@@ -1336,7 +1336,7 @@ class StressclParam(NamedTuple):
 
     aswp: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     n_tf_coils: Any = None
 
@@ -1479,7 +1479,7 @@ class StressclParam(NamedTuple):
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             aswp=0.29370123076207649,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
@@ -1602,7 +1602,7 @@ class StressclParam(NamedTuple):
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             aswp=0.29370123076207649,
-            cpttf=74026.751437500003,
+            c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
