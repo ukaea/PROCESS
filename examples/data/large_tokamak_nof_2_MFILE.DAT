@@ -727,7 +727,7 @@
  Minimum_allowed_temperature_margin_in_superconductor_(K)_________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
  Actual_temperature_margin_in_superconductor_(K)__________________________ (tmarg)________________________ 1.84958797271245423e+00 OP
  Critical_current_(A)_____________________________________________________ (icrit)________________________ 1.31684724877303030e+05 OP
- Actual_current_(A)_______________________________________________________ (cpttf)________________________ 8.54626750025380170e+04 OP
+ Actual_current_(A)_______________________________________________________ (c_tf_turn)________________________ 8.54626750025380170e+04 OP
  Actual_current_/_critical_current________________________________________ (iooic)________________________ 6.48994597377696492e-01 OP
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (isumatoh)____________________              1    
@@ -978,7 +978,7 @@
  TF_coil_power_conversion_floor_space_(m2)________________________________ (tfcfsp)_______________________ 1.79035896387644812e+03 OP
  TF_coil_power_conv._building_volume_(m3)_________________________________ (tfcbv)________________________ 1.07421537832586891e+04 OP
  TF_coil_AC_inductive_power_demand_(MW)___________________________________ (xpwrmw)_______________________ 1.89487124234004121e+01 OP
- Total_steady_state_AC_power_demand_(MW)__________________________________ (tfacpd)_______________________ 7.04959669427709468e+00 OP
+ Total_steady_state_AC_power_demand_(MW)__________________________________ (p_tf_electric_supplies_mw)_______________________ 7.04959669427709468e+00 OP
  # PF Coils and Central Solenoid: Power and Energy #
  Number_of_PF_coil_circuits_______________________________________________ (pfckts)_______________________ 1.20000000000000000e+01
  Sum_of_PF_power_supply_ratings_(MVA)_____________________________________ (spsmva)_______________________ 3.33907884925543385e+02 OP
@@ -1057,7 +1057,7 @@
  Efficiency_(figure_of_merit)_of_cryogenic_aluminium_plant_is_40%_of_ideal_Carnot_value:_ _______________________________ -2.02032258064516368e+00 OP
  Electric_power_for_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
  # Plant Power / Heat Transport Balance #
- Neutron_power_multiplication_in_blanket__________________________________ (emult)________________________ 1.26899999999999991e+00
+ Neutron_power_multiplication_in_blanket__________________________________ (f_p_blkt_multiplication)________________________ 1.26899999999999991e+00
  Divertor_area_fraction_of_whole_toroid_surface___________________________ (fdiv)_________________________ 1.15000000000000005e-01
  H/CD_apparatus_+_diagnostics_area_fraction_______________________________ (fhcd)_________________________ 0.00000000000000000e+00
  First_wall_area_fraction_________________________________________________ (1-fdiv-fhcd)__________________ 8.85000000000000009e-01
@@ -1080,7 +1080,7 @@
  Heat_removal_from_cryogenic_plant_(MW)___________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
  Heat_removal_from_facilities_(MW)________________________________________ (fachtmw)______________________ 5.55633807269848106e+01 OP
  Coolant_pumping_efficiency_losses_(MW)___________________________________ (p_coolant_pump_loss_total_mw)_____________________ 2.60486326695601917e+01 OP
- Heat_removal_from_injection_power_(MW)___________________________________ (pinjht)_______________________ 7.75278055722339587e+01 OP
+ Heat_removal_from_injection_power_(MW)___________________________________ (p_hcd_electric_loss_mw)_______________________ 7.75278055722339587e+01 OP
  Heat_removal_from_tritium_plant_(MW)_____________________________________ (p_tritium_plant_electric_mw)_____________________ 1.50000000000000000e+01 OP
  Heat_removal_from_vacuum_pumps_(MW)______________________________________ (vachtmw)______________________ 5.00000000000000000e-01 OP
  TF_coil_resistive_power_(MW)_____________________________________________ (tfcmw)________________________ 0.00000000000000000e+00 OP
@@ -1096,7 +1096,7 @@
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 7.75278055722339587e+01 OP
  Total_(MW)_______________________________________________________________ _______________________________ 3.86898310614849436e+02 OP
  Fusion_power_(MW)________________________________________________________ (p_fusion_total_mw)_________________ 1.60956116199862254e+03 OP
- Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (emultmw)______________________ 3.05841320096784727e+02 OP
+ Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (p_blkt_multiplication_mw)______________________ 3.05841320096784727e+02 OP
  Injected_power_(MW)______________________________________________________ (pinjmw.)______________________ 7.75278055722339587e+01 OP
  Ohmic_power_(MW)_________________________________________________________ (p_plasma_ohmic_mw.)___________ 6.88941757462895432e-01 OP
  Power_deposited_in_primary_coolant_by_pump_(MW)__________________________ (p_coolant_pump_total_mw)___________________ 1.74325464788595298e+02 OP
@@ -1114,20 +1114,20 @@
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
  Electric_power_for_tritium_plant_(MW)____________________________________ (p_tritium_plant_electric_mw)_____________________ 1.50000000000000000e+01
  Electric_power_for_cryoplant_(MW)________________________________________ (p_cryo_plant_electric_mw)_______________________ 4.42348527433520431e+01 OP
- Electric_power_for_TF_coils_(MW)_________________________________________ (tfacpd)_______________________ 7.04959669427709468e+00 OP
- Electric_power_for_PF_coils_(MW)_________________________________________ (pfwpmw)_______________________ 1.50704302529968892e+00 OP
+ Electric_power_for_TF_coils_(MW)_________________________________________ (p_tf_electric_supplies_mw)_______________________ 7.04959669427709468e+00 OP
+ Electric_power_for_PF_coils_(MW)_________________________________________ (p_pf_electric_supplies_mw)_______________________ 1.50704302529968892e+00 OP
  All_other_internal_electric_power_requirements_(MW)______________________ (fachtmw)______________________ 5.55633807269848106e+01 OP
  Total_(MW)_______________________________________________________________ (tot_plant_power)______________ 8.67303641193163344e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 8.67303641193163344e+02 OP
  Gross_electrical_output*_(MW)____________________________________________ (p_plant_electric_gross_mw)_____________________ 8.67303641193163458e+02 OP
  Fusion_power_(MW)________________________________________________________ (p_fusion_total_mw)_________________ 1.60956116199862254e+03 OP
- Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (emultmw)______________________ 3.05841320096784727e+02 OP
+ Power_from_energy_multiplication_in_blanket_and_shield_(MW)______________ (p_blkt_multiplication_mw)______________________ 3.05841320096784727e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91540248209540732e+03 OP
  Net_electrical_output_(MW)	______________________________________________ (p_plant_electric_net_mw)_____________________ 3.88019059400626361e+02 OP
  Heat_rejected_by_main_power_conversion_circuit_(MW)______________________ (p_turbine_loss_mw)________________ 1.30095546178974519e+03 OP
  Heat_rejected_by_other_cooling_circuits_(MW)_____________________________ (p_plant_secondary_heat_mw)_____________________ 2.27456408964308480e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 1.91643093015468003e+03 OP
- Net_electric_power_/_total_nuclear_power_(%)_____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+emultmw)_ 2.02578342164484511e+01 OP
+ Net_electric_power_/_total_nuclear_power_(%)_____________________________ (p_plant_electric_net_mw/(p_fusion_total_mw+p_blkt_multiplication_mw)_ 2.02578342164484511e+01 OP
  Net_electric_power_/_total_fusion_power_(%)______________________________ (p_plant_electric_net_mw/p_fusion_total_mw)________ 2.41071335816040531e+01 OP
  Gross_electric_power*_/_high_grade_heat_(%)______________________________ (eta_turbine)________________________ 4.00000000000000000e+01
  Recirculating_power_fraction_____________________________________________ (cirpowfr)_____________________ 5.52614515872639100e-01 OP
@@ -1210,7 +1210,7 @@ boundl(58) = 0.008
 ixc = 59 * fcutfsu
 boundl(59) = 0.50
 boundu(59) = 0.94
-ixc = 60 * cpttf
+ixc = 60 * c_tf_turn
 boundl(60) = 65000.0
 boundu(60) = 90000.0
 ixc = 109 * ralpne
@@ -1552,7 +1552,7 @@ sig_tf_case_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in T
 sig_tf_wp_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
 dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 casths   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
-cpttf    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
+c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
 dhecoil  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;

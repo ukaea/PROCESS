@@ -1373,8 +1373,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Outboard leg current per turn (A)",
-                "(cpttf)",
-                tfcoil_variables.cpttf,
+                "(c_tf_turn)",
+                tfcoil_variables.c_tf_turn,
             )
             po.ovarre(
                 self.outfile,
@@ -1598,8 +1598,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "joints resistive power loss (W)",
-                    "(pres_joints)",
-                    tfcoil_variables.pres_joints,
+                    "(p_tf_joints_resistive)",
+                    tfcoil_variables.p_tf_joints_resistive,
                 )
                 po.ovarre(
                     self.outfile,
@@ -5248,7 +5248,7 @@ def init_tfcoil_variables():
     tfv.cdtfleg = 0.0
     tfv.cforce = 0.0
     tfv.cplen = 0.0
-    tfv.cpttf = 7.0e4
+    tfv.c_tf_turn = 7.0e4
     tfv.cpttf_max = 9.0e4
     tfv.dcase = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
@@ -5340,13 +5340,13 @@ def init_tfcoil_variables():
     tfv.m_tf_bus = 0.0
     tfv.tfckw = 0.0
     tfv.tfcmw = 0.0
-    tfv.tfcpmw = 0.0
-    tfv.tfjtsmw = 0.0
+    tfv.p_cp_resistive_mw = 0.0
+    tfv.p_tf_joints_resistive_mw = 0.0
     tfv.tfcryoarea = 0.0
     tfv.tficrn = 0.0
     tfv.ind_tf_coil = 0.0
     tfv.tfinsgap = 0.01
-    tfv.tflegmw = 0.0
+    tfv.p_tf_leg_resistive_mw = 0.0
     tfv.rho_cp = 0.0
     tfv.rho_tf_leg = 0.0
     tfv.rho_tf_bus = 1.86e-8
@@ -5356,7 +5356,7 @@ def init_tfcoil_variables():
     tfv.n_tf_joints_contact = 6
     tfv.n_tf_joints = 4
     tfv.th_joint_contact = 0.03
-    tfv.pres_joints = 0.0
+    tfv.p_tf_joints_resistive = 0.0
     tfv.len_tf_coil = 0.0
     tfv.eff_tf_cryo = -1.0
     tfv.n_tf_coils = 16.0

@@ -312,7 +312,9 @@ INPUT_VARIABLES = {
     "cowner": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "cplife_input": InputVariable(fortran.cost_variables, float, range=(0.001, 50.0)),
     "cpstflnc": InputVariable(fortran.cost_variables, float, range=(0.01, 30.0)),
-    "cpttf": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 1000000.0)),
+    "c_tf_turn": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.001, 1000000.0)
+    ),
     "cpttf_max": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000000.0)),
     "crane_arm_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
@@ -469,7 +471,9 @@ INPUT_VARIABLES = {
     "elecstore_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "emult": InputVariable(fortran.fwbs_variables, float, range=(1.0, 2.0)),
+    "f_p_blkt_multiplication": InputVariable(
+        fortran.fwbs_variables, float, range=(1.0, 2.0)
+    ),
     "esbldgm3": InputVariable(
         fortran.buildings_variables, float, range=(1000.0, 1000000.0)
     ),

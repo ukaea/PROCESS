@@ -124,7 +124,7 @@ module heat_transport_variables
     real(dp) :: p_plant_electric_gross_mw
     !! gross electric power (MW)
 
-    real(dp) :: pinjht
+    real(dp) :: p_hcd_electric_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
     real(dp) :: pinjmax
@@ -169,7 +169,7 @@ module heat_transport_variables
     real(dp) :: pwpm2
     !! base AC power requirement per unit floor area (W/m2)
 
-    real(dp) :: tfacpd
+    real(dp) :: p_tf_electric_supplies_mw
     !! total steady state TF coil AC power demand (MW)
 
     real(dp) :: tlvpmw

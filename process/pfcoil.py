@@ -3574,7 +3574,7 @@ def init_pfcoil_variables():
     pfv.rhopfbus = 3.93e-8
     pfv.m_pf_coil_max = 0.0
     pfv.r_pf_coil_outer_max = 0.0
-    pfv.pfwpmw = 0.0
+    pfv.p_pf_electric_supplies_mw = 0.0
     pfv.p_cs_resistive_flat_top = 0.0
     pfv.p_pf_coil_resistive_total_flat_top = 0.0
     pfv.r_pf_coil_inner[:] = 0.0
