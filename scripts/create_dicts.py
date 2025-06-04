@@ -29,7 +29,6 @@ from pathlib import Path
 
 import create_dicts_config
 import numpy as np
-from python_dicts import get_python_variables
 
 from process.init import init_all_module_vars
 from process.input import INPUT_VARIABLES
@@ -68,12 +67,9 @@ class Dictionary:
 
 class ProjectDictionary(Dictionary):
     # Dicts that rely on the Ford project object
-    def __init__(self, name, project, python_variables, value_type):
+    def __init__(self, name, project, value_type):
         Dictionary.__init__(self, name)
         self.project = project  # The Ford project object
-        self.python_variables = (
-            python_variables  # List of variables from Python PhysEng models
-        )
         self.value_type = value_type
         # The attribute in the project to make a dict for
 
@@ -83,11 +79,6 @@ class ProjectDictionary(Dictionary):
         for module in self.project.modules:
             for var in module.variables:
                 self.dict[self.name][var.name] = getattr(var, self.value_type)
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = getattr(
-                annotated_variable, self.value_type
-            )
 
 
 class SourceDictionary(Dictionary):
@@ -118,10 +109,8 @@ class HardcodedDictionary(Dictionary):
 
 class VariableDescriptions(ProjectDictionary):
     # Dictionary of variable descriptions
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_DESCRIPTIONS", project, python_variables, "doc"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_DESCRIPTIONS", project, "doc")
 
     def make_dict(self):
         # Assign the variable name key to the var description
@@ -138,9 +127,6 @@ class VariableDescriptions(ProjectDictionary):
                     # Guards against multiple declarations in different modules,
                     # when only one declaration is commented
                     self.dict[self.name][var.name] = desc
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = annotated_variable.units
 
     def post_process(self):
         for var_name, var_desc in self.dict[self.name].items():
@@ -177,10 +163,8 @@ class DefaultValues(ProjectDictionary):
     """
 
     # Dictionary of default values of variables
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_DEFAULT", project, python_variables, "initial"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_DEFAULT", project, "initial")
 
     def make_dict(self):
         # Assign the variable name key to the initial value of the variable
@@ -193,10 +177,6 @@ class DefaultValues(ProjectDictionary):
         # Now fetch values in init subroutines to overwrite Ford's initial
         # values if necessary
         self.parse_init_subroutines()
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = annotated_variable.obj
-            # obj is the initial value also
 
     def process_initial_value(self, var):
         """Process the initial value of a var from Ford.
@@ -508,10 +488,8 @@ class DefaultValues(ProjectDictionary):
 
 class Modules(ProjectDictionary):
     # Dictionary mapping modules to arrays of its module-level variables
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_MODULE", project, python_variables, "name"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_MODULE", project, "name")
 
     def make_dict(self):
         for module in self.project.modules:
@@ -520,13 +498,6 @@ class Modules(ProjectDictionary):
             for var in module.variables:
                 # Add module-level variables
                 self.dict[self.name][module.name].append(var.name)
-
-        for annotated_variable in self.python_variables:
-            if annotated_variable.parent not in self.dict[self.name]:
-                self.dict[self.name][annotated_variable.parent] = []
-            self.dict[self.name][annotated_variable.parent].append(
-                annotated_variable.name
-            )
 
 
 def to_type(string):
@@ -857,16 +828,14 @@ def create_dicts(project):
     dict_objects = []
     # Different dict objects, e.g. variable descriptions
 
-    python_variables = get_python_variables()
-
     init_all_module_vars()
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
     dict_objects.extend([
-        VariableDescriptions(project, python_variables),
-        DefaultValues(project, python_variables),
-        Modules(project, python_variables),
+        VariableDescriptions(project),
+        DefaultValues(project),
+        Modules(project),
         HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
@@ -909,7 +878,7 @@ def create_dicts(project):
                 # set default to be None if variable is not being initialised eg if you
                 # just have `example_double: float` instead of `example_double: float = None`
                 value = getattr(module, node.target.id, None)
-                # JSON doesn't like arrays
+                # JSON doesn't like np arrays
                 if type(value) is np.ndarray:
                     value = value.tolist()
                 initial_values_dict[node.target.id] = value
