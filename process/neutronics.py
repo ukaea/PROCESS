@@ -229,6 +229,16 @@ def expand_macro_neutron_multiplication_xs_into_matrix(
     [i]-th bin producing a neutron in the [j]-bin, recorded as the [i,j] element in the
     matrix.
 
+    Parameters
+    ----------
+    discrete_n2n_xs:
+        The group-wise macroscopic cross-section for the n2n reaction.
+        A 1D numpy array, with len==number of neutron groups.
+    group_structure:
+        The n+1 energy bin boundaries for the n neutron groups, in descending energies.
+    q_value:
+        The difference in q-value.
+
     Returns
     -------
     :
@@ -245,7 +255,7 @@ def expand_macro_neutron_multiplication_xs_into_matrix(
 
 def get_material_nuclear_data(
     material: str, group_structure: list[float]
-) -> tuple[npt.NDArray[np.float64], npt.NDArray]:
+) -> tuple[npt.NDArray[np.float64], npt.NDArray, float]:
     """
     The constants that is directly used.
 
@@ -304,25 +314,18 @@ def get_material_nuclear_data(
     discrete_macro_scattering_xs = calculate_average_macro_xs(
         composition, micro_scattering_xs, density
     )
-    discrete_macro_scattering_xs_matrix = (
+    source_matrix = (
         scattering_weight_matrix(group_structure, avg_atomic_mass).T
         * discrete_macro_scattering_xs
     ).T
-    discrete_n2n_xs = calculate_average_macro_xs(
-        composition, micro_n2n_xs, density
-    )
-    discrete_macro_mult_xs_matrix = (
-        expand_macro_neutron_multiplication_xs_into_matrix(
-            discrete_n2n_xs,
+    for modified_composition_file, modified_density, q_value in n2n_susceptible_species:
+        source_matrix += expand_macro_neutron_multiplication_xs_into_matrix(
+            calculate_average_macro_xs(
+                composition, micro_n2n_xs, density
+            ),
             group_structure,
-            N2N_Q_VALUE,
-            # TODO: need to restructure this as we may have more than one types of (n,2n)
-            # reactions, requiring different values of N2N_Q_VALUE.
+            q_value,
         )
-    )
-    source_matrix = (
-        discrete_macro_scattering_xs_matrix + discrete_macro_mult_xs_matrix
-    )
 
     return discrete_macro_total_xs, source_matrix, avg_atomic_mass
 
