@@ -376,14 +376,15 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Add fusion power to plasma
     axis.text(
-        0.24,
-        0.725,
+        0.22,
+        0.75,
         "$P_{{fus}}$\n"
         f"{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
         zorder=2,
+        fontsize=11,
     )
     # Load the plasma image
     neutron = mpimg.imread(
@@ -397,11 +398,89 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     new_ax.imshow(neutron)
     new_ax.axis("off")
     
+    
+    # Add lost alpha power
+    axis.text(
+        0.22,
+        0.81,
+        "$P_{\\alpha,{loss}}$\n"
+        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+        fontsize=11,
+    )
+
+    # Add radiation power to plasma
+    axis.text(
+        0.22,
+        0.69,
+        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+        fontsize=11,
+    )
+    
+    # Add radiation power to plasma
+    axis.text(
+        0.34,
+        0.71,
+        "$\\gamma$",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+        fontsize=12,
+    )
+    
+    # Add separatrix power to plasma
+    axis.text(
+        0.22,
+        0.63,
+        f"$P_{{{{sep}}}}$\n{mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+        fontsize=11,
+    )
+    
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.95, 0.75),
-        xytext=(0.3, 0.75),
+        xy=(0.4075, 0.65),
+        xytext=(0.3, 0.65),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            color="pink",
+            arrowstyle="-",  # No arrow head
+            linewidth=2.0,
+        ),
+    )
+    
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.405, 0.55),
+        xytext=(0.405, 0.65),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="pink",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.95, 0.76),
+        xytext=(0.31, 0.76),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -412,33 +491,10 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         ),
     )
     
-    # Add lost alpha power
-    axis.text(
-        0.24,
-        0.8,
-        "$P_{\\alpha,{loss}}$\n"
-        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
-        transform=fig.transFigure,
-        horizontalalignment="left",
-        verticalalignment="bottom",
-        zorder=2,
-    )
-
-    # Add radiation power to plasma
-    axis.text(
-        0.24,
-        0.675,
-        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
-        transform=fig.transFigure,
-        horizontalalignment="left",
-        verticalalignment="bottom",
-        zorder=2,
-    )
-    
     axis.annotate(
         "",
-        xy=(0.56, 0.675),
-        xytext=(0.3, 0.675),
+        xy=(0.56, 0.695),
+        xytext=(0.3, 0.695),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -471,8 +527,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.56, 0.825),
-        xytext=(0.3, 0.825),
+        xy=(0.56, 0.83),
+        xytext=(0.3, 0.83),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -589,7 +645,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.25, 0.5),
+        xy=(0.2, 0.5),
         xytext=(0.1, 0.5),
         xycoords=fig.transFigure,
         arrowprops=dict(
@@ -603,7 +659,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
-        0.25,
+        0.2,
         0.435,
         f"$P_{{\\text{{secondary,loss}}}}$:\n {mfile_data.data['p_hcd_secondary_electric_mw'].get_scan(scan)*(1.0-mfile_data.data['eta_hcd_secondary_injector_wall_plug'].get_scan(scan)):.2f} MWe",
         fontsize=9,
@@ -615,13 +671,14 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "facecolor": "lightyellow",
             "alpha": 1.0,
             "linewidth": 2,
+            "linestyle":"dashed",
         },
     )
     
     
     axis.annotate(
         "",
-        xy=(0.25, 0.46),
+        xy=(0.2, 0.46),
         xytext=(0.1, 0.46),
         xycoords=fig.transFigure,
         arrowprops=dict(
@@ -634,7 +691,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         ),
     )
     axis.text(
-        0.25,
+        0.2,
         0.485,
         f"$P_{{\\text{{primary,loss}}}}$:\n {mfile_data.data['p_hcd_primary_electric_mw'].get_scan(scan)*(1.0-mfile_data.data['eta_hcd_primary_injector_wall_plug'].get_scan(scan)):.2f} MWe",
         fontsize=9,
@@ -646,6 +703,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "facecolor": "lightyellow",
             "alpha": 1.0,
             "linewidth": 2,
+            "linestyle":"dashed",
         },
     )
 
@@ -712,9 +770,9 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Low grade heat total
     
     axis.text(
-        0.45,
-        0.2,
-        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MW",
+        0.325,
+        0.225,
+        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="center",
@@ -724,6 +782,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
+            "linestyle": "dashed",
         },
         zorder=4,
     )
@@ -740,14 +799,14 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.95, 0.1, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        [1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(turbine)
     new_ax.axis("off")
     
     axis.text(
-        0.8,
-        0.485,
+        0.9,
+        0.25,
         f"$P_{{\\text{{primary,thermal}}}}$:\n {mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):.2f} MW \n $\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
         fontsize=9,
         verticalalignment="bottom",
@@ -760,6 +819,20 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "linewidth": 2,
         },
     )
+    # Draw a downward arrow from the primary thermal box to the right side of the generator
+    axis.annotate(
+        "",
+        xy=(0.925, 0.165),  # Right side of generator (in figure coords)
+        xytext=(0.97, 0.165),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
     
     # Load the plasma image
     generator = mpimg.imread(
@@ -768,10 +841,54 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [1.1, 0.1, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        [0.96, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(generator)
     new_ax.axis("off")
+    
+    
+    # Generator to gross electric power
+    axis.annotate(
+        "",
+        xy=(0.75, 0.17),
+        xytext=(0.79, 0.17),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Turbine to loss power
+    axis.annotate(
+        "",
+        xy=(0.91, 0.08),
+        xytext=(0.91, 0.13),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle= "dashed",
+        ),
+    )
+    
+    # Generator labels
+    axis.text(
+        0.79,
+        0.16,
+        "Generator",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        zorder=20,
+    )
     
     # Load the plasma image
     pylon = mpimg.imread(
@@ -780,12 +897,104 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [1.15, -0.075, 0.1, 0.1], transform=axis.transAxes, zorder=10
+        [0.925, -0.1, 0.1, 0.1], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(pylon)
     new_ax.axis("off")
     
+    axis.text(
+        0.68,
+        0.15,
+        f"$P_{{\\text{{gross}}}}$:\n {mfile_data.data['p_plant_electric_gross_mw'].get_scan(scan):.2f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
     
+    # Gross to net electric power
+    axis.annotate(
+        "",
+        xy=(0.72, 0.08),
+        xytext=(0.72, 0.15),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    axis.text(
+        0.875,
+        0.05,
+        f"$P_{{\\text{{loss}}}}$:\n {mfile_data.data['p_turbine_loss_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "linestyle":"dashed",
+        },
+    )
+    
+    axis.text(
+        0.68,
+        0.05,
+        f"$P_{{\\text{{net,electric}}}}$:\n {mfile_data.data['p_plant_electric_net_mw'].get_scan(scan):.2f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    axis.text(
+        0.575,
+        0.14,
+        f"$P_{{\\text{{recirc,electric}}}}$:\n {mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):.2f} MWe\n"
+        + f"$f_{{\\text{{recirc}}}}$:\n {mfile_data.data['cirpowfr'].get_scan(scan):.2f}",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    # Gross to recirculated power
+    axis.annotate(
+        "",
+        xy=(0.635, 0.17),
+        xytext=(0.675, 0.17),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
     
     # ================================
     
@@ -848,8 +1057,24 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
+        0.37,
+        0.775,
+        f"$P_{{\\text{{neutron}}}}$:\n {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
         0.46,
-        0.7,
+        0.71,
         f"$P_{{\\text{{FW,rad}}}}$:\n {mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
@@ -863,7 +1088,52 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    axis.text(
+        0.55,
+        0.54,
+        f"Deposited power \n (inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "linewidth": 2,
+        },
+    )
     
+    # Blanket power
+    axis.text(
+        0.7,
+        0.54,
+        f"Deposited power \n (inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.65,
+        0.48,
+        f"Deposited power (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth\n",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
     
     # ==========================================
     
@@ -874,7 +1144,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.7, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+        [0.75, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(blanket)
     new_ax.axis("off")
@@ -890,8 +1160,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
-        0.6,
-        0.8,
+        0.625,
+        0.775,
         f"$P_{{\\text{{Blkt,nuclear}}}}$:\n {mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n $P_{{\\text{{Blkt,multiplication}}}}$:\n {mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW ",
         fontsize=9,
         verticalalignment="bottom",
@@ -926,7 +1196,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     
     axis.text(
-        0.9,
+        0.85,
         0.9,
         "Vacuum Vessel",
         fontsize=11,
@@ -946,15 +1216,15 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.25, 0.4, 0.25, 0.25], transform=axis.transAxes, zorder=10
+        [0.15, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(divertor)
     new_ax.axis("off")
     
     axis.annotate(
         "",
-        xy=(0.4, 0.55),
-        xytext=(0.4, 0.675),
+        xy=(0.37, 0.55),
+        xytext=(0.37, 0.695),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -966,7 +1236,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
-        0.335,
+        0.3,
         0.58,
         f"$P_{{\\text{{div,rad}}}}$:\n {mfile_data.data['p_div_rad_total_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
@@ -983,8 +1253,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     axis.annotate(
         "",
-        xy=(0.45, 0.55),
-        xytext=(0.45, 0.75),
+        xy=(0.435, 0.55),
+        xytext=(0.435, 0.76),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -995,7 +1265,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         ),
     )
     axis.text(
-        0.46,
+        0.45,
         0.58,
         f"$P_{{\\text{{div,nuclear}}}}$:\n {mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
@@ -1009,8 +1279,213 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "linewidth": 2,
         },
     )
+    axis.text(
+        0.46,
+        0.46,
+        f"Deposited power (inc pump):\n {mfile_data.data['p_div_heat_deposited_mw'].get_scan(scan):.2f} MWth\n" +
+        f"Solid angle fraction: {mfile_data.data['f_ster_div_single'].get_scan(scan):.3f}\n" +
+        f"Primary heat fraction: {mfile_data.data['f_p_div_primary_heat'].get_scan(scan):.3f}",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "linewidth": 2,
+        },
+    )
     
     # ===========================================
+    
+    # Coolant pumps
+
+    axis.text(
+        0.5,
+        0.36,
+        f"$P_{{\\text{{div,pump}}}}$: {mfile_data.data['p_div_coolant_pump_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.9,
+        0.5,
+        f"$P_{{\\text{{shld,pump}}}}$: {mfile_data.data['p_shld_coolant_pump_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.875,
+        0.55,
+        f"$P_{{\\text{{shld,pump}}}}$: {mfile_data.data['p_shld_heat_deposited_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "orange",
+            "linewidth": 2,
+        },
+    )
+
+
+
+
+
+    
+    axis.text(
+        0.7,
+        0.225,
+        f"Coolant pumps electric:\n{mfile_data.data['p_coolant_pump_elec_total_mw'].get_scan(scan):.3f} MWe\n"+
+        f"$\\eta$: {mfile_data.data['etahtp'].get_scan(scan):.3f}",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    axis.text(
+        0.7,
+        0.35,
+        f"Coolant pumps total:\n{mfile_data.data['p_coolant_pump_total_mw'].get_scan(scan):.3f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    axis.text(
+        0.5,
+        0.25,
+        f"Coolant pumps losses total:\n {mfile_data.data['p_coolant_pump_loss_total_mw'].get_scan(scan):.3f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+            "linestyle": "dashed",
+        },
+    )
+    
+    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    axis.annotate(
+        "",
+        xy=(0.4, 0.3),
+        xytext=(0.45, 0.3),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # ===========================================
+    # Plant core systems
+    
+    # Cryo Plant
+    axis.text(
+        0.05,
+        0.15,
+        f"Cryo Plant:\n {mfile_data.data['p_cryo_plant_electric_mw'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    # Cryo Plant
+    axis.text(
+        0.05,
+        0.05,
+        f"Tritium Plant:\n {mfile_data.data['p_tritium_plant_electric_mw'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    # Vacuum Pumps
+    axis.text(
+        0.25,
+        0.05,
+        f"Vacuum pumps:\n {mfile_data.data['vachtmw'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    # Vacuum Pumps
+    axis.text(
+        0.35,
+        0.05,
+        f"Plant base load:\n {mfile_data.data['fcsht'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
     
     
 
