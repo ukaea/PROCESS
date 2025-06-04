@@ -344,6 +344,8 @@ OBS_VARS = {
     "etath": "eta_turbine",
     "trithtmw": "p_tritium_plant_electric_mw",
     "iprimshld": "i_shld_primary_heat",
+    "cpttf": "c_tf_turn",
+    "emult": "f_p_blkt_multiplication",
 }
 
 OBS_VARS_HELP = {

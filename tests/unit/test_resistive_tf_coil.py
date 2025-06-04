@@ -38,7 +38,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     fcoolcp: Any = None
 
-    cpttf: Any = None
+    c_tf_turn: Any = None
 
     cdtfleg: Any = None
 
@@ -85,7 +85,7 @@ class ResTfInternalGeomParam(NamedTuple):
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
-            cpttf=70000,
+            c_tf_turn=70000,
             cdtfleg=0,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0,
@@ -112,7 +112,7 @@ class ResTfInternalGeomParam(NamedTuple):
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
             fcoolcp=0.12725,
-            cpttf=2125000,
+            c_tf_turn=2125000,
             cdtfleg=421788350.27812088,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0.00030678028680367151,
@@ -174,7 +174,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "fcoolcp", restfinternalgeomparam.fcoolcp)
 
-    monkeypatch.setattr(tfcoil_variables, "cpttf", restfinternalgeomparam.cpttf)
+    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", restfinternalgeomparam.c_tf_turn)
 
     monkeypatch.setattr(tfcoil_variables, "cdtfleg", restfinternalgeomparam.cdtfleg)
 
@@ -218,7 +218,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_n_tf_turn
     )
 
-    assert tfcoil_variables.cpttf == pytest.approx(
+    assert tfcoil_variables.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 
@@ -238,7 +238,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_n_tf_turn
     )
 
-    assert tfcoil_variables.cpttf == pytest.approx(
+    assert tfcoil_variables.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 
@@ -273,7 +273,7 @@ class TfResHeatingParam(NamedTuple):
     rho_tf_joints: Any = None
     p_tf_leg_resistive: Any = None
     p_cp_resistive: Any = None
-    pres_joints: Any = None
+    p_tf_joints_resistive: Any = None
     n_tf_joints_contact: Any = None
     n_tf_joints: Any = None
     n_tf_coils: Any = None
@@ -327,7 +327,7 @@ class TfResHeatingParam(NamedTuple):
             rho_tf_joints=2.5000000000000002e-10,
             p_tf_leg_resistive=0,
             p_cp_resistive=0,
-            pres_joints=0,
+            p_tf_joints_resistive=0,
             n_tf_joints_contact=6,
             n_tf_joints=4,
             n_tf_coils=12,
@@ -377,7 +377,7 @@ class TfResHeatingParam(NamedTuple):
             rho_tf_joints=2.5000000000000002e-10,
             p_tf_leg_resistive=332643748.67243439,
             p_cp_resistive=432477095.0716282,
-            pres_joints=1944336.7995005273,
+            p_tf_joints_resistive=1944336.7995005273,
             n_tf_joints_contact=6,
             n_tf_joints=4,
             n_tf_coils=12,
@@ -480,7 +480,11 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfcoil_variables, "p_cp_resistive", tfresheatingparam.p_cp_resistive
     )
 
-    monkeypatch.setattr(tfcoil_variables, "pres_joints", tfresheatingparam.pres_joints)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "p_tf_joints_resistive",
+        tfresheatingparam.p_tf_joints_resistive,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "n_tf_joints_contact", tfresheatingparam.n_tf_joints_contact
@@ -564,7 +568,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfresheatingparam.expected_p_cp_resistive
     )
 
-    assert tfcoil_variables.pres_joints == pytest.approx(
+    assert tfcoil_variables.p_tf_joints_resistive == pytest.approx(
         tfresheatingparam.expected_pres_joints
     )
 

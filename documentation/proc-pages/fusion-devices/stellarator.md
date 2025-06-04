@@ -209,7 +209,7 @@ The fully three-dimensional shape of the coils is assumed to be fixed, but the s
 
 The stellarator coils are assumed to be superconducting - no resistive coil calculations are performed. The critical field at the superconductor is calculated using circular approximations for the coils in the inductance and field calculations, and the limit is enforced automatically. All superconductor materials that are available for tokamaks are also available for stellarators.
 
-The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `dr_tf_nose_case`, no. 57; `cpttf`, no. 60 and `dx_tf_inboard_out_toroidal`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`dr_tf_nose_case` is required as input); the code will stop with an error message of this is attempted.
+The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `dr_tf_nose_case`, no. 57; `c_tf_turn`, no. 60 and `dx_tf_inboard_out_toroidal`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`dr_tf_nose_case` is required as input); the code will stop with an error message of this is attempted.
 The conduit insulation thickness (`thicndut`), as well as the steel thickness around each conductor (`thwcndut`) should be given as input parameters together with the dimension of the conductor area (`t_turn_tf`).
 
 
@@ -256,7 +256,7 @@ There are two blanket modules implemented in stellarator-PROCESS at the moment,
 The KIT HCPB model is documented elsewhere, for the simple module the following set of input parameters should be provided:
 ```
 blkttype = 0,1,2 (only relevant for mass calculations)
-emult = 1.18 *Energy multiplication in blanket and shield
+f_p_blkt_multiplication = 1.18 *Energy multiplication in blanket and shield
 etahtp = 1. *Electrical efficiency of primary coolant pumps
 fblbe = 0.47 *Beryllium fraction of blanket by volume (only relevant for mass calculations)
 fblli2o = 0.07 *Lithium oxide fraction of blanket by volume (only relevant for mass calculations)

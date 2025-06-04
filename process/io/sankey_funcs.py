@@ -50,14 +50,14 @@ def plot_full_sankey(
     )  # Alpha particle and HC&D power (MW)
 
     # Used in [NEUTRONICS]
-    emultmw = m_file.data["emultmw"].get_scan(
+    p_blkt_multiplication_mw = m_file.data["p_blkt_multiplication_mw"].get_scan(
         -1
     )  # Energy multiplication in blanket (MW)
     p_blkt_nuclear_heat_total_mw = m_file.data["p_blkt_nuclear_heat_total_mw"].get_scan(
         -1
     )  # Total Nuclear heating in the blanket (MW)
     pnucemblkt = (
-        p_blkt_nuclear_heat_total_mw - emultmw
+        p_blkt_nuclear_heat_total_mw - p_blkt_multiplication_mw
     )  # External nuclear heating in blanket (MW)
     p_div_nuclear_heat_total_mw = m_file.data["p_div_nuclear_heat_total_mw"].get_scan(
         -1
@@ -347,7 +347,7 @@ def plot_full_sankey(
         """# -------------------------------------- BLANKET - 6 --------------------------------------
 
         # Blanket - Energy mult., Energy Mult., pumping power, Blanket
-        BLANKET = [pnucemblkt, emultmw, htpmwblkt, -p_blkt_heat_deposited_mw]
+        BLANKET = [pnucemblkt, p_blkt_multiplication_mw, htpmwblkt, -p_blkt_heat_deposited_mw]
         sankey.add(flows=BLANKET,
                    # left(in), down(in), down(in), right(out)
                    orientations=[0, -1, -1, 0],
@@ -427,7 +427,7 @@ def plot_full_sankey(
         """# ---------------------------------------- HCD - 11 ----------------------------------------
 
         # HCD loss + injected, -injected, -HCD loss
-        HCD = [pinjht+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -pinjht]
+        HCD = [p_hcd_electric_loss_mw+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -p_hcd_electric_loss_mw]
         assert(sum(HCD)**2 < 0.5)
         sankey.add(flows=HCD,
                    # [down(in), up(out), down(out)]
@@ -480,10 +480,10 @@ def plot_full_sankey(
                 t.set_position((pos[0]+0.5*(p_alpha_total_mw/totalplasma)+0.05,pos[1]-0.1))
             if t == diagrams[1].texts[0]: # H&CD power
                 t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*((pinjht+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
+                t.set_position((pos[0]-0.5*((p_hcd_electric_loss_mw+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
             if t == diagrams[1].texts[2]: # H&CD losses
                 t.set_horizontalalignment('left')
-                t.set_position((pos[0]+(pinjht/totalplasma)+0.05,pos[1]))
+                t.set_position((pos[0]+(p_hcd_electric_loss_mw/totalplasma)+0.05,pos[1]))
             if t == diagrams[2].texts[1]: # Energy Multiplication
                 t.set_horizontalalignment('center')
                 t.set_position((pos[0],pos[1]-0.2))
@@ -571,7 +571,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_cp_shield_nuclear_heat_mw = m_file.data["p_cp_shield_nuclear_heat_mw"].get_scan(
         -1
     )  # nuclear heating in the CP shield (MW)
-    emultmw = m_file.data["emultmw"].get_scan(-1)  # Blanket energy multiplication (MW)
+    p_blkt_multiplication_mw = m_file.data["p_blkt_multiplication_mw"].get_scan(
+        -1
+    )  # Blanket energy multiplication (MW)
     p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(-1)  # Alpha power (MW)
     f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
         -1
@@ -594,7 +596,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         + p_shld_nuclear_heat_mw
         + p_fw_rad_total_mw
         + p_fw_alpha_mw
-        - emultmw
+        - p_blkt_multiplication_mw
     )
 
     if itart == 0:
@@ -633,14 +635,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # cryogenic plant power (MW)
     fachtmw = m_file.data["fachtmw"].get_scan(-1)  # facility heat removal (MW)
-    tfacpd = m_file.data["tfacpd"].get_scan(
+    p_tf_electric_supplies_mw = m_file.data["p_tf_electric_supplies_mw"].get_scan(
         -1
     )  # total steady state TF coil AC power demand (MW)
     p_tritium_plant_electric_mw = m_file.data["p_tritium_plant_electric_mw"].get_scan(
         -1
     )  # power required for tritium processing (MW)
     vachtmw = m_file.data["vachtmw"].get_scan(-1)  # vacuum pump power (MW)
-    pfwpmw = m_file.data["pfwpmw"].get_scan(
+    p_pf_electric_supplies_mw = m_file.data["p_pf_electric_supplies_mw"].get_scan(
         -1
     )  # Total mean wall plug power for PFC & CS (MW)
     p_cp_coolant_pump_elec_mw = (
@@ -651,10 +653,10 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_plant_core_systems_elec_mw = (
         p_cryo_plant_electric_mw
         + fachtmw
-        + tfacpd
+        + p_tf_electric_supplies_mw
         + p_tritium_plant_electric_mw
         + vachtmw
-        + pfwpmw
+        + p_pf_electric_supplies_mw
         + p_cp_coolant_pump_elec_mw
     )
     p_hcd_electric_total_mw = m_file.data["p_hcd_electric_total_mw"].get_scan(
@@ -721,14 +723,14 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # Blanket deposited power, blanket energy multiplication, - primary heat
         blanketsetc = [
             totalblktetc + totaldivetc + totalcpetc,
-            emultmw,
+            p_blkt_multiplication_mw,
             -pthermmw_p - totaldivetc - totalcpetc - p_shld_nuclear_heat_mw,
         ]
         # Check if difference >2 between primary heat and blanket + blanket multiplication
         if _ == 1 and sqrt(sum(blanketsetc) ** 2) > 2:
             print(
                 "blankets etc. power balance",
-                totalblktetc + emultmw,
+                totalblktetc + p_blkt_multiplication_mw,
                 -pthermmw_p - p_shld_nuclear_heat_mw,
             )
         sankey.add(

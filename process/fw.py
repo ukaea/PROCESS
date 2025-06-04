@@ -634,8 +634,8 @@ def init_fwbs_variables():
     fwbs_variables.denstl = 7800.0
     fwbs_variables.denwc = 15630.0
     fwbs_variables.dewmkg = 0.0
-    fwbs_variables.emult = 1.269
-    fwbs_variables.emultmw = 0.0
+    fwbs_variables.f_p_blkt_multiplication = 1.269
+    fwbs_variables.p_blkt_multiplication_mw = 0.0
     fwbs_variables.fblss = 0.09705
     fwbs_variables.f_ster_div_single = 0.115
     fwbs_variables.f_a_fw_hcd = 0.0

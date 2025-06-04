@@ -131,7 +131,7 @@ var_dicts = {
         description="Thickness of steel jacket turn",
         units="",
     ),
-    "cpttf": VariableMetadata(
+    "c_tf_turn": VariableMetadata(
         latex=r"$I_\mathrm{TF}^\mathrm{turn}$ [$A$]",
         description="TF turn current",
         units="A",

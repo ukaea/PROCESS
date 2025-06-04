@@ -318,7 +318,7 @@ class Caller:
         self.models.power.pfpwr(output=False)
 
         # Plant heat transport part 1
-        self.models.power.power1()
+        self.models.power.component_thermal_powers()
 
         # Vacuum model
         self.models.vacuum.run(output=False)
