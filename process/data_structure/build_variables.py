@@ -1,4 +1,4 @@
-ripflag: int
+ripflag: int = None
 
 
 def init_build_variables():

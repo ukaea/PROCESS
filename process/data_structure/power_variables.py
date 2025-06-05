@@ -1,44 +1,44 @@
-qmisc: float
+qmisc: float = None
 
-qac: float
+qac: float = None
 
-qcl: float
+qcl: float = None
 
-qss: float
+qss: float = None
 
-p_shld_coolant_pump_elec_mw: float
+p_shld_coolant_pump_elec_mw: float = None
 
-p_div_coolant_pump_elec_mw: float
+p_div_coolant_pump_elec_mw: float = None
 
-p_coolant_pump_total_mw: float
+p_coolant_pump_total_mw: float = None
 
-p_fw_blkt_heat_deposited_mw: float
+p_fw_blkt_heat_deposited_mw: float = None
 
-p_fw_blkt_coolant_pump_elec_mw: float
+p_fw_blkt_coolant_pump_elec_mw: float = None
 
-p_blkt_breeder_pump_elec_mw: float
+p_blkt_breeder_pump_elec_mw: float = None
 
-p_div_heat_deposited_mw: float
+p_div_heat_deposited_mw: float = None
 
-p_fw_heat_deposited_mw: float
+p_fw_heat_deposited_mw: float = None
 
-p_blkt_heat_deposited_mw: float
+p_blkt_heat_deposited_mw: float = None
 
-p_blkt_liquid_breeder_heat_deposited_mw: float
+p_blkt_liquid_breeder_heat_deposited_mw: float = None
 
-p_shld_heat_deposited_mw: float
+p_shld_heat_deposited_mw: float = None
 
-p_cp_coolant_pump_elec_mw: float
+p_cp_coolant_pump_elec_mw: float = None
 
-p_plant_core_systems_elec_mw: float
+p_plant_core_systems_elec_mw: float = None
 
-f_p_div_primary_heat: float
+f_p_div_primary_heat: float = None
 
-delta_eta: float
+delta_eta: float = None
 
-i_div_primary_heat: float
+i_div_primary_heat: float = None
 
-p_turbine_loss_mw: float
+p_turbine_loss_mw: float = None
 
 
 def init_power_variables():
