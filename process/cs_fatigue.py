@@ -10,13 +10,57 @@ class CsFatigue:
 
     def ncycle(
         self,
-        max_hoop_stress,
-        residual_stress,
-        t_crack_vertical,
-        t_structural_vertical,
-        t_structural_radial,
-    ):
-        """ """
+        max_hoop_stress: float,
+        residual_stress: float,
+        t_crack_vertical: float,
+        t_structural_vertical: float,
+        t_structural_radial: float,
+    ) -> tuple[float, float]:
+        """
+        Calculate the number of cycles to failure and the initial radial crack size
+        for a given set of material and stress parameters.
+        This method uses the Paris law and Walker equation to estimate the fatigue
+        life of a material under cyclic loading conditions. It iteratively calculates
+        the crack growth and the number of cycles required for the crack to reach
+        critical dimensions or for the stress intensity factor to exceed the fracture
+        toughness.
+
+        :param max_hoop_stress:
+            Maximum hoop stress applied to the material (in Pascals).
+        :type max_hoop_stress: float
+        :param residual_stress:
+            Residual stress present in the material (in Pascals).
+        :type residual_stress: float
+        :param t_crack_vertical:
+            Initial vertical crack size (in meters).
+        :type t_crack_vertical: float
+        :param t_structural_vertical:
+            Structural vertical thickness of the material (in meters).
+        :type t_structural_vertical: float
+        :param t_structural_radial:
+            Structural radial thickness of the material (in meters).
+        :type t_structural_radial: float
+        :return:
+            A tuple containing:
+            - The number of cycles to failure (float).
+            - The initial radial crack size (float, in meters).
+        :rtype: tuple[float, float]
+        :raises ValueError:
+            If input parameters are invalid or lead to non-physical results.
+
+        :note:
+            The method assumes default parameters for SS 316LN material as described
+            in the reference:
+            X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
+            vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705.
+
+        :references:
+            - Fatigue Stress Assessment in Fusion Magnet Components,
+              J. Lorenzo, X. Sarasola, M. Mantsinen.
+            - https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
+
+        """
+
         # Default Parameters for SS 316LN from
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705
@@ -89,19 +133,41 @@ class CsFatigue:
 
     @staticmethod
     @njit(cache=True)
-    def embedded_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an embedded elliptical efect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+    def embedded_stress_intensity_factor(
+        hoop_stress: float, t: float, w: float, a: float, c: float, phi: np.ndarray
+    ) -> float:
+        """
+        Calculate the embedded stress intensity factor for an elliptical crack in a plate.
+        This function computes the stress intensity factor for an embedded elliptical crack
+        in a finite plate subjected to hoop stress. The calculation is based on geometric
+        correction factors and stress intensity factor equations for cracks in three-dimensional
+        finite bodies.
+
+        :param hoop_stress: Change in hoop stress over the cycle.
+        :type hoop_stress: float
+        :param t: Plate thickness.
+        :type t: float
+        :param w: Plate width.
+        :type w: float
+        :param a: Crack depth (in the thickness direction).
+        :type a: float
+        :param c: Crack length (in the width direction).
+        :type c: float
+        :param phi: Array of angles (in radians) for which the stress intensity factor is computed.
+        :type phi: np.ndarray
+        :return: The computed stress intensity factor.
+        :rtype: float
+
+
+        :notes:
+
+        :References:
+            - J. C. Newman, I. S. Raju, "Stress-Intensity Factor Equations for Cracks in
+              Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads."
+              https://core.ac.uk/download/pdf/42849129.pdf
+            - C. Jong, "Magnet Structural Design Criteria Part 1: Main Structural Components
+              and Welds," 2012.
+        """
 
         # reuse of calc
         a_c = a / c
@@ -149,19 +215,52 @@ class CsFatigue:
 
     @staticmethod
     @njit(cache=True)
-    def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an surface semi elliptical defect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+    def surface_stress_intensity_factor(
+        hoop_stress: float, t: float, w: float, a: float, c: float, phi: np.ndarray
+    ) -> float:
+        """
+        Calculate the surface stress intensity factor for a semi-elliptical surface crack
+        in a finite plate subjected to hoop stress.
+        This function computes the stress intensity factor (SIF) for a surface crack
+        based on the geometry and loading conditions. It assumes a semi-elliptical
+        defect geometry and uses equations derived from the references provided.
+
+        :param hoop_stress:
+            The change in hoop stress over the cycle (in MPa or appropriate units).
+        :type hoop_stress: float
+        :param t:
+            Plate thickness (in mm or appropriate units).
+        :type t: float
+        :param w:
+            Plate width (in mm or appropriate units).
+        :type w: float
+        :param a:
+            Crack depth in the thickness direction (in mm or appropriate units).
+        :type a: float
+        :param c:
+            Crack length in the width direction (in mm or appropriate units).
+        :type c: float
+        :param phi:
+            Array of angles (in radians) along the crack front where the SIF is evaluated.
+        :type phi: np.ndarray
+        :return:
+            The surface stress intensity factor (in MPa√m or appropriate units).
+        :rtype: float
+        :raises ValueError:
+            If invalid input parameters are provided (e.g., negative dimensions).
+
+        :notes:
+            - The function assumes a semi-elliptical surface crack geometry.
+            - The bending stress is currently set to zero and can be modified as needed.
+
+        :References:
+            - J. C. Newman, I. S. Raju, "Stress-Intensity Factor Equations for Cracks in
+              Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
+              (https://core.ac.uk/download/pdf/42849129.pdf)
+            - C. Jong, "Magnet Structural Design Criteria Part 1: Main Structural
+              Components and Welds", 2012.
+
+        """
 
         bending_stress = 0.0e0  # * 3.0 * M / (w*d**2.0)
 
