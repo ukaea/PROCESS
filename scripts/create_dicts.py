@@ -855,7 +855,7 @@ def create_dicts(project):
         dict_object.post_process()
         dict_object.publish()
 
-    variable_module_location = Path.cwd().parent / "process/data_structure"
+    variable_module_location = Path(__file__).parent.parent / "process/data_structure"
     module_names = [
         file.name for file in variable_module_location.iterdir() if file.is_file()
     ]
@@ -870,6 +870,8 @@ def create_dicts(project):
         variable_names = []
         var_names_and_descriptions = {}
         dict_module_entry = {}
+        variable_types = {}
+
         # get the variable names and initial values
         for node in ast.walk(module_tree):
             if isinstance(node, ast.AnnAssign):
@@ -877,32 +879,44 @@ def create_dicts(project):
                 # (either is None, or value initialised in init_variables fn)
                 # set default to be None if variable is not being initialised eg if you
                 # just have `example_double: float` instead of `example_double: float = None`
-                value = getattr(module, node.target.id, None)
+                initial_value = getattr(module, node.target.id, None)
                 # JSON doesn't like np arrays
-                if type(value) is np.ndarray:
-                    value = value.tolist()
-                initial_values_dict[node.target.id] = value
-                expr = ast.Expression(body=node.value)
-                ast.fix_missing_locations(expr)
-                config = eval(compile(expr, "", "eval"))
-                if type(config) is np.ndarray:
-                    config = config.tolist()
-                if config is not value and config is not None:
-                    initial_values_dict[node.target.id] = config
+                if type(initial_value) is np.ndarray:
+                    initial_value = initial_value.tolist()
+                initial_values_dict[node.target.id] = initial_value
                 # get the variable names
                 var_name = node.target.id
                 # add variable name to the list if not already there
                 if var_name not in variable_names:
                     variable_names.append(var_name)
+                # Now want to get the types of these variables
+                if isinstance(node.annotation, ast.Subscript):
+                    if node.annotation.value.id == "list":
+                        if node.annotation.slice.id == "str":
+                            var_type = "string_array"
+                        if node.annotation.slice.id == "float":
+                            var_type = "real_array"
+                        if node.annotation.slice.id == "int":
+                            var_type = "int_array"
+                else:
+                    if node.annotation.id == "float":
+                        var_type = "real_variable"
+                    if node.annotation.id == "int":
+                        var_type = "int_variable"
 
+                variable_types[node.target.id] = var_type
         # get the variable descriptions
-        for a, b in pairwise(module_tree.body):
-            if isinstance(a, ast.AnnAssign) and isinstance(b, ast.Expr):
+        # need to check for pairs of ast.AnnAssign followed by an ast.Expr - this is the form of
+        # a variable being declared followed by a docstring expression. can get these var descriptions
+        # from here, and if there is no ast.Expr immediately after an ast.AnnAssign then this var does not
+        # have a docstring and so set the description to be ""
+        for node1, node2 in pairwise(module_tree.body):
+            if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
                 # if docstring immediately follows the variable declaration, add docstring to descriptions dict
-                var_names_and_descriptions[a.target.id] = b.value.value
-            if isinstance(a, ast.AnnAssign) and not isinstance(b, ast.Expr):
+                var_names_and_descriptions[node1.target.id] = node2.value.value
+            if isinstance(node1, ast.AnnAssign) and not isinstance(node2, ast.Expr):
                 # if no docstring for variable, have a blank description
-                var_names_and_descriptions[a.target.id] = ""
+                var_names_and_descriptions[node1.target.id] = ""
         # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
         # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
         lastvar = module_tree.body[-1]
@@ -913,11 +927,12 @@ def create_dicts(project):
         ):
             var_names_and_descriptions[lastvar.target.id] = ""
         # Add to relevant dicts
-        dict_module_entry[f"{module_name.replace('.py', '')}"] = variable_names
+        dict_module_entry[module_name.replace(".py", "")] = variable_names
 
         output_dict["DICT_MODULE"].update(dict_module_entry)
         output_dict["DICT_DEFAULT"].update(initial_values_dict)
         output_dict["DICT_DESCRIPTIONS"].update(var_names_and_descriptions)
+        output_dict["DICT_VAR_TYPE"].update(variable_types)
 
     # Save output_dict as JSON, to be used by utilities scripts
     with open(DICTS_FILENAME, "w") as dicts_file:

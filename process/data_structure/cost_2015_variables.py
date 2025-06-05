@@ -1,24 +1,24 @@
 import numpy as np
 
-mean_electric_output: float = None
+mean_electric_output: float
 
-annual_electric_output: float = None
+annual_electric_output: float
 
-maintenance: float = None
+maintenance: float
 
-total_costs: float = None
+total_costs: float
 
-s_label: np.ndarray = None
+s_label: list[str]
 
-s_kref: np.ndarray = None
+s_kref: list[float]
 
-s_k: np.ndarray = None
+s_k: list[float]
 
-s_cref: np.ndarray = None
+s_cref: list[float]
 
-s_cost: np.ndarray = None
+s_cost: list[float]
 
-s_cost_factor: np.ndarray = None
+s_cost_factor: list[float]
 
 
 def init_cost_2015_variables():

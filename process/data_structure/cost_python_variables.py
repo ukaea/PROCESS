@@ -1,199 +1,199 @@
-c228: float = None
+c228: float
 """c228 account cost"""
 
-c229: float = None
+c229: float
 """c229 account cost"""
 
-c23: float = None
+c23: float
 """c23 account cost"""
 
-c25: float = None
+c25: float
 """c25 account cost"""
 
-c26: float = None
+c26: float
 """c26 account cost"""
 
-cindrt: float = None
+cindrt: float
 """cindrt account cost"""
 
-ccont: float = None
+ccont: float
 """ccont account cost"""
 
-c226: float = None
+c226: float
 
-c2261: float = None
+c2261: float
 
-c2262: float = None
+c2262: float
 
-c2263: float = None
+c2263: float
 
-c227: float = None
+c227: float
 
-c2271: float = None
+c2271: float
 
-c2272: float = None
+c2272: float
 
-c2273: float = None
+c2273: float
 
-c2274: float = None
+c2274: float
 
-c24: float = None
+c24: float
 
-c241: float = None
+c241: float
 
-c242: float = None
+c242: float
 
-c243: float = None
+c243: float
 
-c244: float = None
+c244: float
 
-c245: float = None
+c245: float
 
-c21: float = None
+c21: float
 
-c211: float = None
+c211: float
 
-c212: float = None
+c212: float
 
-c213: float = None
+c213: float
 
-c214: float = None
+c214: float
 
-c2141: float = None
+c2141: float
 
-c2142: float = None
+c2142: float
 
-c215: float = None
+c215: float
 
-c216: float = None
+c216: float
 
-c217: float = None
+c217: float
 
-c2171: float = None
+c2171: float
 
-c2172: float = None
+c2172: float
 
-c2173: float = None
+c2173: float
 
-c2174: float = None
+c2174: float
 
-c22: float = None
+c22: float
 
-c2211: float = None
+c2211: float
 
-c2212: float = None
+c2212: float
 
-c22121: float = None
+c22121: float
 
-c22122: float = None
+c22122: float
 
-c22123: float = None
+c22123: float
 
-c22124: float = None
+c22124: float
 
-c22125: float = None
+c22125: float
 
-c22126: float = None
+c22126: float
 
-c22127: float = None
+c22127: float
 
-c2213: float = None
+c2213: float
 
-c22131: float = None
+c22131: float
 
-c22132: float = None
+c22132: float
 
-c2214: float = None
+c2214: float
 
-c2215: float = None
+c2215: float
 
-c2221: float = None
+c2221: float
 
-c22211: float = None
+c22211: float
 
-c22212: float = None
+c22212: float
 
-c22213: float = None
+c22213: float
 
-c22214: float = None
+c22214: float
 
-c22215: float = None
+c22215: float
 
-c2222: float = None
+c2222: float
 
-c22221: float = None
+c22221: float
 
-c22222: float = None
+c22222: float
 
-c22223: float = None
+c22223: float
 
-c22224: float = None
+c22224: float
 
-c2223: float = None
+c2223: float
 
-c223: float = None
+c223: float
 
-c2231: float = None
+c2231: float
 
-c2232: float = None
+c2232: float
 
-c2233: float = None
+c2233: float
 
-c2234: float = None
+c2234: float
 
-c224: float = None
+c224: float
 
-c2241: float = None
+c2241: float
 
-c2242: float = None
+c2242: float
 
-c2243: float = None
+c2243: float
 
-c2244: float = None
+c2244: float
 
-c2245: float = None
+c2245: float
 
-c2246: float = None
+c2246: float
 
-c225: float = None
+c225: float
 
-c2251: float = None
+c2251: float
 
-c22511: float = None
+c22511: float
 
-c22512: float = None
+c22512: float
 
-c22513: float = None
+c22513: float
 
-c22514: float = None
+c22514: float
 
-c22515: float = None
+c22515: float
 
-c2252: float = None
+c2252: float
 
-c22521: float = None
+c22521: float
 
-c22522: float = None
+c22522: float
 
-c22523: float = None
+c22523: float
 
-c22524: float = None
+c22524: float
 
-c22525: float = None
+c22525: float
 
-c22526: float = None
+c22526: float
 
-c22527: float = None
+c22527: float
 
-c2253: float = None
+c2253: float
 
-chx: float = None
+chx: float
 
-cpp: float = None
+cpp: float
 
-cppa: float = None
+cppa: float
 
-c22128: float = None
+c22128: float
 
 
 # TODO rename

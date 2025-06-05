@@ -4,6 +4,7 @@ import numpy as np
 
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
+from process.data_structure import build_variables as build_variables_python
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -26,7 +27,7 @@ class Build:
     def __init__(self):
         self.outfile = constants.nout
         self.mfile = constants.mfile
-        self.ripflag = 0
+        self.ripflag = build_variables_python.ripflag
 
     def portsz(self):
         """Port size calculation
