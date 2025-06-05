@@ -913,7 +913,7 @@ def create_dicts(project):
         ):
             var_names_and_descriptions[lastvar.target.id] = ""
         # Add to relevant dicts
-        dict_module_entry[f"{module_name}_variables_annotated_vars"] = variable_names
+        dict_module_entry[f"{module_name.replace('.py', '')}"] = variable_names
 
         output_dict["DICT_MODULE"].update(dict_module_entry)
         output_dict["DICT_DEFAULT"].update(initial_values_dict)
