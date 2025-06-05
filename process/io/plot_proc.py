@@ -451,7 +451,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.4075, 0.65),
+        xy=(0.3725, 0.65),
         xytext=(0.3, 0.65),
         xycoords=fig.transFigure,
         arrowprops=dict(
@@ -464,8 +464,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     # Draw two horizontal dashed arrows coming from the right of the power supply box
     axis.annotate(
         "",
-        xy=(0.405, 0.55),
-        xytext=(0.405, 0.65),
+        xy=(0.37, 0.55),
+        xytext=(0.37, 0.65),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -550,7 +550,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     axis.text(
         0.0725,
-        0.85,
+        0.83,
         textstr_hcd_primary,
         fontsize=9,
         verticalalignment="bottom",
@@ -675,6 +675,52 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    # Draw an arrow to the low grade heat
+    axis.annotate(
+        "",
+        xy=(0.25, 0.3),  # Right side of generator (in figure coords)
+        xytext=(0.25, 0.43),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    # Draw an arrow to the low grade heat
+    axis.annotate(
+        "",
+        xy=(0.28, 0.3),  # Right side of generator (in figure coords)
+        xytext=(0.28, 0.5),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    axis.annotate(
+        "",
+        xy=(0.26, 0.5),
+        xytext=(0.28, 0.5),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="black",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
     
     axis.annotate(
         "",
@@ -823,10 +869,25 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     axis.annotate(
         "",
         xy=(0.925, 0.165),  # Right side of generator (in figure coords)
-        xytext=(0.97, 0.165),  # Bottom of primary thermal box
+        xytext=(0.96, 0.165),  # Bottom of primary thermal box
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Total primary thermal to turbine inlet line (no arrow)
+    axis.annotate(
+        "",
+        xy=(0.96, 0.245),  # Right side of generator (in figure coords)
+        xytext=(0.96, 0.1625),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # Just a line, no arrow head
             color="orange",
             linewidth=3.0,
             zorder=5,
@@ -888,6 +949,38 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         horizontalalignment="left",
         transform=fig.transFigure,
         zorder=20,
+    )
+    
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.85, 0.17),
+        xytext=(0.925, 0.17),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="black",
+            linewidth=7.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    
+    # Turbine to loss power
+    axis.annotate(
+        "",
+        xy=(0.91, 0.08),
+        xytext=(0.91, 0.13),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle= "dashed",
+        ),
     )
     
     # Load the plasma image
@@ -996,6 +1089,80 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         ),
     )
     
+    # Recirculated to pumps electric
+    axis.annotate(
+        "",
+        xy=(0.7, 0.225),
+        xytext=(0.635, 0.185),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Recirc to hcd primary one
+    axis.annotate(
+        "",
+        xy=(0.14, 0.2),
+        xytext=(0.57, 0.2),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # Recirc to hcd primary one
+    axis.annotate(
+        "",
+        xy=(0.08, 0.18),
+        xytext=(0.57, 0.18),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    # HCD primary
+    axis.annotate(
+        "",
+        xy=(0.08, 0.35),
+        xytext=(0.08, 0.1775),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    # HCD secondary
+    axis.annotate(
+        "",
+        xy=(0.14, 0.35),
+        xytext=(0.14, 0.2),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=1.5,
+            zorder=5,
+            fill=True,
+        ),
+    )
+
     # ================================
     
     # First wall
@@ -1088,10 +1255,24 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    axis.annotate(
+        "",
+        xy=(0.61, 0.57),
+        xytext=(0.61, 0.65),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="orange",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
     axis.text(
-        0.55,
+        0.5,
         0.54,
-        f"Deposited power \n (inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1107,7 +1288,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     axis.text(
         0.7,
         0.54,
-        f"Deposited power \n (inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1120,9 +1301,9 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
-        0.65,
-        0.48,
-        f"Deposited power (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth\n",
+        0.6,
+        0.49,
+        f"Primary thermal (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth\n",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1162,7 +1343,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     axis.text(
         0.625,
         0.775,
-        f"$P_{{\\text{{Blkt,nuclear}}}}$:\n {mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n $P_{{\\text{{Blkt,multiplication}}}}$:\n {mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW ",
+        f"$P_{{\\text{{Blkt,nuclear}}}}$:\n {mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n $P_{{\\text{{Blkt,multiplication}}}}$:\n {mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW\n" +
+        f"$f_{{\\text{{multiplication}}}}$:\n {mfile_data.data['f_p_blkt_multiplication'].get_scan(scan):.2f}",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1205,6 +1387,56 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         transform=fig.transFigure,
     )
     
+    axis.text(
+        0.38,
+        0.375,
+        f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile_data.data['p_shld_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "linestyle":"dashed",
+        },
+    )
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.4, 0.3),
+        xytext=(0.4, 0.37),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+
+    axis.annotate(
+        "",
+        xy=(0.445, 0.39),
+        xytext=(0.85, 0.39),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+
+    
     # ==========================================
     
     # Divertor
@@ -1216,15 +1448,15 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.15, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10
+        [0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(divertor)
     new_ax.axis("off")
     
     axis.annotate(
         "",
-        xy=(0.37, 0.55),
-        xytext=(0.37, 0.695),
+        xy=(0.35, 0.55),
+        xytext=(0.35, 0.695),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -1236,8 +1468,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
-        0.3,
-        0.58,
+        0.29,
+        0.57,
         f"$P_{{\\text{{div,rad}}}}$:\n {mfile_data.data['p_div_rad_total_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
@@ -1253,8 +1485,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     axis.annotate(
         "",
-        xy=(0.435, 0.55),
-        xytext=(0.435, 0.76),
+        xy=(0.39, 0.55),
+        xytext=(0.39, 0.76),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -1265,9 +1497,9 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         ),
     )
     axis.text(
-        0.45,
+        0.4,
         0.58,
-        f"$P_{{\\text{{div,nuclear}}}}$:\n {mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1280,9 +1512,9 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     axis.text(
-        0.46,
-        0.46,
-        f"Deposited power (inc pump):\n {mfile_data.data['p_div_heat_deposited_mw'].get_scan(scan):.2f} MWth\n" +
+        0.48,
+        0.42,
+        f"Deposited power (inc pump):\n{mfile_data.data['p_div_heat_deposited_mw'].get_scan(scan):.2f} MWth\n" +
         f"Solid angle fraction: {mfile_data.data['f_ster_div_single'].get_scan(scan):.3f}\n" +
         f"Primary heat fraction: {mfile_data.data['f_p_div_primary_heat'].get_scan(scan):.3f}",
         fontsize=9,
@@ -1296,13 +1528,76 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    axis.text(
+        0.3,
+        0.375,
+        f"$P_{{\\text{{div,secondary}}}}$:\n{mfile_data.data['p_div_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "linestyle":"dashed",
+        },
+    )
+    #Divertor to secondary heat
+    axis.annotate(
+        "",
+        xy=(0.33, 0.405),
+        xytext=(0.33, 0.5),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.52, 0.39),
+        xytext=(0.4, 0.5),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="orange",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
+    #Divertor secondary heat to total secondary heat
+    axis.annotate(
+        "",
+        xy=(0.33, 0.3),
+        xytext=(0.33, 0.375),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
     # ===========================================
     
     # Coolant pumps
 
     axis.text(
-        0.5,
-        0.36,
+        0.55,
+        0.33,
         f"$P_{{\\text{{div,pump}}}}$: {mfile_data.data['p_div_coolant_pump_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
@@ -1316,10 +1611,41 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    # Shield pump to sheild primary thermal
+    axis.annotate(
+        "",
+        xy=(0.64, 0.34),
+        xytext=(0.7, 0.34),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    # Shield pump to sheild primary thermal
+    axis.annotate(
+        "",
+        xy=(0.875, 0.34),
+        xytext=(0.81, 0.34),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    
     axis.text(
-        0.9,
-        0.5,
-        f"$P_{{\\text{{shld,pump}}}}$: {mfile_data.data['p_shld_coolant_pump_mw'].get_scan(scan):.2f} MW",
+        0.875,
+        0.325,
+        f"$P_{{\\text{{shld,pump}}}}$:\n{mfile_data.data['p_shld_coolant_pump_mw'].get_scan(scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1333,9 +1659,57 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     )
     
     axis.text(
+        0.75,
+        0.4,
+        f"$P_{{\\text{{FW + Blkt}}}}$:\n{mfile_data.data['p_fw_blkt_coolant_pump_mw'].get_scan(scan):.2f} MW",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+    
+    # Shield pump to sheild primary thermal
+    axis.annotate(
+        "",
+        xy=(0.9, 0.54),
+        xytext=(0.9, 0.36),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    
+    # Electric to pumps total
+    axis.annotate(
+        "",
+        xy=(0.95, 0.3),
+        xytext=(0.95, 0.55),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    
+    axis.text(
         0.875,
-        0.55,
-        f"$P_{{\\text{{shld,pump}}}}$: {mfile_data.data['p_shld_heat_deposited_mw'].get_scan(scan):.2f} MW",
+        0.54,
+        f"Primary thermal:\n{mfile_data.data['p_shld_heat_deposited_mw'].get_scan(scan):.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1371,7 +1745,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     axis.text(
         0.7,
-        0.35,
+        0.325,
         f"Coolant pumps total:\n{mfile_data.data['p_coolant_pump_total_mw'].get_scan(scan):.3f} MW",
         fontsize=9,
         verticalalignment="bottom",
@@ -1384,10 +1758,26 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "linewidth": 2,
         },
     )
+    # Electric to pumps total
+    axis.annotate(
+        "",
+        xy=(0.75, 0.325),
+        xytext=(0.75, 0.275),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+
+        ),
+    )
+    
     axis.text(
         0.5,
-        0.25,
-        f"Coolant pumps losses total:\n {mfile_data.data['p_coolant_pump_loss_total_mw'].get_scan(scan):.3f} MWth",
+        0.235,
+        f"Coolant pumps losses total:\n{mfile_data.data['p_coolant_pump_loss_total_mw'].get_scan(scan):.3f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1401,11 +1791,11 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
-    # Draw two horizontal dashed arrows coming from the right of the power supply box
+    # Coolant electric to pump losses
     axis.annotate(
         "",
-        xy=(0.4, 0.3),
-        xytext=(0.45, 0.3),
+        xy=(0.645, 0.25),
+        xytext=(0.695, 0.25),
         xycoords=fig.transFigure,
         arrowprops=dict(
             arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
@@ -1413,6 +1803,25 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             linewidth=2.0,
             zorder=5,
             fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    
+    
+    # Coolant losses to secondary heat
+    axis.annotate(
+        "",
+        xy=(0.405, 0.25),
+        xytext=(0.4975, 0.25),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
         ),
     )
     
@@ -1421,8 +1830,8 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
     
     # Cryo Plant
     axis.text(
+        0.45,
         0.05,
-        0.15,
         f"Cryo Plant:\n {mfile_data.data['p_cryo_plant_electric_mw'].get_scan(scan):.3f} MWe",
         fontsize=9,
         verticalalignment="bottom",
@@ -1436,9 +1845,24 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.49, 0.09),
+        xytext=(0.575, 0.14),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
     # Cryo Plant
     axis.text(
-        0.05,
+        0.35,
         0.05,
         f"Tritium Plant:\n {mfile_data.data['p_tritium_plant_electric_mw'].get_scan(scan):.3f} MWe",
         fontsize=9,
@@ -1453,9 +1877,24 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.4, 0.09),
+        xytext=(0.575, 0.15),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
     # Vacuum Pumps
     axis.text(
-        0.25,
+        0.55,
         0.05,
         f"Vacuum pumps:\n {mfile_data.data['vachtmw'].get_scan(scan):.3f} MWe",
         fontsize=9,
@@ -1470,11 +1909,28 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.6, 0.08),
+        xytext=(0.6, 0.14),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+    
     # Vacuum Pumps
     axis.text(
-        0.35,
+        0.15,
         0.05,
-        f"Plant base load:\n {mfile_data.data['fcsht'].get_scan(scan):.3f} MWe",
+        f"Plant base load:\n{mfile_data.data['fcsht'].get_scan(scan):.3f} MWe\n"
+        + f"Minimum base load:\n{mfile_data.data['p_plant_electric_base'].get_scan(scan)* 1.0e-6:.3f} MWe\n" 
+        + f"Plant floor power density:\n{mfile_data.data['pwpm2'].get_scan(scan)* 1.0e-3:.3f} kW/m^2",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1487,7 +1943,104 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
     
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.28, 0.09),
+        xytext=(0.575, 0.17),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
     
+    
+    axis.text(
+        0.46,
+        0.285,
+        f"$P_{{\\text{{HCD,loss}}}}$:\n{mfile_data.data['p_hcd_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.8,
+            "linewidth": 2,
+            "linestyle": "dashed",
+        },
+    )
+    
+    #Shield to secondary heat total
+    axis.annotate(
+        "",
+        xy=(0.47, 0.32),
+        xytext=(0.47, 0.65),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    # HCD loss to total secondayr heat
+    axis.annotate(
+        "",
+        xy=(0.41, 0.295),
+        xytext=(0.455, 0.295),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
+    
+    # TF nuclear heat
+    axis.text(
+        0.155,
+        0.25,
+        f"$P_{{\\text{{TF,nuclear}}}}$:\n{mfile_data.data['p_tf_nuclear_heat_mw'].get_scan(scan):.2f} MWth",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+            "linestyle":"dashed",
+        },
+    )
+    
+    # HCD loss to total secondayr heat
+    axis.annotate(
+        "",
+        xy=(0.245, 0.265),
+        xytext=(0.215, 0.265),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=2.0,
+            zorder=5,
+            fill=True,
+            linestyle="--",
+        ),
+    )
 
 
 def plot_main_plasma_information(
