@@ -436,7 +436,7 @@ class Power:
             )
 
         #  Total baseline power to facility loads, MW
-        heat_transport_variables.fcsht = (
+        heat_transport_variables.p_plant_electric_base_total_mw = (
             basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
         )
 
@@ -444,7 +444,7 @@ class Power:
         # MDK No idea what this is - especially the last term
         # It is used in the old cost routine, so I will leave it in place.
         heat_transport_variables.tlvpmw = (
-            heat_transport_variables.fcsht
+            heat_transport_variables.p_plant_electric_base_total_mw
             + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
@@ -508,8 +508,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total base power required at all times (MW)",
-            "(fcsht)",
-            heat_transport_variables.fcsht,
+            "(p_plant_electric_base_total_mw)",
+            heat_transport_variables.p_plant_electric_base_total_mw,
             "OP ",
         )
         # MDK Remove this output: no idea what this is
@@ -823,8 +823,10 @@ class Power:
         else:
             power_variables.p_cp_coolant_pump_elec_mw = 0.0e0
 
-        #  Facility heat removal (heat_transport_variables.fcsht calculated in ACPOW)
-        heat_transport_variables.fachtmw = heat_transport_variables.fcsht
+        #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
+        heat_transport_variables.fachtmw = (
+            heat_transport_variables.p_plant_electric_base_total_mw
+        )
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
@@ -3070,7 +3072,7 @@ def init_heat_transport_variables():
     heat_transport_variables.eta_turbine = 0.35
     heat_transport_variables.etath_liq = 0.35
     heat_transport_variables.fachtmw = 0.0
-    heat_transport_variables.fcsht = 0.0
+    heat_transport_variables.p_plant_electric_base_total_mw = 0.0
     heat_transport_variables.fgrosbop = 0.0
     heat_transport_variables.fmgdmw = 0.0
     heat_transport_variables.fpumpblkt = 0.005
