@@ -42,7 +42,7 @@ module heat_transport_variables
     real(dp) :: fachtmw
     !! facility heat removal (MW)
 
-    real(dp) :: fcsht
+    real(dp) :: p_plant_electric_base_total_mw
     !! total baseline power required at all times (MW)
 
     real(dp) :: fgrosbop

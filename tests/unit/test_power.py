@@ -1919,7 +1919,7 @@ class AcpowParam(NamedTuple):
 
     peakmva: Any = None
 
-    fcsht: Any = None
+    p_plant_electric_base_total_mw: Any = None
 
     fmgdmw: Any = None
 
@@ -1953,7 +1953,7 @@ class AcpowParam(NamedTuple):
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=0,
             peakmva=736.39062584245937,
-            fcsht=0,
+            p_plant_electric_base_total_mw=0,
             fmgdmw=0,
             pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.28554165620102,
@@ -1974,7 +1974,7 @@ class AcpowParam(NamedTuple):
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
             peakmva=90.673341440806112,
-            fcsht=61.882833632875375,
+            p_plant_electric_base_total_mw=61.882833632875375,
             fmgdmw=0,
             pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.2162627659944,
@@ -2042,7 +2042,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "peakmva", acpowparam.peakmva)
 
-    monkeypatch.setattr(heat_transport_variables, "fcsht", acpowparam.fcsht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_base_total_mw",
+        acpowparam.p_plant_electric_base_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
 
@@ -2152,7 +2156,7 @@ class Power2Param(NamedTuple):
 
     fpumpfw: Any = None
 
-    fcsht: Any = None
+    p_plant_electric_base_total_mw: Any = None
 
     i_shld_primary_heat: Any = None
 
@@ -2318,7 +2322,7 @@ class Power2Param(NamedTuple):
             p_plant_electric_recirc_mw=0,
             p_plant_primary_heat_mw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
-            fcsht=61.882833632875375,
+            p_plant_electric_base_total_mw=61.882833632875375,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=0,
@@ -2420,7 +2424,7 @@ class Power2Param(NamedTuple):
             p_plant_electric_recirc_mw=489.56557141942733,
             p_plant_primary_heat_mw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
-            fcsht=62.237143915360818,
+            p_plant_electric_base_total_mw=62.237143915360818,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=61.882833632875375,
@@ -2655,7 +2659,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
 
-    monkeypatch.setattr(heat_transport_variables, "fcsht", power2param.fcsht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_base_total_mw",
+        power2param.p_plant_electric_base_total_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "i_shld_primary_heat", power2param.i_shld_primary_heat
