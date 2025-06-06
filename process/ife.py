@@ -2183,7 +2183,7 @@ class IFE:
 
         # Power needed per floor area, MW/m2
 
-        pmwpm2 = heat_transport_variables.pwpm2 * 1e-6
+        pmwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1e-6
 
         # Total pulsed power system load, MW
 
