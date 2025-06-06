@@ -2429,11 +2429,11 @@ class Costs:
         cost_python_variables.chx = (
             1.0e-6
             * cost_variables.ucphx
-            * heat_transport_variables.nphx
+            * heat_transport_variables.n_primary_heat_exchangers
             * (
                 1.0e6
                 * heat_transport_variables.p_plant_primary_heat_mw
-                / heat_transport_variables.nphx
+                / heat_transport_variables.n_primary_heat_exchangers
             )
             ** exphts
         )
