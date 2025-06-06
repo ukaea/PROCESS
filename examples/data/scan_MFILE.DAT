@@ -916,7 +916,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -1911,7 +1911,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -2906,7 +2906,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -3901,7 +3901,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -4896,7 +4896,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -5891,7 +5891,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -6886,7 +6886,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -7881,7 +7881,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
@@ -8876,7 +8876,7 @@
  Tritium_processing_(MW)_________________________________________________ (p_tritium_plant_electric_mw..)__________________      1.5000E+01    
  Vacuum_pumps__(MW)______________________________________________________ (vachtmw..)___________________      5.0000E-01    
  Total_pulsed_power_(MW)_________________________________________________ (pacpmw)______________________      6.3305E+02 OP 
- Total_base_power_required_at_all_times_(MW)_____________________________ (fcsht)_______________________      6.5033E+01 OP 
+ Total_base_power_required_at_all_times_(MW)_____________________________ (p_plant_electric_base_total_mw)_______________________      6.5033E+01 OP 
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)________ (qss/1.0D6)___________________      2.3952E-02 OP 
  Nuclear_heating_of_cryogenic_components_(MW)____________________________ (qnuc/1.0D6)__________________      1.2920E-02 OP 
