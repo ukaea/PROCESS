@@ -361,7 +361,25 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     # ---
 
 
-def plot_main_power_flow(axis, mfile_data, scan, fig):
+def plot_main_power_flow(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, fig: plt.Figure
+) -> None:
+    """
+    Plots the main power flow diagram for the fusion reactor, including plasma, heating and current drive,
+    first wall, blanket, vacuum vessel, divertor, coolant pumps, turbine, generator, and auxiliary systems.
+    Annotates the diagram with power values and draws arrows to indicate power flows.
+
+    Args:
+        axis (plt.Axes): The matplotlib axis object to plot on.
+        mfile_data (mf.MFile): The MFILE data object containing power flow parameters.
+        scan (int): The scan number to use for extracting data.
+        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    """
+
+    # ==========================================
+    # Plasma
+    # ===========================================
+
     # Load the plasma image
     plasma = mpimg.imread(
         resources.path("process.io", "plasma.png")
@@ -386,12 +404,9 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         zorder=2,
         fontsize=11,
     )
-    # Load the plasma image
-    neutron = mpimg.imread(
-        resources.path("process.io", "neutron.png")
-    )  # Use importlib.resources to locate the image
+    # Load the neutron image
+    neutron = mpimg.imread(resources.path("process.io", "neutron.png"))
 
-    # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
         [0.2, 0.85, 0.03, 0.03], transform=axis.transAxes, zorder=10
     )
@@ -423,7 +438,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         fontsize=11,
     )
 
-    # Add radiation power to plasma
+    # Add photon image to plasma
     axis.text(
         0.34,
         0.71,
@@ -453,11 +468,11 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         xy=(0.3725, 0.65),
         xytext=(0.3, 0.65),
         xycoords=fig.transFigure,
-        arrowprops=dict(
-            color="pink",
-            arrowstyle="-",  # No arrow head
-            linewidth=2.0,
-        ),
+        arrowprops={
+            "color": "pink",
+            "arrowstyle": "-",  # No arrow head
+            "linewidth": 2.0,
+        },
     )
 
     # Draw two horizontal dashed arrows coming from the right of the power supply box
@@ -1256,7 +1271,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             fill=True,
         ),
     )
-    
+
     axis.annotate(
         "",
         xy=(0.81, 0.585),
@@ -1270,7 +1285,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             fill=True,
         ),
     )
-    
+
     axis.annotate(
         "",
         xy=(0.92, 0.595),
@@ -1443,7 +1458,7 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             linestyle="--",
         ),
     )
-    
+
     axis.annotate(
         "",
         xy=(0.85, 0.385),
@@ -1633,6 +1648,20 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
         },
     )
 
+    axis.annotate(
+        "",
+        xy=(0.57, 0.46),
+        xytext=(0.57, 0.35),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+
     # Shield pump to sheild primary thermal
     axis.annotate(
         "",
@@ -1693,7 +1722,21 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "linewidth": 2,
         },
     )
-    
+
+    axis.annotate(
+        "",
+        xy=(0.75, 0.49),
+        xytext=(0.75, 0.44),
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-|>,head_length=1,head_width=0.3",  # solid filled head
+            color="black",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+
     # Coolant pumps total to blanket and FW pump
     axis.annotate(
         "",
@@ -1752,6 +1795,49 @@ def plot_main_power_flow(axis, mfile_data, scan, fig):
             "facecolor": "orange",
             "linewidth": 2,
         },
+    )
+
+    # Draw a downward arrow from the primary thermal box to the right side of the generator
+    axis.annotate(
+        "",
+        xy=(0.825, 0.57),  # Right side of generator (in figure coords)
+        xytext=(0.87, 0.57),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+
+    axis.annotate(
+        "",
+        xy=(0.625, 0.57),  # Right side of generator (in figure coords)
+        xytext=(0.695, 0.57),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
+    )
+
+    axis.annotate(
+        "",
+        xy=(0.56, 0.52),  # Right side of generator (in figure coords)
+        xytext=(0.56, 0.55),  # Bottom of primary thermal box
+        xycoords=fig.transFigure,
+        arrowprops=dict(
+            arrowstyle="-",  # No arrow head
+            color="orange",
+            linewidth=3.0,
+            zorder=5,
+            fill=True,
+        ),
     )
 
     axis.text(
