@@ -34,7 +34,7 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 1: Calculate the electric wall plug power for the different coolant systems by dividing by the pump wall plug efficiencies
 
 $$
-P_{\text{pump,electric}} = \frac{P_{\text{pump}}}{\underbrace{\eta_{\text{pump}}}_{\texttt{etahtp}}}
+P_{\text{pump,electric}} = \frac{P_{\text{pump}}}{\underbrace{\eta_{\text{pump}}}_{\texttt{eta_coolant_pump_electric}}}
 $$
 
 This is done for the first wall, blanket, vacuum vessel shield, divertor and blanket secondary breeder coolant (if present).

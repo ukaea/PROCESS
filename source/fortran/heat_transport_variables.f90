@@ -157,9 +157,6 @@ module heat_transport_variables
     real(dp) :: p_plant_secondary_heat_mw
     !! Low-grade heat (MW)
 
-    real(dp) :: pseclossmw
-    !! Low-grade heat (VV + lost)(MW)
-
     real(dp) :: p_shld_secondary_heat_mw
     !! Low-grade heat deposited in shield (MW)
 

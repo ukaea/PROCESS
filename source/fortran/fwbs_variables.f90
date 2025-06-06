@@ -505,7 +505,7 @@ module fwbs_variables
   real(dp) :: etaiso
   !! isentropic efficiency of FW and blanket coolant pumps
 
-  real(dp) :: etahtp
+  real(dp) :: eta_coolant_pump_electric
   !! electrical efficiency of primary coolant pumps
 
   !! -----------------------------------------------------
