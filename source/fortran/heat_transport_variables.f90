@@ -109,7 +109,7 @@ module heat_transport_variables
     !! - =0 does not contribute to energy generation cycle
     !! - =1 contributes to energy generation cycle
 
-    integer :: nphx
+    integer :: n_primary_heat_exchangers
     !! number of primary heat exchangers
 
     real(dp) :: pacpmw

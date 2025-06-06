@@ -1086,7 +1086,7 @@
  TF_coil_resistive_power_(MW)_____________________________________________ (tfcmw)________________________ 0.00000000000000000e+00 OP
  Total_low-grade_thermal_power_(MW)_______________________________________ (p_plant_secondary_heat_mw)_____________________ 2.27456408964308480e+02 OP
  Total_High-grade_thermal_power_(MW)______________________________________ (p_plant_primary_heat_mw)_____________________ 2.16825910298290864e+03 OP
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 2.67976424195365780e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.30345146305381149e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 3.98321570500746930e+02 OP
