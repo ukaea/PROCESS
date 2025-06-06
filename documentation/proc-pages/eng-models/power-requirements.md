@@ -34,7 +34,7 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 1: Calculate the electric wall plug power for the different coolant systems by dividing by the pump wall plug efficiencies
 
 $$
-P_{\text{pump,electric}} = \frac{P_{\text{pump}}}{\underbrace{\eta_{\text{pump}}}_{\texttt{etahtp}}}
+P_{\text{pump,electric}} = \frac{P_{\text{pump}}}{\underbrace{\eta_{\text{pump}}}_{\texttt{eta_coolant_pump_electric}}}
 $$
 
 This is done for the first wall, blanket, vacuum vessel shield, divertor and blanket secondary breeder coolant (if present).
@@ -120,6 +120,12 @@ $$
 
 $$
 \overbrace{P_{\text{HCD,secondary-heat}}}^{\texttt{p_hcd_secondary_heat_mw}} = P_{\text{HCD, nuclear}} + P_{\text{HCD,}\gamma}
+$$
+
+13: The number of primary heat exchangers is calculated as follows:
+
+$$
+N_{\text{PHX}} = \left\lceil \dfrac{P_{\text{plant,primary-heat}}}{1000} \right\rceil
 $$
 
 ---

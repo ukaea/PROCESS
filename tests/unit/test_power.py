@@ -1918,17 +1918,17 @@ class AcpowParam(NamedTuple):
 
     peakmva: Any = None
 
-    fcsht: Any = None
+    p_plant_electric_base_total_mw: Any = None
 
     fmgdmw: Any = None
 
-    pwpm2: Any = None
+    pflux_plant_floor_electric: Any = None
 
     p_coolant_pump_elec_total_mw: Any = None
 
     pacpmw: Any = None
 
-    iscenr: Any = None
+    i_pf_energy_storage_source: Any = None
 
     srcktpm: Any = None
 
@@ -1952,12 +1952,12 @@ class AcpowParam(NamedTuple):
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=0,
             peakmva=736.39062584245937,
-            fcsht=0,
+            p_plant_electric_base_total_mw=0,
             fmgdmw=0,
-            pwpm2=150,
+            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.28554165620102,
             pacpmw=0,
-            iscenr=2,
+            i_pf_energy_storage_source=2,
             srcktpm=1071.1112934857531,
             iprint=0,
             outfile=11,
@@ -1973,12 +1973,12 @@ class AcpowParam(NamedTuple):
             p_hcd_electric_total_mw=129.94611930107126,
             tlvpmw=699.34943812129745,
             peakmva=90.673341440806112,
-            fcsht=61.882833632875375,
+            p_plant_electric_base_total_mw=61.882833632875375,
             fmgdmw=0,
-            pwpm2=150,
+            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.2162627659944,
             pacpmw=1226.1273281650574,
-            iscenr=2,
+            i_pf_energy_storage_source=2,
             srcktpm=1069.8879533693198,
             iprint=0,
             outfile=11,
@@ -2041,11 +2041,19 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "peakmva", acpowparam.peakmva)
 
-    monkeypatch.setattr(heat_transport_variables, "fcsht", acpowparam.fcsht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_base_total_mw",
+        acpowparam.p_plant_electric_base_total_mw,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pwpm2", acpowparam.pwpm2)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "pflux_plant_floor_electric",
+        acpowparam.pflux_plant_floor_electric,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2055,7 +2063,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
 
-    monkeypatch.setattr(pf_power_variables, "iscenr", acpowparam.iscenr)
+    monkeypatch.setattr(
+        pf_power_variables,
+        "i_pf_energy_storage_source",
+        acpowparam.i_pf_energy_storage_source,
+    )
 
     monkeypatch.setattr(pf_power_variables, "srcktpm", acpowparam.srcktpm)
 
@@ -2083,7 +2095,7 @@ class Power2Param(NamedTuple):
 
     qnuc: Any = None
 
-    etahtp: Any = None
+    eta_coolant_pump_electric: Any = None
 
     f_p_blkt_multiplication: Any = None
 
@@ -2131,7 +2143,7 @@ class Power2Param(NamedTuple):
 
     p_div_coolant_pump_mw: Any = None
 
-    nphx: Any = None
+    n_primary_heat_exchangers: Any = None
 
     helpow: Any = None
 
@@ -2143,7 +2155,7 @@ class Power2Param(NamedTuple):
 
     fpumpfw: Any = None
 
-    fcsht: Any = None
+    p_plant_electric_base_total_mw: Any = None
 
     i_shld_primary_heat: Any = None
 
@@ -2279,7 +2291,7 @@ class Power2Param(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
-            etahtp=0.87000000000000011,
+            eta_coolant_pump_electric=0.87000000000000011,
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
@@ -2303,13 +2315,13 @@ class Power2Param(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7942175899286208,
-            nphx=3,
+            n_primary_heat_exchangers=3,
             helpow=76851.741036987034,
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=0,
             p_plant_primary_heat_mw=2620.2218111502593,
             fpumpfw=0.0050000000000000001,
-            fcsht=61.882833632875375,
+            p_plant_electric_base_total_mw=61.882833632875375,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=0,
@@ -2381,7 +2393,7 @@ class Power2Param(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
-            etahtp=0.87000000000000011,
+            eta_coolant_pump_electric=0.87000000000000011,
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
@@ -2405,13 +2417,13 @@ class Power2Param(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7933419035282543,
-            nphx=3,
+            n_primary_heat_exchangers=3,
             helpow=220505.71684249729,
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=489.56557141942733,
             p_plant_primary_heat_mw=2619.4223856129224,
             fpumpfw=0.0050000000000000001,
-            fcsht=62.237143915360818,
+            p_plant_electric_base_total_mw=62.237143915360818,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
             fachtmw=61.882833632875375,
@@ -2518,7 +2530,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 
-    monkeypatch.setattr(fwbs_variables, "etahtp", power2param.etahtp)
+    monkeypatch.setattr(fwbs_variables, "eta_coolant_pump_electric", power2param.eta_coolant_pump_electric)
 
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
@@ -2618,7 +2630,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_div_coolant_pump_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "nphx", power2param.nphx)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "n_primary_heat_exchangers",
+        power2param.n_primary_heat_exchangers,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "helpow", power2param.helpow)
 
@@ -2642,7 +2658,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
 
-    monkeypatch.setattr(heat_transport_variables, "fcsht", power2param.fcsht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_base_total_mw",
+        power2param.p_plant_electric_base_total_mw,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables, "i_shld_primary_heat", power2param.i_shld_primary_heat

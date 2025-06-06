@@ -2147,11 +2147,11 @@ class Costs:
         self.chx = (
             1.0e-6
             * cost_variables.ucphx
-            * heat_transport_variables.nphx
+            * heat_transport_variables.n_primary_heat_exchangers
             * (
                 1.0e6
                 * heat_transport_variables.p_plant_primary_heat_mw
-                / heat_transport_variables.nphx
+                / heat_transport_variables.n_primary_heat_exchangers
             )
             ** exphts
         )
@@ -2395,7 +2395,8 @@ class Costs:
         #  Account 242 : Transformers
         self.c242 = 1.0e-6 * (
             cost_variables.ucpp * (heat_transport_variables.pacpmw * 1.0e3) ** expepe
-            + cost_variables.ucap * (heat_transport_variables.fcsht * 1.0e3)
+            + cost_variables.ucap
+            * (heat_transport_variables.p_plant_electric_base_total_mw * 1.0e3)
         )
 
         #  Apply safety assurance factor

@@ -1117,7 +1117,7 @@
  Tritium_processing_(MW)__________________________________________________ (p_tritium_plant_electric_mw..)___________________ 1.50000000000000000e+01
  Vacuum_pumps__(MW)_______________________________________________________ (vachtmw..)____________________ 5.00000000000000000e-01
  Total_pulsed_power_(MW)__________________________________________________ (pacpmw)_______________________ 5.72623427480157716e+02 OP
- Total_base_power_required_at_all_times_(MW)______________________________ (fcsht)________________________ 5.50666913788472527e+01 OP
+ Total_base_power_required_at_all_times_(MW)______________________________ (p_plant_electric_base_total_mw)________________________ 5.50666913788472527e+01 OP
  # Cryogenics #
  Conduction_and_radiation_heat_loads_on_cryogenic_components_(MW)_________ (qss/1.0d6)____________________ 2.52114470375780081e-02 OP
  Nuclear_heating_of_cryogenic_components_(MW)_____________________________ (qnuc/1.0d6)___________________ 1.29999999999999994e-02 OP
@@ -1147,7 +1147,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)__________________ (p_coolant_pump_elec_total_mw)________________________ 2.10754419504584575e+02 OP
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield_________________ (fpumpshld)____________________ 5.00000000000000010e-03
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor_______________ (fpumpdiv)_____________________ 5.00000000000000010e-03
- Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (etahtp)_______________________ 8.70000000000000107e-01
+ Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (eta_coolant_pump_electric)_______________________ 8.70000000000000107e-01
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (eta_turbine)________________________ 4.00000000000000022e-01
  Fraction_of_total_high-grade_thermal_power_to_divertor___________________ (f_p_div_primary_heat)_________________ 1.40200687853449329e-01 OP
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)_________ _______________________________ 2.18230014219860914e+03 OP
@@ -1160,7 +1160,7 @@
  TF_coil_resistive_power_(MW)_____________________________________________ (tfcmw)________________________ 0.00000000000000000e+00 OP
  Total_low-grade_thermal_power_(MW)_______________________________________ (p_plant_secondary_heat_mw)_____________________ 2.52584620983478175e+02 OP
  Total_High-grade_thermal_power_(MW)______________________________________ (p_plant_primary_heat_mw)_____________________ 2.36395397689003630e+03 OP
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 3.21850327706303688e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.18176171262989300e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 4.40026498969293016e+02 OP
@@ -1696,7 +1696,7 @@ ipowerflow = 0
 primary_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
-etahtp = 0.87
+eta_coolant_pump_electric = 0.87
 
 * Isentropic efficiency of FW and blanket coolant pumps
 etaiso = 0.9

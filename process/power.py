@@ -446,12 +446,8 @@ class Power:
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
         None
         """
-        ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
 
-        # Power to PF coil power supplies, MW
-        ppfmw = 1.0e-3 * pf_power_variables.srcktpm
-
-        if pf_power_variables.iscenr == 2:
+        if pf_power_variables.i_pf_energy_storage_source == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
@@ -466,16 +462,16 @@ class Power:
         basemw = heat_transport_variables.p_plant_electric_base * 1.0e-6
 
         #  Power needed per unit floor area, kW/m2
-        pkwpm2 = heat_transport_variables.pwpm2 * 1.0e-3
+        pkwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1.0e-3
 
         #  Power to divertor coil supplies, MW
         bdvmw = 0.0e0
 
         #  Total pulsed power system load, MW
         heat_transport_variables.pacpmw = (
-            ppfmw
+            1.0e-3 * pf_power_variables.srcktpm
             + bdvmw
-            + ptfmw
+            + heat_transport_variables.p_tf_electric_supplies_mw
             + crymw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
@@ -485,13 +481,13 @@ class Power:
 
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
-        if pf_power_variables.iscenr != 2:
+        if pf_power_variables.i_pf_energy_storage_source != 2:
             heat_transport_variables.pacpmw = (
                 heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
             )
 
         #  Total baseline power to facility loads, MW
-        heat_transport_variables.fcsht = (
+        heat_transport_variables.p_plant_electric_base_total_mw = (
             basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
         )
 
@@ -499,7 +495,7 @@ class Power:
         # MDK No idea what this is - especially the last term
         # It is used in the old cost routine, so I will leave it in place.
         heat_transport_variables.tlvpmw = (
-            heat_transport_variables.fcsht
+            heat_transport_variables.p_plant_electric_base_total_mw
             + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
             + heat_transport_variables.vachtmw
@@ -563,8 +559,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Total base power required at all times (MW)",
-            "(fcsht)",
-            heat_transport_variables.fcsht,
+            "(p_plant_electric_base_total_mw)",
+            heat_transport_variables.p_plant_electric_base_total_mw,
             "OP ",
         )
         # MDK Remove this output: no idea what this is
@@ -591,18 +587,18 @@ class Power:
         #  in the coolant.  The difference should be lost as secondary heat.
 
         self.p_fw_blkt_coolant_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
         self.p_shld_coolant_pump_elec_mw = (
-            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
         self.p_div_coolant_pump_elec_mw = (
-            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Secondary breeder coolant loop. Should return zero if not used.
         self.p_blkt_breeder_pump_elec_mw = (
-            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Total mechanical pump power needed (deposited in coolant)
@@ -774,9 +770,19 @@ class Power:
         )
 
         #  Number of primary heat exchangers
-        heat_transport_variables.nphx = math.ceil(
+        heat_transport_variables.n_primary_heat_exchangers = math.ceil(
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
+
+    def calculate_cryo_loads(self) -> None:
+        """
+        Calculates and updates the cryogenic heat loads for the system.
+
+        This method computes the various cryogenic heat loads, including conduction/radiation,
+        nuclear heating, AC losses, and resistive losses in current leads. It also updates
+        the miscellaneous allowance and total heat removal at cryogenic temperatures.
+        The results are stored in the corresponding instance variables.
+        """
 
         #  Cryogenic power
         # ---
@@ -867,8 +873,10 @@ class Power:
         else:
             self.p_cp_coolant_pump_elec_mw = 0.0e0
 
-        #  Facility heat removal (heat_transport_variables.fcsht calculated in ACPOW)
-        heat_transport_variables.fachtmw = heat_transport_variables.fcsht
+        #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
+        heat_transport_variables.fachtmw = (
+            heat_transport_variables.p_plant_electric_base_total_mw
+        )
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
@@ -1144,8 +1152,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical efficiency of heat transport coolant pumps",
-            "(etahtp)",
-            fwbs_variables.etahtp,
+            "(eta_coolant_pump_electric)",
+            fwbs_variables.eta_coolant_pump_electric,
         )
         # #284
         po.osubhd(self.outfile, "Plant thermodynamics: options :")
@@ -1525,8 +1533,8 @@ class Power:
         po.ovarin(
             self.outfile,
             "Number of primary heat exchangers",
-            "(nphx)",
-            heat_transport_variables.nphx,
+            "(n_primary_heat_exchangers)",
+            heat_transport_variables.n_primary_heat_exchangers,
             "OP ",
         )
 
@@ -3076,7 +3084,7 @@ def init_pf_power_variables():
     """Initialise PF coil power variables"""
     pf_power_variables.acptmax = 0.0
     pf_power_variables.ensxpfm = 0.0
-    pf_power_variables.iscenr = 2
+    pf_power_variables.i_pf_energy_storage_source = 2
     pf_power_variables.pfckts = 0.0
     pf_power_variables.spfbusl = 0.0
     pf_power_variables.spsmva = 0.0
@@ -3097,7 +3105,7 @@ def init_heat_transport_variables():
     heat_transport_variables.eta_turbine = 0.35
     heat_transport_variables.etath_liq = 0.35
     heat_transport_variables.fachtmw = 0.0
-    heat_transport_variables.fcsht = 0.0
+    heat_transport_variables.p_plant_electric_base_total_mw = 0.0
     heat_transport_variables.fgrosbop = 0.0
     heat_transport_variables.fmgdmw = 0.0
     heat_transport_variables.fpumpblkt = 0.005
@@ -3116,7 +3124,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_coolant_pump_loss_total_mw = 0.0
     heat_transport_variables.ipowerflow = 1
     heat_transport_variables.i_shld_primary_heat = 1
-    heat_transport_variables.nphx = 0
+    heat_transport_variables.n_primary_heat_exchangers = 0
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
     heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
@@ -3131,10 +3139,9 @@ def init_heat_transport_variables():
     heat_transport_variables.p_div_secondary_heat_mw = 0.0
     heat_transport_variables.p_hcd_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_secondary_heat_mw = 0.0
-    heat_transport_variables.pseclossmw = 0.0
     heat_transport_variables.p_shld_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_primary_heat_mw = 0.0
-    heat_transport_variables.pwpm2 = 150.0
+    heat_transport_variables.pflux_plant_floor_electric = 150.0
     heat_transport_variables.p_tf_electric_supplies_mw = 0.0
     heat_transport_variables.tlvpmw = 0.0
     heat_transport_variables.p_tritium_plant_electric_mw = 15.0

@@ -42,14 +42,14 @@ module heat_transport_variables
     real(dp) :: fachtmw
     !! facility heat removal (MW)
 
-    real(dp) :: fcsht
+    real(dp) :: p_plant_electric_base_total_mw
     !! total baseline power required at all times (MW)
 
     real(dp) :: fgrosbop
     !! scaled fraction of gross power to balance-of-plant
 
     real(dp) :: fmgdmw
-    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_energy_storage_source=2`)
 
     real(dp) :: fpumpblkt
     !! fraction of total blanket thermal power required to drive the blanket
@@ -109,7 +109,7 @@ module heat_transport_variables
     !! - =0 does not contribute to energy generation cycle
     !! - =1 contributes to energy generation cycle
 
-    integer :: nphx
+    integer :: n_primary_heat_exchangers
     !! number of primary heat exchangers
 
     real(dp) :: pacpmw
@@ -157,16 +157,13 @@ module heat_transport_variables
     real(dp) :: p_plant_secondary_heat_mw
     !! Low-grade heat (MW)
 
-    real(dp) :: pseclossmw
-    !! Low-grade heat (VV + lost)(MW)
-
     real(dp) :: p_shld_secondary_heat_mw
     !! Low-grade heat deposited in shield (MW)
 
     real(dp) :: p_plant_primary_heat_mw
     !! High-grade heat useful for electric production (MW)
 
-    real(dp) :: pwpm2
+    real(dp) :: pflux_plant_floor_electric
     !! base AC power requirement per unit floor area (W/m2)
 
     real(dp) :: p_tf_electric_supplies_mw

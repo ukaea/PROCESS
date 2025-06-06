@@ -179,7 +179,7 @@ i_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
 i_fw_coolant_type = helium * switch for first wall coolant (can be different from blanket coolant);
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
-etahtp   = 0.87 * electrical efficiency of primary coolant pumps
+eta_coolant_pump_electric   = 0.87 * electrical efficiency of primary coolant pumps
 i_fw_blkt_shared_coolant    = 0 * Switch for whether the FW and BB are on the same pump system
 outlet_temp_liq = 873.0 * Inlet (scan var 68) and Outlet (scan var 69) temperature of the liquid breeder/coolant [K]
 
