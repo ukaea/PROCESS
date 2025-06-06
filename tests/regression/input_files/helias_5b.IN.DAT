@@ -117,7 +117,7 @@ xpertin  = 1.5          *Perpendicular heat transport coefficient (m2/s)
 
 denstl   = 7800.0       *Density of steel (kg/m3)
 f_p_blkt_multiplication    = 1.18         *Energy multiplication in blanket and shield
-etahtp   = 1.0          *Electrical efficiency of primary coolant pumps
+eta_coolant_pump_electric   = 1.0          *Electrical efficiency of primary coolant pumps
 fblbe    = 0.47         *Beryllium fraction of blanket by volume
 fblli2o  = 0.07         *Lithium oxide fraction of blanket by volume
 fbllipb  = 0.00         *Lithium lead fraction of blanket by volume

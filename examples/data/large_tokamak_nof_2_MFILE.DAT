@@ -1073,7 +1073,7 @@
  Total_electrical_pumping_power_for_primary_coolant_(MW)__________________ (p_coolant_pump_elec_total_mw)________________________ 2.00374097458155489e+02 OP
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield_________________ (fpumpshld)____________________ 5.00000000000000010e-03
  Coolant_pump_power_/_non-pumping_thermal_power_in_divertor_______________ (fpumpdiv)_____________________ 5.00000000000000010e-03
- Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (etahtp)_______________________ 8.70000000000000107e-01
+ Electrical_efficiency_of_heat_transport_coolant_pumps____________________ (eta_coolant_pump_electric)_______________________ 8.70000000000000107e-01
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle__ (eta_turbine)________________________ 4.00000000000000022e-01
  Fraction_of_total_high-grade_thermal_power_to_divertor___________________ (f_p_div_primary_heat)_________________ 1.06636673511010222e-01 OP
  Total_power_leaving_reactor_(across_vacuum_vessel_boundary)_(MW)_________ _______________________________ 1.99514117238382801e+03 OP
@@ -1356,7 +1356,7 @@ primary_pumping = 3 * Switch for pumping power for primary coolant (mechanical p
 secondary_cycle = 2 * Switch for power conversion cycle;
 vfshld   = 0.60 * coolant void fraction in shield
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
-etahtp   = 0.87 * electrical efficiency of primary coolant pumps
+eta_coolant_pump_electric   = 0.87 * electrical efficiency of primary coolant pumps
 
 *-----------------Global Variables-----------------*
 
