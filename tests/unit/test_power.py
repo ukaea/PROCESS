@@ -2095,7 +2095,7 @@ class Power2Param(NamedTuple):
 
     qnuc: Any = None
 
-    etahtp: Any = None
+    eta_coolant_pump_electric: Any = None
 
     f_p_blkt_multiplication: Any = None
 
@@ -2291,7 +2291,7 @@ class Power2Param(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
-            etahtp=0.87000000000000011,
+            eta_coolant_pump_electric=0.87000000000000011,
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
@@ -2393,7 +2393,7 @@ class Power2Param(NamedTuple):
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             p_fw_rad_total_mw=254.87601794907812,
             qnuc=12920,
-            etahtp=0.87000000000000011,
+            eta_coolant_pump_electric=0.87000000000000011,
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
@@ -2530,7 +2530,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 
-    monkeypatch.setattr(fwbs_variables, "etahtp", power2param.etahtp)
+    monkeypatch.setattr(fwbs_variables, "eta_coolant_pump_electric", power2param.eta_coolant_pump_electric)
 
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
