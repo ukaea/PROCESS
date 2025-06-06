@@ -395,12 +395,9 @@ class Power:
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
         None
         """
-        ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
 
-        # Power to PF coil power supplies, MW
-        ppfmw = 1.0e-3 * pf_power_variables.srcktpm
 
-        if pf_power_variables.iscenr == 2:
+        if pf_power_variables.i_pf_energy_storage_source == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
@@ -422,9 +419,9 @@ class Power:
 
         #  Total pulsed power system load, MW
         heat_transport_variables.pacpmw = (
-            ppfmw
+            1.0e-3 * pf_power_variables.srcktpm
             + bdvmw
-            + ptfmw
+            + heat_transport_variables.p_tf_electric_supplies_mw
             + crymw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
@@ -434,7 +431,7 @@ class Power:
 
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
-        if pf_power_variables.iscenr != 2:
+        if pf_power_variables.i_pf_energy_storage_source != 2:
             heat_transport_variables.pacpmw = (
                 heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
             )
@@ -3053,7 +3050,7 @@ def init_pf_power_variables():
     """Initialise PF coil power variables"""
     pf_power_variables.acptmax = 0.0
     pf_power_variables.ensxpfm = 0.0
-    pf_power_variables.iscenr = 2
+    pf_power_variables.i_pf_energy_storage_source = 2
     pf_power_variables.pfckts = 0.0
     pf_power_variables.spfbusl = 0.0
     pf_power_variables.spsmva = 0.0
