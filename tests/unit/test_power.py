@@ -2046,7 +2046,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pflux_plant_floor_electric", acpowparam.pflux_plant_floor_electric)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "pflux_plant_floor_electric",
+        acpowparam.pflux_plant_floor_electric,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2056,7 +2060,11 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
 
-    monkeypatch.setattr(pf_power_variables, "i_pf_energy_storage_source", acpowparam.i_pf_energy_storage_source)
+    monkeypatch.setattr(
+        pf_power_variables,
+        "i_pf_energy_storage_source",
+        acpowparam.i_pf_energy_storage_source,
+    )
 
     monkeypatch.setattr(pf_power_variables, "srcktpm", acpowparam.srcktpm)
 
@@ -2132,7 +2140,7 @@ class Power2Param(NamedTuple):
 
     p_div_coolant_pump_mw: Any = None
 
-    nphx: Any = None
+    n_primary_heat_exchangers: Any = None
 
     helpow: Any = None
 
@@ -2304,7 +2312,7 @@ class Power2Param(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7942175899286208,
-            nphx=3,
+            n_primary_heat_exchangers=3,
             helpow=76851.741036987034,
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=0,
@@ -2406,7 +2414,7 @@ class Power2Param(NamedTuple):
             fpumpblkt=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7933419035282543,
-            nphx=3,
+            n_primary_heat_exchangers=3,
             helpow=220505.71684249729,
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=489.56557141942733,
@@ -2619,7 +2627,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_div_coolant_pump_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "nphx", power2param.nphx)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "n_primary_heat_exchangers",
+        power2param.n_primary_heat_exchangers,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "helpow", power2param.helpow)
 
