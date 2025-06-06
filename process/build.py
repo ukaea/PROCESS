@@ -4,7 +4,7 @@ import numpy as np
 
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
-from process.data_structure import build_variables as build_variables_python
+from process.data_structure import build_python_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -27,7 +27,6 @@ class Build:
     def __init__(self):
         self.outfile = constants.nout
         self.mfile = constants.mfile
-        self.ripflag = build_variables_python.ripflag
 
     def portsz(self):
         """Port size calculation
@@ -1897,7 +1896,7 @@ class Build:
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
-            self.ripflag,
+            build_python_variables.ripflag,
         ) = self.ripple_amplitude(
             tfcoil_variables.ripmax,
             build_variables.r_tf_outboard_mid,
@@ -1929,7 +1928,7 @@ class Build:
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
-            self.ripflag,
+            build_python_variables.ripflag,
         ) = self.ripple_amplitude(
             tfcoil_variables.ripmax,
             build_variables.r_tf_outboard_mid,
@@ -2058,7 +2057,7 @@ class Build:
 
             po.oheadr(self.outfile, "Radial Build")
 
-            if self.ripflag != 0:
+            if build_python_variables.ripflag != 0:
                 po.ocmmnt(
                     self.outfile,
                     "(Ripple result may not be accurate, as the fit was outside",
@@ -2067,14 +2066,14 @@ class Build:
                 po.oblnkl(self.outfile)
                 error_handling.report_error(62)
 
-                if self.ripflag == 1:
+                if build_python_variables.ripflag == 1:
                     error_handling.fdiags[0] = (
                         tfcoil_variables.wwp1
                         * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
                     error_handling.report_error(141)
-                elif self.ripflag == 2:
+                elif build_python_variables.ripflag == 2:
                     # Convert to integer as idiags is integer array
                     error_handling.idiags[0] = int(tfcoil_variables.n_tf_coils)
                     error_handling.report_error(142)

@@ -15,6 +15,9 @@ from process.buildings import init_buildings_variables
 from process.costs import init_cost_variables
 from process.cs_fatigue import init_cs_fatigue_variables
 from process.current_drive import init_current_drive_variables
+from process.data_structure.build_python_variables import (
+    init_build_variables as init_python_build_variables,
+)
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_python_variables import (
     init_cost_variables as init_cost_variables_new,
@@ -287,6 +290,7 @@ def init_all_module_vars():
     init_cost_2015_variables()
     init_power_variables()
     init_cost_variables_new()
+    init_python_build_variables()
 
     fortran.init_module.init_fortran_modules()
 
