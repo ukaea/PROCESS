@@ -395,7 +395,8 @@ class Power:
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
         None
         """
-
+        ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
+        ppfmw = 1.0e-3 * pf_power_variables.srcktpm
         if pf_power_variables.i_pf_energy_storage_source == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
@@ -418,9 +419,9 @@ class Power:
 
         #  Total pulsed power system load, MW
         heat_transport_variables.pacpmw = (
-            1.0e-3 * pf_power_variables.srcktpm
+            ppfmw
             + bdvmw
-            + heat_transport_variables.p_tf_electric_supplies_mw
+            + ptfmw
             + crymw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_coolant_pump_elec_total_mw
@@ -536,18 +537,18 @@ class Power:
         #  in the coolant.  The difference should be lost as secondary heat.
 
         power_variables.p_fw_blkt_coolant_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.etahtp
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
         power_variables.p_shld_coolant_pump_elec_mw = (
-            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
         power_variables.p_div_coolant_pump_elec_mw = (
-            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Secondary breeder coolant loop. Should return zero if not used.
         power_variables.p_blkt_breeder_pump_elec_mw = (
-            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.etahtp
+            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Total mechanical pump power needed (deposited in coolant)
@@ -1102,8 +1103,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electrical efficiency of heat transport coolant pumps",
-            "(etahtp)",
-            fwbs_variables.etahtp,
+            "(eta_coolant_pump_electric)",
+            fwbs_variables.eta_coolant_pump_electric,
         )
         # #284
         po.osubhd(self.outfile, "Plant thermodynamics: options :")
@@ -3106,7 +3107,6 @@ def init_heat_transport_variables():
     heat_transport_variables.p_div_secondary_heat_mw = 0.0
     heat_transport_variables.p_hcd_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_secondary_heat_mw = 0.0
-    heat_transport_variables.pseclossmw = 0.0
     heat_transport_variables.p_shld_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_primary_heat_mw = 0.0
     heat_transport_variables.pflux_plant_floor_electric = 150.0
