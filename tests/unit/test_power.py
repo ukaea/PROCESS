@@ -1923,7 +1923,7 @@ class AcpowParam(NamedTuple):
 
     fmgdmw: Any = None
 
-    pwpm2: Any = None
+    pflux_plant_floor_electric: Any = None
 
     p_coolant_pump_elec_total_mw: Any = None
 
@@ -1955,7 +1955,7 @@ class AcpowParam(NamedTuple):
             peakmva=736.39062584245937,
             fcsht=0,
             fmgdmw=0,
-            pwpm2=150,
+            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.28554165620102,
             pacpmw=0,
             i_pf_energy_storage_source=2,
@@ -1976,7 +1976,7 @@ class AcpowParam(NamedTuple):
             peakmva=90.673341440806112,
             fcsht=61.882833632875375,
             fmgdmw=0,
-            pwpm2=150,
+            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.2162627659944,
             pacpmw=1226.1273281650574,
             i_pf_energy_storage_source=2,
@@ -2046,7 +2046,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
 
-    monkeypatch.setattr(heat_transport_variables, "pwpm2", acpowparam.pwpm2)
+    monkeypatch.setattr(heat_transport_variables, "pflux_plant_floor_electric", acpowparam.pflux_plant_floor_electric)
 
     monkeypatch.setattr(
         heat_transport_variables,

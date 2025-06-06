@@ -1055,7 +1055,7 @@ INPUT_VARIABLES = {
         fortran.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
     "pumptp": InputVariable(fortran.vacuum_variables, float, range=(0.0, 1e30)),
-    "pwpm2": InputVariable(
+    "pflux_plant_floor_electric": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),

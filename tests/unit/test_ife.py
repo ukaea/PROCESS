@@ -2608,7 +2608,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 class IfeacpParam(NamedTuple):
     a_plant_floor_effective: Any = None
     p_plant_electric_base: Any = None
-    pwpm2: Any = None
+    pflux_plant_floor_electric: Any = None
     pacpmw: Any = None
     p_cryo_plant_electric_mw: Any = None
     vachtmw: Any = None
@@ -2633,7 +2633,7 @@ class IfeacpParam(NamedTuple):
         IfeacpParam(
             a_plant_floor_effective=128814.70697706047,
             p_plant_electric_base=5000000,
-            pwpm2=150,
+            pflux_plant_floor_electric=150,
             pacpmw=0,
             p_cryo_plant_electric_mw=10,
             vachtmw=0.5,
@@ -2675,7 +2675,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
         "p_plant_electric_base",
         ifeacpparam.p_plant_electric_base,
     )
-    monkeypatch.setattr(heat_transport_variables, "pwpm2", ifeacpparam.pwpm2)
+    monkeypatch.setattr(heat_transport_variables, "pflux_plant_floor_electric", ifeacpparam.pflux_plant_floor_electric)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", ifeacpparam.pacpmw)
     monkeypatch.setattr(
         heat_transport_variables,

@@ -412,7 +412,7 @@ class Power:
         basemw = heat_transport_variables.p_plant_electric_base * 1.0e-6
 
         #  Power needed per unit floor area, kW/m2
-        pkwpm2 = heat_transport_variables.pwpm2 * 1.0e-3
+        pkwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1.0e-3
 
         #  Power to divertor coil supplies, MW
         bdvmw = 0.0e0
@@ -3108,7 +3108,7 @@ def init_heat_transport_variables():
     heat_transport_variables.pseclossmw = 0.0
     heat_transport_variables.p_shld_secondary_heat_mw = 0.0
     heat_transport_variables.p_plant_primary_heat_mw = 0.0
-    heat_transport_variables.pwpm2 = 150.0
+    heat_transport_variables.pflux_plant_floor_electric = 150.0
     heat_transport_variables.p_tf_electric_supplies_mw = 0.0
     heat_transport_variables.tlvpmw = 0.0
     heat_transport_variables.p_tritium_plant_electric_mw = 15.0
