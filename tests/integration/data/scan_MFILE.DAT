@@ -957,7 +957,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -1952,7 +1952,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -2947,7 +2947,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -3942,7 +3942,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -4937,7 +4937,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -5932,7 +5932,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -6927,7 +6927,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -7922,7 +7922,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    
@@ -8917,7 +8917,7 @@
  TF_coil_resistive_power_(MW)____________________________________________ (tfcmw)_______________________      0.0000E+00    
  Total_low-grade_thermal_power_(MW)______________________________________ (p_plant_secondary_heat_mw)____________________      2.3892E+02    
  Total_High-grade_thermal_power_(MW)_____________________________________ (p_plant_primary_heat_mw)____________________      2.6501E+03    
- Number_of_primary_heat_exchangers_______________________________________ (nphx)________________________              3 OP 
+ Number_of_primary_heat_exchangers_______________________________________ (n_primary_heat_exchangers)________________________              3 OP 
  Transport_power_from_scaling_law_(MW)___________________________________ (pscalingmw)__________________      3.2994E+02    
  Radiation_power_from_inside_"radius_plasma_core_norm"_(MW)___________________________ (pcoreradmw.)_________________      1.0500E+02    
  Total_(MW)______________________________________________________________ ______________________________      4.3494E+02    

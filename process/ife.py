@@ -1956,7 +1956,7 @@ class IFE:
 
         # Number of primary heat exchangers
 
-        heat_transport_variables.nphx = np.ceil(
+        heat_transport_variables.n_primary_heat_exchangers = np.ceil(
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0
         )
 
@@ -2145,8 +2145,8 @@ class IFE:
             process_output.ovarin(
                 self.outfile,
                 "Number of primary heat exchangers",
-                "(nphx)",
-                heat_transport_variables.nphx,
+                "(n_primary_heat_exchangers)",
+                heat_transport_variables.n_primary_heat_exchangers,
             )
 
             if cost_variables.ireactor == 1:
