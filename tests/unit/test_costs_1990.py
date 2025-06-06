@@ -485,7 +485,7 @@ def test_acc242(monkeypatch, costs):
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(htv, "pacpmw", 630.0)
-    monkeypatch.setattr(htv, "fcsht", 65.0)
+    monkeypatch.setattr(htv, "p_plant_electric_base_total_mw", 65.0)
     monkeypatch.setattr(costs, "c242", 0)
 
     costs.acc242()
@@ -4910,7 +4910,7 @@ class Acc242Param(NamedTuple):
 
     pacpmw: Any = None
 
-    fcsht: Any = None
+    p_plant_electric_base_total_mw: Any = None
 
     c24: Any = None
 
@@ -4927,7 +4927,7 @@ class Acc242Param(NamedTuple):
         Acc242Param(
             lsa=2,
             pacpmw=1226.1273281650574,
-            fcsht=61.882833632875375,
+            p_plant_electric_base_total_mw=61.882833632875375,
             c24=0,
             c242=0,
             cpp=28.655661819943806,
@@ -4936,7 +4936,7 @@ class Acc242Param(NamedTuple):
         Acc242Param(
             lsa=2,
             pacpmw=651.53859031110449,
-            fcsht=62.237143915360818,
+            p_plant_electric_base_total_mw=62.237143915360818,
             c24=44.135962032044716,
             c242=12.196675853540341,
             cpp=29.255948217627452,
@@ -4961,7 +4961,11 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "pacpmw", acc242param.pacpmw)
 
-    monkeypatch.setattr(heat_transport_variables, "fcsht", acc242param.fcsht)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "p_plant_electric_base_total_mw",
+        acc242param.p_plant_electric_base_total_mw,
+    )
 
     monkeypatch.setattr(costs, "c24", acc242param.c24)
 
