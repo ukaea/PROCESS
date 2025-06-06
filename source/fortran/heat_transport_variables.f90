@@ -166,7 +166,7 @@ module heat_transport_variables
     real(dp) :: p_plant_primary_heat_mw
     !! High-grade heat useful for electric production (MW)
 
-    real(dp) :: pwpm2
+    real(dp) :: pflux_plant_floor_electric
     !! base AC power requirement per unit floor area (W/m2)
 
     real(dp) :: p_tf_electric_supplies_mw
