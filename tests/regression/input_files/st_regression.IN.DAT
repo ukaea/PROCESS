@@ -3006,7 +3006,7 @@ etahtp = 0.87
 * DESCRIPTION:   Electrical efficiency of primary coolant pumps (default = 0.95)
 * JUSTIFICATION: Not yet set
 
-*pwpm2 = 
+*pflux_plant_floor_electric = 
 * DESCRIPTION:   Base AC power requirement (W/m2)
 * JUSTIFICATION: 
 
