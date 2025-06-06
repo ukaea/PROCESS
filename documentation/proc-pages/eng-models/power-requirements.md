@@ -122,6 +122,12 @@ $$
 \overbrace{P_{\text{HCD,secondary-heat}}}^{\texttt{p_hcd_secondary_heat_mw}} = P_{\text{HCD, nuclear}} + P_{\text{HCD,}\gamma}
 $$
 
+13: The number of primary heat exchangers is calculated as follows:
+
+$$
+N_{\text{PHX}} = \left\lceil \dfrac{P_{\text{plant,primary-heat}}}{1000} \right\rceil
+$$
+
 ---
 
 #### Remainder power conversion | `power2()`

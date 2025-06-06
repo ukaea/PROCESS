@@ -778,6 +778,16 @@ class Power:
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
 
+    def calculate_cryo_loads(self) -> None:
+        """
+        Calculates and updates the cryogenic heat loads for the system.
+
+        This method computes the various cryogenic heat loads, including conduction/radiation,
+        nuclear heating, AC losses, and resistive losses in current leads. It also updates
+        the miscellaneous allowance and total heat removal at cryogenic temperatures.
+        The results are stored in the corresponding instance variables.
+        """
+
         #  Cryogenic power
         # ---
         # Initialisation (unchanged if all coil resisitive)
