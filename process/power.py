@@ -396,7 +396,6 @@ class Power:
         None
         """
 
-
         if pf_power_variables.i_pf_energy_storage_source == 2:
             ppfmw = ppfmw + heat_transport_variables.peakmva
 
@@ -721,7 +720,7 @@ class Power:
         )
 
         #  Number of primary heat exchangers
-        heat_transport_variables.nphx = math.ceil(
+        heat_transport_variables.n_primary_heat_exchangers = math.ceil(
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
 
@@ -1490,8 +1489,8 @@ class Power:
         po.ovarin(
             self.outfile,
             "Number of primary heat exchangers",
-            "(nphx)",
-            heat_transport_variables.nphx,
+            "(n_primary_heat_exchangers)",
+            heat_transport_variables.n_primary_heat_exchangers,
             "OP ",
         )
 
@@ -3090,7 +3089,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_coolant_pump_loss_total_mw = 0.0
     heat_transport_variables.ipowerflow = 1
     heat_transport_variables.i_shld_primary_heat = 1
-    heat_transport_variables.nphx = 0
+    heat_transport_variables.n_primary_heat_exchangers = 0
     heat_transport_variables.pacpmw = 0.0
     heat_transport_variables.peakmva = 0.0
     heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
