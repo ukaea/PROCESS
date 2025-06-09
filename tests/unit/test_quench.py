@@ -1,44 +1,57 @@
 import numpy as np
 
-from process.quench import _copper_irradiation_resistivity
+from process.quench import (
+    _copper_irradiation_resistivity,
+    _copper_specific_heat_capacity,
+    _helium_density,
+)
 
 
 def test_copper_irradiation():
-    fluence = (
-        np.array([
-            0.24,
-            0.45,
-            0.60,
-            0.79,
-            1.06,
-            1.26,
-            1.56,
-            1.89,
-            2.23,
-            2.68,
-            2.92,
-            3.13,
-            3.30,
-            3.59,
-            3.90,
-            4.20,
-            4.71,
-            5.04,
-            5.34,
-            5.56,
-            5.82,
-            6.03,
-            6.23,
-            6.58,
-            6.86,
-            7.38,
-            7.75,
-            8.11,
-            8.40,
-            8.51,
-        ])
-        * 1e20
-    )
+    """
+    Data as read off from:
+
+    M. Nakagawa et al., "High-dose neutron-irradiation
+    effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
+    https://doi.org/10.1103/PhysRevB.16.5285  Figure 6
+
+    and listed in:
+
+    M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
+    WP12, PEX, Super-X Divertor for DEMO
+    """
+    fluence = 1e20 * np.array([
+        0.24,
+        0.45,
+        0.60,
+        0.79,
+        1.06,
+        1.26,
+        1.56,
+        1.89,
+        2.23,
+        2.68,
+        2.92,
+        3.13,
+        3.30,
+        3.59,
+        3.90,
+        4.20,
+        4.71,
+        5.04,
+        5.34,
+        5.56,
+        5.82,
+        6.03,
+        6.23,
+        6.58,
+        6.86,
+        7.38,
+        7.75,
+        8.11,
+        8.40,
+        8.51,
+    ])
 
     nu_irr_data = 1e-11 * np.array([
         16.32,
@@ -75,3 +88,52 @@ def test_copper_irradiation():
 
     nu_irr = _copper_irradiation_resistivity(fluence)
     assert np.allclose(nu_irr, nu_irr_data)
+
+
+def test_copper_specific_heat_capacity():
+    """
+    Data from NIST:
+
+    J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
+    at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+    """
+    temperature_k = np.array([
+        4,
+        6,
+        8,
+        10,
+        14,
+        20,
+        30,
+        50,
+        80,
+        100,
+        120,
+        160,
+        200,
+        260,
+    ])
+    heat_capacity_j_per_kg_k = np.array([
+        0.09,
+        0.23,
+        0.48,
+        0.92,
+        2.35,
+        7.49,
+        26.7,
+        96.9,
+        203,
+        252,
+        287,
+        331,
+        356,
+        377,
+    ])
+
+    cp = _copper_specific_heat_capacity(temperature_k)
+    # NIST quotes errors of 5 - 20 % below 100 K... (comparable to data scatter)
+    assert np.allclose(cp, heat_capacity_j_per_kg_k, rtol=0.24)
+
+
+def test_helium_density():
+    assert np.isclose(_helium_density(4.0, 6e5), 147.0, rtol=2e-2)

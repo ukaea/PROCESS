@@ -1687,6 +1687,27 @@ class SuperconductingTFCoil(TFCoil):
         detection_time,
         fluence,
     ):
+        """
+        Calculates the maximum conductor current density limited by the protection limit,
+        and the discharge voltage for a TF coil.
+
+        :param float aio: Operating current (A)
+        :param float tfes: Energy stored in one TF coil (J)
+        :param float acs: Cable space - inside area (m²)
+        :param float aturn: Area per turn (i.e. entire cable) (m²)
+        :param float tdump: Dump time (s)
+        :param float fcond: Fraction of cable space containing conductor
+        :param float fcu: Fraction of conductor that is copper
+        :param float tba: Helium temperature at peak field point (K)
+        :param float tmax: Maximum conductor temperature during quench (K)
+        :param float peak_field: Maximum conductor temperature during quench (T)
+        :param float cur_rrr: Copper residual-resistance-ratio
+        :param float detection_time: Quench detection time (s)
+        :param float fluence: End-of-life neutron fluence in the copper (1/m²)
+
+        :return float ajwpro: Winding pack current density from temperature rise protection (A/m²)
+        :return float vd: Discharge voltage imposed on a TF coil (V)
+        """
         #  Dump voltage
         vd = 2.0e0 * tfes / (tdump * aio)
         ajwpro = (
