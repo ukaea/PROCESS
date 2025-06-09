@@ -196,7 +196,6 @@ cppa: float = None
 c22128: float = None
 
 
-# TODO rename
 def init_cost_variables():
     global c228
     c228 = 0.0

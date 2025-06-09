@@ -879,30 +879,36 @@ def create_dicts(project):
                 # (either is None, or value initialised in init_variables fn)
                 # set default to be None if variable is not being initialised eg if you
                 # just have `example_double: float` instead of `example_double: float = None`
-                initial_value = getattr(module, node.target.id, None)
+                initial_value = getattr(module, node.target.id)
                 # JSON doesn't like np arrays
                 if type(initial_value) is np.ndarray:
                     initial_value = initial_value.tolist()
                 initial_values_dict[node.target.id] = initial_value
-                # get the variable names
+                # get the variable name and add to variable_names list
                 var_name = node.target.id
-                # add variable name to the list if not already there
-                if var_name not in variable_names:
-                    variable_names.append(var_name)
+                variable_names.append(var_name)
                 # Now want to get the types of these variables
                 if isinstance(node.annotation, ast.Subscript):
                     if node.annotation.value.id == "list":
                         if node.annotation.slice.id == "str":
                             var_type = "string_array"
-                        if node.annotation.slice.id == "float":
+                        elif node.annotation.slice.id == "float":
                             var_type = "real_array"
-                        if node.annotation.slice.id == "int":
+                        elif node.annotation.slice.id == "int":
                             var_type = "int_array"
+                        else:
+                            raise TypeError(
+                                f"The type annotation of variable {node.target.id} is {node.annotation.value.id}[{node.annotation.slice.id}], and this is not recognised. Please change your type annotation for this variable. PROCESS recognises the following type annotations: list[float], list[int], list[str]."
+                            )
                 else:
                     if node.annotation.id == "float":
                         var_type = "real_variable"
-                    if node.annotation.id == "int":
+                    elif node.annotation.id == "int":
                         var_type = "int_variable"
+                    else:
+                        raise TypeError(
+                            f"The type annotation of variable {node.target.id} is {node.annotation.id}, and this is not recognised. Please change your type annotation for this variable. PROCESS recognises the following type annotations: float, int."
+                        )
 
                 variable_types[node.target.id] = var_type
         # get the variable descriptions
