@@ -170,23 +170,24 @@ def test_calculate_quench_protection_intuitive_gradient():
     grad = approx_fprime(
         x, lambda x: calculate_quench_protection_current_density(*x), epsilon=1e-6
     )
-    # Increasing discharge time will increase the required protection current
+    # Increasing discharge time will decrease the protection current
     assert grad[0] < 0.0
-    # Increasing field will increase the required protection current
+    # Increasing field will decrease the protection current
     assert grad[1] < 0.0
-    # Increasing copper fraction will lower the required protection current
+    # Increasing copper fraction will increase the required protection current
     assert grad[2] > 0.0
-    # Increasing helium fraction will increase the required protection current
+    # Increasing helium fraction will decrease the protection current
     assert grad[3] < 0.0
-    # Increasing start temperature will increase the required protection current
+    # Increasing start temperature will decrease the protection current
     # This is because this reduces the range over which the integral is performed
     assert grad[4] < 0.0
-    # Increasing max temperature will lower the required protection current
+    # Increasing max temperature will increase the protection current
     # This is because this increases the range over which the integral is performed
     assert grad[5] > 0.0
-    # Increasing RRR will lower the required protection current
+    # Increasing RRR will increase protection current
     assert grad[6] > 0.0
-    # Increasing detection time will increase the required protection current
+    # Increasing detection time will decrease the protection current
     assert grad[7] < 0.0
-    # Increasing fluence will increase the required protection current
+    assert np.isclose(grad[7], 2.0 * grad[0])
+    # Increasing fluence will decrease the required protection current
     assert grad[8] < 0.0
