@@ -2647,7 +2647,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, do not care about auxiliary power lower limit 
 * VARIABLES:     p_hcd_injected_total_mw (MW) calculated in-situ
 
-*auxmin =  
+*p_hcd_injected_min =  
 * DESCRIPTION:   Minimum required auxiliary power (MW)
 * JUSTIFICATION: Turned off, not using icc = 40
 
