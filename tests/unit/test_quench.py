@@ -179,7 +179,7 @@ def test_calculate_quench_protection_intuitive_gradient():
     # Increasing helium fraction will decrease the protection current
     assert grad[3] < 0.0
     # Increasing start temperature will decrease the protection current
-    # This is because this reduces the range over which the integral is performed
+    # This is because this decreases the range over which the integral is performed
     assert grad[4] < 0.0
     # Increasing max temperature will increase the protection current
     # This is because this increases the range over which the integral is performed
