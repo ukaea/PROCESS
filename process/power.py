@@ -537,18 +537,22 @@ class Power:
         #  in the coolant.  The difference should be lost as secondary heat.
 
         power_variables.p_fw_blkt_coolant_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+            / fwbs_variables.eta_coolant_pump_electric
         )
         power_variables.p_shld_coolant_pump_elec_mw = (
-            heat_transport_variables.p_shld_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
+            heat_transport_variables.p_shld_coolant_pump_mw
+            / fwbs_variables.eta_coolant_pump_electric
         )
         power_variables.p_div_coolant_pump_elec_mw = (
-            heat_transport_variables.p_div_coolant_pump_mw / fwbs_variables.eta_coolant_pump_electric
+            heat_transport_variables.p_div_coolant_pump_mw
+            / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Secondary breeder coolant loop. Should return zero if not used.
         power_variables.p_blkt_breeder_pump_elec_mw = (
-            heat_transport_variables.p_blkt_breeder_pump_mw / fwbs_variables.eta_coolant_pump_electric
+            heat_transport_variables.p_blkt_breeder_pump_mw
+            / fwbs_variables.eta_coolant_pump_electric
         )
 
         # Total mechanical pump power needed (deposited in coolant)
@@ -895,7 +899,7 @@ class Power:
             )
 
             #  Recirculating power fraction
-            cirpowfr = (
+            heat_transport_variables.f_p_plant_electric_recirc = (
                 heat_transport_variables.p_plant_electric_gross_mw
                 - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.p_plant_electric_gross_mw
@@ -2000,7 +2004,11 @@ class Power:
             self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
         )
         po.ovarrf(
-            self.outfile, "Recirculating power fraction", "(cirpowfr)", cirpowfr, "OP "
+            self.outfile,
+            "Recirculating power fraction",
+            "(f_p_plant_electric_recirc)",
+            heat_transport_variables.f_p_plant_electric_recirc,
+            "OP ",
         )
 
     def power3(self, output: bool):
@@ -3115,3 +3123,4 @@ def init_heat_transport_variables():
     heat_transport_variables.p_tritium_plant_electric_mw = 15.0
     heat_transport_variables.temp_turbine_coolant_in = 0.0
     heat_transport_variables.vachtmw = 0.5
+    heat_transport_variables.f_p_plant_electric_recirc = 0.0
