@@ -5673,3 +5673,4 @@ def init_tfcoil_variables():
     tfv.theta1_vv = 1.0  # 1 Deg
     tfv.max_vv_stress = 143.0e6
     tfv.rrr_tf_cu = 100.0
+    tfv.t_tf_quench_detection = 3.0

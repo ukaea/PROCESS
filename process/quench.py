@@ -734,3 +734,15 @@ if __name__ == "__main__":
     ax.set_xlabel("n_quad")
     ax.set_ylabel("jwdgpro [A/m^2]")
     plt.show()
+
+    f, ax = plt.subplots()
+    ax.loglog(tm, rm0, ls="", marker="o", label="MATPRO data B=0, RRR=100")
+    ax.loglog(
+        t, _copper_electrical_resistivity(t, 0, 100, 3e23), label="phi_n = 3e23 1/m^2"
+    )
+    ax.loglog(t, _copper_electrical_resistivity(t, 0, 100, 0), label="phi_n = 0 1/m^2")
+    ax.legend()
+    ax.set_xlabel("T [K]")
+    ax.set_ylabel("nu [Ohm.m]")
+    ax.set_title("B = 0 T, RRR = 100")
+    plt.show()

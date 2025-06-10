@@ -1334,6 +1334,9 @@ INPUT_VARIABLES = {
     "t_in_bb": InputVariable(
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
+    "t_tf_quench_detection": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "t_out_bb": InputVariable(
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
