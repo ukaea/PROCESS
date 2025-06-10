@@ -129,7 +129,7 @@ def write(models, _outfile):
 
     # Plant heat transport pt 2 & 3
     models.power.output_cryogenics()
-    models.power.power2(output=True)
+    models.power.plant_electric_production(output=True)
     models.power.power3(output=True)
 
     # Water usage in secondary cooling system
