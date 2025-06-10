@@ -1049,7 +1049,13 @@ The LHS is solved analytically, assuming that the current is at the operational 
 
 The resistivity of copper, $\nu_{Cu}$ is an extremely important parameter in this model. The residual-resistance-ratio (RRR) of the copper can be specified, and magneto-resistive and irradiation-induced increases in resistivity are accounted for. The magnetic field at which the copper resisitivity is calculated is kept constant at $B_{TF,peak}$. This is conservative, and to simplify the implementation (keeping the separation of the $t$ and $T$ integrations).
 
-- `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
+Formally this gives:
+
+$$
+J_{TF,quench} = \sqrt{\dfrac{1}{\tau_{TF,discharge}/2 + t_{detection}} f_{Cu} \bigg( f_{He}\int_{T_0}^{T_{max}} \dfrac{\rho_{He}C_{p,He}}{\nu_{Cu}} dT + f_{Cu} \int_{T_0}^{T_{max}} \dfrac{\rho_{Cu}C_{p,Cu}}{\nu_{Cu}} dT + f_{sc} \int_{T_0}^{T_{max}} \dfrac{\rho_{sc}C_{p,sc}}{\nu_{Cu}} dT \bigg)}
+$$
+
+- `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, $J_{TF,quench}$, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
 
 ## Code structure
 
