@@ -1029,7 +1029,25 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 
 To be done. Please contact the PROCESS team if you need more informations.
 
-## Quench protection (TODO)
+## Quench protection
+
+Superconducting quenches in the TF coil are modelled using a simple 0-D adiabatic heat balance in which the heat rise in the copper during a quench is equal to the heat rise required to increase the material temperature by $dT$. This is known as a ``hotspot criterion'' model, as the maximum temperature during a quench is the termination criterion (the point at which the quench is considered irreparably damaging).
+
+The copper is assumed to carry the full current during a quench, and the materials are assumed to be in thermal equilibrium. We have:
+
+$$
+P(t)dt = \sum_i c_{P,i}\rho_{i} V_{i} dT
+$$
+
+Where $P(t)$ is the power deposited in the copper through Joule heating at time t, and the sum on the RHS is over the conductor consitutents (copper, helium, superconductor), where $V_{i}$ is the volume of said constituent. This can be rewritten as:
+
+$$
+\int J(t)^2 dt = \int_{T_{op}}^{T_{hotspot}} \sum_i f_{i}\dfrac{c_{P,i}\rho_{i}}{\nu_{Cu}} dT
+$$
+
+The LHS is solved analytically, assuming that the current is at the operational value $J_{op}$ for some quench detection time $t_{detection}$ and then decays exponentially with a time constant $\tau_{discharge}$. The RHS is solved numerically by integration of the temperature-dependent material properties over $dT$.
+
+The resistivity of copper, $\nu_{Cu}$ is an extremely important parameter in this model. The residual-resistance-ratio (RRR) of the copper can be specified, and magneto-resistive and irradiation-induced increases in resistivity are accounted for. The magnetic field at which the copper resisitivity is calculated is kept constant at $B_{TF,peak}$. This is conservative, and to simplify the implementation (keeping the separation of the $t$ and $T$ integrations).
 
 - `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, constraint equation no.\ 35 should be turned on with iteration variable 53 ( `fjprot`).
 
