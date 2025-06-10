@@ -128,9 +128,62 @@ $$
 N_{\text{PHX}} = \left\lceil \dfrac{P_{\text{plant,primary-heat}}}{1000} \right\rceil
 $$
 
----
+-----------
 
-#### Remainder power conversion | `plant_electric_production()`
+#### Electric power production | `plant_electric_production()`
+
+1: Calculate the total base plant facility load as a combination of base load and the power needed per $\text{m}^2$ of floor space
+
+$$
+\overbrace{P_{\text{base,total}}}^\texttt{p_plant_electric_base_total_mw} = \overbrace{P_{\text{base}}}^\texttt{p_plant_electric_base} \\
++ \underbrace{A_{\text{floor,effective}}}_{\texttt{a_plant_floor_effective}} \times \underbrace{q_{\text{floor,effective}}}_{\texttt{pflux_plant_floor_electric}}
+$$
+
+2: The electric demands of the plant core systems are calculated
+
+$$
+\overbrace{P_{\text{core systems}}}^\texttt{p_plant_core_systems_elec_mw} = P_{\text{base,total}} 
+\\ + \overbrace{P_{\text{cryo plant}}}^\texttt{p_cryo_plant_electric_mw} + \overbrace{P_{\text{tritium plant}}}^\texttt{p_tritium_plant_electric_mw}
+\\ + \overbrace{P_{\text{TF}}}^\texttt{p_tf_electric_supplies_mw} + \overbrace{P_{\text{PF}}}^\texttt{p_pf_electric_supplies_mw}
+\\ + \overbrace{P_{\text{vacuum pumps}}}^\texttt{vachtmw} + \underbrace{\overbrace{P_{\text{CP pumps}}}}_{\text{If present}}^\texttt{p_cp_coolant_pump_elec_mw}
+$$
+
+3: The total secondary heat, which is the low-grade thermal power not used for power production is calculated
+
+$$
+\overbrace{P_{\text{secondary heat}}}^\texttt{p_plant_secondary_heat_mw} = P_{\text{core systems}}
+\\ +  \overbrace{P_{\text{HCD, electric loss}}}^\texttt{p_hcd_electric_loss_mw} + \overbrace{P_{\text{pump, electric loss}}}^\texttt{p_coolant_pump_loss_total_mw}
+\\ + \overbrace{P_{\text{div, secondary heat}}}^\texttt{p_div_secondary_heat_mw } + \underbrace{\overbrace{P_{\text{shield, secondary heat}}}}_{\text{If} \ \texttt{i_shld_primary_heat = 0}}^\texttt{p_shld_secondary_heat_mw}
+\\ + \overbrace{P_{\text{HCD, secondary heat}}}^\texttt{p_hcd_secondary_heat_mw} + \overbrace{P_{\text{TF, nuclear}}}^\texttt{p_tf_nuclear_heat_mw}
+$$
+
+4: The gross-electric power produced is calculated
+
+$$
+\overbrace{P_{\text{gross, electric}}}^\texttt{p_plant_electric_gross_mw} = \overbrace{P_{\text{plant, primary-heat}}}^\texttt{p_plant_primary_heat_mw} \times \overbrace{\eta_{\text{turbine}}}^\texttt{eta_turbine}
+\\ + \underbrace{\overbrace{P_{\text{liquid breeder heat}}}^\texttt{p_blkt_liquid_breeder_heat_deposited_mw} \times \overbrace{\eta_{\text{liquid,turbine}}}}_{\text{If present}}^\texttt{etath_liq}
+$$
+
+5: The required recirculated electric power is calculated as the core system power and then the HCD and coolant pump electric powers that would also be on during a pulse.
+
+$$
+\overbrace{P_{\text{recirc, electric}}}^\texttt{p_plant_electric_recirc_mw} = P_{\text{core systems}}
+\\ + \overbrace{P_{\text{HCD electric}}}^\texttt{p_hcd_electric_total_mw} + \overbrace{P_{\text{coolant pumps, electric}}}^\texttt{p_coolant_pump_elec_total_mw}
+$$
+
+
+6: The net-electric power is found by the different of gross and net
+
+$$
+\overbrace{P_{\text{net, electric}}}^\texttt{p_plant_electric_net_mw} = P_{\text{gross, electric}} - P_{\text{recirc, electric}}
+$$
+
+
+7: The recirculated power fraction is then quickly found as
+
+$$
+\overbrace{f_{\text{recirc}}}^\texttt{f_p_plant_electric_recirc} = \frac{P_{\text{gross, electric}} - P_{\text{net, electric}}}{P_{\text{gross, electric}}}
+$$
 
 ---
 
@@ -163,7 +216,7 @@ is possible using the simplified model; indeed, no temperatures
 are even considered in the model.
 
 $$
-\eta_{\text{thermal → electric}} = 0.411
+\eta_{\text{turbine}} = 0.411
 $$
 
 
@@ -178,7 +231,7 @@ It can be used with water or helium primary coolants.
 This model is the same as above but a penalty is applied as the coolant in the divertor has to operate at much lower temperature than the blanket, which may be the case because of the greater heat flux that has to be removed.
 
 $$
-\eta_{\text{thermal → electric}} = 0.411 -0.339f
+\eta_{\text{turbine}} = 0.411 -0.339f
 $$
 
 where $f$ is the fraction of heat to the divertor.
@@ -192,7 +245,7 @@ This model is set with `i_thermal_electric_conversion = 3`.
 The efficiency of the power generation cycle is input by the user via `eta_turbine`.
   
 $$
-\eta_{\text{thermal → electric}} = \texttt{eta_turbine}
+\eta_{\text{turbine}} = \texttt{eta_turbine}
 $$
 
 -----------------
@@ -208,7 +261,7 @@ T_{\text{turbine,inlet}} = T_{\text{blkt,outlet}} - 20.0
 $$
  
 $$
-\eta_{\text{thermal → electric}} = 0.1802 \ln{(T_{\text{turbine,inlet}})}-0.7823 - \Delta \eta \\
+\eta_{\text{turbine}} = 0.1802 \ln{(T_{\text{turbine,inlet}})}-0.7823 - \Delta \eta \\
 \text{for} \quad  657.15 \le T_{\text{turbine,inlet}} \le 915.15 \text{K}
 $$
 
@@ -234,7 +287,7 @@ T_{\text{turbine,inlet}} = T_{\text{blkt,outlet}} - 20.0
 $$
  
 $$
-\eta_{\text{thermal → electric}} = 0.4347 \ln{(T_{\text{turbine,inlet}})}-2.5043 \\
+\eta_{\text{turbine}} = 0.4347 \ln{(T_{\text{turbine,inlet}})}-2.5043 \\
 \text{for} \quad  408.15 \le T_{\text{turbine,inlet}} \le 1023.15 \text{K}
 $$
 

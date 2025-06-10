@@ -849,15 +849,13 @@ class Power:
 
     def plant_electric_production(self, output: bool):
         """
-        Calculates the remainder of the heat transport
-        and plant power balance constituents
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
-        This routine calculates the rest of the heat transport
-        and plant power balance constituents, not already calculated in
-        <A HREF="acpow.html">ACPOW</A> or <A HREF="power1.html">POWER1</A>.
-        None
+        This method completes the calculation of the plant's electrical and thermal power flows,
+        including secondary heat, recirculating power, net and gross electric power, and various
+        efficiency measures.
+
+        If `output` is True, the method writes a comprehensive summary of the plant's power and
+        heat transport balance, assumptions, and efficiency metrics to the specified output file.
+
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
             self.p_cp_coolant_pump_elec_mw = (
@@ -866,15 +864,11 @@ class Power:
         else:
             self.p_cp_coolant_pump_elec_mw = 0.0e0
 
-        #  Facility base load, MW (loads not dependent on floor area)
-        basemw = heat_transport_variables.p_plant_electric_base * 1.0e-6
-
-        #  Power needed per unit floor area, kW/m2
-        pkwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1.0e-3
-
         #  Total baseline power to facility loads, MW
         heat_transport_variables.p_plant_electric_base_total_mw = (
-            basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
+            heat_transport_variables.p_plant_electric_base * 1.0e-6
+        ) + buildings_variables.a_plant_floor_effective * (
+            heat_transport_variables.pflux_plant_floor_electric * 1.0e-6
         )
 
         #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
@@ -884,9 +878,7 @@ class Power:
 
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
-        #  pfcoil_variables.p_pf_electric_supplies_mw = Mean electrical energy dissipated in PFC power supplies as they
-        #  increase or decrease the poloidal field energy AND extra due to ohmic heating
-        #  of the plasma.  Issue #713
+
         self.p_plant_core_systems_elec_mw = (
             heat_transport_variables.p_cryo_plant_electric_mw
             + heat_transport_variables.fachtmw
