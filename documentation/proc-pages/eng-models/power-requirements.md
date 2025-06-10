@@ -130,7 +130,7 @@ $$
 
 ---
 
-#### Remainder power conversion | `power2()`
+#### Remainder power conversion | `plant_electric_production()`
 
 ---
 
