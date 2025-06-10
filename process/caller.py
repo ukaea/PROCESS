@@ -334,7 +334,7 @@ class Caller:
         self.models.power.acpow(output=False)
 
         # Plant heat transport pt 2 & 3
-        self.models.power.power2(output=False)
+        self.models.power.plant_electric_production(output=False)
 
         self.models.power.power3(output=False)
 
