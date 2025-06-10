@@ -552,6 +552,9 @@ module tfcoil_variables
   real(dp) :: frholeg
   !! Ouboard legs resistivity enhancement factor. Only used for `itart=1`.
 
+  real(dp) :: rrr_tf_cu
+  !! TF coil copper residual-resistance-ratio (RRR). Only used for quench protection.
+
   integer :: i_cp_joints
   !! Switch for CP demoutable joints type
   !!  -= 0 : Clampled joints
