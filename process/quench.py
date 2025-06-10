@@ -725,7 +725,7 @@ if __name__ == "__main__":
     n = np.linspace(10, 200, 30, dtype=int)
     j = [
         calculate_quench_protection_current_density(
-            23.0, 11.0, 0.7, 0.2, 4.75, 150, 100, 0.0, 3e21, ni
+            23.0, 11.0, 0.7, 0.2, 4.75, 150, 300, 0.0, 3e21, ni
         )
         for ni in n
     ]
