@@ -459,12 +459,6 @@ class Power:
         #  Power to cryogenic comp. motors, MW
         crymw = heat_transport_variables.p_cryo_plant_electric_mw
 
-        #  Facility base load, MW (loads not dependent on floor area)
-        basemw = heat_transport_variables.p_plant_electric_base * 1.0e-6
-
-        #  Power needed per unit floor area, kW/m2
-        pkwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1.0e-3
-
         #  Power to divertor coil supplies, MW
         bdvmw = 0.0e0
 
@@ -487,11 +481,6 @@ class Power:
                 heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
             )
 
-        #  Total baseline power to facility loads, MW
-        heat_transport_variables.p_plant_electric_base_total_mw = (
-            basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
-        )
-
         # Estimate of the total low voltage power, MW
         # MDK No idea what this is - especially the last term
         # It is used in the old cost routine, so I will leave it in place.
@@ -509,7 +498,6 @@ class Power:
         #  Output section
         # po.oheadr(self.outfile,'AC Power')
         po.oheadr(self.outfile, "Electric Power Requirements")
-        po.ovarre(self.outfile, "Facility base load (MW)", "(basemw)", basemw)
         po.ovarre(self.outfile, "Divertor coil power supplies (MW)", "(bdvmw)", bdvmw)
         po.ovarre(
             self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP "
@@ -877,6 +865,17 @@ class Power:
             )
         else:
             self.p_cp_coolant_pump_elec_mw = 0.0e0
+
+        #  Facility base load, MW (loads not dependent on floor area)
+        basemw = heat_transport_variables.p_plant_electric_base * 1.0e-6
+
+        #  Power needed per unit floor area, kW/m2
+        pkwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1.0e-3
+
+        #  Total baseline power to facility loads, MW
+        heat_transport_variables.p_plant_electric_base_total_mw = (
+            basemw + buildings_variables.a_plant_floor_effective * pkwpm2 / 1000.0e0
+        )
 
         #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
         heat_transport_variables.fachtmw = (
