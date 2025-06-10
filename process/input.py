@@ -480,7 +480,9 @@ INPUT_VARIABLES = {
     "eta_ecrh_injector_wall_plug": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
-    "eta_coolant_pump_electric": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
+    "eta_coolant_pump_electric": InputVariable(
+        fortran.fwbs_variables, float, range=(0.1, 1.0)
+    ),
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "eta_lowhyb_injector_wall_plug": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)

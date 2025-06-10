@@ -2530,7 +2530,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
 
-    monkeypatch.setattr(fwbs_variables, "eta_coolant_pump_electric", power2param.eta_coolant_pump_electric)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "eta_coolant_pump_electric",
+        power2param.eta_coolant_pump_electric,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
