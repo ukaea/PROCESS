@@ -1791,13 +1791,13 @@ contains
       !! residual error in physical units; output string; units string
       !! Equation for auxiliary power lower limit
       !! #=# current_drive
-      !! #=#=# fauxmn, auxmin
+      !! #=#=# fauxmn, p_hcd_injected_min
       !! and hence also optional here.
       !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
       !! fauxmn : input real : f-value for minimum auxiliary power
       !! p_hcd_injected_total_mw : input real : total auxiliary injected power (MW)
-      !! auxmin : input real : minimum auxiliary power (MW)
-      use constraint_variables, only: fauxmn, auxmin
+      !! p_hcd_injected_min : input real : minimum auxiliary power (MW)
+      use constraint_variables, only: fauxmn, p_hcd_injected_min
       use current_drive_variables, only: p_hcd_injected_total_mw
       implicit none
             real(dp), intent(out) :: tmp_cc
@@ -1806,9 +1806,9 @@ contains
       character(len=1), intent(out) :: tmp_symbol
       character(len=10), intent(out) :: tmp_units
 
-      tmp_cc =  1.0D0 - fauxmn * p_hcd_injected_total_mw/auxmin
-      tmp_con = auxmin * (1.0D0 - tmp_cc)
-      tmp_err = auxmin * tmp_cc
+      tmp_cc =  1.0D0 - fauxmn * p_hcd_injected_total_mw/p_hcd_injected_min
+      tmp_con = p_hcd_injected_min * (1.0D0 - tmp_cc)
+      tmp_err = p_hcd_injected_min * tmp_cc
       tmp_symbol = '>'
       tmp_units = 'MW'
 

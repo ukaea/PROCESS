@@ -27,7 +27,7 @@ It is sometimes useful to adjust artificially the current drive efficiency value
 
 ### Power limits
 The maximum amount of desired heating and current drive power can be set with `p_hcd_injected_max`. This limit can be enforced by activating constraint equation 30 (`icc=30`).
-Similarly the lower bound on required heating and current drive power can be set with `auxmin`. This limit can be enforced by activating constraint equation 40 (`icc=40`).
+Similarly the lower bound on required heating and current drive power can be set with `p_hcd_injected_min`. This limit can be enforced by activating constraint equation 40 (`icc=40`).
 
 ### Secondary current drive
 

@@ -15,7 +15,7 @@ module constraint_variables
 
   public
 
-  real(dp) :: auxmin
+  real(dp) :: p_hcd_injected_min
   !! minimum auxiliary power (MW) (`constraint equation 40`)
 
   real(dp) :: beta_poloidal_max
@@ -317,7 +317,7 @@ module constraint_variables
     !! Initialise module variables
     implicit none
 
-    auxmin = 0.1D0
+    p_hcd_injected_min = 0.1D0
     beta_poloidal_max = 0.19D0
     bigqmin = 10.0D0
     bmxlim = 12.0D0
