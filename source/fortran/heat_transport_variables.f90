@@ -180,4 +180,7 @@ module heat_transport_variables
 
     real(dp) :: vachtmw
     !! vacuum pump power (MW)
+
+    real(dp) :: f_p_plant_electric_recirc
+    !! fraction of recirculating electric power to total electric power
   end module heat_transport_variables
