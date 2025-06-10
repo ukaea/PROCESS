@@ -797,7 +797,7 @@ class Power:
             / ((293 / 4.5) - 1)
         ) / 1.0e3
 
-    def power2(self, output: bool):
+    def plant_electric_production(self, output: bool):
         """
         Calculates the remainder of the heat transport
         and plant power balance constituents
