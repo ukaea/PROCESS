@@ -152,7 +152,7 @@ class Stellarator:
             self.buildings.run(output=True)
             self.vacuum.run(output=True)
             self.power.acpow(output=True)
-            self.power.power2(output=True)
+            self.power.plant_electric_production(output=True)
 
             return
 
@@ -171,7 +171,7 @@ class Stellarator:
         self.buildings.run(output=False)
         self.vacuum.run(output=False)
         self.power.acpow(output=False)
-        self.power.power2(output=False)
+        self.power.plant_electric_production(output=False)
         # TODO: should availability.run be called
         # rather than availability.avail?
         self.availability.avail(output=False)
