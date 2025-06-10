@@ -7,6 +7,7 @@ from process.quench import (
     _copper_rrr_resistivity,
     _copper_specific_heat_capacity,
     _helium_density,
+    calculate_quench_protection_current_density,
 )
 
 
@@ -161,3 +162,9 @@ def test_copper_magneto_resistivity(rrr):
 
 def test_helium_density():
     assert np.isclose(_helium_density(4.0, 6e5), 147.0, rtol=2e-2)
+
+
+def test_calculate_quench_protection():
+    calculate_quench_protection_current_density(
+        23.0, 11.0, 0.7, 0.2, 4.75, 150, 100, 0.0, 3e21, 30
+    )
