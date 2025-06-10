@@ -1,7 +1,10 @@
 import numpy as np
+import pytest
 
 from process.quench import (
     _copper_irradiation_resistivity,
+    _copper_magneto_resistivity,
+    _copper_rrr_resistivity,
     _copper_specific_heat_capacity,
     _helium_density,
 )
@@ -133,6 +136,27 @@ def test_copper_specific_heat_capacity():
     cp = _copper_specific_heat_capacity(temperature_k)
     # NIST quotes errors of 5 - 20 % below 100 K... (comparable to data scatter)
     assert np.allclose(cp, heat_capacity_j_per_kg_k, rtol=0.24)
+
+
+@pytest.mark.parametrize("rrr", [100, 300, 1000])
+def test_copper_rrr_resistivity(rrr):
+    t = 4.0
+    rrr1 = _copper_rrr_resistivity(t, rrr=1)
+    rrr100 = _copper_rrr_resistivity(t, rrr=rrr)
+    ratio = rrr1 / rrr100
+    assert np.isclose(ratio, rrr, rtol=1e-3)
+
+
+@pytest.mark.parametrize("rrr", [1, 100, 300, 1000])
+def test_copper_magneto_resistivity(rrr):
+    t = 4.0
+    rrr = _copper_rrr_resistivity(t, rrr=rrr)
+    nu = _copper_magneto_resistivity(rrr, 0.0)
+    assert rrr == nu
+    nu = _copper_magneto_resistivity(rrr, 10.0)
+    assert rrr < nu
+    nu2 = _copper_magneto_resistivity(rrr, 20.0)
+    assert nu < nu2
 
 
 def test_helium_density():
