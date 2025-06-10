@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from scipy.optimize import approx_fprime
 
 from process.quench import (
     _copper_irradiation_resistivity,
@@ -164,7 +165,28 @@ def test_helium_density():
     assert np.isclose(_helium_density(4.0, 6e5), 147.0, rtol=2e-2)
 
 
-def test_calculate_quench_protection():
-    calculate_quench_protection_current_density(
-        23.0, 11.0, 0.7, 0.2, 4.75, 150, 100, 0.0, 3e21, 30
+def test_calculate_quench_protection_intuitive_gradient():
+    x = [23.0, 11.0, 0.7, 0.2, 4.75, 150, 100, 1.0, 3e21]
+    grad = approx_fprime(
+        x, lambda x: calculate_quench_protection_current_density(*x), epsilon=1e-6
     )
+    # Increasing discharge time will increase the required protection current
+    assert grad[0] < 0.0
+    # Increasing field will increase the required protection current
+    assert grad[1] < 0.0
+    # Increasing copper fraction will lower the required protection current
+    assert grad[2] > 0.0
+    # Increasing helium fraction will increase the required protection current
+    assert grad[3] < 0.0
+    # Increasing start temperature will increase the required protection current
+    # This is because this reduces the range over which the integral is performed
+    assert grad[4] < 0.0
+    # Increasing max temperature will lower the required protection current
+    # This is because this increases the range over which the integral is performed
+    assert grad[5] > 0.0
+    # Increasing RRR will lower the required protection current
+    assert grad[6] > 0.0
+    # Increasing detection time will increase the required protection current
+    assert grad[7] < 0.0
+    # Increasing fluence will increase the required protection current
+    assert grad[8] < 0.0
