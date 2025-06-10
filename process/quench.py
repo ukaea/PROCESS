@@ -68,8 +68,8 @@ def _copper_specific_heat_capacity(temperature: float) -> float:
 
 def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
     """
-    Calculates the electrical resistivity of cryogenic copper with temperature and magnetic
-    field dependence  [Ω·m].
+    Calculates the electrical resistivity of cryogenic copper with temperature and RRR
+    dependence  [Ω·m].
 
     :author M. Coleman, UKAEA
 
@@ -77,9 +77,6 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
     :param float rrr: Residual resistivity ratio (dimensionless).
     :returns: Electrical resistivity of copper [Ω·m].
     :rtype: float
-
-    :notes:
-        - Resistivity increases with magnetic field due to magnetoresistance effects.
 
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
@@ -182,9 +179,35 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
     return resistivity
 
 
-def _copper_electrical_resistivity_1(
+def _copper_electrical_resistivity(
     temperature: float, field: float, rrr: float, fluence: float
 ) -> float:
+    """
+    Calculates the electrical resistivity of cryogenic copper with temperature, RRR, magnetic
+    field, and fluence dependence  [Ω·m].
+
+    :author M. Coleman, UKAEA
+
+    :param float temperature: Operating temperature [K].
+    :param float rrr: Residual resistivity ratio (dimensionless).
+    :param float field: Operating magnetic field [T].
+    :param float fluence: Total end-of-life neutron fluence [n/m²].
+    :returns: Electrical resistivity of copper [Ω·m].
+    :rtype: float
+
+    :notes:
+        - Resistivity increases with magnetic field due to magnetoresistance effects.
+
+    :references:
+        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
+        at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        Equation 8-1
+        - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM, COPPER, IRON, AND
+        TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
+        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+        Figure 6
+    """
     rho_rrr = _copper_rrr_resistivity(temperature, rrr)
     rho_irr = _copper_irradiation_resistivity(fluence)
     return _copper_magneto_resistivity(rho_rrr + rho_irr, field)
@@ -295,7 +318,6 @@ def _quench_integrals(
     """
     # Helium pressure [Pa] (assumed to be constant throughout quench) - no plans to make input
     pressure = 6e5  # ITER TF coolant pressure
-    nu_irr_cu = _copper_irradiation_resistivity(fluence)
 
     n_quad: Final[int] = 30
     nodes, weights = np.polynomial.legendre.leggauss(n_quad)
@@ -308,7 +330,7 @@ def _quench_integrals(
         ti = 0.5 * (xi + 1.0) * (t_max - t_he_peak) + t_he_peak
         dti = 0.5 * wi * (t_max - t_he_peak)
 
-        nu_cu = _copper_rrr_resistivity(ti, field, rrr) + nu_irr_cu
+        nu_cu = _copper_electrical_resistivity(ti, field, rrr, fluence)
         factor = dti / nu_cu
 
         ihe += (
@@ -653,7 +675,7 @@ if __name__ == "__main__":
     f, ax = plt.subplots()
     ax.plot(
         t,
-        _copper_electrical_resistivity_1(t, 10, 100, 3e23),
+        _copper_electrical_resistivity(t, 10, 100, 3e23),
         label="rho = rho_mag(rho + rho_irr) 3e24 n/m^2",
     )
     ax.plot(
@@ -664,7 +686,7 @@ if __name__ == "__main__":
     )
     ax.plot(
         t,
-        _copper_electrical_resistivity_1(t, 10, 100, 3e22),
+        _copper_electrical_resistivity(t, 10, 100, 3e22),
         label="rho = rho_mag(rho + rho_irr) 3e22 n/m^2",
     )
     ax.plot(
@@ -675,7 +697,7 @@ if __name__ == "__main__":
     )
     ax.plot(
         t,
-        _copper_electrical_resistivity_1(t, 10, 100, 0),
+        _copper_electrical_resistivity(t, 10, 100, 0),
         label="rho = rho_mag(rho + rho_irr) 0 n/m^2",
     )
     ax.plot(
