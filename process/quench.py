@@ -293,7 +293,12 @@ def _helium_specific_heat_capacity(temperature: float, pressure: float) -> float
 
 
 def _quench_integrals(
-    t_he_peak: float, t_max: float, field: float, rrr: float, fluence: float
+    t_he_peak: float,
+    t_max: float,
+    field: float,
+    rrr: float,
+    fluence: float,
+    n_quad: int,
 ) -> tuple[float, float, float]:
     """
     Calculates the material property integrals for quench protection.
@@ -308,6 +313,7 @@ def _quench_integrals(
     :param float field: Magnetic field [T].
     :param float rrr: Residual resistivity ratio of copper.
     :param float fluence: Neutron fluence [n/cm²] (for irradiation effects).
+    :param int n_quad: number of Gauss-Legendre quadrature points to use in the integration.
     :returns: Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
     :rtype: Tuple[float, float, float]
 
@@ -319,7 +325,6 @@ def _quench_integrals(
     # Helium pressure [Pa] (assumed to be constant throughout quench) - no plans to make input
     pressure = 6e5  # ITER TF coolant pressure
 
-    n_quad: Final[int] = 30
     nodes, weights = np.polynomial.legendre.leggauss(n_quad)
 
     ihe = 0.0
@@ -354,6 +359,7 @@ def calculate_quench_protection_current_density(
     cu_rrr: float,
     detection_time: float,
     fluence: float,
+    n_quad: int = 75,
 ) -> float:
     """
     Calculates the current density limited by the protection limit.
@@ -376,6 +382,7 @@ def calculate_quench_protection_current_density(
     :param float cu_rrr: Residual resistivity ratio of copper.
     :param float detection_time: Detection time delay [s].
     :param float fluence: Neutron fluence [n/m²].
+    :param int n_quad: number of Gauss-Legendre quadrature points to use in the integration.
     :returns: Maximum allowable winding pack current density [A/m²].
     :rtype: float
 
@@ -391,13 +398,15 @@ def calculate_quench_protection_current_density(
     """
     # Input warnings
     # TODO: Apply PROCESS kludging / warning conventions
-    cu_rrr = np.clip(cu_rrr, 1.0)
+    cu_rrr = np.clip(cu_rrr, 1.0, None)
     t_he_peak = np.clip(t_he_peak, 4.0, 300.0)
     t_max = np.clip(t_max, 4.0, 300.0)
     fluence = np.clip(fluence, 0.0, 15e22)
-    tau_discharge = np.clip(tau_discharge, 1e-3)
+    tau_discharge = np.clip(tau_discharge, 1e-3, None)
 
-    i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
+    i_he, i_cu, i_sc = _quench_integrals(
+        t_he_peak, t_max, peak_field, cu_rrr, fluence, n_quad
+    )
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
     f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
@@ -610,6 +619,7 @@ if __name__ == "__main__":
         ])
         * 1e-8
     )
+    # MATPRO B=0
     rm0 = (
         np.array([
             1.53e-2,
@@ -710,4 +720,17 @@ if __name__ == "__main__":
     ax.set_xlabel("T [K]")
     ax.set_ylabel("nu [Ohm.m]")
     ax.set_title("Copper resistivity")
+    plt.show()
+
+    n = np.linspace(10, 200, 30, dtype=int)
+    j = [
+        calculate_quench_protection_current_density(
+            23.0, 11.0, 0.7, 0.2, 4.75, 150, 100, 0.0, 3e21, ni
+        )
+        for ni in n
+    ]
+    f, ax = plt.subplots()
+    ax.plot(n, j)
+    ax.set_xlabel("n_quad")
+    ax.set_ylabel("jwdgpro [A/m^2]")
     plt.show()
