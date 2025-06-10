@@ -372,7 +372,7 @@ def calculate_quench_protection_current_density(
     cu_rrr = np.clip(cu_rrr, 1.0)
     t_he_peak = np.clip(t_he_peak, 4.0, 300.0)
     t_max = np.clip(t_max, 4.0, 300.0)
-    fluence = np.clip(fluence, 0.0)
+    fluence = np.clip(fluence, 0.0, 15e22)
     tau_discharge = np.clip(tau_discharge, 1e-3)
 
     i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
