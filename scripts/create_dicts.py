@@ -898,16 +898,25 @@ def create_dicts(project):
                             var_type = "int_array"
                         else:
                             raise TypeError(
-                                f"The type annotation of variable {node.target.id} is {node.annotation.value.id}[{node.annotation.slice.id}], and this is not recognised. Please change your type annotation for this variable. PROCESS recognises the following type annotations: list[float], list[int], list[str]."
+                                f"The type annotation of variable {node.target.id} is "
+                                f"{node.annotation.value.id}[{node.annotation.slice.id}], and "
+                                "this is not recognised. Please change your type annotation for "
+                                "this variable. PROCESS recognises the following type annotations: "
+                                "list[float], list[int], list[str]."
                             )
                 else:
                     if node.annotation.id == "float":
                         var_type = "real_variable"
                     elif node.annotation.id == "int":
                         var_type = "int_variable"
+                    elif node.annotation.id == "str":
+                        var_type = "str_variable"
                     else:
                         raise TypeError(
-                            f"The type annotation of variable {node.target.id} is {node.annotation.id}, and this is not recognised. Please change your type annotation for this variable. PROCESS recognises the following type annotations: float, int."
+                            f"The type annotation of variable {node.target.id} is "
+                            f"{node.annotation.id}, and this is not recognised. Please change your "
+                            "type annotation for this variable. PROCESS recognises the following "
+                            "type annotations: float, int, str."
                         )
 
                 variable_types[node.target.id] = var_type
