@@ -187,78 +187,32 @@ After following the instruction to add an input variable, you can make the varia
 
 ## Add a constraint equation
 
-Constraint equations are added to *PROCESS* in the following way:
+Constraint equations are added to *PROCESS* in the `process/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
 
-1. <p style='text-align: justify;'>
-    Increment the parameter `ipeqns` in module `numerics` in the source file
-    `numerics.f90` in order to accommodate the new constraint.
-  </p>
-2. <p style='text-align: justify;'>
-    Add a line to `lablcc` in the source file `numerics.f90` decribing the
-    constraint equation.
-  </p>
-3. <p style='text-align: justify;'>
-    Add a line to the FORD description of `lablcc` the source file `numerics.f90`.
-  </p>
-4. <p style='text-align: justify;'>
-    Add a new Fortran `case` statement to routine `CONSTRAINT_EQNS` in source
-    file `constraint_equations.f90`.
-  </p>
-5. <p style='text-align: justify;'>
-    Then add a new subrountine including the `constraints` module ensuring that
-    all the variables used in the formula are contained in the modules specified
-    via `use, XX only: XX` statements. Use a similar formulation to that used
-    for the existing constraint equations, remembering that the code will try
-    to force `cc(i)` to be zero.
-  </p>
-6. <p style='text-align: justify;'>
-    If the constraint is using a f-value, notify the constraint equation
-    number on the f-value description.
-  </p>
+A constraint is simply added by registering the constraint to the manager using a decorator.
 
-<p style='text-align: justify;'>
-  Remember that if an inequality is being added, a new f-value iteration
-  variable may also need to be added to the code.
-</p>
-
-```fortran
-    do i = i1,i2	   
-      ! The constraint value in physical units is
-      ! a) for consistency equations, the quantity to be equated, or
-      ! b) for limit equations, the limiting value.
-      ! The symbol is = for a consistency equation, < for an upper limit
-      ! or > for a lower limit.
-      select case (icc(i))
-  ...
-	      ! Equation for fusion power upper limit
-        case (9); call constraint_eqn_009(args)
+```python
+@ConstraintManager.register_constraint(1234, "m", "=")
+def my_constraint_function(): ...
 ```
+The arguments to the `register_constraint` function are:
 
-```fortran
-   subroutine constraint_eqn_009(args)
-      !! Equation for fusion power upper limit
-      !! author: P B Lloyd, CCFE, Culham Science Centre
-      !! args : output structure : residual error; constraint value; 
-      !! residual error in physical units; output string; units string
-      !! Equation for fusion power upper limit
-      !! #=# physics
-      !! #=#=# fp_fusion_total_max_mw, p_fusion_total_max_mw
-      !! and hence also optional here.
-      !! Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-      !! fp_fusion_total_max_mw : input real : f-value for maximum fusion power
-      !! p_fusion_total_max_mw : input real : maximum fusion power (MW)
-      !! p_fusion_total_mw : input real : fusion power (MW)
-      use constraint_variables, only: fp_fusion_total_max_mw, p_fusion_total_max_mw
-      use physics_variables, only: p_fusion_total_mw
-      implicit none
-      type (constraint_args_type), intent(out) :: args
+- Name (again, currently an integer)
+- Unit (for output reporting purposes)
+- Symbol (e.g. =, >=, <=. Again, for output reporting purposes)
 
-      args%cc =  1.0D0 - fp_fusion_total_max_mw * p_fusion_total_max_mw/p_fusion_total_mw
-      args%con = p_fusion_total_max_mw * (1.0D0 - args%cc)
-      args%err = p_fusion_total_mw * args%cc
-      args%symbol = '<'
-      args%units = 'MW'
 
-   end subroutine constraint_eqn_009
+`my_constraint_function` should be named appropriately and return a `ConstraintResult` which contains the:
+
+- Normalised residual error
+- Constraint value
+- Constraint error
+
+```python
+@ConstraintManager.register_constraint(1234, "m", "=")
+def my_constraint_function():
+  normalised_residual = ...
+  value = ...
+  error = ...
+  return ConstraintResult(normalised_residual, value, error)
 ```
-
