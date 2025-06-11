@@ -81,7 +81,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.ind_tf_coil = self.tfcind(
                 build_variables.dr_tf_inboard,
                 tfcoil_variables.r_tf_arc,
-                tfcoil_variables.yarc,
+                tfcoil_variables.z_tf_arc,
             )
         else:
             tfcoil_variables.ind_tf_coil = (

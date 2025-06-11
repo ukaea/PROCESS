@@ -733,7 +733,7 @@ module tfcoil_variables
   real(dp), dimension(4) :: xctfc
   !! x location of arc centre i (m)
 
-  real(dp), dimension(5) :: yarc
+  real(dp), dimension(5) :: z_tf_arc
   !! y location of arc point i on surface (m)
 
   real(dp), dimension(4) :: yctfc
