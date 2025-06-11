@@ -13,6 +13,6 @@ def test_plot_radial_build(temp_data, mfile_name):
     """
     mfile = temp_data / mfile_name
 
-    plot_radial_build.main(args=["-f", str(mfile), "--outputdir", str(temp_data)])
+    plot_radial_build.main(args=["-f", str(mfile)])
 
     assert len(list(temp_data.glob("*.pdf")))

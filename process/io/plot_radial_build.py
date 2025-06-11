@@ -42,13 +42,6 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-op",
-        "--outputdir",
-        default=Path.cwd(),
-        help="Output directory for plot, defaults to current working directory.",
-    )
-
-    parser.add_argument(
         "-sf",
         "--save_format",
         nargs="?",
@@ -370,10 +363,10 @@ def main(args=None):
     )
     plt.xlabel("Radius [m]")
     plt.tight_layout()
-    plt.savefig(
-        f"{args.outputdir}/{Path(args.input).stem}_radial_build.{save_format}",
-        bbox_inches="tight",
+    output_path = (
+        Path(args.input).parent / f"{Path(args.input).stem}_radial_build.{save_format}"
     )
+    plt.savefig(output_path, bbox_inches="tight")
 
     # Display plot (used in Jupyter notebooks)
     plt.show()
