@@ -185,9 +185,6 @@ $$
 \overbrace{f_{\text{recirc}}}^\texttt{f_p_plant_electric_recirc} = \frac{P_{\text{gross, electric}} - P_{\text{net, electric}}}{P_{\text{gross, electric}}}
 $$
 
----
-
-#### Time dependent power requirements | `power3()`
 
 ---
 
