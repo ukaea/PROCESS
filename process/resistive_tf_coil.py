@@ -85,7 +85,7 @@ class ResistiveTFCoil(TFCoil):
             )
         else:
             tfcoil_variables.ind_tf_coil = (
-                (build_variables.hmax + build_variables.dr_tf_outboard)
+                (build_variables.z_tf_inside_half + build_variables.dr_tf_outboard)
                 * RMU0
                 / constants.pi
                 * np.log(
@@ -153,7 +153,7 @@ class ResistiveTFCoil(TFCoil):
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
-                build_variables.hmax,
+                build_variables.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.i_tf_inside_cs,
@@ -506,7 +506,7 @@ class ResistiveTFCoil(TFCoil):
                 build_variables.r_tf_inboard_out,
                 build_variables.r_cp_top,
                 sctfcoil_module.z_cp_top,
-                build_variables.hmax + build_variables.dr_tf_outboard,
+                build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
                 tfcoil_variables.dr_tf_nose_case,
                 tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.tinstf,
@@ -672,8 +672,8 @@ class ResistiveTFCoil(TFCoil):
         #     error_handling.fdiags[0] = rmid
         #     error_handling.report_error(117)
 
-        # if build_variables.hmax <= 0.0e0:
-        #     error_handling.fdiags[0] = build_variables.hmax
+        # if build_variables.z_tf_inside_half <= 0.0e0:
+        #     error_handling.fdiags[0] = build_variables.z_tf_inside_half
         #     error_handling.report_error(118)
 
         # if (fcool < 0.0e0) or (fcool > 1.0e0):
@@ -685,8 +685,8 @@ class ResistiveTFCoil(TFCoil):
         #     error_handling.fdiags[1] = rmid
         #     error_handling.report_error(120)
 
-        # if build_variables.hmax < ztop:
-        #     error_handling.fdiags[0] = build_variables.hmax
+        # if build_variables.z_tf_inside_half < ztop:
+        #     error_handling.fdiags[0] = build_variables.z_tf_inside_half
         #     error_handling.fdiags[1] = ztop
         #     error_handling.report_error(121)
 

@@ -51,7 +51,7 @@ class Buildings:
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
         tf_vertical_dim = 2.0e0 * (
-            build_variables.hmax + build_variables.dr_tf_outboard
+            build_variables.z_tf_inside_half + build_variables.dr_tf_outboard
         )
 
         # Find mass of each TF coil, in tonnes
@@ -83,7 +83,8 @@ class Buildings:
                 tfcoil_variables.n_tf_coils,
                 build_variables.rsldo,
                 build_variables.rsldi,
-                2.0e0 * (build_variables.hmax - build_variables.dz_shld_vv_gap)
+                2.0e0
+                * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
                 - build_variables.dz_vv_lower,
                 fwbs_variables.whtshld,
@@ -540,7 +541,7 @@ class Buildings:
         # find height, maximum radial dimension, maximum toroidal dimension
         if cost_variables.tlife != 0.0e0:
             hcomp_height = 2 * (
-                build_variables.hmax
+                build_variables.z_tf_inside_half
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
@@ -585,7 +586,7 @@ class Buildings:
 
             # Outboard 'component': first wall, blanket, shield
             hcomp_height = 2 * (
-                build_variables.hmax
+                build_variables.z_tf_inside_half
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
@@ -649,7 +650,7 @@ class Buildings:
 
         # Centre post
         if cost_variables.cplife != 0.0e0:
-            hcomp_height = 2 * build_variables.hmax
+            hcomp_height = 2 * build_variables.z_tf_inside_half
             if tfcoil_variables.i_tf_sup != 1:
                 hcomp_rad_thk = build_variables.r_cp_top
             else:

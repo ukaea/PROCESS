@@ -375,7 +375,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
 
 
 class ComponentHalfHeightParam(NamedTuple):
-    hmax: Any = None
+    z_tf_inside_half: Any = None
     dz_xpoint_divertor: Any = None
     dz_shld_vv_gap: Any = None
     dz_blkt_upper: Any = None
@@ -399,7 +399,7 @@ class ComponentHalfHeightParam(NamedTuple):
     "componenthalfheightparam",
     (
         ComponentHalfHeightParam(
-            hmax=8.8182171641274945,
+            z_tf_inside_half=8.8182171641274945,
             dz_xpoint_divertor=2.0018838307941582,
             dz_shld_vv_gap=0.16300000000000001,
             dz_blkt_upper=0.85000000000000009,
@@ -434,7 +434,9 @@ def test_component_half_height(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "hmax", componenthalfheightparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", componenthalfheightparam.z_tf_inside_half
+    )
     monkeypatch.setattr(
         build_variables,
         "dz_xpoint_divertor",

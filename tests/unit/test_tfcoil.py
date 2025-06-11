@@ -226,7 +226,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfv, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(tfv, "tcoolin", cntrpst_asset.tcoolin)
     monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(bv, "hmax", 1)
+    monkeypatch.setattr(bv, "z_tf_inside_half", 1)
     monkeypatch.setattr(bv, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
@@ -757,7 +757,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     denstl: Any = None
 
@@ -886,7 +886,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             denstl=7800,
             m_tf_turn_steel_conduit=0,
             m_tf_coils_total=0,
@@ -958,7 +958,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             denstl=7800,
             m_tf_turn_steel_conduit=115651.90127937049,
             m_tf_coils_total=19649856.627845347,
@@ -1060,7 +1060,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(build_variables, "hmax", tfcoilareaandmassesparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
+    )
 
     monkeypatch.setattr(fwbs_variables, "denstl", tfcoilareaandmassesparam.denstl)
 
@@ -1266,7 +1268,7 @@ class StressclParam(NamedTuple):
 
     dr_cs_tf_gap: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -1445,7 +1447,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
             n_tf_turn=200,
@@ -1568,7 +1570,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
             n_tf_turn=200,
@@ -1741,7 +1743,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_bucking,
         stressclparam.r_tf_inboard_in,
         stressclparam.dr_bore,
-        stressclparam.hmax,
+        stressclparam.z_tf_inside_half,
         stressclparam.f_z_cs_tf_internal,
         stressclparam.dr_cs,
         stressclparam.i_tf_inside_cs,

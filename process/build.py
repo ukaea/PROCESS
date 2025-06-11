@@ -749,7 +749,7 @@ class Build:
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
-        build_variables.hmax = (
+        build_variables.z_tf_inside_half = (
             build_variables.z_plasma_xpoint_upper
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
@@ -762,7 +762,9 @@ class Build:
 
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
-            build_variables.hpfu = build_variables.hmax + build_variables.dr_tf_inboard
+            build_variables.hpfu = (
+                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            )
             build_variables.hpfdif = 0.0e0
         else:
             build_variables.hpfu = (
@@ -781,7 +783,7 @@ class Build:
             )
             build_variables.hpfdif = (
                 build_variables.hpfu
-                - (build_variables.hmax + build_variables.dr_tf_inboard)
+                - (build_variables.z_tf_inside_half + build_variables.dr_tf_inboard)
             ) / 2.0e0
 
     def divgeom(self, output: bool):
@@ -2471,7 +2473,7 @@ def init_build_variables():
     build_variables.dr_cs_tf_gap = 0.08
     build_variables.gapomin = 0.234
     build_variables.dr_shld_vv_gap_outboard = 0.0
-    build_variables.hmax = 0.0
+    build_variables.z_tf_inside_half = 0.0
     build_variables.hpfdif = 0.0
     build_variables.hpfu = 0.0
     build_variables.hr1 = 0.0

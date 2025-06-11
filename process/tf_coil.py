@@ -83,7 +83,7 @@ class TFCoil:
             )
         else:
             tfcoil_variables.ind_tf_coil = (
-                (build_variables.hmax + build_variables.dr_tf_outboard)
+                (build_variables.z_tf_inside_half + build_variables.dr_tf_outboard)
                 * RMU0
                 / constants.pi
                 * np.log(
@@ -151,7 +151,7 @@ class TFCoil:
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
-                build_variables.hmax,
+                build_variables.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.i_tf_inside_cs,
@@ -493,11 +493,15 @@ class TFCoil:
             # Height of straight section as a fraction of the coil inner height
             if physics_variables.i_single_null == 0:
                 # Double null
-                tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * build_variables.hmax
-                tfcoil_variables.z_tf_arc[1] = build_variables.hmax
+                tfcoil_variables.z_tf_arc[0] = (
+                    FSTRAIGHT * build_variables.z_tf_inside_half
+                )
+                tfcoil_variables.z_tf_arc[1] = build_variables.z_tf_inside_half
                 tfcoil_variables.z_tf_arc[2] = 0
-                tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
-                tfcoil_variables.z_tf_arc[4] = -FSTRAIGHT * build_variables.hmax
+                tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
+                tfcoil_variables.z_tf_arc[4] = (
+                    -FSTRAIGHT * build_variables.z_tf_inside_half
+                )
             else:
                 # Single null
                 tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * (
@@ -507,8 +511,10 @@ class TFCoil:
                     build_variables.hpfu - build_variables.dr_tf_inboard
                 )
                 tfcoil_variables.z_tf_arc[2] = 0
-                tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
-                tfcoil_variables.z_tf_arc[4] = -FSTRAIGHT * build_variables.hmax
+                tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
+                tfcoil_variables.z_tf_arc[4] = (
+                    -FSTRAIGHT * build_variables.z_tf_inside_half
+                )
 
             # Horizontal and vertical radii of inside edge of TF coil
             # Arcs are numbered clockwise:
@@ -552,8 +558,8 @@ class TFCoil:
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[2] = 0
-            tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
-            tfcoil_variables.z_tf_arc[4] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
+            tfcoil_variables.z_tf_arc[4] = -build_variables.z_tf_inside_half
 
             # TF middle circumference
             tfcoil_variables.len_tf_coil = 2 * (
@@ -598,21 +604,21 @@ class TFCoil:
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[2] = 0
-            tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
-            tfcoil_variables.z_tf_arc[4] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
+            tfcoil_variables.z_tf_arc[4] = -build_variables.z_tf_inside_half
 
             # TF middle circumference
             # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART
             if physics_variables.itart == 0:
                 tfcoil_variables.len_tf_coil = 2.0e0 * (
-                    2.0e0 * build_variables.hmax
+                    2.0e0 * build_variables.z_tf_inside_half
                     + build_variables.dr_tf_inboard
                     + build_variables.r_tf_outboard_mid
                     - build_variables.r_tf_inboard_mid
                 )  # eq(25)
             elif physics_variables.itart == 1:
                 tfcoil_variables.len_tf_coil = (
-                    build_variables.hmax
+                    build_variables.z_tf_inside_half
                     + build_variables.hpfu
                     + 2.0e0
                     * (build_variables.r_tf_outboard_mid - build_variables.r_cp_top)
@@ -820,8 +826,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Maximum inboard edge height (m)",
-            "(hmax)",
-            build_variables.hmax,
+            "(z_tf_inside_half)",
+            build_variables.z_tf_inside_half,
             "OP ",
         )
         if physics_variables.itart == 1:
@@ -920,8 +926,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Distance from the midplane to the top of the centrepost (m)",
-                "(hmax + dr_tf_outboard)",
-                build_variables.hmax + build_variables.dr_tf_outboard,
+                "(z_tf_inside_half + dr_tf_outboard)",
+                build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
             )
 
         # Turn/WP gemoetry
@@ -2076,11 +2082,13 @@ class TFCoil:
         # Coolant channels:
         acool = tfv.a_cp_cool * tfv.n_tf_coils  # Cooling cross-sectional area
         dcool = 2.0e0 * tfv.rcool  # Diameter
-        lcool = 2.0e0 * (bv.hmax + bv.dr_tf_outboard)  # Length
+        lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
         tfv.ncool = acool / (constants.pi * tfv.rcool**2)  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
-        acpav = 0.5e0 * tfv.vol_cond_cp / (bv.hmax + bv.dr_tf_outboard) + acool
+        acpav = (
+            0.5e0 * tfv.vol_cond_cp / (bv.z_tf_inside_half + bv.dr_tf_outboard) + acool
+        )
         ro = (acpav / (constants.pi * tfv.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
@@ -2827,7 +2835,7 @@ class TFCoil:
 
             # The length of the vertical section is that of the first (inboard) segment
             # = height of TF coil inner edge + (2 * coil thickness)
-            tfcoil_variables.cplen = (2.0e0 * build_variables.hmax) + (
+            tfcoil_variables.cplen = (2.0e0 * build_variables.z_tf_inside_half) + (
                 2.0e0 * build_variables.dr_tf_inboard
             )
 
@@ -3087,7 +3095,7 @@ class TFCoil:
         i_tf_bucking,
         r_tf_inboard_in,
         dr_bore,
-        hmax,
+        z_tf_inside_half,
         f_z_cs_tf_internal,
         dr_cs,
         i_tf_inside_cs,
@@ -3286,9 +3294,14 @@ class TFCoil:
 
                 # CS vertical cross-section area [m2]
                 if i_tf_inside_cs == 1:
-                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * (dr_bore - dr_tf_inboard)
+                    a_oh = (
+                        2.0e0
+                        * z_tf_inside_half
+                        * f_z_cs_tf_internal
+                        * (dr_bore - dr_tf_inboard)
+                    )
                 else:
-                    a_oh = 2.0e0 * hmax * f_z_cs_tf_internal * dr_cs
+                    a_oh = 2.0e0 * z_tf_inside_half * f_z_cs_tf_internal * dr_cs
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value

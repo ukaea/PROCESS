@@ -258,7 +258,7 @@ class StbildParam(NamedTuple):
 
     dr_shld_vv_gap_outboard: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     dr_cs: Any = None
 
@@ -380,7 +380,7 @@ class StbildParam(NamedTuple):
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             dr_shld_vv_gap_outboard=0,
-            hmax=6.2927927927927927,
+            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=0,
             rbld=0,
@@ -450,7 +450,7 @@ class StbildParam(NamedTuple):
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             dr_shld_vv_gap_outboard=0.025000000000000005,
-            hmax=6.2927927927927927,
+            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=26.367558258201448,
             rbld=22,
@@ -559,7 +559,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_shld_vv_gap_outboard", stbildparam.dr_shld_vv_gap_outboard
     )
 
-    monkeypatch.setattr(build_variables, "hmax", stbildparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", stbildparam.z_tf_inside_half
+    )
 
     monkeypatch.setattr(build_variables, "dr_cs", stbildparam.dr_cs)
 
@@ -680,7 +682,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.expected_dr_shld_vv_gap_outboard
     )
 
-    assert build_variables.hmax == pytest.approx(stbildparam.expected_hmax)
+    assert build_variables.z_tf_inside_half == pytest.approx(stbildparam.expected_hmax)
 
     assert build_variables.r_tf_outboard_mid == pytest.approx(
         stbildparam.expected_r_tf_outboard_mid

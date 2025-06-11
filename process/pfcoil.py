@@ -150,7 +150,7 @@ class PFCoil:
 
             # total Central Solenoid current at EOF
             ioheof = (
-                -bv.hmax
+                -bv.z_tf_inside_half
                 * pfv.f_z_cs_tf_internal
                 * bv.dr_cs
                 * 2.0e0
@@ -170,7 +170,10 @@ class PFCoil:
                 pf.rfxf[nng] = pfv.r_cs_middle
                 pf.rfxf[nng + pfv.nfxfh] = pf.rfxf[nng]
                 pf.zfxf[nng] = (
-                    bv.hmax * pfv.f_z_cs_tf_internal / pfv.nfxfh * ((nng + 1) - 0.5e0)
+                    bv.z_tf_inside_half
+                    * pfv.f_z_cs_tf_internal
+                    / pfv.nfxfh
+                    * ((nng + 1) - 0.5e0)
                 )
                 pf.zfxf[nng + pfv.nfxfh] = -pf.zfxf[nng]
                 pf.cfxf[nng] = -ioheof / pf.nfxf * pfv.f_j_cs_start_pulse_end_flat_top
@@ -193,11 +196,11 @@ class PFCoil:
                     # Z coordinate of coil enforced so as not
                     # to occupy the same space as the Central Solenoid
                     pf.zcls[j, k] = signn[k] * (
-                        bv.hmax * pfv.f_z_cs_tf_internal
+                        bv.z_tf_inside_half * pfv.f_z_cs_tf_internal
                         + 0.1e0
                         + 0.5e0
                         * (
-                            bv.hmax * (1.0e0 - pfv.f_z_cs_tf_internal)
+                            bv.z_tf_inside_half * (1.0e0 - pfv.f_z_cs_tf_internal)
                             + bv.dr_tf_inboard
                             + 0.1e0
                         )
@@ -208,9 +211,9 @@ class PFCoil:
                 for k in range(pfv.n_pf_coils_in_group[j]):
                     pf.rcls[j, k] = pv.rmajor + pfv.rpf2 * pv.triang * pv.rminor
                     if pv.itart == 1 and pv.itartpf == 0:
-                        pf.zcls[j, k] = (bv.hmax - pfv.zref[j]) * signn[k]
+                        pf.zcls[j, k] = (bv.z_tf_inside_half - pfv.zref[j]) * signn[k]
                     else:
-                        # pf.zcls(j,k) = (bv.hmax + bv.dr_tf_inboard + 0.86e0) * signn(k)
+                        # pf.zcls(j,k) = (bv.z_tf_inside_half + bv.dr_tf_inboard + 0.86e0) * signn(k)
                         if top_bottom == 1:  # this coil is above midplane
                             pf.zcls[j, k] = bv.hpfu + 0.86e0
                             top_bottom = -1
@@ -500,7 +503,7 @@ class PFCoil:
                     + (bv.dr_cs * bv.dr_cs) / 6.0e0
                     + (bv.dr_cs * bv.dr_bore) / 2.0e0
                 )
-                / (bv.hmax * pfv.f_z_cs_tf_internal * 2.0e0)
+                / (bv.z_tf_inside_half * pfv.f_z_cs_tf_internal * 2.0e0)
             )
             dics = csflux / ddics
 
@@ -585,7 +588,7 @@ class PFCoil:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * bv.dr_cs
                     dz = 0.5e0 * (
-                        bv.hmax * (1.0e0 - pfv.f_z_cs_tf_internal)
+                        bv.z_tf_inside_half * (1.0e0 - pfv.f_z_cs_tf_internal)
                         + bv.dr_tf_inboard
                         + 0.1e0
                     )  # ???
@@ -1087,7 +1090,7 @@ class PFCoil:
 
         author: P J Knight, CCFE, Culham Science Centre
         """
-        hohc = bv.hmax * pfv.f_z_cs_tf_internal
+        hohc = bv.z_tf_inside_half * pfv.f_z_cs_tf_internal
 
         # Z coordinates of coil edges
         pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1] = hohc
@@ -1445,7 +1448,7 @@ class PFCoil:
                         * sgn
                         * bv.dr_cs
                         * pfv.f_z_cs_tf_internal
-                        * bv.hmax
+                        * bv.z_tf_inside_half
                         / pf.nfxf
                         * 2.0e0
                     )
@@ -3155,7 +3158,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
+            # ioheof = bv.z_tf_inside_half * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # Copper area = (area of coil - area of steel)*(1- void fraction)*
             # (fraction of copper in strands)
@@ -3172,7 +3175,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
+            # ioheof = bv.z_tf_inside_half * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
@@ -3186,7 +3189,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
+            # ioheof = bv.z_tf_inside_half * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu)
 
@@ -3208,7 +3211,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.hmax * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
+            # ioheof = bv.z_tf_inside_half * pfv.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfv.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # rcv.copperaoh_m2 = ioheof / (pfv.awpoh * (1.0 - pfv.f_a_cs_void) * pfv.fcuohsu)
 
