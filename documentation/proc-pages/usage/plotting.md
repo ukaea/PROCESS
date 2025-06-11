@@ -1,8 +1,14 @@
 # Utilities
 
-<h2>Plotting an MFILE</h2>
+## Plotting an MFILE
 
-<h3>Summary document</h3>
+!!! note 
+
+    The majority of the output plots can be automatically generated at the end of the `PROCESS` run by using the `--full-output` flag.
+    See the [running process](./running-process.md) section for more info.
+
+### Summary document
+
 `plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI:
 
 ```bash
@@ -59,7 +65,9 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 <figcaption>Figure 9: plot_proc first wall comparison page  </figcaption>
 </figure>
 
-<h3>Scan files</h3>
+----------------
+
+### Scan files
 
 `plot_scans` is a tool to show the change in variables as a scan variable is varied.
 Scans can be done in one or two dimensions.
@@ -77,9 +85,9 @@ python process/io/plot_scans.py -f path/to/MFILE.DAT
 <figcaption>Figure 11: 1D scan plot </figcaption>
 </figure>
 
+----------------
 
-
-<h3>Radial build</h3>
+### Radial build
 
 `plot_radial_build` is to plot the radial build of the machine in terms of bar segments. It can be run as follows:
 

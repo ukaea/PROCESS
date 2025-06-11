@@ -72,7 +72,7 @@ from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
-from process.io import mfile, plot_proc
+from process.io import mfile, plot_proc, plot_radial_build, plot_sankey
 from process.io import obsolete_vars as ov
 
 # For VaryRun
@@ -185,7 +185,6 @@ class Process:
             default="run_process.conf",
             help="configuration file for varying iteration parameters",
         )
-        parser.add_argument("-p", "--plot", action="store_true", help="plot an mfile")
         parser.add_argument(
             "-m",
             "--mfile",
@@ -207,6 +206,11 @@ class Process:
             "--update-obsolete",
             action="store_true",
             help="Automatically update obsolete variables in the IN.DAT file",
+        )
+        parser.add_argument(
+            "--full-output",
+            action="store_true",
+            help="Run all summary plotting scripts for the output",
         )
 
         # If args is not None, then parse the supplied arguments. This is likely
@@ -238,22 +242,23 @@ class Process:
         # TODO Currently, Process will always run on an input file beforehand.
         # It would be better to not require this, so just plot_proc could be
         # run, for example.
-        if self.args.plot:
-            # Check mfile exists, then plot
-            mfile_path = Path(self.args.mfile)
-            mfile_str = str(mfile_path.resolve())
-            if mfile_path.exists():
-                # TODO Get --show arg to work: actually show the plot, don't
-                # just save it
-                plot_proc.main(args=["-f", mfile_str])
-            else:
-                logger.error("mfile to be used for plotting doesn't exist")
         if self.args.mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
             mfile_path = Path(self.args.mfile)
             mfile_data = mfile.MFile(filename=mfile_path)
             mfile_data.open_mfile()
             mfile_data.write_to_json()
+        if self.args.full_output:
+            # Run all summary plotting scripts for the output
+            mfile_path = Path(str(self.args.input).replace("IN.DAT", "MFILE.DAT"))
+            mfile_str = str(mfile_path.resolve())
+            print(f"Plotting mfile {mfile_str}")
+            if mfile_path.exists():
+                plot_proc.main(args=["-f", mfile_str])
+                plot_radial_build.main(args=["-f", mfile_str, "-nm"])
+                plot_sankey.main(args=["-m", mfile_str])
+            else:
+                logger.error("mfile to be used for plotting doesn't exist")
 
 
 class VaryRun:

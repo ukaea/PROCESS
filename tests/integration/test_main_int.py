@@ -73,11 +73,9 @@ def test_plot_proc(temp_data, mfile_name):
     # Specify input and mfiles
     input_file = temp_data / "large_tokamak_IN.DAT"
     input_file_str = str(input_file.resolve())
-    mfile = temp_data / mfile_name
-    mfile_str = str(mfile)
 
     # Run on input, then plot custom mfile name
-    main.main(args=["-i", input_file_str, "--plot", "--mfile", mfile_str])
+    main.main(args=["-i", input_file_str, "--full-output"])
 
     # Assert a pdf has been created
     assert len(list(temp_data.glob("*.pdf")))
