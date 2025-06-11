@@ -1328,21 +1328,23 @@ class SuperconductingTFCoil(TFCoil):
             temp_tf_coolant_peak_field,
             temp_tf_conductor_peak_quench,
         )
-        tfcoil_variables.jwdgpro, vd = self.protect_new(
-            iop,
-            tfes,
-            acs,
-            aturn,
-            tdump,
-            fcond,
-            fcu,
-            thelium,
-            tmax,
-            bmax,
-            tfcoil_variables.rrr_tf_cu,
-            tfcoil_variables.t_tf_quench_detection,
-            constraint_variables.nflutfmax,
-        )
+
+        # # At present only valid for LTS windings (Nb3Sn)
+        # tfcoil_variables.jwdgpro, vd = self.protect_new(
+        #     iop,
+        #     tfes,
+        #     acs,
+        #     aturn,
+        #     tdump,
+        #     fcond,
+        #     fcu,
+        #     thelium,
+        #     tmax,
+        #     bmax,
+        #     tfcoil_variables.rrr_tf_cu,
+        #     tfcoil_variables.t_tf_quench_detection,
+        #     constraint_variables.nflutfmax,
+        # )
 
         if output:  # Output --------------------------
             if tmarg <= 0.0e0:
