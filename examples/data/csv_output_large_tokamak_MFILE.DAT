@@ -675,7 +675,7 @@
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      8.6482E-01 ITV
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      8.6482E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (dx_tf_inboard_out_toroidal)______________________      1.4145E+00 OP 
- Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
+ Maximum_inboard_edge_height_(m)_________________________________________ (z_tf_inside_half)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7815E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
  TF_coil_arc_point_0_R_(m)_______________________________________________ (r_tf_arc(1))_____________________      3.6253E+00    

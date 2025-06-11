@@ -1536,7 +1536,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     and approximations in the models integration with PROCESS.
     """
     monkeypatch.setattr(build_variables, "dr_tf_inboard", 1.4)  # Baseline 2018 value
-    monkeypatch.setattr(build_variables, "hmax", 8.8)  # Table 2
+    monkeypatch.setattr(build_variables, "z_tf_inside_half", 8.8)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_inboard_mid", 3.55)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_outboard_mid", 15.62)  # Table 2
     monkeypatch.setattr(tfcoil_variables, "theta1_coil", 48)  # Table 2

@@ -25,7 +25,7 @@ def cryostat_fixture():
 
 class ExternalCryoGeometryParam(NamedTuple):
     f_z_cryostat: Any = None
-    hmax: Any = None
+    z_tf_inside_half: Any = None
     dr_tf_inboard: Any = None
     dr_cryostat: Any = None
     r_cryostat_inboard: Any = None
@@ -54,7 +54,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     (
         ExternalCryoGeometryParam(
             f_z_cryostat=4.2679999999999998,
-            hmax=8.8182171641274945,
+            z_tf_inside_half=8.8182171641274945,
             dr_tf_inboard=0.92672586247397692,
             dr_cryostat=0.15000000000000002,
             r_cryostat_inboard=0,
@@ -154,7 +154,9 @@ def test_external_cryo_geometry(
     monkeypatch.setattr(
         build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
     )
-    monkeypatch.setattr(build_variables, "hmax", externalcryogeometryparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", externalcryogeometryparam.z_tf_inside_half
+    )
     monkeypatch.setattr(
         build_variables, "dr_tf_inboard", externalcryogeometryparam.dr_tf_inboard
     )
