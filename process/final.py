@@ -2,13 +2,13 @@
 
 from tabulate import tabulate
 
+import process.constraints as constraints
 from process import output as op
 from process import (
     process_output as po,
 )
 from process.fortran import (
     constants,
-    constraints,
     numerics,
 )
 from process.objectives import objective_function
@@ -67,20 +67,15 @@ def output_evaluation():
         f2py_compatible_to_string(i)
         for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns] - 1]
     ]
-    units = [f2py_compatible_to_string(i) for i in units]
-    physical_constraint = [
-        f"{c} {u}" for c, u in zip(value.tolist(), units, strict=False)
-    ]
-    physical_residual = [
-        f"{c} {u}" for c, u in zip(residual.tolist(), units, strict=False)
-    ]
+    physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
+    physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
 
     table_data = {
         "Constraint Name": labels,
-        "Constraint Type": symbols.tolist(),
+        "Constraint Type": symbols,
         "Physical constraint": physical_constraint,
         "Constraint residual": physical_residual,
-        "Normalised residual": residual_error.tolist(),
+        "Normalised residual": residual_error,
     }
 
     po.write(constants.nout, tabulate(table_data, headers="keys"))

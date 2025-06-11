@@ -9,6 +9,7 @@ from typing import Any
 from warnings import warn
 
 from process import fortran
+from process.constraints import ConstraintManager
 from process.exceptions import ProcessValidationError, ProcessValueError
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
@@ -104,10 +105,10 @@ INPUT_VARIABLES = {
     "maxcal": InputVariable(fortran.global_variables, int, range=(0, 10000)),
     "minmax": InputVariable(fortran.numerics, int),
     "neqns": InputVariable(
-        fortran.numerics, int, range=(1, fortran.numerics.ipeqns.item())
+        fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
     ),
     "nineqns": InputVariable(
-        fortran.numerics, int, range=(1, fortran.numerics.ipeqns.item())
+        fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
     "alphan": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),

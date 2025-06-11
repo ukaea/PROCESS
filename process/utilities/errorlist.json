@@ -12,8 +12,8 @@
   "errors": [
     {
       "no": 1,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 7 if i_plasma_ignited=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 2,
@@ -27,38 +27,38 @@
     },
     {
       "no": 4,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 28 if i_plasma_ignited=1"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 5,
-      "level": 3,
-      "message": "CONSTRAINTS: temp_fw_peak = 0 ==> i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 6,
-      "level": 3,
-      "message": "CONSTRAINTS: tcycmn = 0 ==> i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 7,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 43 if itart=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 8,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 44 if itart=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 9,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 45 if itart=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 10,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 46 if itart=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 11,
@@ -67,18 +67,18 @@
     },
     {
       "no": 12,
-      "level": 3,
-      "message": "CONSTRAINTS: Do not use constraint 50 if ife=0"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 13,
-      "level": 3,
-      "message": "CONSTRAINTS: No such constraint equation number..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 14,
-      "level": 3,
-      "message": "CONSTRAINTS: NaN/infty error for constraint equation..."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 15,
@@ -202,12 +202,12 @@
     },
     {
       "no": 39,
-      "level": 1,
+      "level": 0,
       "message": "REMOVED"
     },
     {
       "no": 40,
-      "level": 2,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "no": 50,
-      "level": 3,
+      "level": 0,
       "message": "REMOVED"
     },
     {
@@ -292,23 +292,23 @@
     },
     {
       "no": 57,
-      "level": 3,
-      "message": "CONVXC: Illegal iteration variable number"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 58,
       "level": 3,
-      "message": "CONVXC: Iteration variable is zero; change its initial value or lower bound"
+      "message": "REMOVED"
     },
     {
       "no": 59,
       "level": 3,
-      "message": "CONVXC: NaN error for iteration variable"
+      "message": "REMOVED"
     },
     {
       "no": 60,
-      "level": 3,
-      "message": "CONVXC: scale(i) = 0 for iteration variable"
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 61,
@@ -1187,8 +1187,8 @@
     },
     {
       "no": 236,
-      "level": 3,
-      "message": "CHECK: The 1/R toroidal B field dependency constraint is being depreciated."
+      "level": 0,
+      "message": "REMOVED"
     },
     {
       "no": 237,
@@ -1452,8 +1452,8 @@
     },
     {
       "no": 289,
-      "level": 3,
-      "message": "CHECK: Constraint equation 22 has been deprecated."
+      "level": 0,
+      "message": "REMOVED"
     }
   ]
 }
