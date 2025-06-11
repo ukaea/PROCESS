@@ -376,6 +376,17 @@ def plot_main_power_flow(
         fig (plt.Figure): The matplotlib figure object for additional annotations.
     """
 
+    axis.text(
+        0.05,
+        0.95,
+        "* Components do not represent the design",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=2,
+        fontsize=11,
+    )
+
     # ==========================================
     # Plasma
     # ===========================================
@@ -669,12 +680,13 @@ def plot_main_power_flow(
             },
             annotation_clip=False,
         )
+
+    # Plot line from HCD power supply to bend for injected
     axis.plot(
         [-0.28, -0.28],
         [0.875, 0.5],
         transform=axis.transAxes,
         color="black",
-        linestyle="--",
         linewidth=1.5,
         zorder=3,
         clip_on=False,
@@ -725,7 +737,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightyellow",
+            "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -807,7 +819,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "lightyellow",
+            "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -1059,7 +1071,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "orange",
+            "facecolor": "lime",
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -1124,7 +1136,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "orange",
+            "facecolor": "lime",
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -1144,7 +1156,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "orange",
+            "facecolor": "lime",
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -1314,7 +1326,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "blue",
+            "facecolor": "dodgerblue",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -1410,6 +1422,36 @@ def plot_main_power_flow(
             "boxstyle": "round",
             "facecolor": "orange",
             "linewidth": 2,
+        },
+    )
+
+    # Draw arrow from FW primary heat box to blanket and FW primary heat deposited box
+    axis.annotate(
+        "",
+        xy=(0.65, 0.52),
+        xytext=(0.62, 0.55),
+        xycoords=fig.transFigure,
+        arrowprops={
+            "arrowstyle": "-|>,head_length=1,head_width=0.3",
+            "color": "orange",
+            "linewidth": 2.0,
+            "zorder": 5,
+            "fill": True,
+        },
+    )
+
+    # Draw arrow from blanket primary heat box to blanket and FW primary heat deposited box
+    axis.annotate(
+        "",
+        xy=(0.68, 0.52),
+        xytext=(0.7, 0.55),
+        xycoords=fig.transFigure,
+        arrowprops={
+            "arrowstyle": "-|>,head_length=1,head_width=0.3",
+            "color": "orange",
+            "linewidth": 2.0,
+            "zorder": 5,
+            "fill": True,
         },
     )
 
@@ -1553,7 +1595,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -1608,6 +1650,22 @@ def plot_main_power_flow(
         },
     )
 
+    # ============================================
+    # Divertor
+    # ============================================
+
+    axis.text(
+        0.325,
+        0.48,
+        "Divertor",
+        transform=fig.transFigure,
+        horizontalalignment="left",
+        verticalalignment="bottom",
+        zorder=1000,  # bring to front
+        fontsize=11,
+        color="white",  # make text white
+    )
+
     # Load the divertor image
     divertor = mpimg.imread(
         resources.path("process.io", "divertor.png")
@@ -1629,7 +1687,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "blue",
+            "facecolor": "dodgerblue",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -1684,7 +1742,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -1899,7 +1957,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lime",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -1948,7 +2006,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lightblue",
             "alpha": 0.8,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -2004,7 +2062,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "burlywood",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -2036,7 +2094,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "burlywood",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -2068,7 +2126,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "burlywood",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -2104,7 +2162,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "burlywood",
             "alpha": 0.8,
             "linewidth": 2,
         },
@@ -2136,7 +2194,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lightblue",
             "alpha": 0.8,
             "linewidth": 2,
             "linestyle": "dashed",
@@ -2186,7 +2244,7 @@ def plot_main_power_flow(
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "wheat",
+            "facecolor": "lightblue",
             "alpha": 1.0,
             "linewidth": 2,
             "linestyle": "dashed",
