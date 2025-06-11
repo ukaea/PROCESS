@@ -1126,6 +1126,191 @@ class Power:
             heat_transport_variables.p_plant_primary_heat_mw,
         )
 
+    def output_plant_electric_powers(self):
+        po.oheadr(self.outfile, "Plant Electricity Production")
+
+        po.ocmmnt(self.outfile, "Turbine conversion : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total high grade thermal power used for electricity production [MWth]",
+            "(p_plant_primary_heat_mw)",
+            heat_transport_variables.p_plant_primary_heat_mw,
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Thermal to electric conversion efficiency of the turbine",
+            "(eta_turbine)",
+            heat_transport_variables.eta_turbine,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total thermal power lost in power conversion [MWth]",
+            "(p_turbine_loss_mw)",
+            self.p_turbine_loss_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total electric power produced [MWe]",
+            "(p_plant_electric_gross_mw)",
+            heat_transport_variables.p_plant_electric_gross_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Electric requirements of core plant systems : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Base plant electric load [We]",
+            "(p_plant_electric_base)",
+            heat_transport_variables.p_plant_electric_base,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power per unit area of plant floor space [We/m^2]",
+            "(pflux_plant_floor_electric)",
+            heat_transport_variables.pflux_plant_floor_electric,
+        )
+        po.ovarre(
+            self.outfile,
+            "Effective area of plant buildings floor [m^2]",
+            "(a_plant_floor_effective)",
+            buildings_variables.a_plant_floor_effective,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total base plant electric load [MWe]",
+            "(p_plant_electric_base_total_mw)",
+            heat_transport_variables.p_plant_electric_base_total_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for cryo plant [MWe]",
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for tritium plant [MWe]",
+            "(p_tritium_plant_electric_mw)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for vacuum pumps [MWe]",
+            "(vachtmww)",
+            heat_transport_variables.vachtmw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for TF coil system [MWe]",
+            "(p_tf_electric_supplies_mw)",
+            heat_transport_variables.p_tf_electric_supplies_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for PF coil system [MWe]",
+            "(p_pf_electric_supplies_mw)",
+            pfcoil_variables.p_pf_electric_supplies_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for CP coolant pumps [MWe]",
+            "(p_cp_coolant_pump_elec_mw)",
+            self.p_cp_coolant_pump_elec_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of core plant systems needed at all times [MWe]",
+            "(p_plant_core_systems_elec_mw)",
+            self.p_plant_core_systems_elec_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Electric requirements during plasma flat-top : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of FW and Blanket coolant pumps [MWe]",
+            "(p_fw_blkt_coolant_pump_elec_mw)",
+            self.p_fw_blkt_coolant_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of Blanket secondary breeder coolant pumps [MWe]",
+            "(p_blkt_breeder_pump_elec_mw)",
+            self.p_blkt_breeder_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of VV and Shield coolant pumps [MWe]",
+            "(p_shld_coolant_pump_elec_mw)",
+            self.p_shld_coolant_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of Divertor colant pumps [MWe]",
+            "(p_div_coolant_pump_elec_mw)",
+            self.p_div_coolant_pump_elec_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric wall plug efficiency of coolant pumps",
+            "(eta_coolant_pump_electric)",
+            fwbs_variables.eta_coolant_pump_electric,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total electric demand of all coolant pumps [MWe]",
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total electric demand of all H&CD systems [MWe]",
+            "(p_hcd_electric_total_mw)",
+            heat_transport_variables.p_hcd_electric_total_mw,
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total re-circulated electric power of the plant [MWe]",
+            "(p_plant_electric_recirc_mw)",
+            heat_transport_variables.p_plant_electric_recirc_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of gross electricity re-circulated",
+            "(f_p_plant_electric_recirc)",
+            heat_transport_variables.f_p_plant_electric_recirc,
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total net-electric power of the plant [MWe]",
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
+        )
+
     def plant_electric_production(self, output: bool):
         """
         This method completes the calculation of the plant's electrical and thermal power flows,
