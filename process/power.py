@@ -847,6 +847,285 @@ class Power:
             / ((293 / 4.5) - 1)
         ) / 1.0e3
 
+    def output_plant_thermal_powers(self):
+        po.oheadr(self.outfile, "Plant Heat Transport Balance")
+
+        po.ocmmnt(self.outfile, "First Wall : ")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heat deposited in FW [MW]",
+            "(p_fw_nuclear_heat_total_mw)",
+            fwbs_variables.p_fw_nuclear_heat_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in FW [MW]",
+            "(p_fw_rad_total_mw)",
+            fwbs_variables.p_fw_rad_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Lost alpha-particle heat deposited in FW [MW]",
+            "(p_fw_alpha_mw)",
+            physics_variables.p_fw_alpha_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutral beam shine-through heat deposited in FW [MW]",
+            "(p_beam_shine_through_mw)",
+            current_drive_variables.p_beam_shine_through_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutral beam orbit loss heat deposited in FW [MW]",
+            "(p_beam_orbit_loss_mw)",
+            current_drive_variables.p_beam_orbit_loss_mw,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Mechancial pumping power deposited in FW coolant [MW]",
+            "(p_fw_coolant_pump_mw)",
+            heat_transport_variables.p_fw_coolant_pump_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in FW and coolant [MW]",
+            "(p_fw_heat_deposited_mw)",
+            self.p_fw_heat_deposited_mw,
+        )
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Blanket : ")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total neutronic nuclear heat deposited and created in Blanket(s) [MW]",
+            "(p_blkt_nuclear_heat_total_mw)",
+            fwbs_variables.p_blkt_nuclear_heat_total_mw,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Mechancial pumping power deposited in Blanket(s) coolant [MW]",
+            "(p_blkt_coolant_pump_mw)",
+            heat_transport_variables.p_blkt_coolant_pump_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in Blanket(s) and coolant [MW]",
+            "(p_blkt_heat_deposited_mw)",
+            self.p_blkt_heat_deposited_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "FW and Blanket : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Mechancial pumping power deposited in Blanket(s) and FW coolant [MW]",
+            "(p_fw_blkt_coolant_pump_mw)",
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in Blanket(s) and FW coolant [MW]",
+            "(p_fw_blkt_heat_deposited_mw)",
+            self.p_fw_blkt_heat_deposited_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "VV and Shield : ")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heat deposited in VV shield [MW]",
+            "(p_shld_nuclear_heat_mw)",
+            fwbs_variables.p_shld_nuclear_heat_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heat deposited in ST centrepost shield [MW]",
+            "(p_cp_shield_nuclear_heat_mw)",
+            fwbs_variables.p_cp_shield_nuclear_heat_mw,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Mechancial pumping power deposited in shield coolant(s) [MW]",
+            "(p_shld_coolant_pump_mw)",
+            heat_transport_variables.p_shld_coolant_pump_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in VV and shield coolant(s) [MW]",
+            "(p_shld_heat_deposited_mw)",
+            self.p_shld_heat_deposited_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Divertor : ")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma separatrix power deposited in divertor) [MW]",
+            "(p_plasma_separatrix_mw)",
+            physics_variables.p_plasma_separatrix_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heat deposited in divertor [MW]",
+            "(p_div_nuclear_heat_total_mw)",
+            fwbs_variables.p_div_nuclear_heat_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in divertor [MW]",
+            "(p_div_rad_total_mw)",
+            fwbs_variables.p_div_rad_total_mw,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Mechancial pumping power deposited in divertor coolant [MW]",
+            "(p_div_coolant_pump_mw)",
+            heat_transport_variables.p_div_coolant_pump_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in divertor and coolants [MW]",
+            "(p_div_heat_deposited_mw)",
+            self.p_div_heat_deposited_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Secondary heat : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Electric power for core plant systems [MW]",
+            "(p_plant_core_systems_elec_mw)",
+            self.p_plant_core_systems_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Wall plug losses in H&CD systems [MW]",
+            "(p_hcd_electric_loss_mw)",
+            heat_transport_variables.p_hcd_electric_loss_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total wall plug losses in coolant pump systems [MW]",
+            "(p_coolant_pump_loss_total_mw)",
+            heat_transport_variables.p_coolant_pump_loss_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Divertor thermal power not used for electricity production [MW]",
+            "(p_div_secondary_heat_mw)",
+            heat_transport_variables.p_div_secondary_heat_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Shield thermal power not used for electricity production [MW]",
+            "(p_shld_secondary_heat_mw)",
+            heat_transport_variables.p_shld_secondary_heat_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heating in TF coils [MW]",
+            "(p_tf_nuclear_heat_mw)",
+            fwbs_variables.p_tf_nuclear_heat_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heating in H&CD systems and diagnostics [MW]",
+            "(p_fw_hcd_nuclear_heat_mw)",
+            fwbs_variables.p_fw_hcd_nuclear_heat_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in H&CD systems and diagnostics [MW]",
+            "(p_fw_hcd_rad_total_mw)",
+            fwbs_variables.p_fw_hcd_rad_total_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in in H&CD systems and diagnostics [MW]",
+            "(p_hcd_secondary_heat_mw)",
+            heat_transport_variables.p_hcd_secondary_heat_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total secondary heat not used for electricity production [MW]",
+            "(p_plant_secondary_heat_mw)",
+            heat_transport_variables.p_plant_secondary_heat_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Primary heat : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in FW and coolant [MW]",
+            "(p_fw_heat_deposited_mw)",
+            self.p_fw_heat_deposited_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in Blanket(s) and coolant [MW]",
+            "(p_blkt_heat_deposited_mw)",
+            self.p_blkt_heat_deposited_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in Blanket(s) and FW coolant [MW]",
+            "(p_fw_blkt_heat_deposited_mw)",
+            self.p_fw_blkt_heat_deposited_mw,
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in VV and shield coolant(s) [MW]",
+            "(p_shld_heat_deposited_mw)",
+            self.p_shld_heat_deposited_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total heat deposited in divertor and coolants [MW]",
+            "(p_div_heat_deposited_mw)",
+            self.p_div_heat_deposited_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total primary thermal power used for electricity production [MW]",
+            "(p_plant_primary_heat_mw)",
+            heat_transport_variables.p_plant_primary_heat_mw,
+        )
+
     def plant_electric_production(self, output: bool):
         """
         This method completes the calculation of the plant's electrical and thermal power flows,
