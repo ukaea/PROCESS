@@ -832,11 +832,10 @@ module tfcoil_variables
 
   real(dp) :: max_vv_stress
   !! The allowable peak maximum shear stress in the vacuum vessel due to quench and fast discharge of the TF coils [Pa]
-end module tfcoil_variables
-
 
   real(dp) :: t_tf_quench_detection
   !! TF coil quench detection time (s). Only used for TF coil quench protection.
 
   real(dp) :: rrr_tf_cu
   !! TF coil copper residual-resistance-ratio (RRR). Only used for quench protection.
+end module tfcoil_variables
