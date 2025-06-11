@@ -1151,21 +1151,24 @@ class SuperconductingTFCoil(TFCoil):
             else:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
-            if superconductors.current_density_margin(1e-6, *arguments) < 0:
-                tmarg = -1.0
+            if superconductors.current_density_margin(thelium, *arguments) < 0:
+                # Kludge tmarg to be a negative value. The tmargtf constraint (icc=36)
+                # should be violated in this case and the unplanned tf availability
+                # should be 100% (making cfactr 0 and violating the availability icc=61)
+                tmarg = -abs(thelium)  # -|t| to ensure its not a double negative
             else:
-                root_result = optimize.root_scalar(
+                t_zero_margin = optimize.newton(
                     superconductors.current_density_margin,
-                    x0=thelium,
-                    x1=2 * thelium,
-                    bracket=[1e-6, 500],
+                    thelium,
                     args=arguments,
-                    xtol=1.0e-06,
-                    rtol=1.0e-6,
+                    tol=1.0e-06,
                     maxiter=50,
+                    x1=2 * thelium,
+                    rtol=1.0e-6,
+                    disp=True,
                 )
 
-                tmarg = root_result.root - thelium
+                tmarg = t_zero_margin - thelium
 
             tfcoil_variables.temp_margin = tmarg
 
