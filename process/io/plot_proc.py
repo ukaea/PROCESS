@@ -764,9 +764,11 @@ def plot_main_plasma_information(
     # =========================================
 
     # Load the neutron image
-    alpha_particle = mpimg.imread(
-        resources.path("process.io", "alpha_particle.PNG")
-    )  # Use importlib.resources to locate the image
+    with resources.path(
+        "process.io", "alpha_particle.PNG"
+    ) as alpha_particle_image_path:
+        # Use importlib.resources to locate the image
+        alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
 
     # Display the neutron image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -806,7 +808,8 @@ def plot_main_plasma_information(
     )
 
     # =========================================
-    neutron = mpimg.imread(resources.path("process.io", "neutron.png"))
+    with resources.path("process.io", "neutron.png") as neutron_image_path:
+        neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
         [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10
     )
