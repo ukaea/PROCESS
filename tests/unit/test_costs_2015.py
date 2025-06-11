@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from process.costs_2015 import Costs2015
+from process.data_structure import cost_2015_variables
 from process.fortran import (
     build_variables,
     cost_variables,
@@ -2352,29 +2353,35 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
         calcbuildingcostsparam.tok_build_cost_per_vol,
     )
 
-    monkeypatch.setattr(costs2015, "s_kref", calcbuildingcostsparam.s_kref)
+    monkeypatch.setattr(cost_2015_variables, "s_kref", calcbuildingcostsparam.s_kref)
 
-    monkeypatch.setattr(costs2015, "s_k", calcbuildingcostsparam.s_k)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calcbuildingcostsparam.s_k)
 
-    monkeypatch.setattr(costs2015, "s_cref", calcbuildingcostsparam.s_cref)
+    monkeypatch.setattr(cost_2015_variables, "s_cref", calcbuildingcostsparam.s_cref)
 
-    monkeypatch.setattr(costs2015, "s_cost", calcbuildingcostsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_cost", calcbuildingcostsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcbuildingcostsparam.s_cost_factor
+        cost_2015_variables, "s_cost_factor", calcbuildingcostsparam.s_cost_factor
     )
 
     costs2015.calc_building_costs()
 
-    assert costs2015.s_kref == pytest.approx(calcbuildingcostsparam.expected_s_kref)
+    assert cost_2015_variables.s_kref == pytest.approx(
+        calcbuildingcostsparam.expected_s_kref
+    )
 
-    assert costs2015.s_k == pytest.approx(calcbuildingcostsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(calcbuildingcostsparam.expected_s_k)
 
-    assert costs2015.s_cref == pytest.approx(calcbuildingcostsparam.expected_s_cref)
+    assert cost_2015_variables.s_cref == pytest.approx(
+        calcbuildingcostsparam.expected_s_cref
+    )
 
-    assert costs2015.s_cost == pytest.approx(calcbuildingcostsparam.expected_s_cost)
+    assert cost_2015_variables.s_cost == pytest.approx(
+        calcbuildingcostsparam.expected_s_cost
+    )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calcbuildingcostsparam.expected_s_cost_factor
     )
 
@@ -4629,27 +4636,35 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(cost_variables, "costexp", calclandcostsparam.costexp)
 
-    monkeypatch.setattr(costs2015, "s_kref", calclandcostsparam.s_kref)
+    monkeypatch.setattr(cost_2015_variables, "s_kref", calclandcostsparam.s_kref)
 
-    monkeypatch.setattr(costs2015, "s_k", calclandcostsparam.s_k)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calclandcostsparam.s_k)
 
-    monkeypatch.setattr(costs2015, "s_cref", calclandcostsparam.s_cref)
+    monkeypatch.setattr(cost_2015_variables, "s_cref", calclandcostsparam.s_cref)
 
-    monkeypatch.setattr(costs2015, "s_cost", calclandcostsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_cost", calclandcostsparam.s_cost)
 
-    monkeypatch.setattr(costs2015, "s_cost_factor", calclandcostsparam.s_cost_factor)
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost_factor", calclandcostsparam.s_cost_factor
+    )
 
     costs2015.calc_land_costs()
 
-    assert costs2015.s_kref == pytest.approx(calclandcostsparam.expected_s_kref)
+    assert cost_2015_variables.s_kref == pytest.approx(
+        calclandcostsparam.expected_s_kref
+    )
 
-    assert costs2015.s_k == pytest.approx(calclandcostsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(calclandcostsparam.expected_s_k)
 
-    assert costs2015.s_cref == pytest.approx(calclandcostsparam.expected_s_cref)
+    assert cost_2015_variables.s_cref == pytest.approx(
+        calclandcostsparam.expected_s_cref
+    )
 
-    assert costs2015.s_cost == pytest.approx(calclandcostsparam.expected_s_cost)
+    assert cost_2015_variables.s_cost == pytest.approx(
+        calclandcostsparam.expected_s_cost
+    )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calclandcostsparam.expected_s_cost_factor
     )
 
@@ -6906,27 +6921,35 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(cost_variables, "costexp", calctfcoilcostsparam.costexp)
 
-    monkeypatch.setattr(costs2015, "s_kref", calctfcoilcostsparam.s_kref)
+    monkeypatch.setattr(cost_2015_variables, "s_kref", calctfcoilcostsparam.s_kref)
 
-    monkeypatch.setattr(costs2015, "s_k", calctfcoilcostsparam.s_k)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calctfcoilcostsparam.s_k)
 
-    monkeypatch.setattr(costs2015, "s_cref", calctfcoilcostsparam.s_cref)
+    monkeypatch.setattr(cost_2015_variables, "s_cref", calctfcoilcostsparam.s_cref)
 
-    monkeypatch.setattr(costs2015, "s_cost", calctfcoilcostsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_cost", calctfcoilcostsparam.s_cost)
 
-    monkeypatch.setattr(costs2015, "s_cost_factor", calctfcoilcostsparam.s_cost_factor)
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost_factor", calctfcoilcostsparam.s_cost_factor
+    )
 
     costs2015.calc_tf_coil_costs()
 
-    assert costs2015.s_kref == pytest.approx(calctfcoilcostsparam.expected_s_kref)
+    assert cost_2015_variables.s_kref == pytest.approx(
+        calctfcoilcostsparam.expected_s_kref
+    )
 
-    assert costs2015.s_k == pytest.approx(calctfcoilcostsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(calctfcoilcostsparam.expected_s_k)
 
-    assert costs2015.s_cref == pytest.approx(calctfcoilcostsparam.expected_s_cref)
+    assert cost_2015_variables.s_cref == pytest.approx(
+        calctfcoilcostsparam.expected_s_cref
+    )
 
-    assert costs2015.s_cost == pytest.approx(calctfcoilcostsparam.expected_s_cost)
+    assert cost_2015_variables.s_cost == pytest.approx(
+        calctfcoilcostsparam.expected_s_cost
+    )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calctfcoilcostsparam.expected_s_cost_factor
     )
 
@@ -9169,35 +9192,43 @@ def test_calc_remote_handling_costs(
         cost_variables, "num_rh_systems", calcremotehandlingcostsparam.num_rh_systems
     )
 
-    monkeypatch.setattr(costs2015, "s_kref", calcremotehandlingcostsparam.s_kref)
+    monkeypatch.setattr(
+        cost_2015_variables, "s_kref", calcremotehandlingcostsparam.s_kref
+    )
 
-    monkeypatch.setattr(costs2015, "s_k", calcremotehandlingcostsparam.s_k)
-
-    monkeypatch.setattr(costs2015, "s_cref", calcremotehandlingcostsparam.s_cref)
-
-    monkeypatch.setattr(costs2015, "s_cost", calcremotehandlingcostsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calcremotehandlingcostsparam.s_k)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcremotehandlingcostsparam.s_cost_factor
+        cost_2015_variables, "s_cref", calcremotehandlingcostsparam.s_cref
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost", calcremotehandlingcostsparam.s_cost
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost_factor", calcremotehandlingcostsparam.s_cost_factor
     )
 
     costs2015.calc_remote_handling_costs()
 
-    assert costs2015.s_kref == pytest.approx(
+    assert cost_2015_variables.s_kref == pytest.approx(
         calcremotehandlingcostsparam.expected_s_kref
     )
 
-    assert costs2015.s_k == pytest.approx(calcremotehandlingcostsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(
+        calcremotehandlingcostsparam.expected_s_k
+    )
 
-    assert costs2015.s_cref == pytest.approx(
+    assert cost_2015_variables.s_cref == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cref
     )
 
-    assert costs2015.s_cost == pytest.approx(
+    assert cost_2015_variables.s_cost == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cost
     )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cost_factor
     )
 
@@ -11442,29 +11473,37 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
 
     monkeypatch.setattr(cost_variables, "costexp", calcnplantandvvcostsparam.costexp)
 
-    monkeypatch.setattr(costs2015, "s_kref", calcnplantandvvcostsparam.s_kref)
+    monkeypatch.setattr(cost_2015_variables, "s_kref", calcnplantandvvcostsparam.s_kref)
 
-    monkeypatch.setattr(costs2015, "s_k", calcnplantandvvcostsparam.s_k)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calcnplantandvvcostsparam.s_k)
 
-    monkeypatch.setattr(costs2015, "s_cref", calcnplantandvvcostsparam.s_cref)
+    monkeypatch.setattr(cost_2015_variables, "s_cref", calcnplantandvvcostsparam.s_cref)
 
-    monkeypatch.setattr(costs2015, "s_cost", calcnplantandvvcostsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_cost", calcnplantandvvcostsparam.s_cost)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcnplantandvvcostsparam.s_cost_factor
+        cost_2015_variables, "s_cost_factor", calcnplantandvvcostsparam.s_cost_factor
     )
 
     costs2015.calc_n_plant_and_vv_costs()
 
-    assert costs2015.s_kref == pytest.approx(calcnplantandvvcostsparam.expected_s_kref)
+    assert cost_2015_variables.s_kref == pytest.approx(
+        calcnplantandvvcostsparam.expected_s_kref
+    )
 
-    assert costs2015.s_k == pytest.approx(calcnplantandvvcostsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(
+        calcnplantandvvcostsparam.expected_s_k
+    )
 
-    assert costs2015.s_cref == pytest.approx(calcnplantandvvcostsparam.expected_s_cref)
+    assert cost_2015_variables.s_cref == pytest.approx(
+        calcnplantandvvcostsparam.expected_s_cref
+    )
 
-    assert costs2015.s_cost == pytest.approx(calcnplantandvvcostsparam.expected_s_cost)
+    assert cost_2015_variables.s_cost == pytest.approx(
+        calcnplantandvvcostsparam.expected_s_cost
+    )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calcnplantandvvcostsparam.expected_s_cost_factor
     )
 
@@ -13703,37 +13742,45 @@ def test_calc_energy_conversion_system(
         cost_variables, "costexp", calcenergyconversionsystemparam.costexp
     )
 
-    monkeypatch.setattr(costs2015, "s_kref", calcenergyconversionsystemparam.s_kref)
+    monkeypatch.setattr(
+        cost_2015_variables, "s_kref", calcenergyconversionsystemparam.s_kref
+    )
 
-    monkeypatch.setattr(costs2015, "s_k", calcenergyconversionsystemparam.s_k)
-
-    monkeypatch.setattr(costs2015, "s_cref", calcenergyconversionsystemparam.s_cref)
-
-    monkeypatch.setattr(costs2015, "s_cost", calcenergyconversionsystemparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calcenergyconversionsystemparam.s_k)
 
     monkeypatch.setattr(
-        costs2015,
+        cost_2015_variables, "s_cref", calcenergyconversionsystemparam.s_cref
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost", calcenergyconversionsystemparam.s_cost
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables,
         "s_cost_factor",
         calcenergyconversionsystemparam.s_cost_factor,
     )
 
     costs2015.calc_energy_conversion_system()
 
-    assert costs2015.s_kref == pytest.approx(
+    assert cost_2015_variables.s_kref == pytest.approx(
         calcenergyconversionsystemparam.expected_s_kref
     )
 
-    assert costs2015.s_k == pytest.approx(calcenergyconversionsystemparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(
+        calcenergyconversionsystemparam.expected_s_k
+    )
 
-    assert costs2015.s_cref == pytest.approx(
+    assert cost_2015_variables.s_cref == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cref
     )
 
-    assert costs2015.s_cost == pytest.approx(
+    assert cost_2015_variables.s_cost == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cost
     )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cost_factor
     )
 
@@ -16029,7 +16076,9 @@ def test_calc_remaining_subsystems(
     )
 
     monkeypatch.setattr(
-        pf_power_variables, "ensxpfm", calcremainingsubsystemsparam.ensxpfm
+        pf_power_variables,
+        "ensxpfm",
+        calcremainingsubsystemsparam.ensxpfm,
     )
 
     monkeypatch.setattr(
@@ -16070,35 +16119,43 @@ def test_calc_remaining_subsystems(
 
     monkeypatch.setattr(cost_variables, "costexp", calcremainingsubsystemsparam.costexp)
 
-    monkeypatch.setattr(costs2015, "s_kref", calcremainingsubsystemsparam.s_kref)
+    monkeypatch.setattr(
+        cost_2015_variables, "s_kref", calcremainingsubsystemsparam.s_kref
+    )
 
-    monkeypatch.setattr(costs2015, "s_k", calcremainingsubsystemsparam.s_k)
-
-    monkeypatch.setattr(costs2015, "s_cref", calcremainingsubsystemsparam.s_cref)
-
-    monkeypatch.setattr(costs2015, "s_cost", calcremainingsubsystemsparam.s_cost)
+    monkeypatch.setattr(cost_2015_variables, "s_k", calcremainingsubsystemsparam.s_k)
 
     monkeypatch.setattr(
-        costs2015, "s_cost_factor", calcremainingsubsystemsparam.s_cost_factor
+        cost_2015_variables, "s_cref", calcremainingsubsystemsparam.s_cref
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost", calcremainingsubsystemsparam.s_cost
+    )
+
+    monkeypatch.setattr(
+        cost_2015_variables, "s_cost_factor", calcremainingsubsystemsparam.s_cost_factor
     )
 
     costs2015.calc_remaining_subsystems()
 
-    assert costs2015.s_kref == pytest.approx(
+    assert cost_2015_variables.s_kref == pytest.approx(
         calcremainingsubsystemsparam.expected_s_kref
     )
 
-    assert costs2015.s_k == pytest.approx(calcremainingsubsystemsparam.expected_s_k)
+    assert cost_2015_variables.s_k == pytest.approx(
+        calcremainingsubsystemsparam.expected_s_k
+    )
 
-    assert costs2015.s_cref == pytest.approx(
+    assert cost_2015_variables.s_cref == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cref
     )
 
-    assert costs2015.s_cost == pytest.approx(
+    assert cost_2015_variables.s_cost == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cost
     )
 
-    assert costs2015.s_cost_factor == pytest.approx(
+    assert cost_2015_variables.s_cost_factor == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cost_factor
     )
 
