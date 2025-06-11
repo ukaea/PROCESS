@@ -109,7 +109,7 @@ class SuperconductingTFCoil(TFCoil):
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.ind_tf_coil = self.tfcind(
                 build_variables.dr_tf_inboard,
-                tfcoil_variables.xarc,
+                tfcoil_variables.r_tf_arc,
                 tfcoil_variables.yarc,
             )
         else:
