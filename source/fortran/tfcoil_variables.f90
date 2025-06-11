@@ -727,7 +727,7 @@ module tfcoil_variables
   real(dp), dimension(4) :: radctf
   !! radius of arc i (m)
 
-  real(dp), dimension(5) :: xarc
+  real(dp), dimension(5) :: r_tf_arc
   !! x location of arc point i on surface (m)
 
   real(dp), dimension(4) :: xctfc
