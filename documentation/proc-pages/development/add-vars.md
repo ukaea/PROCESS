@@ -196,12 +196,14 @@ A constraint is simply added by registering the constraint to the manager using 
 def my_constraint_function(): ...
 ```
 The arguments to the `register_constraint` function are:
+
 - Name (again, currently an integer)
 - Unit (for output reporting purposes)
 - Symbol (e.g. =, >=, <=. Again, for output reporting purposes)
 
 
 `my_constraint_function` should be named appropriately and return a `ConstraintResult` which contains the:
+
 - Normalised residual error
 - Constraint value
 - Constraint error
