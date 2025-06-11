@@ -652,7 +652,7 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
 
 class TfcindParam(NamedTuple):
-    yarc: Any = None
+    z_tf_arc: Any = None
 
     r_tf_arc: Any = None
 
@@ -669,7 +669,7 @@ class TfcindParam(NamedTuple):
     "tfcindparam",
     (
         TfcindParam(
-            yarc=np.array(
+            z_tf_arc=np.array(
                 (
                     4.5228880258064512,
                     7.5381467096774184,
@@ -694,7 +694,7 @@ class TfcindParam(NamedTuple):
             expected_ind_tf_coil=5.4453892599192845e-06,
         ),
         TfcindParam(
-            yarc=np.array(
+            z_tf_arc=np.array(
                 (
                     4.5336880258064509,
                     7.5561467096774191,
@@ -736,7 +736,9 @@ def test_tfcind(tfcindparam, monkeypatch, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
     ind_tf_coil = tfcoil.tfcind(
-        tfthk=tfcindparam.tfthk, r_tf_arc=tfcindparam.r_tf_arc, yarc=tfcindparam.yarc
+        tfthk=tfcindparam.tfthk,
+        r_tf_arc=tfcindparam.r_tf_arc,
+        z_tf_arc=tfcindparam.z_tf_arc,
     )
 
     assert ind_tf_coil == pytest.approx(tfcindparam.expected_ind_tf_coil)

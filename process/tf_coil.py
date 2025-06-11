@@ -79,7 +79,7 @@ class TFCoil:
             tfcoil_variables.ind_tf_coil = self.tfcind(
                 build_variables.dr_tf_inboard,
                 tfcoil_variables.r_tf_arc,
-                tfcoil_variables.yarc,
+                tfcoil_variables.z_tf_arc,
             )
         else:
             tfcoil_variables.ind_tf_coil = (
@@ -481,7 +481,7 @@ class TFCoil:
             # PROCESS D-shape parametrisation
 
             # X position of the arcs, eq(21)
-            # The tfcoil_variables.r_tf_arc/tfcoil_variables.yarc are defined in the INSIDE part of the TF
+            # The tfcoil_variables.r_tf_arc/tfcoil_variables.z_tf_arc are defined in the INSIDE part of the TF
             tfcoil_variables.r_tf_arc[0] = build_variables.r_tf_inboard_out
             tfcoil_variables.r_tf_arc[1] = (
                 physics_variables.rmajor - 0.2e0 * physics_variables.rminor
@@ -493,36 +493,36 @@ class TFCoil:
             # Height of straight section as a fraction of the coil inner height
             if physics_variables.i_single_null == 0:
                 # Double null
-                tfcoil_variables.yarc[0] = FSTRAIGHT * build_variables.hmax
-                tfcoil_variables.yarc[1] = build_variables.hmax
-                tfcoil_variables.yarc[2] = 0
-                tfcoil_variables.yarc[3] = -build_variables.hmax
-                tfcoil_variables.yarc[4] = -FSTRAIGHT * build_variables.hmax
+                tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * build_variables.hmax
+                tfcoil_variables.z_tf_arc[1] = build_variables.hmax
+                tfcoil_variables.z_tf_arc[2] = 0
+                tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
+                tfcoil_variables.z_tf_arc[4] = -FSTRAIGHT * build_variables.hmax
             else:
                 # Single null
-                tfcoil_variables.yarc[0] = FSTRAIGHT * (
+                tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * (
                     build_variables.hpfu - build_variables.dr_tf_inboard
                 )
-                tfcoil_variables.yarc[1] = (
+                tfcoil_variables.z_tf_arc[1] = (
                     build_variables.hpfu - build_variables.dr_tf_inboard
                 )
-                tfcoil_variables.yarc[2] = 0
-                tfcoil_variables.yarc[3] = -build_variables.hmax
-                tfcoil_variables.yarc[4] = -FSTRAIGHT * build_variables.hmax
+                tfcoil_variables.z_tf_arc[2] = 0
+                tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
+                tfcoil_variables.z_tf_arc[4] = -FSTRAIGHT * build_variables.hmax
 
             # Horizontal and vertical radii of inside edge of TF coil
             # Arcs are numbered clockwise:
             # 1=upper inboard, 2=upper outboard, 3=lower ouboard, 4=lower inboard
             # 'len_tf_coil' is the length of the coil midline.
             tfcoil_variables.len_tf_coil = (
-                tfcoil_variables.yarc[0] - tfcoil_variables.yarc[4]
+                tfcoil_variables.z_tf_arc[0] - tfcoil_variables.z_tf_arc[4]
             )
             for ii in range(4):
                 tfcoil_variables.tfa[ii] = abs(
                     tfcoil_variables.r_tf_arc[ii + 1] - tfcoil_variables.r_tf_arc[ii]
                 )
                 tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii]
+                    tfcoil_variables.z_tf_arc[ii + 1] - tfcoil_variables.z_tf_arc[ii]
                 )
                 # Radii and length of midline of coil segments
                 aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_inboard
@@ -536,24 +536,24 @@ class TFCoil:
         # ---
         elif tfcoil_variables.i_tf_shape == 1 and physics_variables.itart == 1:
             # X position of the arcs, eq(23) and text before it
-            tfcoil_variables.yarc[0] = build_variables.r_cp_top
-            tfcoil_variables.yarc[1] = (
+            tfcoil_variables.z_tf_arc[0] = build_variables.r_cp_top
+            tfcoil_variables.z_tf_arc[1] = (
                 physics_variables.rmajor - 0.2e0 * physics_variables.rminor
             )
-            tfcoil_variables.yarc[2] = sctfcoil_module.r_tf_outboard_in
-            tfcoil_variables.yarc[3] = tfcoil_variables.r_tf_arc[1]
-            tfcoil_variables.yarc[4] = tfcoil_variables.r_tf_arc[0]
+            tfcoil_variables.z_tf_arc[2] = sctfcoil_module.r_tf_outboard_in
+            tfcoil_variables.z_tf_arc[3] = tfcoil_variables.r_tf_arc[1]
+            tfcoil_variables.z_tf_arc[4] = tfcoil_variables.r_tf_arc[0]
 
             # Double null, eq(23) and text before it
-            tfcoil_variables.yarc[0] = (
+            tfcoil_variables.z_tf_arc[0] = (
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
-            tfcoil_variables.yarc[1] = (
+            tfcoil_variables.z_tf_arc[1] = (
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
-            tfcoil_variables.yarc[2] = 0
-            tfcoil_variables.yarc[3] = -build_variables.hmax
-            tfcoil_variables.yarc[4] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[2] = 0
+            tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[4] = -build_variables.hmax
 
             # TF middle circumference
             tfcoil_variables.len_tf_coil = 2 * (
@@ -565,7 +565,7 @@ class TFCoil:
                     tfcoil_variables.r_tf_arc[ii + 1] - tfcoil_variables.r_tf_arc[ii]
                 )
                 tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.yarc[ii + 1] - tfcoil_variables.yarc[ii]
+                    tfcoil_variables.z_tf_arc[ii + 1] - tfcoil_variables.z_tf_arc[ii]
                 )
 
                 # Radii and length of midline of coil segments
@@ -591,15 +591,15 @@ class TFCoil:
             tfcoil_variables.r_tf_arc[4] = tfcoil_variables.r_tf_arc[0]
 
             # Y position of the arcs
-            tfcoil_variables.yarc[0] = (
+            tfcoil_variables.z_tf_arc[0] = (
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
-            tfcoil_variables.yarc[1] = (
+            tfcoil_variables.z_tf_arc[1] = (
                 build_variables.hpfu - build_variables.dr_tf_inboard
             )
-            tfcoil_variables.yarc[2] = 0
-            tfcoil_variables.yarc[3] = -build_variables.hmax
-            tfcoil_variables.yarc[4] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[2] = 0
+            tfcoil_variables.z_tf_arc[3] = -build_variables.hmax
+            tfcoil_variables.z_tf_arc[4] = -build_variables.hmax
 
             # TF middle circumference
             # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART
@@ -875,7 +875,7 @@ class TFCoil:
         for ii in range(5):
             po.write(
                 self.outfile,
-                f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}              {tfcoil_variables.yarc[ii]}",
+                f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}              {tfcoil_variables.z_tf_arc[ii]}",
             )
             po.ovarre(
                 constants.mfile,
@@ -886,8 +886,8 @@ class TFCoil:
             po.ovarre(
                 constants.mfile,
                 f"TF coil arc point {ii} Z (m)",
-                f"(yarc({ii + 1}))",
-                tfcoil_variables.yarc[ii],
+                f"(z_tf_arc({ii + 1}))",
+                tfcoil_variables.z_tf_arc[ii],
             )
 
         # CP tapering geometry
@@ -2698,7 +2698,7 @@ class TFCoil:
 
     @staticmethod
     @numba.njit(cache=True)
-    def tfcind(tfthk, r_tf_arc, yarc):
+    def tfcind(tfthk, r_tf_arc, z_tf_arc):
         """Calculates the self inductance of a TF coil
         This routine calculates the self inductance of a TF coil
         approximated by a straight inboard section and two elliptical arcs.
@@ -2716,14 +2716,14 @@ class TFCoil:
 
         # Integrate over the whole TF area, including the coil thickness.
         x0 = r_tf_arc[1]
-        y0 = yarc[1]
+        y0 = z_tf_arc[1]
 
         # Minor and major radii of the inside and outside perimeters of the the
         # Inboard leg and arc.
         # Average the upper and lower halves, which are different in the
         # single null case
         ai = r_tf_arc[1] - r_tf_arc[0]
-        bi = (yarc[1] - yarc[3]) / 2.0e0 - yarc[0]
+        bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0 - z_tf_arc[0]
         ao = ai + tfthk
         bo = bi + tfthk
         # Interval used for integration
@@ -2744,7 +2744,7 @@ class TFCoil:
             else:
                 h_bore = 0.0e0
                 # Include the contribution from the straight section
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + yarc[0]
+                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + z_tf_arc[0]
 
             # Assume B in TF coil = 1/2  B in dr_bore
             # Multiply by 2 for upper and lower halves of coil
@@ -2753,7 +2753,7 @@ class TFCoil:
 
         # Outboard arc
         ai = r_tf_arc[2] - r_tf_arc[1]
-        bi = (yarc[1] - yarc[3]) / 2.0e0
+        bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0
         ao = ai + tfthk
         bo = bi + tfthk
         dr = ao / NINTERVALS
@@ -5406,7 +5406,7 @@ def init_tfcoil_variables():
     tfv.radctf[:] = 0.0
     tfv.r_tf_arc[:] = 0.0
     tfv.xctfc[:] = 0.0
-    tfv.yarc[:] = 0.0
+    tfv.z_tf_arc[:] = 0.0
     tfv.yctfc[:] = 0.0
     tfv.tfa[:] = 0.0
     tfv.tfb[:] = 0.0

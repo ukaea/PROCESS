@@ -2568,22 +2568,22 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     # Arc points
     # MDK Only 4 points now required for elliptical arcs
     x1 = mfile_data.data["r_tf_arc(1)"].get_scan(scan)
-    y1 = mfile_data.data["yarc(1)"].get_scan(scan)
+    y1 = mfile_data.data["z_tf_arc(1)"].get_scan(scan)
     x2 = mfile_data.data["r_tf_arc(2)"].get_scan(scan)
-    y2 = mfile_data.data["yarc(2)"].get_scan(scan)
+    y2 = mfile_data.data["z_tf_arc(2)"].get_scan(scan)
     x3 = mfile_data.data["r_tf_arc(3)"].get_scan(scan)
-    y3 = mfile_data.data["yarc(3)"].get_scan(scan)
+    y3 = mfile_data.data["z_tf_arc(3)"].get_scan(scan)
     x4 = mfile_data.data["r_tf_arc(4)"].get_scan(scan)
-    y4 = mfile_data.data["yarc(4)"].get_scan(scan)
+    y4 = mfile_data.data["z_tf_arc(4)"].get_scan(scan)
     x5 = mfile_data.data["r_tf_arc(5)"].get_scan(scan)
-    y5 = mfile_data.data["yarc(5)"].get_scan(scan)
+    y5 = mfile_data.data["z_tf_arc(5)"].get_scan(scan)
     dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
     dr_shld_thermal_outboard = mfile_data.data["dr_shld_thermal_outboard"].get_scan(
         scan
     )
     dr_tf_shld_gap = mfile_data.data["dr_tf_shld_gap"].get_scan(scan)
     if y3 != 0:
-        print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
+        print("TF coil geometry: The value of z_tf_arc(3) is not zero, but should be.")
 
     if dr_shld_thermal_inboard != dr_shld_thermal_outboard:
         print(
