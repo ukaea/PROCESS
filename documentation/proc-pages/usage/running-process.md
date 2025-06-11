@@ -2,15 +2,18 @@
 
 There are a number of ways to run PROCESS.  The first two are determined by the value of the switch `ioptimz` in the input file:
 
-`ioptimz` = -2 for evaluation. The physics and engineering models are evaluated and the equality (e.g. model consistency) constraints will be solved using `scipy`'s `fsolve`. The input file and default values together define the input values of all variables. The values of the parameters used to solve the equalities (solution parameters) will be different in the solution, however. This is used when evaluating a set of input parameters (e.g. a "point") whilst ensuring that the models are self-consistent.
+`ioptimz = -2` for evaluation. The physics and engineering models are evaluated and the equality (e.g. model consistency) constraints will be solved using `scipy`'s `fsolve`. The input file and default values together define the input values of all variables. The values of the parameters used to solve the equalities (solution parameters) will be different in the solution, however. This is used when evaluating a set of input parameters (e.g. a "point") whilst ensuring that the models are self-consistent.
 
-`ioptimz` = 1 for optimisation.  Those variables specified as iteration variables (specified by equations such as `ixc = 1` in the input file) are automatically varied during the iteration process, between the bounds given by the arrays `boundl` (lower bounds) and `boundu` (upper bounds).  The input file contains the *initial* values of the iteration variables, but the final values will not be same.  The iteration process continues until convergence, or until the maximum number of iterations (`maxcal`) is reached.  If the code converges, the constraints will be satisfied and the Figure of Merit will be maximised or minimised. 
+`ioptimz = 1` for optimisation.  Those variables specified as iteration variables (specified by equations such as `ixc = 1` in the input file) are automatically varied during the iteration process, between the bounds given by the arrays `boundl` (lower bounds) and `boundu` (upper bounds).  The input file contains the *initial* values of the iteration variables, but the final values will not be same.  The iteration process continues until convergence, or until the maximum number of iterations (`maxcal`) is reached.  If the code converges, the constraints will be satisfied and the Figure of Merit will be maximised or minimised. 
 
 If the optimisation fails to converge, a third option is available by using the command line option `-v` (VaryRun), together with a configuration file.  PROCESS is run repeatedly in optimisation mode (`ioptimz` = 1 must be set), but a new input file is written each time, with different, randomly selected *initial* values of the iteration variables.  The factor within which the initial values of the iteration variables are changed is `FACTOR` (in the configuration file).  For example, `FACTOR = 1.1` will vary the initial values randomly by up to 10%.  This is repeated until PROCESS converges, or until the maximum number of PROCESS runs (`NITER`) is reached.  Sometimes this procedure will generate a converged solution when a single optimisation run does not.
 
 A SCAN is available in any of these modes.  One input variable can be scanned (`scan_dim = 1`) or two input variables (`scan_dim = 2`).  A scan variable must not be an iteration variable.  For details, see [scan_module](https://ukaea.github.io/PROCESS/io/vardes/?h=scan#scan_module).
 
+--------------
+
 ## To run PROCESS
+
 The default PROCESS input file name is IN.DAT. If no input file name is given as an argument in the command line, it assumes an IN.DAT file is present in the current directory:
 ```bash
 # Use an IN.DAT file in the current directory
@@ -28,8 +31,27 @@ will produce the following output files in the same directory as the input file:
     my_file_name_MFILE.DAT
 ```
 
+It may be convenient to automatically generate the summary plots after the `PROCESS` run has finished.
+Setting the `--full-output` flag:
 
-__VaryRun__  
+```bash
+process -i path/to/my_file_name_IN.DAT --full-output
+```
+
+will produce the following output files in the same directory as the input file:
+
+```
+    my_file_name_OUT.DAT
+    my_file_name_MFILE.DAT
+    SankeyPowerFlow.pdf
+    my_file_name.MFILE.DATSUMMARY.pdf
+    my_file_name.MFILE_radial_build.pdf
+```
+
+---------------
+
+### VaryRun 
+
 The default VaryRun configuration filename is `run_process.conf`. If no configuration filename is given as an argument in the command line, `run_process.conf` is assumed to be present in the current directory:
 ```bash
 # Use a configuration file called run_process.conf in the current directory
@@ -41,19 +63,17 @@ process -v -c path/to/my_conf_file.conf
 ```
 When using VaryRun, the input filename is defined inside the configuration file.  The `-i` argument should not be used.
 
+-----------------
 
-__Comand line arguments__  
-The full set of command line arguments is:
+### Command line arguments
 
-```bash
-process [--input, -i input_file_path] [--varyiterparams, -v] [--varyiterparamsconfig, -c config_file_path] [--help, -h]
-```
-
-Help is available with:
+The full set of command line arguments is available with:
 
 ```bash
 process --help
 ```
+
+------------
 
 ## Configuration file for VaryRun
 
