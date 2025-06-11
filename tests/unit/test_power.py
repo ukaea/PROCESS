@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure import power_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -136,13 +137,13 @@ def test_cryo(cryoparam, monkeypatch, power):
 
     monkeypatch.setattr(fwbs_variables, "inuclear", cryoparam.inuclear)
 
-    monkeypatch.setattr(power, "qss", cryoparam.qss)
+    monkeypatch.setattr(power_variables, "qss", cryoparam.qss)
 
-    monkeypatch.setattr(power, "qac", cryoparam.qac)
+    monkeypatch.setattr(power_variables, "qac", cryoparam.qac)
 
-    monkeypatch.setattr(power, "qcl", cryoparam.qcl)
+    monkeypatch.setattr(power_variables, "qcl", cryoparam.qcl)
 
-    monkeypatch.setattr(power, "qmisc", cryoparam.qmisc)
+    monkeypatch.setattr(power_variables, "qmisc", cryoparam.qmisc)
 
     helpow = power.cryo(
         i_tf_sup=cryoparam.i_tf_sup,
@@ -155,13 +156,13 @@ def test_cryo(cryoparam, monkeypatch, power):
         t_pulse_repetition=cryoparam.t_pulse_repetition,
     )
 
-    assert power.qss == pytest.approx(cryoparam.expected_qss)
+    assert power_variables.qss == pytest.approx(cryoparam.expected_qss)
 
-    assert power.qac == pytest.approx(cryoparam.expected_qac)
+    assert power_variables.qac == pytest.approx(cryoparam.expected_qac)
 
-    assert power.qcl == pytest.approx(cryoparam.expected_qcl)
+    assert power_variables.qcl == pytest.approx(cryoparam.expected_qcl)
 
-    assert power.qmisc == pytest.approx(cryoparam.expected_qmisc)
+    assert power_variables.qmisc == pytest.approx(cryoparam.expected_qmisc)
 
     assert helpow == pytest.approx(cryoparam.expected_helpow)
 
@@ -2795,56 +2796,70 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        power, "p_shld_coolant_pump_elec_mw", power2param.p_shld_coolant_pump_elec_mw
+        power_variables,
+        "p_shld_coolant_pump_elec_mw",
+        power2param.p_shld_coolant_pump_elec_mw,
     )
 
     monkeypatch.setattr(
-        power, "p_div_coolant_pump_elec_mw", power2param.p_div_coolant_pump_elec_mw
+        power_variables,
+        "p_div_coolant_pump_elec_mw",
+        power2param.p_div_coolant_pump_elec_mw,
     )
 
     monkeypatch.setattr(
-        power, "p_coolant_pump_total_mw", power2param.p_coolant_pump_total_mw
+        power_variables, "p_coolant_pump_total_mw", power2param.p_coolant_pump_total_mw
     )
 
     monkeypatch.setattr(
-        power, "p_fw_blkt_heat_deposited_mw", power2param.p_fw_blkt_heat_deposited_mw
+        power_variables,
+        "p_fw_blkt_heat_deposited_mw",
+        power2param.p_fw_blkt_heat_deposited_mw,
     )
 
     monkeypatch.setattr(
-        power,
+        power_variables,
         "p_fw_blkt_coolant_pump_elec_mw",
         power2param.p_fw_blkt_coolant_pump_elec_mw,
     )
 
     monkeypatch.setattr(
-        power, "p_div_heat_deposited_mw", power2param.p_div_heat_deposited_mw
+        power_variables, "p_div_heat_deposited_mw", power2param.p_div_heat_deposited_mw
     )
 
     monkeypatch.setattr(
-        power, "p_fw_heat_deposited_mw", power2param.p_fw_heat_deposited_mw
+        power_variables, "p_fw_heat_deposited_mw", power2param.p_fw_heat_deposited_mw
     )
 
     monkeypatch.setattr(
-        power, "p_shld_heat_deposited_mw", power2param.p_shld_heat_deposited_mw
+        power_variables,
+        "p_shld_heat_deposited_mw",
+        power2param.p_shld_heat_deposited_mw,
     )
 
     monkeypatch.setattr(
-        power, "p_cp_coolant_pump_elec_mw", power2param.p_cp_coolant_pump_elec_mw
+        power_variables,
+        "p_cp_coolant_pump_elec_mw",
+        power2param.p_cp_coolant_pump_elec_mw,
     )
 
     monkeypatch.setattr(
-        power, "p_plant_core_systems_elec_mw", power2param.p_plant_core_systems_elec_mw
+        power_variables,
+        "p_plant_core_systems_elec_mw",
+        power2param.p_plant_core_systems_elec_mw,
     )
 
-    monkeypatch.setattr(power, "f_p_div_primary_heat", power2param.f_p_div_primary_heat)
+    monkeypatch.setattr(
+        power_variables, "f_p_div_primary_heat", power2param.f_p_div_primary_heat
+    )
 
-    monkeypatch.setattr(power, "qss", power2param.qss)
+    monkeypatch.setattr(power_variables, "qss", power2param.qss)
 
-    monkeypatch.setattr(power, "qac", power2param.qac)
+    monkeypatch.setattr(power_variables, "qac", power2param.qac)
 
-    monkeypatch.setattr(power, "qcl", power2param.qcl)
+    monkeypatch.setattr(power_variables, "qcl", power2param.qcl)
 
-    monkeypatch.setattr(power, "qmisc", power2param.qmisc)
+    monkeypatch.setattr(power_variables, "qmisc", power2param.qmisc)
 
     power.power2(output=False)
 
@@ -2868,7 +2883,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.expected_p_plant_secondary_heat_mw
     )
 
-    assert power.p_plant_core_systems_elec_mw == pytest.approx(
+    assert power_variables.p_plant_core_systems_elec_mw == pytest.approx(
         power2param.expected_pcoresystems
     )
 
