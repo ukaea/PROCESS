@@ -117,7 +117,7 @@ module build_variables
   real(dp) :: dr_shld_vv_gap_outboard
   !! gap between outboard vacuum vessel and TF coil (m)
 
-  real(dp) :: hmax
+  real(dp) :: z_tf_inside_half
   !! maximum (half-)height of TF coil (inside edge) (m)
 
   real(dp) :: hpfdif

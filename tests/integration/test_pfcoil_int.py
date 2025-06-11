@@ -48,7 +48,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(bv, "hpfdif", 0.0)
     monkeypatch.setattr(bv, "hpfu", 4.0)  # guess
-    monkeypatch.setattr(bv, "hmax", 8.8)
+    monkeypatch.setattr(bv, "z_tf_inside_half", 8.8)
     monkeypatch.setattr(bv, "dr_cs", 0.65)
     monkeypatch.setattr(bv, "dr_tf_outboard", 1.4)
     monkeypatch.setattr(bv, "dr_tf_inboard", 1.4)
@@ -187,7 +187,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
     # Mocks for ohcalc()
-    monkeypatch.setattr(bv, "hmax", 8.864)
+    monkeypatch.setattr(bv, "z_tf_inside_half", 8.864)
     monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
     monkeypatch.setattr(fwbsv, "denstl", 7.8e3)
     monkeypatch.setattr(eh, "idiags", np.full(8, 0))
@@ -2195,7 +2195,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pf, "bpf2", np.zeros(22))
 
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "hmax", 9.0730900215620327)
+    monkeypatch.setattr(bv, "z_tf_inside_half", 9.0730900215620327)
     monkeypatch.setattr(bv, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(
         eh,

@@ -114,7 +114,7 @@ class SuperconductingTFCoil(TFCoil):
             )
         else:
             tfcoil_variables.ind_tf_coil = (
-                (build_variables.hmax + build_variables.dr_tf_outboard)
+                (build_variables.z_tf_inside_half + build_variables.dr_tf_outboard)
                 * RMU0
                 / constants.pi
                 * np.log(
@@ -182,7 +182,7 @@ class SuperconductingTFCoil(TFCoil):
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
-                build_variables.hmax,
+                build_variables.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.i_tf_inside_cs,
@@ -1530,7 +1530,7 @@ class SuperconductingTFCoil(TFCoil):
         We assume vertical symmetry which is only true for double null
         machines.
         """
-        H_coil = build_variables.hmax + (build_variables.dr_tf_inboard / 2)
+        H_coil = build_variables.z_tf_inside_half + (build_variables.dr_tf_inboard / 2)
         ri_coil = build_variables.r_tf_inboard_mid
         ro_coil = build_variables.r_tf_outboard_mid
         # NOTE: rm is measured from the outside edge of the coil because thats where

@@ -289,7 +289,7 @@ class TfResHeatingParam(NamedTuple):
     dr_tf_outboard: Any = None
     dr_tf_inboard: Any = None
     r_cp_top: Any = None
-    hmax: Any = None
+    z_tf_inside_half: Any = None
     r_tf_inboard_in: Any = None
     r_tf_inboard_out: Any = None
     itart: Any = None
@@ -343,7 +343,7 @@ class TfResHeatingParam(NamedTuple):
             dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.87643571428571443,
-            hmax=4.4214285714285717,
+            z_tf_inside_half=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
@@ -393,7 +393,7 @@ class TfResHeatingParam(NamedTuple):
             dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.85843571428571441,
-            hmax=4.4214285714285717,
+            z_tf_inside_half=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             itart=1,
@@ -526,7 +526,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(build_variables, "r_cp_top", tfresheatingparam.r_cp_top)
 
-    monkeypatch.setattr(build_variables, "hmax", tfresheatingparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", tfresheatingparam.z_tf_inside_half
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_in", tfresheatingparam.r_tf_inboard_in
@@ -584,7 +586,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 class CpostParam(NamedTuple):
     n_tf_coils: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -630,7 +632,7 @@ class CpostParam(NamedTuple):
     (
         CpostParam(
             n_tf_coils=12,
-            hmax=4.4214285714285717,
+            z_tf_inside_half=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             r_cp_top=0.87643571428571443,
@@ -653,7 +655,7 @@ class CpostParam(NamedTuple):
         ),
         CpostParam(
             n_tf_coils=12,
-            hmax=4.4214285714285717,
+            z_tf_inside_half=4.4214285714285717,
             r_tf_inboard_in=0,
             r_tf_inboard_out=0.15483000000000002,
             r_cp_top=0.85843571428571441,
@@ -689,7 +691,9 @@ def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "hmax", cpostparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", cpostparam.z_tf_inside_half
+    )
 
     (
         a_cp_cool,

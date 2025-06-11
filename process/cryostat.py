@@ -58,7 +58,7 @@ class Cryostat:
 
         # Vertical clearance between TF coil and cryostat (m)
         buildings_variables.dz_tf_cryostat = fwbs_variables.z_cryostat_half_inside - (
-            build_variables.hmax + build_variables.dr_tf_inboard
+            build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
         )
 
         # Internal cryostat space volume [m^3]
