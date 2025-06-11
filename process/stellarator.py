@@ -439,7 +439,7 @@ class Stellarator:
         #  Roughly equal to average of (inboard build from TF coil to plasma
         #  centre) and (outboard build from plasma centre to TF coil)
 
-        build_variables.hmax = 0.5e0 * (
+        build_variables.z_tf_inside_half = 0.5e0 * (
             (
                 build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
@@ -2855,7 +2855,7 @@ class Stellarator:
         )  # [GJ] Total magnetic energy
 
         #  Coil dimensions
-        build_variables.hmax = (
+        build_variables.z_tf_inside_half = (
             0.5e0
             * stellarator_configuration.stella_config_maximal_coil_height
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
@@ -2869,7 +2869,9 @@ class Stellarator:
         )
         # the average minor coil radius
 
-        tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
+        tfborev = (
+            2.0e0 * build_variables.z_tf_inside_half
+        )  # [m] estimated vertical coil dr_bore
 
         tfcoil_variables.len_tf_coil = (
             stellarator_configuration.stella_config_coillength
@@ -3798,8 +3800,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum inboard edge height (m)",
-            "(hmax)",
-            build_variables.hmax,
+            "(z_tf_inside_half)",
+            build_variables.z_tf_inside_half,
         )
         po.ovarre(
             self.outfile,
