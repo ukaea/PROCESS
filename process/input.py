@@ -1025,9 +1025,6 @@ INPUT_VARIABLES = {
     "p_hcd_secondary_injected_mw": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
-    "pinjmax": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
-    ),
     "plasma_res_factor": InputVariable(
         fortran.physics_variables, float, range=(0.0, 1.0)
     ),
