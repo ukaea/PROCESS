@@ -123,7 +123,7 @@ module sctfcoil_module
    real(dp) :: dr_tf_turn_cable_space, t_cable_toroidal
 !! Cable area radial and toroidal dimension (integer turn only) [m]
 
-   real(dp) :: dr_tf_turn, t_turn_toroidal
+   real(dp) :: dr_tf_turn, dx_tf_turn
 !! Turn radial and toroidal dimension (integer turn only) [m]
 
    real(dp) :: t_cable
