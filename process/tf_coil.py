@@ -224,7 +224,7 @@ class TFCoil:
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
                 sctfcoil_module.dr_tf_turn_cable_space,
-                tfcoil_variables.dhecoil,
+                tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
@@ -1232,8 +1232,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Diameter of central helium channel in cable",
-                    "(dhecoil)",
-                    tfcoil_variables.dhecoil,
+                    "(dia_tf_turn_coolant_channel)",
+                    tfcoil_variables.dia_tf_turn_coolant_channel,
                 )
                 po.ocmmnt(self.outfile, "Fractions by area")
                 po.ovarre(
@@ -3162,7 +3162,7 @@ class TFCoil:
         i_tf_turns_integer,
         t_cable,
         dr_tf_turn_cable_space,
-        dhecoil,
+        dia_tf_turn_coolant_channel,
         fcutfsu,
         dx_tf_turn_steel,
         t_lat_case_av,
@@ -3512,7 +3512,7 @@ class TFCoil:
             # Helium
             eyoung_member_array[0] = 0e0
             poisson_member_array[0] = poisson_steel
-            l_member_array[0] = dhecoil
+            l_member_array[0] = dia_tf_turn_coolant_channel
             # Conductor and co-wound copper
             (
                 eyoung_member_array[1],
@@ -3520,10 +3520,10 @@ class TFCoil:
                 poisson_member_array[1],
             ) = eyoung_series(
                 np.double(eyoung_cond_trans),
-                (t_cable_eyng - dhecoil) * (1.0e0 - fcutfsu),
+                (t_cable_eyng - dia_tf_turn_coolant_channel) * (1.0e0 - fcutfsu),
                 np.double(poisson_cond_trans),
                 np.double(eyoung_copper),
-                (t_cable_eyng - dhecoil) * fcutfsu,
+                (t_cable_eyng - dia_tf_turn_coolant_channel) * fcutfsu,
                 np.double(poisson_copper),
             )
             # Steel conduit
@@ -5297,7 +5297,7 @@ def init_tfcoil_variables():
     tfv.dcase = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
     tfv.dcondins = 1800.0
-    tfv.dhecoil = 0.005
+    tfv.dia_tf_turn_coolant_channel = 0.005
     tfv.estotftgj = 0.0
     tfv.b_crit_upper_nbti = 14.86
     tfv.t_crit_nbti = 9.04

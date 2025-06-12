@@ -749,7 +749,7 @@
  Width_of_space_inside_conductor_(m)______________________________________ (t_cable)______________________ 3.83854185774860357e-02 OP
  Steel_conduit_thickness_(m)______________________________________________ (dx_tf_turn_steel)_____________________ 8.25725955690296935e-03
  Inter-turn_insulation_thickness_(m)______________________________________ (dx_tf_turn_insulation)_____________________ 8.00000000000000038e-04
- Diameter_of_central_helium_channel_in_cable______________________________ (dhecoil)______________________ 1.00000000000000002e-02
+ Diameter_of_central_helium_channel_in_cable______________________________ (dia_tf_turn_coolant_channel)______________________ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space)________________________ 1.44051823697205180e-03
  Coolant_fraction_in_conductor_excluding_central_channel__________________ (vftf)_________________________ 3.00000000000000044e-01
  Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.79481349092732456e-01
@@ -1792,7 +1792,7 @@ n_tf_coils = 16
 tinstf = 0.008
 
 * Diameter if He channel in winding [m]
-dhecoil = 0.01
+dia_tf_turn_coolant_channel = 0.01
 
 * Helium coolant temperature [K]
 tftmp = 4.75

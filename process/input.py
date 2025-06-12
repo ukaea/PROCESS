@@ -367,7 +367,9 @@ INPUT_VARIABLES = {
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "decomf": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
-    "dhecoil": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dia_tf_turn_coolant_channel": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "dintrt": InputVariable(fortran.cost_variables, float, range=(0.0, 0.1)),
     "discount_rate": InputVariable(fortran.cost_variables, float, range=(0.0, 0.5)),
     "div_nref": InputVariable(
