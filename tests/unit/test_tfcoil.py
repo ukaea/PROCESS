@@ -797,7 +797,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     dcase: Any = None
 
-    acndttf: Any = None
+    a_tf_turn_steel: Any = None
 
     n_tf_turn: Any = None
 
@@ -913,7 +913,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcondins=1800,
             len_tf_coil=50.483843027201402,
             dcase=8000,
-            acndttf=0.0014685061538103825,
+            a_tf_turn_steel=0.0014685061538103825,
             n_tf_turn=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
@@ -985,7 +985,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcondins=1800,
             len_tf_coil=50.514015976170839,
             dcase=8000,
-            acndttf=0.0014685061538103825,
+            a_tf_turn_steel=0.0014685061538103825,
             n_tf_turn=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
@@ -1116,7 +1116,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "dcase", tfcoilareaandmassesparam.dcase)
 
-    monkeypatch.setattr(tfcoil_variables, "acndttf", tfcoilareaandmassesparam.acndttf)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "n_tf_turn", tfcoilareaandmassesparam.n_tf_turn
@@ -1310,7 +1312,7 @@ class StressclParam(NamedTuple):
 
     dx_tf_turn_insulation: Any = None
 
-    acndttf: Any = None
+    a_tf_turn_steel: Any = None
 
     tfinsgap: Any = None
 
@@ -1472,7 +1474,7 @@ class StressclParam(NamedTuple):
             insstrain=0,
             tinstf=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
-            acndttf=0.0014685061538103825,
+            a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
@@ -1595,7 +1597,7 @@ class StressclParam(NamedTuple):
             insstrain=0,
             tinstf=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
-            acndttf=0.0014685061538103825,
+            a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
@@ -1811,7 +1813,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_tresca,
         stressclparam.acasetf,
         stressclparam.vforce,
-        stressclparam.acndttf,
+        stressclparam.a_tf_turn_steel,
     )
 
     assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)

@@ -21,7 +21,7 @@ module tfcoil_variables
   real(dp) :: acasetfo
   !! external case area per coil (outboard leg) (m2)
 
-  real(dp) :: acndttf
+  real(dp) :: a_tf_turn_steel
   !! area of the cable conduit (m2)
 
   real(dp) :: acond
