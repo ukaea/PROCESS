@@ -673,7 +673,7 @@
  Width_of_turn_including_inter-turn_insulation_(m)________________________ (t_turn_tf)____________________ 5.82428732675677810e-02 OP
  Width_of_conductor_(square)_(m)__________________________________________ (t_conductor)__________________ 5.66428732675677837e-02 OP
  Width_of_space_inside_conductor_(m)______________________________________ (t_cable)______________________ 4.06186532016039326e-02 OP
- Steel_conduit_thickness_(m)______________________________________________ (thwcndut)_____________________ 8.01211003298192385e-03
+ Steel_conduit_thickness_(m)______________________________________________ (dx_tf_turn_steel)_____________________ 8.01211003298192385e-03
  Inter-turn_insulation_thickness_(m)______________________________________ (dx_tf_turn_insulation)_____________________ 8.00000000000000038e-04
  Diameter_of_central_helium_channel_in_cable______________________________ (dhecoil)______________________ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space)________________________ 1.61887869455795111e-03
@@ -1205,7 +1205,7 @@ ixc = 41 * fcohbop
 ixc = 44 * fvsbrnni
 ixc = 56 * tdmptf
 ixc = 57 * thkcas
-ixc = 58 * thwcndut
+ixc = 58 * dx_tf_turn_steel
 boundl(58) = 0.008
 ixc = 59 * fcutfsu
 boundl(59) = 0.50
@@ -1562,7 +1562,7 @@ n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 thkcas   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp = 0.5153787768966674 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
-thwcndut = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
+dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
 tinstf   = 0.008 * Thickness of the ground insulation layer surrounding (m)
 tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)

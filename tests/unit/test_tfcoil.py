@@ -1302,7 +1302,7 @@ class StressclParam(NamedTuple):
 
     sig_tf_wp: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
     insstrain: Any = None
 
@@ -1468,7 +1468,7 @@ class StressclParam(NamedTuple):
             sig_tf_cs_bucked=0,
             sig_tf_case=0,
             sig_tf_wp=0,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
             tinstf=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
@@ -1591,7 +1591,7 @@ class StressclParam(NamedTuple):
             sig_tf_cs_bucked=0,
             sig_tf_case=543381805.25001633,
             sig_tf_wp=397005702.35272157,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
             tinstf=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
@@ -1793,7 +1793,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.t_cable_radial,
         stressclparam.dhecoil,
         stressclparam.fcutfsu,
-        stressclparam.thwcndut,
+        stressclparam.dx_tf_turn_steel,
         stressclparam.t_lat_case_av,
         stressclparam.t_wp_toroidal_av,
         stressclparam.a_tf_ins,

@@ -1176,7 +1176,7 @@ i_tf_turns_integer = 0
 * JUSTIFICATION: Not set, assuming default
 
 *ixc = 58
-*thwcndut = 
+*dx_tf_turn_steel = 
 *boundl(58) = 
 *boundu(58) = 
 * DESCRIPTION:   WP Turn steel conduit/jacket structure minimal thickness

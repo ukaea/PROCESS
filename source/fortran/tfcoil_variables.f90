@@ -617,7 +617,7 @@ module tfcoil_variables
   real(dp) :: dr_tf_wp
   !! radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 
-  real(dp) :: thwcndut
+  real(dp) :: dx_tf_turn_steel
   !! TF coil conduit case thickness (m) (`iteration variable 58`)
 
   real(dp) :: tinstf
