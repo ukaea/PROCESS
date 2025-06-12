@@ -762,12 +762,12 @@ class Build:
 
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
-            build_variables.hpfu = (
+            build_variables.z_tf_top = (
                 build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
             )
             build_variables.hpfdif = 0.0e0
         else:
-            build_variables.hpfu = (
+            build_variables.z_tf_top = (
                 build_variables.dr_tf_inboard
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dz_shld_thermal
@@ -782,7 +782,7 @@ class Build:
                 + build_variables.z_plasma_xpoint_upper
             )
             build_variables.hpfdif = (
-                build_variables.hpfu
+                build_variables.z_tf_top
                 - (build_variables.z_tf_inside_half + build_variables.dr_tf_inboard)
             ) / 2.0e0
 
@@ -2475,7 +2475,7 @@ def init_build_variables():
     build_variables.dr_shld_vv_gap_outboard = 0.0
     build_variables.z_tf_inside_half = 0.0
     build_variables.hpfdif = 0.0
-    build_variables.hpfu = 0.0
+    build_variables.z_tf_top = 0.0
     build_variables.hr1 = 0.0
     build_variables.iohcl = 1
     build_variables.i_cs_precomp = 1
