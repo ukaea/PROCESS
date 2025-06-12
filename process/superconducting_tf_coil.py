@@ -355,12 +355,14 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.tmargtf) = self.supercon_croco(
-                aturn,
-                tfcoil_variables.bmaxtfrp,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.tftmp,
-                output=output,
+            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.tmargtf) = (
+                self.supercon_croco(
+                    aturn,
+                    tfcoil_variables.bmaxtfrp,
+                    tfcoil_variables.c_tf_turn,
+                    tfcoil_variables.tftmp,
+                    output=output,
+                )
             )
 
             tfcoil_variables.vtfskv = (
@@ -373,7 +375,7 @@ class SuperconductingTFCoil(TFCoil):
                 vdump,
                 tfcoil_variables.tmargtf,
             ) = self.supercon(
-                tfcoil_variables.acstf,
+                tfcoil_variables.a_tf_turn_cable_space,
                 aturn,
                 tfcoil_variables.bmaxtfrp,
                 tfcoil_variables.vftf,
@@ -439,7 +441,7 @@ class SuperconductingTFCoil(TFCoil):
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
-        # tfcoil_variables.acstf : Cable space - inside area (m2)
+        # tfcoil_variables.a_tf_turn_cable_space : Cable space - inside area (m2)
         # Set new rebco_variables.croco_od
         # allowing for scaling of rebco_variables.croco_od
         rebco_variables.croco_od = (
@@ -449,7 +451,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.conductor_acs = (
             9.0e0 / 4.0e0 * np.pi * rebco_variables.croco_od**2
         )
-        tfcoil_variables.acstf = sctfcoil_module.conductor_acs
+        tfcoil_variables.a_tf_turn_cable_space = sctfcoil_module.conductor_acs
         sctfcoil_module.conductor_area = (
             tfcoil_variables.t_conductor**2
         )  # does this not assume it's a sqaure???
@@ -666,8 +668,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Total area of cable space (m2)",
-                "(acstf)",
-                tfcoil_variables.acstf,
+                "(a_tf_turn_cable_space)",
+                tfcoil_variables.a_tf_turn_cable_space,
                 "OP ",
             )
 
@@ -1723,15 +1725,11 @@ class SuperconductingTFCoil(TFCoil):
         # WP/trun currents
         self.tf_wp_currents()
 
-        # sctfcoil_module.sc_tf_internal_geom(
-        #     i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer
-        # )
-
         # Setting the WP turn geometry / areas
         if i_tf_turns_integer == 0:
             # Non-ingeger number of turns
             (
-                tfcoil_variables.acstf,
+                tfcoil_variables.a_tf_turn_cable_space,
                 tfcoil_variables.acndttf,
                 tfcoil_variables.insulation_area,
                 tfcoil_variables.n_tf_turn,
@@ -1745,7 +1743,7 @@ class SuperconductingTFCoil(TFCoil):
         else:
             # Integer number of turns
             (
-                tfcoil_variables.acstf,
+                tfcoil_variables.a_tf_turn_cable_space,
                 tfcoil_variables.acndttf,
                 tfcoil_variables.insulation_area,
                 tfcoil_variables.c_tf_turn,
@@ -1767,7 +1765,7 @@ class SuperconductingTFCoil(TFCoil):
         # Total conductor cross-sectional area, taking account of void area
         # and central helium channel [m2]
         tfcoil_variables.acond = (
-            tfcoil_variables.acstf
+            tfcoil_variables.a_tf_turn_cable_space
             * tfcoil_variables.n_tf_turn
             * (1.0e0 - tfcoil_variables.vftf)
             - tfcoil_variables.awphec
@@ -1775,7 +1773,9 @@ class SuperconductingTFCoil(TFCoil):
 
         # Void area in conductor for He, not including central channel [m2]
         tfcoil_variables.avwp = (
-            tfcoil_variables.acstf * tfcoil_variables.n_tf_turn * tfcoil_variables.vftf
+            tfcoil_variables.a_tf_turn_cable_space
+            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.vftf
         )
 
         # Area of inter-turn insulation: total [m2]
@@ -2126,41 +2126,41 @@ class SuperconductingTFCoil(TFCoil):
 
         # Cross-sectional area of cable space per turn
         # taking account of rounded inside corners [m2]
-        acstf = (sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal) - (
-            4.0e0 - np.pi
-        ) * sctfcoil_module.rbcndut**2
+        a_tf_turn_cable_space = (
+            sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
+        ) - (4.0e0 - np.pi) * sctfcoil_module.rbcndut**2
 
-        if acstf <= 0.0e0:
+        if a_tf_turn_cable_space <= 0.0e0:
             if (sctfcoil_module.t_cable_radial < 0.0e0) or (
                 sctfcoil_module.t_cable_toroidal < 0.0e0
             ):
-                error_handling.fdiags[0] = acstf
+                error_handling.fdiags[0] = a_tf_turn_cable_space
                 error_handling.fdiags[1] = sctfcoil_module.t_cable_radial
                 error_handling.fdiags[2] = sctfcoil_module.t_cable_toroidal
                 error_handling.report_error(101)
             else:
-                error_handling.fdiags[0] = acstf
+                error_handling.fdiags[0] = a_tf_turn_cable_space
                 error_handling.fdiags[1] = sctfcoil_module.t_cable_radial
                 error_handling.fdiags[1] = sctfcoil_module.t_cable_toroidal
                 error_handling.report_error(102)
                 sctfcoil_module.rbcndut = 0.0e0
-                acstf = (
+                a_tf_turn_cable_space = (
                     sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
                 )
 
         # Cross-sectional area of conduit jacket per turn [m2]
         acndttf = (
             sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal
-            - acstf
+            - a_tf_turn_cable_space
         )
 
         # Area of inter-turn insulation: single turn [m2]
         insulation_area = (
             sctfcoil_module.t_turn_radial * sctfcoil_module.t_turn_toroidal
             - acndttf
-            - acstf
+            - a_tf_turn_cable_space
         )
-        return acstf, acndttf, insulation_area, c_tf_turn, n_tf_turn
+        return a_tf_turn_cable_space, acndttf, insulation_area, c_tf_turn, n_tf_turn
 
         # -------------
 
@@ -2235,11 +2235,11 @@ class SuperconductingTFCoil(TFCoil):
         # Area of inter-turn insulation: single turn [m2]
         insulation_area = a_turn - tfcoil_variables.t_conductor**2
 
-        # NOTE: Fortran has acstf as an intent(out) variable that was outputting
-        # into tfcoil_variables.acstf. The local variable, however, appears to
-        # initially hold the value of tfcoil_variables.acstf despite not being
+        # NOTE: Fortran has a_tf_turn_cable_space as an intent(out) variable that was outputting
+        # into tfcoil_variables.a_tf_turn_cable_space. The local variable, however, appears to
+        # initially hold the value of tfcoil_variables.a_tf_turn_cable_space despite not being
         # intent(in). I have replicated this behaviour in Python for now.
-        acstf = copy.copy(tfcoil_variables.acstf)
+        a_tf_turn_cable_space = copy.copy(tfcoil_variables.a_tf_turn_cable_space)
 
         # ITER like turn structure
         if i_tf_sc_mat != 6:
@@ -2251,22 +2251,24 @@ class SuperconductingTFCoil(TFCoil):
 
             # Cross-sectional area of cable space per turn
             # taking account of rounded inside corners [m2]
-            acstf = sctfcoil_module.t_cable**2 - (4.0e0 - np.pi) * rbcndut**2
+            a_tf_turn_cable_space = (
+                sctfcoil_module.t_cable**2 - (4.0e0 - np.pi) * rbcndut**2
+            )
 
-            if acstf <= 0.0e0:
+            if a_tf_turn_cable_space <= 0.0e0:
                 if tfcoil_variables.t_conductor < 0.0e0:
-                    error_handling.fdiags[0] = acstf
+                    error_handling.fdiags[0] = a_tf_turn_cable_space
                     error_handling.fdiags[1] = sctfcoil_module.t_cable
                     error_handling.report_error(101)
                 else:
-                    error_handling.fdiags[0] = acstf
+                    error_handling.fdiags[0] = a_tf_turn_cable_space
                     error_handling.fdiags[1] = sctfcoil_module.t_cable
                     error_handling.report_error(102)
                     rbcndut = 0.0e0
-                    acstf = sctfcoil_module.t_cable**2
+                    a_tf_turn_cable_space = sctfcoil_module.t_cable**2
 
             # Cross-sectional area of conduit jacket per turn [m2]
-            acndttf = tfcoil_variables.t_conductor**2 - acstf
+            acndttf = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
         # REBCO turn structure
         elif i_tf_sc_mat == 6:
@@ -2274,9 +2276,9 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.t_cable = tfcoil_variables.t_conductor - 2.0e0 * thwcndut
 
             # Cross-sectional area of conduit jacket per turn [m2]
-            acndttf = tfcoil_variables.t_conductor**2 - acstf
+            acndttf = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
-        return acstf, acndttf, insulation_area, n_tf_turn
+        return a_tf_turn_cable_space, acndttf, insulation_area, n_tf_turn
 
 
 @staticmethod

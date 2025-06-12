@@ -809,7 +809,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     awphec: Any = None
 
-    acstf: Any = None
+    a_tf_turn_cable_space: Any = None
 
     whttflgs: Any = None
 
@@ -917,7 +917,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
             awphec=0.015707963267948974,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
             whtconal=0,
@@ -989,7 +989,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
             awphec=0.015707963267948974,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
             whtconal=0,
@@ -1136,7 +1136,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "awphec", tfcoilareaandmassesparam.awphec)
 
-    monkeypatch.setattr(tfcoil_variables, "acstf", tfcoilareaandmassesparam.acstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_turn_cable_space",
+        tfcoilareaandmassesparam.a_tf_turn_cable_space,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "whttflgs", tfcoilareaandmassesparam.whttflgs)
 
@@ -1280,7 +1284,7 @@ class StressclParam(NamedTuple):
 
     i_tf_tresca: Any = None
 
-    acstf: Any = None
+    a_tf_turn_cable_space: Any = None
 
     vforce: Any = None
 
@@ -1453,7 +1457,7 @@ class StressclParam(NamedTuple):
             n_tf_turn=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
@@ -1576,7 +1580,7 @@ class StressclParam(NamedTuple):
             n_tf_turn=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,

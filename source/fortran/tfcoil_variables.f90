@@ -28,7 +28,7 @@ module tfcoil_variables
   !! Winding pack conductor area [m2]
   !! Does not include the area of voids and central helium channel
 
-  real(dp) :: acstf
+  real(dp) :: a_tf_turn_cable_space
   !! Cable space area (per turn)  [m2]
   !! Includes the area of voids and central helium channel
 

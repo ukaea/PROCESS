@@ -1239,8 +1239,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "internal area of the cable space",
-                    "(acstf)",
-                    tfcoil_variables.acstf,
+                    "(a_tf_turn_cable_space)",
+                    tfcoil_variables.a_tf_turn_cable_space,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2898,7 +2898,7 @@ class TFCoil:
             tfcoil_variables.whtconsc = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
-                * tfcoil_variables.acstf
+                * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
                 - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
@@ -2908,7 +2908,7 @@ class TFCoil:
             tfcoil_variables.whtconcu = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
-                * tfcoil_variables.acstf
+                * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * tfcoil_variables.fcutfsu
                 - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
@@ -3290,8 +3290,8 @@ class TFCoil:
             raise ProcessValueError("r_tf_inboard_in is ~= 0", 245)
 
         # TODO: following is no longer used/needed?
-        # if tfcoil_variables.acstf >= 0.0e0:
-        #     tcbs = numpy.sqrt(tfcoil_variables.acstf)
+        # if tfcoil_variables.a_tf_turn_cable_space >= 0.0e0:
+        #     tcbs = numpy.sqrt(tfcoil_variables.a_tf_turn_cable_space)
         # else:
         #     tcbs = 0.0e0
 
@@ -5261,7 +5261,7 @@ def init_tfcoil_variables():
     tfv.acasetfo = 0.0
     tfv.acndttf = 0.0
     tfv.acond = 0.0
-    tfv.acstf = 0.0
+    tfv.a_tf_turn_cable_space = 0.0
     tfv.insulation_area = 0.0
     tfv.a_tf_coil_wp_turn_insulation = 0.0
     tfv.sig_tf_case_max = 6.0e8

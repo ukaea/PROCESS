@@ -2544,13 +2544,13 @@ class Stellarator:
                 "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut."
             )
         # [m^2] Cross-sectional area of cable space per turn
-        tfcoil_variables.acstf = (
+        tfcoil_variables.a_tf_turn_cable_space = (
             0.9e0 * t_cable**2
-        )  # 0.9 to include some rounded corners. (tfcoil_variables.acstf = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
+        )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
         # [m^2] Cross-sectional area of conduit case per turn
         tfcoil_variables.acndttf = (
             t_cable + 2.0e0 * tfcoil_variables.thwcndut
-        ) ** 2 - tfcoil_variables.acstf
+        ) ** 2 - tfcoil_variables.a_tf_turn_cable_space
         #######################################################################################
 
         #######################################################################################
@@ -2609,7 +2609,7 @@ class Stellarator:
 
         # Conduct fraction of conduit * Superconductor fraction in conductor
         f_scu = (
-            (tfcoil_variables.acstf * (1.0e0 - tfcoil_variables.vftf))
+            (tfcoil_variables.a_tf_turn_cable_space * (1.0e0 - tfcoil_variables.vftf))
             / (tfcoil_variables.t_turn_tf**2)
             * (1.0e0 - tfcoil_variables.fcutfsu)
         )  # fraction that is SC of wp.
@@ -2673,19 +2673,21 @@ class Stellarator:
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
         tfcoil_variables.acond = (
-            tfcoil_variables.acstf
+            tfcoil_variables.a_tf_turn_cable_space
             * tfcoil_variables.n_tf_turn
             * (1.0e0 - tfcoil_variables.vftf)
         )
         # [m^2] Void area in cable, for He
         tfcoil_variables.avwp = (
-            tfcoil_variables.acstf * tfcoil_variables.n_tf_turn * tfcoil_variables.vftf
+            tfcoil_variables.a_tf_turn_cable_space
+            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.vftf
         )
         # [m^2] Insulation area (not including ground-wall)
         tfcoil_variables.a_tf_coil_wp_turn_insulation = tfcoil_variables.n_tf_turn * (
             tfcoil_variables.t_turn_tf**2
             - tfcoil_variables.acndttf
-            - tfcoil_variables.acstf
+            - tfcoil_variables.a_tf_turn_cable_space
         )
         # [m^2] Structure area for cable
         tfcoil_variables.aswp = tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
@@ -2917,7 +2919,7 @@ class Stellarator:
         tfcoil_variables.whtconsc = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
+            * tfcoil_variables.a_tf_turn_cable_space
             * (1.0e0 - tfcoil_variables.vftf)
             * (1.0e0 - tfcoil_variables.fcutfsu)
             - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
@@ -2928,7 +2930,7 @@ class Stellarator:
         tfcoil_variables.whtconcu = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
+            * tfcoil_variables.a_tf_turn_cable_space
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
             - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
@@ -3020,7 +3022,7 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
@@ -3036,12 +3038,12 @@ class Stellarator:
             tfcoil_variables.fcutfsu,
             1 - tfcoil_variables.vftf,
             tfcoil_variables.tftmp,
-            tfcoil_variables.acstf,
+            tfcoil_variables.a_tf_turn_cable_space,
             tfcoil_variables.t_turn_tf**2,
         )
 
         # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
-        # print *, "acstf: ", tfcoil_variables.acstf
+        # print *, "a_tf_turn_cable_space: ", tfcoil_variables.a_tf_turn_cable_space
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
             coilcurrent * 1.0e6 / (tfcoil_variables.acond * tfcoil_variables.fcutfsu)
@@ -3839,8 +3841,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cable conductor + void area (m2)",
-            "(acstf)",
-            tfcoil_variables.acstf,
+            "(a_tf_turn_cable_space)",
+            tfcoil_variables.a_tf_turn_cable_space,
         )
         po.ovarre(
             self.outfile,

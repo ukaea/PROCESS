@@ -3056,7 +3056,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
     steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
-    internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+    internal_cable_space = round(
+        mfile_data.data["a_tf_turn_cable_space"].get_scan(scan) * 1e6, 5
+    )
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 
     # Plot the total turn shape
