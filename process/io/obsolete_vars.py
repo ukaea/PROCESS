@@ -350,6 +350,10 @@ OBS_VARS = {
     "etahtp": "eta_coolant_pump_electric",
     "pwpm2": "pflux_plant_floor_electric",
     "iscenr": "i_pf_energy_storage_source",
+    "dhecoil": "dia_tf_turn_coolant_channel",
+    "n_tf_turn": "n_tf_coil_turns",
+    "thicndut": "dx_tf_turn_insulation",
+    "thwcndut": "dx_tf_turn_steel",
 }
 
 OBS_VARS_HELP = {
