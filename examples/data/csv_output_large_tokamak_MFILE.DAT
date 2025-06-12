@@ -136,9 +136,9 @@
  dr_tf_nose_case__________________________________________________________________ (itvar038)____________________      2.2965E-01    
  dr_tf_nose_case_(final_value/initial_value)______________________________________ (xcm038)______________________      4.5931E-01    
  dr_tf_nose_case_(range_normalised)_______________________________________________ (nitvar038)___________________      1.8911E-01    
- thwcndut________________________________________________________________ (itvar039)____________________      8.0000E-03    
- thwcndut_(final_value/initial_value)____________________________________ (xcm039)______________________      1.0000E+00    
- thwcndut_(range_normalised)_____________________________________________ (nitvar039)___________________      0.0000E+00    
+ dx_tf_turn_steel________________________________________________________________ (itvar039)____________________      8.0000E-03    
+ dx_tf_turn_steel_(final_value/initial_value)____________________________________ (xcm039)______________________      1.0000E+00    
+ dx_tf_turn_steel_(range_normalised)_____________________________________________ (nitvar039)___________________      0.0000E+00    
  fcutfsu_________________________________________________________________ (itvar040)____________________      8.6211E-01    
  fcutfsu_(final_value/initial_value)_____________________________________ (xcm040)______________________      1.0776E+00    
  fcutfsu_(range_normalised)______________________________________________ (nitvar040)___________________      8.2299E-01    
@@ -714,7 +714,7 @@
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7439E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.5839E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      3.9839E-02 OP 
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      8.0000E-03 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0000E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5562E-03    
@@ -1447,7 +1447,7 @@ dr_tf_nose_case = 0.5
 * TF coil conduit thickness [m]
 ixc = 58
 boundl(58) = 0.008
-thwcndut = 0.008
+dx_tf_turn_steel = 0.008
 
 * copper fraction of cable conductor (TF coils)
 ixc = 59 

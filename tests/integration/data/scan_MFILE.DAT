@@ -562,7 +562,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5597E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2646E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2585E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7385E-03    
@@ -1557,7 +1557,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5597E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2647E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2585E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7386E-03    
@@ -2552,7 +2552,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2648E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2584E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7387E-03    
@@ -3547,7 +3547,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2584E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7387E-03    
@@ -4542,7 +4542,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2583E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7388E-03    
@@ -5537,7 +5537,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2650E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2583E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7388E-03    
@@ -6532,7 +6532,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2651E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2583E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7389E-03    
@@ -7527,7 +7527,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2582E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7389E-03    
@@ -8522,7 +8522,7 @@
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
  Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      1.2582E-02 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7390E-03    
@@ -9044,7 +9044,7 @@ boundu(52) = 10.0
 ixc = 53 * fjprot
 ixc = 56 * tdmptf
 ixc = 57 * dr_tf_nose_case
-ixc = 58 * thwcndut
+ixc = 58 * dx_tf_turn_steel
 boundl(58) = 8.0d-3
 ixc = 61 * dr_shld_vv_gap_inboard
 boundl(61) = 0.02
@@ -9290,7 +9290,7 @@ dhecoil  = 0.010 * diameter of He coil in TF winding (m)
 tftmp    = 4.750 * Peak helium coolant temperature in tf coils and pf coils (k)
 dx_tf_turn_insulation = 2.0d-3 * Conduit insulation thickness (m)
 dr_tf_nose_case   = 0.495 * Inboard tf coil case outer (non-plasma side) thickness (m)
-thwcndut = 0.008 * Tf coil conduit case thickness (m)
+dx_tf_turn_steel = 0.008 * Tf coil conduit case thickness (m)
 tinstf   = 0.008 * Ground insulation thickness surrounding winding pack (m)
 tmargmin = 1.500 * Minimum allowable temperature margin (cs and tf coils) (k)
 vdalw    = 10.00 * Max voltage across tf coil during quench (kv)
@@ -9339,7 +9339,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fjprot         =  1.0000E+00
                      tdmptf         =  2.5829E+01
                      dr_tf_nose_case         =  5.2465E-01
-                     thwcndut       =  8.0000E-03
+                     dx_tf_turn_steel       =  8.0000E-03
                      dr_shld_vv_gap_inboard          =  2.0000E-02
                      fl_h_threshold      =  1.4972E+00
                      fpsepbqar      =  1.0000E+00
