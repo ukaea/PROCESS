@@ -124,7 +124,7 @@ module build_variables
   !! difference in distance from midplane of upper and lower portions of TF
   !! legs (non-zero for single-null devices) (m)
 
-  real(dp) :: hpfu
+  real(dp) :: z_tf_top
   !! height to top of (upper) TF coil leg (m)
 
   real(dp) :: hr1
