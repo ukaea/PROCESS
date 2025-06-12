@@ -237,7 +237,7 @@ turns. The number of turns can be parametrized in three different ways :
     for the TF coil structural properties it is also an iteration variable.
   </p>
 - <p style='text-align: justify;'>
-    **Helium cooling channel diameter `dhecoil`:** user input defining the 
+    **Helium cooling channel diameter `dia_tf_turn_coolant_channel`:** user input defining the 
     size of the cooling channel.
   </p>
 
@@ -1300,7 +1300,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `c_tf_turn`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
-| `dhecoil`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
+| `dia_tf_turn_coolant_channel`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
 | `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
 | `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
 

@@ -306,7 +306,7 @@ ripmax   = 0.6 * Maximum allowable toroidal field ripple amplitude
 tdmptf   = 30.0 * Dump time for tf coil (s)
 n_tf_coils     = 16 * Number of tf coils (default = 50 for stellarators)
 alstrtf  = 5.8E8 * allowable stress in TF coil (Pa)
-dhecoil  = 0.010 * diameter of He coil in TF winding (m)
+dia_tf_turn_coolant_channel  = 0.010 * diameter of He coil in TF winding (m)
 tftmp    = 4.750 * Peak helium coolant temperature in tf coils and pf coils (k)
 thicndut = 2.0d-3 * Conduit insulation thickness (m)
 dr_tf_nose_case   = 0.495 * Inboard tf coil case outer (non-plasma side) thickness (m)

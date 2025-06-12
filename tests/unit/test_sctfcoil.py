@@ -104,7 +104,7 @@ class SuperconParam(NamedTuple):
 
     jwdgpro: Any = None
 
-    dhecoil: Any = None
+    dia_tf_turn_coolant_channel: Any = None
 
     c_tf_turn: Any = None
 
@@ -181,7 +181,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=0,
             jwdgpro=0,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -221,7 +221,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -261,7 +261,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -322,7 +322,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "jwdgpro", superconparam.jwdgpro)
 
-    monkeypatch.setattr(tfcoil_variables, "dhecoil", superconparam.dhecoil)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dia_tf_turn_coolant_channel",
+        superconparam.dia_tf_turn_coolant_channel,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_turn", superconparam.c_tf_turn)
 

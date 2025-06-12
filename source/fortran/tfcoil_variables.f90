@@ -156,7 +156,7 @@ module tfcoil_variables
   real(dp) :: dcondins
   !! density of conduit + ground-wall insulation (kg/m3)
 
-  real(dp) :: dhecoil
+  real(dp) :: dia_tf_turn_coolant_channel
   !! diameter of central helium channel in TF winding (m)
 
   real(dp) :: estotftgj
