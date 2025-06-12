@@ -944,7 +944,7 @@ def check_process(inputs):  # noqa: ARG001
                 fortran.tfcoil_variables.tinstf
                 + fortran.tfcoil_variables.tfinsgap
                 + fortran.tfcoil_variables.dx_tf_turn_insulation
-                + fortran.tfcoil_variables.dhecoil
+                + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)

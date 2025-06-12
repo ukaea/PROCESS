@@ -564,7 +564,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2646E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7385E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2635E-01 ITV
@@ -1559,7 +1559,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2647E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7386E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2636E-01 ITV
@@ -2554,7 +2554,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2648E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7387E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2637E-01 ITV
@@ -3549,7 +3549,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7387E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2637E-01 ITV
@@ -4544,7 +4544,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7388E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2638E-01 ITV
@@ -5539,7 +5539,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2650E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7388E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2638E-01 ITV
@@ -6534,7 +6534,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2651E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7389E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2639E-01 ITV
@@ -7529,7 +7529,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7389E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2639E-01 ITV
@@ -8524,7 +8524,7 @@
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.7390E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.2640E-01 ITV
@@ -9286,7 +9286,7 @@ tdmptf   = 30.0 * Dump time for tf coil (s)
 n_tf_coils     = 16 * Number of tf coils (default = 50 for stellarators)
 sig_tf_case_max  = 5.8E8 * Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
 sig_tf_wp_max    = 5.8E8 * Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
-dhecoil  = 0.010 * diameter of He coil in TF winding (m)
+dia_tf_turn_coolant_channel  = 0.010 * diameter of He coil in TF winding (m)
 tftmp    = 4.750 * Peak helium coolant temperature in tf coils and pf coils (k)
 dx_tf_turn_insulation = 2.0d-3 * Conduit insulation thickness (m)
 dr_tf_nose_case   = 0.495 * Inboard tf coil case outer (non-plasma side) thickness (m)

@@ -675,7 +675,7 @@
  Width_of_space_inside_conductor_(m)______________________________________ (t_cable)______________________ 4.06186532016039326e-02 OP
  Steel_conduit_thickness_(m)______________________________________________ (dx_tf_turn_steel)_____________________ 8.01211003298192385e-03
  Inter-turn_insulation_thickness_(m)______________________________________ (dx_tf_turn_insulation)_____________________ 8.00000000000000038e-04
- Diameter_of_central_helium_channel_in_cable______________________________ (dhecoil)______________________ 1.00000000000000002e-02
+ Diameter_of_central_helium_channel_in_cable______________________________ (dia_tf_turn_coolant_channel)______________________ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space)________________________ 1.61887869455795111e-03
  Coolant_fraction_in_conductor_excluding_central_channel__________________ (vftf)_________________________ 3.00000000000000044e-01
  Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.23199976882647566e-01
@@ -1553,7 +1553,7 @@ sig_tf_wp_max = 7.5e8 * Allowable maximum shear stress (Tresca criterion) in TF 
 dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (calculated for stellarators)
 casths   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
-dhecoil  = 0.01 * diameter of central helium channel in TF winding (m)
+dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)

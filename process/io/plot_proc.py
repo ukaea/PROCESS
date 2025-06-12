@@ -3053,7 +3053,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
         cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
-    he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
+    he_pipe_diameter = round(
+        mfile_data.data["dia_tf_turn_coolant_channel"].get_scan(scan) * 1e3, 5
+    )
     steel_thickness = round(mfile_data.data["dx_tf_turn_steel"].get_scan(scan) * 1e3, 5)
     insulation_thickness = round(
         mfile_data.data["dx_tf_turn_insulation"].get_scan(scan) * 1e3, 5

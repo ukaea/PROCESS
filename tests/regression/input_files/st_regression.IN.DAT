@@ -1182,7 +1182,7 @@ i_tf_turns_integer = 0
 * DESCRIPTION:   WP Turn steel conduit/jacket structure minimal thickness
 * JUSTIFICATION: 
 
-*dhecoil = 
+*dia_tf_turn_coolant_channel = 
 * DESCRIPTION:   Diameter of central helium channel in TF winding (m)
 * JUSTIFICATION: 
 *                
