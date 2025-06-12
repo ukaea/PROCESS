@@ -957,7 +957,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     n_pancake: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
     dx_tf_turn_insulation: Any = None
 
@@ -1010,7 +1010,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_cable=0,
             n_layer=10,
             n_pancake=20,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
             expected_t_turn_tf=0.056579413904423038,
@@ -1044,7 +1044,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_cable=0.036389912284773368,
             n_layer=10,
             n_pancake=20,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
             expected_t_turn_tf=0.056579413904423038,
@@ -1131,7 +1131,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     ) = sctfcoil.tf_integer_turn_geom(
         n_layer=tfintegerturngeomparam.n_layer,
         n_pancake=tfintegerturngeomparam.n_pancake,
-        thwcndut=tfintegerturngeomparam.thwcndut,
+        dx_tf_turn_steel=tfintegerturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfintegerturngeomparam.dx_tf_turn_insulation,
     )
 
@@ -1213,7 +1213,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     j_tf_wp: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
     dx_tf_turn_insulation: Any = None
 
@@ -1253,7 +1253,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable=0,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
-            thwcndut=0.0080000000000000019,
+            dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
             expected_t_turn_tf=0.049532469413859428,
@@ -1279,7 +1279,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable=0.031932469413859424,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
-            thwcndut=0.0080000000000000019,
+            dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
             expected_t_turn_tf=0.049532469413859428,
@@ -1305,7 +1305,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.301e07,
-            thwcndut=8.015e-03,
+            dx_tf_turn_steel=8.015e-03,
             dx_tf_turn_insulation=8.0e-4,
             expected_t_conductor=5.712e-02,
             expected_t_turn_tf=0.05872,
@@ -1331,7 +1331,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.673e07,
-            thwcndut=8.148e-03,
+            dx_tf_turn_steel=8.148e-03,
             dx_tf_turn_insulation=8.0e-4,
             expected_t_conductor=0.058296,
             expected_t_turn_tf=0.059896,
@@ -1406,7 +1406,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         sctfcoil.tf_averaged_turn_geom(
             i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
             j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
-            thwcndut=tfaveragedturngeomparam.thwcndut,
+            dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
             dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
         )
     )
