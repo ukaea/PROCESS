@@ -1162,8 +1162,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Toroidal width of turn (m)",
-                    "(t_turn_toroidal)",
-                    sctfcoil_module.t_turn_toroidal,
+                    "(dx_tf_turn)",
+                    sctfcoil_module.dx_tf_turn,
                 )
                 po.ovarre(
                     self.outfile,
