@@ -1593,7 +1593,7 @@ def constraint_equation_64():
     """
     cc = (
         fortran.physics_variables.zeff / fortran.constraint_variables.fzeffmax
-        - 1.0 * fortran.constraint_variables.ffzeffmax
+        - 1.0 * fortran.constraint_variables.fzeffmax
     )
     return ConstraintResult(
         cc,
