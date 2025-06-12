@@ -987,7 +987,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     expected_acndttf: Any = None
 
-    expected_insulation_area: Any = None
+    expected_a_tf_turn_insulation: Any = None
 
     expected_cpttf: Any = None
 
@@ -1027,7 +1027,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_t_cable=0.036389912284773368,
             expected_a_tf_turn_cable_space=0.001293323051622732,
             expected_acndttf=0.0014685061538103825,
-            expected_insulation_area=0.00043940087233490435,
+            expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
             expected_n_tf_turn=200,
         ),
@@ -1061,7 +1061,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_t_cable=0.036389912284773368,
             expected_a_tf_turn_cable_space=0.001293323051622732,
             expected_acndttf=0.0014685061538103825,
-            expected_insulation_area=0.00043940087233490435,
+            expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
             expected_n_tf_turn=200,
         ),
@@ -1133,7 +1133,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     (
         a_tf_turn_cable_space,
         acndttf,
-        insulation_area,
+        a_tf_turn_insulation,
         c_tf_turn,
         n_tf_turn,
     ) = sctfcoil.tf_integer_turn_geom(
@@ -1185,8 +1185,8 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
 
     assert acndttf == pytest.approx(tfintegerturngeomparam.expected_acndttf)
 
-    assert insulation_area == pytest.approx(
-        tfintegerturngeomparam.expected_insulation_area
+    assert a_tf_turn_insulation == pytest.approx(
+        tfintegerturngeomparam.expected_a_tf_turn_insulation
     )
 
     assert c_tf_turn == pytest.approx(tfintegerturngeomparam.expected_cpttf)
@@ -1239,7 +1239,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     expected_acndttf: Any = None
 
-    expected_insulation_area: Any = None
+    expected_a_tf_turn_insulation: Any = None
 
     expected_n_tf_turn: Any = None
 
@@ -1270,7 +1270,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_t_cable=0.031932469413859424,
             expected_a_tf_turn_cable_space=0.00098877993839630008,
             expected_acndttf=0.0013087416857142699,
-            expected_insulation_area=0.00015594390212434958,
+            expected_a_tf_turn_insulation=0.00015594390212434958,
             expected_n_tf_turn=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
@@ -1296,7 +1296,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_t_cable=0.031932469413859424,
             expected_a_tf_turn_cable_space=0.00098877993839630008,
             expected_acndttf=0.0013087416857142699,
-            expected_insulation_area=0.00015594390212434958,
+            expected_a_tf_turn_insulation=0.00015594390212434958,
             expected_n_tf_turn=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
@@ -1322,7 +1322,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_t_cable=0.04109,
             expected_a_tf_turn_cable_space=0.001657369442,
             expected_acndttf=0.001605324958,
-            expected_insulation_area=0.000185344,
+            expected_a_tf_turn_insulation=0.000185344,
             expected_n_tf_turn=175.49384787,
         ),
         TfAveragedTurnGeomParam(
@@ -1348,7 +1348,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_t_cable=0.042,
             expected_a_tf_turn_cable_space=0.001731943361,
             expected_acndttf=0.001666480255,
-            expected_insulation_area=0.00018910719999999962,
+            expected_a_tf_turn_insulation=0.00018910719999999962,
             expected_n_tf_turn=168.6701961481806,
         ),
     ),
@@ -1410,7 +1410,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
 
-    a_tf_turn_cable_space, acndttf, insulation_area, n_tf_turn = (
+    a_tf_turn_cable_space, acndttf, a_tf_turn_insulation, n_tf_turn = (
         sctfcoil.tf_averaged_turn_geom(
             i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
             j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
@@ -1445,8 +1445,8 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     assert acndttf == pytest.approx(tfaveragedturngeomparam.expected_acndttf)
 
-    assert insulation_area == pytest.approx(
-        tfaveragedturngeomparam.expected_insulation_area
+    assert a_tf_turn_insulation == pytest.approx(
+        tfaveragedturngeomparam.expected_a_tf_turn_insulation
     )
 
     assert n_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_n_tf_turn)

@@ -1731,7 +1731,7 @@ class SuperconductingTFCoil(TFCoil):
             (
                 tfcoil_variables.a_tf_turn_cable_space,
                 tfcoil_variables.acndttf,
-                tfcoil_variables.insulation_area,
+                tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.n_tf_turn,
             ) = self.tf_averaged_turn_geom(
                 tfcoil_variables.j_tf_wp,
@@ -1745,7 +1745,7 @@ class SuperconductingTFCoil(TFCoil):
             (
                 tfcoil_variables.a_tf_turn_cable_space,
                 tfcoil_variables.acndttf,
-                tfcoil_variables.insulation_area,
+                tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_turn,
             ) = self.tf_integer_turn_geom(
@@ -1783,7 +1783,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Area of inter-turn insulation: total [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.insulation_area
+            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_insulation
         )
 
         # Area of steel structure in winding pack [m2]
@@ -2167,12 +2167,18 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Area of inter-turn insulation: single turn [m2]
-        insulation_area = (
+        a_tf_turn_insulation = (
             sctfcoil_module.dr_tf_turn * sctfcoil_module.dx_tf_turn
             - acndttf
             - a_tf_turn_cable_space
         )
-        return a_tf_turn_cable_space, acndttf, insulation_area, c_tf_turn, n_tf_turn
+        return (
+            a_tf_turn_cable_space,
+            acndttf,
+            a_tf_turn_insulation,
+            c_tf_turn,
+            n_tf_turn,
+        )
 
         # -------------
 
@@ -2247,7 +2253,7 @@ class SuperconductingTFCoil(TFCoil):
         n_tf_turn = sctfcoil_module.awptf / a_turn
 
         # Area of inter-turn insulation: single turn [m2]
-        insulation_area = a_turn - tfcoil_variables.t_conductor**2
+        a_tf_turn_insulation = a_turn - tfcoil_variables.t_conductor**2
 
         # NOTE: Fortran has a_tf_turn_cable_space as an intent(out) variable that was outputting
         # into tfcoil_variables.a_tf_turn_cable_space. The local variable, however, appears to
@@ -2296,7 +2302,7 @@ class SuperconductingTFCoil(TFCoil):
             # Cross-sectional area of conduit jacket per turn [m2]
             acndttf = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
-        return a_tf_turn_cable_space, acndttf, insulation_area, n_tf_turn
+        return a_tf_turn_cable_space, acndttf, a_tf_turn_insulation, n_tf_turn
 
 
 @staticmethod
