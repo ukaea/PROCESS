@@ -1188,8 +1188,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Toroidal width of cable space",
-                    "(t_cable_toroidal)",
-                    sctfcoil_module.t_cable_toroidal,
+                    "(dx_tf_turn_cable_space)",
+                    sctfcoil_module.dx_tf_turn_cable_space,
                 )
             else:
                 po.ovarre(
