@@ -2301,25 +2301,19 @@ def constraint_eqns(m: int, ieqn: int):
 
     for i in range(i1, i2):
         constraint_id = fortran.numerics.icc[i].item()
-        try:
-            constraint = ConstraintManager.get_constraint(constraint_id)
+        constraint = ConstraintManager.get_constraint(constraint_id)
 
-            if constraint is None:
-                tmp_cc, tmp_con, tmp_err, tmp_symbol, tmp_units = getattr(
-                    fortran.constraints, f"constraint_eqn_{constraint_id:03d}"
-                )()
-            else:
-                result = constraint.constraint_equation()
-                tmp_cc, tmp_con, tmp_err = (
-                    result.normalised_residual,
-                    result.constraint_value,
-                    result.constraint_error,
-                )
-                tmp_symbol, tmp_units = constraint.symbol, constraint.units
+        if constraint is None:
+            error_msg = f"Constraint equation {constraint_id} cannot be found"
+            raise ProcessError(error_msg)
 
-        except AttributeError as e:
-            error_msg = f"Constraint equation {i + 1} cannot be found"
-            raise ProcessError(error_msg) from e
+        result = constraint.constraint_equation()
+        tmp_cc, tmp_con, tmp_err = (
+            result.normalised_residual,
+            result.constraint_value,
+            result.constraint_error,
+        )
+        tmp_symbol, tmp_units = constraint.symbol, constraint.units
 
         if np.isnan(tmp_cc) or np.isinf(tmp_cc) or abs(tmp_cc) > 9.99e99:
             error_msg = (
