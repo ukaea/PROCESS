@@ -72,8 +72,41 @@ class TFCoil:
             dr_tf_outboard=build_variables.dr_tf_outboard,
         )
 
-        self.tf_current()
-        self.tf_coil_shape_inner()
+        (
+            tfcoil_variables.b_tf_inboard_peak,
+            tfcoil_variables.c_tf_total,
+            sctfcoil_module.c_tf_coil,
+            tfcoil_variables.oacdcp,
+        ) = self.tf_current(
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            bt=physics_variables.bt,
+            rmajor=physics_variables.rmajor,
+            r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
+            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+        )
+
+        (
+            tfcoil_variables.len_tf_coil,
+            tfcoil_variables.tfa,
+            tfcoil_variables.tfb,
+            tfcoil_variables.r_tf_arc,
+            tfcoil_variables.z_tf_arc,
+        ) = self.tf_coil_shape_inner(
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            itart=physics_variables.itart,
+            i_single_null=physics_variables.i_single_null,
+            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            r_cp_top=build_variables.r_cp_top,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_outboard_in=sctfcoil_module.r_tf_outboard_in,
+            z_tf_inside_half=build_variables.z_tf_inside_half,
+            z_tf_top=build_variables.z_tf_top,
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+        )
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
             tfcoil_variables.ind_tf_coil = self.tfcind(
@@ -467,162 +500,156 @@ class TFCoil:
 
         return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
 
-    def tf_coil_shape_inner(self):
-        """Calculates the TF coil shape
-        Calculates the shape of the INSIDE of the TF coil. The coil is
-        approximated by a straight inboard section and four elliptical arcs
-        This is a totally ad hoc model, with no physics or engineering basis.
+    def tf_coil_shape_inner(
+        self,
+        i_tf_shape: int,
+        itart: int,
+        i_single_null: int,
+        r_tf_inboard_out: float,
+        r_cp_top: float,
+        rmajor: float,
+        rminor: float,
+        r_tf_outboard_in: float,
+        z_tf_inside_half: float,
+        z_tf_top: float,
+        dr_tf_inboard: float,
+        dr_tf_outboard: float,
+        r_tf_outboard_mid: float,
+        r_tf_inboard_mid: float,
+    ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Calculate the shape of the inside of the TF coil.
 
-        The referenced equations can be found in draft/unpublished document
-        attached in GitLab to issue #1328.
+        This method approximates the TF coil by a straight inboard section and four elliptical arcs.
+        The model is ad hoc and does not have a physics or engineering basis.
+
+        :param i_tf_shape: TF coil shape selection switch.
+        :type i_tf_shape: int
+        :param itart: TART (tight aspect ratio tokamak) switch.
+        :type itart: int
+        :param i_single_null: Single null switch.
+        :type i_single_null: int
+        :param r_tf_inboard_out: Outer radius of the inboard leg of the TF coil [m].
+        :type r_tf_inboard_out: float
+        :param r_cp_top: Centrepost outer radius at the top [m].
+        :type r_cp_top: float
+        :param rmajor: Major radius of the plasma [m].
+        :type rmajor: float
+        :param rminor: Minor radius of the plasma [m].
+        :type rminor: float
+        :param r_tf_outboard_in: Inner radius of the outboard leg of the TF coil [m].
+        :type r_tf_outboard_in: float
+        :param z_tf_inside_half: Maximum inboard edge height [m].
+        :type z_tf_inside_half: float
+        :param z_tf_top: Vertical position of the top of the TF coil [m].
+        :type z_tf_top: float
+        :param dr_tf_inboard: Radial thickness of the inboard leg of the TF coil [m].
+        :type dr_tf_inboard: float
+        :param dr_tf_outboard: Radial thickness of the outboard leg of the TF coil [m].
+        :type dr_tf_outboard: float
+        :param r_tf_outboard_mid: Mid-plane radius of the outboard leg of the TF coil [m].
+        :type r_tf_outboard_mid: float
+        :param r_tf_inboard_mid: Mid-plane radius of the inboard leg of the TF coil [m].
+        :type r_tf_inboard_mid: float
+
+        :returns:
+            - len_tf_coil (float): Total length of the TF coil.
+            - tfa (np.ndarray): Arc segment lengths in R.
+            - tfb (np.ndarray): Arc segment lengths in Z.
+            - r_tf_arc (np.ndarray): R coordinates of arc points.
+            - z_tf_arc (np.ndarray): Z coordinates of arc points.
+        :rtype: tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]
         """
         FSTRAIGHT = 0.6
-        if tfcoil_variables.i_tf_shape == 1 and physics_variables.itart == 0:
+        len_tf_coil = 0.0
+        r_tf_arc = np.zeros(5)
+        z_tf_arc = np.zeros(5)
+        tfa = np.zeros(4)
+        tfb = np.zeros(4)
+
+        if i_tf_shape == 1 and itart == 0:
             # PROCESS D-shape parametrisation
+            r_tf_arc[0] = r_tf_inboard_out
+            r_tf_arc[1] = rmajor - 0.2e0 * rminor
+            r_tf_arc[2] = r_tf_outboard_in
+            r_tf_arc[3] = r_tf_arc[1]
+            r_tf_arc[4] = r_tf_arc[0]
 
-            # X position of the arcs, eq(21)
-            # The tfcoil_variables.r_tf_arc/tfcoil_variables.z_tf_arc are defined in the INSIDE part of the TF
-            tfcoil_variables.r_tf_arc[0] = build_variables.r_tf_inboard_out
-            tfcoil_variables.r_tf_arc[1] = (
-                physics_variables.rmajor - 0.2e0 * physics_variables.rminor
-            )
-            tfcoil_variables.r_tf_arc[2] = sctfcoil_module.r_tf_outboard_in
-            tfcoil_variables.r_tf_arc[3] = tfcoil_variables.r_tf_arc[1]
-            tfcoil_variables.r_tf_arc[4] = tfcoil_variables.r_tf_arc[0]
-
-            # Height of straight section as a fraction of the coil inner height
-            if physics_variables.i_single_null == 0:
-                # Double null
-                tfcoil_variables.z_tf_arc[0] = (
-                    FSTRAIGHT * build_variables.z_tf_inside_half
-                )
-                tfcoil_variables.z_tf_arc[1] = build_variables.z_tf_inside_half
-                tfcoil_variables.z_tf_arc[2] = 0
-                tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
-                tfcoil_variables.z_tf_arc[4] = (
-                    -FSTRAIGHT * build_variables.z_tf_inside_half
-                )
+            if i_single_null == 0:
+                z_tf_arc[0] = FSTRAIGHT * (z_tf_top - dr_tf_inboard)
+                z_tf_arc[1] = z_tf_top - dr_tf_inboard
+                z_tf_arc[2] = 0
+                z_tf_arc[3] = -z_tf_inside_half
+                z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
             else:
-                # Single null
-                tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * (
-                    build_variables.z_tf_top - build_variables.dr_tf_inboard
-                )
-                tfcoil_variables.z_tf_arc[1] = (
-                    build_variables.z_tf_top - build_variables.dr_tf_inboard
-                )
-                tfcoil_variables.z_tf_arc[2] = 0
-                tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
-                tfcoil_variables.z_tf_arc[4] = (
-                    -FSTRAIGHT * build_variables.z_tf_inside_half
-                )
+                z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
+                z_tf_arc[1] = z_tf_inside_half
+                z_tf_arc[2] = 0
+                z_tf_arc[3] = -z_tf_inside_half
+                z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
 
-            # Horizontal and vertical radii of inside edge of TF coil
-            # Arcs are numbered clockwise:
-            # 1=upper inboard, 2=upper outboard, 3=lower ouboard, 4=lower inboard
-            # 'len_tf_coil' is the length of the coil midline.
-            tfcoil_variables.len_tf_coil = (
-                tfcoil_variables.z_tf_arc[0] - tfcoil_variables.z_tf_arc[4]
-            )
+            len_tf_coil = z_tf_arc[0] - z_tf_arc[4]
+
             for ii in range(4):
-                tfcoil_variables.tfa[ii] = abs(
-                    tfcoil_variables.r_tf_arc[ii + 1] - tfcoil_variables.r_tf_arc[ii]
-                )
-                tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.z_tf_arc[ii + 1] - tfcoil_variables.z_tf_arc[ii]
-                )
-                # Radii and length of midline of coil segments
-                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_inboard
-                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_inboard
-                tfcoil_variables.len_tf_coil = (
-                    tfcoil_variables.len_tf_coil + 0.25e0 * self.circumference(aa, bb)
-                )
-                # note: final tfcoil_variables.len_tf_coil includes inboard leg length; eq(22)
+                tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
+                tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
+                aa = tfa[ii] + 0.5e0 * dr_tf_inboard
+                bb = tfb[ii] + 0.5e0 * dr_tf_inboard
+                len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        # Centrepost with D-shaped
-        # ---
-        elif tfcoil_variables.i_tf_shape == 1 and physics_variables.itart == 1:
-            # X position of the arcs, eq(23) and text before it
-            tfcoil_variables.z_tf_arc[0] = build_variables.r_cp_top
-            tfcoil_variables.z_tf_arc[1] = (
-                physics_variables.rmajor - 0.2e0 * physics_variables.rminor
-            )
-            tfcoil_variables.z_tf_arc[2] = sctfcoil_module.r_tf_outboard_in
-            tfcoil_variables.z_tf_arc[3] = tfcoil_variables.r_tf_arc[1]
-            tfcoil_variables.z_tf_arc[4] = tfcoil_variables.r_tf_arc[0]
+        elif i_tf_shape == 1 and itart == 1:
+            # Centrepost with D-shaped
+            r_tf_arc[0] = r_cp_top
+            r_tf_arc[1] = rmajor - 0.2e0 * rminor
+            r_tf_arc[2] = r_tf_outboard_in
+            r_tf_arc[3] = r_tf_arc[1]
+            r_tf_arc[4] = r_tf_arc[0]
 
-            # Double null, eq(23) and text before it
-            tfcoil_variables.z_tf_arc[0] = (
-                build_variables.z_tf_top - build_variables.dr_tf_inboard
-            )
-            tfcoil_variables.z_tf_arc[1] = (
-                build_variables.z_tf_top - build_variables.dr_tf_inboard
-            )
-            tfcoil_variables.z_tf_arc[2] = 0
-            tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
-            tfcoil_variables.z_tf_arc[4] = -build_variables.z_tf_inside_half
+            z_tf_arc[0] = z_tf_top - dr_tf_inboard
+            z_tf_arc[1] = z_tf_top - dr_tf_inboard
+            z_tf_arc[2] = 0
+            z_tf_arc[3] = -z_tf_inside_half
+            z_tf_arc[4] = -z_tf_inside_half
 
-            # TF middle circumference
-            tfcoil_variables.len_tf_coil = 2 * (
-                tfcoil_variables.r_tf_arc[1] - tfcoil_variables.r_tf_arc[0]
-            )
+            len_tf_coil = 2 * (r_tf_arc[1] - r_tf_arc[0])
 
             for ii in range(1, 3):
-                tfcoil_variables.tfa[ii] = abs(
-                    tfcoil_variables.r_tf_arc[ii + 1] - tfcoil_variables.r_tf_arc[ii]
+                tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
+                tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
+                aa = tfa[ii] + 0.5e0 * dr_tf_outboard
+                bb = tfb[ii] + 0.5e0 * dr_tf_outboard
+                len_tf_coil += 0.25e0 * self.circumference(aa, bb)
+
+        elif i_tf_shape == 2:
+            # Picture frame coil
+            if itart == 0:
+                r_tf_arc[0] = r_tf_inboard_out
+            if itart == 1:
+                r_tf_arc[0] = r_cp_top
+            r_tf_arc[1] = r_tf_outboard_in
+            r_tf_arc[2] = r_tf_arc[1]
+            r_tf_arc[3] = r_tf_arc[1]
+            r_tf_arc[4] = r_tf_arc[0]
+
+            z_tf_arc[0] = z_tf_top - dr_tf_inboard
+            z_tf_arc[1] = z_tf_top - dr_tf_inboard
+            z_tf_arc[2] = 0
+            z_tf_arc[3] = -z_tf_inside_half
+            z_tf_arc[4] = -z_tf_inside_half
+
+            if itart == 0:
+                len_tf_coil = 2.0e0 * (
+                    2.0e0 * z_tf_inside_half
+                    + dr_tf_inboard
+                    + r_tf_outboard_mid
+                    - r_tf_inboard_mid
                 )
-                tfcoil_variables.tfb[ii] = abs(
-                    tfcoil_variables.z_tf_arc[ii + 1] - tfcoil_variables.z_tf_arc[ii]
+            elif itart == 1:
+                len_tf_coil = (
+                    z_tf_inside_half + z_tf_top + 2.0e0 * (r_tf_outboard_mid - r_cp_top)
                 )
 
-                # Radii and length of midline of coil segments
-                aa = tfcoil_variables.tfa[ii] + 0.5e0 * build_variables.dr_tf_outboard
-                bb = tfcoil_variables.tfb[ii] + 0.5e0 * build_variables.dr_tf_outboard
-                tfcoil_variables.len_tf_coil = (
-                    tfcoil_variables.len_tf_coil + 0.25e0 * self.circumference(aa, bb)
-                )
-                # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART; eq(24)
-        # ---
-
-        # Picture frame coil
-        # ---
-        elif tfcoil_variables.i_tf_shape == 2:
-            # X position of the arcs
-            if physics_variables.itart == 0:
-                tfcoil_variables.r_tf_arc[0] = build_variables.r_tf_inboard_out
-            if physics_variables.itart == 1:
-                tfcoil_variables.r_tf_arc[0] = build_variables.r_cp_top
-            tfcoil_variables.r_tf_arc[1] = sctfcoil_module.r_tf_outboard_in
-            tfcoil_variables.r_tf_arc[2] = tfcoil_variables.r_tf_arc[1]
-            tfcoil_variables.r_tf_arc[3] = tfcoil_variables.r_tf_arc[1]
-            tfcoil_variables.r_tf_arc[4] = tfcoil_variables.r_tf_arc[0]
-
-            # Y position of the arcs
-            tfcoil_variables.z_tf_arc[0] = (
-                build_variables.z_tf_top - build_variables.dr_tf_inboard
-            )
-            tfcoil_variables.z_tf_arc[1] = (
-                build_variables.z_tf_top - build_variables.dr_tf_inboard
-            )
-            tfcoil_variables.z_tf_arc[2] = 0
-            tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
-            tfcoil_variables.z_tf_arc[4] = -build_variables.z_tf_inside_half
-
-            # TF middle circumference
-            # IMPORTANT : THE CENTREPOST LENGTH IS NOT INCLUDED IN len_tf_coil FOR TART
-            if physics_variables.itart == 0:
-                tfcoil_variables.len_tf_coil = 2.0e0 * (
-                    2.0e0 * build_variables.z_tf_inside_half
-                    + build_variables.dr_tf_inboard
-                    + build_variables.r_tf_outboard_mid
-                    - build_variables.r_tf_inboard_mid
-                )  # eq(25)
-            elif physics_variables.itart == 1:
-                tfcoil_variables.len_tf_coil = (
-                    build_variables.z_tf_inside_half
-                    + build_variables.z_tf_top
-                    + 2.0e0
-                    * (build_variables.r_tf_outboard_mid - build_variables.r_cp_top)
-                )  # eq(26)
+        return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
     def outtf(self, peaktfflag):
         """Writes superconducting TF coil output to file

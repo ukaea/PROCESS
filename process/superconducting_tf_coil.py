@@ -99,7 +99,30 @@ class SuperconductingTFCoil(TFCoil):
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
             a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
         )
-        self.tf_coil_shape_inner()
+
+        (
+            tfcoil_variables.len_tf_coil,
+            tfcoil_variables.tfa,
+            tfcoil_variables.tfb,
+            tfcoil_variables.r_tf_arc,
+            tfcoil_variables.z_tf_arc,
+        ) = super().tf_coil_shape_inner(
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            itart=physics_variables.itart,
+            i_single_null=physics_variables.i_single_null,
+            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            r_cp_top=build_variables.r_cp_top,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_outboard_in=sctfcoil_module.r_tf_outboard_in,
+            z_tf_inside_half=build_variables.z_tf_inside_half,
+            z_tf_top=build_variables.z_tf_top,
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+        )
+
         self.sc_tf_internal_geom(
             tfcoil_variables.i_tf_wp_geom,
             tfcoil_variables.i_tf_case_geom,
