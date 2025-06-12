@@ -953,7 +953,7 @@ i_tf_sc_mat = 9
 icc = 33 
 * DESCRIPTION:   TF superconductor operating current / critical current density
 * JUSTIFICATION: A quench must be avoided
-* VARIABLES:     j_tf_wp & jwdgcrt (critical current) calculated in-situ
+* VARIABLES:     j_tf_wp & j_tf_wp_critical (critical current) calculated in-situ
 
 ixc = 50
 fiooic = 1.0
