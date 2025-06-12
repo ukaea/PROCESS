@@ -11,6 +11,9 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 # prefix = "/squid"
 prefix = "/updated"
 # prefix = "/rebuild"
+# prefix = "/stellarator_helias_once_through"
+# prefix = "/helias_5b"
+prefix = "/helias5"
 
 
 def postprocess(single_run):
