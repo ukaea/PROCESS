@@ -346,6 +346,10 @@ OBS_VARS = {
     "iprimshld": "i_shld_primary_heat",
     "cpttf": "c_tf_turn",
     "emult": "f_p_blkt_multiplication",
+    "dhecoil": "dia_tf_turn_coolant_channel",
+    "n_tf_turn": "n_tf_coil_turns",
+    "thicndut": "dx_tf_turn_insulation",
+    "thwcndut": "dx_tf_turn_steel",
 }
 
 OBS_VARS_HELP = {
